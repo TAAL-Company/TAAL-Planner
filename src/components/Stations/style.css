@@ -1,0 +1,62 @@
+.Stations {
+  background-color: rgb(255, 242, 234);
+  margin: -0.5px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  height: 345px;
+  width: 272px;
+  overflow: auto;
+  scrollbar-color: #bfc4ce #dadbe2 !important;
+  scrollbar-width: thin !important;
+}
+.characters{
+  margin-left: -34px;
+}
+.addStationCover {
+  background-color: rgb(255, 242, 234);
+  margin: -0.5px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+}
+
+.Station:focus {
+  background: linear-gradient(90deg, #fffbf7 0, #efe3d6);
+  transition: 0.4s;
+}
+
+.Station:hover {
+  background-color: #fbfbfb;
+}
+
+.TitleStation {
+  color: rgb(107, 102, 99);
+  height: 50px;
+  border-radius: 6px;
+  opacity: 1;
+  margin-bottom: 17px;
+}
+
+.Cover_Stations {
+  padding: "1%";
+  margin-right: "2%";
+}
+
+.force-overflow {
+  min-height: 450px;
+}
+
+.Stations::-webkit-scrollbar-track {
+  padding: 2px 0;
+  background-color: #dadbe2;
+  border-radius: 10px;
+}
+
+.Stations::-webkit-scrollbar {
+  width: 10px;
+}
+
+.Stations::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #bfc4ce;
+  border: 1px solid rgb(235, 235, 235);
+}

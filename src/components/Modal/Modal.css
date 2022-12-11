@@ -1,0 +1,564 @@
+.modalBackground {
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(200, 200, 200);
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalContainerMessage {
+  z-index: 10;
+  border: 2.5px solid rgb(86, 160, 225);
+  border-radius: 5px;
+  margin-right: auto;
+  width: 575px;
+  height: 550px;
+  background-color: aliceblue;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  flex-direction: column;
+  padding: 25px;
+  position: fixed;
+  box-shadow: rgb(136 136 136) 1px 2px;
+  margin-top: -80px;
+}
+
+.modalContainer {
+  margin-left: 35%;
+  background-color: white;
+  flex-direction: column;
+  position: fixed;
+  z-index: 10;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 10px #0000004d;
+  border-radius: 8px;
+  opacity: 1;
+  top: 105px;
+  left: -96px;
+}
+
+.modalMyTasksContainer {
+  border: 2.5px solid rgb(86, 160, 225);
+  border-radius: 5px;
+  margin-top: -25vh;
+  margin-left: 34%;
+  margin-right: auto;
+  width: 500px;
+  height: 650px;
+  background-color: aliceblue;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  position: fixed;
+  box-shadow: rgb(136 136 136) 1px 2px;
+  z-index: 10;
+}
+
+.bodyTasks {
+  padding: 23px;
+  height: 400px;
+  overflow: auto;
+  text-align: right;
+  background-color: rgb(204, 228, 248);
+}
+
+.modalContainerCalculator {
+  border-radius: 5px;
+  border: 2.5px solid rgb(86, 160, 225);
+  margin-right: auto;
+  width: 575px;
+  height: 650px;
+  background-color: aliceblue;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  flex-direction: column;
+  padding: 25px;
+  position: fixed;
+  box-shadow: rgb(136 136 136) 1px 2px;
+  margin-top: -180px;
+  z-index: 10;
+}
+
+.modalContainerStudent {
+  border: 2.5px solid rgb(86, 160, 225);
+  border-radius: 5px;
+  width: 575px;
+  height: 570px;
+  background-color: aliceblue;
+  box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
+  flex-direction: column;
+  padding: 25px;
+  position: fixed;
+  box-shadow: rgb(136 136 136) 1px 2px;
+  margin-top: -100px;
+  z-index: 10;
+  margin-left: 30%;
+}
+
+.modalContainerStudentPrint {
+  width: 575px;
+  height: 620px;
+  flex-direction: column;
+  position: fixed;
+  margin-top: 120px;
+  z-index: 10;
+}
+
+.modalContainerLoading {
+  background-color: aliceblue;
+  box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
+  flex-direction: column;
+  position: fixed;
+  margin-top: -90px;
+  z-index: 10;
+  width: 100vw;
+  height: 100vh;
+}
+
+.modalContainerLittleLoading {
+  background-color: #728596;
+  box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
+  flex-direction: column;
+  position: fixed;
+  margin-top: -390px;
+  margin-left: 140px;
+  z-index: 10;
+  width: 200px;
+  height: 200px;
+  border-radius: 100%;
+  padding: 30px;
+}
+
+.modalContainerHelpPlanner {
+  border: 2.5px solid rgb(86, 160, 225);
+  border-radius: 5px;
+  margin-right: auto;
+  width: 575px;
+  height: 450px;
+  background-color: aliceblue;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  flex-direction: column;
+  padding: 25px;
+  position: fixed;
+  box-shadow: rgb(136 136 136) 1px 2px;
+  margin-top: -120px;
+  margin-left: 450px;
+  border-radius: 2%;
+  z-index: 10;
+}
+
+.modalContainer .Planner {
+  display: none;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(90, 90, 90, 0.5);
+  z-index: 9999;
+}
+
+.modalContainer .title {
+  display: inline-block;
+  text-align: center;
+  margin-top: 10px;
+
+}
+
+.titleCloseBtn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.titleCloseBtn button {
+  background-color: transparent;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+.modalContainer .body {
+  flex: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.7rem;
+  text-align: center;
+}
+
+.footer button {
+  width: 150px;
+  height: 45px;
+  margin: 10px;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.saveAs {
+  width: 119px;
+  height: 36px;
+  background: #256FA1 0% 0% no-repeat padding-box;
+  border-radius: 6px;
+  opacity: 1;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin: 20px;
+  margin-left: 84px;
+  border: none;
+}
+
+.continueBtn:hover {
+  background-color: rgb(59, 86, 138);
+}
+
+.cancelBtn {
+  top: 733px;
+  left: 860px;
+  width: 119px;
+  height: 36px;
+  /* UI Properties */
+  border: 1px solid #99999B;
+  border-radius: 6px;
+  opacity: 1;
+}
+
+.cancelBtn:hover {
+  border: 1px solid #99999B;
+}
+
+.RouteName {
+  text-align: right;
+  border: none;
+  display: flex;
+  height: 30px;
+  width: 100%;
+  background-color: rgb(180, 180, 180);
+  border-color: rgb(180, 180, 180);
+  ;
+  color: rgb(255, 255, 255);
+  position: absolute;
+  right: 0px;
+}
+
+.cancelCovar {
+  border: none;
+  width: 39px;
+  height: 35px;
+  background: transparent url('../../Pictures/Ellipse\ 1\ copy\ 8.svg') 0% 0% no-repeat padding-box;
+  opacity: 1;
+  position: relative;
+}
+
+.closeModal {
+  position: relative;
+  top: -6px;
+  left: -9.2px;
+  border: none;
+  color: white;
+}
+
+.w3-input {
+  background-color: #d0d8d8;
+}
+
+.modalContainerPlases {
+  position: fixed;
+  z-index: 10;
+  height: -200px;
+  margin-left: 500px;
+  width: 520px;
+  text-align: right;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 10px #0000004d;
+  border-radius: 8px;
+  opacity: 1;
+}
+
+.modalContainerHelp {
+  position: relative;
+  height: -200px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  box-shadow: 0px 3px 10px #0000004d;
+  border-radius: 3px;
+  top: -348px;
+  height: 279px;
+  width: 240px;
+  left: 11px;
+  border: 3px solid #99999B;
+}
+
+.HelpTxt {
+  height: 24px;
+  letter-spacing: 0px;
+  color: #505050;
+  opacity: 1;
+  font: normal normal bold 16px/24px Assistant;
+  text-align: end;
+}
+
+.cancelSaveAs {
+  top: 733px;
+  left: 860px;
+  width: 119px;
+  height: 36px;
+  border: 1px solid #99999B;
+  border-radius: 6px;
+  opacity: 1;
+}
+
+.BackgroundTasks {
+  border: 2.5px solid rgb(86, 160, 225);
+  border-radius: 5px;
+  background-color: aliceblue;
+  box-shadow: rgb(136 136 136) 1px 2px;
+  position: fixed;
+  width: 500px;
+  height: -200px;
+  margin: -210px;
+  margin-left: 500px;
+  padding: 10px;
+  width: 520px;
+  text-align: right;
+  align-self: center;
+  z-index: 10;
+
+}
+
+.allTasks {
+  height: 135px;
+  overflow: scroll;
+}
+
+.AddStudentTitle {
+  text-align: right;
+  position: relative;
+  right: 82px;
+}
+
+.nameRoutTitle {
+  text-align: right;
+  position: relative;
+  right: 65px;
+}
+
+.inputRouteName {
+  width: 579px;
+  position: relative;
+  left: 62px;
+  height: 40px;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #C9C9C9;
+  border-radius: 4px;
+  opacity: 1;
+}
+
+.allStudent {
+  height: 255px;
+  overflow: scroll;
+  overflow-x: hidden;
+  direction: rtl;
+  position: relative;
+  left: 85px;
+  width: 582px;
+  border: 1px solid #C9C9C9;
+  border-radius: 4px;
+  opacity: 1;
+}
+
+.allStudent::-webkit-scrollbar-track {
+  padding: 2px 0;
+  background-color: #dadbe2;
+  border-radius: 10px;
+}
+
+.allStudent::-webkit-scrollbar {
+  width: 10px;
+}
+
+.allStudent::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #bfc4ce;
+  border: 1px solid rgb(235, 235, 235);
+}
+
+.newRoutTitle {
+  text-align: end;
+  position: relative;
+  left: -51px;
+  top: 19px;
+  font-size: 20px;
+  font: normal normal 20px/26px Assistant;
+  letter-spacing: 0px;
+  color: #FFFFFF;
+  opacity: 1;
+}
+
+.headerAddPlases {
+  width: 520px;
+  height: 65px;
+  background: #256FA1 0% 0% no-repeat padding-box;
+  border-radius: 8px 8px 0px 0px;
+  opacity: 1;
+  margin-top: 8px;
+}
+
+.closeModal {
+  top: -13px;
+  left: -4px;
+  border: none;
+  color: white;
+  font-size: 30px;
+}
+
+.list-group-item {
+  text-align: right;
+}
+
+.headerNewRoute {
+  top: 307px;
+  left: 642px;
+  width: 750px;
+  height: 65px;
+  background: #256FA1 0% 0% no-repeat padding-box;
+  border-radius: 8px 8px 0px 0px;
+  opacity: 1;
+}
+
+.BackgroundPlasesNoClick {
+  border: 2.5px solid rgb(86, 160, 225);
+  border-radius: 5px;
+  background-color: aliceblue;
+  box-shadow: rgb(136 136 136) 1px 2px;
+  z-index: 10;
+  position: fixed;
+  width: 500px;
+  margin-left: 500px;
+  padding: 10px;
+  width: 520px;
+  height: 335px;
+  text-align: right;
+  align-self: center;
+}
+
+.OK {
+  background-color: rgb(95, 95, 230);
+  width: 50%;
+  box-shadow: rgb(136 136 136) 1px 2px;
+  margin: 20px;
+  margin-right: 46px;
+}
+
+.OK:hover {
+  background-color: rgb(60, 60, 148);
+}
+
+.printStudent {
+  background-color: rgb(255, 255, 255);
+  border-color: #d0d8d8;
+}
+
+.printStudent:hover {
+  background-color: rgb(255, 255, 255);
+  border-color: #53b0b0;
+}
+
+.ModalIcons {
+  width: 160px;
+  height: 33px;
+  background: transparent url('../../Pictures/Component\ Icons.svg') 0% 0% no-repeat padding-box;
+  border: 0px solid white;
+  opacity: 1;
+  position: relative;
+  left: 81px;
+  top: 16px;
+  margin-left: -160px;
+}
+
+.ModalIcons:hover {
+
+  display: none;
+
+}
+
+.ModalIconsStation {
+  width: 160px;
+  height: 33px;
+  background: transparent url('../../Pictures/Component\ Icons.svg') 0% 0% no-repeat padding-box;
+  border: 0px solid white;
+  opacity: 1;
+  position: relative;
+  left: 81px;
+  top: 16px;
+  margin-left: -160px;
+}
+
+.penIcon {
+  height: 16px;
+  width: 16px;
+  background: transparent url('../../Pictures/Ic_pen.svg') 0% 0% no-repeat padding-box;
+  opacity: 1;
+  position: relative;
+  right: -14px;
+  top: -6px;
+  border: none;
+
+}
+
+.penIconStation {
+  height: 16px;
+  width: 16px;
+  background: transparent url('../../Pictures/Ic_pen.svg') 0% 0% no-repeat padding-box;
+  opacity: 1;
+  position: relative;
+  right: 41px;
+  border: none;
+}
+
+.linkIcon {
+  height: 32px;
+  background: transparent url('../../Pictures/ic_link.svg') 0% 0% no-repeat padding-box;
+  opacity: 1;
+  top: 3px;
+  left: 22px;
+  position: relative;
+  width: 27px;
+  border: none;
+}
+
+.duplicateIcon {
+  height: 24px;
+  background: transparent url('../../Pictures/ic_duplicate.svg') 0% 0% no-repeat padding-box;
+  opacity: 1;
+  position: relative;
+  top: -2px;
+  left: 29px;
+  width: 20px;
+  border: none;
+}
+
+.duplicateIconStation {
+  height: 24px;
+  background: transparent url('../../Pictures/ic_duplicate.svg') 0% 0% no-repeat padding-box;
+  opacity: 1;
+  position: relative;
+  top: 5px;
+  left: 41px;
+  width: 20px;
+  border: none;
+}
+
+
+.shareIcon {
+  height: 24px;
+  background: transparent url('../../Pictures/ic_share.svg') 0% 0% no-repeat padding-box;
+  opacity: 1;
+  position: relative;
+  top: -3px;
+  left: 37px;
+  width: 23px;
+  border: none;
+}

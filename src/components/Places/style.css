@@ -36,14 +36,15 @@
   align-items: center;
   align-self: center;
   align-content: center;
+  font-size: large;
 }
 
 .MyRoutesTitle {
   margin-top: 17px;
-  margin-left: 25px;
+  /* margin-left: 25px; */
   position: relative;
   bottom: 10px;
-  font-size: 23px;
+  /* font-size: 23px; */
 }
 
 .eyeIcon {
@@ -158,7 +159,7 @@
 
 .name_of_site_title {
   color: #7A78B7;
-  font-size: 23px;
+  /* font-size: 23px; */
 }
 
 .TitlePlaces {
@@ -169,6 +170,8 @@
   color: #505050;
   opacity: 1;
   margin-top: 25px;
+  text-align: right;
+  font-size: large;
 }
 
 h3 {

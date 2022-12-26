@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import LoginAPI from "./LoginAPI";
 import logo from "../../Pictures/login-logo.svg";
+import userLogo from "../../Pictures/user-logo.png";
+import lockLogo from "../../Pictures/lock-logo.png";
 import "./styleLogin.css";
 import background from "../../Pictures/backgroundLogin.png";
-
 
 let flagLoading = false;
 
@@ -42,14 +43,14 @@ function Login(props) {
         <>
           <div className="App-header" style={myStyle}>
             <div className="box">
-            <div className="logoHeader">
-                  <img
-                    src={logo}
-                    className="App-logo"
-                    alt="logo"
-                    
-                  ></img>
-                </div>
+              <div className="logoHeader">
+                <img
+                  src={logo}
+                  className="App-logo"
+                  alt="logo"
+
+                ></img>
+              </div>
               {/* <p>{props.serverMessage}</p> */}
               <div
                 className="d-flex justify-content-around"
@@ -68,20 +69,43 @@ function Login(props) {
                   </div> */}
                   <div className="p-2">
                     <div className="login">
-                      <input
-                        type="text"
-                        placeholder="שם משתמש"
-                        name="user"
-                        value={loginDetails.user}
-                        onChange={handleChange}
-                      />
-                      <input
-                        type="password"
-                        placeholder="סיסמא"
-                        name="pass"
-                        value={loginDetails.pass}
-                        onChange={handleChange}
-                      />
+                      <div className="input-container">
+
+                        <input
+                          type="text"
+                          placeholder="שם משתמש"
+                          name="user"
+                          value={loginDetails.user}
+                          onChange={handleChange}
+                        />
+                        <div className="img-container">
+
+                          <img
+                            src={userLogo}
+                            className="user-logo"
+                            alt="logo"
+
+                          ></img>
+                        </div>
+                      </div>
+                      <div className="input-container">
+
+                        <input
+                          type="password"
+                          placeholder="סיסמא"
+                          name="pass"
+                          value={loginDetails.pass}
+                          onChange={handleChange}
+                        />
+                        <div className="img-container">
+                          <img
+                            src={lockLogo}
+                            className="lock-logo"
+                            alt="logo"
+
+                          ></img>
+                        </div>
+                      </div>
                       <div className="d-flex justify-content-center">
                         <input
                           type="submit"
@@ -95,7 +119,7 @@ function Login(props) {
                     </div>
                   </div>
                 </div>
-             
+
 
               </div>
             </div>

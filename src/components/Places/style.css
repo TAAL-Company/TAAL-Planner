@@ -172,6 +172,8 @@
   margin-top: 25px;
   text-align: right;
   font-size: large;
+  display: flow-root;
+  padding-right: 4%;
 }
 
 h3 {

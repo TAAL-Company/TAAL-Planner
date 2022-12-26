@@ -42,6 +42,8 @@ const Stations = (props) => {
   const [modalIconsOpen, setModalIconsOpen] = useState(false);
   const [myRouteClick, setMyRouteClick] = useState(0);
   const [characters, updateCharacters] = useState(props.propsData);
+
+  //changing the order of the stations
   function handleOnDragEnd(result) {
     if (!result.destination) return;
 
@@ -51,6 +53,8 @@ const Stations = (props) => {
 
     updateCharacters(items);
   }
+
+
   if (flagFirstTime === true) {
     filteredData = props.propsData;
   }
@@ -74,6 +78,9 @@ const Stations = (props) => {
     );
     // console.log("filtered Data 3:", filteredData)
   };
+  useEffect(() => {
+    console.log("charactersss: ", characters)
+  }, [characters]);
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);

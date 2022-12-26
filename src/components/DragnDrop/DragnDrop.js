@@ -12,6 +12,7 @@ import Tablet from "../Tablet/Tablet";
 import Dot from "../Dot/Dot";
 import Clock from "../Clock/Clock";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Reorder } from '../../functions/Reorder';  // a custom function to reorder the items array
 
 let Route = [];
 let dndArray = [];
@@ -67,6 +68,8 @@ function DragnDrop(props) {
       console.log("element:", element.post_title);
     });
   console.log("props mySite:", props.mySite);
+  console.log("props dragFrom:", props.dragFrom);
+
   // console.log("JSON.parse(localStorage.getItem('New_Routes')):", JSON.parse(localStorage.getItem('New_Routes')))
   // console.log("propsDataTask:", props.propDataTask)
   // nameStation = props.myStation.name
@@ -105,6 +108,10 @@ function DragnDrop(props) {
 
     updateCharacters(items);
   }
+
+  useEffect(() => {
+    console.log("charactersss: ", characters)
+}, [characters]);
 
   // const [, setNameStation] = useState(props.myStation.name);
   // const [, setMarginTop] = useState("");
@@ -163,16 +170,32 @@ function DragnDrop(props) {
   });
   console.log("dndArray check:", dndArray);
   //---------------------------------------------------------
-  const [, drop] = useDrop(() => ({
+  const [{isOver}, drop] = useDrop(() => ({
     accept: "image",
-    drop: (item) => addImageToBoard(item.id),
+    drop(item, monitor) {
+      const itemData = monitor.getItem()
+      // const board = itemData.boardName
+      // const id = itemData.id
+      console.log("item.board: ",itemData.boardName)
+      addImageToBoard(itemData.id ,itemData.boardName )
+    },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
   }));
+  useEffect(() => {
+    console.log('isOver: ', isOver);
+  }, [isOver])
+  useEffect(() => {
+    console.log('drop: ', drop);
+  }, [drop])
   //---------------------------------------------------------
-  const addImageToBoard = (id) => {
-    thisId = id;
+  const addImageToBoard = (id,boardName) => {
+    // thisId = id;
+
+  
+
+
     if (saveTag.props !== undefined) {
       if (saveTag.props.myLastStation === saveTag.props.myStation) {
         setFlagPhoneOne((flagPhoneOne = true));
@@ -196,6 +219,11 @@ function DragnDrop(props) {
         setNameStation((nameStation = props.myStation.name));
         setKavTaskTopMarginTop((kavTaskTopMarginTop = "-7px"));
       }
+    }
+
+    if(boardName === "border"){
+      console.log("item.board: ",boardName)
+      
     }
     setCount(count++);
     // alert(count)
@@ -347,6 +375,7 @@ function DragnDrop(props) {
                     myLastStation={props.myStation.name}
                     count={count}
                     data={tag.data}
+                    dragFromCover ={"TasksCover"}
                   />
                 );
               })}
@@ -405,6 +434,7 @@ function DragnDrop(props) {
                       myMarginTop={"-68px"}
                       myLastStation={props.myStation.name}
                       count={count}
+                      dragFromCover ={"MyTasks"}
                     />
                   );
                 })}
@@ -549,6 +579,8 @@ function DragnDrop(props) {
                           nameStation={tag.nameStation}
                           flagPhone={flagPhone}
                           flagTree={flagTree}
+                          dragFromCover ={"border"}
+                          
                         />
                       ));
                     })}

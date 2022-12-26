@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import LoginAPI from "./LoginAPI";
-import logo from "../../Pictures/logo.jpeg";
+import logo from "../../Pictures/login-logo.svg";
 import "./styleLogin.css";
+import background from "../../Pictures/backgroundLogin.png";
+
+
 let flagLoading = false;
+
 function Login(props) {
   const [, setFlagLoading] = useState(false);
   const [APIDetailsLogin, setAPIDetailsLogin] = useState({
@@ -23,6 +27,10 @@ function Login(props) {
     setAPIDetailsLogin({ ...loginDetails });
     setFlagLoading((flagLoading = true));
   }
+  const myStyle = {
+    backgroundImage: `url(${background})`,
+  }
+
   return (
     <>
       {sessionStorage.logged_in ? (
@@ -32,57 +40,66 @@ function Login(props) {
         </h1>
       ) : (
         <>
-          <header className="App-header">
-            {/* <p>{props.serverMessage}</p> */}
-            <div
-              className="d-flex justify-content-around"
-              onKeyPress={(e) => {
-                e.key === "Enter" && handleSubmit();
-              }}
-            >
-              <div className="d-flex flex-column">
-                <div className="p-2">
-                  <h2
-                    className="Login_Title"
-                    style={{ paddingTop: "7vh", marginLeft: "0.5rem" }}
-                  >
-                    Login
-                  </h2>
+          <div className="App-header" style={myStyle}>
+            <div className="box">
+            <div className="logoHeader">
+                  <img
+                    src={logo}
+                    className="App-logo"
+                    alt="logo"
+                    
+                  ></img>
                 </div>
-                <div className="p-2">
-                  <div className="login">
-                    <input
-                      type="text"
-                      placeholder="User Name"
-                      name="user"
-                      value={loginDetails.user}
-                      onChange={handleChange}
-                    />
-                    <input
-                      type="password"
-                      placeholder="Password"
-                      name="pass"
-                      value={loginDetails.pass}
-                      onChange={handleChange}
-                    />
-                    <div className="d-flex justify-content-center">
+              {/* <p>{props.serverMessage}</p> */}
+              <div
+                className="d-flex justify-content-around"
+                onKeyPress={(e) => {
+                  e.key === "Enter" && handleSubmit();
+                }}
+              >
+                <div className="d-flex flex-column">
+                  {/* <div className="p-2">
+                    <h2
+                      className="Login_Title"
+                      style={{ paddingTop: "7vh", marginLeft: "0.5rem" }}
+                    >
+                      Login
+                    </h2>
+                  </div> */}
+                  <div className="p-2">
+                    <div className="login">
                       <input
-                        type="submit"
-                        onClick={handleSubmit}
-                        value="כניסה"
+                        type="text"
+                        placeholder="שם משתמש"
+                        name="user"
+                        value={loginDetails.user}
+                        onChange={handleChange}
                       />
+                      <input
+                        type="password"
+                        placeholder="סיסמא"
+                        name="pass"
+                        value={loginDetails.pass}
+                        onChange={handleChange}
+                      />
+                      <div className="d-flex justify-content-center">
+                        <input
+                          type="submit"
+                          onClick={handleSubmit}
+                          value="התחברות"
+                        />
+                      </div>
+                      <div className="forgetPassword">
+                        שכחת סיסמא?
+                      </div>
                     </div>
                   </div>
                 </div>
+             
+
               </div>
-              <img 
-                src={logo}
-                className="App-logo"
-                alt="logo"
-                style={{ paddingTop: "4.5%" }}
-              ></img>
             </div>
-          </header>
+          </div>
           <LoginAPI
             APIDetailsLogin={APIDetailsLogin}
             setUsername={props.setUsername}

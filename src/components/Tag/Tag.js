@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDrag } from "react-dnd";
 // import { RiDragMove2Line } from "react-icons/ri";
 import "./style.css";
@@ -31,27 +31,41 @@ function Tag({
   dataImg,
   data,
   modalFlagTablet,
+  dragFromCover
 }) {
   localStorage.setItem("myLastStation", JSON.stringify(myLastStation));
   console.log("title in Tag:", title);
   console.log("myLastStation:", myLastStation);
   console.log("width width width widthwidthwidth:", kavTaskTopMarginTop);
   console.log("myStation:", myStation);
-  console.log("countcountcountcount:", count);
+  console.log("countcountcountcount1:", count);
   console.log("id:", id);
-  console.log("title:", title);
+  console.log("flagBoard:", flagBoard);
+  console.log("nameStation:", nameStation);
+  console.log("borderLeft:", borderLeft);
+  console.log("data:", data);
+
+
+ 
+  
+   
   const [, setIdListen] = useState(0);
   const [, setDataListen] = useState({});
 
   // console.log("flag Tag", flag)
 
-  const [, drag] = useDrag(() => ({
+  const [{isDragging}, drag] = useDrag(() => ({
     type: "image",
-    item: { id: id },
+    item: { id: id , boardName: dragFromCover },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }));
+ console.log("dragFromCover: ", dragFromCover);
+  useEffect(() => {
+    console.log('isDragging: ', isDragging);
+  }, [isDragging])
+
   const listen = () => {
     setIdListen((idListen = idImg));
     setDataListen((dataListen = dataImg));

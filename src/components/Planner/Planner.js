@@ -62,6 +62,8 @@ const Planner = () => {
     // function getName(val) {
     //     setName(val.target.value)
     // }
+
+    /*changing between Hebrew and English */
     const hebrew = () => {
         setHebrew(false);
         setLanguage("עברית");

@@ -2,10 +2,12 @@ import "./style.css";
 import Image from "react-bootstrap/Image";
 let image = "";
 const Images = ({ id, data, flag }) => {
+  console.log("IMAGES");
+  console.log("id image: ", id);
+  console.log("data image: ", data);
+  console.log("flag image: ", flag);
   if (id) {
-    console.log("id image: ", id);
-    console.log("data image: ", data);
-    console.log("flag image: ", flag);
+
 
     for (let index = 0; index < data.length; index++) {
       if (data[index].acf.image)

@@ -51,7 +51,7 @@ const Tablet = (props) => {
                                 key={keyCount}
                                 title={tag.title}
                                 id={tag.id}
-                                idImg={tag.idImg}
+                                // idImg={tag.idImg}
                                 dataImg={tag.dataImg}
                                 idAudio={tag.idAudio}
                                 dataAudio={tag.dataAudio}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState , useEffect } from "react";
 import { useDrag } from "react-dnd";
 // import { RiDragMove2Line } from "react-icons/ri";
 import "./style.css";
@@ -27,7 +27,7 @@ function Tag({
   kavTaskTopMarginTop,
   borderLeft,
   flagPhone,
-  idImg,
+  // idImg,
   dataImg,
   data,
   modalFlagTablet,
@@ -38,17 +38,15 @@ function Tag({
   console.log("myLastStation:", myLastStation);
   console.log("width width width widthwidthwidth:", kavTaskTopMarginTop);
   console.log("myStation:", myStation);
-  console.log("countcountcountcount1:", count);
+  console.log("countcountcountcount:", count);
   console.log("id:", id);
+
   console.log("flagBoard:", flagBoard);
   console.log("nameStation:", nameStation);
   console.log("borderLeft:", borderLeft);
   console.log("data:", data);
+  // console.log("idImg: ", idImg)
 
-
- 
-  
-   
   const [, setIdListen] = useState(0);
   const [, setDataListen] = useState({});
 
@@ -66,10 +64,11 @@ function Tag({
     console.log('isDragging: ', isDragging);
   }, [isDragging])
 
+
   const listen = () => {
-    setIdListen((idListen = idImg));
+    setIdListen((idListen = id));
     setDataListen((dataListen = dataImg));
-    // console.log("dataListen:", dataListen)
+    console.log("dataListen:", dataListen)
   };
   const listenMyStation = () => {
     data.forEach((val) => {
@@ -126,7 +125,7 @@ function Tag({
             <div className="nameOfTaskPhone">
               {" "}
               {title}
-              <Images id={idImg} data={dataImg} />
+              <Images id={id} data={dataImg} />
             </div>
           </div>
           <button className="listenIcon" onClick={() => listen()}></button>
@@ -159,7 +158,7 @@ function Tag({
       {flagBoard && modalFlagTablet && !flagPhone ? (
         <>
           <div className="ItemStyle">
-            <Images id={idImg} data={dataImg} flag={true} />
+            <Images id={id} data={dataImg} flag={true} />
           </div>
         </>
       ) : (

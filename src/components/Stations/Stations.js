@@ -253,42 +253,42 @@ const Stations = (props) => {
                                 index={index}
                               >
                                 {(provided) => (
-                                  <p
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                  >
                                     <div
-                                      className="buttons"
-                                      onClick={() =>
-                                        Display_The_Tasks(id, name)
-                                      }
-                                      key={index}
+                                      ref={provided.innerRef}
+                                      {...provided.draggableProps}
+                                      {...provided.dragHandleProps}
                                     >
-                                      {/* <BsThreeDotsVertical
+                                      <div
+                                        className="buttons"
+                                        onClick={() =>
+                                          Display_The_Tasks(id, name)
+                                        }
+                                        key={index}
+                                      >
+                                        {/* <BsThreeDotsVertical
                                         className="threeDotsVerticalEng"
                                         onClick={() =>
                                           clickOnhreeDotsVerticaIcont(id, name)
                                         }
                                       /> */}
-                                      {myRouteClick === id ? (
-                                        <>
-                                          {modalIconsOpen && (
-                                            <ModalIcons
-                                              setOpenModalPlaces={
-                                                setModalIconsOpen
-                                              }
-                                              myCategory={myCategory}
-                                            />
-                                          )}
-                                        </>
-                                      ) : (
-                                        <></>
-                                      )}
-                                      <h3 className="nameOfButton">{name}</h3>
-                                      {/* <Dot color="#F2AE69" /> */}
-                                    </div>
-                                  </p>
+                                        {myRouteClick === id ? (
+                                          <>
+                                            {modalIconsOpen && (
+                                              <ModalIcons
+                                                setOpenModalPlaces={
+                                                  setModalIconsOpen
+                                                }
+                                                myCategory={myCategory}
+                                              />
+                                            )}
+                                          </>
+                                        ) : (
+                                          <></>
+                                        )}
+                                        <h3 className="nameOfButton">{name}</h3>
+                                        {/* <Dot color="#F2AE69" /> */}
+                                      </div>
+                                    </div>             
                                 )}
                               </Draggable>
                             );

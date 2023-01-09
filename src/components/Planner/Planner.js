@@ -169,7 +169,7 @@ const Planner = () => {
                                 </div>
 
                                 {modalOpen && <Modal setOpenModal={setModalOpen} setText={get_Name} />}
-                                <div>
+                                <div className="warpper">
                                     <Places setFloatLang={floatLan} sites={sites} stations={stations} myTasks={myTasks} drag={drag}
                                         addSite={addSite} addStation={addStation} addMyTask={addMyTask} titlePlacesCss={titlePlacesCss}
                                         titleStationCss={titleStationCss} titleTaskCss={titleTaskCss} flagHebrew={flagHebrew} />

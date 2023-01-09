@@ -164,7 +164,7 @@ function DragnDrop(props) {
       bottom: bottom,
       kavTopWidth: kavTopWidth,
       newkavTaskTop: newkavTaskTop,
-      idImg: thisId,
+      // idImg: thisId,
       dataImg: saveProps.propDataTask,
     };
   });
@@ -368,7 +368,7 @@ function DragnDrop(props) {
                     title={tag.title}
                     id={tag.id}
                     key={tag.id}
-                    idImg={tag.idImg}
+                    // idImg={tag.id}
                     dataImg={tag.dataImg}
                     flagBoard={false}
                     myStation={tag.myStation}
@@ -421,10 +421,11 @@ function DragnDrop(props) {
               <div className="MyTasks">
                 {props.mySite.name}
                 {board.map((tag, keyCount) => {
+                  // console.log("tag.idImg1: ", tag.idImg);
                   return (
                     <Tag
                       title={tag.title}
-                      idImg={tag.idImg}
+                      // idImg={tag.id}
                       data={tag.data}
                       dataImg={tag.dataImg}
                       id={tag.id}
@@ -554,13 +555,14 @@ function DragnDrop(props) {
                       <></>
                     )}
                     {board.map((tag, keyCount) => {
+                      console.log("tag.id: ", tag.id);
                       return (saveTag = (
                         <Tag
                           modalFlagTablet={modalFlagTablet}
                           title={tag.title}
                           id={tag.id}
                           data={tag.data}
-                          idImg={tag.idImg}
+                          // idImg={tag.id}
                           dataImg={tag.dataImg}
                           key={keyCount}
                           flagBoard={true}

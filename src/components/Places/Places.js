@@ -379,7 +379,7 @@ const Places = (props) => {
             </>
           ) : (
             <>
-              {/* routs */}
+              {/* routes */}
 
               {modalOpen && (
                 <Modal
@@ -408,10 +408,11 @@ const Places = (props) => {
                     >
                       <h3 className="TitlePlaces">
                         <div className="MyRoutesTitle">
-                          מסלולים ב{" "}
+                          {/* מסלולים ב{" "}
                           <span className="name_of_site_title">
                             {mySite.name}
-                          </span>
+                          </span> */}
+                          מסלולים
                         </div>
                       </h3>
                     </div>

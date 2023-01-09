@@ -63,10 +63,18 @@ const finalSpaceCharacters = [
 
 //-------------------------
 function DragnDrop(props) {
-  if (props.tasksOfRoutes && props.tasksOfRoutes.acf)
+
+  const [board, setBoard] = useState([]);
+
+  if (props.tasksOfRoutes && props.tasksOfRoutes.acf) {
     props.tasksOfRoutes.acf.tasks.forEach((element) => {
       console.log("element:", element.post_title);
     });
+    console.log("tasksOfRoutes: ", props.tasksOfRoutes);
+    console.log("board: ", board);
+    // setBoard((board) => [...board, ]);
+  }
+
   console.log("props mySite:", props.mySite);
   console.log("props dragFrom:", props.dragFrom);
 
@@ -80,7 +88,7 @@ function DragnDrop(props) {
   const [, setModalFlagTablet] = useState(false);
 
   // const [, setHelpFlag] = useState(false);
-  const [board, setBoard] = useState([]);
+
   const [, setCount] = useState(0);
   const [get_Name] = useState(null); // for TextView
   const [, setFlagTree] = useState(true);
@@ -111,7 +119,7 @@ function DragnDrop(props) {
 
   useEffect(() => {
     console.log("charactersss: ", characters)
-}, [characters]);
+  }, [characters]);
 
   // const [, setNameStation] = useState(props.myStation.name);
   // const [, setMarginTop] = useState("");
@@ -141,7 +149,47 @@ function DragnDrop(props) {
     fetchData();
   }, []);
   saveProps = props;
-  // console.log("props,", saveProps.propDataTask)
+
+  useEffect(() => {
+
+    if(props.tasksOfRoutes && props.tasksOfRoutes.acf ){
+    console.log("props.tasksOfRoutes ", props.tasksOfRoutes)
+    let temp = props.tasksOfRoutes.acf.tasks;
+
+    console.log("temp: ", temp)
+
+    props.tasksOfRoutes.acf.tasks.forEach((element) => {
+
+      setBoard((board) => [...board, {
+        id: element.ID,
+        title: element.post_title
+          .replace("&#8211;", "-")
+          .replace("&#8217;", "' "),
+        mySite: props.mySite,
+        myStation: props.tasksOfRoutes.title.rendered,
+        data: props.myStation.data,
+        nameStation: props.tasksOfRoutes.title.rendered,
+        width: width,
+        borderLeft: borderLeft,
+        height: height,
+        kavTaskTopMarginTop: kavTaskTopMarginTop,
+        bottom: bottom,
+        kavTopWidth: kavTopWidth,
+        newkavTaskTop: newkavTaskTop,
+        // idImg: thisId,
+        dataImg: saveProps.propDataTask,
+      }]);
+
+      setCount(count++);
+    }
+    )
+
+    console.log("board1: ", board)
+  }
+
+  }, [props.tasksOfRoutes])
+
+
   // alert("hi")
   dndArray = props.propDataTask.map((element) => {
     if (count1 === 0) {
@@ -170,14 +218,14 @@ function DragnDrop(props) {
   });
   console.log("dndArray check:", dndArray);
   //---------------------------------------------------------
-  const [{isOver}, drop] = useDrop(() => ({
+  const [{ isOver }, drop] = useDrop(() => ({
     accept: "image",
     drop(item, monitor) {
       const itemData = monitor.getItem()
       // const board = itemData.boardName
       // const id = itemData.id
-      console.log("item.board: ",itemData.boardName)
-      addImageToBoard(itemData.id ,itemData.boardName )
+      console.log("item.board: ", itemData.boardName)
+      addImageToBoard(itemData.id, itemData.boardName)
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
@@ -190,10 +238,10 @@ function DragnDrop(props) {
     console.log('drop: ', drop);
   }, [drop])
   //---------------------------------------------------------
-  const addImageToBoard = (id,boardName) => {
+  const addImageToBoard = (id, boardName) => {
     // thisId = id;
 
-  
+
 
 
     if (saveTag.props !== undefined) {
@@ -221,9 +269,9 @@ function DragnDrop(props) {
       }
     }
 
-    if(boardName === "border"){
-      console.log("item.board: ",boardName)
-      
+    if (boardName === "border") {
+      console.log("item.board: ", boardName)
+
     }
     setCount(count++);
     // alert(count)
@@ -322,7 +370,7 @@ function DragnDrop(props) {
                 dir="rtl"
                 placeholder="חפש משימה"
                 label={<CgSearch style={{ fontSize: "x-large" }} />}
-                // onChange={inputHandler}
+              // onChange={inputHandler}
               ></input>
             </div>
           </>
@@ -353,7 +401,7 @@ function DragnDrop(props) {
                 className="searchButton"
                 dir="rtl"
                 label={<CgSearch style={{ fontSize: "x-large" }} />}
-                // onChange={inputHandler}
+              // onChange={inputHandler}
               ></input>
             </div>
           </>
@@ -363,22 +411,22 @@ function DragnDrop(props) {
           {dndArray.length === 0
             ? null
             : dndArray.map((tag) => {
-                return (
-                  <Tag
-                    title={tag.title}
-                    id={tag.id}
-                    key={tag.id}
-                    // idImg={tag.id}
-                    dataImg={tag.dataImg}
-                    flagBoard={false}
-                    myStation={tag.myStation}
-                    myLastStation={props.myStation.name}
-                    count={count}
-                    data={tag.data}
-                    dragFromCover ={"TasksCover"}
-                  />
-                );
-              })}
+              return (
+                <Tag
+                  title={tag.title}
+                  id={tag.id}
+                  key={tag.id}
+                  // idImg={tag.id}
+                  dataImg={tag.dataImg}
+                  flagBoard={false}
+                  myStation={tag.myStation}
+                  myLastStation={props.myStation.name}
+                  count={count}
+                  data={tag.data}
+                  dragFromCover={"TasksCover"}
+                />
+              );
+            })}
         </div>
         <div className="addTaskCover">
           <button
@@ -435,7 +483,7 @@ function DragnDrop(props) {
                       myMarginTop={"-68px"}
                       myLastStation={props.myStation.name}
                       count={count}
-                      dragFromCover ={"MyTasks"}
+                      dragFromCover={"MyTasks"}
                     />
                   );
                 })}
@@ -527,7 +575,7 @@ function DragnDrop(props) {
                           {props.mySite.name}
                           &nbsp;&nbsp;{" "}
                         </div>
-                        {props.tasksOfRoutes && props.tasksOfRoutes.acf ? (
+                        {/* {props.tasksOfRoutes && props.tasksOfRoutes.acf ? (
                           <>
                             {props.tasksOfRoutes.acf.tasks.map(
                               (element, keyCount) => {
@@ -549,7 +597,7 @@ function DragnDrop(props) {
                           </>
                         ) : (
                           <></>
-                        )}
+                        )} */}
                       </>
                     ) : (
                       <></>
@@ -581,8 +629,8 @@ function DragnDrop(props) {
                           nameStation={tag.nameStation}
                           flagPhone={flagPhone}
                           flagTree={flagTree}
-                          dragFromCover ={"border"}
-                          
+                          dragFromCover={"border"}
+
                         />
                       ));
                     })}
@@ -599,67 +647,71 @@ function DragnDrop(props) {
                 ) : (
                   <>
                     {/* flagPhone */}
-                    {flagPhone ? (
-                      <>
-                        {props.tasksOfRoutes && props.tasksOfRoutes.acf ? (
-                          <>
-                            <div className="phoneCover">
-                              <div className="phoneHeaderCover">
-                                <div className="hederPhone">
-                                  <button
-                                    className="stress"
-                                    onClick={() => stressFun()}
-                                  ></button>
-                                  <div className="cellInfo"></div>
-                                  <Dot className="Dotcamera" color="#2f2f2f" />
-                                  <div className="clock">
-                                    <Clock />
+                    {
+                      flagPhone ? (
+                        <>
+                          {/* {props.tasksOfRoutes && props.tasksOfRoutes.acf ? ( */}
+                            {/* <>
+                              <div className="phoneCover">
+                                <div className="phoneHeaderCover">
+                                  <div className="hederPhone">
+                                    <button
+                                      className="stress"
+                                      onClick={() => stressFun()}
+                                    ></button>
+                                    <div className="cellInfo"></div>
+                                    <Dot className="Dotcamera" color="#2f2f2f" />
+                                    <div className="clock">
+                                      <Clock />
+                                    </div>
                                   </div>
                                 </div>
+                                {board.map(
+                                  (element, keyCount) => {
+                                    //שליחת המסלול
+                                    return (
+                                      <Tag
+                                        key={keyCount}
+                                        title={element.title}
+                                        id={element.id}
+                                        flagBoard={true}
+                                        myLastStation={element.myStation}
+                                        myMarginTop={"-68px"}
+                                        count={count}
+                                        flagTree={flagTree}
+                                        flagPhone={flagPhone}
+                                      />
+                                    );
+                                  }
+                                )}
                               </div>
-                              {props.tasksOfRoutes.acf.tasks.map(
-                                (element, keyCount) => {
-                                  //שליחת המסלול
-                                  return (
-                                    <Tag
-                                      key={keyCount}
-                                      title={element.post_title}
-                                      id={element.ID}
-                                      flagBoard={true}
-                                      myLastStation={props.myStation.name}
-                                      myMarginTop={"-68px"}
-                                      count={count}
-                                      flagTree={flagTree}
-                                      flagPhone={flagPhone}
-                                    />
-                                  );
-                                }
-                              )}
-                            </div>
-                          </>
-                        ) : (
-                          <>
-                            <Phone
-                              modalFlagTablet={modalFlagTablet}
-                              flagPhone={flagPhone}
-                              board={board}
-                              saveTag={saveTag}
-                              count={count}
-                              myStation={props.myStation}
-                              flagTree={flagTree}
-                              flagStress={flagStress}
-                              mySite={props.mySite}
-                            />
-                          </>
-                        )}
+                            </> */}
+                          {/* ) 
+                        
+                            : (*/}
+                              <>
+                                <Phone
+                                  modalFlagTablet={modalFlagTablet}
+                                  flagPhone={flagPhone}
+                                  board={board}
+                                  saveTag={saveTag}
+                                  count={count}
+                                  myStation={props.myStation}
+                                  flagTree={flagTree}
+                                  flagStress={flagStress}
+                                  mySite={props.mySite}
+                                />
+                              </>
+                        {/*    ) */}
+                          {/* } */}
 
-                        {/* --------------------------------------------------- */}
+                          {/* --------------------------------------------------- */}
 
-                        {/* --------------------------------------------------- */}
-                      </>
-                    ) : (
-                      <>
-                        {/* {modalFlagTablet ? <>
+                          {/* --------------------------------------------------- */}
+                        </>
+                      ) : (
+                        <>
+                          {/* {modalFlagTablet ? <>
                                                 <Tablet
                                                     flagPhone={flagPhone}
                                                     board={board}
@@ -671,25 +723,25 @@ function DragnDrop(props) {
                                                     mySite={props.mySite} />
 
                                             </> : <></>} */}
-                        {modalFlagTablet ? (
-                          <>
-                            <Tablet
-                              modalFlagTablet={modalFlagTablet}
-                              flagPhone={flagPhone}
-                              board={board}
-                              saveTag={saveTag}
-                              count={count}
-                              myStation={props.myStation}
-                              flagTree={flagTree}
-                              flagStress={flagStress}
-                              mySite={props.mySite}
-                            />
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                      </>
-                    )}
+                          {modalFlagTablet ? (
+                            <>
+                              <Tablet
+                                modalFlagTablet={modalFlagTablet}
+                                flagPhone={flagPhone}
+                                board={board}
+                                saveTag={saveTag}
+                                count={count}
+                                myStation={props.myStation}
+                                flagTree={flagTree}
+                                flagStress={flagStress}
+                                mySite={props.mySite}
+                              />
+                            </>
+                          ) : (
+                            <></>
+                          )}
+                        </>
+                      )}
                   </>
                 )}
               </div>

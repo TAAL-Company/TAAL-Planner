@@ -7,7 +7,7 @@ const Tasks_comp = (props) => {
     // console.log("mySite TaskComp:", props.mySite)
 
     console.log("Task AllStation in:", props.allStations)
-    // console.log("flot task comp:", props.language)
+    console.log("props.propsDataTask task comp:", props.propsDataTask)
    
     return (
         <>

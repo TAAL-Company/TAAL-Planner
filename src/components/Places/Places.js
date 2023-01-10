@@ -14,6 +14,8 @@ import { AiOutlinePlus } from "react-icons/ai";
 // import Dot from "../Dot/Dot";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { CgSearch } from "react-icons/cg";
+import textArea from '../../Pictures/textArea.svg'
+
 
 // const { baseUrl } = require
 //-----------------------
@@ -162,9 +164,9 @@ const Places = (props) => {
     console.log("e", e);
 
     setTasksOfRoutes((tasksOfRoutes = e));
-    // console.log("check value routes:", tasksOfRoutes);
+    console.log("check value routes:", tasksOfRoutes);
     setFlagButtonRoute((flagRoute = true));
-    // console.log("check value routes:", tasksOfRoutes.acf.tasks);
+    console.log("check value routes:", tasksOfRoutes.acf.tasks);
   };
   const handleSelectChange = (event) => {
     const selectedValue = JSON.parse(event.target.value);
@@ -477,7 +479,7 @@ const Places = (props) => {
               </div>
               <div className="routs">
                 {filteredDataRouts.length === 0
-                  ? <div className="textBeforeStation">אחרי בחירת האתר, בעמודה זו יופיעו המסלולים הקיימים בו</div>
+                  ? <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>אחרי בחירת האתר, בעמודה זו יופיעו המסלולים הקיימים בו.</div>
                   : filteredDataRouts.map((value, index) => {
                     return (
                       <div

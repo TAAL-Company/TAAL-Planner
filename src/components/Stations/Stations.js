@@ -14,6 +14,7 @@ import { CgSearch } from "react-icons/cg";
 import "@fontsource/assistant";
 import ModalIcons from "../Modal/Modal_Icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import textArea from '../../Pictures/textArea.svg'
 
 //-----------------------
 let allTasks = [];
@@ -188,7 +189,7 @@ const Stations = (props) => {
               <>
                 <div
                   className="TitleStation"
-                 
+
                 >
                   {/* <BsThreeDotsVertical className='threeDotsVertical' /> */}
                   <div className="MyTitle text"> {props.stationsName}</div>
@@ -198,7 +199,7 @@ const Stations = (props) => {
               <>
                 <div
                   className="TitleStation"
-                 
+
                 >
                   <h3>
                     &nbsp;&nbsp;&nbsp;
@@ -227,7 +228,7 @@ const Stations = (props) => {
               ></input>
             </div>
             <div className="Stations">
-              {props.clickAddRoute ? ( //DND
+              {characters.length > 0  ? ( //DND
                 <>
                   <DragDropContext onDragEnd={handleOnDragEnd}>
                     <Droppable droppableId="characters">
@@ -248,42 +249,42 @@ const Stations = (props) => {
                                 index={index}
                               >
                                 {(provided) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                  >
                                     <div
-                                      ref={provided.innerRef}
-                                      {...provided.draggableProps}
-                                      {...provided.dragHandleProps}
+                                      className="buttons"
+                                      onClick={() =>
+                                        Display_The_Tasks(id, name)
+                                      }
+                                      key={index}
                                     >
-                                      <div
-                                        className="buttons"
-                                        onClick={() =>
-                                          Display_The_Tasks(id, name)
-                                        }
-                                        key={index}
-                                      >
-                                        {/* <BsThreeDotsVertical
+                                      {/* <BsThreeDotsVertical
                                         className="threeDotsVerticalEng"
                                         onClick={() =>
                                           clickOnhreeDotsVerticaIcont(id, name)
                                         }
                                       /> */}
-                                        {myRouteClick === id ? (
-                                          <>
-                                            {modalIconsOpen && (
-                                              <ModalIcons
-                                                setOpenModalPlaces={
-                                                  setModalIconsOpen
-                                                }
-                                                myCategory={myCategory}
-                                              />
-                                            )}
-                                          </>
-                                        ) : (
-                                          <></>
-                                        )}
-                                        <h3 className="nameOfButton">{name}</h3>
-                                        {/* <Dot color="#F2AE69" /> */}
-                                      </div>
-                                    </div>             
+                                      {myRouteClick === id ? (
+                                        <>
+                                          {modalIconsOpen && (
+                                            <ModalIcons
+                                              setOpenModalPlaces={
+                                                setModalIconsOpen
+                                              }
+                                              myCategory={myCategory}
+                                            />
+                                          )}
+                                        </>
+                                      ) : (
+                                        <></>
+                                      )}
+                                      <h3 className="nameOfButton">{name}</h3>
+                                      {/* <Dot color="#F2AE69" /> */}
+                                    </div>
+                                  </div>
                                 )}
                               </Draggable>
                             );
@@ -322,7 +323,7 @@ const Stations = (props) => {
                   })} */}
                 </>
               ) : (
-                <div className="textBeforeStation">אחרי בחירת המסלול, בעמודה זו יופיעו התחנות הקיימות בה.</div>
+                <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>אחרי בחירת המסלול, בעמודה זו יופיעו התחנות הקיימות בו.</div>
               )}
             </div>
             <div className="addStationCover">

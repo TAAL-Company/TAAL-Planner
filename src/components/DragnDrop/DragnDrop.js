@@ -13,6 +13,8 @@ import Dot from "../Dot/Dot";
 import Clock from "../Clock/Clock";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { Reorder } from '../../functions/Reorder';  // a custom function to reorder the items array
+import textArea from '../../Pictures/textArea.svg'
+
 
 let Route = [];
 let dndArray = [];
@@ -177,17 +179,22 @@ function DragnDrop(props) {
           kavTopWidth: kavTopWidth,
           newkavTaskTop: newkavTaskTop,
           // idImg: thisId,
-          dataImg: saveProps.propDataTask,
+          dataImg: props.propDataTask,
         }]);
 
         setCount(count++);
       }
       )
 
-      console.log("board1: ", board)
+      
     }
 
   }, [props.tasksOfRoutes])
+
+  useEffect(() => {
+    console.log("board1: ", board)
+  }, [board])
+  
 
 
   // alert("hi")
@@ -408,7 +415,7 @@ function DragnDrop(props) {
         {/* המשימות */}
         <div className="TasksCover">
           {dndArray.length === 0
-            ? <div className="textBeforeStation">אחרי בחירת התחנה, בעמודה זו יופיעו המשימות הקיימות בה.</div>
+            ? <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>אחרי בחירת התחנה, בעמודה זו יופיעו המשימות הקיימות בה.</div>
             : dndArray.map((tag) => {
               return (
                 <Tag

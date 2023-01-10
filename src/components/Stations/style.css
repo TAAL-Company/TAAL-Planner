@@ -20,10 +20,17 @@
   padding-bottom: 1px;
   border-radius: 4px 0px 4px 0px;
 }
-.textBeforeStation{
+
+.textBeforeStation {
   text-align: center;
   direction: rtl;
+  height: 175px;
+  background: transparent 0% 0% no-repeat padding-box;
+  /* width: 80%; */
+  padding: 38px;
+  padding-top: 69px;
 }
+
 .Station:focus {
   background: linear-gradient(90deg, #fffbf7 0, #efe3d6);
   transition: 0.4s;

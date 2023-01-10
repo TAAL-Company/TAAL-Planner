@@ -40,6 +40,7 @@ function Tag({
   console.log("myStation:", myStation);
   console.log("countcountcountcount:", count);
   console.log("id:", id);
+  console.log("image data tag: ",dataImg)
 
   console.log("flagBoard:", flagBoard);
   console.log("nameStation:", nameStation);

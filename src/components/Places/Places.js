@@ -60,6 +60,9 @@ const Places = (props) => {
   const [, setFlagButtonRoute] = useState(false);
   const [, setTasksOfRoutes] = useState([]);
   const [, setFlagTest] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [isFirstSelection, setIsFirstSelection] = useState(false);
+
 
   // const [, setMyCategory] = useState("place")
   let inputHandler = (e) => {
@@ -163,17 +166,28 @@ const Places = (props) => {
     setFlagButtonRoute((flagRoute = true));
     // console.log("check value routes:", tasksOfRoutes.acf.tasks);
   };
-  const Display_The_Stations = (e) => {
+  const handleSelectChange = (event) => {
+    const selectedValue = JSON.parse(event.target.value);
+    Display_The_Stations(selectedValue);
+    setModalVisible(true);
+  }
+
+  const Display_The_Stations = (selectedValue) => {
+
+    // const selectedValue = JSON.parse(event.target.value);
+
     setFlagRoute((flagRoute = true));
-    setThisIdTask((thisIdTask = e.id));
+    setThisIdTask((thisIdTask = selectedValue.id));
     if (stationArray.length > 0) {
       stationArray = [];
     }
-    setMySite((mySite.name = e.name));
-    setMySite((mySite.id = e.id));
-    // console.log("val:", e);
+    setMySite((mySite.name = selectedValue.name));
+    setMySite((mySite.id = selectedValue.id));
+
+    console.log("val:", selectedValue);
+
     Places_and_their_stations.forEach((element) => {
-      if (element.parent.id === e.id) {
+      if (element.parent.id === selectedValue.id) {
         element.related.forEach((rel) => {
           setStateStation({ data: stationArray.push(rel) });
         });
@@ -225,12 +239,47 @@ const Places = (props) => {
     setFlagTest((flagTest = true));
     setModalOpen(true);
   };
+
+  useEffect(() => {
+    console.log("filteredData: ", filteredData)
+  }, [filteredData])
+
   //----------------------------------------------------------------------
   return (
-    <>
-      {!done ? (
+    <> <div className="Places">
+      <div className="placesTitle">באיזה אתר ברצונך לבנות מסלול?</div>
+      <select defaultValue={'DEFAULT'} onChange={handleSelectChange}>
+        <option value="DEFAULT" disabled>אתר</option>
+
+        {filteredData.map((value, index) => {
+          return (
+            <option
+              // className="buttons"
+              // onClick={() => Display_The_Stations(value)}
+              key={index}
+              value={JSON.stringify(value)}
+            >
+              {/* <div className='penIcon' ></div>
+                              <div className='eyeIcon' ></div> */}
+              {/* <BsThreeDotsVertical
+            className="threeDotsVerticalEng"
+            //        setModalOpen(true)
+            onClick={() => clickOnhreeDotsVerticaIcont(value)}
+          /> */}
+              {/* <div className="nameOfButton text"> */}
+              {value.name}
+              {/* </div> */}
+              {/* <Dot color="rgb(161, 147, 229)" /> */}
+              {/* <Dot color={'#7A78B7 '} /> */}
+            </option >
+          );
+        })}
+      </select>
+    </div>
+      <div className="mainRectangles">
+        {/* {!done ? ( */}
         <>{/* {<ModalLoading />} */}</>
-      ) : (
+        {/* // ) : ( */}
         <>
           {/* <DragDropContext onDragEnd={handleOnDragEnd}>
             <Droppable droppableId="characters">
@@ -263,194 +312,173 @@ const Places = (props) => {
               )}
             </Droppable>
           </DragDropContext> */}
-          {!flagRoute ? (
-            <>
-              {modalOpen && <ModalPlaces setOpenModalPlaces={setModalOpen} />}
-              {modalIconsOpen && (
-                <ModalIcons
-                  setOpenModalPlaces={setModalIconsOpen}
-                  myCategory={myCategory}
-                />
-              )}
-              <div
-                className="Cover_Places"
-                style={{
-                  float: props.setFloatLang,
-                  padding: "2%",
-                  marginRight: "7%",
-                  // marginleft: "7%"
-                }}
-              >
-                {!props.flagHebrew ? (
-                  <>
-                    {" "}
-                    <div
-                      className="TitlePlacesCover"
-                      style={{
-                        background: props.titlePlacesCss,
-                      }}
-                    >
-                      {/* <BsThreeDotsVertical className='threeDotsVertical' /> */}
-                      <div className="MyTitle text">{props.sites}</div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div
-                      className="TitlePlacesCover"
-                      style={{
-                        background: props.titlePlacesCss,
-                      }}
-                    >
-                      <h3 className="TitlePlaces">
-                        &nbsp;&nbsp;&nbsp;
-                        <div className="MyTitle">{props.sites}</div>
-                        {/* <BsThreeDotsVertical className='threeDotsVerticalEng' /> */}
-                      </h3>
-                    </div>
-                  </>
+          {/* {!flagRoute ? ( */}
+          <>
+            {/* {modalOpen && <ModalPlaces setOpenModalPlaces={setModalOpen} />}
+                {modalIconsOpen && (
+                  <ModalIcons
+                    setOpenModalPlaces={setModalIconsOpen}
+                    myCategory={myCategory}
+                  />
                 )}
                 <div
-                  className="search"
+                  className="Cover_Places"
                   style={{
-                    backgroundColor: "#7A78B71F",
-                    borderStyle: "none none solid none",
-                    borderColor: "#fff",
-                    borderWidth: "5px",
+                    float: props.setFloatLang,
+                    padding: "2%",
+                    // marginRight: "7%",
+                    // marginleft: "7%"
                   }}
                 >
-                  <input
-                    className="searchButton"
-                    dir="rtl"
-                    placeholder="חפש אתר"
-                    label={<CgSearch style={{ fontSize: "x-large" }} />}
-                    onChange={inputHandler}
-                  ></input>
-                </div>
-                <div className="Places">
-                  {filteredData.map((value, index) => {
-                    return (
-                      <button
-                        className="buttons"
-                        onClick={() => Display_The_Stations(value)}
-                        key={index}
+                  {!props.flagHebrew ? (
+                    <>
+                      {" "}
+                      <div
+                        className="TitlePlacesCover"
+
                       >
-                        {/* <div className='penIcon' ></div>
-                                            <div className='eyeIcon' ></div> */}
-                        <BsThreeDotsVertical
-                          className="threeDotsVerticalEng"
-                          //        setModalOpen(true)
-                          onClick={() => clickOnhreeDotsVerticaIcont(value)}
-                        />
-                        <div className="nameOfButton text">{value.name}</div>
-                        {/* <Dot color="rgb(161, 147, 229)" /> */}
-                        {/* <Dot color={'#7A78B7 '} /> */}
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="addPlaceCover">
-                  <button
-                    className="AddButton"
-                    onClick={() => {
-                      setModalOpen(true);
+                        {/* <BsThreeDotsVertical className='threeDotsVertical' /> */}
+            {/*  <div className="MyTitle text">{props.sites}</div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div
+                        className="TitlePlacesCover"
+                      // style={{
+                      //   background: props.titlePlacesCss,
+                      // }}
+                      >
+                        <h3 className="TitlePlaces">
+                          &nbsp;&nbsp;&nbsp;
+                          <div className="MyTitle">{props.sites}</div>
+                          {/* <BsThreeDotsVertical className='threeDotsVerticalEng' /> */}
+            {/*  </h3>
+                      </div>
+                    </>
+                  )}
+                  <div
+                    className="search"
+                    style={{
+                      backgroundColor: "#F5F5F5",
+                      // borderStyle: "none none solid none",
+                      // borderColor: "#fff",
+                      // borderWidth: "5px",
                     }}
                   >
-                    <AiOutlinePlus className="plus" />
-                  </button>
-                </div>
-              </div>
-              <Stations
-                propsData={stationArray}
-                idTask={thisIdTask}
-                allStations={onlyAllStation}
-                language={props}
-                stationsName={props.stations}
-                myTasks={props.myTasks}
-                drag={props.drag}
-                addStation={props.addStation}
-                addMyTask={props.addMyTask}
-                titleStationCss={props.titleStationCss}
-                titleTaskCss={props.titleTaskCss}
-                mySite={mySite}
-                flagHebrew={props.flagHebrew}
-                clickAddRoute={clickAddRoute}
-              />
-            </>
-          ) : (
-            <>
-              {/* routes */}
+                    <input
+                      className="searchButton"
+                      dir="rtl"
+                      placeholder="חפש אתר"
+                      label={<CgSearch style={{ fontSize: "x-large" }} />}
+                      onChange={inputHandler}
+                    ></input>
+                  </div>
 
-              {modalOpen && (
-                <Modal
-                  setOpenModal={setModalOpen}
-                  setFlagStudent={setFlagStudent}
-                  flagTest={flagTest}
-                />
-              )}
-              <div
-                className="Cover_Places"
-                style={{
-                  float: props.setFloatLang,
-                  padding: "2%",
-                  marginRight: "7%",
-                }}
-              >
-                {!props.flagHebrew ? (
-                  <>
-                    {" "}
-                    <div
-                      className="TitlePlacesCover"
-                      style={{
-                        background:
-                          "linear-gradient(90deg,  #256FA11F  95%, #679abd 1%)",
+                  <div className="addPlaceCover">
+                    <button
+                      className="AddButton"
+                      onClick={() => {
+                        setModalOpen(true);
                       }}
                     >
-                      <h3 className="TitlePlaces">
-                        <div className="MyRoutesTitle">
-                          {/* מסלולים ב{" "}
+                      <AiOutlinePlus className="plus" />
+                    </button>
+                  </div>
+                </div>
+                <Stations
+                  propsData={stationArray}
+                  idTask={thisIdTask}
+                  allStations={onlyAllStation}
+                  language={props}
+                  stationsName={props.stations}
+                  myTasks={props.myTasks}
+                  drag={props.drag}
+                  addStation={props.addStation}
+                  addMyTask={props.addMyTask}
+                  titleStationCss={props.titleStationCss}
+                  titleTaskCss={props.titleTaskCss}
+                  mySite={mySite}
+                  flagHebrew={props.flagHebrew}
+                  clickAddRoute={clickAddRoute}
+                /> */}
+          </>
+          {/* ) : ( */}
+          <>
+            {/* routes */}
+
+            {modalOpen && (
+              <Modal
+                setOpenModal={setModalOpen}
+                setFlagStudent={setFlagStudent}
+                flagTest={flagTest}
+              />
+            )}
+            <div
+              className="Cover_Places"
+              style={{
+                float: props.setFloatLang,
+                padding: "2%",
+
+              }}
+            >
+              {!props.flagHebrew ? (
+                <>
+                  {" "}
+                  <div
+                    className="TitlePlacesCover"
+                  // style={{
+                  //   background:
+                  //     "linear-gradient(90deg,  #256FA11F  95%, #679abd 1%)",
+                  // }}
+                  >
+                    <h3 className="TitlePlaces">
+                      <div className="MyRoutesTitle">
+                        {/* מסלולים ב{" "}
                           <span className="name_of_site_title">
                             {mySite.name}
                           </span> */}
-                          מסלולים
-                        </div>
-                      </h3>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div
-                      className="TitlePlacesCover"
-                      style={{
-                        background: props.titlePlacesCss,
-                      }}
-                    >
-                      <h3 className="TitlePlaces">
-                        &nbsp;&nbsp;&nbsp;
-                        <div className="MyTitle">{props.sites}</div>
-                      </h3>
-                    </div>
-                  </>
-                )}
-                <div
-                  className="search"
-                  style={{
-                    backgroundColor: "#256FA11F",
-                    borderStyle: "none none solid none",
-                    borderColor: "#fff",
-                    borderWidth: "5px",
-                  }}
-                >
-                  <input
-                    className="searchButton"
-                    dir="rtl"
-                    placeholder="חפש מסלול"
-                    label={<CgSearch style={{ fontSize: "x-large" }} />}
-                    onChange={inputHandlerRoutes}
-                  ></input>
-                </div>
-                <div className="routs">
-                  {filteredDataRouts.map((value, index) => {
+                        מסלולים
+                      </div>
+                    </h3>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div
+                    className="TitlePlacesCover"
+                  // style={{
+                  //   background: props.titlePlacesCss,
+                  // }}
+                  >
+                    <h3 className="TitlePlaces">
+                      &nbsp;&nbsp;&nbsp;
+                      <div className="MyTitle">{props.sites}</div>
+                    </h3>
+                  </div>
+                </>
+              )}
+              <div
+                className="search"
+                style={{
+                  backgroundColor: "#F5F5F5",
+                  // borderStyle: "none none solid none",
+                  // borderColor: "#fff",
+                  // borderWidth: "5px",
+                }}
+              >
+                <input
+                  className="searchButton"
+                  dir="rtl"
+                  placeholder="חפש מסלול"
+                  label={<CgSearch style={{ fontSize: "x-large" }} />}
+                  onChange={inputHandlerRoutes}
+                ></input>
+              </div>
+              <div className="routs">
+                {filteredDataRouts.length === 0
+                  ? <div className="textBeforeStation">אחרי בחירת האתר, בעמודה זו יופיעו המסלולים הקיימים בו</div>
+                  : filteredDataRouts.map((value, index) => {
                     return (
                       <div
                         className="buttons"
@@ -481,44 +509,47 @@ const Places = (props) => {
                       </div>
                     );
                   })}
-                </div>
-                <div
-                  className="addPlaceCover"
-                  style={{ background: "#256FA11F" }}
-                >
-                  <button
-                    className="AddButton"
-                    onClick={() => {
-                      setModalOpen(true);
-                      setFlagStudent(true);
-                      setClickAddRoute((clickAddRoute = true));
-                    }}
-                  >
-                    <AiOutlinePlus className="plus" />
-                  </button>
-                </div>
               </div>
-              <Stations
-                propsData={stationArray}
-                idTask={thisIdTask}
-                allStations={onlyAllStation}
-                language={props}
-                stationsName={props.stations}
-                myTasks={props.myTasks}
-                drag={props.drag}
-                addStation={props.addStation}
-                addMyTask={props.addMyTask}
-                titleStationCss={props.titleStationCss}
-                titleTaskCss={props.titleTaskCss}
-                mySite={mySite}
-                flagHebrew={props.flagHebrew}
-                tasksOfRoutes={tasksOfRoutes}
-                clickAddRoute={clickAddRoute}
-              />
-            </>
-          )}
+              <div
+                className="addPlaceCover"
+
+              >
+                <button
+                  className="AddButton"
+                  onClick={() => {
+                    setModalOpen(true);
+                    setFlagStudent(true);
+                    setClickAddRoute((clickAddRoute = true));
+                  }}
+                >
+                  <AiOutlinePlus className="plus" />
+                </button>
+              </div>
+            </div>
+            <Stations
+              propsData={stationArray}
+              idTask={thisIdTask}
+              allStations={onlyAllStation}
+              language={props}
+              stationsName={props.stations}
+              myTasks={props.myTasks}
+              drag={props.drag}
+              addStation={props.addStation}
+              addMyTask={props.addMyTask}
+              titleStationCss={props.titleStationCss}
+              titleTaskCss={props.titleTaskCss}
+              mySite={mySite}
+              flagHebrew={props.flagHebrew}
+              tasksOfRoutes={tasksOfRoutes}
+              clickAddRoute={clickAddRoute}
+            />
+          </>
+          {/* ) */}
+          {/* } */}
         </>
-      )}
+        {/* )} */}
+
+      </div>
     </>
   );
 };

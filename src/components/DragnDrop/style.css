@@ -1,32 +1,32 @@
 .Board {
- 
   left: 0px;
   width: 400px;
   height: 100vw;
   background: #F5F5F5 0% 0% no-repeat padding-box;
   opacity: 1;
-  margin-top: -28px;
-
+  top: 0;
+  position: absolute;
+  padding-left: 25px;
+  padding-right: 25px;
 }
 
 .Cover_Tasks {
   float: left;
   padding: 1%;
   margin-right: 2%;
-  font-size: small;
+  /* font-size: small; */
 }
 
 .TitleTasks {
-  color: rgb(88, 92, 81);
-  border-radius: 6px;
-  margin-bottom: 17px;
-  width: 272px;
-  height: 50px;
+  background: #E8B221;
+  height: 48px;
+  border-radius: 4px 4px 0px 0px;
+  color: white;
 }
 
 .TasksCover {
-  background-color: #F8F9F3;
-  margin: -0.5px;
+  background-color: #f5f5f5;
+  /* margin: -0.5px; */
   padding-top: 1px;
   padding-bottom: 1px;
   overflow: auto;
@@ -234,11 +234,12 @@
 }
 
 .addTaskCover {
-  background-color: #F8F9F3;
-  margin: -0.5px;
+  background-color: #f5f5f5;
+  /* margin: -0.5px; */
   padding-top: 1px;
   padding-bottom: 1px;
-  width: 272px
+  /* width: 272px */
+  border-radius: 4px 0px 4px 0px;
 }
 
 .MediaCover {
@@ -261,10 +262,18 @@
 }
 
 .AddRoute {
-  border: none;
+  /* border: none;
   background: #F5F5F5 0% 0% no-repeat padding-box;
   position: relative;
-  left: 40px;
+  left: 40px; */
+
+  background: #256FA1;
+  margin-top: 20px;
+  border-radius: 4px;
+  color: white;
+  font-size: 18px;
+  box-shadow: 0px 3px 6px #0000004d;
+  border: 2px solid #256FA1;
 }
 
 .AddTasks:hover {
@@ -278,23 +287,24 @@
   border: 1px solid #6A6865;
   border-radius: 0px 0px 6px 6px;
   opacity: 1;
-  margin-left: 43px;
+  /* margin-left: 43px; */
   overflow: auto;
   scrollbar-color: #bfc4ce #dadbe2 !important;
   scrollbar-width: thin !important;
 }
 
 .mySiteChois {
-  margin-top: 20px;
-  width: 171px;
-  text-align: -7px;
+  /* margin-top: 20px; */
+  /* width: 171px; */
   font: normal normal bold 20px/26px Assistant;
-  letter-spacing: 0px;
-  color: #4A2C6E;
+  /* letter-spacing: 0px; */
+  color: #505050;
   opacity: 1;
-  margin-left: auto;
+  /* margin-left: auto; */
   position: relative;
-  top: 6px;
+  top: 18px;
+  text-align: right;
+  margin-right: 45px;
 }
 
 .mySiteChoisPhoneCover {
@@ -306,13 +316,13 @@
 }
 
 .my_Buttons_icons {
-  position: relative;
-  left: 43px;
+  /* position: relative; */
+  /* left: 43px;*/
   width: 313px;
   height: 54px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   border: 1px solid #6A6865;
-  border-radius: 6px 6px 0px 0px;
+  /* border-radius: 6px 6px 0px 0px; */
   opacity: 1;
 }
 
@@ -337,11 +347,15 @@
 .txt {
   text-align: right;
   font: normal normal bold 21px/34px Assistant;
-  color: #505050;
-  position: relative;
-  top: 33px;
-  right: 36px;
+  color: #ffffff;
+  /* position: relative; */
+  /* top: 33px;
+  right: 36px; */
   font-size: large;
+  border-radius: 4px 4px 0px 0px;
+  background: #256FA1;
+  width: 313px;
+  margin-top: 20px;
 }
 
 .helpBtn {

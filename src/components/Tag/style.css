@@ -114,7 +114,7 @@
   border-left: 2px solid #c2bfbf;
   height: 84px;
   position: relative;
-  margin-top: -6.5px;
+  /* margin-top: -6.5px; */
   left: 275px;
   float: inherit;
 }
@@ -193,12 +193,15 @@
 }
 
 .kavT {
-  border-top: 2px solid #c2bfbf;
   width: 15px;
   position: relative;
-  margin-top: -17px;
-  left: 269px;
+  left: 268px;
   bottom: -40px;
+  border-radius: 50%;
+  background: #256FA1;
+  height: 16px;
+  width: 16px;
+  z-index: 1;
 }
 
 .kavTask {

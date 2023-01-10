@@ -188,10 +188,7 @@ const Stations = (props) => {
               <>
                 <div
                   className="TitleStation"
-                  style={{
-                    background: props.titleStationCss,
-                    //   background: linear-gradient(90deg, rgb(255, 234, 220) 95%, #e29e62 1%);
-                  }}
+                 
                 >
                   {/* <BsThreeDotsVertical className='threeDotsVertical' /> */}
                   <div className="MyTitle text"> {props.stationsName}</div>
@@ -201,10 +198,7 @@ const Stations = (props) => {
               <>
                 <div
                   className="TitleStation"
-                  style={{
-                    background: props.titleStationCss,
-                    //   background: linear-gradient(90deg, rgb(255, 234, 220) 95%, #e29e62 1%);
-                  }}
+                 
                 >
                   <h3>
                     &nbsp;&nbsp;&nbsp;
@@ -217,10 +211,11 @@ const Stations = (props) => {
             <div
               className="search"
               style={{
-                backgroundColor: "rgb(255, 242, 234)",
-                borderStyle: "none none solid none",
-                borderColor: "#fff",
-                borderWidth: "5px",
+                backgroundColor: "#F5F5F5",
+                // borderStyle: "none none solid none",
+                // borderColor: "#fff",
+                // borderWidth: "5px",
+                padding: "13px 0px 13px 0px"
               }}
             >
               <input
@@ -327,7 +322,7 @@ const Stations = (props) => {
                   })} */}
                 </>
               ) : (
-                <></>
+                <div className="textBeforeStation">אחרי בחירת המסלול, בעמודה זו יופיעו התחנות הקיימות בה.</div>
               )}
             </div>
             <div className="addStationCover">

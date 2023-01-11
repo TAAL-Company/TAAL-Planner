@@ -179,11 +179,7 @@ const Stations = (props) => {
 
           <div
             className="Cover_Stations"
-            style={{
-              float: props.language.setFloatLang,
-              marginRight: "-2%",
-              padding: "2%",
-            }}
+         
           >
             {!props.flagHebrew ? (
               <>

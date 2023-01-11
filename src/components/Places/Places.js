@@ -418,11 +418,6 @@ const Places = (props) => {
             )}
             <div
               className="Cover_Places"
-              style={{
-                float: props.setFloatLang,
-                padding: "2%",
-
-              }}
             >
               {!props.flagHebrew ? (
                 <>

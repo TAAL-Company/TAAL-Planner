@@ -344,12 +344,7 @@ function DragnDrop(props) {
       )}
       <div
         className="Cover_Tasks"
-        style={{
-          float: props.language,
-          marginRight: "-2%",
-          padding: "2%",
-          // fontSize: "small",
-        }}
+    
       >
         {!props.flagHebrew ? (
           <>

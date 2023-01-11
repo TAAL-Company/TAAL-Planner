@@ -28,9 +28,7 @@ function Login(props) {
     setAPIDetailsLogin({ ...loginDetails });
     setFlagLoading((flagLoading = true));
   }
-  const myStyle = {
-    backgroundImage: `url(${background})`,
-  }
+
 
   return (
     <>
@@ -41,7 +39,7 @@ function Login(props) {
         </h1>
       ) : (
         <>
-          <div className="App-header" style={myStyle}>
+          <div className="App-header" >
             <div className="box">
               <div className="logoHeader">
                 <img

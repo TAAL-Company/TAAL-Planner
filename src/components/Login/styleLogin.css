@@ -113,7 +113,7 @@ input[type=submit]:hover {
 }
 
 .App-header {
-  /* background-color: #292929; */
+  background-color: #256fa1;
   display: flex;
   justify-content: center;
   align-items: center;

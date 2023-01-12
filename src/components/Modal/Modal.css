@@ -266,11 +266,11 @@
 }
 
 .modalContainerPlases {
-  position: fixed;
+  /* position: fixed; */
   z-index: 10;
-  height: -200px;
-  margin-left: 500px;
-  width: 520px;
+  /* height: -200px; */
+  /* margin-left: 500px; */
+  width: 100%;
   text-align: right;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 10px #0000004d;
@@ -280,7 +280,6 @@
 
 .modalContainerHelp {
   position: relative;
-  height: -200px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 10px #0000004d;
   border-radius: 3px;
@@ -311,17 +310,17 @@
 }
 
 .BackgroundTasks {
-  border: 2.5px solid rgb(86, 160, 225);
+  border: 3.5px solid rgb(86, 160, 225);
   border-radius: 5px;
-  background-color: aliceblue;
+  background-color: rgb(86, 160, 225);
   box-shadow: rgb(136 136 136) 1px 2px;
-  position: fixed;
+  position: relative;
   width: 500px;
-  height: -200px;
-  margin: -210px;
-  margin-left: 500px;
-  padding: 10px;
-  width: 520px;
+  /* height: -200px; */
+  /* margin: -210px; */
+  /* margin-left: 500px; */
+  /* padding: 10px; */
+  /* width: 520px; */
   text-align: right;
   align-self: center;
   z-index: 10;

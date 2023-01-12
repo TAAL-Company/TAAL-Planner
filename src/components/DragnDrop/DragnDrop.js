@@ -106,6 +106,7 @@ function DragnDrop(props) {
   const [, setKavTaskTopMarginTop] = useState("-7px");
   const [, setBorderLeft] = useState("2px solid #c2bfbf");
   const [, setFlagStress] = useState(false);
+  // const [prevStation,setPrevStation] = useState("test");
 
   const [characters, updateCharacters] = useState(finalSpaceCharacters);
 
@@ -157,11 +158,37 @@ function DragnDrop(props) {
     if (props.tasksOfRoutes && props.tasksOfRoutes.acf) {
       console.log("props.tasksOfRoutes ", props.tasksOfRoutes)
       let temp = props.tasksOfRoutes.acf.tasks;
+      let prevStation = "test";
 
-      console.log("temp: ", temp)
+      console.log("temp: ", props.tasksOfRoutes);
+      console.log("temp prevStation: ", prevStation);
+
 
       props.tasksOfRoutes.acf.tasks.forEach((element) => {
 
+        if (prevStation !== "") {
+          if (prevStation === props.tasksOfRoutes.title.rendered) {  //same station
+            setFlagPhoneOne((flagPhoneOne = true));
+            setWidth((width = "-84px"));
+            setBorderLeft((borderLeft = "2x solid #c2bfbf"));
+            setHeight((height = "86px"));
+            setBottom((bottom = "45px"));
+            setKavTopWidth((kavTopWidth = "0px"));
+            setNewkavTaskTop((newkavTaskTop = "100px"));
+            setNameStation((nameStation = ""));
+            setKavTaskTopMarginTop((kavTaskTopMarginTop = "-27px"));
+          } else {
+            setFlagPhoneOne((flagPhoneOne = false));
+            setBorderLeft((borderLeft = "0x solid #c2bfbf"));
+            setWidth((width = "-13px"));
+            setHeight((height = "70px"));
+            setBottom((bottom = "-27px"));
+            setKavTopWidth((kavTopWidth = "25px"));
+            setNewkavTaskTop((newkavTaskTop = "0px"));
+            setNameStation((nameStation = props.myStation.name));
+            setKavTaskTopMarginTop((kavTaskTopMarginTop = "-7px"));
+          }
+        }
         setBoard((board) => [...board, {
           id: element.ID,
           title: element.post_title
@@ -183,10 +210,14 @@ function DragnDrop(props) {
         }]);
 
         setCount(count++);
+
+        prevStation = props.tasksOfRoutes.title.rendered;
+        console.log("temp prevStation: ", prevStation);
+
       }
       )
 
-      
+
     }
 
   }, [props.tasksOfRoutes])
@@ -194,7 +225,7 @@ function DragnDrop(props) {
   useEffect(() => {
     console.log("board1: ", board)
   }, [board])
-  
+
 
 
   // alert("hi")
@@ -250,7 +281,7 @@ function DragnDrop(props) {
     if (boardName !== "border") {
 
       if (saveTag.props !== undefined) {
-        if (saveTag.props.myLastStation === saveTag.props.myStation) {
+        if (saveTag.props.myLastStation === saveTag.props.myStation) {  //same station
           setFlagPhoneOne((flagPhoneOne = true));
           setWidth((width = "-84px"));
           setBorderLeft((borderLeft = "2x solid #c2bfbf"));
@@ -344,7 +375,7 @@ function DragnDrop(props) {
       )}
       <div
         className="Cover_Tasks"
-    
+
       >
         {!props.flagHebrew ? (
           <>

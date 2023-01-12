@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { get } from "../../api/api";
+import { getingData, get } from "../../api/api";
 // import { FcSearch } from "react-icons/fc";
 // import { MdOutlineAdsClick } from "react-icons/md";
 import "./style.css";
 import TasksComp from "../Tasks_comp/Tasks_comp";
 import ModalStations from "../Modal/Modal_Stations";
 // import TextField from "@mui/material/TextField";
-import { baseUrl } from "../../config";
+
 import { AiOutlinePlus } from "react-icons/ai";
 // import Dot from "../Dot/Dot"
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -82,11 +82,12 @@ const Stations = (props) => {
   useEffect(() => {
     console.log("charactersss: ", characters)
   }, [characters]);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        getingData();
+        allTasks = await getingData();
       } catch (error) {
         console.error(error.message);
       }
@@ -94,35 +95,7 @@ const Stations = (props) => {
     };
     fetchData();
   }, []);
-  const getingData = async () => {
-    await get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
-      params: {
-        per_page: 100,
-        "Cache-Control": "no-cache",
-      },
-    }).then((res) => {
-      let max_pages = res.headers["x-wp-totalpages"];
-      console.log("res headers:", res.headers);
-      allTasks = res.data;
-      if (max_pages > 1) {
-        for (let i = 2; i <= max_pages; i++) {
-          console.log("max_pages: ", max_pages);
-          get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
-            params: {
-              per_page: 100,
-              page: i,
-              "Cache-Control": "no-cache",
-            },
-          }).then((res) => {
-            console.log("res:", res);
-            // allTasks = res.data;
-            Array.prototype.push.apply(allTasks, res.data);
-            console.log("allTasks:", allTasks);
-          });
-        }
-      }
-    });
-  };
+  
   const Display_The_Tasks = (e, n) => {
     console.log("eeeeeeeeeeeeeeeeeee: ", e);
     if (myStation.id === e) {

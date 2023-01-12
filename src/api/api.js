@@ -1,4 +1,5 @@
 import axios from "axios";
+import { baseUrl } from "../config";
 
 export const get = async (url, header) => {
   try {
@@ -20,4 +21,39 @@ export const post = async (url, body, header) => {
   } catch (e) {
     console.log(e);
   }
+};
+export const getingData = async () => {
+
+  let allTasks;
+
+
+  await get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
+    params: {
+      per_page: 100,
+      "Cache-Control": "no-cache",
+    },
+  }).then((res) => {
+    let max_pages = res.headers["x-wp-totalpages"];
+    console.log("res headers:", res.headers);
+    allTasks = res.data;
+    if (max_pages > 1) {
+      for (let i = 2; i <= max_pages; i++) {
+        console.log("max_pages: ", max_pages);
+        get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
+          params: {
+            per_page: 100,
+            page: i,
+            "Cache-Control": "no-cache",
+          },
+        }).then((res) => {
+          console.log("res:", res);
+          // allTasks = res.data;
+          Array.prototype.push.apply(allTasks, res.data);
+          console.log("allTasks:", allTasks);
+        });
+      }
+    }
+  });
+
+  return allTasks;
 };

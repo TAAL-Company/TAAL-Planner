@@ -105,7 +105,7 @@ const Modal_Stations = ({ setOpenModalPlaces, idTasks }) => {
                 </h1>
               </div>
               <br></br>
-              <div className="body">
+              <div className="body" style={{ textAlign: "center"}}>
                 <h4>
                   {" "}
                   עליך לבחור את האתר שאת/ה מעוניינ/ת להוסיף אליו את התחנה, לאחר

@@ -30,6 +30,12 @@ const Dashboard = () => {
       addLabel: "הוספת מקצוע",
       image: pic,
     },
+    {
+      id: 5,
+      headline: "גלריה",
+      addLabel: "הוספת תמונה",
+      image: pic,
+    },
   ];
 
   return (
@@ -45,6 +51,9 @@ const Dashboard = () => {
           <div className="cardsLine">
             <CardDash cards={cards[2]} />
             <CardDash cards={cards[3]} />
+          </div>
+          <div className="cardsLine">
+            <CardDash cards={cards[4]} />
           </div>
         </div>
       </div>

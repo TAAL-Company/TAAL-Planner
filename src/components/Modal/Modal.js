@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import "./Modal.css";
-import { get } from "../../api/api";
+import { get, insertRoute } from "../../api/api";
 import { FcLink } from "react-icons/fc";
 import { BsExclamationLg } from "react-icons/bs";
 import Modal_Loading from "./Modal_Loading";
 import { baseUrl } from "../../config";
 import { RiAsterisk } from "react-icons/ri";
+
 
 //--------------------------
 let obj = { tasks: [], users: [], mySite: [] };
@@ -14,7 +15,7 @@ let myStudents = [];
 let myStudentsChoice = [];
 let flagClickOK = false;
 //--------------------------
-function Modal({ setOpenModal, setFlagStudent, flagTest }) {
+function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute }) {
   console.log("flagTest:", flagTest);
   const [, set_obj] = useState(null); // for TextView
   const [, setDone] = useState(false);
@@ -25,6 +26,9 @@ function Modal({ setOpenModal, setFlagStudent, flagTest }) {
   const [, setMyStudentsChoice] = useState([]);
   const [, setFlagClickOK] = useState(false);
   const [get_Name, setName] = useState(null); // for TextView
+
+  const [routeTitle, setRouteTitle] = useState('');
+  const [newRoute, setNewRoute] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -158,6 +162,32 @@ function Modal({ setOpenModal, setFlagStudent, flagTest }) {
     setFlagStudent(false);
     setOpenModal(false);
   };
+  const handleSubmitRouteTitle = (event) => {
+    event.preventDefault();
+
+    setNewTitleForRoute(routeTitle);
+
+    const routeData = {
+      title: routeTitle,
+      places: [
+        JSON.parse(localStorage.getItem("MySite")).id
+      ]
+    };
+
+    insertRoute(routeData , setNewRoute);
+
+
+    setRouteTitle('');
+    setFlagStudent(false);
+    setOpenModal(false);
+  }
+
+  useEffect(() => {
+    console.log("newRoute: ", newRoute);
+
+  }, [newRoute])
+
+
   return (
     <>
       {flagTest ? (
@@ -335,7 +365,7 @@ function Modal({ setOpenModal, setFlagStudent, flagTest }) {
                     <div className="headerNewRoute">
                       <div className="newRoutTitle">מסלול חדש</div>
                     </div>
-                    <form id="IPU" className="w3-container">
+                    <form id="IPU" className="w3-container" onSubmit={handleSubmitRouteTitle}>
                       <div className="nameRoutTitle"> :שם המסלול </div>
                       <p>
                         <input
@@ -343,40 +373,23 @@ function Modal({ setOpenModal, setFlagStudent, flagTest }) {
                           className="inputRouteName"
                           required={true}
                           type="text"
-                          onChange={getName}
+                          // onChange={getName}
+                          value={routeTitle}
+                          onChange={e => setRouteTitle(e.target.value)}
                         ></input>
                       </p>
-                    </form>
-                    {/* <div className="AddStudentTitle">
-                  שייך מסלול לעובד &nbsp;&nbsp;
-                  <FcLink className="icon" />
-                </div>
-                <div className="allStudent">
-                  {student.map((value, index) => {
-                    return (
-                      <label key={index} className="list-group-item">
-                        <input
-                          dir="ltr"
-                          onChange={() => saveCheckbox(value)}
-                          className="form-check-input me-1"
-                          type="checkbox"
-                          id={value.name}
-                          name={value.name}
-                          value=""
-                        ></input>
-                        {value.name}
-                      </label>
-                    );
-                  })}
-                </div> */}
-                    <button className="saveAs" onClick={() => saveData()}>
-                      <div style={{ color: "white" }}>שמירה בשם</div>
-                    </button>
 
-                    <button className="cancelSaveAs" onClick={() => saveData()}>
-                      {" "}
-                      ביטול
-                    </button>
+                      <button type="submit" className="saveAs" >
+                        {/* onClick={() => saveData()}> */}
+                        <div style={{ color: "white" }}>שמירה בשם</div>
+                      </button>
+
+                      <button className="cancelSaveAs" onClick={() => saveData()}>
+                        {" "}
+                        ביטול
+                      </button>
+                    </form>
+
                   </>
                 ) : (
                   <>

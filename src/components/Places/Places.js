@@ -64,7 +64,7 @@ const Places = (props) => {
   const [, setFlagTest] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [isFirstSelection, setIsFirstSelection] = useState(false);
-
+  const [newTitleForRoute, setNewTitleForRoute] = useState("");
 
   // const [, setMyCategory] = useState("place")
   let inputHandler = (e) => {
@@ -246,6 +246,18 @@ const Places = (props) => {
     console.log("filteredData: ", filteredData)
   }, [filteredData])
 
+  useEffect(() => {  //after adding new routes
+    console.log("newTitleForRoute: ", newTitleForRoute)
+
+    console.log("filteredDataRouts: ",filteredDataRouts);
+
+    // if(newTitleForRoute!=""){
+    //   setFilteredDataRouts([...setFilteredDataRouts, ])
+
+    // }
+
+  }, [newTitleForRoute])
+
   //----------------------------------------------------------------------
   return (
     <> <div className="Places">
@@ -279,138 +291,11 @@ const Places = (props) => {
       </select>
     </div>
       <div className="mainRectangles">
-        {/* {!done ? ( */}
-        <>{/* {<ModalLoading />} */}</>
-        {/* // ) : ( */}
-        <>
-          {/* <DragDropContext onDragEnd={handleOnDragEnd}>
-            <Droppable droppableId="characters">
-              {(provided) => (
-                <ul
-                  className="characters"
-                  {...provided.droppableProps}
-                  ref={provided.innerRef}
-                >
-                  {characters.map(({ id, name }, index) => {
-                    let ID = "" + id;
-                    console.log("id: ", typeof ID);
-
-                    return (
-                      <Draggable key={ID} draggableId={ID} index={index}>
-                        {(provided) => (
-                          <li
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <p>{name}</p>
-                          </li>
-                        )}
-                      </Draggable>
-                    );
-                  })}
-                  {provided.placeholder}
-                </ul>
-              )}
-            </Droppable>
-          </DragDropContext> */}
-          {/* {!flagRoute ? ( */}
-          <>
-            {/* {modalOpen && <ModalPlaces setOpenModalPlaces={setModalOpen} />}
-                {modalIconsOpen && (
-                  <ModalIcons
-                    setOpenModalPlaces={setModalIconsOpen}
-                    myCategory={myCategory}
-                  />
-                )}
-                <div
-                  className="Cover_Places"
-                  style={{
-                    float: props.setFloatLang,
-                    padding: "2%",
-                    // marginRight: "7%",
-                    // marginleft: "7%"
-                  }}
-                >
-                  {!props.flagHebrew ? (
-                    <>
-                      {" "}
-                      <div
-                        className="TitlePlacesCover"
-
-                      >
-                        {/* <BsThreeDotsVertical className='threeDotsVertical' /> */}
-            {/*  <div className="MyTitle text">{props.sites}</div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div
-                        className="TitlePlacesCover"
-                      // style={{
-                      //   background: props.titlePlacesCss,
-                      // }}
-                      >
-                        <h3 className="TitlePlaces">
-                          &nbsp;&nbsp;&nbsp;
-                          <div className="MyTitle">{props.sites}</div>
-                          {/* <BsThreeDotsVertical className='threeDotsVerticalEng' /> */}
-            {/*  </h3>
-                      </div>
-                    </>
-                  )}
-                  <div
-                    className="search"
-                    style={{
-                      backgroundColor: "#F5F5F5",
-                      // borderStyle: "none none solid none",
-                      // borderColor: "#fff",
-                      // borderWidth: "5px",
-                    }}
-                  >
-                    <input
-                      className="searchButton"
-                      dir="rtl"
-                      placeholder="חפש אתר"
-                      label={<CgSearch style={{ fontSize: "x-large" }} />}
-                      onChange={inputHandler}
-                    ></input>
-                  </div>
-
-                  <div className="addPlaceCover">
-                    <button
-                      className="AddButton"
-                      onClick={() => {
-                        setModalOpen(true);
-                      }}
-                    >
-                      <AiOutlinePlus className="plus" />
-                    </button>
-                  </div>
-                </div>
-                <Stations
-                  propsData={stationArray}
-                  idTask={thisIdTask}
-                  allStations={onlyAllStation}
-                  language={props}
-                  stationsName={props.stations}
-                  myTasks={props.myTasks}
-                  drag={props.drag}
-                  addStation={props.addStation}
-                  addMyTask={props.addMyTask}
-                  titleStationCss={props.titleStationCss}
-                  titleTaskCss={props.titleTaskCss}
-                  mySite={mySite}
-                  flagHebrew={props.flagHebrew}
-                  clickAddRoute={clickAddRoute}
-                /> */}
-          </>
-          {/* ) : ( */}
-          <>
+    
             {/* routes */}
-
             {modalOpen && (
               <Modal
+              setNewTitleForRoute={setNewTitleForRoute}
                 setOpenModal={setModalOpen}
                 setFlagStudent={setFlagStudent}
                 flagTest={flagTest}
@@ -540,10 +425,7 @@ const Places = (props) => {
               tasksOfRoutes={tasksOfRoutes}
               clickAddRoute={clickAddRoute}
             />
-          </>
-          {/* ) */}
-          {/* } */}
-        </>
+       
         {/* )} */}
 
       </div>

@@ -41,7 +41,7 @@ input {
   width: 374px;
   border: unset;
   background-color: #efefef;
-  
+
 }
 
 
@@ -88,32 +88,28 @@ input[type=submit]:hover {
 }
 
 .App-logo {
-  width: 190px;
-  height: 110px;
+  width: 320px;
+  height: 100px;
 }
 
 .box {
-  gap: 12%;
+  gap: 2%;
   border-radius: 8px 8px 8px 8px;
-  background-color: #FFFFFF;
+  background-color: #272727;
   /* float: inherit; */
   /* border: black solid; */
   width: 670px;
   height: 552px;
   position: fixed;
-  /* top: 50%;
-  left: 50%;
-  margin-top: -100px;
-  margin-left: -100px; */
   display: flex;
   flex-direction: column;
   box-shadow: 2px 5px 20px #00000080;
-  opacity: 1;
-  justify-content: flex-start;
+  /* opacity: 1; */
+  justify-content: center;
 }
 
 .App-header {
-  background-color: #256fa1;
+  /* background-color: #256fa1; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -128,7 +124,7 @@ input[type=submit]:hover {
 }
 
 .logoHeader {
-  background: #256FA1;
+  /* background: #256FA1; */
   box-shadow: 0px 5px 20px #00000080;
   text-align-last: center;
   border-radius: 8px 8px 0px 0px;

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import LoginAPI from "./LoginAPI";
-import logo from "../../Pictures/login-logo.svg";
+import logo from "../../Pictures/loginLogoTaal.svg";
 import userLogo from "../../Pictures/user-logo.png";
 import lockLogo from "../../Pictures/lock-logo.png";
 import "./styleLogin.css";

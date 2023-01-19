@@ -26,7 +26,7 @@ let stationArray = [];
 let Places_and_their_stations = [];
 let thisIdTask = 0;
 let filteredData = [];
-let filteredDataRouts = [];
+let filteredDataRoutes = [];
 let inputText = "";
 let inputTextRouts = "";
 let mySite = { name: "", id: "" };
@@ -53,7 +53,7 @@ const Places = (props) => {
   const [, setPlaces] = useState([]);
   const [, setRoutes] = useState([]);
   const [, setFilteredData] = useState([]);
-  const [, setFilteredDataRouts] = useState([]);
+  const [, setFilteredDataRoutes] = useState([]);
   const [, setInputText] = useState("");
   const [, setInputTextRouts] = useState("");
   const [, setMySite] = useState(null);
@@ -64,7 +64,7 @@ const Places = (props) => {
   const [, setFlagTest] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [isFirstSelection, setIsFirstSelection] = useState(false);
-  const [newTitleForRoute, setNewTitleForRoute] = useState("");
+  const [newTitleForRoute, setNewTitleForRoute] = useState({});
 
   // const [, setMyCategory] = useState("place")
   let inputHandler = (e) => {
@@ -86,8 +86,8 @@ const Places = (props) => {
   let inputHandlerRoutes = (e) => {
     //convert input text to lower case
     setInputTextRouts((inputTextRouts = e.target.value.toLowerCase()));
-    setFilteredDataRouts(
-      (filteredDataRouts = myRoutes.filter((el) => {
+    setFilteredDataRoutes(
+      (filteredDataRoutes = myRoutes.filter((el) => {
         // setInputText(lowerCase);
         if (inputTextRouts === "") {
           return el;
@@ -222,8 +222,8 @@ const Places = (props) => {
         ))
       );
       // console.log("myRoutesssssssssssss:", myRoutes);
-      setFilteredDataRouts(
-        (filteredDataRouts = myRoutes.filter((el) => {
+      setFilteredDataRoutes(
+        (filteredDataRoutes = myRoutes.filter((el) => {
           if (inputTextRouts === "") {
             return el;
           }
@@ -233,6 +233,8 @@ const Places = (props) => {
           }
         }))
       );
+
+
     });
   };
   const clickOnhreeDotsVerticaIcont = (value) => {
@@ -249,14 +251,20 @@ const Places = (props) => {
   useEffect(() => {  //after adding new routes
     console.log("newTitleForRoute: ", newTitleForRoute)
 
-    console.log("filteredDataRouts: ",filteredDataRouts);
+    // console.log("filteredDataRoutes: ", filteredDataRoutes);
 
-    // if(newTitleForRoute!=""){
-    //   setFilteredDataRouts([...setFilteredDataRouts, ])
-
-    // }
+    if (Object.keys(newTitleForRoute).length > 0) {
+      filteredDataRoutes.push(newTitleForRoute);
+      setFilteredDataRoutes(filteredDataRoutes)
+      console.log("HHII")
+    }
 
   }, [newTitleForRoute])
+  useEffect(() => {
+    console.log("filteredDataRoutes: ", filteredDataRoutes);
+
+
+  }, [filteredDataRoutes])
 
   //----------------------------------------------------------------------
   return (
@@ -291,141 +299,141 @@ const Places = (props) => {
       </select>
     </div>
       <div className="mainRectangles">
-    
-            {/* routes */}
-            {modalOpen && (
-              <Modal
-              setNewTitleForRoute={setNewTitleForRoute}
-                setOpenModal={setModalOpen}
-                setFlagStudent={setFlagStudent}
-                flagTest={flagTest}
-              />
-            )}
-            <div
-              className="Cover_Places"
-            >
-              {!props.flagHebrew ? (
-                <>
-                  {" "}
-                  <div
-                    className="TitlePlacesCover"
-                  // style={{
-                  //   background:
-                  //     "linear-gradient(90deg,  #256FA11F  95%, #679abd 1%)",
-                  // }}
-                  >
-                    <h3 className="TitlePlaces">
-                      <div className="MyRoutesTitle">
-                        {/* מסלולים ב{" "}
+
+        {/* routes */}
+        {modalOpen && (
+          <Modal
+            setNewTitleForRoute={setNewTitleForRoute}
+            setOpenModal={setModalOpen}
+            setFlagStudent={setFlagStudent}
+            flagTest={flagTest}
+          />
+        )}
+        <div
+          className="Cover_Places"
+        >
+          {!props.flagHebrew ? (
+            <>
+              {" "}
+              <div
+                className="TitlePlacesCover"
+              // style={{
+              //   background:
+              //     "linear-gradient(90deg,  #256FA11F  95%, #679abd 1%)",
+              // }}
+              >
+                <h3 className="TitlePlaces">
+                  <div className="MyRoutesTitle">
+                    {/* מסלולים ב{" "}
                           <span className="name_of_site_title">
                             {mySite.name}
                           </span> */}
-                        מסלולים
-                      </div>
-                    </h3>
+                    מסלולים
                   </div>
-                </>
-              ) : (
-                <>
+                </h3>
+              </div>
+            </>
+          ) : (
+            <>
+              <div
+                className="TitlePlacesCover"
+              // style={{
+              //   background: props.titlePlacesCss,
+              // }}
+              >
+                <h3 className="TitlePlaces">
+                  &nbsp;&nbsp;&nbsp;
+                  <div className="MyTitle">{props.sites}</div>
+                </h3>
+              </div>
+            </>
+          )}
+          <div
+            className="search"
+            style={{
+              backgroundColor: "#F5F5F5",
+              // borderStyle: "none none solid none",
+              // borderColor: "#fff",
+              // borderWidth: "5px",
+            }}
+          >
+            <input
+              className="searchButton"
+              dir="rtl"
+              placeholder="חפש מסלול"
+              label={<CgSearch style={{ fontSize: "x-large" }} />}
+              onChange={inputHandlerRoutes}
+            ></input>
+          </div>
+          <div className="routs">
+            {filteredDataRoutes.length === 0
+              ? <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>אחרי בחירת האתר, בעמודה זו יופיעו המסלולים הקיימים בו.</div>
+              : filteredDataRoutes.map((value, index) => {
+                return (
                   <div
-                    className="TitlePlacesCover"
-                  // style={{
-                  //   background: props.titlePlacesCss,
-                  // }}
+                    className="buttons"
+                    onClick={() => DisplayTasks(value)} //הצגת המסלול
+                    key={index}
                   >
-                    <h3 className="TitlePlaces">
-                      &nbsp;&nbsp;&nbsp;
-                      <div className="MyTitle">{props.sites}</div>
-                    </h3>
-                  </div>
-                </>
-              )}
-              <div
-                className="search"
-                style={{
-                  backgroundColor: "#F5F5F5",
-                  // borderStyle: "none none solid none",
-                  // borderColor: "#fff",
-                  // borderWidth: "5px",
-                }}
-              >
-                <input
-                  className="searchButton"
-                  dir="rtl"
-                  placeholder="חפש מסלול"
-                  label={<CgSearch style={{ fontSize: "x-large" }} />}
-                  onChange={inputHandlerRoutes}
-                ></input>
-              </div>
-              <div className="routs">
-                {filteredDataRouts.length === 0
-                  ? <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>אחרי בחירת האתר, בעמודה זו יופיעו המסלולים הקיימים בו.</div>
-                  : filteredDataRouts.map((value, index) => {
-                    return (
-                      <div
-                        className="buttons"
-                        onClick={() => DisplayTasks(value)} //הצגת המסלול
-                        key={index}
-                      >
-                        <BsThreeDotsVertical
-                          className="threeDotsVerticalEng"
-                          onClick={() => clickOnhreeDotsVerticaIcont(value)}
-                        />
-                        {myRouteClick === value.id ? (
-                          <>
-                            {modalIconsOpen && (
-                              <ModalIcons
-                                setOpenModalPlaces={setModalIconsOpen}
-                                myCategory={myCategory}
-                              />
-                            )}
-                          </>
-                        ) : (
-                          <></>
+                    <BsThreeDotsVertical
+                      className="threeDotsVerticalEng"
+                      onClick={() => clickOnhreeDotsVerticaIcont(value)}
+                    />
+                    {myRouteClick === value.id ? (
+                      <>
+                        {modalIconsOpen && (
+                          <ModalIcons
+                            setOpenModalPlaces={setModalIconsOpen}
+                            myCategory={myCategory}
+                          />
                         )}
-                        <div className="nameOfButton">
-                          {value.title.rendered
-                            .replace("&#8211;", "-")
-                            .replace("&#8217;", "'")}
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
-              <div
-                className="addPlaceCover"
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                    <div className="nameOfButton">
+                      {value.title.rendered
+                        .replace("&#8211;", "-")
+                        .replace("&#8217;", "'")}
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+          <div
+            className="addPlaceCover"
 
-              >
-                <button
-                  className="AddButton"
-                  onClick={() => {
-                    setModalOpen(true);
-                    setFlagStudent(true);
-                    setClickAddRoute((clickAddRoute = true));
-                  }}
-                >
-                  <AiOutlinePlus className="plus" />
-                </button>
-              </div>
-            </div>
-            <Stations
-              propsData={stationArray}
-              idTask={thisIdTask}
-              allStations={onlyAllStation}
-              language={props}
-              stationsName={props.stations}
-              myTasks={props.myTasks}
-              drag={props.drag}
-              addStation={props.addStation}
-              addMyTask={props.addMyTask}
-              titleStationCss={props.titleStationCss}
-              titleTaskCss={props.titleTaskCss}
-              mySite={mySite}
-              flagHebrew={props.flagHebrew}
-              tasksOfRoutes={tasksOfRoutes}
-              clickAddRoute={clickAddRoute}
-            />
-       
+          >
+            <button
+              className="AddButton"
+              onClick={() => {
+                setModalOpen(true);
+                setFlagStudent(true);
+                setClickAddRoute((clickAddRoute = true));
+              }}
+            >
+              <AiOutlinePlus className="plus" />
+            </button>
+          </div>
+        </div>
+        <Stations
+          propsData={stationArray}
+          idTask={thisIdTask}
+          allStations={onlyAllStation}
+          language={props}
+          stationsName={props.stations}
+          myTasks={props.myTasks}
+          drag={props.drag}
+          addStation={props.addStation}
+          addMyTask={props.addMyTask}
+          titleStationCss={props.titleStationCss}
+          titleTaskCss={props.titleTaskCss}
+          mySite={mySite}
+          flagHebrew={props.flagHebrew}
+          tasksOfRoutes={tasksOfRoutes}
+          clickAddRoute={clickAddRoute}
+        />
+
         {/* )} */}
 
       </div>

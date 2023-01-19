@@ -5,6 +5,7 @@ import { RiAsterisk } from "react-icons/ri";
 import { BsExclamationLg } from "react-icons/bs";
 import Modal_Loading from "./Modal_Loading";
 import { baseUrl } from "../../config";
+import stopIcon from '../../Pictures/stopIcon.svg'
 
 //--------------------------
 let getPicture, getSound;
@@ -89,147 +90,139 @@ const Modal_Stations = ({ setOpenModalPlaces, idTasks }) => {
         <>
           <div className="BackgroundPlasesNoClick">
             <div className="modalContainerPlases">
-              <div className="titleCloseBtnPlases">
+          
+              <div className="stopIconContainer">
+                <img
+                  src={stopIcon}
+                  alt="logo"
+
+                ></img>
+              </div>
+              <div className="body" style={{ textAlign: "center" }}>
+                <h4>
+                  {" "}
+                  עליך לבחור ראשית אתר, ואז לשייך אליו תחנה
+                </h4>
+
+              </div>
+              <div className="footer">
                 <button
+                  className="cancelBtn"
                   onClick={() => {
                     setOpenModalPlaces(false);
                   }}
                 >
-                  X
+                  סגור
                 </button>
-              </div>
-              <div className="title">
-                <h1>
-                  <BsExclamationLg style={{ color: "red", fontSize: "40px" }} />
-                  בחר אתר
-                </h1>
-              </div>
-              <br></br>
-              <div className="body" style={{ textAlign: "center"}}>
-                <h4>
-                  {" "}
-                  עליך לבחור את האתר שאת/ה מעוניינ/ת להוסיף אליו את התחנה, לאחר
-                  מכן תוכל/י להוסיף את התחנה
-                </h4>
-                <br></br>
-                <div className="footer">
-                  <button
-                    className="cancelBtn"
-                    onClick={() => {
-                      setOpenModalPlaces(false);
-                    }}
-                  >
-                    סגור
-                  </button>
-                </div>
               </div>
             </div>
           </div>
         </>
       ) : (
         <>
-          <div className="BackgroundPlases">
-            <div className="modalContainerPlases">
-              <div className="titleCloseBtnPlases">
-                <button
-                  onClick={() => {
-                    setOpenModalPlaces(false);
-                  }}
-                >
-                  X
-                </button>
-              </div>
-              <div className="title">
-                <h3>
-                  <b>הוסף תחנה</b>
-                </h3>
-              </div>
-              <div className="body">
-                <form id="IPU" className="w3-container">
-                  <h6>
-                    :רשום את שם תחנה <RiAsterisk style={{ color: "red" }} />
-                  </h6>
-                  <p>
-                    <input
-                      required={true}
-                      type="text"
-                      onChange={handleTitleInput}
-                      style={{
-                        textAlign: "right",
-                        width: "420px",
-                      }}
-                    ></input>
-                  </p>
-                </form>
-                <form id="IPU" className="w3-container">
-                  <h6>
-                    :תאר במשפט את תחנה <RiAsterisk style={{ color: "red" }} />
-                  </h6>
-                  <p>
-                    <input
-                      type="text"
-                      onChange={handleDescriptionInput}
-                      style={{
-                        textAlign: "right",
-                        width: "420px",
-                      }}
-                    ></input>
-                  </p>
-                </form>
-                <form id="IPU" className="w3-container">
-                  <h6>
-                    : הוסף תמונה של תחנה <FcMultipleInputs />
-                  </h6>
-                  <div className="input-group mb-3">
-                    <input
-                      required={true}
-                      accept=".png, .jpg, .jpeg"
-                      className="form-control"
-                      type="file"
-                      onChange={handleFileInput}
-                      style={{
-                        textAlign: "right",
-                        width: "100%",
-                      }}
-                    ></input>
-                  </div>
-                </form>
-                <form id="IPU" className="w3-container">
-                  <h6>
-                    : הוסף קטע קול המתאר את התחנה <FcMultipleInputs />
-                  </h6>
-                  <p>
-                    <input
-                      required={true}
-                      accept=".mp3"
-                      type="file"
-                      className="form-control"
-                      onChange={handleFileInput}
-                      style={{
-                        textAlign: "right",
-                        width: "96%",
-                      }}
-                    ></input>
-                  </p>
-                </form>
-              </div>
-              <div className="footer">
-                <input
-                  type="submit"
-                  className="OK"
-                  value={ichour}
-                  onClick={Post_Station}
-                />
-              </div>
-              {flagClickOK ? (
-                <>
-                  <Modal_Loading props={false} />
-                </>
-              ) : (
-                <></>
-              )}
+          <div className="modalContainerNewStation">
+
+            <div className="headerNewTask">
+              <div className="NewTaskTitle">תחנה חדשה</div>
             </div>
+            <div className="bodyNewStation">
+              <form id="IPU" className="w3-container">
+                <h6>
+                  :רשום את שם תחנה <RiAsterisk style={{ color: "red" }} />
+                </h6>
+                <p>
+                  <input
+                    required={true}
+                    type="text"
+                    onChange={handleTitleInput}
+                    style={{
+                      height: "40px",
+                      width: "100%",
+                      paddingRight: "20px"
+                    }}
+                  ></input>
+                </p>
+              </form>
+              <form id="IPU" className="w3-container">
+                <h6>
+                  :תאר במשפט את תחנה <RiAsterisk style={{ color: "red" }} />
+                </h6>
+                <p>
+                  <input
+                    type="text"
+                    onChange={handleDescriptionInput}
+                    style={{
+                      height: "40px",
+                      width: "100%",
+                      paddingRight: "20px"
+                    }}
+                  ></input>
+                </p>
+              </form>
+              <form id="IPU" className="w3-container">
+                <h6>
+                  : הוסף תמונה של תחנה <FcMultipleInputs />
+                </h6>
+                <div className="input-group mb-3">
+                  <input
+                    required={true}
+                    accept=".png, .jpg, .jpeg"
+                    className="form-control"
+                    type="file"
+                    onChange={handleFileInput}
+                    style={{
+                      width: "100%",
+                      height: "40px",
+                    }}
+                  ></input>
+                </div>
+              </form>
+              <form id="IPU" className="w3-container">
+                <h6>
+                  : הוסף קטע קול המתאר את התחנה <FcMultipleInputs />
+                </h6>
+                <p>
+                  <input
+                    required={true}
+                    accept=".mp3"
+                    type="file"
+                    className="form-control"
+                    onChange={handleFileInput}
+                    style={{
+                      width: "100%",
+                      height: "40px",
+                    }}
+                  ></input>
+                </p>
+              </form>
+            </div>
+            <div className="footerNewStation">
+              <input
+                type="submit"
+                className="newStationButton"
+                value="שמור תחנה"
+                onClick={Post_Station}
+              />
+              <input
+                type="submit"
+                className="newStationButton"
+                value="ביטול"
+                onClick={() => {
+                  setOpenModalPlaces(false);
+                }}
+              />
+            </div>
+
+
+            {flagClickOK ? (
+              <>
+                <Modal_Loading props={false} />
+              </>
+            ) : (
+              <></>
+            )}
           </div>
+
         </>
       )}
     </>

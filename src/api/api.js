@@ -58,7 +58,7 @@ export const getingData = async () => {
   return allTasks;
 };
 
-export const insertRoute = (routeData , setNewRoute) => {
+export const insertRoute = (routeData, callback) => {
   const headers = {
     "Content-Type": "application/json",
     accept: "application/json",
@@ -70,11 +70,11 @@ export const insertRoute = (routeData , setNewRoute) => {
     status: 'publish'
   }
 
-  axios.post('https://taal.tech/wp-json/wp/v2/routes/', data, { headers: headers })
+  return axios.post('https://taal.tech/wp-json/wp/v2/routes/', data, { headers: headers })
     .then(response => {
       console.log(response.data);
 
-      setNewRoute(response.data);
+      return response.data;
     })
     .catch(error => {
       console.log(error);

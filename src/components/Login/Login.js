@@ -70,6 +70,7 @@ function Login(props) {
                       <div className="input-container">
 
                         <input
+                          className="inputLogin"
                           type="text"
                           placeholder="שם משתמש"
                           name="user"
@@ -89,6 +90,7 @@ function Login(props) {
                       <div className="input-container">
 
                         <input
+                          className="inputLogin"
                           type="password"
                           placeholder="סיסמא"
                           name="pass"

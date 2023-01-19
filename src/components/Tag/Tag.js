@@ -3,7 +3,7 @@ import { useDrag } from "react-dnd";
 // import { RiDragMove2Line } from "react-icons/ri";
 import "./style.css";
 // import Dot from "../Dot/Dot"
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { BsThreeDotsVertical, BsList } from "react-icons/bs";
 import Images from "../Images/Images";
 import Audios from "../Audios/Audios";
 
@@ -144,7 +144,10 @@ function Tag({
                 ref={drag}
                 src={title}
               >
-                <BsThreeDotsVertical className="threeDotsVerticalTasks" />
+                {dragFromCover !=="reorderBoard"?
+                 <BsThreeDotsVertical className="threeDotsVerticalTasks" />: 
+                 <BsList className="threeDotsVerticalTasks"/> 
+                 }
                 <div className="nameOfTask"> {title}</div>
               </div>
             </>

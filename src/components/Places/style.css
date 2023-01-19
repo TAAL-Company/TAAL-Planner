@@ -76,7 +76,6 @@
 .threeDotsVerticalTasks {
   opacity: 1;
   position: relative;
-  left: -85px;
   font-size: 18px;
 }
 
@@ -121,7 +120,7 @@
   box-shadow: 0 2px 2px #00000080;
   display: flex;
   height: 59px;
-  justify-content: right;
+  justify-content: space-between;
   margin: 13px 13px 13px 23px;
   padding: 20px;
   width: 225px;
@@ -206,14 +205,14 @@ h3 {
 }
 
 .nameOfButton {
-  width: 115px;
+  width: 100%;
   font: normal normal bold 15px/20px Assistant;
   letter-spacing: 0px;
   color: #505050;
   opacity: 1;
   text-align: end;
-  padding: ce;
-  align-self: center;
+  /* align-self: center; */
+  justify-content: right;
 }
 
 .loading {

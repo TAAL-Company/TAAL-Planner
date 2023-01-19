@@ -14,7 +14,7 @@ let flagClickOK = false;
 let myPlacesChoiceTemp = [];
 let myPlacesChoice = [];
 //--------------------------
-function Modal_Tasks({ setOpenModalPlases, allStations, help }) {
+function Modal_Tasks({ setOpenModalPlaces, allStations, help }) {
   const [, setDone] = useState(false);
   const [get_title, setTitle] = useState("");
   const [, setPicture] = useState(null);
@@ -129,17 +129,11 @@ function Modal_Tasks({ setOpenModalPlases, allStations, help }) {
       {!help ? (
         <>
           <div className="BackgroundTasks">
-            <div className="modalContainerPlases">
-              <div className="titleCloseBtnPlases">
-                <button
-                  onClick={() => {
-                    setOpenModalPlases(false);
-                  }}
-                >
-                  X
-                </button>
+            <div className="modalContainerTasks">
+              <div className="headerNewTask">
+                <div className="NewTaskTitle">משימה חדשה</div>
               </div>
-              <div className="body">
+              <div className="bodyNewTask">
                 {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
                 <form id="IPU" className="w3-container">
                   <h6>
@@ -151,9 +145,9 @@ function Modal_Tasks({ setOpenModalPlases, allStations, help }) {
                       type="text"
                       onChange={handleTitleInput}
                       style={{
-                        textAlign: "right",
-                        width: "420px",
-                        height: "35px",
+                        width: "100%",
+                        height: "40px",
+                        paddingRight: "20px"
                       }}
                     ></input>
                   </p>
@@ -167,9 +161,9 @@ function Modal_Tasks({ setOpenModalPlases, allStations, help }) {
                       type="text"
                       onChange={handleDescriptionInput}
                       style={{
-                        textAlign: "right",
-                        width: "420px",
-                        height: "35px",
+                        width: "100%",
+                        height: "40px",
+                        paddingRight: "20px"
                       }}
                     ></input>
                   </p>
@@ -188,7 +182,7 @@ function Modal_Tasks({ setOpenModalPlases, allStations, help }) {
                       style={{
                         textAlign: "right",
                         width: "100%",
-                        height: "35px",
+                        height: "40px",
                       }}
                     ></input>
                   </div>
@@ -206,8 +200,8 @@ function Modal_Tasks({ setOpenModalPlases, allStations, help }) {
                       onChange={handleFileInput}
                       style={{
                         textAlign: "right",
-                        width: "96%",
-                        height: "35px",
+                        width: "100%",
+                        height: "40px",
                       }}
                     ></input>
                   </p>
@@ -235,13 +229,31 @@ function Modal_Tasks({ setOpenModalPlases, allStations, help }) {
                   </div>
                 </form>
               </div>
-              <div className="footer">
+              <div style={{
+                display: "flex",
+                justifyContent: "flex-start",
+                gap: "16px",
+                height: "100px",
+                alignItems: "center",
+                paddingLeft: "68px",
+                marginBottom: "20px",
+              }}
+                className="footerNewTasks">
                 <input
                   type="submit"
-                  className="OK"
-                  value={ichour}
+                  className="saveTaskButton"
+                  value="שמור משימה"
                   onClick={Post_Task}
                 />
+                <input
+                  type="submit"
+                  className="cancelTaskButton"
+                  value="ביטול"
+                  onClick={() => {
+                    setOpenModalPlaces(false);
+                  }}
+                />
+
               </div>
               {flagClickOK ? (
                 <>
@@ -259,7 +271,7 @@ function Modal_Tasks({ setOpenModalPlases, allStations, help }) {
             <div className="titleCloseBtn">
               <button
                 onClick={() => {
-                  setOpenModalPlases(false);
+                  setOpenModalPlaces(false);
                 }}
               >
                 {" "}
@@ -296,7 +308,8 @@ function Modal_Tasks({ setOpenModalPlases, allStations, help }) {
             </div>
           </div>
         </div>
-      )}
+      )
+      }
     </>
   );
 }

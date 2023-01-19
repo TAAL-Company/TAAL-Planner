@@ -61,10 +61,9 @@ input[type=submit] {
   font-weight: 100;
 }
 
-input[type="text"],
-input[type="password"] {
+.inputLogin{
   padding: 0.8em;
-  padding-right: 67px;
+  padding-right: 66px;
 }
 
 
@@ -125,7 +124,7 @@ input[type=submit]:hover {
 
 .logoHeader {
   /* background: #256FA1; */
-  box-shadow: 0px 5px 20px #00000080;
+  /* box-shadow: 0px 5px 20px #00000080; */
   text-align-last: center;
   border-radius: 8px 8px 0px 0px;
 }

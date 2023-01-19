@@ -165,7 +165,7 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute }) 
   const handleSubmitRouteTitle = (event) => {
     event.preventDefault();
 
-    setNewTitleForRoute(routeTitle);
+    // setNewTitleForRoute(routeTitle);
 
     const routeData = {
       title: routeTitle,
@@ -174,12 +174,13 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute }) 
       ]
     };
 
-    insertRoute(routeData , setNewRoute);
-
-
-    setRouteTitle('');
-    setFlagStudent(false);
-    setOpenModal(false);
+    insertRoute(routeData).then(data => {
+      setNewRoute(data);
+      setNewTitleForRoute(data);
+      setRouteTitle('');
+      setFlagStudent(false);
+      setOpenModal(false);
+    })
   }
 
   useEffect(() => {
@@ -348,8 +349,7 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute }) 
               </div>
             </>
           ) : (
-            <div className="Background">
-              <div className="modalContainer">
+              <div className="modalContainerNewRoute">
                 {setFlagStudent ? (
                   <>
                     {/* <div className="titleCloseBtn">
@@ -423,7 +423,6 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute }) 
                   </>
                 )}
               </div>
-            </div>
           )}
         </>
       )}

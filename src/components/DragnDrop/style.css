@@ -42,37 +42,35 @@
 }
 
 .tree {
-  top: 235px;
-  width: 21px;
-  height: 43px;
+  width: 63px;
+  height: 54px;
   background: transparent url('../../Pictures/ic_tree.svg') 0% 0% no-repeat padding-box;
   border: 0px solid white;
-  opacity: 1;
-  position: relative;
-  left: 29px;
-  top: 6px;
+  align-self: center;
+  background-position: center;
+  border-right: solid 1px black;
 }
 
 .watch {
-  width: 21px;
-  height: 43px;
+  width: 62px;
+  height: 54px;
   background: transparent url('../../Pictures/ic_watch.svg') 0% 0% no-repeat padding-box;
-  border: 0px solid white;
-  opacity: 1;
-  position: relative;
-  left: 66px;
-  top: -11px;
+  border: none;
+  align-self: center;
+  align-self: center;
+  background-position: center;
+  border-right: solid 1px black;
 }
 
 .phone {
-  width: 21px;
-  height: 43px;
+  width: 63px;
+  height: 54px;
   background: transparent url('../../Pictures/Ic_phone.svg') 0% 0% no-repeat padding-box;
   border: 0px solid white;
-  opacity: 1;
-  position: relative;
-  left: 104px;
-  top: -18px;
+  align-self: center;
+  align-self: center;
+  background-position: center;
+  border-right: solid 1px black;
 }
 
 .phoneCover {
@@ -149,27 +147,36 @@
 }
 
 .tablet {
-  width: 64px;
-  height: 42px;
+  width: 63px;
+  height: 54px;
   background: transparent url('../../Pictures/Ic_tablet.svg') 0% 0% no-repeat padding-box;
   border: 0px solid white;
   opacity: 1;
-  position: relative;
-  left: 133px;
-  top: -15px;
+  align-self: center;
+  align-self: center;
+  background-position: center;
+  border-right: solid 1px black;
 }
-
+.reorder {
+  width: 63px;
+  height: 54px;
+  background: transparent url('../../Pictures/ic_reorder.svg') 0% 0% no-repeat padding-box;
+  border: 0px solid white;
+  align-self: center;
+  background-position: center;
+  border-right: solid 1px black;
+}
 .computer {
-  width: 51px;
-  height: 35px;
+  width: 63px;
+  height: 54px;
   background: transparent url('../../Pictures/ic_computer.svg') 0% 0% no-repeat padding-box;
   border: 0px solid white;
-  position: relative;
-  top: 33px;
-  left: 203px;
-  margin-left: -146px;
+  align-self: center;
+  background-position: center;
 }
-
+.active {
+  border-bottom: 4px solid #256FA1;
+}
 .kavIconsTree {
   border-left: 2px solid #c2bfbf;
   height: 53px;
@@ -311,14 +318,14 @@
 }
 
 .my_Buttons_icons {
-  /* position: relative; */
-  /* left: 43px;*/
-  width: 313px;
-  height: 54px;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
-  border: 1px solid #6A6865;
-  /* border-radius: 6px 6px 0px 0px; */
-  opacity: 1;
+    width: 313px;
+    height: 54px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    border: 1px solid #6A6865;
+    opacity: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 /* span {

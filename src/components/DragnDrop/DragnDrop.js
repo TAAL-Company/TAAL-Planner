@@ -9,6 +9,7 @@ import { CgSearch } from "react-icons/cg";
 import { AiFillCheckCircle } from "react-icons/ai";
 import Phone from "../Phone/Phone";
 import Tablet from "../Tablet/Tablet";
+import ReorderBoard from "../ReorderBoard/ReorderBoard";
 import Dot from "../Dot/Dot";
 import Clock from "../Clock/Clock";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
@@ -67,14 +68,18 @@ const finalSpaceCharacters = [
 function DragnDrop(props) {
 
   const [board, setBoard] = useState([]);
+  const [reorderBoardFlag, setReorderBoardFlag] = useState(false);
 
   if (props.tasksOfRoutes && props.tasksOfRoutes.acf) {
-    props.tasksOfRoutes.acf.tasks.forEach((element) => {
-      console.log("element:", element.post_title);
-    });
-    console.log("tasksOfRoutes: ", props.tasksOfRoutes);
-    console.log("board: ", board);
-    // setBoard((board) => [...board, ]);
+    if (props.tasksOfRoutes.acf.tasks) {
+      props.tasksOfRoutes.acf.tasks.forEach((element) => {
+        console.log("element:", element.post_title);
+      });
+      console.log("tasksOfRoutes: ", props.tasksOfRoutes);
+      console.log("board: ", board);
+      // setBoard((board) => [...board, ]);
+    }
+
   }
 
   console.log("props mySite:", props.mySite);
@@ -106,6 +111,7 @@ function DragnDrop(props) {
   const [, setKavTaskTopMarginTop] = useState("-7px");
   const [, setBorderLeft] = useState("2px solid #c2bfbf");
   const [, setFlagStress] = useState(false);
+  const [activeButton, setActiveButton] = useState("tree");
   // const [prevStation,setPrevStation] = useState("test");
 
   const [characters, updateCharacters] = useState(finalSpaceCharacters);
@@ -157,66 +163,65 @@ function DragnDrop(props) {
 
     if (props.tasksOfRoutes && props.tasksOfRoutes.acf) {
       console.log("props.tasksOfRoutes ", props.tasksOfRoutes)
-      let temp = props.tasksOfRoutes.acf.tasks;
       let prevStation = "test";
 
       console.log("temp: ", props.tasksOfRoutes);
       console.log("temp prevStation: ", prevStation);
 
+      if (props.tasksOfRoutes.acf.tasks) {
+        props.tasksOfRoutes.acf.tasks.forEach((element) => {
 
-      props.tasksOfRoutes.acf.tasks.forEach((element) => {
-
-        if (prevStation !== "") {
-          if (prevStation === props.tasksOfRoutes.title.rendered) {  //same station
-            setFlagPhoneOne((flagPhoneOne = true));
-            setWidth((width = "-84px"));
-            setBorderLeft((borderLeft = "2x solid #c2bfbf"));
-            setHeight((height = "86px"));
-            setBottom((bottom = "45px"));
-            setKavTopWidth((kavTopWidth = "0px"));
-            setNewkavTaskTop((newkavTaskTop = "100px"));
-            setNameStation((nameStation = ""));
-            setKavTaskTopMarginTop((kavTaskTopMarginTop = "-27px"));
-          } else {
-            setFlagPhoneOne((flagPhoneOne = false));
-            setBorderLeft((borderLeft = "0x solid #c2bfbf"));
-            setWidth((width = "-13px"));
-            setHeight((height = "70px"));
-            setBottom((bottom = "-27px"));
-            setKavTopWidth((kavTopWidth = "25px"));
-            setNewkavTaskTop((newkavTaskTop = "0px"));
-            setNameStation((nameStation = props.myStation.name));
-            setKavTaskTopMarginTop((kavTaskTopMarginTop = "-7px"));
+          if (prevStation !== "") {
+            if (prevStation === props.tasksOfRoutes.title.rendered) {  //same station
+              setFlagPhoneOne((flagPhoneOne = true));
+              setWidth((width = "-84px"));
+              setBorderLeft((borderLeft = "2x solid #c2bfbf"));
+              setHeight((height = "86px"));
+              setBottom((bottom = "45px"));
+              setKavTopWidth((kavTopWidth = "0px"));
+              setNewkavTaskTop((newkavTaskTop = "100px"));
+              setNameStation((nameStation = ""));
+              setKavTaskTopMarginTop((kavTaskTopMarginTop = "-27px"));
+            } else {
+              setFlagPhoneOne((flagPhoneOne = false));
+              setBorderLeft((borderLeft = "0x solid #c2bfbf"));
+              setWidth((width = "-13px"));
+              setHeight((height = "70px"));
+              setBottom((bottom = "-27px"));
+              setKavTopWidth((kavTopWidth = "25px"));
+              setNewkavTaskTop((newkavTaskTop = "0px"));
+              setNameStation((nameStation = props.myStation.name));
+              setKavTaskTopMarginTop((kavTaskTopMarginTop = "-7px"));
+            }
           }
+          setBoard((board) => [...board, {
+            id: element.ID,
+            title: element.post_title
+              .replace("&#8211;", "-")
+              .replace("&#8217;", "' "),
+            mySite: props.mySite,
+            myStation: props.tasksOfRoutes.title.rendered,
+            data: props.myStation.data,
+            nameStation: props.tasksOfRoutes.title.rendered,
+            width: width,
+            borderLeft: borderLeft,
+            height: height,
+            kavTaskTopMarginTop: kavTaskTopMarginTop,
+            bottom: bottom,
+            kavTopWidth: kavTopWidth,
+            newkavTaskTop: newkavTaskTop,
+            // idImg: thisId,
+            dataImg: props.propDataTask,
+          }]);
+
+          setCount(count++);
+
+          prevStation = props.tasksOfRoutes.title.rendered;
+          console.log("temp prevStation: ", prevStation);
+
         }
-        setBoard((board) => [...board, {
-          id: element.ID,
-          title: element.post_title
-            .replace("&#8211;", "-")
-            .replace("&#8217;", "' "),
-          mySite: props.mySite,
-          myStation: props.tasksOfRoutes.title.rendered,
-          data: props.myStation.data,
-          nameStation: props.tasksOfRoutes.title.rendered,
-          width: width,
-          borderLeft: borderLeft,
-          height: height,
-          kavTaskTopMarginTop: kavTaskTopMarginTop,
-          bottom: bottom,
-          kavTopWidth: kavTopWidth,
-          newkavTaskTop: newkavTaskTop,
-          // idImg: thisId,
-          dataImg: props.propDataTask,
-        }]);
-
-        setCount(count++);
-
-        prevStation = props.tasksOfRoutes.title.rendered;
-        console.log("temp prevStation: ", prevStation);
-
+        )
       }
-      )
-
 
     }
 
@@ -273,6 +278,10 @@ function DragnDrop(props) {
     console.log('isOver: ', isOver);
   }, [isOver])
   useEffect(() => {
+    console.log("activeButton: " + activeButton)
+  }, [activeButton])
+
+  useEffect(() => {
     console.log('drop: ', drop);
   }, [drop])
   //---------------------------------------------------------
@@ -306,6 +315,7 @@ function DragnDrop(props) {
       }
 
 
+
       console.log("item.board: ", boardName)
 
 
@@ -328,44 +338,63 @@ function DragnDrop(props) {
   //     setHelpFlag(helpFlag = true)
   //     setModalOpen(true);
   // }
-  const treeFunction = () => {
+  const treeFunction = (e) => {
     setFlagPhone((flagPhone = false));
     // setFlagTablet(flagTablet = false)
     setModalFlagTablet((modalFlagTablet = false));
     setFlagTree((flagTree = true));
+    setReorderBoardFlag(false);
     // alert("tree")
     // alert(flagPhone)
+    setActiveButton(e.currentTarget.className);
   };
   const stressFun = () => {
     setFlagStress((flagStress = true));
   };
-  const watchFunction = () => {
+  const watchFunction = (e) => {
     setFlagTree((flagTree = false));
     // setFlagTablet(flagTablet = false);
     setModalFlagTablet((modalFlagTablet = false));
-
+    setReorderBoardFlag(false);
     setFlagPhone((flagPhone = false));
+    setActiveButton(e.currentTarget.className);
   };
-  const phoneFunction = () => {
+  const phoneFunction = (e) => {
     setFlagTree((flagTree = false));
     setFlagPhone((flagPhone = true));
+    setReorderBoardFlag(false);
     setModalFlagTablet((modalFlagTablet = false));
+    setActiveButton(e.currentTarget.className);
   };
-  const tabletFunction = () => {
+  const tabletFunction = (e) => {
     setFlagTree((flagTree = false));
     setFlagPhone((flagPhone = false));
     setModalFlagTablet((modalFlagTablet = true));
+    setReorderBoardFlag(false);
+
+    setActiveButton(e.currentTarget.className);
+
   };
-  // const computerFunction = () => {
-  //     setFlagTree(false);
-  //     alert("computer")
-  // }
+  const computerFunction = (e) => {
+    // setFlagTree(false);
+    // alert("computer")
+    setActiveButton(e.currentTarget.className);
+
+  }
+  const reorderFunction = (e) => {
+    setFlagTree((flagTree = false));
+    setFlagPhone((flagPhone = false));
+    setModalFlagTablet((modalFlagTablet = false));
+    setReorderBoardFlag(true);
+    setActiveButton(e.currentTarget.className);
+
+  }
   //---------------------------------------------------------
   return (
     <>
       {modalOpen && (
         <ModalTasks
-          setOpenModalPlases={setModalOpen}
+          setOpenModalPlaces={setModalOpen}
           allStations={props.allStations}
           help={helpFlag}
         />
@@ -555,39 +584,36 @@ function DragnDrop(props) {
                             </div> */}
               <div className="my_Buttons_icons">
                 <button
-                  className="tree"
-                  onClick={() => {
-                    treeFunction();
-                  }}
+                  className={'reorder' + (activeButton === 'reorder' ? ' active' : '')}
+                  onClick={reorderFunction}
                 >
-                  <div className="kavIconsTree"></div>
                 </button>
                 <button
-                  className="watch"
-                  onClick={() => {
-                    watchFunction();
-                  }}
+                  className={'tree' + (activeButton === 'tree' ? ' active' : '')}
+                  onClick={treeFunction}
                 >
-                  <div className="kavIconsWatch"></div>
                 </button>
                 <button
-                  className="phone"
-                  onClick={() => {
-                    phoneFunction();
-                  }}
+                  className={'watch' + (activeButton === 'watch' ? ' active' : '')}
+                  onClick={watchFunction}
                 >
-                  <div className="kavIconsPhone"></div>
                 </button>
                 <button
-                  className="tablet"
-                  onClick={() => {
-                    tabletFunction();
-                  }}
+                  className={'phone' + (activeButton === 'phone' ? ' active' : '')}
+                  onClick={phoneFunction}
                 >
-                  <div className="computer">
-                    <div className="kavIconsTablet"></div>
-                  </div>
                 </button>
+                <button
+                  className={'tablet' + (activeButton === 'tablet' ? ' active' : '')}
+                  onClick={
+                    tabletFunction}
+                >
+                </button>
+                {/* <button
+                  className={'computer' + (activeButton === 'computer' ? ' active' : '')}
+                  onClick={
+                    computerFunction}>
+                </button> */}
               </div>
               <div className="MyTasks">
                 {/* flagTree   */}
@@ -597,7 +623,7 @@ function DragnDrop(props) {
                       <>
                         <div className="kavT"></div>
                         <div className="mySiteChois">
-                          {props.mySite.name}
+                          {props.tasksOfRoutes && props.tasksOfRoutes.title ? props.tasksOfRoutes.title.rendered : ''}
                           &nbsp;&nbsp;{" "}
                         </div>
                         {/* {props.tasksOfRoutes && props.tasksOfRoutes.acf ? (
@@ -675,45 +701,6 @@ function DragnDrop(props) {
                     {
                       flagPhone ? (
                         <>
-                          {/* {props.tasksOfRoutes && props.tasksOfRoutes.acf ? ( */}
-                          {/* <>
-                              <div className="phoneCover">
-                                <div className="phoneHeaderCover">
-                                  <div className="hederPhone">
-                                    <button
-                                      className="stress"
-                                      onClick={() => stressFun()}
-                                    ></button>
-                                    <div className="cellInfo"></div>
-                                    <Dot className="Dotcamera" color="#2f2f2f" />
-                                    <div className="clock">
-                                      <Clock />
-                                    </div>
-                                  </div>
-                                </div>
-                                {board.map(
-                                  (element, keyCount) => {
-                                    //שליחת המסלול
-                                    return (
-                                      <Tag
-                                        key={keyCount}
-                                        title={element.title}
-                                        id={element.id}
-                                        flagBoard={true}
-                                        myLastStation={element.myStation}
-                                        myMarginTop={"-68px"}
-                                        count={count}
-                                        flagTree={flagTree}
-                                        flagPhone={flagPhone}
-                                      />
-                                    );
-                                  }
-                                )}
-                              </div>
-                            </> */}
-                          {/* ) 
-                        
-                            : (*/}
                           <>
                             <Phone
                               modalFlagTablet={modalFlagTablet}
@@ -727,8 +714,6 @@ function DragnDrop(props) {
                               mySite={props.mySite}
                             />
                           </>
-                          {/*    ) */}
-                          {/* } */}
 
                           {/* --------------------------------------------------- */}
 
@@ -736,18 +721,6 @@ function DragnDrop(props) {
                         </>
                       ) : (
                         <>
-                          {/* {modalFlagTablet ? <>
-                                                <Tablet
-                                                    flagPhone={flagPhone}
-                                                    board={board}
-                                                    saveTag={saveTag}
-                                                    count={count}
-                                                    myStation={props.myStation}
-                                                    flagTree={flagTree}
-                                                    flagStress={flagStress}
-                                                    mySite={props.mySite} />
-
-                                            </> : <></>} */}
                           {modalFlagTablet ? (
                             <>
                               <Tablet
@@ -763,7 +736,11 @@ function DragnDrop(props) {
                               />
                             </>
                           ) : (
-                            <></>
+                            <>
+                              <ReorderBoard
+                                board={board}
+                              />
+                            </>
                           )}
                         </>
                       )}

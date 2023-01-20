@@ -394,8 +394,29 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute }) 
                 ) : (
                   <>
                     {" "}
-                    <div className="body">
-                      <h5>שמירת מסלול</h5>
+                    <div className="headerNewRoute">
+                      <div className="newRoutTitle">שמירת מסלול</div>
+                    </div>
+                    <div className="bodySaveRoute">
+                    <div>שיוך חניך:</div>
+                    <div className="allStudent">
+                      {student.map((value, index) => {
+                        return (
+                          <label key={index} className="list-group-item">
+                            <input
+                              dir="ltr"
+                              onChange={() => saveCheckbox(value)}
+                              className="form-check-input me-1"
+                              type="checkbox"
+                              id={value.name}
+                              name={value.name}
+                              value=""
+                            ></input>
+                            {value.name}
+                          </label>
+                        );
+                      })}
+                    </div>
                     </div>
                     <div className="footer">
                       <button className="continueBtn" onClick={Post_Route}>

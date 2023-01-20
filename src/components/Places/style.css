@@ -65,7 +65,7 @@
 .threeDotsVerticalEng {
   opacity: 1;
   position: relative;
-  left: -65px;
+  /* left: -65px; */
   font-size: 18px;
 }
 

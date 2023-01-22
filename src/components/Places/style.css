@@ -1,19 +1,22 @@
 .Places {
-    /* background-color: #F5F5F5; */
-    /* margin: -0.5px; */
-    padding-top: 1px;
-    padding-bottom: 1px;
-    height: 100px;
-    text-align: right;
-    overflow: auto;
-    direction: rtl;
-    padding-right: 41px;
-    display: grid;
-    /* scrollbar-color: #bfc4ce #dadbe2 !important;
+  /* background-color: #F5F5F5; */
+  /* margin: -0.5px; */
+  padding-top: 1px;
+  padding-bottom: 1px;
+  height: 100px;
+  text-align: right;
+  overflow: auto;
+  direction: rtl;
+  padding-right: 41px;
+  display: grid;
+  /* scrollbar-color: #bfc4ce #dadbe2 !important;
     scrollbar-width: thin !important; */
-    justify-content: start;
+  justify-content: start;
 }
-
+.selectPlace{
+  width: 272px;
+  padding-right: 10px;
+}
 .routs {
   background-color: rgb(245 245 245);
   /* margin: -0.5px; */
@@ -24,6 +27,10 @@
   width: 272px;
   scrollbar-color: #bfc4ce #dadbe2 !important;
   scrollbar-width: thin !important;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
 }
 
 .text {
@@ -33,14 +40,14 @@
 
 .MyTitle {
 
-    padding-right: 4%;
-    height: 48px;
-    padding-right: 4%;
-    font: normal normal bold 26px/34px Assistant;
-    justify-content: right;
-    margin: 0;
-    align-items: center;
-    display: flex;
+  padding-right: 4%;
+  height: 48px;
+  padding-right: 4%;
+  font: normal normal bold 26px/34px Assistant;
+  justify-content: right;
+  margin: 0;
+  align-items: center;
+  display: flex;
 }
 
 
@@ -93,7 +100,8 @@
   padding-bottom: 1px;
   border-radius: 4px 0px 4px 0px;
 }
-.mainRectangles{
+
+.mainRectangles {
   display: flex;
   justify-content: end;
   padding-right: 40px;
@@ -121,7 +129,7 @@
   display: flex;
   height: 59px;
   justify-content: space-between;
-  margin: 13px 13px 13px 23px;
+  /* margin: 13px 13px 13px 23px; */
   padding: 20px;
   width: 225px;
 }
@@ -172,20 +180,20 @@
 }
 
 .TitlePlaces {
-    /* top: 301px; */
-    height: 48px;
-    font: normal normal bold 26px/34px Assistant;
-    /* letter-spacing: 0px; */
-    /* color: #505050; */
-    opacity: 1;
-    /* margin-top: 25px; */
-    /* text-align: right; */
-    /* font-size: large; */
-    /* display: flow-root; */
-    padding-right: 4%;
-    justify-content: right;
-    margin: 0;
-    align-items: center;
+  /* top: 301px; */
+  height: 48px;
+  font: normal normal bold 26px/34px Assistant;
+  /* letter-spacing: 0px; */
+  /* color: #505050; */
+  opacity: 1;
+  /* margin-top: 25px; */
+  /* text-align: right; */
+  /* font-size: large; */
+  /* display: flow-root; */
+  padding-right: 4%;
+  justify-content: right;
+  margin: 0;
+  align-items: center;
 }
 
 h3 {

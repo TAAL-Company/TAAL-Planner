@@ -88,7 +88,7 @@ const Modal_Stations = ({ setOpenModalPlaces, idTasks }) => {
     <>
       {idTasks === 0 ? (
         <>
-          <div className="BackgroundPlasesNoClick">
+          {/* <div className="BackgroundPlasesNoClick"> */}
             <div className="modalContainerPlases">
           
               <div className="stopIconContainer">
@@ -116,7 +116,7 @@ const Modal_Stations = ({ setOpenModalPlaces, idTasks }) => {
                 </button>
               </div>
             </div>
-          </div>
+          {/* </div> */}
         </>
       ) : (
         <>

@@ -15,7 +15,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { CgSearch } from "react-icons/cg";
 import textArea from '../../Pictures/textArea.svg'
-
+import Modal_route_chosen from "../Modal/Modal_route_chosen"
 
 // const { baseUrl } = require
 //-----------------------
@@ -30,7 +30,7 @@ let filteredDataRoutes = [];
 let inputText = "";
 let inputTextRouts = "";
 let mySite = { name: "", id: "" };
-let flagRoute = false;
+// let flagRoute = false;
 // let flagButtonRoute = false;
 let tasksOfRoutes = [];
 let clickAddRoute = false;
@@ -62,9 +62,11 @@ const Places = (props) => {
   const [, setFlagButtonRoute] = useState(false);
   const [, setTasksOfRoutes] = useState([]);
   const [, setFlagTest] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [siteSelected, setSiteSelected] = useState(false);
   const [isFirstSelection, setIsFirstSelection] = useState(false);
   const [newTitleForRoute, setNewTitleForRoute] = useState({});
+  const [flagRoute, setRouteFlags] = useState(false);
+  const [openModalRouteChosen, setOpenModalRouteChosen] = useState(false);
 
   // const [, setMyCategory] = useState("place")
   let inputHandler = (e) => {
@@ -160,25 +162,36 @@ const Places = (props) => {
     // setData_Loaded(true)
   };
   const DisplayTasks = (e) => {
-    // console.log("check value routes:", tasksOfRoutes);
-    console.log("e", e);
 
-    setTasksOfRoutes((tasksOfRoutes = e));
-    console.log("check value routes:", tasksOfRoutes);
-    setFlagButtonRoute((flagRoute = true));
-    console.log("check value routes:", tasksOfRoutes.acf.tasks);
+    // console.log("check value routes:", tasksOfRoutes);
+    if (!flagRoute) {
+      console.log("e", e);
+
+      setRouteFlags(true)
+      setTasksOfRoutes((tasksOfRoutes = e));
+      console.log("check value routes:", tasksOfRoutes);
+      // setFlagButtonRoute((flagRoute = true));
+      console.log("check value routes:", tasksOfRoutes.acf.tasks);
+    }
+    else {
+      setOpenModalRouteChosen(true);
+
+    }
+
+
   };
   const handleSelectChange = (event) => {
     const selectedValue = JSON.parse(event.target.value);
     Display_The_Stations(selectedValue);
-    setModalVisible(true);
+    setSiteSelected(true);
   }
 
   const Display_The_Stations = (selectedValue) => {
 
     // const selectedValue = JSON.parse(event.target.value);
 
-    setFlagRoute((flagRoute = true));
+    // setRouteFlags(true)
+    // setFlagRoute((flagRoute = true));
     setThisIdTask((thisIdTask = selectedValue.id));
     if (stationArray.length > 0) {
       stationArray = [];
@@ -270,29 +283,18 @@ const Places = (props) => {
   return (
     <> <div className="Places">
       <div className="placesTitle">באיזה אתר ברצונך לבנות מסלול?</div>
-      <select defaultValue={'DEFAULT'} onChange={handleSelectChange}>
+      <select className="selectPlace" defaultValue={'DEFAULT'} onChange={handleSelectChange}>
         <option value="DEFAULT" disabled>אתר</option>
 
         {filteredData.map((value, index) => {
           return (
             <option
-              // className="buttons"
-              // onClick={() => Display_The_Stations(value)}
               key={index}
               value={JSON.stringify(value)}
             >
-              {/* <div className='penIcon' ></div>
-                              <div className='eyeIcon' ></div> */}
-              {/* <BsThreeDotsVertical
-            className="threeDotsVerticalEng"
-            //        setModalOpen(true)
-            onClick={() => clickOnhreeDotsVerticaIcont(value)}
-          /> */}
-              {/* <div className="nameOfButton text"> */}
+
               {value.name}
-              {/* </div> */}
-              {/* <Dot color="rgb(161, 147, 229)" /> */}
-              {/* <Dot color={'#7A78B7 '} /> */}
+
             </option >
           );
         })}
@@ -307,6 +309,8 @@ const Places = (props) => {
             setOpenModal={setModalOpen}
             setFlagStudent={setFlagStudent}
             flagTest={flagTest}
+            setSiteSelected ={setSiteSelected}
+            siteSelected = {siteSelected}
           />
         )}
         <div
@@ -437,6 +441,14 @@ const Places = (props) => {
         {/* )} */}
 
       </div>
+      {openModalRouteChosen ? (
+        <>
+          <Modal_route_chosen setOpenModalRouteChosen={setOpenModalRouteChosen}>
+          </Modal_route_chosen>
+        </>
+      ) : <></>}
+
+      <></>
     </>
   );
 };

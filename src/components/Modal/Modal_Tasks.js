@@ -5,6 +5,7 @@ import { RiAsterisk } from "react-icons/ri";
 import { IoMdCheckbox } from "react-icons/io";
 import Modal_Loading from "./Modal_Loading";
 import { baseUrl } from "../../config";
+import Modal_no_site_selected from "./Modal_no_site_selected";
 
 //--------------------------
 let getPicture, getSound;
@@ -14,7 +15,7 @@ let flagClickOK = false;
 let myPlacesChoiceTemp = [];
 let myPlacesChoice = [];
 //--------------------------
-function Modal_Tasks({ setOpenModalPlaces, allStations, help }) {
+function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected ,setModalOpenNoSiteSelected }) {
   const [, setDone] = useState(false);
   const [get_title, setTitle] = useState("");
   const [, setPicture] = useState(null);
@@ -123,10 +124,15 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help }) {
         // console.log("myPlacesChoice:", myPlacesChoice)
       }
   };
+  
 
   return (
     <>
-      {!help ? (
+      {!help && !siteSelected ? (<>
+          <Modal_no_site_selected setOpenModal={setOpenModalPlaces}></Modal_no_site_selected>
+
+      </>) : (<></>)}
+      {!help && siteSelected ? (
         <>
           <div className="BackgroundTasks">
             <div className="modalContainerTasks">
@@ -266,48 +272,49 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help }) {
           </div>
         </>
       ) : (
-        <div className="Background">
-          <div className="modalContainerHelpPlanner">
-            <div className="titleCloseBtn">
-              <button
-                onClick={() => {
-                  setOpenModalPlaces(false);
-                }}
-              >
-                {" "}
-                X
-              </button>
-            </div>
-            <h3>
-              הוראות לבניית מסלול &nbsp;
-              <FcAbout />
-            </h3>
-            <br></br>
-            <div className="body" style={{ textAlign: "right" }}>
-              <h6>
-                בחר/י אתר קיים מרשימת האתרים או הוספ/י אתר משלך <samp>(1</samp>
-              </h6>
-              <br></br>
-              <h6>
-                בחר/י תחנה השייכת לאתר שבחרת ו/או הוספ/י תחנה חדשה{" "}
-                <samp>(2</samp>
-              </h6>
-              <br></br>
-              <h6>
-                גרור לתיבת הגרירות את המשימות הרצויות כדי לבנות מסלול חדש{" "}
-                <samp>(3</samp>
-              </h6>
-              <h6>
-                ו/או בחר/י בהוסף משימה ושייך משימה זו לתחנות שבהם יש צורך בביצוע
-                משימה זו
-              </h6>
-              <br></br>
-              <h6>
-                רשום את שם המסלול ובצע שמירה <samp>(4</samp>
-              </h6>
-            </div>
-          </div>
-        </div>
+        <></>
+        // <div className="Background">
+        //   <div className="modalContainerHelpPlanner">
+        //     <div className="titleCloseBtn">
+        //       <button
+        //         onClick={() => {
+        //           setOpenModalPlaces(false);
+        //         }}
+        //       >
+        //         {" "}
+        //         X
+        //       </button>
+        //     </div>
+        //     <h3>
+        //       הוראות לבניית מסלול &nbsp;
+        //       <FcAbout />
+        //     </h3>
+        //     <br></br>
+        //     <div className="body" style={{ textAlign: "right" }}>
+        //       <h6>
+        //         בחר/י אתר קיים מרשימת האתרים או הוספ/י אתר משלך <samp>(1</samp>
+        //       </h6>
+        //       <br></br>
+        //       <h6>
+        //         בחר/י תחנה השייכת לאתר שבחרת ו/או הוספ/י תחנה חדשה{" "}
+        //         <samp>(2</samp>
+        //       </h6>
+        //       <br></br>
+        //       <h6>
+        //         גרור לתיבת הגרירות את המשימות הרצויות כדי לבנות מסלול חדש{" "}
+        //         <samp>(3</samp>
+        //       </h6>
+        //       <h6>
+        //         ו/או בחר/י בהוסף משימה ושייך משימה זו לתחנות שבהם יש צורך בביצוע
+        //         משימה זו
+        //       </h6>
+        //       <br></br>
+        //       <h6>
+        //         רשום את שם המסלול ובצע שמירה <samp>(4</samp>
+        //       </h6>
+        //     </div>
+        //   </div>
+        // </div>
       )
       }
     </>

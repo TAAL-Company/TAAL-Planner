@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
 import Tag from "../Tag/Tag.js";
+import "./reorderBoard.css"
 
 const ReorderBoard = (props) => {
     const [tasks, setTasks] = useState(props.board);

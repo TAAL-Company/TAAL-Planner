@@ -82,7 +82,7 @@ function DragnDrop(props) {
 
   }
 
-  console.log("props mySite:", props.mySite);
+  console.log("props mySite:", props.mySite.name);
   console.log("props dragFrom:", props.dragFrom);
 
   // console.log("JSON.parse(localStorage.getItem('New_Routes')):", JSON.parse(localStorage.getItem('New_Routes')))
@@ -91,6 +91,7 @@ function DragnDrop(props) {
   // const [, setFlagFirst] = useState(true)
   const [, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpenNoSiteSelected, setModalOpenNoSiteSelected] = useState(false);
   const [modalOpenAddRoute, setModalOpenAddRoute] = useState(false);
   const [, setModalFlagTablet] = useState(false);
 
@@ -112,6 +113,7 @@ function DragnDrop(props) {
   const [, setBorderLeft] = useState("2px solid #c2bfbf");
   const [, setFlagStress] = useState(false);
   const [activeButton, setActiveButton] = useState("tree");
+  const [siteSelected, setSiteSelected] = useState(false)
   // const [prevStation,setPrevStation] = useState("test");
 
   const [characters, updateCharacters] = useState(finalSpaceCharacters);
@@ -125,10 +127,16 @@ function DragnDrop(props) {
 
     updateCharacters(items);
   }
-
   useEffect(() => {
     console.log("charactersss: ", characters)
   }, [characters]);
+
+  useEffect(() => {
+    if (props.mySite.name != "") {
+      setSiteSelected(true);
+    
+    }
+  }, [props.mySite.name]);
 
   // const [, setNameStation] = useState(props.myStation.name);
   // const [, setMarginTop] = useState("");
@@ -392,13 +400,15 @@ function DragnDrop(props) {
   //---------------------------------------------------------
   return (
     <>
-      {modalOpen && (
+      {modalOpen ? (
         <ModalTasks
           setOpenModalPlaces={setModalOpen}
+          // setModalOpenNoSiteSelected={setModalOpenNoSiteSelected}
           allStations={props.allStations}
+          siteSelected = {siteSelected}
           help={helpFlag}
         />
-      )}
+      ):(<></>)}
       {modalOpenAddRoute && (
         <Modal setOpenModal={setModalOpenAddRoute} setText={get_Name} />
       )}
@@ -494,6 +504,7 @@ function DragnDrop(props) {
             className="AddButton"
             onClick={() => {
               setModalOpen(true);
+              setModalOpenNoSiteSelected(true);
             }}
           >
             <AiOutlinePlus className="plus" />
@@ -593,11 +604,7 @@ function DragnDrop(props) {
                   onClick={treeFunction}
                 >
                 </button>
-                <button
-                  className={'watch' + (activeButton === 'watch' ? ' active' : '')}
-                  onClick={watchFunction}
-                >
-                </button>
+
                 <button
                   className={'phone' + (activeButton === 'phone' ? ' active' : '')}
                   onClick={phoneFunction}
@@ -607,6 +614,11 @@ function DragnDrop(props) {
                   className={'tablet' + (activeButton === 'tablet' ? ' active' : '')}
                   onClick={
                     tabletFunction}
+                >
+                </button>
+                <button
+                  className={'watch' + (activeButton === 'watch' ? ' active' : '')}
+                  onClick={watchFunction}
                 >
                 </button>
                 {/* <button

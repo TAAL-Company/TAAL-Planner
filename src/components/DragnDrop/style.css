@@ -339,6 +339,9 @@
     flex-direction: row-reverse;
 }
 
+.my_Buttons_icons.english {
+    flex-direction: row;
+}
 /* span {
 
   position: relative;

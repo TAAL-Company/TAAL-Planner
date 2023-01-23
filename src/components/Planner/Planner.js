@@ -39,6 +39,10 @@ const Planner = () => {
         // routeWrite
         , setRouteWrite] = useState("Write down the name of the route");
     const [drag, setRDrag] = useState("route view");
+    const [routesBeforeChoosingSite, setRoutesBeforeChoosingSite] = useState("After selecting the site, this column will show routes that exist on the site.");
+    const [tasksBeforeChoosingSite, setTasksBeforeChoosingSite] = useState("After selecting the site, this column will show routes that exist on the site.");
+    const [stationsBeforeChoosingSite, setStationsBeforeChoosingSite] = useState("After selecting the site, this column will show routes that exist on the site.");
+
 
     const [titlePlacesCss, setTitlePlacesCss] = useState("linear-gradient(90deg, #7A78B7  5%, #7A78B71F 1%)");
     const [titleStationCss, setTitleStationCss] = useState("linear-gradient(90deg, #F2AE69 5%, #FEF5ED 1%)");
@@ -86,13 +90,16 @@ const Planner = () => {
         setAddTask("Add tasks");
         setSiteQuestionLanguage("Which site do you want to build a route on?");
         setSiteLanguage("Site")
+        setRoutesBeforeChoosingSite("After selecting the site, this column will show routes that exist on the site.")
+        setTasksBeforeChoosingSite("After selecting the station, this column will show tasks that exist in it.")
+        setStationsBeforeChoosingSite("After selecting the route, this column will show the stations that exist in it.")
         // setTitlePlacesCss("linear-gradient(90deg, #7A78B7  5%, #7A78B71F 1%)");
         // setTitleStationCss("linear-gradient(90deg,#F2AE69 5%, #FEF5ED 1%)");
         // setTitleTaskCss("linear-gradient(90deg, #C4CE9C 5%, #F8F9F3 1%)");
         setInputSide("left");
         setflagHebrew(true);
         setMarginHebrew("150px")
-        }
+    }
     const english = () => {
         setHebrew(true);
         setLanguage("English");
@@ -109,6 +116,9 @@ const Planner = () => {
         setAddSite("הוסף אתר");
         setAddStation("הוסף תחנה");
         setAddTask("הוסף משימה");
+        setRoutesBeforeChoosingSite("אחרי בחירת האתר, בעמודה זו יופיעו המסלולים הקיימים בו.");
+        setTasksBeforeChoosingSite("אחרי בחירת התחנה, בעמודה זו יופיעו המשימות הקיימות בה.")
+        setStationsBeforeChoosingSite("אחרי בחירת המסלול, בעמודה זו יופיעו התחנות הקיימות בו.")
         // setTitlePlacesCss("linear-gradient(90deg,  #7A78B71F 95%, #7A78B7 1%)");
         // setTitleStationCss("linear-gradient(90deg, #FEF5ED 95%, #F2AE69 1%)");
         // setTitleTaskCss("linear-gradient(90deg, #F8F9F3 95%, #C4CE9C 1%)");
@@ -128,48 +138,9 @@ const Planner = () => {
                         {!loading && (
 
                             < >
-                                <div className="Actions" >
-                                    {flagHebrew ?
-                                        <>
-                                            {/* <button className="AddRoute" type="submit"
-                                            onClick={() => {
-                                                setModalOpen(true);
-                                            }}
-                                        >
-                                            <AiFillCheckCircle className='icon' />
-                                            &nbsp;&nbsp;
-                                            {saveButton}
-                                        </button> */}
-
-                                            {/* &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp;  &nbsp;&nbsp;
-                                        <button className="AddRoute" type="submit"
-                                            onClick={() => {
-                                                setModalOpen(true);
-                                            }}
-                                        >
-                                            <MdHelpOutline className='icon' />
-                                            &nbsp;&nbsp;
-                                            Help
-                                        </button> */}
-
-                                        </> :
-                                        <>
-                                            {/* <button className="AddRoute" type="submit" style={{
-                                            position: 'absolute',
-                                            right: '70px',
-
-                                        }}
-                                            onClick={() => {
-                                                setModalOpen(true);
-                                            }}
-                                        >
-                                            {saveButton}
-                                            &nbsp;&nbsp;
-                                            <AiFillCheckCircle className='icon' />
-                                        </button> */}
-                                        </>}
+                                <div className={`Actions ${language !== 'English' ? 'english' : ''}`}  >
                                     {/* כפתור שפות */}
-                                    <button className="language" style={{ marginLeft: marginHebrew,marginTop: "22px" }}
+                                    <button className="language" style={{ marginLeft: marginHebrew, marginTop: "22px" }}
                                         onClick={() => {
                                             if (Hebrew !== false)
                                                 hebrew();
@@ -180,9 +151,25 @@ const Planner = () => {
 
                                 {modalOpen && <Modal setOpenModal={setModalOpen} setText={get_Name} />}
                                 <div className="warpper">
-                                    <Places setFloatLang={floatLan} language={language} sites={sites} stations={stations} siteLanguage={siteLanguage} siteQuestionLanguage={siteQuestionLanguage} saveButton={saveButton} myTasks={myTasks} drag={drag}
-                                        addSite={addSite} addStation={addStation} addMyTask={addMyTask} titlePlacesCss={titlePlacesCss}
-                                        titleStationCss={titleStationCss} titleTaskCss={titleTaskCss} flagHebrew={flagHebrew} />
+                                    <Places setFloatLang={floatLan}
+                                        stationsBeforeChoosingSite={stationsBeforeChoosingSite}
+                                        tasksBeforeChoosingSite={tasksBeforeChoosingSite}
+                                        routesBeforeChoosingSite={routesBeforeChoosingSite}
+                                        language={language}
+                                        sites={sites}
+                                        stations={stations}
+                                        siteLanguage={siteLanguage}
+                                        siteQuestionLanguage={siteQuestionLanguage}
+                                        saveButton={saveButton}
+                                        myTasks={myTasks}
+                                        drag={drag}
+                                        addSite={addSite}
+                                        addStation={addStation}
+                                        addMyTask={addMyTask}
+                                        titlePlacesCss={titlePlacesCss}
+                                        titleStationCss={titleStationCss}
+                                        titleTaskCss={titleTaskCss}
+                                        flagHebrew={flagHebrew} />
                                 </div>
                             </>
                         )}

@@ -318,42 +318,17 @@ const Places = (props) => {
         <div
           className="Cover_Places"
         >
-          {!props.flagHebrew ? (
-            <>
-              {" "}
-              <div
-                className="TitlePlacesCover"
-              // style={{
-              //   background:
-              //     "linear-gradient(90deg,  #256FA11F  95%, #679abd 1%)",
-              // }}
-              >
-                <h3 className="TitlePlaces">
-                  <div className="MyRoutesTitle">
-                    {/* מסלולים ב{" "}
-                          <span className="name_of_site_title">
-                            {mySite.name}
-                          </span> */}
-                    מסלולים
-                  </div>
-                </h3>
+
+          <>
+            <div className="TitlePlacesCover">
+              <div className="TitlePlaces">
+                <div className={`MyTitle text ${props.language !== 'English' ? 'english' : ''}`}>
+                  {props.language === "English" ? "מסלולים" : "Routes"}
+                </div>
               </div>
-            </>
-          ) : (
-            <>
-              <div
-                className="TitlePlacesCover"
-              // style={{
-              //   background: props.titlePlacesCss,
-              // }}
-              >
-                <h3 className="TitlePlaces">
-                  &nbsp;&nbsp;&nbsp;
-                  <div className="MyTitle">{props.sites}</div>
-                </h3>
-              </div>
-            </>
-          )}
+            </div>
+          </>
+
           <div
             className="search"
             style={{
@@ -366,14 +341,14 @@ const Places = (props) => {
             <input
               className="searchButton"
               dir="rtl"
-              placeholder="חפש מסלול"
+              placeholder={props.language === "English" ? "חפש מסלול" : "search route"}
               label={<CgSearch style={{ fontSize: "x-large" }} />}
               onChange={inputHandlerRoutes}
             ></input>
           </div>
           <div className="routs">
             {filteredDataRoutes.length === 0
-              ? <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>אחרי בחירת האתר, בעמודה זו יופיעו המסלולים הקיימים בו.</div>
+              ? <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>{props.routesBeforeChoosingSite}</div>
               : filteredDataRoutes.map((value, index) => {
                 return (
                   <div
@@ -440,6 +415,8 @@ const Places = (props) => {
           clickAddRoute={clickAddRoute}
           saveButton={props.saveButton}
           siteQuestionLanguage={props.siteQuestionLanguage}
+          stationsBeforeChoosingSite={props.stationsBeforeChoosingSite}
+          tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
         />
 
         {/* )} */}

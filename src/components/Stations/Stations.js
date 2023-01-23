@@ -1,14 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { getingData, get } from "../../api/api";
-// import { FcSearch } from "react-icons/fc";
-// import { MdOutlineAdsClick } from "react-icons/md";
 import "./style.css";
 import TasksComp from "../Tasks_comp/Tasks_comp";
 import ModalStations from "../Modal/Modal_Stations";
-// import TextField from "@mui/material/TextField";
-
 import { AiOutlinePlus } from "react-icons/ai";
-// import Dot from "../Dot/Dot"
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { CgSearch } from "react-icons/cg";
 import "@fontsource/assistant";
@@ -27,12 +22,7 @@ let myCategory = "stationCategory";
 //-----------------------
 const Stations = (props) => {
   console.log("props.stationArray: ", props.stationArray);
-  // console.log("station:", props.language.setFloatLang)
-  // console.log("mySite:", props.mySite);
   console.log("propsDataStations:", props.propsData);
-  // console.log(" props.allStations:", props.allStations)
-  // console.log(" props.idTask:", props.idTask)
-  // const [, set_obj] = useState(null);// for TextView
   const [, setStateTask] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -95,7 +85,7 @@ const Stations = (props) => {
     };
     fetchData();
   }, []);
-  
+
   const Display_The_Tasks = (e, n) => {
     console.log("eeeeeeeeeeeeeeeeeee: ", e);
     if (myStation.id === e) {
@@ -150,34 +140,17 @@ const Stations = (props) => {
             />
           )}
 
-          <div
-            className="Cover_Stations"
-         
-          >
-            {!props.flagHebrew ? (
-              <>
-                <div
-                  className="TitleStation"
+          <div className="Cover_Stations">
 
-                >
-                  {/* <BsThreeDotsVertical className='threeDotsVertical' /> */}
-                  <div className="MyTitle text"> {props.stationsName}</div>
-                </div>
-              </>
-            ) : (
-              <>
-                <div
-                  className="TitleStation"
+            <>
+              <div
+                className="TitleStation"
 
-                >
-                  <h3>
-                    &nbsp;&nbsp;&nbsp;
-                    <div className="MyTitle"> {props.stationsName}</div>
-                    {/* <BsThreeDotsVertical className='threeDotsVerticalEngStation' /> */}
-                  </h3>
-                </div>
-              </>
-            )}
+              >
+                <div className={`MyTitle text ${props.language !== 'English' ? 'english' : ''}`}> {props.stationsName}</div>
+              </div>
+            </>
+
             <div
               className="search"
               style={{
@@ -191,13 +164,13 @@ const Stations = (props) => {
               <input
                 className="searchButton"
                 dir="rtl"
-                placeholder="חפש תחנה"
+                placeholder={props.language === "English" ? "חפש תחנה" : "search station"}
                 label={<CgSearch style={{ fontSize: "x-large" }} />}
                 onChange={inputHandler}
               ></input>
             </div>
             <div className="Stations">
-              {characters.length > 0  ? ( //DND
+              {characters.length > 0 ? ( //DND
                 <>
                   <DragDropContext onDragEnd={handleOnDragEnd}>
                     <Droppable droppableId="characters">
@@ -263,36 +236,9 @@ const Stations = (props) => {
                       )}
                     </Droppable>
                   </DragDropContext>
-                  {/* {filteredData.map((value, index) => {
-                    return (
-                      <button
-                        className="buttons"
-                        onClick={() => Display_The_Tasks(value)}
-                        key={index}
-                      >
-                        <BsThreeDotsVertical
-                          className="threeDotsVerticalEng"
-                          // onClick={() => clickOnhreeDotsVerticaIcont(value)}
-                        />
-                        {myRouteClick === value.id ? (
-                          <>
-                            {modalIconsOpen && (
-                              <ModalIcons
-                                setOpenModalPlaces={setModalIconsOpen}
-                                myCategory={myCategory}
-                              />
-                            )}
-                          </>
-                        ) : (
-                          <></>
-                        )}
-                        <div className="nameOfButton">{value.name}</div>
-                      </button>
-                    );
-                  })} */}
                 </>
               ) : (
-                <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>אחרי בחירת המסלול, בעמודה זו יופיעו התחנות הקיימות בו.</div>
+                <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>{props.stationsBeforeChoosingSite}</div>
               )}
             </div>
             <div className="addStationCover">
@@ -319,8 +265,10 @@ const Stations = (props) => {
             flagHebrew={props.flagHebrew}
             tasksOfRoutes={props.tasksOfRoutes}
             myStations={props.propsData}
-            saveButton ={props.saveButton}
+            saveButton={props.saveButton}
             siteQuestionLanguage={props.siteQuestionLanguage}
+            tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
+
           />
         </>
       )}

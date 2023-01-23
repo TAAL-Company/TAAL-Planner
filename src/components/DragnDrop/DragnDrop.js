@@ -134,7 +134,7 @@ function DragnDrop(props) {
   useEffect(() => {
     if (props.mySite.name != "") {
       setSiteSelected(true);
-    
+
     }
   }, [props.mySite.name]);
 
@@ -405,10 +405,10 @@ function DragnDrop(props) {
           setOpenModalPlaces={setModalOpen}
           // setModalOpenNoSiteSelected={setModalOpenNoSiteSelected}
           allStations={props.allStations}
-          siteSelected = {siteSelected}
+          siteSelected={siteSelected}
           help={helpFlag}
         />
-      ):(<></>)}
+      ) : (<></>)}
       {modalOpenAddRoute && (
         <Modal setOpenModal={setModalOpenAddRoute} setText={get_Name} />
       )}
@@ -416,71 +416,38 @@ function DragnDrop(props) {
         className="Cover_Tasks"
 
       >
-        {!props.flagHebrew ? (
-          <>
-            <div
-              className="TitleTasks"
-            // style={{
-            //   background: props.titleTaskCss,
-            // }}
-            >
-              {/* <BsThreeDotsVertical className='threeDotsVertical' /> */}
-              <div className="MyTitle text">{props.myTasks}</div>
-            </div>
-            <div
-              className="search"
-              style={{
-                backgroundColor: "#F5F5F5",
-                // borderStyle: "none none solid none",
-                // borderColor: "#fff",
-                // borderWidth: "5px",
-              }}
-            >
-              <input
-                className="searchButton"
-                dir="rtl"
-                placeholder="חפש משימה"
-                label={<CgSearch style={{ fontSize: "x-large" }} />}
-              // onChange={inputHandler}
-              ></input>
-            </div>
-          </>
-        ) : (
-          <>
-            <div
-              className="TitleTasks"
-            // style={{
-            //   background: props.titleTaskCss,
-            // }}
-            >
-              <h3>
-                &nbsp;
-                <div className="MyTitle">{props.myTasks}</div>
-                {/* <BsThreeDotsVertical className='threeDotsVerticalEng' /> */}
-              </h3>
-            </div>
-            <div
-              className="search"
-              style={{
-                backgroundColor: "#F5F5F5",
-                // borderStyle: "none none solid none",
-                // borderColor: "#fff",
-                // borderWidth: "5px",
-              }}
-            >
-              <input
-                className="searchButton"
-                dir="rtl"
-                label={<CgSearch style={{ fontSize: "x-large" }} />}
-              // onChange={inputHandler}
-              ></input>
-            </div>
-          </>
-        )}
+
+        <div
+          className="TitleTasks"
+        // style={{
+        //   background: props.titleTaskCss,
+        // }}
+        >
+          {/* <BsThreeDotsVertical className='threeDotsVertical' /> */}
+          <div className={`MyTitle text ${props.language !== 'English' ? 'english' : ''}`}>{props.myTasks}</div>
+        </div>
+        <div
+          className="search"
+          style={{
+            backgroundColor: "#F5F5F5",
+            // borderStyle: "none none solid none",
+            // borderColor: "#fff",
+            // borderWidth: "5px",
+          }}
+        >
+          <input
+            className="searchButton"
+            // dir="rtl"
+            placeholder={props.language === "English" ? "חפש משימה" : "search task"}
+            label={<CgSearch style={{ fontSize: "x-large" }} />}
+          // onChange={inputHandler}
+          ></input>
+        </div>
+
         {/* המשימות */}
         <div className="TasksCover">
           {dndArray.length === 0
-            ? <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>אחרי בחירת התחנה, בעמודה זו יופיעו המשימות הקיימות בה.</div>
+            ? <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>{props.tasksBeforeChoosingSite}</div>
             : dndArray.map((tag) => {
               return (
                 <Tag
@@ -513,7 +480,7 @@ function DragnDrop(props) {
       </div>
       <>
         {/* {props.flagHebrew ? ( */}
-          {/* <>
+        {/* <>
             <div className="Board" style={{ marginLeft: "1119px" }} ref={drop}>
               <i className="bi bi-dash-square">
                 <div
@@ -558,26 +525,26 @@ function DragnDrop(props) {
             </div>{" "}
           </> */}
         {/* // ) : ( */}
-          <>
-            <div className={`Board ${props.language !== 'English' ? 'english' : ''}`} ref={drop}>
-              <button
-                className="AddRoute"
-                type="submit"
-                onClick={() => {
-                  setModalOpenAddRoute(true);
-                }}
-              >
-               {props.saveButton}
-                {/* <AiFillCheckCircle className="icon" /> */}
-              </button>
-              <div className="txt">
-                {" "}
-                {props.drag}&nbsp;&nbsp;
-                <div style={{ fontSize: "20px", left: "185px" }}></div>
-              </div>
+        <>
+          <div className={`Board ${props.language !== 'English' ? 'english' : ''}`} ref={drop}>
+            <button
+              className="AddRoute"
+              type="submit"
+              onClick={() => {
+                setModalOpenAddRoute(true);
+              }}
+            >
+              {props.saveButton}
+              {/* <AiFillCheckCircle className="icon" /> */}
+            </button>
+            <div className="txt">
+              {" "}
+              {props.drag}&nbsp;&nbsp;
+              <div style={{ fontSize: "20px", left: "185px" }}></div>
+            </div>
 
 
-              {/* <div className='my_Buttons_icons'>
+            {/* <div className='my_Buttons_icons'>
                                 <button className='tree'></button>
                                 <div className='kavIconsTree'></div>
                                 <button className='watch'></button>
@@ -588,52 +555,52 @@ function DragnDrop(props) {
                                 <div className='kavIconsTablet'></div>
                                 <button className='computer'></button>
                             </div> */}
-              <div className="my_Buttons_icons">
-                <button
-                  className={'reorder' + (activeButton === 'reorder' ? ' active' : '')}
-                  onClick={reorderFunction}
-                >
-                </button>
-                <button
-                  className={'tree' + (activeButton === 'tree' ? ' active' : '')}
-                  onClick={treeFunction}
-                >
-                </button>
+            <div className={`my_Buttons_icons ${props.language !== 'English' ? 'english' : ''}`}>
+              <button
+                className={'reorder' + (activeButton === 'reorder' ? ' active' : '')}
+                onClick={reorderFunction}
+              >
+              </button>
+              <button
+                className={'tree' + (activeButton === 'tree' ? ' active' : '')}
+                onClick={treeFunction}
+              >
+              </button>
 
-                <button
-                  className={'phone' + (activeButton === 'phone' ? ' active' : '')}
-                  onClick={phoneFunction}
-                >
-                </button>
-                <button
-                  className={'tablet' + (activeButton === 'tablet' ? ' active' : '')}
-                  onClick={
-                    tabletFunction}
-                >
-                </button>
-                <button
-                  className={'watch' + (activeButton === 'watch' ? ' active' : '')}
-                  onClick={watchFunction}
-                >
-                </button>
-                {/* <button
+              <button
+                className={'phone' + (activeButton === 'phone' ? ' active' : '')}
+                onClick={phoneFunction}
+              >
+              </button>
+              <button
+                className={'tablet' + (activeButton === 'tablet' ? ' active' : '')}
+                onClick={
+                  tabletFunction}
+              >
+              </button>
+              <button
+                className={'watch' + (activeButton === 'watch' ? ' active' : '')}
+                onClick={watchFunction}
+              >
+              </button>
+              {/* <button
                   className={'computer' + (activeButton === 'computer' ? ' active' : '')}
                   onClick={
                     computerFunction}>
                 </button> */}
-              </div>
-              <div className="MyTasks">
-                {/* flagTree   */}
-                {flagTree ? (
-                  <>
-                    {props.mySite.name ? (
-                      <>
-                        <div className="kavT"></div>
-                        <div className="mySiteChois">
-                          {props.tasksOfRoutes && props.tasksOfRoutes.title ? props.tasksOfRoutes.title.rendered : ''}
-                          &nbsp;&nbsp;{" "}
-                        </div>
-                        {/* {props.tasksOfRoutes && props.tasksOfRoutes.acf ? (
+            </div>
+            <div className="MyTasks">
+              {/* flagTree   */}
+              {flagTree ? (
+                <>
+                  {props.mySite.name ? (
+                    <>
+                      <div className="kavT"></div>
+                      <div className="mySiteChois">
+                        {props.tasksOfRoutes && props.tasksOfRoutes.title ? props.tasksOfRoutes.title.rendered : ''}
+                        &nbsp;&nbsp;{" "}
+                      </div>
+                      {/* {props.tasksOfRoutes && props.tasksOfRoutes.acf ? (
                           <>
                             {props.tasksOfRoutes.acf.tasks.map(
                               (element, keyCount) => {
@@ -656,60 +623,81 @@ function DragnDrop(props) {
                         ) : (
                           <></>
                         )} */}
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                    {board.map((tag, keyCount) => {
-                      console.log("tag.id: ", tag.id);
-                      return (saveTag = (
-                        <Tag
-                          modalFlagTablet={modalFlagTablet}
-                          title={tag.title}
-                          id={tag.id}
-                          data={tag.data}
-                          // idImg={tag.id}
-                          dataImg={tag.dataImg}
-                          key={keyCount}
-                          flagBoard={true}
-                          myLastStation={props.myStation.name}
-                          myStation={tag.myStation}
-                          myMarginTop={"-68px"}
-                          count={count}
-                          flag={tag.flag}
-                          width={tag.width}
-                          borderLeft={tag.borderLeft}
-                          height={tag.height}
-                          setKavTaskTopMarginTop={tag.setKavTaskTopMarginTop}
-                          bottom={tag.bottom}
-                          kavTopWidth={tag.kavTopWidth}
-                          newkavTaskTop={tag.newkavTaskTop}
-                          nameStation={tag.nameStation}
-                          flagPhone={flagPhone}
-                          flagTree={flagTree}
-                          dragFromCover={"border"}
+                    </>
+                  ) : (
+                    <></>
+                  )}
+                  {board.map((tag, keyCount) => {
+                    console.log("tag.id: ", tag.id);
+                    return (saveTag = (
+                      <Tag
+                        modalFlagTablet={modalFlagTablet}
+                        title={tag.title}
+                        id={tag.id}
+                        data={tag.data}
+                        // idImg={tag.id}
+                        dataImg={tag.dataImg}
+                        key={keyCount}
+                        flagBoard={true}
+                        myLastStation={props.myStation.name}
+                        myStation={tag.myStation}
+                        myMarginTop={"-68px"}
+                        count={count}
+                        flag={tag.flag}
+                        width={tag.width}
+                        borderLeft={tag.borderLeft}
+                        height={tag.height}
+                        setKavTaskTopMarginTop={tag.setKavTaskTopMarginTop}
+                        bottom={tag.bottom}
+                        kavTopWidth={tag.kavTopWidth}
+                        newkavTaskTop={tag.newkavTaskTop}
+                        nameStation={tag.nameStation}
+                        flagPhone={flagPhone}
+                        flagTree={flagTree}
+                        dragFromCover={"border"}
 
-                        />
-                      ));
-                    })}
-                    {flagPhoneOne ? (
+                      />
+                    ));
+                  })}
+                  {flagPhoneOne ? (
+                    <>
+                      <div className="kavB"></div>
+                    </>
+                  ) : (
+                    <>
+                      {/* <div className="kavBOne"></div> */}
+                    </>
+                  )}
+                </>
+              ) : (
+                <>
+                  {/* flagPhone */}
+                  {
+                    flagPhone ? (
                       <>
-                        <div className="kavB"></div>
+                        <>
+                          <Phone
+                            modalFlagTablet={modalFlagTablet}
+                            flagPhone={flagPhone}
+                            board={board}
+                            saveTag={saveTag}
+                            count={count}
+                            myStation={props.myStation}
+                            flagTree={flagTree}
+                            flagStress={flagStress}
+                            mySite={props.mySite}
+                          />
+                        </>
+
+                        {/* --------------------------------------------------- */}
+
+                        {/* --------------------------------------------------- */}
                       </>
                     ) : (
                       <>
-                        {/* <div className="kavBOne"></div> */}
-                      </>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {/* flagPhone */}
-                    {
-                      flagPhone ? (
-                        <>
+                        {modalFlagTablet ? (
                           <>
-                            <Phone
+                            <Tablet
                               modalFlagTablet={modalFlagTablet}
                               flagPhone={flagPhone}
                               board={board}
@@ -721,41 +709,20 @@ function DragnDrop(props) {
                               mySite={props.mySite}
                             />
                           </>
-
-                          {/* --------------------------------------------------- */}
-
-                          {/* --------------------------------------------------- */}
-                        </>
-                      ) : (
-                        <>
-                          {modalFlagTablet ? (
-                            <>
-                              <Tablet
-                                modalFlagTablet={modalFlagTablet}
-                                flagPhone={flagPhone}
-                                board={board}
-                                saveTag={saveTag}
-                                count={count}
-                                myStation={props.myStation}
-                                flagTree={flagTree}
-                                flagStress={flagStress}
-                                mySite={props.mySite}
-                              />
-                            </>
-                          ) : (
-                            <>
-                              <ReorderBoard
-                                board={board}
-                              />
-                            </>
-                          )}
-                        </>
-                      )}
-                  </>
-                )}
-              </div>
+                        ) : (
+                          <>
+                            <ReorderBoard
+                              board={board}
+                            />
+                          </>
+                        )}
+                      </>
+                    )}
+                </>
+              )}
             </div>
-          </>
+          </div>
+        </>
         {/* // )} */}
       </>
     </>

@@ -13,14 +13,18 @@
     scrollbar-width: thin !important; */
   justify-content: start;
 }
+
 .Places.english {
   padding-left: 40px;
   direction: ltr;
 }
-.selectPlace{
+
+.selectPlace {
   width: 272px;
   padding-right: 10px;
+  padding-left: 10px;
 }
+
 .routs {
   background-color: rgb(245 245 245);
   /* margin: -0.5px; */
@@ -54,7 +58,10 @@
   display: flex;
 }
 
-
+.MyTitle.english {
+  justify-content: left;
+  padding-left: 15px;
+}
 
 .eyeIcon {
   width: 66px;
@@ -114,10 +121,12 @@
   gap: 1%;
   margin-top: 20px;
 }
+
 .mainRectangles.english {
   flex-direction: revert;
   justify-content: start;
 }
+
 .Cover_Places {
   /* flex: 1 1 auto; */
   /* margin: 0 4px; */

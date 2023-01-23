@@ -231,7 +231,7 @@ const Places = (props) => {
       // console.log("mySite.id:", mySite.id)
       setRoutes(
         (myRoutes = res.data.filter(
-          (item) => item.acf.my_site === String(mySite.id)
+          (item) => (item.acf.my_site === String(mySite.id) || item.places.includes(mySite.id))
         ))
       );
       // console.log("myRoutesssssssssssss:", myRoutes);
@@ -281,10 +281,12 @@ const Places = (props) => {
 
   //----------------------------------------------------------------------
   return (
-    <> <div className="Places">
-      <div className="placesTitle">באיזה אתר ברצונך לבנות מסלול?</div>
+    <> <div className={`Places ${props.language !== 'English' ? 'english' : ''}`}>
+      <div className="placesTitle">
+        {props.siteQuestionLanguage}
+      </div>
       <select className="selectPlace" defaultValue={'DEFAULT'} onChange={handleSelectChange}>
-        <option value="DEFAULT" disabled>אתר</option>
+        <option value="DEFAULT" disabled>{props.siteLanguage}</option>
 
         {filteredData.map((value, index) => {
           return (
@@ -300,7 +302,7 @@ const Places = (props) => {
         })}
       </select>
     </div>
-      <div className="mainRectangles">
+      <div className={`mainRectangles ${props.language !== 'English' ? 'english' : ''}`}>
 
         {/* routes */}
         {modalOpen && (
@@ -309,8 +311,8 @@ const Places = (props) => {
             setOpenModal={setModalOpen}
             setFlagStudent={setFlagStudent}
             flagTest={flagTest}
-            setSiteSelected ={setSiteSelected}
-            siteSelected = {siteSelected}
+            setSiteSelected={setSiteSelected}
+            siteSelected={siteSelected}
           />
         )}
         <div
@@ -424,7 +426,7 @@ const Places = (props) => {
           propsData={stationArray}
           idTask={thisIdTask}
           allStations={onlyAllStation}
-          language={props}
+          language={props.language}
           stationsName={props.stations}
           myTasks={props.myTasks}
           drag={props.drag}
@@ -436,6 +438,8 @@ const Places = (props) => {
           flagHebrew={props.flagHebrew}
           tasksOfRoutes={tasksOfRoutes}
           clickAddRoute={clickAddRoute}
+          saveButton={props.saveButton}
+          siteQuestionLanguage={props.siteQuestionLanguage}
         />
 
         {/* )} */}

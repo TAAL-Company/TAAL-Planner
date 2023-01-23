@@ -7,12 +7,12 @@ import 'reactjs-popup/dist/index.css';
 import Modal from '../Modal/Modal';
 
 //-------------------------
-let marginHebrew = '0px';
 const Planner = () => {
     const [get_logged_in, setLogged_in] = useState(false);// for TextView
     const [get_Name,
         // setName
     ] = useState(null);// for TextView
+    const [marginHebrew, setMarginHebrew] = useState("150px");
     const [loading, setLoading] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
     const [Hebrew, setHebrew] = useState(false);
@@ -27,8 +27,14 @@ const Planner = () => {
     const [myTasks, setTasks] = useState("Tasks");
     const [addMyTask, setAddTask] = useState("Add tasks");
     const [
-        // saveButton
+        saveButton
         , setSaveButton] = useState("Save route");
+    const [
+        siteLanguage
+        , setSiteLanguage] = useState("Site");
+    const [
+        siteQuestionLanguage
+        , setSiteQuestionLanguage] = useState("Which site do you want to build a route on?");
     const [
         // routeWrite
         , setRouteWrite] = useState("Write down the name of the route");
@@ -78,18 +84,22 @@ const Planner = () => {
         setAddSite("Add sites");
         setAddStation("add stations");
         setAddTask("Add tasks");
-        setTitlePlacesCss("linear-gradient(90deg, #7A78B7  5%, #7A78B71F 1%)");
-        setTitleStationCss("linear-gradient(90deg,#F2AE69 5%, #FEF5ED 1%)");
-        setTitleTaskCss("linear-gradient(90deg, #C4CE9C 5%, #F8F9F3 1%)");
+        setSiteQuestionLanguage("Which site do you want to build a route on?");
+        setSiteLanguage("Site")
+        // setTitlePlacesCss("linear-gradient(90deg, #7A78B7  5%, #7A78B71F 1%)");
+        // setTitleStationCss("linear-gradient(90deg,#F2AE69 5%, #FEF5ED 1%)");
+        // setTitleTaskCss("linear-gradient(90deg, #C4CE9C 5%, #F8F9F3 1%)");
         setInputSide("left");
         setflagHebrew(true);
-        // marginHebrew = '1330px';
-    }
+        setMarginHebrew("150px")
+        }
     const english = () => {
         setHebrew(true);
         setLanguage("English");
         console.log(Hebrew);
         setFloatLan("right");
+        setSiteQuestionLanguage("באיזה אתר ברצונך לבנות מסלול?")
+        setSiteLanguage("אתר")
         setSites("אתרים");
         setStations("תחנות");
         setTasks(" משימות");
@@ -99,12 +109,12 @@ const Planner = () => {
         setAddSite("הוסף אתר");
         setAddStation("הוסף תחנה");
         setAddTask("הוסף משימה");
-        setTitlePlacesCss("linear-gradient(90deg,  #7A78B71F 95%, #7A78B7 1%)");
-        setTitleStationCss("linear-gradient(90deg, #FEF5ED 95%, #F2AE69 1%)");
-        setTitleTaskCss("linear-gradient(90deg, #F8F9F3 95%, #C4CE9C 1%)");
+        // setTitlePlacesCss("linear-gradient(90deg,  #7A78B71F 95%, #7A78B7 1%)");
+        // setTitleStationCss("linear-gradient(90deg, #FEF5ED 95%, #F2AE69 1%)");
+        // setTitleTaskCss("linear-gradient(90deg, #F8F9F3 95%, #C4CE9C 1%)");
         setInputSide("right");
         setflagHebrew(false);
-        // marginHebrew = 0;
+        setMarginHebrew("150px")
 
     }
     return (
@@ -159,7 +169,7 @@ const Planner = () => {
                                         </button> */}
                                         </>}
                                     {/* כפתור שפות */}
-                                    <button className="language" style={{ marginLeft: marginHebrew }}
+                                    <button className="language" style={{ marginLeft: marginHebrew,marginTop: "22px" }}
                                         onClick={() => {
                                             if (Hebrew !== false)
                                                 hebrew();
@@ -170,7 +180,7 @@ const Planner = () => {
 
                                 {modalOpen && <Modal setOpenModal={setModalOpen} setText={get_Name} />}
                                 <div className="warpper">
-                                    <Places setFloatLang={floatLan} sites={sites} stations={stations} myTasks={myTasks} drag={drag}
+                                    <Places setFloatLang={floatLan} language={language} sites={sites} stations={stations} siteLanguage={siteLanguage} siteQuestionLanguage={siteQuestionLanguage} saveButton={saveButton} myTasks={myTasks} drag={drag}
                                         addSite={addSite} addStation={addStation} addMyTask={addMyTask} titlePlacesCss={titlePlacesCss}
                                         titleStationCss={titleStationCss} titleTaskCss={titleTaskCss} flagHebrew={flagHebrew} />
                                 </div>

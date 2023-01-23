@@ -9,9 +9,15 @@
   padding-left: 25px;
   padding-right: 25px;
 }
+.Board.english {
+  right: 0px;
+  left: auto;
+}
 
-
-
+.mainRectangles.english {
+  flex-direction: revert;
+  justify-content: start;
+}
 .TitleTasks {
   background: #E8B221;
   height: 48px;

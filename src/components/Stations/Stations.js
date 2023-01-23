@@ -309,7 +309,7 @@ const Stations = (props) => {
           <TasksComp
             propsDataTask={tasks}
             allStations={props.allStations}
-            language={props.language.setFloatLang}
+            language={props.language}
             myTasks={props.myTasks}
             drag={props.drag}
             addMyTask={props.addMyTask}
@@ -319,6 +319,8 @@ const Stations = (props) => {
             flagHebrew={props.flagHebrew}
             tasksOfRoutes={props.tasksOfRoutes}
             myStations={props.propsData}
+            saveButton ={props.saveButton}
+            siteQuestionLanguage={props.siteQuestionLanguage}
           />
         </>
       )}

@@ -198,7 +198,7 @@ function DragnDrop(props) {
               setBottom((bottom = "-27px"));
               setKavTopWidth((kavTopWidth = "25px"));
               setNewkavTaskTop((newkavTaskTop = "0px"));
-              setNameStation((nameStation = props.myStation.name));
+              // setNameStation((nameStation = props.myStation.name));
               setKavTaskTopMarginTop((kavTaskTopMarginTop = "-7px"));
             }
           }
@@ -210,14 +210,14 @@ function DragnDrop(props) {
             mySite: props.mySite,
             myStation: props.tasksOfRoutes.title.rendered,
             data: props.myStation.data,
-            nameStation: props.tasksOfRoutes.title.rendered,
+            // nameStation: props.tasksOfRoutes.title.rendered,
             width: width,
-            borderLeft: borderLeft,
-            height: height,
-            kavTaskTopMarginTop: kavTaskTopMarginTop,
-            bottom: bottom,
-            kavTopWidth: kavTopWidth,
-            newkavTaskTop: newkavTaskTop,
+            // borderLeft: borderLeft,
+            // height: height,
+            // kavTaskTopMarginTop: kavTaskTopMarginTop,
+            // bottom: bottom,
+            // kavTopWidth: kavTopWidth,
+            // newkavTaskTop: newkavTaskTop,
             // idImg: thisId,
             dataImg: props.propDataTask,
           }]);
@@ -512,8 +512,8 @@ function DragnDrop(props) {
         </div>
       </div>
       <>
-        {props.flagHebrew ? (
-          <>
+        {/* {props.flagHebrew ? ( */}
+          {/* <>
             <div className="Board" style={{ marginLeft: "1119px" }} ref={drop}>
               <i className="bi bi-dash-square">
                 <div
@@ -522,26 +522,21 @@ function DragnDrop(props) {
                     left: "13px",
                   }}
                 >
-                  {/* <Images id={thisId} data={saveProps.propDataTask} /> */}
                 </div>
-                {/* <Audios id={thisId} data={myTask} /> */}
                 <div className="txt">
                   {" "}
                   {props.drag}&nbsp;&nbsp;
-                  {/* <button className="helpBtn" onClick={() => {
-                            help()
-                        }} >help</button> */}
+     
                   <div style={{ fontSize: "20px", left: "185px" }}>
-                    {/* <span><RiDragMove2Line /></span> */}
-                    {/* <div className='kavTop'></div> */}
+              
                   </div>
-                  {/* &nbsp;<RiDragMove2Line /> */}
+            
                 </div>
               </i>
               <div className="MyTasks">
                 {props.mySite.name}
                 {board.map((tag, keyCount) => {
-                  // console.log("tag.idImg1: ", tag.idImg);
+               
                   return (
                     <Tag
                       title={tag.title}
@@ -561,10 +556,10 @@ function DragnDrop(props) {
                 })}
               </div>
             </div>{" "}
-          </>
-        ) : (
+          </> */}
+        {/* // ) : ( */}
           <>
-            <div className="Board" ref={drop}>
+            <div className={`Board ${props.language !== 'English' ? 'english' : ''}`} ref={drop}>
               <button
                 className="AddRoute"
                 type="submit"
@@ -572,7 +567,7 @@ function DragnDrop(props) {
                   setModalOpenAddRoute(true);
                 }}
               >
-                שמור מסלול
+               {props.saveButton}
                 {/* <AiFillCheckCircle className="icon" /> */}
               </button>
               <div className="txt">
@@ -761,7 +756,7 @@ function DragnDrop(props) {
               </div>
             </div>
           </>
-        )}
+        {/* // )} */}
       </>
     </>
   );

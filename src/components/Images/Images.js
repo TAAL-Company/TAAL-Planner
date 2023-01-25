@@ -1,26 +1,17 @@
 import "./style.css";
 import Image from "react-bootstrap/Image";
-let image = "";
-const Images = ({ id, data, flag }) => {
+// let image = "";
+const Images = ({ id, url, flag }) => {
   console.log("IMAGES");
   console.log("id image: ", id);
-  console.log("data image: ", data);
+  console.log("url image: ", url);
   console.log("flag image: ", flag);
-  if (id) {
 
-
-    for (let index = 0; index < data.length; index++) {
-      if (data[index].acf.image)
-        if (data[index].id === id) {
-          image = data[index].acf.image.url;
-        }
-    }
-  }
   return (
     <>
       {flag && id ? (
         <>
-          {image !== "" ? (
+          {url !== "" ? (
             <>
               <div className="imgTablet">
                 <Image
@@ -28,7 +19,7 @@ const Images = ({ id, data, flag }) => {
                     width: "60px",
                     height: "69px",
                   }}
-                  src={image}
+                  src={url}
                   alt="new"
                 />
               </div>
@@ -37,7 +28,7 @@ const Images = ({ id, data, flag }) => {
         </>
       ) : (
         <>
-          {image !== "" ? (
+          {url !== "" ? (
             <>
               <div className="img">
                 <Image
@@ -45,7 +36,7 @@ const Images = ({ id, data, flag }) => {
                     width: "133px",
                     height: "89px",
                   }}
-                  src={image}
+                  src={url}
                   alt="new"
                 />
               </div>

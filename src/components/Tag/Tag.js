@@ -126,7 +126,7 @@ function Tag({
             <div className="nameOfTaskPhone">
               {" "}
               {title}
-              <Images id={id} data={dataImg} />
+              <Images id={id} url={dataImg} />
             </div>
           </div>
           <button className="listenIcon" onClick={() => listen()}></button>
@@ -162,7 +162,7 @@ function Tag({
       {flagBoard && modalFlagTablet && !flagPhone ? (
         <>
           <div className="ItemStyle">
-            <Images id={id} data={dataImg} flag={true} />
+            <Images id={id} url={dataImg} flag={true} />
           </div>
         </>
       ) : (

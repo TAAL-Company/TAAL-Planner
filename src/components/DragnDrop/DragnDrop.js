@@ -41,31 +41,13 @@ let flagTree = true;
 let flagPhoneOne = false;
 let flagStress = false;
 let modalFlagTablet = false;
-const finalSpaceCharacters = [
-  {
-    id: "gary",
-    name: "a",
-  },
-  {
-    id: "cato",
-    name: "b",
-  },
-  {
-    id: "kvn",
-    name: "c",
-  },
-  {
-    id: "mooncake",
-    name: "d",
-  },
-  {
-    id: "quinn",
-    name: "e",
-  },
-];
+let myStation = "";
 
 //-------------------------
 function DragnDrop(props) {
+  // console.log(" props.allTasksOfTheSiteeee drag ", props.allTasksOfTheSite)
+  // console.log(" props.allTasks 1: ", props.allTasksOfTheSite.find(task => task.id === 3020))
+
 
   const [board, setBoard] = useState([]);
   const [reorderBoardFlag, setReorderBoardFlag] = useState(false);
@@ -82,11 +64,11 @@ function DragnDrop(props) {
 
   }
 
-  console.log("props mySite:", props.mySite.name);
+  console.log("props mySite:", props.mySite);
   console.log("props dragFrom:", props.dragFrom);
 
   // console.log("JSON.parse(localStorage.getItem('New_Routes')):", JSON.parse(localStorage.getItem('New_Routes')))
-  // console.log("propsDataTask:", props.propDataTask)
+  console.log("propsDataTask:", props.propDataTask)
   // nameStation = props.myStation.name
   // const [, setFlagFirst] = useState(true)
   const [, setLoading] = useState(false);
@@ -115,21 +97,12 @@ function DragnDrop(props) {
   const [activeButton, setActiveButton] = useState("tree");
   const [siteSelected, setSiteSelected] = useState(false)
   // const [prevStation,setPrevStation] = useState("test");
+  console.log(" props.boardArrayDND1 ", props.boardArrayDND)
+  const [boardArrayDND, setboardArrayDND] = useState(props.boardArrayDND)
 
-  const [characters, updateCharacters] = useState(finalSpaceCharacters);
+  let prevStation = "";
 
-  function handleOnDragEnd(result) {
-    if (!result.destination) return;
 
-    const items = Array.from(characters);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-
-    updateCharacters(items);
-  }
-  useEffect(() => {
-    console.log("charactersss: ", characters)
-  }, [characters]);
 
   useEffect(() => {
     if (props.mySite.name != "") {
@@ -138,22 +111,6 @@ function DragnDrop(props) {
     }
   }, [props.mySite.name]);
 
-  // const [, setNameStation] = useState(props.myStation.name);
-  // const [, setMarginTop] = useState("");
-  // let inputHandler = (e) => {
-  //     console.log("eeeeeeeeeeeeeeee:", e.target.value)
-  //     setInputText(inputText = e.target.value.toLowerCase());
-  //     setFilteredData(filteredData = Route.filter((el) => {
-  //         // setInputText(lowerCase);
-  //         if (inputText === '') {
-  //             return el;
-  //         }
-  //         //return the item which contains the user input
-  //         else {
-  //             return el.name.toLowerCase().includes(inputText)
-  //         }
-  //     }))
-  // };
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -171,62 +128,11 @@ function DragnDrop(props) {
 
     if (props.tasksOfRoutes && props.tasksOfRoutes.acf) {
       console.log("props.tasksOfRoutes ", props.tasksOfRoutes)
-      let prevStation = "test";
-
-      console.log("temp: ", props.tasksOfRoutes);
-      console.log("temp prevStation: ", prevStation);
 
       if (props.tasksOfRoutes.acf.tasks) {
-        props.tasksOfRoutes.acf.tasks.forEach((element) => {
-
-          if (prevStation !== "") {
-            if (prevStation === props.tasksOfRoutes.title.rendered) {  //same station
-              setFlagPhoneOne((flagPhoneOne = true));
-              setWidth((width = "-84px"));
-              setBorderLeft((borderLeft = "2x solid #c2bfbf"));
-              setHeight((height = "86px"));
-              setBottom((bottom = "45px"));
-              setKavTopWidth((kavTopWidth = "0px"));
-              setNewkavTaskTop((newkavTaskTop = "100px"));
-              setNameStation((nameStation = ""));
-              setKavTaskTopMarginTop((kavTaskTopMarginTop = "-27px"));
-            } else {
-              setFlagPhoneOne((flagPhoneOne = false));
-              setBorderLeft((borderLeft = "0x solid #c2bfbf"));
-              setWidth((width = "-13px"));
-              setHeight((height = "70px"));
-              setBottom((bottom = "-27px"));
-              setKavTopWidth((kavTopWidth = "25px"));
-              setNewkavTaskTop((newkavTaskTop = "0px"));
-              // setNameStation((nameStation = props.myStation.name));
-              setKavTaskTopMarginTop((kavTaskTopMarginTop = "-7px"));
-            }
-          }
-          setBoard((board) => [...board, {
-            id: element.ID,
-            title: element.post_title
-              .replace("&#8211;", "-")
-              .replace("&#8217;", "' "),
-            mySite: props.mySite,
-            myStation: props.tasksOfRoutes.title.rendered,
-            data: props.myStation.data,
-            // nameStation: props.tasksOfRoutes.title.rendered,
-            width: width,
-            // borderLeft: borderLeft,
-            // height: height,
-            // kavTaskTopMarginTop: kavTaskTopMarginTop,
-            // bottom: bottom,
-            // kavTopWidth: kavTopWidth,
-            // newkavTaskTop: newkavTaskTop,
-            // idImg: thisId,
-            dataImg: props.propDataTask,
-          }]);
-
-          setCount(count++);
-
-          prevStation = props.tasksOfRoutes.title.rendered;
-          console.log("temp prevStation: ", prevStation);
-
+        props.tasksOfRoutes.acf.tasks.forEach(async (element) => {
+          console.log("element.ID: ", element.ID);
+          await addImageToBoard(element.ID, "routes")
         }
         )
       }
@@ -236,7 +142,7 @@ function DragnDrop(props) {
   }, [props.tasksOfRoutes])
 
   useEffect(() => {
-    console.log("board1: ", board)
+    console.log("board1 dnd: ", board)
   }, [board])
 
 
@@ -264,7 +170,7 @@ function DragnDrop(props) {
       kavTopWidth: kavTopWidth,
       newkavTaskTop: newkavTaskTop,
       // idImg: thisId,
-      dataImg: saveProps.propDataTask,
+      dataImg: element.acf.image.url,
     };
   });
   console.log("dndArray check:", dndArray);
@@ -290,14 +196,20 @@ function DragnDrop(props) {
   }, [activeButton])
 
   useEffect(() => {
-    console.log('drop: ', drop);
-  }, [drop])
+    console.log('board111: ', board);
+  }, [board])
   //---------------------------------------------------------
-  const addImageToBoard = (id, boardName) => {
-    // thisId = id;
+  const addImageToBoard = async (id, boardName) => {
+
+    console.log("id alltasks: ", id)
+
     if (boardName !== "border") {
 
       if (saveTag.props !== undefined) {
+
+        console.log("saveTag.props.myStation DND", saveTag)
+        console.log("saveTag.props.myLastStation dnd", saveTag.props.myLastStation)
+
         if (saveTag.props.myLastStation === saveTag.props.myStation) {  //same station
           setFlagPhoneOne((flagPhoneOne = true));
           setWidth((width = "-84px"));
@@ -323,19 +235,86 @@ function DragnDrop(props) {
       }
 
 
+      // if (boardName === "routes") {
 
-      console.log("item.board: ", boardName)
+      //   if (saveTag.props !== undefined) {
+      //     prevStation = saveTag.props.myLastStation;
+      //     myStation = saveTag.props.myStation;
+      //   }
+      //   else if (prevStation == "") {
+      //     prevStation = props.firstStationName
+      //   }
+
+      //   if (myStation == "") {
+      //     myStation = await props.boardArrayDND.find((tag) => id === tag.id).myStation;
+      //   }
+        
+      //   console.log("dnd prevStation: ", prevStation)
+      //   console.log("dnd myStation: ", myStation)
+
+      //   if (prevStation === myStation) {  //same station
+
+      //     console.log("111 same station")
+
+      //     setFlagPhoneOne((flagPhoneOne = true));
+      //     setWidth((width = "-84px"));
+      //     setBorderLeft((borderLeft = "2x solid #c2bfbf"));
+      //     setHeight((height = "86px"));
+      //     setBottom((bottom = "45px"));
+      //     setKavTopWidth((kavTopWidth = "0px"));
+      //     setNewkavTaskTop((newkavTaskTop = "100px"));
+      //     setNameStation((nameStation = ""));
+      //     setKavTaskTopMarginTop((kavTaskTopMarginTop = "-27px"));
+      //   } else {
+
+      //     console.log("111 NOT same station")
+
+
+      //     setFlagPhoneOne((flagPhoneOne = false));
+      //     setBorderLeft((borderLeft = "0x solid #c2bfbf"));
+      //     setWidth((width = "-13px"));
+      //     setHeight((height = "70px"));
+      //     setBottom((bottom = "-27px"));
+      //     setKavTopWidth((kavTopWidth = "25px"));
+      //     setNewkavTaskTop((newkavTaskTop = "0px"));
+      //     // setNameStation(nameStation = props.myStation.name)
+      //     setNameStation((nameStation = myStation));
+      //     setKavTaskTopMarginTop((kavTaskTopMarginTop = "-7px"));
+      //   }
+      // }
+
+
+
+      console.log(" props.boardArrayDND ", props.boardArrayDND)
+
+      console.log(" props.allTasks ", props.allTasksOfTheSite.find(task => task.id === id))
 
 
       setCount(count++);
       // alert(count)
       // setFlagFirst(flagFirst = false)
-      Route = dndArray.filter((tag) => id === tag.id);
-      setBoard((board) => [...board, Route[0]]);
+      if (props.boardArrayDND.length > 0) {
+        console.log("id boardArrayDND: ", id)
+
+        Route = await props.boardArrayDND.filter((tag) => id === tag.id);
+        await setBoard((board) => [...board, Route[0]]);
+      }
+      else {
+        Route = await dndArray.filter((tag) => id === tag.id);
+        await setBoard((board) => [...board, Route[0]]);
+
+      }
+      console.log("dnd Route: ", Route)
+
+      // setBoard((board) => [...board, Route[0]]);
+
+      console.log("dnd setBoard: ", board)
       // thisIdArray.push(thisId);
       myTask = saveProps.propDataTask.filter((item) => item.id === id);
       // console.log("myTAsk:", myTask[0])
       thisIdArray.push(myTask[0]);
+
+      prevStation = myStation;
       // console.log("thisIdArray:", thisIdArray)
       // console.log("dndArray:", dndArray)
       localStorage.setItem("New_Routes", JSON.stringify(thisIdArray));

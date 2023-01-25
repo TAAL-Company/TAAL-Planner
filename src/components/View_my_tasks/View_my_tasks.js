@@ -28,7 +28,7 @@ function View_my_tasks({ prop }) {
   return (
     <>
       <div className="image" style={{}}>
-        <Images id={IdTask} data={MyTasks} />
+        <Images id={IdTask} url={MyTasks.acf.image.url} />
       </div>
       <br></br>
       <br></br>

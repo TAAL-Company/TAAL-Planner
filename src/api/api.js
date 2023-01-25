@@ -22,7 +22,7 @@ export const post = async (url, body, header) => {
     console.log(e);
   }
 };
-export const getingData = async () => {
+export const getingDataTasks = async () => {
 
   let allTasks;
 
@@ -56,6 +56,76 @@ export const getingData = async () => {
   });
 
   return allTasks;
+};
+
+export const getingDataRoutes = async () => {
+
+  let allRoutes;
+
+  await get(`${baseUrl}/wp-json/wp/v2/routes/`, {
+    params: {
+      per_page: 100,
+      "Content-Type": "application/json",
+    },
+  }).then((res) => {
+    let max_pages = res.headers["x-wp-totalpages"];
+
+    allRoutes = res.data;
+    if (max_pages > 1) {
+      for (let i = 2; i <= max_pages; i++) {
+        console.log("max_pages: ", max_pages);
+        get(`${baseUrl}/wp-json/wp/v2/routes/`, {
+          params: {
+            per_page: 100,
+            page: i,
+            "Cache-Control": "no-cache",
+          },
+        }).then((res) => {
+          console.log("res:", res);
+
+          Array.prototype.push.apply(allRoutes, res.data);
+          console.log("allRoutes:", allRoutes);
+        });
+      }
+    }
+  });
+
+  return allRoutes;
+};
+
+export const getingDataPlaces = async () => {
+
+  let allPlaces;
+
+  await get(`${baseUrl}/wp-json/wp/v2/places/`, {
+    params: {
+      per_page: 100,
+      "Content-Type": "application/json",
+    },
+  }).then((res) => {
+    let max_pages = res.headers["x-wp-totalpages"];
+
+    allPlaces = res.data;
+    if (max_pages > 1) {
+      for (let i = 2; i <= max_pages; i++) {
+        console.log("max_pages: ", max_pages);
+        get(`${baseUrl}/wp-json/wp/v2/places/`, {
+          params: {
+            per_page: 100,
+            page: i,
+            "Cache-Control": "no-cache",
+          },
+        }).then((res) => {
+          console.log("res:", res);
+
+          Array.prototype.push.apply(allPlaces, res.data);
+          console.log("allPlaces: ", allPlaces);
+        });
+      }
+    }
+  });
+
+  return allPlaces;
 };
 
 export const insertRoute = (routeData, callback) => {

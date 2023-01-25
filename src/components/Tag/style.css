@@ -256,10 +256,10 @@
 
 .kavTaskTop {
   border-top: 2px solid #c2bfbf;
-  width: 13px;
+  width: 35px;
   position: relative;
   margin-top: -7px;
-  left: -4px;
+  left: -26px;
   top: 38px;
 }
 
@@ -318,4 +318,3 @@
   left: 4px;
 }
 
-.imagesPositionPhone {}

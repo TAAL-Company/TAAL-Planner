@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { getingData, get } from "../../api/api";
+import { getingDataTasks } from "../../api/api";
 import "./style.css";
 import TasksComp from "../Tasks_comp/Tasks_comp";
 import ModalStations from "../Modal/Modal_Stations";
 import { AiOutlinePlus } from "react-icons/ai";
-import { BsThreeDotsVertical } from "react-icons/bs";
+// import { BsThreeDotsVertical } from "react-icons/bs";
 import { CgSearch } from "react-icons/cg";
 import "@fontsource/assistant";
 import ModalIcons from "../Modal/Modal_Icons";
@@ -12,7 +12,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import textArea from '../../Pictures/textArea.svg'
 
 //-----------------------
-let allTasks = [];
+// let allTasks = [];
 let tasks = [];
 let filteredData = [];
 let inputText = "";
@@ -21,6 +21,8 @@ let myStation = { name: "", id: "", flag: true, data: [] };
 let myCategory = "stationCategory";
 //-----------------------
 const Stations = (props) => {
+
+  console.log(" props.allTasksOfTheSite1 ", props.allTasksOfTheSite)
   console.log("props.stationArray: ", props.stationArray);
   console.log("propsDataStations:", props.propsData);
   const [, setStateTask] = useState([]);
@@ -70,21 +72,21 @@ const Stations = (props) => {
     // console.log("filtered Data 3:", filteredData)
   };
   useEffect(() => {
-    console.log("charactersss: ", characters)
-  }, [characters]);
+    console.log("charactersss: ", props.boardArrayDND)
+  }, [props.boardArrayDND]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        allTasks = await getingData();
-      } catch (error) {
-        console.error(error.message);
-      }
-      setLoading(false);
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(true);
+  //     try {
+  //       allTasks = await getingDataTasks();
+  //     } catch (error) {
+  //       console.error(error.message);
+  //     }
+  //     setLoading(false);
+  //   };
+  //   fetchData();
+  // }, []);
 
   const Display_The_Tasks = (e, n) => {
     console.log("eeeeeeeeeeeeeeeeeee: ", e);
@@ -100,7 +102,7 @@ const Stations = (props) => {
     if (tasks.length > 0) {
       tasks = [];
     }
-    allTasks.forEach((element) => {
+    props.allTasks.forEach((element) => {
       for (let i = 0; i < element.places.length; i++) {
         if (element.places[i] === e) {
           tasks.push(element);
@@ -123,10 +125,10 @@ const Stations = (props) => {
     setStateTask({ data: tasks }); //Updating the state
   };
 
-  const clickOnhreeDotsVerticaIcont = (value) => {
-    setMyRouteClick(value.id);
-    setModalIconsOpen(true);
-  };
+  // const clickOnhreeDotsVerticaIcont = (value) => {
+  //   setMyRouteClick(value.id);
+  //   setModalIconsOpen(true);
+  // };
   //----------------------------------------------------------
   return (
     <>
@@ -253,8 +255,11 @@ const Stations = (props) => {
             </div>
           </div>
           <TasksComp
+            firstStationName={props.firstStationName}
+            boardArrayDND={props.boardArrayDND}
             propsDataTask={tasks}
             allStations={props.allStations}
+            allTasks={props.allTasks}
             language={props.language}
             myTasks={props.myTasks}
             drag={props.drag}
@@ -268,6 +273,7 @@ const Stations = (props) => {
             saveButton={props.saveButton}
             siteQuestionLanguage={props.siteQuestionLanguage}
             tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
+            allTasksOfTheSite={props.allTasksOfTheSite}
 
           />
         </>

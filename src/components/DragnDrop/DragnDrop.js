@@ -13,7 +13,6 @@ import ReorderBoard from "../ReorderBoard/ReorderBoard";
 import Dot from "../Dot/Dot";
 import Clock from "../Clock/Clock";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { Reorder } from '../../functions/Reorder';  // a custom function to reorder the items array
 import textArea from '../../Pictures/textArea.svg'
 
 
@@ -691,7 +690,7 @@ function DragnDrop(props) {
                         ) : (
                           <>
                             <ReorderBoard
-                              board={board}
+                              board={board} setBoard={setBoard}
                             />
                           </>
                         )}

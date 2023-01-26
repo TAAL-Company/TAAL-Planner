@@ -34,7 +34,7 @@ const Stations = (props) => {
   const [, setMyStation] = useState(null);
   const [modalIconsOpen, setModalIconsOpen] = useState(false);
   const [myRouteClick, setMyRouteClick] = useState(0);
-  const [characters, updateCharacters] = useState(props.propsData);
+  const [characters, updateCharacters] = useState(props.stationArray);
 
   //changing the order of the stations
   function handleOnDragEnd(result) {
@@ -49,7 +49,7 @@ const Stations = (props) => {
 
 
   if (flagFirstTime === true) {
-    filteredData = props.propsData;
+    filteredData = props.stationArray;
   }
   // console.log("filtered Data 1:", filteredData)
   let inputHandler = (e) => {
@@ -59,7 +59,7 @@ const Stations = (props) => {
     // setFilteredData(filteredData = [])
     // console.log("filtered Data 2:", filteredData)
     setFilteredData(
-      (filteredData = props.propsData.filter((el) => {
+      (filteredData = props.stationArray.filter((el) => {
         if (inputText === "") {
           return el;
         }
@@ -95,7 +95,7 @@ const Stations = (props) => {
     } else {
       setMyStation((myStation.flag = true));
     }
-    setMyStation((myStation.data = props.propsData));
+    setMyStation((myStation.data = props.stationArray));
     setMyStation((myStation.name = n));
     setMyStation((myStation.id = e));
     // console.log("console myStat myStation:", myStation)
@@ -111,7 +111,7 @@ const Stations = (props) => {
       // console.log("Display_The_Tasks", tasks)
     });
     setFilteredData(
-      (filteredData = props.propsData.filter((el) => {
+      (filteredData = props.stationArray.filter((el) => {
         if (inputText === "") {
           return el;
         }
@@ -199,7 +199,7 @@ const Stations = (props) => {
                                     {...provided.dragHandleProps}
                                   >
                                     <div
-                                      className="buttons"
+                                      className="buttons" style={id === myStation.id ? { border: "1px solid #cc0127" } : {}}
                                       onClick={() =>
                                         Display_The_Tasks(id, name)
                                       }
@@ -269,7 +269,7 @@ const Stations = (props) => {
             myStation={myStation}
             flagHebrew={props.flagHebrew}
             tasksOfRoutes={props.tasksOfRoutes}
-            myStations={props.propsData}
+            myStations={props.stationArray}
             saveButton={props.saveButton}
             siteQuestionLanguage={props.siteQuestionLanguage}
             tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}

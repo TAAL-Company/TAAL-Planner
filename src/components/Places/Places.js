@@ -75,7 +75,43 @@ const Places = (props) => {
   const [allTasksOfTheSite, setAllTasksOfTheSite] = useState([]);
   const [firstStationName, setFirstStationName] = useState("")
   const [boardArrayDND, setBoardArrayDND] = useState([]);
-  const [routeClicked, setRouteClicked] = useState([]);
+  const [pastelColors, setPastelColors] = useState(
+    ["#F49AC2", //(pale pink)
+      "#77DD77", //(pastel green)
+      "#FFB347", //(pastel orange)
+      "#B39EB5", //(lavender)
+      "#FF6961", //(salmon)
+      "#CB99C9", //(pastel purple)
+      "#87CEFA", //(light blue)
+      "#FDFD96", //(pastel yellow)
+      "#F5A9A9", //(light coral)
+      "#ADD8E6", //(light cyan)
+      "#D9B611", //(pastel gold)
+      "#F5CAC3", //(peach)
+      "#A8D8EA", //(light sky blue)
+      "#F4C2C2", //(light salmon)
+      "#93A8A8", //(light gray-green)
+      "#E8E3E3", //(light gray)
+
+      "#F5A9E1", //(light pink)
+      "#F5D0A9", //(light tan)
+      "#F5A9BB", //(light coral pink)
+      "#F5A9A9", //(light coral)
+      "#A9F5A9", //(pastel green)
+      "#F5A9F2", //(light lavender pink)
+      "#F5C9CB", //(light pink)
+      "#F5E6CB", //(light yellow)
+      "#F5D7CB", //(light apricot)
+      "#F5CBDC", //(light lavender)
+      "#C9F5CB", //(light green)
+      "#CBF5E6", //(light blue-green)
+      "#CBE6F5", //(light periwinkle)
+      "#CBD7F5", //(light blue)
+      "#C9CBF5", //(light purple)
+      "#E6CBF5" //(light magenta)
+    ]
+  );
+  // const [routeClicked, setRouteClicked] = useState([]);
 
   // const [, setMyCategory] = useState("place")
   let inputHandler = (e) => {
@@ -156,6 +192,9 @@ const Places = (props) => {
       (onlyAllStation = allPlaces.filter((item) => item.parent > 0)) //parent > 0 means station 
     );
 
+    console.log("onlyAllStation: ", onlyAllStation);
+
+
     Places_and_their_stations = places.map((element) => {
       return {
         parent: element,
@@ -188,7 +227,7 @@ const Places = (props) => {
 
       setTasksOfRoutes((tasksOfRoutes = e));
 
-      console.log("check value routes:", tasksOfRoutes);
+      console.log("tasksOfRoutes: ", tasksOfRoutes);
       // setFlagButtonRoute((flagRoute = true));
       console.log("check value routes:", tasksOfRoutes.acf.tasks);
       console.log(" tasksOfRoutes.acf.tasks[0]", tasksOfRoutes.acf.tasks[0].ID.places);
@@ -294,10 +333,10 @@ const Places = (props) => {
     }
   };
 
-  useEffect(() => {
-    console.log("routeClicked: ", routeClicked)
+  // useEffect(() => {
+  //   console.log("routeClicked: ", routeClicked)
 
-  }, [routeClicked])
+  // }, [routeClicked])
 
   const handleSelectChange = (event) => {
     const selectedValue = JSON.parse(event.target.value);
@@ -325,7 +364,7 @@ const Places = (props) => {
         element.related.forEach((rel) => {
           setStateStation({ data: stationArray.push(rel) });
         });
-        // console.log("stationArray:", stationArray);
+        console.log("stationArray:", stationArray);
       }
     });
 
@@ -365,83 +404,6 @@ const Places = (props) => {
 
   };
 
-  // useEffect(() => {
-  //   console.log("allTasksOfTheSite dnd: ", allTasksOfTheSite)
-  //   setBoardArrayDND(allTasksOfTheSite.map((element) => {
-  //     let prevStation = "";
-  //     let stationID = element.places.find(item => item !== mySite.id)
-  //     let stationName = "";
-  //     if (stationID) {
-  //       stationName = onlyAllStation.find(item => item.id === stationID).name
-  //     }
-  //     else {
-  //       stationName = "כללי"
-  //     }
-
-  //     let width = "-13px";
-  //     let height = "70px";
-  //     let nameStation = "14px";
-  //     let bottom = "-27px";
-  //     let kavTopWidth = "25px";
-  //     let newkavTaskTop = "100px";
-  //     let kavTaskTopMarginTop = "-7px";
-  //     let borderLeft = "2px solid #c2bfbf";
-
-  //     if (prevStation === stationName) {  // sameStation
-
-  //       width = "-84px";
-  //       borderLeft = "2x solid #c2bfbf";
-  //       height = "86px";
-  //       bottom = "45px";
-  //       kavTopWidth = "0px";
-  //       newkavTaskTop = "100px";
-  //       nameStation = "";
-  //       kavTaskTopMarginTop = "-27px";
-  //     } else {
-
-  //       borderLeft = "0x solid #c2bfbf";
-  //       width = "-13px";
-  //       height = "70px";
-  //       bottom = "-27px";
-  //       kavTopWidth = "25px";
-  //       newkavTaskTop = "0px";
-  //       nameStation = stationName;
-  //       kavTaskTopMarginTop = "-7px";
-
-  //     }
-
-
-  //     prevStation = stationName;
-
-
-  //     console.log("stationName dnd:", stationName)
-  //     console.log("prevStation dnd:", prevStation)
-
-  //     return {
-  //       id: element.id,
-  //       title: element.title.rendered
-  //         .replace("&#8211;", "-")
-  //         .replace("&#8217;", "' "),
-  //       mySite: mySite,
-  //       myStation: stationName,
-  //       data: stationArray,
-  //       nameStation: stationName,
-  //       width: width,
-  //       borderLeft: borderLeft,
-  //       height: height,
-  //       kavTaskTopMarginTop: kavTaskTopMarginTop,
-  //       bottom: bottom,
-  //       kavTopWidth: kavTopWidth,
-  //       newkavTaskTop: newkavTaskTop,
-  //       dataImg: element.acf.image.url,
-  //     };
-
-
-  //   }
-
-  //   ))
-
-  // }, [allTasksOfTheSite, mySite])
   useEffect(() => {
     console.log("boardArrayDND dnd: ", boardArrayDND)
 
@@ -551,7 +513,7 @@ const Places = (props) => {
               : filteredDataRoutes.map((value, index) => {
                 return (
                   <div
-                    className="buttons"
+                    className="buttons" style={value.id === tasksOfRoutes.id ? { border: "1px solid #256fa1" } : {}}
                     onClick={() => DisplayTasks(value)} //הצגת המסלול
                     key={index}
                   >
@@ -599,7 +561,7 @@ const Places = (props) => {
         <Stations
           firstStationName={firstStationName}
           boardArrayDND={boardArrayDND}
-          propsData={stationArray}
+          stationArray={stationArray}
           idTask={thisIdTask}
           allStations={onlyAllStation}
           language={props.language}
@@ -632,7 +594,16 @@ const Places = (props) => {
         </>
       ) : <></>}
 
-      <></>
+      {/* <div class="colors">
+        {pastelColors.map((color) => {
+          return (
+            <div style={{background: color, height:"100px", width: "100px"}}>{color}</div>
+          )
+        }
+        )
+
+        }
+      </div> */}
     </>
   );
 };

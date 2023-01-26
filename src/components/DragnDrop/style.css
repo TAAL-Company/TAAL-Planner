@@ -294,13 +294,15 @@
 
 .MyTasks {
   width: 313px;
-  height: 515px;
+  height: 535px;
   background: #FFFFFF 0% 0% no-repeat padding-box;
   border: 1px solid #6A6865;
   border-radius: 0px 0px 6px 6px;
   opacity: 1;
   /* margin-left: 43px; */
+  padding-left: 15px;
   overflow: auto;
+  overflow-x: hidden;
   scrollbar-color: #bfc4ce #dadbe2 !important;
   scrollbar-width: thin !important;
 }

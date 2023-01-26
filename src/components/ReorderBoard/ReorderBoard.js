@@ -87,6 +87,7 @@ const ReorderBoard = (props) => {
                                 <Draggable key={task.id} draggableId={'' + task.id} index={index}>
                                     {(provided) => (
                                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
+                                            <div className="nameStationReorder"> {task.nameStation}</div>    
                                             <Tag
                                                 title={task.title}
                                                 data={task.data}

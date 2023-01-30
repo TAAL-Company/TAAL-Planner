@@ -293,7 +293,7 @@
 
 .nameOfTask {
   top: 432px;
-  width: 98px;
+  /* width: 98px; */
   font: normal normal bold 15px/20px Assistant;
   letter-spacing: 0px;
   color: #505050;

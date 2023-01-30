@@ -16,6 +16,7 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { CgSearch } from "react-icons/cg";
 import textArea from '../../Pictures/textArea.svg'
 import Modal_route_chosen from "../Modal/Modal_route_chosen"
+import { MdNoStroller } from "react-icons/md";
 
 
 // const { baseUrl } = require
@@ -87,7 +88,7 @@ const Places = (props) => {
       "#F5A9A9", //(light coral)
       "#ADD8E6", //(light cyan)
       "#D9B611", //(pastel gold)
-      "#F5CAC3", //(peach)
+      "#9EA8EF", //
       "#A8D8EA", //(light sky blue)
       "#F4C2C2", //(light salmon)
       "#93A8A8", //(light gray-green)
@@ -95,11 +96,11 @@ const Places = (props) => {
 
       "#F5A9E1", //(light pink)
       "#F5D0A9", //(light tan)
-      "#F5A9BB", //(light coral pink)
-      "#F5A9A9", //(light coral)
+      "#F5A9BB", //
+      "#F07F85", //
       "#A9F5A9", //(pastel green)
       "#F5A9F2", //(light lavender pink)
-      "#F5C9CB", //(light pink)
+      "#F2B965", //
       "#F5E6CB", //(light yellow)
       "#F5D7CB", //(light apricot)
       "#F5CBDC", //(light lavender)
@@ -257,7 +258,7 @@ const Places = (props) => {
         else {
           stationName = "כללי"
         }
-
+        let color = stationArray.find(item => item.id === stationID).color
         let width = "-13px";
         let height = "70px";
         let nameStation = "14px";
@@ -317,6 +318,7 @@ const Places = (props) => {
           kavTopWidth: kavTopWidth,
           newkavTaskTop: newkavTaskTop,
           dataImg: taskTemp.acf.image.url,
+          color: color
         };
 
 
@@ -359,16 +361,21 @@ const Places = (props) => {
 
     console.log("val:", selectedValue);
 
+    let colorTemp = 0;
+
     Places_and_their_stations.forEach((element) => {
       if (element.parent.id === selectedValue.id) {
         element.related.forEach((rel) => {
-          setStateStation({ data: stationArray.push(rel) });
+          rel.color = pastelColors[colorTemp];
+          colorTemp++;
+          stationArray.push(rel);
         });
         console.log("stationArray:", stationArray);
+        console.log("color: ", pastelColors)
       }
     });
 
-    setStateStation({ data: stationArray });
+    // setStateStation({ data: stationArray });
 
     try {
       allRoutes = await getingDataRoutes();  //get request for routes
@@ -582,6 +589,7 @@ const Places = (props) => {
           tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
           allTasks={allTasks}
           allTasksOfTheSite={allTasksOfTheSite}
+          pastelColors = {pastelColors}
         />
 
         {/* )} */}
@@ -594,7 +602,7 @@ const Places = (props) => {
         </>
       ) : <></>}
 
-      {/* <div class="colors">
+      <div class="colors">
         {pastelColors.map((color) => {
           return (
             <div style={{background: color, height:"100px", width: "100px"}}>{color}</div>
@@ -603,7 +611,7 @@ const Places = (props) => {
         )
 
         }
-      </div> */}
+      </div>
     </>
   );
 };

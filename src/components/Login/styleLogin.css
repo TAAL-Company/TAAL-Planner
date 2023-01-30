@@ -61,9 +61,18 @@ input[type=submit] {
   font-weight: 100;
 }
 
-.inputLogin{
-  padding: 0.8em;
-  padding-right: 66px;
+.inputLogin {
+  border-radius: 5px 0px 0px 5px;
+  padding-right: 15px;
+  flex-basis: 85%;
+  display: grid;
+  /* margin: 0.5rem; */
+  /* border-radius: 5px; */
+  direction: rtl;
+  /* height: 56px; */
+  width: 100%;
+  border: unset;
+  background-color: #efefef;
 }
 
 
@@ -141,11 +150,18 @@ input[type=submit]:hover {
   text-align: center;
   justify-content: center;
   padding-top: 8.5px;
-  margin-left: -55px;
+  /* text-align: center; */
+  justify-content: center;
+  align-items: center;
+  /* padding-top: 8.5px; */
+  display: flex;
 }
 
 .input-container {
   display: flex;
+  width: 374px;
+  flex-direction: row;
+  height: 56px;
 }
 
 img.user-logo {

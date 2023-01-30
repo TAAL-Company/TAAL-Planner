@@ -47,29 +47,33 @@
 }
 
 .modalMyTasksContainer {
-  border: 2.5px solid rgb(86, 160, 225);
+  background-color: #f0f8ff;
+  border: 2.5px solid #56a0e1;
   border-radius: 5px;
-  margin-top: -25vh;
-  margin-left: 34%;
-  margin-right: auto;
-  width: 500px;
-  height: 650px;
-  background-color: aliceblue;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  display: flex;
+  box-shadow: 0 5px 15px rgb(0 0 0 / 35%);
+  box-shadow: 1px 2px #888;
+  /* display: flex; */
   flex-direction: column;
+  height: 650px;
+  /* margin-left: 34%; */
+  /* margin-right: auto; */
+  /* margin-top: -25vh; */
   padding: 25px;
   position: fixed;
-  box-shadow: rgb(136 136 136) 1px 2px;
+  width: 500px;
   z-index: 10;
+  transform: translate(50%, 50%);
+  bottom: 50%;
+  right: 50%;
 }
 
 .bodyTasks {
-  padding: 23px;
-  height: 400px;
+  background-color: #cce4f8;
+  height: 300px;
   overflow: auto;
+  padding: 23px;
   text-align: right;
-  background-color: rgb(204, 228, 248);
+  overflow: auto;
 }
 
 .modalContainerCalculator {

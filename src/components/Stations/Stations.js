@@ -22,7 +22,7 @@ let myCategory = "stationCategory";
 //-----------------------
 const Stations = (props) => {
 
-  console.log(" props.allTasksOfTheSite1 ", props.allTasksOfTheSite)
+  console.log("yyy props.allStations ", props.allStations)
   console.log("props.stationArray: ", props.stationArray);
   console.log("propsDataStations:", props.propsData);
   const [, setStateTask] = useState([]);
@@ -34,24 +34,25 @@ const Stations = (props) => {
   const [, setMyStation] = useState(null);
   const [modalIconsOpen, setModalIconsOpen] = useState(false);
   const [myRouteClick, setMyRouteClick] = useState(0);
-  const [characters, updateCharacters] = useState(props.stationArray);
+  const [stationArray, updateStationArray] = useState(props.stationArray);
 
   //changing the order of the stations
   function handleOnDragEnd(result) {
     if (!result.destination) return;
 
-    const items = Array.from(characters);
+    const items = Array.from(stationArray);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    updateCharacters(items);
+    updateStationArray(items);
   }
 
 
   if (flagFirstTime === true) {
     filteredData = props.stationArray;
   }
-  // console.log("filtered Data 1:", filteredData)
+
+  // handle search station name 
   let inputHandler = (e) => {
     setInputText((inputText = e.target.value.toLowerCase()));
     setFlagFirstTime((flagFirstTime = false));
@@ -102,14 +103,22 @@ const Stations = (props) => {
     if (tasks.length > 0) {
       tasks = [];
     }
+
+    let colorTemp = 0; 
+    
     props.allTasks.forEach((element) => {
       for (let i = 0; i < element.places.length; i++) {
         if (element.places[i] === e) {
+          let colorTemp = props.allStations.find((item) => item.id === e).color;
+          element.color = colorTemp;
+          colorTemp++;
           tasks.push(element);
         }
       }
-      // console.log("Display_The_Tasks", tasks)
+
     });
+
+    console.log("props.allTasks yyy", tasks)
     setFilteredData(
       (filteredData = props.stationArray.filter((el) => {
         if (inputText === "") {
@@ -172,17 +181,17 @@ const Stations = (props) => {
               ></input>
             </div>
             <div className="Stations">
-              {characters.length > 0 ? ( //DND
+              {stationArray.length > 0 ? ( //DND
                 <>
                   <DragDropContext onDragEnd={handleOnDragEnd}>
-                    <Droppable droppableId="characters">
+                    <Droppable droppableId="stationArray">
                       {(provided) => (
                         <ul
-                          className="characters"
+                          className="stationArray"
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                         >
-                          {characters.map(({ id, name }, index) => {
+                          {stationArray.map(({ id, name, color }, index) => {
                             let ID = "" + id;
                             console.log("id: ", typeof ID);
 
@@ -199,7 +208,12 @@ const Stations = (props) => {
                                     {...provided.dragHandleProps}
                                   >
                                     <div
-                                      className="buttons" style={id === myStation.id ? { border: "1px solid #cc0127" } : {}}
+                                      className="buttons"
+                                      style={id === myStation.id ?
+                                        { border: "1px solid #cc0127", background: `linear-gradient(270deg, ${color} 7%, #F8F9F3 1%)` }
+                                        :
+                                        { background: `linear-gradient(270deg, ${color} 7%, #F8F9F3 1%)` }
+                                      }
                                       onClick={() =>
                                         Display_The_Tasks(id, name)
                                       }

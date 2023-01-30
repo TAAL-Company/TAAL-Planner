@@ -141,13 +141,15 @@ function DragnDrop(props) {
   }, [props.tasksOfRoutes])
 
   useEffect(() => {
-    console.log("board1 dnd: ", board)
-  }, [board])
+    console.log("props.propDataTask: ", props.propDataTask)
+  }, [props.propDataTask])
 
 
 
   // alert("hi")
   dndArray = props.propDataTask.map((element) => {
+    // let color = stationArray.find(item => item.id === stationID).color
+
     if (count1 === 0) {
       nameStation = props.myStation.name;
       count1++;
@@ -170,6 +172,7 @@ function DragnDrop(props) {
       newkavTaskTop: newkavTaskTop,
       // idImg: thisId,
       dataImg: element.acf.image.url,
+      color: element.color
     };
   });
   console.log("dndArray check:", dndArray);

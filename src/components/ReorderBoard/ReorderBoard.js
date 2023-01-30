@@ -54,26 +54,6 @@ const ReorderBoard = (props) => {
         const [reorderedItem] = items.splice(result.source.index, 1)
         console.log("result.source.index", result.source.index);
         items.splice(result.destination.index, 0, reorderedItem);
-
-        // let beforeSource = items[result.source.index-1];
-        // let afterSource = items[result.source.index+1];
-        // let beforeDestination = items[result.destination.index-1];
-        // let afterDestination=items[result.destination.index+1];
-
-        // console.log("beforeSource: yarden"+ beforeSource.nameStation);
-        // console.log("afterSource: yarden"+afterSource.nameStation);
-        // console.log("beforeDestination: yarden"+beforeDestination.nameStation)
-        // console.log("afterDestination: yarden"+afterDestination.nameStation)
-
-        // if(afterSource!= undefined && afterSource.nameStation == ""){  //If one before it matches one before it
-        //     if(beforeSource == undefined){
-        //         items[result.source.index+1] = afterSource.myStation;
-        //     }
-        //     else if(afterSource.myStation !== beforeSource.myStation){
-        //         items[result.source.index+1] = afterSource.myStation;
-        //     }
-        // }
-
         setTasks(items);
     }
 
@@ -87,25 +67,39 @@ const ReorderBoard = (props) => {
                                 <Draggable key={task.id} draggableId={'' + task.id} index={index}>
                                     {(provided) => (
                                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
-                                            <div className="nameStationReorder"> {task.nameStation}</div>    
-                                            <Tag
+                                            <div className="nameStationReorder"> {task.nameStation}</div>
+                                            {/* <Tag
                                                 title={task.title}
                                                 data={task.data}
                                                 dataImg={task.dataImg}
                                                 id={task.id}
                                                 key={index}
                                                 dragFromCover={"reorderBoard"}
-                                            />
+                                                stationColor={task.color}
+                                            /> */}
+                                            <>
+                                                <div
+                                                    className="buttons"
+                                                    style={{
+                                                        background: `linear-gradient(270deg, ${task.color} 7%, #fff 1%)`,
+                                                        justifyContent: "flex-end", padding: "22px" }
+                                                    }
+                                                >
+
+                                                <div className="nameOfTask"> {task.title}</div>
+                                            </div>
+                                        </>
                                         </div>
-                                    )}
+                            )
+                        }
                                 </Draggable>
-                            );
+                );
                         })}
-                        {provided.placeholder}
-                    </div>
+                {provided.placeholder}
+            </div>
                 )}
-            </Droppable>
-        </DragDropContext>
+        </Droppable>
+        </DragDropContext >
     )
 }
 export default ReorderBoard;

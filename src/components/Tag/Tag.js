@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDrag } from "react-dnd";
 // import { RiDragMove2Line } from "react-icons/ri";
 import "./style.css";
@@ -31,7 +31,8 @@ function Tag({
   dataImg,
   data,
   modalFlagTablet,
-  dragFromCover
+  dragFromCover,
+  stationColor
 }) {
   localStorage.setItem("myLastStation", JSON.stringify(myLastStation));
   console.log("title in Tag:", title);
@@ -40,7 +41,7 @@ function Tag({
   console.log("myStation:", myStation);
   console.log("countcountcountcount:", count);
   console.log("id:", id);
-  console.log("image data tag: ",dataImg)
+  console.log("image data tag: ", dataImg)
 
   console.log("flagBoard:", flagBoard);
   console.log("nameStation:", nameStation);
@@ -53,14 +54,14 @@ function Tag({
 
   // console.log("flag Tag", flag)
 
-  const [{isDragging}, drag] = useDrag(() => ({
+  const [{ isDragging }, drag] = useDrag(() => ({
     type: "image",
-    item: { id: id , boardName: dragFromCover },
+    item: { id: id, boardName: dragFromCover },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
   }));
- console.log("dragFromCover: ", dragFromCover);
+  console.log("dragFromCover: ", dragFromCover);
   useEffect(() => {
     console.log('isDragging: ', isDragging);
   }, [isDragging])
@@ -140,14 +141,18 @@ function Tag({
             <>
               <div
                 className="buttons"
-                style={{ marginTop: myMarginTop }}
+                style={dragFromCover === "reorderBoard" ?
+                  { marginTop: myMarginTop, background: `linear-gradient(270deg, ${stationColor} 7%, #fff 1%)` }
+                  :
+                  { marginTop: myMarginTop }
+                }
                 ref={drag}
                 src={title}
               >
-                {dragFromCover !=="reorderBoard"?
-                 <BsThreeDotsVertical className="threeDotsVerticalTasks" />: 
-                 <BsList className="threeDotsVerticalTasks"/> 
-                 }
+                {dragFromCover !== "reorderBoard" ?
+                  <BsThreeDotsVertical className="threeDotsVerticalTasks" /> :
+                  <BsList className="threeDotsVerticalTasks" />
+                }
                 <div className="nameOfTask"> {title}</div>
               </div>
             </>

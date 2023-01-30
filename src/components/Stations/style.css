@@ -10,7 +10,7 @@
   scrollbar-width: thin !important;
 }
 
-.characters {
+.stationArray {
   margin-left: -34px;
   display: flex;
   flex-direction: column;

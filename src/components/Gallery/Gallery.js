@@ -37,7 +37,9 @@ function Gallery(props) {
         });
         const data = await response.json();
         if (response.ok) {
-            setImages(prevImages => [...prevImages, data]);
+            console.log("yyy data" , data)
+            console.log("yyy images" , images)
+            setImages(prevImages => [ data,...prevImages]);
             setUploadMessage('Image uploaded successfully!');
 
         } else {

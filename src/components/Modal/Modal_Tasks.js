@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Modal.css";
 import { FcMultipleInputs, FcAbout } from "react-icons/fc";
 import { RiAsterisk } from "react-icons/ri";
@@ -6,24 +6,25 @@ import { IoMdCheckbox } from "react-icons/io";
 import Modal_Loading from "./Modal_Loading";
 import { baseUrl } from "../../config";
 import Modal_no_site_selected from "./Modal_no_site_selected";
+import { uploadFile, insertTask } from '../../api/api';
 
 //--------------------------
-let getPicture, getSound;
 let ichour = "אישור";
 let file = "";
-let flagClickOK = false;
 let myPlacesChoiceTemp = [];
-let myPlacesChoice = [];
+
 //--------------------------
-function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected ,setModalOpenNoSiteSelected }) {
+function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setModalOpenNoSiteSelected, mySite , setAllTasksOfTheSite }) {
   const [, setDone] = useState(false);
   const [get_title, setTitle] = useState("");
-  const [, setPicture] = useState(null);
-  const [, setSound] = useState(null);
+  const [picture, setPicture] = useState(null);
+  const [audio, setAudio] = useState(null);
   const [getDescription, setDescription] = useState("");
   const [, setFile] = useState("");
-  const [, setFlagClickOK] = useState(false);
-  const [, setMyPlacesChoice] = useState([]);
+  const [flagClickOK, setFlagClickOK] = useState(false);
+  const [myPlacesChoice, setMyPlacesChoice] = useState([mySite.id]);
+
+  console.log("allStations: ", allStations)
 
   const handleTitleInput = (e) => {
     setTitle(e.target.value);
@@ -31,81 +32,125 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected ,setM
   const handleDescriptionInput = (e) => {
     setDescription(e.target.value);
   };
-  const handleFileInput = (e) => {
-    setFile((file = e.target.files[0]));
-    // console.log("file", file)
-    if (file.type.includes("image")) {
-      setPicture((getPicture = file));
-      // console.log(file)
+  // const handleFileInput = (e) => {
+  //   setFile((file = e.target.files[0]));
+  //   // console.log("file", file)
+  //   if (file.type.includes("image")) {
+  //     setPicture((getPicture = file));
+  //     // console.log(file)
+  //   }
+  //   if (file.type.includes("audio")) {
+  //     setAudio((file));
+  //     // console.log(file)
+  //   }
+  // };
+  const Post_Task = async () => {
+
+    setFlagClickOK(true);
+
+    // resultMyPlacesChoice();
+    let imageData;
+    let audioData;
+
+    try {
+      if (picture) {
+        imageData = await uploadFile(picture, 'Image');
+        console.log(`Image uploaded successfully:`, imageData);
+      }
+      if (audio) {
+        audioData = await uploadFile(audio, 'Audio');
+        console.log(`Audio uploaded successfully:`, audioData);
+      }
+    } catch (error) {
+      console.error(error);
     }
-    if (file.type.includes("audio")) {
-      setSound((getSound = file));
-      // console.log(file)
-    }
-  };
-  function Post_Task() {
-    resultMyPlacesChoice();
 
     if (get_title === "" || getDescription === "") {
       alert("עליך למלא שדות חובה המסומנים בכוכבית");
     } else {
-      setFlagClickOK((flagClickOK = true));
-      let url_post = `${baseUrl}/wp-json/wp/v2/tasks/`;
-      fetch(url_post, {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-        },
-        body: JSON.stringify({
-          // password: "sdfsdf",
-          status: "publish",
-
-          title: get_title,
-          // "description": getDescription,
-          places: myPlacesChoice,
-          fields: {
-            image: {
-              ID: 372,
-            },
-            // minimum_profile: 6
-          },
-        }),
-      })
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (post) {
+      try {
+        const post = await insertTask(get_title, myPlacesChoice, imageData, audioData);
           setDone(true);
-          // alert("ok")
-          // console.log("post Modale Tasks:", post)
-          window.location.replace("/planner");
-        });
+          console.log("post Modale Tasks:", post)
+          setFlagClickOK(false);
+          setOpenModalPlaces(false);
+          let color = allStations.find(item => item.id === myPlacesChoice[1]).color
+          setAllTasksOfTheSite(prev => [...prev, post])
+      } catch (error) {
+        console.error(error);
+      }
+
+      console.log("insertTask: ", insertTask      )
+
+    //   let url_post = `${baseUrl}/wp-json/wp/v2/tasks/`;
+    //   fetch(url_post, {
+    //     method: "POST",
+    //     mode: "cors",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+    //     },
+    //     body: JSON.stringify({
+    //       // password: "sdfsdf",
+    //       status: "publish",
+
+    //       title: get_title,
+    //       // "description": getDescription,
+    //       places: myPlacesChoice,
+    //       fields: {
+    //         image: {
+    //           ID: imageData.id,
+    //         },
+    //         audio: {
+    //           ID: audioData.id
+    //         }
+    //         // minimum_profile: 6
+    //       },
+    //     }),
+    //   })
+    //     .then(function (response) {
+    //       return response.json();
+
+    //       // props.setAllTasksOfTheSite
+    //     })
+    //     .then(function (post) {
+    //       setDone(true);
+    //       // alert("ok")
+    //       console.log("post Modale Tasks:", post)
+    //       // window.location.replace("/planner");
+    //       setFlagClickOK(false);
+    //       setOpenModalPlaces(false);
+    //     });
     }
+
+
   }
   const saveCheckbox = (val) => {
     // console.log(val)
-    setMyPlacesChoice(myPlacesChoiceTemp.push(val));
+    setMyPlacesChoice(prev => [...prev, val.id])
     // setMyStudents(myStudents.push(val))
-    sortById();
-    // console.log("myPlacesChoice:", myPlacesChoiceTemp);
+    // sortById();
   };
-  const sortById = () => {
-    if (myPlacesChoiceTemp.length > 1)
-      for (let i = 0; i < myPlacesChoiceTemp.length; i++) {
-        let min = myPlacesChoiceTemp[i];
-        for (let j = i; j < myPlacesChoiceTemp.length; j++) {
-          // console.log(j, ",", myStudents[j].id)
-          if (myPlacesChoiceTemp[j].id < min.id) {
-            setMyPlacesChoice((myPlacesChoiceTemp[i] = myPlacesChoiceTemp[j]));
-            setMyPlacesChoice((myPlacesChoiceTemp[j] = min));
-            min = myPlacesChoiceTemp[j].id;
-          }
-        }
-      }
-    // console.log("myPlacesChoiceSort:", myPlacesChoiceTemp);
-  };
+  useEffect(() => {
+    console.log("myPlacesChoice:", myPlacesChoice);
+
+  }, [myPlacesChoice])
+
+  // const sortById = () => {
+  //   if (myPlacesChoiceTemp.length > 1)
+  //     for (let i = 0; i < myPlacesChoiceTemp.length; i++) {
+  //       let min = myPlacesChoiceTemp[i];
+  //       for (let j = i; j < myPlacesChoiceTemp.length; j++) {
+  //         // console.log(j, ",", myStudents[j].id)
+  //         if (myPlacesChoiceTemp[j].id < min.id) {
+  //           setMyPlacesChoice((myPlacesChoiceTemp[i] = myPlacesChoiceTemp[j]));
+  //           setMyPlacesChoice((myPlacesChoiceTemp[j] = min));
+  //           min = myPlacesChoiceTemp[j].id;
+  //         }
+  //       }
+  //     }
+  //   // console.log("myPlacesChoiceSort:", myPlacesChoiceTemp);
+  // };
 
   const resultMyPlacesChoice = () => {
     if (myPlacesChoiceTemp.length > 1)
@@ -124,12 +169,12 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected ,setM
         // console.log("myPlacesChoice:", myPlacesChoice)
       }
   };
-  
+
 
   return (
     <>
       {!help && !siteSelected ? (<>
-          <Modal_no_site_selected setOpenModal={setOpenModalPlaces}></Modal_no_site_selected>
+        <Modal_no_site_selected setOpenModal={setOpenModalPlaces}></Modal_no_site_selected>
 
       </>) : (<></>)}
       {!help && siteSelected ? (
@@ -184,7 +229,7 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected ,setM
                       accept=".png, .jpg, .jpeg"
                       className="form-control"
                       type="file"
-                      onChange={handleFileInput}
+                      onChange={(e) => setPicture(e.target.files[0])}
                       style={{
                         textAlign: "right",
                         width: "100%",
@@ -203,7 +248,7 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected ,setM
                       accept=".mp3"
                       type="file"
                       className="form-control"
-                      onChange={handleFileInput}
+                      onChange={(e) => setAudio(e.target.files[0])}
                       style={{
                         textAlign: "right",
                         width: "100%",

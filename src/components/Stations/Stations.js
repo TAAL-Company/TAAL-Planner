@@ -36,6 +36,11 @@ const Stations = (props) => {
   const [myRouteClick, setMyRouteClick] = useState(0);
   const [stationArray, updateStationArray] = useState(props.stationArray);
 
+  useEffect(() => {
+    updateStationArray(props.stationArray);
+  }, [props.stationArray])
+  
+
   //changing the order of the stations
   function handleOnDragEnd(result) {
     if (!result.destination) return;
@@ -106,15 +111,13 @@ const Stations = (props) => {
 
     let colorTemp = 0; 
     
-    props.allTasks.forEach((element) => {
-      for (let i = 0; i < element.places.length; i++) {
-        if (element.places[i] === e) {
+    props.allTasksOfTheSite.forEach((element) => {
+        if (element.places.includes(e)) {
           let colorTemp = props.allStations.find((item) => item.id === e).color;
           element.color = colorTemp;
           colorTemp++;
           tasks.push(element);
         }
-      }
 
     });
 
@@ -288,6 +291,8 @@ const Stations = (props) => {
             siteQuestionLanguage={props.siteQuestionLanguage}
             tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
             allTasksOfTheSite={props.allTasksOfTheSite}
+            setAllTasksOfTheSite={props.setAllTasksOfTheSite}
+
 
           />
         </>

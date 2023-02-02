@@ -16,7 +16,8 @@ const Tasks_comp = (props) => {
                     language={props.language} myTasks={props.myTasks} siteQuestionLanguage={props.siteQuestionLanguage} saveButton={props.saveButton} drag={props.drag}
                     addMyTask={props.addMyTask} titleTaskCss={props.titleTaskCss} mySite={props.mySite}
                     flagHebrew={props.flagHebrew} tasksOfRoutes={props.tasksOfRoutes} myStation={props.myStation}
-                    myStations={props.myStations} />
+                    myStations={props.myStations} setAllTasksOfTheSite={props.setAllTasksOfTheSite}
+                />
             </DndProvider >
         </>
     );

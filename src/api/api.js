@@ -1,5 +1,15 @@
 import axios from "axios";
 import { baseUrl } from "../config";
+// import  apiFetch  from '@wordpress/api-fetch';
+
+// const flushCache = async () => {
+//   try {
+//     await apiFetch({ path:  `${baseUrl}/wp-json/wp/v2/routes?force=true`});
+//     console.log('Cache flushed');
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
 
 export const get = async (url, header) => {
   try {
@@ -54,6 +64,7 @@ export const getingDataTasks = async () => {
       }
     }
   });
+  // await flushCache();
 
   return allTasks;
 };
@@ -89,6 +100,7 @@ export const getingDataRoutes = async () => {
       }
     }
   });
+  // await flushCache();
 
   return allRoutes;
 };
@@ -124,6 +136,7 @@ export const getingDataPlaces = async () => {
       }
     }
   });
+  // await flushCache();
 
   return allPlaces;
 };
@@ -141,12 +154,80 @@ export const insertRoute = (routeData, callback) => {
   }
 
   return axios.post('https://taal.tech/wp-json/wp/v2/routes/', data, { headers: headers })
-    .then(response => {
+    .then(async response => {
       console.log(response.data);
+
+      // await flushCache();
 
       return response.data;
     })
     .catch(error => {
       console.log(error);
     });
+
+
 }
+
+export const uploadFile = async (file, type) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('title', file.name);
+  formData.append('description', `${type} uploaded from React`);
+
+  try {
+    const response = await fetch('https://taal.tech/wp-json/wp/v2/media', {
+      method: 'POST',
+      headers: {
+        'Authorization': "Bearer" + sessionStorage.jwt,
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error uploading ${type}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    // await flushCache();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const insertTask = async (get_title, myPlacesChoice, imageData, audioData) => {
+  try {
+    const response = await fetch('https://taal.tech/wp-json/wp/v2/tasks', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({
+        status: "publish",
+        title: get_title,
+        places: myPlacesChoice,
+        fields: {
+          image: {
+            ID: imageData.id,
+          },
+          audio:{
+            ID: audioData.id
+          }
+        },
+      }),
+    });
+  
+    if (!response.ok) {
+      throw new Error(`Error inserting task: ${response.statusText}`);
+    }
+  
+    const data = await response.json();
+    // await flushCache();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

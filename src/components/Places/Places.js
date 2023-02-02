@@ -77,7 +77,13 @@ const Places = (props) => {
   const [firstStationName, setFirstStationName] = useState("")
   const [boardArrayDND, setBoardArrayDND] = useState([]);
   const [pastelColors, setPastelColors] = useState(
-    ["#F49AC2", //(pale pink)
+    [
+      "#91D3A8", //
+      "#F2B965", //
+      "#F07F85", //
+      "#9EA8EF", //
+      "#DEBCF0", //
+      "#F49AC2", //(pale pink)
       "#77DD77", //(pastel green)
       "#FFB347", //(pastel orange)
       "#B39EB5", //(lavender)
@@ -88,7 +94,6 @@ const Places = (props) => {
       "#F5A9A9", //(light coral)
       "#ADD8E6", //(light cyan)
       "#D9B611", //(pastel gold)
-      "#9EA8EF", //
       "#A8D8EA", //(light sky blue)
       "#F4C2C2", //(light salmon)
       "#93A8A8", //(light gray-green)
@@ -97,10 +102,8 @@ const Places = (props) => {
       "#F5A9E1", //(light pink)
       "#F5D0A9", //(light tan)
       "#F5A9BB", //
-      "#F07F85", //
       "#A9F5A9", //(pastel green)
       "#F5A9F2", //(light lavender pink)
-      "#F2B965", //
       "#F5E6CB", //(light yellow)
       "#F5D7CB", //(light apricot)
       "#F5CBDC", //(light lavender)
@@ -246,19 +249,25 @@ const Places = (props) => {
 
       setBoardArrayDND(tasksOfRoutes.acf.tasks.map((element) => {
 
-        let taskTemp = allTasksOfTheSite.find(item => item.id === element.ID)
-        console.log("taskTemp: ", taskTemp)
+        let taskTemp = allTasks.find(item => item.id === element.ID)
+        console.log("taskTemp: yyyyy", taskTemp)
+        console.log("element.ID: yyyyy", element.ID)
 
 
+        let color;
         let stationID = taskTemp.places.find(item => item !== mySite.id)
         let stationName = "";
         if (stationID) {
           stationName = onlyAllStation.find(item => item.id === stationID).name
+          color = stationArray.find(item => item.id === stationID).color
+
         }
         else {
           stationName = "כללי"
+          color = "black"
         }
-        let color = stationArray.find(item => item.id === stationID).color
+
+        // let color = stationArray.find(item => item.id === stationID).color
         let width = "-13px";
         let height = "70px";
         let nameStation = "14px";
@@ -359,21 +368,22 @@ const Places = (props) => {
     setMySite((mySite.name = selectedValue.name));
     setMySite((mySite.id = selectedValue.id));
 
-    console.log("val:", selectedValue);
+    localStorage.setItem("MySite", JSON.stringify(mySite));
+
+    console.log("onlyAllStation:", onlyAllStation);
 
     let colorTemp = 0;
 
-    Places_and_their_stations.forEach((element) => {
-      if (element.parent.id === selectedValue.id) {
-        element.related.forEach((rel) => {
-          rel.color = pastelColors[colorTemp];
-          colorTemp++;
-          stationArray.push(rel);
-        });
-        console.log("stationArray:", stationArray);
-        console.log("color: ", pastelColors)
+    stationArray = onlyAllStation.filter((item) => {
+      if (item.parent === selectedValue.id) {
+        item.color = pastelColors[colorTemp];
+        colorTemp++;
+        return item;
+
       }
-    });
+    })
+
+
 
     // setStateStation({ data: stationArray });
 
@@ -404,18 +414,26 @@ const Places = (props) => {
       }))
     );
 
-    setAllTasksOfTheSite(
-      allTasks.filter(task => task.places.includes(mySite.id))
+    let temp = [];
+
+    allTasks.map(task => {
+      if (task.places.includes(mySite.id))
+        setAllTasksOfTheSite(prev => [...prev, task])
+      else {
+        console.log("NOT")
+        let temp = task.places.find(element => places.find(item => (item.id === element && item.parent === mySite.id)));
+        if (temp !== undefined)
+           setAllTasksOfTheSite(prev => [...prev, task])
+      }
+    }
     )
 
-
-  };
-
+  }
   useEffect(() => {
-    console.log("boardArrayDND dnd: ", boardArrayDND)
+    console.log("allTasksOfTheSite dnd: ", allTasksOfTheSite)
 
 
-  }, [boardArrayDND])
+  }, [allTasksOfTheSite])
 
 
   const clickOnhreeDotsVerticaIcont = (value) => {
@@ -442,10 +460,10 @@ const Places = (props) => {
 
   }, [newTitleForRoute])
   useEffect(() => {
-    console.log("filteredDataRoutes: ", filteredDataRoutes);
+    console.log("Places_and_their_stations: ", Places_and_their_stations);
 
 
-  }, [filteredDataRoutes])
+  }, [Places_and_their_stations])
 
   //----------------------------------------------------------------------
   return (
@@ -589,7 +607,7 @@ const Places = (props) => {
           tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
           allTasks={allTasks}
           allTasksOfTheSite={allTasksOfTheSite}
-          pastelColors = {pastelColors}
+          pastelColors={pastelColors}
         />
 
         {/* )} */}
@@ -602,10 +620,10 @@ const Places = (props) => {
         </>
       ) : <></>}
 
-      <div class="colors">
+      <div className="colors">
         {pastelColors.map((color) => {
           return (
-            <div style={{background: color, height:"100px", width: "100px"}}>{color}</div>
+            <div style={{ background: color, height: "100px", width: "100px" }}>{color}</div>
           )
         }
         )

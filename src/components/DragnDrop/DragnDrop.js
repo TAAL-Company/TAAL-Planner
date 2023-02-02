@@ -45,7 +45,7 @@ let myStation = "";
 //-------------------------
 function DragnDrop(props) {
   // console.log(" props.allTasksOfTheSiteeee drag ", props.allTasksOfTheSite)
-  // console.log(" props.allTasks 1: ", props.allTasksOfTheSite.find(task => task.id === 3020))
+  console.log(" props.allTasks 1: ", props.allTasksOfTheSite)
 
 
   const [board, setBoard] = useState([]);
@@ -320,7 +320,7 @@ function DragnDrop(props) {
       // console.log("thisIdArray:", thisIdArray)
       // console.log("dndArray:", dndArray)
       localStorage.setItem("New_Routes", JSON.stringify(thisIdArray));
-      localStorage.setItem("MySite", JSON.stringify(props.mySite));
+      // localStorage.setItem("MySite", JSON.stringify(props.mySite));
     }
   };
   // const help = () => {
@@ -384,9 +384,11 @@ function DragnDrop(props) {
       {modalOpen ? (
         <ModalTasks
           setOpenModalPlaces={setModalOpen}
+          setAllTasksOfTheSite={props.setAllTasksOfTheSite}
           // setModalOpenNoSiteSelected={setModalOpenNoSiteSelected}
-          allStations={props.allStations}
+          allStations={props.myStations}
           siteSelected={siteSelected}
+          mySite={props.mySite}
           help={helpFlag}
         />
       ) : (<></>)}

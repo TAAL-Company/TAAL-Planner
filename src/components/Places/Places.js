@@ -231,10 +231,7 @@ const Places = (props) => {
 
       setTasksOfRoutes((tasksOfRoutes = e));
 
-      console.log("tasksOfRoutes: ", tasksOfRoutes);
-      // setFlagButtonRoute((flagRoute = true));
-      console.log("check value routes:", tasksOfRoutes.acf.tasks);
-      console.log(" tasksOfRoutes.acf.tasks[0]", tasksOfRoutes.acf.tasks[0].ID.places);
+      tasksOfRoutes.title.rendered = tasksOfRoutes.title.rendered.replace("&#8211;", "-").replace("&#8217;", "'");  //replace gebrish for - or '
 
       let firstStationId = allTasks.find(obj => obj.id === tasksOfRoutes.acf.tasks[0].ID).places.find(item => item !== mySite.id);
       console.log("firstStationId:", firstStationId);
@@ -242,8 +239,6 @@ const Places = (props) => {
       setFirstStationName(
         onlyAllStation.find(item => item.id === firstStationId).name
       )
-
-      console.log("allTasksOfTheSite dnd: ", allTasksOfTheSite)
 
       let prevStation = "";
 
@@ -423,7 +418,7 @@ const Places = (props) => {
         console.log("NOT")
         let temp = task.places.find(element => places.find(item => (item.id === element && item.parent === mySite.id)));
         if (temp !== undefined)
-           setAllTasksOfTheSite(prev => [...prev, task])
+          setAllTasksOfTheSite(prev => [...prev, task])
       }
     }
     )

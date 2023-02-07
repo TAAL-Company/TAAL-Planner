@@ -172,7 +172,7 @@ export const uploadFile = async (file, type) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Error uploading ${type}: ${response.statusText}`);
+      throw new Error(`Error uploading ${type}: ${response}`);
     }
 
     const data = await response.json();
@@ -183,7 +183,49 @@ export const uploadFile = async (file, type) => {
   } catch (error) {
     throw error;
   }
+}
+export const insertStation = async (get_title, getDescription, site, imageData, audioData) => {
+  console.log("get_title YARDEN", get_title)
+  console.log("site.id YARDEN", site.id)
+  console.log("imageData YARDEN", imageData)
+  console.log("audioData YARDEN", audioData)
+
+  try {
+    const response = await fetch('https://taal.tech/wp-json/wp/v2/places', {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json",
+        Authorization: "Bearer" + sessionStorage.jwt,
+      },
+      body: JSON.stringify({
+        name: get_title,
+        parent: site.id,
+        description: getDescription,
+        fields: {
+          image: imageData,
+          audio: audioData.id
+
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      console.log("res: "+JSON.stringify(response))
+      throw new Error(`Error inserting statin: ${response.status}`);
+    }
+
+    const data = await response.json();
+    // await flushCache();
+
+    return data;
+  } catch (error) {
+    console.error(error);
+
+    throw error;
+  }
 };
+
 export const insertTask = async (get_title, myPlacesChoice, imageData, audioData) => {
   try {
     const response = await fetch('https://taal.tech/wp-json/wp/v2/tasks', {
@@ -200,17 +242,17 @@ export const insertTask = async (get_title, myPlacesChoice, imageData, audioData
           image: {
             ID: imageData.id,
           },
-          audio:{
+          audio: {
             ID: audioData.id
           }
         },
       }),
     });
-  
+
     if (!response.ok) {
       throw new Error(`Error inserting task: ${response.statusText}`);
     }
-  
+
     const data = await response.json();
     // await flushCache();
 

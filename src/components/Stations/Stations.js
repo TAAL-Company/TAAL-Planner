@@ -39,7 +39,7 @@ const Stations = (props) => {
   useEffect(() => {
     updateStationArray(props.stationArray);
   }, [props.stationArray])
-  
+
 
   //changing the order of the stations
   function handleOnDragEnd(result) {
@@ -101,7 +101,8 @@ const Stations = (props) => {
     } else {
       setMyStation((myStation.flag = true));
     }
-    setMyStation((myStation.data = props.stationArray));
+    if (e != 0)
+      setMyStation((myStation.data = props.stationArray));
     setMyStation((myStation.name = n));
     setMyStation((myStation.id = e));
     // console.log("console myStat myStation:", myStation)
@@ -109,15 +110,20 @@ const Stations = (props) => {
       tasks = [];
     }
 
-    let colorTemp = 0; 
-    
+
     props.allTasksOfTheSite.forEach((element) => {
-        if (element.places.includes(e)) {
-          let colorTemp = props.allStations.find((item) => item.id === e).color;
+      let colorTemp = props.stationArray.find((item) => item.id === e).color;
+
+      if (e === 0) {
+        if (element.places.length == 1 && element.places.includes(props.mySite.id)) {
           element.color = colorTemp;
-          colorTemp++;
           tasks.push(element);
         }
+      }
+      else if (element.places.includes(e)) {
+        element.color = colorTemp;
+        tasks.push(element);
+      }
 
     });
 
@@ -137,10 +143,10 @@ const Stations = (props) => {
     setStateTask({ data: tasks }); //Updating the state
   };
 
-  // const clickOnhreeDotsVerticaIcont = (value) => {
-  //   setMyRouteClick(value.id);
-  //   setModalIconsOpen(true);
-  // };
+  useEffect(() => {
+    console.log("onlyAllStation stations: ", props.onlyAllStation)
+
+  }, [props.onlyAllStation])
   //----------------------------------------------------------
   return (
     <>
@@ -149,8 +155,13 @@ const Stations = (props) => {
         <>
           {modalOpen && (
             <ModalStations
+              stationArray={props.stationArray}
               setOpenModalPlaces={setModalOpen}
               idTasks={props.idTask}
+              mySite={props.mySite}
+              pastelColors={props.pastelColors}
+
+
             />
           )}
 
@@ -212,11 +223,16 @@ const Stations = (props) => {
                                   >
                                     <div
                                       className="buttons"
-                                      style={id === myStation.id ?
-                                        { border: "1px solid #cc0127", background: `linear-gradient(270deg, ${color} 7%, #F8F9F3 1%)` }
-                                        :
-                                        { background: `linear-gradient(270deg, ${color} 7%, #F8F9F3 1%)` }
+                                      style={
+                                        {
+                                          border: (id === myStation.id) ? "1px solid #cc0127" : "",
+                                          background: props.language === 'English' ?
+                                            `linear-gradient(270deg, ${color} 7%, #F8F9F3 1%)`
+                                            :
+                                            `linear-gradient(90deg, ${color} 7%, #F8F9F3 1%)`
+                                        }
                                       }
+
                                       onClick={() =>
                                         Display_The_Tasks(id, name)
                                       }
@@ -296,7 +312,8 @@ const Stations = (props) => {
 
           />
         </>
-      )}
+      )
+      }
     </>
   );
 };

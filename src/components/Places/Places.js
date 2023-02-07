@@ -27,7 +27,6 @@ let allPlaces = [];
 let places = [];
 let myRoutes = [];
 let onlyAllStation = [];
-let stationArray = [];
 let Places_and_their_stations = [];
 let thisIdTask = 0;
 let filteredData = [];
@@ -48,6 +47,7 @@ const Places = (props) => {
   const [done, setDone] = useState(false);
   const [, setLoading] = useState(false);
   const [, setStateStation] = useState([]);
+  const [stationArray, setStationArray] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalIconsOpen, setModalIconsOpen] = useState(false);
   const [myRouteClick, setMyRouteClick] = useState(0);
@@ -74,7 +74,7 @@ const Places = (props) => {
   const [openModalRouteChosen, setOpenModalRouteChosen] = useState(false);
   const [allTasks, setAllTasks] = useState([]);
   const [allTasksOfTheSite, setAllTasksOfTheSite] = useState([]);
-  const [firstStationName, setFirstStationName] = useState("")
+  const [firstStationName, setFirstStationName] = useState("כללי")
   const [boardArrayDND, setBoardArrayDND] = useState([]);
   const [pastelColors, setPastelColors] = useState(
     [
@@ -115,25 +115,8 @@ const Places = (props) => {
       "#E6CBF5" //(light magenta)
     ]
   );
-  // const [routeClicked, setRouteClicked] = useState([]);
 
-  // const [, setMyCategory] = useState("place")
-  let inputHandler = (e) => {
-    //convert input text to lower case
-    setInputText((inputText = e.target.value.toLowerCase()));
-    setFilteredData(
-      (filteredData = places.filter((el) => {
-        // setInputText(lowerCase);
-        if (inputText === "") {
-          return el;
-        }
-        //return the item which contains the user input
-        else {
-          return el.name.toLowerCase().includes(inputText);
-        }
-      }))
-    );
-  };
+
   let inputHandlerRoutes = (e) => {
     //convert input text to lower case
     setInputTextRouts((inputTextRouts = e.target.value.toLowerCase()));
@@ -236,15 +219,19 @@ const Places = (props) => {
       let firstStationId = allTasks.find(obj => obj.id === tasksOfRoutes.acf.tasks[0].ID).places.find(item => item !== mySite.id);
       console.log("firstStationId:", firstStationId);
 
-      setFirstStationName(
-        onlyAllStation.find(item => item.id === firstStationId).name
-      )
+      let name = onlyAllStation.find(item => item.id === firstStationId);
+      if (name != undefined) {
+        setFirstStationName(
+          onlyAllStation.find(item => item.id === firstStationId).name
+        )
+      }
+
 
       let prevStation = "";
 
       setBoardArrayDND(tasksOfRoutes.acf.tasks.map((element) => {
 
-        let taskTemp = allTasks.find(item => item.id === element.ID)
+        let taskTemp = allTasksOfTheSite.find(item => item.id === element.ID)
         console.log("taskTemp: yyyyy", taskTemp)
         console.log("element.ID: yyyyy", element.ID)
 
@@ -252,14 +239,14 @@ const Places = (props) => {
         let color;
         let stationID = taskTemp.places.find(item => item !== mySite.id)
         let stationName = "";
-        if (stationID) {
+        if (stationID != undefined) {
           stationName = onlyAllStation.find(item => item.id === stationID).name
           color = stationArray.find(item => item.id === stationID).color
 
         }
         else {
           stationName = "כללי"
-          color = "black"
+          color = stationArray.find(item => item.id === 0).color
         }
 
         // let color = stationArray.find(item => item.id === stationID).color
@@ -339,13 +326,14 @@ const Places = (props) => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("routeClicked: ", routeClicked)
+  useEffect(() => {
+    console.log("onlyAllStation: ", onlyAllStation)
 
-  // }, [routeClicked])
+  }, [onlyAllStation])
 
   const handleSelectChange = (event) => {
     const selectedValue = JSON.parse(event.target.value);
+    console.log("selectedValue: " + JSON.stringify(selectedValue))
     Display_The_Stations(selectedValue);
     setSiteSelected(true);
   }
@@ -369,7 +357,7 @@ const Places = (props) => {
 
     let colorTemp = 0;
 
-    stationArray = onlyAllStation.filter((item) => {
+    setStationArray(onlyAllStation.filter((item) => {
       if (item.parent === selectedValue.id) {
         item.color = pastelColors[colorTemp];
         colorTemp++;
@@ -377,8 +365,8 @@ const Places = (props) => {
 
       }
     })
-
-
+    )
+    setStationArray(prev => [...prev, { id: 0, color: pastelColors[colorTemp], parent: selectedValue.id, name: "כללי" }])
 
     // setStateStation({ data: stationArray });
 
@@ -414,7 +402,7 @@ const Places = (props) => {
     allTasks.map(task => {
       if (task.places.includes(mySite.id))
         setAllTasksOfTheSite(prev => [...prev, task])
-      else {
+      else {     //if there is station of my site
         console.log("NOT")
         let temp = task.places.find(element => places.find(item => (item.id === element && item.parent === mySite.id)));
         if (temp !== undefined)
@@ -584,6 +572,7 @@ const Places = (props) => {
           stationArray={stationArray}
           idTask={thisIdTask}
           allStations={onlyAllStation}
+          setOnlyAllStation={setOnlyAllStation}
           language={props.language}
           stationsName={props.stations}
           myTasks={props.myTasks}
@@ -615,7 +604,7 @@ const Places = (props) => {
         </>
       ) : <></>}
 
-      <div className="colors">
+      {/* <div className="colors">
         {pastelColors.map((color) => {
           return (
             <div style={{ background: color, height: "100px", width: "100px" }}>{color}</div>
@@ -624,7 +613,7 @@ const Places = (props) => {
         )
 
         }
-      </div>
+      </div> */}
     </>
   );
 };

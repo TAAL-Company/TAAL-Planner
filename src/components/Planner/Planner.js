@@ -84,7 +84,7 @@ const Planner = () => {
         setTasks("Tasks");
         setSaveButton("Save route");
         setRouteWrite("Write down the name of the route");
-        setRDrag("route view");
+        setRDrag("Route View");
         setAddSite("Add sites");
         setAddStation("add stations");
         setAddTask("Add tasks");

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import "./Modal.css";
 import { FcMultipleInputs } from "react-icons/fc";
 import { RiAsterisk } from "react-icons/ri";
@@ -6,17 +6,19 @@ import { BsExclamationLg } from "react-icons/bs";
 import Modal_Loading from "./Modal_Loading";
 import { baseUrl } from "../../config";
 import stopIcon from '../../Pictures/stopIcon.svg'
+import { uploadFile, insertStation } from '../../api/api';
+
 
 //--------------------------
-let getPicture, getSound;
+// let getPicture, getSound;
 let ichour = "אישור";
 let flagClickOK = false;
 //--------------------------
-const Modal_Stations = ({ setOpenModalPlaces, idTasks }) => {
+const Modal_Stations = (props) => {
   const [, setDone] = useState(false);
   const [get_title, settitle] = useState("");
-  const [, setPicture] = useState(null);
-  const [, setSound] = useState(null);
+  const [picture, setPicture] = useState(null);
+  const [audio, setAudio] = useState(null);
   const [getDescription, setDescription] = useState("");
   const [, setFlagClickOK] = useState(false);
   //----------------------------------
@@ -31,91 +33,108 @@ const Modal_Stations = ({ setOpenModalPlaces, idTasks }) => {
   };
   //----------------------------------
 
-  const handleFileInput = (e) => {
-    // handle validations
-    const file = e.target.files[0];
+  // const handleFileInput = (e) => {
+  //   // handle validations
+  //   const file = e.target.files[0];
 
-    if (file.type.includes("image")) {
-      setPicture((getPicture = file));
-      // console.log(file)
-    }
+  //   if (file.type.includes("image")) {
+  //     setPicture((getPicture = file));
+  //     // console.log(file)
+  //   }
 
-    if (file.type.includes("audio")) {
-      setSound((getSound = file));
-      // console.log(file)
-    }
-  };
+  //   if (file.type.includes("audio")) {
+  //     setSound((getSound = file));
+  //     // console.log(file)
+  //   }
+  // };
   //----------------------------------
 
-  function Post_Station() {
+  async function Post_Station() {
+    setFlagClickOK((flagClickOK = true));
+
+
+    let imageData;
+    let audioData;
+
+    try {
+      if (picture) {
+        imageData = await uploadFile(picture, 'Image');
+        console.log(`Image uploaded successfully:`, imageData);
+      }
+      if (audio) {
+        audioData = await uploadFile(audio, 'Audio');
+        console.log(`Audio uploaded successfully:`, audioData);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
     if (get_title === "" || getDescription === "") {
       alert("עליך למלא שדות חובה המסומנים בכוכבית");
     } else {
-      setFlagClickOK((flagClickOK = true));
-      let url_post = `${baseUrl}/wp-json/wp/v2/places/`;
-      fetch(url_post, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-        },
+      try {
 
-        body: JSON.stringify({
-          name: get_title,
-          description: getDescription,
-          parent: idTasks,
-          fields: {
-            audio: getSound,
-            image: getPicture,
-          },
-        }),
-      })
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (post) {
-          // get_Route_ID = post.id
-          setDone(true);
+        const post = await insertStation(get_title, getDescription, props.mySite, imageData, audioData);
+        setDone(true);
+        setFlagClickOK((flagClickOK = false));
 
-          // alert(get_Route_ID)
-          // console.log(post)
-          setFlagClickOK((flagClickOK = false));
-          window.location.replace("/planner");
-        });
+        let length = props.stationArray.length;
+        let color =  props.pastelColors[length];
+        post.color = color;
+        props.setOpenModalPlaces(false);
+
+        await props.stationArray.push(post)
+      } catch (error) {
+        alert("שם התחנה כבר קיים - בחר שם אחר");
+        console.error(error);
+      }
+
+
+
+
+
     }
   }
+
+  useEffect(() => {
+    console.log("m props.stationArray:", props.stationArray)
+
+
+  }, [props.stationArray])
+
+
   return (
     <>
-      {idTasks === 0 ? (
+      {props.idTasks === 0 ? (
         <>
           {/* <div className="BackgroundPlasesNoClick"> */}
-            <div className="modalContainerPlases">
-          
-              <div className="stopIconContainer">
-                <img
-                  src={stopIcon}
-                  alt="logo"
+          <div className="modalContainerPlases">
 
-                ></img>
-              </div>
-              <div className="body" style={{ textAlign: "center" }}>
-                <h4>
-                  {" "}
-                  עליך לבחור ראשית אתר, ואז לשייך אליו תחנה
-                </h4>
+            <div className="stopIconContainer">
+              <img
+                src={stopIcon}
+                alt="logo"
 
-              </div>
-              <div className="footer">
-                <button
-                  className="cancelBtn"
-                  onClick={() => {
-                    setOpenModalPlaces(false);
-                  }}
-                >
-                  סגור
-                </button>
-              </div>
+              ></img>
             </div>
+            <div className="body" style={{ textAlign: "center" }}>
+              <h4>
+                {" "}
+                עליך לבחור ראשית אתר, ואז לשייך אליו תחנה
+              </h4>
+
+            </div>
+            <div className="footer">
+              <button
+                className="cancelBtn"
+                onClick={() => {
+                  props.setOpenModalPlaces(false);
+                }}
+              >
+                סגור
+              </button>
+            </div>
+          </div>
           {/* </div> */}
         </>
       ) : (
@@ -169,7 +188,7 @@ const Modal_Stations = ({ setOpenModalPlaces, idTasks }) => {
                     accept=".png, .jpg, .jpeg"
                     className="form-control"
                     type="file"
-                    onChange={handleFileInput}
+                    onChange={(e) => setPicture(e.target.files[0])}
                     style={{
                       width: "100%",
                       height: "40px",
@@ -187,7 +206,7 @@ const Modal_Stations = ({ setOpenModalPlaces, idTasks }) => {
                     accept=".mp3"
                     type="file"
                     className="form-control"
-                    onChange={handleFileInput}
+                    onChange={(e) => setAudio(e.target.files[0])}
                     style={{
                       width: "100%",
                       height: "40px",
@@ -208,7 +227,7 @@ const Modal_Stations = ({ setOpenModalPlaces, idTasks }) => {
                 className="newStationButton"
                 value="ביטול"
                 onClick={() => {
-                  setOpenModalPlaces(false);
+                  props.setOpenModalPlaces(false);
                 }}
               />
             </div>

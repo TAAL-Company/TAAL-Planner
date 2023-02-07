@@ -68,37 +68,34 @@ const ReorderBoard = (props) => {
                                     {(provided) => (
                                         <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} >
                                             <div className="nameStationReorder"> {task.nameStation}</div>
-                                            {/* <Tag
-                                                title={task.title}
-                                                data={task.data}
-                                                dataImg={task.dataImg}
-                                                id={task.id}
-                                                key={index}
-                                                dragFromCover={"reorderBoard"}
-                                                stationColor={task.color}
-                                            /> */}
                                             <>
                                                 <div
                                                     className="buttons"
-                                                    style={{
-                                                        background: `linear-gradient(270deg, ${task.color} 7%, #fff 1%)`,
-                                                        justifyContent: "flex-end", padding: "22px" }
-                                                    }
+                                                    style={
+                                                        {
+                                                          background: props.language === 'English' ? 
+                                                            `linear-gradient(270deg, ${task.color} 7%, #F8F9F3 1%)`
+                                                            : 
+                                                            `linear-gradient(90deg, ${task.color} 7%, #F8F9F3 1%)`,
+                                                          justifyContent: "flex-end",
+                                                          padding: "22px"
+                                                        }
+                                                      }
                                                 >
 
-                                                <div className="nameOfTask"> {task.title}</div>
-                                            </div>
-                                        </>
+                                                    <div className="nameOfTask"> {task.title}</div>
+                                                </div>
+                                            </>
                                         </div>
-                            )
-                        }
+                                    )
+                                    }
                                 </Draggable>
-                );
+                            );
                         })}
-                {provided.placeholder}
-            </div>
+                        {provided.placeholder}
+                    </div>
                 )}
-        </Droppable>
+            </Droppable>
         </DragDropContext >
     )
 }

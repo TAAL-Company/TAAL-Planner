@@ -695,7 +695,7 @@ function DragnDrop(props) {
                         ) : (
                           <>
                             <ReorderBoard
-                              board={board} setBoard={setBoard}
+                              board={board} setBoard={setBoard} language={props.language}
                             />
                           </>
                         )}

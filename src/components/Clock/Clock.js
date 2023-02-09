@@ -6,7 +6,7 @@ function Clock() {
         const fetchData = async () => {
             try {
                 const date = new Date();
-                setClockState(date.toLocaleTimeString());
+                setClockState(date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
             } catch (error) {
                 console.error(error.message);
             }

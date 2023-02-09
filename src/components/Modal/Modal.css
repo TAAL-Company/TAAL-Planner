@@ -680,11 +680,12 @@ input.newStationButton {
   width: 23px;
   border: none;
 }
+
 .modal_route_chosen {
   position: fixed;
   z-index: 10;
   /* margin-left: 500px; */
-  width: 372px;
+  /* width: 372px; */
   height: 340px;
   text-align: right;
   background: #FFFFFF 0% 0% no-repeat padding-box;
@@ -702,4 +703,23 @@ input.newStationButton {
   padding-left: 40px;
   padding-right: 40px;
   gap: 10px;
+}
+
+/*  3 dots */
+.button-dropdown-content {
+  /* display: none; */
+  position: absolute;
+  background-color: #f1f1f1;
+  width: 100px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  text-align: center;
+}
+
+.button-dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
 }

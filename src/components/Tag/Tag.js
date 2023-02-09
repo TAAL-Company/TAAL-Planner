@@ -3,9 +3,11 @@ import { useDrag } from "react-dnd";
 // import { RiDragMove2Line } from "react-icons/ri";
 import "./style.css";
 // import Dot from "../Dot/Dot"
-import { BsThreeDotsVertical, BsList } from "react-icons/bs";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import Images from "../Images/Images";
 import Audios from "../Audios/Audios";
+import Modal_dropdown from "../Modal/Modal_dropdown";
+import { CgOpenCollective } from "react-icons/cg";
 
 let idListen = 0;
 let dataListen = {};
@@ -32,7 +34,8 @@ function Tag({
   data,
   modalFlagTablet,
   dragFromCover,
-  stationColor
+  stationColor,
+  language
 }) {
   localStorage.setItem("myLastStation", JSON.stringify(myLastStation));
   console.log("title in Tag:", title);
@@ -51,6 +54,8 @@ function Tag({
 
   const [, setIdListen] = useState(0);
   const [, setDataListen] = useState({});
+  const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
+
 
   // console.log("flag Tag", flag)
 
@@ -65,6 +70,20 @@ function Tag({
   useEffect(() => {
     console.log('isDragging: ', isDragging);
   }, [isDragging])
+
+
+  const clickOnhreeDotsVerticaIcont = (value) => {
+    if (openThreeDotsVertical == value)
+      setOpenThreeDotsVertical(-1)
+    else
+      setOpenThreeDotsVertical(value)
+
+  }
+  useEffect(() => {
+    console.log("openThree" + openThreeDotsVertical)
+
+  }, [openThreeDotsVertical])
+
 
 
   const listen = () => {
@@ -86,18 +105,18 @@ function Tag({
         <>
           {/* {myLastStation !== myStation && flagBoard ? <>  <div className='kavTask3'></div></> : <></>} */}
 
-          <div className="kav"></div>
-          <div className="kavTop" style={{ width: kavTopWidth }}>
-            <div className="titleStat"></div>
-            <div className="kavTask" style={{ borderLeft: borderLeft }}>
+          <div className={`kav ${language !== 'English' ? 'english' : ''}`}></div>
+          <div className={`kavTop ${language !== 'English' ? 'english' : ''}`} style={{ width: kavTopWidth }}>
+            <div className={`titleStat ${language !== 'English' ? 'english' : ''}`}>{nameStation}</div>
+            <div className={`kavTask ${language !== 'English' ? 'english' : ''}`} style={{ borderLeft: borderLeft }}>
               {/* <div className='kavB'></div> */}
             </div>
             <div
-              className="kavTask2"
+            className={`kavTask2 ${language !== 'English' ? 'english' : ''}`}
               style={{ height: height, bottom: bottom }}
             ></div>
-            <div className="kavTaskTop" style={{ marginTop: width }}></div>
-            <div className="nameStationBoard">{nameStation}</div>
+            <div className={`kavTaskTop ${language !== 'English' ? 'english' : ''}`} style={{ marginTop: width }}></div>
+            <div className={`nameStationBoard ${language !== 'English' ? 'english' : ''}`}>{nameStation}</div>
           </div>
         </>
       ) : (
@@ -141,18 +160,35 @@ function Tag({
             <>
               <div
                 className="buttons"
-                style={dragFromCover === "reorderBoard" ?
-                  { marginTop: myMarginTop, background: `linear-gradient(270deg, ${stationColor} 7%, #fff 1%)` }
-                  :
-                  { marginTop: myMarginTop }
+              
+                style={
+                  {
+                    background: (dragFromCover === "reorderBoard") ? `linear-gradient(270deg, ${stationColor} 7%)` : "",
+                    marginTop: myMarginTop,
+                    flexDirection: language === 'English' ? "row" : "row-reverse",
+                    textAlignLast: language === 'English' ? "end" : "left",
+                    marginLeft: language === 'English' ? "" : "56px"
+                  }
                 }
                 ref={drag}
                 src={title}
               >
-                {dragFromCover !== "reorderBoard" ?
+                {/* {dragFromCover !== "reorderBoard" ?
                   <BsThreeDotsVertical className="threeDotsVerticalTasks" /> :
                   <BsList className="threeDotsVerticalTasks" />
-                }
+                } */}
+                <div className="dropdownThreeDots">
+
+                  <button className="threeDotsVerticalEng"
+                    onClick={() => clickOnhreeDotsVerticaIcont(id)} >
+                    <BsThreeDotsVertical />
+                  </button>
+
+                  {openThreeDotsVertical !== id ?
+                    <></>: <Modal_dropdown /> 
+
+                  }
+                </div>
                 <div className="nameOfTask"> {title}</div>
               </div>
             </>

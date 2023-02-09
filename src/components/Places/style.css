@@ -81,10 +81,10 @@
 }
 
 .threeDotsVerticalEng {
-  opacity: 1;
-  position: relative;
-  /* left: -65px; */
-  font-size: 18px;
+  width: 25px;
+  height: 25px;
+  display: grid;
+  align-content: center;
 }
 
 .threeDotsVerticalEng:hover+.ModalIcons {
@@ -92,9 +92,9 @@
 }
 
 .threeDotsVerticalTasks {
-  opacity: 1;
-  position: relative;
-  font-size: 18px;
+  width: 25px;
+  height: 25px;
+  align-self: center;
 }
 
 .threeDotsVerticalEngStation {
@@ -147,8 +147,13 @@
   height: 59px;
   justify-content: space-between;
   /* margin: 13px 13px 13px 23px; */
-  padding: 20px;
+  padding: 15px;
   width: 225px;
+  align-items: center;
+}
+.buttons.english {
+  margin-left: 56px;
+
 }
 
 .AddButton {
@@ -238,6 +243,10 @@ h3 {
   text-align: end;
   /* align-self: center; */
   justify-content: right;
+  border: 0;
+  background-color: transparent;
+  margin: 0;
+  margin-right: 10px;
 }
 
 .loading {

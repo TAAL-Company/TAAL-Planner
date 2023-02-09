@@ -320,6 +320,10 @@
   text-align: right;
   margin-right: 45px;
 }
+.mySiteChois.english {
+  text-align: left;
+  left: 30px;
+}
 
 .mySiteChoisPhoneCover {
   text-align: -7px;
@@ -374,6 +378,10 @@
   background: #256FA1;
   width: 313px;
   margin-top: 20px;
+}
+.txt.english{
+  text-align: left;
+  padding-left: 12px;
 }
 
 .helpBtn {

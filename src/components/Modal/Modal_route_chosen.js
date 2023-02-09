@@ -15,14 +15,15 @@ const Modal_route_chosen = (props) => {
 
                     ></img>
                 </div>
-                <div className="body" style={{ textAlign: "center" , direction: "rtl"}}>
+                <div className="body" style={{ textAlign: "center", direction: "rtl" }}>
                     <h4>
-                        {" "}
                         בחרת כבר במסלול אחר, ברצונך להחליף?
                     </h4>
-
+                    <div>
+                        החלפת מסלול תמחק את השינויים שביצעת במסלול הנוכחי
+                    </div>
                 </div>
-                <div className="footer">
+                <div className="footer" style={{ display: "flex" }}>
                     <button
                         className="cancelBtn"
                         onClick={() => {
@@ -30,6 +31,14 @@ const Modal_route_chosen = (props) => {
                         }}
                     >
                         ביטול
+                    </button>
+                    <button
+                        className="cancelBtn"
+                        onClick={() => {
+                            props.setReplaceRouteFlag(true);
+                        }}
+                    >
+                        החלף מסלול
                     </button>
                 </div>
             </div>

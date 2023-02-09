@@ -101,7 +101,12 @@ function DragnDrop(props) {
 
   let prevStation = "";
 
+  useEffect(() => {
+    if (props.replaceRouteFlag) {
+      setBoard([])
 
+    }
+  }, [props.replaceRouteFlag]);
 
   useEffect(() => {
     if (props.mySite.name != "") {
@@ -237,54 +242,6 @@ function DragnDrop(props) {
       }
 
 
-      // if (boardName === "routes") {
-
-      //   if (saveTag.props !== undefined) {
-      //     prevStation = saveTag.props.myLastStation;
-      //     myStation = saveTag.props.myStation;
-      //   }
-      //   else if (prevStation == "") {
-      //     prevStation = props.firstStationName
-      //   }
-
-      //   if (myStation == "") {
-      //     myStation = await props.boardArrayDND.find((tag) => id === tag.id).myStation;
-      //   }
-        
-      //   console.log("dnd prevStation: ", prevStation)
-      //   console.log("dnd myStation: ", myStation)
-
-      //   if (prevStation === myStation) {  //same station
-
-      //     console.log("111 same station")
-
-      //     setFlagPhoneOne((flagPhoneOne = true));
-      //     setWidth((width = "-84px"));
-      //     setBorderLeft((borderLeft = "2x solid #c2bfbf"));
-      //     setHeight((height = "86px"));
-      //     setBottom((bottom = "45px"));
-      //     setKavTopWidth((kavTopWidth = "0px"));
-      //     setNewkavTaskTop((newkavTaskTop = "100px"));
-      //     setNameStation((nameStation = ""));
-      //     setKavTaskTopMarginTop((kavTaskTopMarginTop = "-27px"));
-      //   } else {
-
-      //     console.log("111 NOT same station")
-
-
-      //     setFlagPhoneOne((flagPhoneOne = false));
-      //     setBorderLeft((borderLeft = "0x solid #c2bfbf"));
-      //     setWidth((width = "-13px"));
-      //     setHeight((height = "70px"));
-      //     setBottom((bottom = "-27px"));
-      //     setKavTopWidth((kavTopWidth = "25px"));
-      //     setNewkavTaskTop((newkavTaskTop = "0px"));
-      //     // setNameStation(nameStation = props.myStation.name)
-      //     setNameStation((nameStation = myStation));
-      //     setKavTaskTopMarginTop((kavTaskTopMarginTop = "-7px"));
-      //   }
-      // }
-
 
 
       console.log(" props.boardArrayDND ", props.boardArrayDND)
@@ -323,10 +280,8 @@ function DragnDrop(props) {
       // localStorage.setItem("MySite", JSON.stringify(props.mySite));
     }
   };
-  // const help = () => {
-  //     setHelpFlag(helpFlag = true)
-  //     setModalOpen(true);
-  // }
+
+
   const treeFunction = (e) => {
     setFlagPhone((flagPhone = false));
     // setFlagTablet(flagTablet = false)
@@ -380,6 +335,7 @@ function DragnDrop(props) {
   }
   //---------------------------------------------------------
   return (
+
     <>
       {modalOpen ? (
         <ModalTasks
@@ -445,6 +401,7 @@ function DragnDrop(props) {
                   count={count}
                   data={tag.data}
                   dragFromCover={"TasksCover"}
+                  language={props.language}
                 />
               );
             })}
@@ -462,53 +419,7 @@ function DragnDrop(props) {
         </div>
       </div>
       <>
-        {/* {props.flagHebrew ? ( */}
-        {/* <>
-            <div className="Board" style={{ marginLeft: "1119px" }} ref={drop}>
-              <i className="bi bi-dash-square">
-                <div
-                  style={{
-                    position: "relative",
-                    left: "13px",
-                  }}
-                >
-                </div>
-                <div className="txt">
-                  {" "}
-                  {props.drag}&nbsp;&nbsp;
-     
-                  <div style={{ fontSize: "20px", left: "185px" }}>
-              
-                  </div>
-            
-                </div>
-              </i>
-              <div className="MyTasks">
-                {props.mySite.name}
-                {board.map((tag, keyCount) => {
-               
-                  return (
-                    <Tag
-                      title={tag.title}
-                      // idImg={tag.id}
-                      data={tag.data}
-                      dataImg={tag.dataImg}
-                      id={tag.id}
-                      key={keyCount}
-                      flagBoard={true}
-                      myStation={tag.myStation}
-                      myMarginTop={"-68px"}
-                      myLastStation={props.myStation.name}
-                      count={count}
-                      dragFromCover={"MyTasks"}
-                    />
-                  );
-                })}
-              </div>
-            </div>{" "}
-          </> */}
-        {/* // ) : ( */}
-        <>
+            <>
           <div className={`Board ${props.language !== 'English' ? 'english' : ''}`} ref={drop}>
             <button
               className="AddRoute"
@@ -520,7 +431,7 @@ function DragnDrop(props) {
               {props.saveButton}
               {/* <AiFillCheckCircle className="icon" /> */}
             </button>
-            <div className="txt">
+            <div className={`txt ${props.language !== 'English' ? 'english' : ''}`}>
               {" "}
               {props.drag}&nbsp;&nbsp;
               <div style={{ fontSize: "20px", left: "185px" }}></div>
@@ -578,34 +489,12 @@ function DragnDrop(props) {
                 <>
                   {props.mySite.name ? (
                     <>
-                      <div className="kavT"></div>
-                      <div className="mySiteChois">
+                      <div className={`kavT ${props.language !== 'English' ? 'english' : ''}`}></div>
+                      <div className={`mySiteChois ${props.language !== 'English' ? 'english' : ''}`}>
                         {props.tasksOfRoutes && props.tasksOfRoutes.title ? props.tasksOfRoutes.title.rendered : ''}
                         &nbsp;&nbsp;{" "}
                       </div>
-                      {/* {props.tasksOfRoutes && props.tasksOfRoutes.acf ? (
-                          <>
-                            {props.tasksOfRoutes.acf.tasks.map(
-                              (element, keyCount) => {
-                                //שליחת המסלול
-                                return (
-                                  <Tag
-                                    key={keyCount}
-                                    title={element.post_title}
-                                    id={element.ID}
-                                    flagBoard={true}
-                                    myLastStation={props.myStation.name}
-                                    myMarginTop={"-68px"}
-                                    count={count}
-                                    flagTree={flagTree}
-                                  />
-                                );
-                              }
-                            )}
-                          </>
-                        ) : (
-                          <></>
-                        )} */}
+          
                     </>
                   ) : (
                     <></>
@@ -638,6 +527,7 @@ function DragnDrop(props) {
                         flagPhone={flagPhone}
                         flagTree={flagTree}
                         dragFromCover={"border"}
+                        language={props.language}
 
                       />
                     ));

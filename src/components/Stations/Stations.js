@@ -4,12 +4,12 @@ import "./style.css";
 import TasksComp from "../Tasks_comp/Tasks_comp";
 import ModalStations from "../Modal/Modal_Stations";
 import { AiOutlinePlus } from "react-icons/ai";
-// import { BsThreeDotsVertical } from "react-icons/bs";
 import { CgSearch } from "react-icons/cg";
 import "@fontsource/assistant";
-import ModalIcons from "../Modal/Modal_Icons";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import textArea from '../../Pictures/textArea.svg'
+import Modal_dropdown from "../Modal/Modal_dropdown";
+import { BsThreeDotsVertical } from "react-icons/bs";
 
 //-----------------------
 // let allTasks = [];
@@ -35,6 +35,7 @@ const Stations = (props) => {
   const [modalIconsOpen, setModalIconsOpen] = useState(false);
   const [myRouteClick, setMyRouteClick] = useState(0);
   const [stationArray, updateStationArray] = useState(props.stationArray);
+  const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
 
   useEffect(() => {
     updateStationArray(props.stationArray);
@@ -52,6 +53,12 @@ const Stations = (props) => {
     updateStationArray(items);
   }
 
+  const clickOnhreeDotsVerticaIcont = (value) => {
+    if (openThreeDotsVertical == value)
+      setOpenThreeDotsVertical(-1)
+    else
+      setOpenThreeDotsVertical(value)
+  };
 
   if (flagFirstTime === true) {
     filteredData = props.stationArray;
@@ -230,36 +237,31 @@ const Stations = (props) => {
                                             `linear-gradient(270deg, ${color} 7%, #F8F9F3 1%)`
                                             :
                                             `linear-gradient(90deg, ${color} 7%, #F8F9F3 1%)`
+                                          ,
+                                          flexDirection: props.language === 'English' ? "row" : "row-reverse",
+                                          textAlignLast: props.language === 'English' ? "end" : "left"
+
                                         }
                                       }
 
-                                      onClick={() =>
-                                        Display_The_Tasks(id, name)
-                                      }
+
                                       key={index}
                                     >
-                                      {/* <BsThreeDotsVertical
-                                        className="threeDotsVerticalEng"
-                                        onClick={() =>
-                                          clickOnhreeDotsVerticaIcont(id, name)
+                                      <div className="dropdownThreeDots">
+
+                                        <button className="threeDotsVerticalEng"
+                                          onClick={() => clickOnhreeDotsVerticaIcont(index)} >
+                                          <BsThreeDotsVertical />
+                                        </button>
+
+                                        {openThreeDotsVertical === index ?
+                                          <Modal_dropdown /> : <></>
+
                                         }
-                                      /> */}
-                                      {myRouteClick === id ? (
-                                        <>
-                                          {modalIconsOpen && (
-                                            <ModalIcons
-                                              setOpenModalPlaces={
-                                                setModalIconsOpen
-                                              }
-                                              myCategory={myCategory}
-                                            />
-                                          )}
-                                        </>
-                                      ) : (
-                                        <></>
-                                      )}
-                                      <h3 className="nameOfButton">{name}</h3>
-                                      {/* <Dot color="#F2AE69" /> */}
+                                      </div>
+                                      <button className="nameOfButton" onClick={() => Display_The_Tasks(id, name)}>
+                                        {name}
+                                      </button>
                                     </div>
                                   </div>
                                 )}
@@ -288,6 +290,7 @@ const Stations = (props) => {
             </div>
           </div>
           <TasksComp
+            replaceRouteFlag={props.replaceRouteFlag}
             firstStationName={props.firstStationName}
             boardArrayDND={props.boardArrayDND}
             propsDataTask={tasks}

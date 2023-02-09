@@ -11,7 +11,7 @@ const Tasks_comp = (props) => {
     return (
         <>
             <DndProvider backend={HTML5Backend}>
-                <DragnDrop dragFrom={"tasksList"} firstStationName={props.firstStationName} allTasksOfTheSite={props.allTasksOfTheSite} allTasks={props.allTasks} tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
+                <DragnDrop dragFrom={"tasksList"} replaceRouteFlag={props.replaceRouteFlag} firstStationName={props.firstStationName} allTasksOfTheSite={props.allTasksOfTheSite} allTasks={props.allTasks} tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
                     propDataTask={props.propsDataTask} boardArrayDND={props.boardArrayDND} allStations={props.allStations}
                     language={props.language} myTasks={props.myTasks} siteQuestionLanguage={props.siteQuestionLanguage} saveButton={props.saveButton} drag={props.drag}
                     addMyTask={props.addMyTask} titleTaskCss={props.titleTaskCss} mySite={props.mySite}

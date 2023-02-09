@@ -119,6 +119,11 @@
   float: inherit;
 }
 
+.kav.english {
+  left: 8px;
+  height: 85px;
+}
+
 .margin {
   display: -webkit-inline-box;
   height: 84px;
@@ -138,6 +143,9 @@
   bottom: 42px;
   right: 185px;
   text-align-last: end;
+}
+.nameStationBoard.english{
+  color: #ffffff00;
 }
 
 .nameStationBoardPhone {
@@ -173,11 +181,17 @@
   height: 24px;
   font: normal normal bold 15px/20px Assistant;
   letter-spacing: 0px;
-  color: #505050;
+  color: #ffffff00;
   opacity: 1;
   position: relative;
   right: 48px;
   top: -13px;
+}
+
+.titleStat.english {
+  color: #00000000;
+  left: 34px;
+
 }
 
 .titleStat1 {
@@ -204,6 +218,10 @@
   z-index: 1;
 }
 
+.kavT.english {
+  left: 1px;
+}
+
 .kavTask {
   border-left: 2px solid #c2bfbf;
   height: 57px;
@@ -212,6 +230,11 @@
   left: -68px;
   margin-left: 91px;
   top: 24px;
+}
+
+.kavTask.english {
+  margin-left: 0;
+  left: -1px;
 }
 
 .kavTask1 {
@@ -232,6 +255,9 @@
   left: 9px;
   float: inherit;
   bottom: -27px;
+}
+.kavTask2.english {
+  left: 13px;
 }
 
 .kavTask21 {
@@ -263,6 +289,12 @@
   top: 38px;
 }
 
+.kavTaskTop.english {
+  left: 13px;
+
+}
+
+
 .newkavTaskTop {
   border-top: 2px solid #c2bfbf;
   width: 13px;
@@ -279,6 +311,10 @@
   margin-top: -7px;
   left: 252px;
   top: -50px;
+}
+
+.kavTop.english {
+  left: 9px;
 }
 
 .dotBoard {
@@ -317,4 +353,3 @@
   top: -23px;
   left: 4px;
 }
-

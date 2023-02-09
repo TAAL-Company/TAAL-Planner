@@ -7,7 +7,7 @@ import Stations from "../Stations/Stations";
 import ModalPlaces from "../Modal/Model_Places";
 // import ModalLoading from '../Modal/Modal_Loading';
 import Modal from "../Modal/Modal";
-import ModalIcons from "../Modal/Modal_Icons";
+import Modal_dropdown from "../Modal/Modal_dropdown";
 // import TextField from "@mui/material/TextField";
 import { baseUrl } from "../../config";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -34,7 +34,6 @@ let filteredDataRoutes = [];
 let inputText = "";
 let inputTextRouts = "";
 let mySite = { name: "", id: "" };
-// let flagRoute = false;
 // let flagButtonRoute = false;
 let tasksOfRoutes = [];
 let clickAddRoute = false;
@@ -63,7 +62,6 @@ const Places = (props) => {
   const [, setInputTextRouts] = useState("");
   const [, setMySite] = useState(null);
   // const [get_logged_in, setLogged_in] = useState(false);// for TextView
-  const [, setFlagRoute] = useState(false);
   const [, setFlagButtonRoute] = useState(false);
   const [, setTasksOfRoutes] = useState([]);
   const [, setFlagTest] = useState(false);
@@ -76,6 +74,9 @@ const Places = (props) => {
   const [allTasksOfTheSite, setAllTasksOfTheSite] = useState([]);
   const [firstStationName, setFirstStationName] = useState("כללי")
   const [boardArrayDND, setBoardArrayDND] = useState([]);
+  const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
+  const [replaceRoute, setReplaceRoute] = useState([])
+  const [replaceRouteFlag, setReplaceRouteFlag] = useState(false)
   const [pastelColors, setPastelColors] = useState(
     [
       "#91D3A8", //
@@ -204,7 +205,33 @@ const Places = (props) => {
     setDone(true);
   };
 
+  useEffect(async () => {
+    console.log("replaceRouteFlag flagRoute", replaceRouteFlag);
+    if (replaceRouteFlag) {
+      setRouteFlags(false)
+      console.log("flagRoute flagRoute", flagRoute);
+
+
+    }
+
+
+  }, [replaceRouteFlag])
+
+  useEffect(() => {
+    if (!flagRoute && replaceRouteFlag) {
+
+      setReplaceRouteFlag(false)
+      setOpenModalRouteChosen(false);
+
+      DisplayTasks(replaceRoute)
+    }
+
+
+  }, [flagRoute])
+
   const DisplayTasks = async (e) => {
+
+    console.log("flagRoute e ENTER", e);
 
     // Check if another route is already selected
     if (!flagRoute) {
@@ -321,6 +348,7 @@ const Places = (props) => {
 
     }
     else {
+      setReplaceRoute(e)
       setOpenModalRouteChosen(true);
 
     }
@@ -420,10 +448,10 @@ const Places = (props) => {
 
 
   const clickOnhreeDotsVerticaIcont = (value) => {
-    setMyRouteClick(value.id);
-    setModalIconsOpen(true);
-    setFlagTest((flagTest = true));
-    setModalOpen(true);
+    if (openThreeDotsVertical == value)
+      setOpenThreeDotsVertical(-1)
+    else
+      setOpenThreeDotsVertical(value)
   };
 
   useEffect(() => {
@@ -474,6 +502,8 @@ const Places = (props) => {
       <div className={`mainRectangles ${props.language !== 'English' ? 'english' : ''}`}>
 
         {/* routes */}
+
+        {/* modal for adding new route */}
         {modalOpen && (
           <Modal
             setNewTitleForRoute={setNewTitleForRoute}
@@ -521,33 +551,42 @@ const Places = (props) => {
               : filteredDataRoutes.map((value, index) => {
                 return (
                   <div
-                    className="buttons" style={value.id === tasksOfRoutes.id ? { border: "1px solid #256fa1" } : {}}
-                    onClick={() => DisplayTasks(value)} //הצגת המסלול
+                    className="buttons"
+                    style={
+                      {
+                        border: (value.id === tasksOfRoutes.id) ? "1px solid #256fa1" : "",
+                        flexDirection: props.language === 'English' ? "row" : "row-reverse",
+                        textAlignLast: props.language === 'English' ? "end" : "left"
+                      }
+                    }
                     key={index}
                   >
-                    <BsThreeDotsVertical
-                      className="threeDotsVerticalEng"
-                      onClick={() => clickOnhreeDotsVerticaIcont(value)}
-                    />
-                    {myRouteClick === value.id ? (
-                      <>
-                        {modalIconsOpen && (
-                          <ModalIcons
-                            setOpenModalPlaces={setModalIconsOpen}
-                            myCategory={myCategory}
-                          />
-                        )}
-                      </>
-                    ) : (
-                      <></>
-                    )}
-                    <div className="nameOfButton">
+                    <div className="dropdownThreeDots">
+
+                      <button className="threeDotsVerticalEng"
+                        onClick={() => clickOnhreeDotsVerticaIcont(index)} >
+                        <BsThreeDotsVertical />
+                      </button>
+
+                      {openThreeDotsVertical === index ?
+                        <Modal_dropdown /> : <></>
+
+                      }
+                    </div>
+
+                    <button className="nameOfButton" onClick={() => DisplayTasks(value)} //הצגת המסלול
+                    >
                       {value.title.rendered
                         .replace("&#8211;", "-")
                         .replace("&#8217;", "'")}
-                    </div>
+                    </button>
+
+
+
                   </div>
+
                 );
+
               })}
           </div>
           <div
@@ -567,6 +606,7 @@ const Places = (props) => {
           </div>
         </div>
         <Stations
+          replaceRouteFlag={replaceRouteFlag}
           firstStationName={firstStationName}
           boardArrayDND={boardArrayDND}
           stationArray={stationArray}
@@ -597,12 +637,14 @@ const Places = (props) => {
         {/* )} */}
 
       </div>
-      {openModalRouteChosen ? (
-        <>
-          <Modal_route_chosen setOpenModalRouteChosen={setOpenModalRouteChosen}>
-          </Modal_route_chosen>
-        </>
-      ) : <></>}
+      {
+        openModalRouteChosen ? (
+          <>
+            <Modal_route_chosen setReplaceRouteFlag={setReplaceRouteFlag} setOpenModalRouteChosen={setOpenModalRouteChosen}>
+            </Modal_route_chosen>
+          </>
+        ) : <></>
+      }
 
       {/* <div className="colors">
         {pastelColors.map((color) => {

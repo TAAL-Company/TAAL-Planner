@@ -74,6 +74,8 @@ export const getingDataRoutes = async () => {
     params: {
       per_page: 100,
       "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+
     },
   }).then((res) => {
     let max_pages = res.headers["x-wp-totalpages"];
@@ -107,6 +109,8 @@ export const getingDataPlaces = async () => {
     params: {
       per_page: 100,
       "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+
     },
   }).then((res) => {
     let max_pages = res.headers["x-wp-totalpages"];

@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./Modal.css";
 import { FcMultipleInputs } from "react-icons/fc";
 import { RiAsterisk } from "react-icons/ri";
@@ -17,10 +17,13 @@ let flagClickOK = false;
 const Modal_Stations = (props) => {
   const [, setDone] = useState(false);
   const [get_title, settitle] = useState("");
-  const [picture, setPicture] = useState(null);
+  const [picture, setPicture] = useState([]);
   const [audio, setAudio] = useState(null);
   const [getDescription, setDescription] = useState("");
   const [, setFlagClickOK] = useState(false);
+  const [picturePreview, setPicturePreview] = useState(false);
+  const [srcImage, setSrcImage] = useState("");
+
   //----------------------------------
 
   const handleTitleInput = (e) => {
@@ -32,22 +35,14 @@ const Modal_Stations = (props) => {
     setDescription(e.target.value);
   };
   //----------------------------------
+  useEffect(() => {
+    if (picture.length > 0) {
+      setPicturePreview(true)
+      setSrcImage(URL.createObjectURL(picture))
+    }
+    console.log("picture", picture);
 
-  // const handleFileInput = (e) => {
-  //   // handle validations
-  //   const file = e.target.files[0];
-
-  //   if (file.type.includes("image")) {
-  //     setPicture((getPicture = file));
-  //     // console.log(file)
-  //   }
-
-  //   if (file.type.includes("audio")) {
-  //     setSound((getSound = file));
-  //     // console.log(file)
-  //   }
-  // };
-  //----------------------------------
+  }, [picture])
 
   async function Post_Station() {
     setFlagClickOK((flagClickOK = true));
@@ -79,7 +74,7 @@ const Modal_Stations = (props) => {
         setFlagClickOK((flagClickOK = false));
 
         let length = props.stationArray.length;
-        let color =  props.pastelColors[length];
+        let color = props.pastelColors[length];
         post.color = color;
         props.setOpenModalPlaces(false);
 
@@ -151,6 +146,7 @@ const Modal_Stations = (props) => {
                 </h6>
                 <p>
                   <input
+                    value={get_title}
                     required={true}
                     type="text"
                     onChange={handleTitleInput}
@@ -194,7 +190,12 @@ const Modal_Stations = (props) => {
                       height: "40px",
                     }}
                   ></input>
+                  {picturePreview ?
+                    <img className="picturePreview" src={srcImage} alt="picturePreview"></img>
+                    : <></>
+                  }
                 </div>
+
               </form>
               <form id="IPU" className="w3-container">
                 <h6>

@@ -112,7 +112,7 @@ function Tag({
               {/* <div className='kavB'></div> */}
             </div>
             <div
-            className={`kavTask2 ${language !== 'English' ? 'english' : ''}`}
+              className={`kavTask2 ${language !== 'English' ? 'english' : ''}`}
               style={{ height: height, bottom: bottom }}
             ></div>
             <div className={`kavTaskTop ${language !== 'English' ? 'english' : ''}`} style={{ marginTop: width }}></div>
@@ -160,14 +160,14 @@ function Tag({
             <>
               <div
                 className="buttons"
-              
+
                 style={
                   {
                     background: (dragFromCover === "reorderBoard") ? `linear-gradient(270deg, ${stationColor} 7%)` : "",
                     marginTop: myMarginTop,
                     flexDirection: language === 'English' ? "row" : "row-reverse",
                     textAlignLast: language === 'English' ? "end" : "left",
-                    marginLeft: language === 'English' ? "" : "56px"
+                    marginLeft: language !== 'English' && dragFromCover === "border" ? "56px" : ""
                   }
                 }
                 ref={drag}
@@ -185,7 +185,7 @@ function Tag({
                   </button>
 
                   {openThreeDotsVertical !== id ?
-                    <></>: <Modal_dropdown /> 
+                    <></> : <Modal_dropdown />
 
                   }
                 </div>

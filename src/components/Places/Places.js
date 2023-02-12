@@ -17,6 +17,7 @@ import { CgSearch } from "react-icons/cg";
 import textArea from '../../Pictures/textArea.svg'
 import Modal_route_chosen from "../Modal/Modal_route_chosen"
 import { MdNoStroller } from "react-icons/md";
+import Modal_site_chosen from "../Modal/Modal_site_chosen"
 
 
 // const { baseUrl } = require
@@ -29,7 +30,7 @@ let myRoutes = [];
 let onlyAllStation = [];
 let Places_and_their_stations = [];
 let thisIdTask = 0;
-let filteredData = [];
+// let filteredData = [];
 let filteredDataRoutes = [];
 let inputText = "";
 let inputTextRouts = "";
@@ -56,7 +57,7 @@ const Places = (props) => {
   const [, setOnlyAllStation] = useState([]);
   const [, setPlaces] = useState([]);
   const [, setRoutes] = useState([]);
-  const [, setFilteredData] = useState([]);
+  // const [, setFilteredData] = useState([]);
   const [, setFilteredDataRoutes] = useState([]);
   const [, setInputText] = useState("");
   const [, setInputTextRouts] = useState("");
@@ -70,6 +71,8 @@ const Places = (props) => {
   const [newTitleForRoute, setNewTitleForRoute] = useState({});
   const [flagRoute, setRouteFlags] = useState(false);
   const [openModalRouteChosen, setOpenModalRouteChosen] = useState(false);
+  const [openModalSiteChosen, setOpenModalSiteChosen] = useState(false);
+  const [replaceSite, setReplaceSite] = useState([])
   const [allTasks, setAllTasks] = useState([]);
   const [allTasksOfTheSite, setAllTasksOfTheSite] = useState([]);
   const [firstStationName, setFirstStationName] = useState("כללי")
@@ -77,6 +80,8 @@ const Places = (props) => {
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [replaceRoute, setReplaceRoute] = useState([])
   const [replaceRouteFlag, setReplaceRouteFlag] = useState(false)
+  const [replaceSiteFlag, setReplaceSiteFlag] = useState(false)
+
   const [pastelColors, setPastelColors] = useState(
     [
       "#91D3A8", //
@@ -140,12 +145,18 @@ const Places = (props) => {
       setLoading(true);
       try {
         setAllTasks(await getingDataTasks()); //get request for tasks
+        allRoutes = await getingDataRoutes();  //get request for routes
+
       } catch (error) {
         console.error(error.message);
       }
+
+     
       setLoading(false);
     };
     fetchData();
+
+    console.log("allRoutes", allRoutes)
   }, []);
 
   useEffect(() => {
@@ -189,17 +200,17 @@ const Places = (props) => {
         related: allPlaces.filter((r) => r.parent === element.id),
       };
     });
-    setFilteredData(
-      (filteredData = places.filter((el) => {
-        if (inputText === "") {
-          return el;
-        }
-        //return the item which contains the user input
-        else {
-          return el.name.toLowerCase().includes(inputText);
-        }
-      }))
-    );
+    // setFilteredData(
+    //   (filteredData = places.filter((el) => {
+    //     if (inputText === "") {
+    //       return el;
+    //     }
+    //     //return the item which contains the user input
+    //     else {
+    //       return el.name.toLowerCase().includes(inputText);
+    //     }
+    //   }))
+    // );
 
 
     setDone(true);
@@ -228,6 +239,8 @@ const Places = (props) => {
 
 
   }, [flagRoute])
+
+
 
   const DisplayTasks = async (e) => {
 
@@ -353,20 +366,53 @@ const Places = (props) => {
 
     }
   };
+  useEffect(async () => {
+    if (replaceSiteFlag) {
+      setSiteSelected(false)
+    }
+  }, [replaceSiteFlag])
 
-  useEffect(() => {
-    console.log("onlyAllStation: ", onlyAllStation)
+  useEffect(async () => {
+    console.log("replaceSiteFlag ***", replaceSiteFlag)
+    console.log("siteSelected ***", siteSelected)
 
-  }, [onlyAllStation])
+    if (!siteSelected && replaceSiteFlag) {
+      console.log("DONE ***")
+      setReplaceSiteFlag(false)
+      setOpenModalSiteChosen(false);
+
+      await handleSelectChange(replaceSite)
+      setTasksOfRoutes((tasksOfRoutes = []));
+      setRouteFlags(false);
+    }
+
+
+  }, [siteSelected])
 
   const handleSelectChange = (event) => {
     const selectedValue = JSON.parse(event.target.value);
-    console.log("selectedValue: " + JSON.stringify(selectedValue))
-    Display_The_Stations(selectedValue);
-    setSiteSelected(true);
+
+    if (!siteSelected) {
+      setReplaceSite(selectedValue)
+      console.log("selectedValue: " + event.target.value)
+      Display_The_Stations(selectedValue);
+      setSiteSelected(true);
+
+    }
+    else {
+      setReplaceSite(event)
+      setOpenModalSiteChosen(true);
+
+    }
+
+
   }
 
   const Display_The_Stations = async (selectedValue) => {
+
+    // console.log("selectedValue: ***" + selectedValue)
+    console.log("Display_The_Stations ***")
+
 
     // const selectedValue = JSON.parse(event.target.value);
 
@@ -374,7 +420,7 @@ const Places = (props) => {
     // setFlagRoute((flagRoute = true));
     setThisIdTask((thisIdTask = selectedValue.id));
     if (stationArray.length > 0) {
-      stationArray = [];
+      setStationArray([])
     }
     setMySite((mySite.name = selectedValue.name));
     setMySite((mySite.id = selectedValue.id));
@@ -398,13 +444,11 @@ const Places = (props) => {
 
     // setStateStation({ data: stationArray });
 
-    try {
-      allRoutes = await getingDataRoutes();  //get request for routes
-    } catch (error) {
-      console.error(error.message);
-    }
+
 
     //myRoutes saves only the routes that belong to the site that choosen
+    if (myRoutes.length > 0)
+      myRoutes = []
     setRoutes(
       (myRoutes = allRoutes.filter(
         (item) => (item.acf.my_site === String(mySite.id) || item.places.includes(mySite.id))
@@ -454,9 +498,9 @@ const Places = (props) => {
       setOpenThreeDotsVertical(value)
   };
 
-  useEffect(() => {
-    console.log("filteredData: ", filteredData)
-  }, [filteredData])
+  // useEffect(() => {
+  //   console.log("filteredData: ", filteredData)
+  // }, [filteredData])
 
   useEffect(() => {  //after adding new routes
     console.log("newTitleForRoute: ", newTitleForRoute)
@@ -485,7 +529,7 @@ const Places = (props) => {
       <select className="selectPlace" defaultValue={'DEFAULT'} onChange={handleSelectChange}>
         <option value="DEFAULT" disabled>{props.siteLanguage}</option>
 
-        {filteredData.map((value, index) => {
+        {places.map((value, index) => {
           return (
             <option
               key={index}
@@ -510,7 +554,6 @@ const Places = (props) => {
             setOpenModal={setModalOpen}
             setFlagStudent={setFlagStudent}
             flagTest={flagTest}
-            setSiteSelected={setSiteSelected}
             siteSelected={siteSelected}
           />
         )}
@@ -607,6 +650,7 @@ const Places = (props) => {
         </div>
         <Stations
           replaceRouteFlag={replaceRouteFlag}
+          replaceSiteFlag={replaceSiteFlag}
           firstStationName={firstStationName}
           boardArrayDND={boardArrayDND}
           stationArray={stationArray}
@@ -645,7 +689,14 @@ const Places = (props) => {
           </>
         ) : <></>
       }
-
+      {
+        openModalSiteChosen ? (
+          <>
+            <Modal_site_chosen setReplaceSiteFlag={setReplaceSiteFlag} setOpenModalSiteChosen={setOpenModalSiteChosen}>
+            </Modal_site_chosen>
+          </>
+        ) : <></>
+      }
       {/* <div className="colors">
         {pastelColors.map((color) => {
           return (

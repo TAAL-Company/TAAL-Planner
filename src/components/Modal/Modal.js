@@ -16,7 +16,7 @@ let myStudents = [];
 let myStudentsChoice = [];
 let flagClickOK = false;
 //--------------------------
-function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, siteSelected, setSiteSelected }) {
+function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, siteSelected }) {
   console.log("flagTest:", flagTest);
   const [, set_obj] = useState(null); // for TextView
   const [, setDone] = useState(false);

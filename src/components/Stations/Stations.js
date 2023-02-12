@@ -291,6 +291,7 @@ const Stations = (props) => {
           </div>
           <TasksComp
             replaceRouteFlag={props.replaceRouteFlag}
+            replaceSiteFlag={props.replaceSiteFlag}
             firstStationName={props.firstStationName}
             boardArrayDND={props.boardArrayDND}
             propsDataTask={tasks}

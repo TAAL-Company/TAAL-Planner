@@ -109,6 +109,14 @@ function DragnDrop(props) {
   }, [props.replaceRouteFlag]);
 
   useEffect(() => {
+    console.log('Replace ***', props.replaceSiteFlag)
+    if (props.replaceSiteFlag) {
+      setBoard([])
+      dndArray = [];
+    }
+  }, [props.replaceSiteFlag]);
+
+  useEffect(() => {
     if (props.mySite.name != "") {
       setSiteSelected(true);
 
@@ -419,7 +427,7 @@ function DragnDrop(props) {
         </div>
       </div>
       <>
-            <>
+        <>
           <div className={`Board ${props.language !== 'English' ? 'english' : ''}`} ref={drop}>
             <button
               className="AddRoute"
@@ -494,44 +502,46 @@ function DragnDrop(props) {
                         {props.tasksOfRoutes && props.tasksOfRoutes.title ? props.tasksOfRoutes.title.rendered : ''}
                         &nbsp;&nbsp;{" "}
                       </div>
-          
+
                     </>
                   ) : (
                     <></>
                   )}
-                  {board.map((tag, keyCount) => {
-                    console.log("tag.id: ", tag.id);
-                    return (saveTag = (
-                      <Tag
-                        modalFlagTablet={modalFlagTablet}
-                        title={tag.title}
-                        id={tag.id}
-                        data={tag.data}
-                        // idImg={tag.id}
-                        dataImg={tag.dataImg}
-                        key={keyCount}
-                        flagBoard={true}
-                        myLastStation={props.myStation.name}
-                        myStation={tag.myStation}
-                        myMarginTop={"-68px"}
-                        count={count}
-                        flag={tag.flag}
-                        width={tag.width}
-                        borderLeft={tag.borderLeft}
-                        height={tag.height}
-                        setKavTaskTopMarginTop={tag.setKavTaskTopMarginTop}
-                        bottom={tag.bottom}
-                        kavTopWidth={tag.kavTopWidth}
-                        newkavTaskTop={tag.newkavTaskTop}
-                        nameStation={tag.nameStation}
-                        flagPhone={flagPhone}
-                        flagTree={flagTree}
-                        dragFromCover={"border"}
-                        language={props.language}
+                  {board == undefined && board.length == 0 ?
+                    <div>לא נבחר</div> :
+                    board.map((tag, keyCount) => {
+                      console.log("tag.id: ", tag.id);
+                      return (saveTag = (
+                        <Tag
+                          modalFlagTablet={modalFlagTablet}
+                          title={tag.title}
+                          id={tag.id}
+                          data={tag.data}
+                          // idImg={tag.id}
+                          dataImg={tag.dataImg}
+                          key={keyCount}
+                          flagBoard={true}
+                          myLastStation={props.myStation.name}
+                          myStation={tag.myStation}
+                          myMarginTop={"-68px"}
+                          count={count}
+                          flag={tag.flag}
+                          width={tag.width}
+                          borderLeft={tag.borderLeft}
+                          height={tag.height}
+                          setKavTaskTopMarginTop={tag.setKavTaskTopMarginTop}
+                          bottom={tag.bottom}
+                          kavTopWidth={tag.kavTopWidth}
+                          newkavTaskTop={tag.newkavTaskTop}
+                          nameStation={tag.nameStation}
+                          flagPhone={flagPhone}
+                          flagTree={flagTree}
+                          dragFromCover={"border"}
+                          language={props.language}
 
-                      />
-                    ));
-                  })}
+                        />
+                      ));
+                    })}
                   {flagPhoneOne ? (
                     <>
                       <div className="kavB"></div>

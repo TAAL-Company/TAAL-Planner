@@ -81,6 +81,9 @@ const Places = (props) => {
   const [replaceRoute, setReplaceRoute] = useState([])
   const [replaceRouteFlag, setReplaceRouteFlag] = useState(false)
   const [replaceSiteFlag, setReplaceSiteFlag] = useState(false)
+  const [progressBarFlag, setProgressBarFlag] = useState(false);
+  const [percentProgressBar, setPercentProgressBar] = useState(5);
+
 
   const [pastelColors, setPastelColors] = useState(
     [
@@ -151,7 +154,7 @@ const Places = (props) => {
         console.error(error.message);
       }
 
-     
+
       setLoading(false);
     };
     fetchData();
@@ -248,6 +251,8 @@ const Places = (props) => {
 
     // Check if another route is already selected
     if (!flagRoute) {
+      setProgressBarFlag(true)
+      setPercentProgressBar(6)
       console.log("flagRoute e", e);
 
       setRouteFlags(true)
@@ -269,16 +274,46 @@ const Places = (props) => {
 
       let prevStation = "";
 
+      let percentTemp = 50 / tasksOfRoutes.acf.tasks.length;
+
+
+
       setBoardArrayDND(tasksOfRoutes.acf.tasks.map((element) => {
 
+        setPercentProgressBar(percentProgressBar => percentProgressBar + percentTemp)
+        //allTasksOfTheSite
         let taskTemp = allTasksOfTheSite.find(item => item.id === element.ID)
         console.log("taskTemp: yyyyy", taskTemp)
         console.log("element.ID: yyyyy", element.ID)
 
+        if (taskTemp == undefined) {
+          return {
+            id: element.ID,
+            title: element.ID + " לא משוייך"
+              .replace("&#8211;", "-")
+              .replace("&#8217;", "' "),
+            mySite: mySite,
+            myStation: "לא משוייך",
+            data: stationArray,
+            nameStation: "לא משוייך",
+            width: "-13px",
+            borderLeft: "2px solid #c2bfbf",
+            height: "70px",
+            kavTaskTopMarginTop: "-7px",
+            bottom: "-27px",
+            kavTopWidth: "25px",
+            newkavTaskTop: "100px",
+            dataImg: "",
+            color: "black"
+          };
+        }
 
         let color;
-        let stationID = taskTemp.places.find(item => item !== mySite.id)
+        let stationID = taskTemp.places.find(item => (item !== mySite.id && isStationOfMySite(item).includes(true)))
         let stationName = "";
+
+
+        console.log("stationID: ", stationID)
         if (stationID != undefined) {
           stationName = onlyAllStation.find(item => item.id === stationID).name
           color = stationArray.find(item => item.id === stationID).color
@@ -389,6 +424,20 @@ const Places = (props) => {
 
   }, [siteSelected])
 
+  const isStationOfMySite = (stationId) => {
+    console.log("isStationOfMySite yyyyy", stationId)
+    return stationArray.map(item => {
+      if (item.id === stationId) {
+        console.log("true yyyyy", true)
+        return true;
+      }
+      else {
+        return false;
+
+      }
+    })
+  }
+
   const handleSelectChange = (event) => {
     const selectedValue = JSON.parse(event.target.value);
 
@@ -442,8 +491,7 @@ const Places = (props) => {
     )
     setStationArray(prev => [...prev, { id: 0, color: pastelColors[colorTemp], parent: selectedValue.id, name: "כללי" }])
 
-    // setStateStation({ data: stationArray });
-
+    console.log("setStationArray: ", stationArray)
 
 
     //myRoutes saves only the routes that belong to the site that choosen
@@ -476,7 +524,9 @@ const Places = (props) => {
         setAllTasksOfTheSite(prev => [...prev, task])
       else {     //if there is station of my site
         console.log("NOT")
-        let temp = task.places.find(element => places.find(item => (item.id === element && item.parent === mySite.id)));
+        let temp = task.places.find(element => onlyAllStation.find(item => (item.id === element && item.parent === mySite.id)));
+        console.log("NOT: ", temp)
+
         if (temp !== undefined)
           setAllTasksOfTheSite(prev => [...prev, task])
       }
@@ -485,10 +535,10 @@ const Places = (props) => {
 
   }
   useEffect(() => {
-    console.log("allTasksOfTheSite dnd: ", allTasksOfTheSite)
+    console.log("stationArray dnd: ", stationArray)
 
 
-  }, [allTasksOfTheSite])
+  }, [stationArray])
 
 
   const clickOnhreeDotsVerticaIcont = (value) => {
@@ -649,6 +699,10 @@ const Places = (props) => {
           </div>
         </div>
         <Stations
+          percentProgressBar={percentProgressBar}
+          setPercentProgressBar={setPercentProgressBar}
+          progressBarFlag={progressBarFlag}
+          setProgressBarFlag={setProgressBarFlag}
           replaceRouteFlag={replaceRouteFlag}
           replaceSiteFlag={replaceSiteFlag}
           firstStationName={firstStationName}

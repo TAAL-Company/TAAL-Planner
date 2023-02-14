@@ -290,6 +290,10 @@ const Stations = (props) => {
             </div>
           </div>
           <TasksComp
+            percentProgressBar={props.percentProgressBar}
+            setPercentProgressBar={props.setPercentProgressBar}
+            progressBarFlag={props.progressBarFlag}
+            setProgressBarFlag={props.setProgressBarFlag}
             replaceRouteFlag={props.replaceRouteFlag}
             replaceSiteFlag={props.replaceSiteFlag}
             firstStationName={props.firstStationName}

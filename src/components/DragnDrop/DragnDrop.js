@@ -14,6 +14,7 @@ import Dot from "../Dot/Dot";
 import Clock from "../Clock/Clock";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import textArea from '../../Pictures/textArea.svg'
+import ProgressBar from "../ProgressBar/ProgressBar";
 
 
 let Route = [];
@@ -41,7 +42,8 @@ let flagPhoneOne = false;
 let flagStress = false;
 let modalFlagTablet = false;
 let myStation = "";
-
+let currentIndex = 0;
+let countTemp = 0;
 //-------------------------
 function DragnDrop(props) {
   // console.log(" props.allTasksOfTheSiteeee drag ", props.allTasksOfTheSite)
@@ -51,17 +53,17 @@ function DragnDrop(props) {
   const [board, setBoard] = useState([]);
   const [reorderBoardFlag, setReorderBoardFlag] = useState(false);
 
-  if (props.tasksOfRoutes && props.tasksOfRoutes.acf) {
-    if (props.tasksOfRoutes.acf.tasks) {
-      props.tasksOfRoutes.acf.tasks.forEach((element) => {
-        console.log("element:", element.post_title);
-      });
-      console.log("tasksOfRoutes: ", props.tasksOfRoutes);
-      console.log("board: ", board);
-      // setBoard((board) => [...board, ]);
-    }
+  // if (props.tasksOfRoutes && props.tasksOfRoutes.acf) {
+  //   if (props.tasksOfRoutes.acf.tasks) {
+  //     props.tasksOfRoutes.acf.tasks.forEach((element) => {
+  //       console.log("element:", element.post_title);
+  //     });
+  //     console.log("tasksOfRoutes: ", props.tasksOfRoutes);
+  //     console.log("board: ", board);
+  //     // setBoard((board) => [...board, ]);
+  //   }
 
-  }
+  // }
 
   console.log("props mySite:", props.mySite);
   console.log("props dragFrom:", props.dragFrom);
@@ -100,7 +102,11 @@ function DragnDrop(props) {
   const [boardArrayDND, setboardArrayDND] = useState(props.boardArrayDND)
 
   let prevStation = "";
+  useEffect(() => {
+    console.log("percent: ", props.percentProgressBar)
 
+
+  }, [props.percentProgressBar])
   useEffect(() => {
     if (props.replaceRouteFlag) {
       setBoard([])
@@ -140,22 +146,25 @@ function DragnDrop(props) {
 
     if (props.tasksOfRoutes && props.tasksOfRoutes.acf) {
       console.log("props.tasksOfRoutes ", props.tasksOfRoutes)
-
+      countTemp = 50 / props.tasksOfRoutes.acf.tasks.length;
+      // props.setProgressBarFlag(true)
       if (props.tasksOfRoutes.acf.tasks) {
-        props.tasksOfRoutes.acf.tasks.forEach(async (element) => {
-          console.log("element.ID: ", element.ID);
+        props.tasksOfRoutes.acf.tasks.forEach(async (element, index) => {
           await addImageToBoard(element.ID, "routes")
+          props.setPercentProgressBar(percentProgressBar => percentProgressBar + countTemp)
         }
         )
+
       }
+      // props.setProgressBarFlag(false)
 
     }
 
   }, [props.tasksOfRoutes])
 
   useEffect(() => {
-    console.log("props.propDataTask: ", props.propDataTask)
-  }, [props.propDataTask])
+    console.log("props.progressBarFlag: ", props.progressBarFlag)
+  }, [props.progressBarFlag])
 
 
 
@@ -248,12 +257,6 @@ function DragnDrop(props) {
           setKavTaskTopMarginTop((kavTaskTopMarginTop = "-7px"));
         }
       }
-
-
-
-
-      console.log(" props.boardArrayDND ", props.boardArrayDND)
-
       console.log(" props.allTasks ", props.allTasksOfTheSite.find(task => task.id === id))
 
 
@@ -264,6 +267,9 @@ function DragnDrop(props) {
         console.log("id boardArrayDND: ", id)
 
         Route = await props.boardArrayDND.filter((tag) => id === tag.id);
+
+        console.log("Route boardArrayDND: ", Route)
+
         await setBoard((board) => [...board, Route[0]]);
       }
       else {
@@ -345,6 +351,7 @@ function DragnDrop(props) {
   return (
 
     <>
+
       {modalOpen ? (
         <ModalTasks
           setOpenModalPlaces={setModalOpen}
@@ -492,6 +499,10 @@ function DragnDrop(props) {
                 </button> */}
             </div>
             <div className="MyTasks">
+              {props.progressBarFlag ?
+                <ProgressBar setProgressBarFlag={props.setProgressBarFlag} 
+                percent={Math.ceil(props.percentProgressBar)}></ProgressBar>
+                : <></>}
               {/* flagTree   */}
               {flagTree ? (
                 <>
@@ -508,7 +519,8 @@ function DragnDrop(props) {
                     <></>
                   )}
                   {board == undefined && board.length == 0 ?
-                    <div>לא נבחר</div> :
+                    <div></div> :
+
                     board.map((tag, keyCount) => {
                       console.log("tag.id: ", tag.id);
                       return (saveTag = (
@@ -541,7 +553,8 @@ function DragnDrop(props) {
 
                         />
                       ));
-                    })}
+                    })
+                  }
                   {flagPhoneOne ? (
                     <>
                       <div className="kavB"></div>

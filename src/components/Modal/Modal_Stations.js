@@ -137,12 +137,15 @@ const Modal_Stations = (props) => {
           <div className="modalContainerNewStation">
 
             <div className="headerNewTask">
-              <div className="NewTaskTitle">תחנה חדשה</div>
+              <div className="NewTaskTitle" style ={{textAlign: props.language === 'English' ?  "right": "left"}}>
+                {props.language !== 'English' ? 'New staition' : 'תחנה חדשה'}
+              </div>
             </div>
-            <div className="bodyNewStation">
+            <div className="bodyNewStation" style ={{textAlign: props.language === 'English' ?  "right": "left"}}>
               <form id="IPU" className="w3-container">
                 <h6>
-                  :רשום את שם תחנה <RiAsterisk style={{ color: "red" }} />
+                  {props.language !== 'English' ? 'Write the station name:' : ':רשום את שם התחנה'}
+                  <RiAsterisk style={{ color: "red" }} />
                 </h6>
                 <p>
                   <input
@@ -151,7 +154,7 @@ const Modal_Stations = (props) => {
                     type="text"
                     onChange={handleTitleInput}
                     style={{
-                      height: "40px",
+                      height: "38px",
                       width: "100%",
                       paddingRight: "20px"
                     }}
@@ -160,14 +163,15 @@ const Modal_Stations = (props) => {
               </form>
               <form id="IPU" className="w3-container">
                 <h6>
-                  :תאר במשפט את תחנה <RiAsterisk style={{ color: "red" }} />
+                  {props.language !== 'English' ? 'Describe the station:' : ':תאר במשפט את תחנה'}
+                  <RiAsterisk style={{ color: "red" }} />
                 </h6>
                 <p>
                   <input
                     type="text"
                     onChange={handleDescriptionInput}
                     style={{
-                      height: "40px",
+                      height: "38px",
                       width: "100%",
                       paddingRight: "20px"
                     }}
@@ -176,7 +180,8 @@ const Modal_Stations = (props) => {
               </form>
               <form id="IPU" className="w3-container">
                 <h6>
-                  : הוסף תמונה של תחנה <FcMultipleInputs />
+                  {props.language !== 'English' ? 'add picture of the station:' : 'הוסף תמונה של התחנה'}
+                  <FcMultipleInputs />
                 </h6>
                 <div className="input-group mb-3">
                   <input
@@ -187,7 +192,8 @@ const Modal_Stations = (props) => {
                     onChange={(e) => setPicture(e.target.files[0])}
                     style={{
                       width: "100%",
-                      height: "40px",
+                      height: "38px",
+                      direction: props.language === 'English' ?  "rtl": "ltr"
                     }}
                   ></input>
                   {picturePreview ?
@@ -199,7 +205,9 @@ const Modal_Stations = (props) => {
               </form>
               <form id="IPU" className="w3-container">
                 <h6>
-                  : הוסף קטע קול המתאר את התחנה <FcMultipleInputs />
+                {props.language !== 'English' ? 'Add a voice clip:' : 'הוסף קטע קול'}
+
+                 <FcMultipleInputs />
                 </h6>
                 <p>
                   <input
@@ -210,7 +218,8 @@ const Modal_Stations = (props) => {
                     onChange={(e) => setAudio(e.target.files[0])}
                     style={{
                       width: "100%",
-                      height: "40px",
+                      height: "38px",
+                      direction: props.language === 'English' ?  "rtl": "ltr"
                     }}
                   ></input>
                 </p>
@@ -220,13 +229,13 @@ const Modal_Stations = (props) => {
               <input
                 type="submit"
                 className="newStationButton"
-                value="שמור תחנה"
+                value={props.language !== 'English' ? 'Save station' : 'שמור תחנה'}
                 onClick={Post_Station}
               />
               <input
                 type="submit"
                 className="newStationButton"
-                value="ביטול"
+                value={props.language !== 'English' ? 'Cancel' : 'ביטול'}
                 onClick={() => {
                   props.setOpenModalPlaces(false);
                 }}

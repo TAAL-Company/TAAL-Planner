@@ -605,6 +605,7 @@ const Places = (props) => {
             setFlagStudent={setFlagStudent}
             flagTest={flagTest}
             siteSelected={siteSelected}
+            language = {props.language} 
           />
         )}
         <div

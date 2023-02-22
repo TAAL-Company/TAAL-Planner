@@ -167,6 +167,7 @@ const Stations = (props) => {
               idTasks={props.idTask}
               mySite={props.mySite}
               pastelColors={props.pastelColors}
+              language = {props.language}
 
 
             />

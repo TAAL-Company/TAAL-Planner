@@ -156,7 +156,8 @@ const Modal_Stations = (props) => {
                     style={{
                       height: "38px",
                       width: "100%",
-                      paddingRight: "20px"
+                      paddingRight: "20px",
+                      direction: props.language === 'English' ?  "rtl": "ltr"
                     }}
                   ></input>
                 </p>
@@ -173,7 +174,8 @@ const Modal_Stations = (props) => {
                     style={{
                       height: "38px",
                       width: "100%",
-                      paddingRight: "20px"
+                      paddingRight: "20px",
+                      direction: props.language === 'English' ?  "rtl": "ltr"
                     }}
                   ></input>
                 </p>

@@ -14,7 +14,7 @@ let file = "";
 let myPlacesChoiceTemp = [];
 
 //--------------------------
-function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setModalOpenNoSiteSelected, mySite , setAllTasksOfTheSite }) {
+function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setModalOpenNoSiteSelected, mySite , setAllTasksOfTheSite, language }) {
   const [, setDone] = useState(false);
   const [get_title, setTitle] = useState("");
   const [picture, setPicture] = useState(null);
@@ -179,16 +179,23 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
       </>) : (<></>)}
       {!help && siteSelected ? (
         <>
-          <div className="BackgroundTasks">
+          <div className="BackgroundTasks" style={{textAlign: language === 'English' ?  "right": "left",
+        direction: language === 'English' ?  "ltr": "rtl",
+        transform: language === 'English' ?  " translate(-50%, -50%)": " translate(50%, -50%)"}}>
             <div className="modalContainerTasks">
               <div className="headerNewTask">
-                <div className="NewTaskTitle">משימה חדשה</div>
+                <div className="NewTaskTitle">
+                {language !== 'English' ? 'New task' : ':משימה חדשה'}
+
+                </div>
               </div>
               <div className="bodyNewTask">
                 {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
                 <form id="IPU" className="w3-container">
                   <h6>
-                    :רשום את שם המשימה <RiAsterisk style={{ color: "red" }} />
+                  {language !== 'English' ? 'Write the name of the task' : ':רשום את שם המשימה '}
+
+                    <RiAsterisk style={{ color: "red" }} />
                   </h6>
                   <p>
                     <input
@@ -197,15 +204,17 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                       onChange={handleTitleInput}
                       style={{
                         width: "100%",
-                        height: "40px",
-                        paddingRight: "20px"
+                        height: "38px",
+                        paddingRight: "20px",
+                        direction: language === 'English' ?  "rtl": "ltr"
                       }}
                     ></input>
                   </p>
                 </form>
                 <form id="IPU" className="w3-container">
                   <h6>
-                    :תאר במשפט את משימה <RiAsterisk style={{ color: "red" }} />
+                  {language !== 'English' ? 'Describe the task' : ':תאר במשפט את משימה '}
+                    <RiAsterisk style={{ color: "red" }} />
                   </h6>
                   <p>
                     <input
@@ -213,15 +222,18 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                       onChange={handleDescriptionInput}
                       style={{
                         width: "100%",
-                        height: "40px",
-                        paddingRight: "20px"
+                        height: "38px",
+                        paddingRight: "20px",
+                        direction: language === 'English' ?  "rtl": "ltr"
                       }}
                     ></input>
                   </p>
                 </form>
                 <form id="IPU" className="w3-container">
                   <h6>
-                    : הוסף תמונה של משימה <FcMultipleInputs />
+                  {language !== 'English' ? 'Add a picture of a task' : ':הוסף תמונה של משימה '}
+
+                   <FcMultipleInputs />
                   </h6>
                   <div className="input-group mb-3">
                     <input
@@ -233,14 +245,15 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                       style={{
                         textAlign: "right",
                         width: "100%",
-                        height: "40px",
+                        height: "38px",
+                        direction: language === 'English' ?  "rtl": "ltr"
                       }}
                     ></input>
                   </div>
                 </form>
                 <form id="IPU" className="w3-container">
                   <h6>
-                    : הוסף קטע קול המתאר את המשימה <FcMultipleInputs />
+                  {language !== 'English' ? 'Add a voice clip describing the task' : ':הוסף קטע קול המתאר את המשימה '}<FcMultipleInputs />
                   </h6>
                   <p>
                     <input
@@ -252,14 +265,15 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                       style={{
                         textAlign: "right",
                         width: "100%",
-                        height: "40px",
+                        height: "38px",
+                        direction: language === 'English' ?  "rtl": "ltr"
                       }}
                     ></input>
                   </p>
 
                   <div className="list-group">
                     <h6>
-                      :בחר את התחנות שברצונך לשייך את המשימה{" "}
+                    {language !== 'English' ? 'Select the stations you want to associate the task with' : ':בחר את התחנות שברצונך לשייך את המשימה'}
                       <IoMdCheckbox style={{ color: "blue" }} />
                     </h6>
                     <div className="allTasks">
@@ -286,20 +300,20 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                 gap: "16px",
                 height: "100px",
                 alignItems: "center",
-                paddingLeft: "68px",
+                padding: "40px",
                 marginBottom: "20px",
               }}
                 className="footerNewTasks">
                 <input
                   type="submit"
                   className="saveTaskButton"
-                  value="שמור משימה"
+                  value={language !== 'English' ? 'Save Task' : 'שמור משימה'}
                   onClick={Post_Task}
                 />
                 <input
                   type="submit"
                   className="cancelTaskButton"
-                  value="ביטול"
+                  value={language !== 'English' ? 'Cancel' : 'ביטול'}
                   onClick={() => {
                     setOpenModalPlaces(false);
                   }}

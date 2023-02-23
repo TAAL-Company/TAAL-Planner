@@ -352,17 +352,7 @@ function DragnDrop(props) {
 
     <>
 
-      {modalOpen ? (
-        <ModalTasks
-          setOpenModalPlaces={setModalOpen}
-          setAllTasksOfTheSite={props.setAllTasksOfTheSite}
-          // setModalOpenNoSiteSelected={setModalOpenNoSiteSelected}
-          allStations={props.myStations}
-          siteSelected={siteSelected}
-          mySite={props.mySite}
-          help={helpFlag}
-        />
-      ) : (<></>)}
+     
       {modalOpenAddRoute && (
         <Modal setOpenModal={setModalOpenAddRoute} setText={get_Name} />
       )}
@@ -500,8 +490,8 @@ function DragnDrop(props) {
             </div>
             <div className="MyTasks">
               {props.progressBarFlag ?
-                <ProgressBar setProgressBarFlag={props.setProgressBarFlag} 
-                percent={Math.ceil(props.percentProgressBar)}></ProgressBar>
+                <ProgressBar setProgressBarFlag={props.setProgressBarFlag}
+                  percent={Math.ceil(props.percentProgressBar)}></ProgressBar>
                 : <></>}
               {/* flagTree   */}
               {flagTree ? (
@@ -621,6 +611,19 @@ function DragnDrop(props) {
         </>
         {/* // )} */}
       </>
+
+      {modalOpen ? (
+        <ModalTasks
+          language={props.language}
+          setOpenModalPlaces={setModalOpen}
+          setAllTasksOfTheSite={props.setAllTasksOfTheSite}
+          // setModalOpenNoSiteSelected={setModalOpenNoSiteSelected}
+          allStations={props.myStations}
+          siteSelected={siteSelected}
+          mySite={props.mySite}
+          help={helpFlag}
+        />
+      ) : (<></>)}
     </>
   );
 }

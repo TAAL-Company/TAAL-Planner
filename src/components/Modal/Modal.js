@@ -344,33 +344,7 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, si
           ) : (
             <div className="modalContainerNewRoute">
               {!siteSelected ? (<>
-                {/* <div className="modalContainerPlases" style={{transform: "translate(150%, 50%)"}}>
-
-                  <div className="stopIconContainer">
-                    <img
-                      src={stopIcon}
-                      alt="logo"
-
-                    ></img>
-                  </div>
-                  <div className="body" style={{ textAlign: "center" }}>
-                    <h4>
-                      {" "}
-                      עליך לבחור ראשית אתר, ואז לשייך אליו מסלול
-                    </h4>
-
-                  </div>
-                  <div className="footer">
-                    <button
-                      className="cancelBtn"
-                      onClick={() => {
-                        setOpenModal(false);
-                      }}
-                    >
-                      סגור
-                    </button>
-                  </div>
-                </div> */}
+            
                 <Modal_no_site_selected styleTransform={{ transform: "translate(150%, 50%)" }} setOpenModal={setOpenModal}></Modal_no_site_selected>
 
               </>) : (
@@ -452,8 +426,7 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, si
                           {language !== 'English' ? 'Save route' : 'שמור מסלול'}
 
                         </button>
-                        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+                   
                         <button
                           className="cancelBtn"
                           onClick={() => {

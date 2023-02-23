@@ -352,9 +352,11 @@ function DragnDrop(props) {
 
     <>
 
-     
+
       {modalOpenAddRoute && (
-        <Modal setOpenModal={setModalOpenAddRoute} setText={get_Name} />
+        <Modal siteSelected={siteSelected}
+          language={props.language}
+          setOpenModal={setModalOpenAddRoute} setText={get_Name} />
       )}
       <div
         className="Cover_Tasks"
@@ -434,7 +436,6 @@ function DragnDrop(props) {
               }}
             >
               {props.saveButton}
-              {/* <AiFillCheckCircle className="icon" /> */}
             </button>
             <div className={`txt ${props.language !== 'English' ? 'english' : ''}`}>
               {" "}

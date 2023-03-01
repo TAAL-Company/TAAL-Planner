@@ -1,15 +1,5 @@
 import axios from "axios";
 import { baseUrl } from "../config";
-// import  apiFetch  from '@wordpress/api-fetch';
-
-// const flushCache = async () => {
-//   try {
-//     await apiFetch({ path:  `${baseUrl}/wp-json/wp/v2/routes?force=true`});
-//     console.log('Cache flushed');
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
 
 export const get = async (url, header) => {
   try {
@@ -32,88 +22,102 @@ export const post = async (url, body, header) => {
     console.log(e);
   }
 };
-export const getingDataTasks = async () => {
-
+export const getingData_Tasks = async () => {
   let allTasks;
   const headers = {
     "Content-Type": "application/json",
     accept: "application/json",
-    // Authorization: "Bearer" + sessionStorage.jwt,
   };
 
-  await get('https://prod-web-app0da5905.azurewebsites.net/tasks', { headers: headers }
-    // {
-    //   params: {
-    //     per_page: 100,
-    //     "Cache-Control": "no-cache",
-    //   },
-    // }
-  ).then((res) => {
-    // let max_pages = res.headers["x-wp-totalpages"];
-
+  await get("https://prod-web-app0da5905.azurewebsites.net/tasks", {
+    headers: headers,
+  }).then((res) => {
     allTasks = res.data;
-    // if (max_pages > 1) {
-    //   for (let i = 2; i <= max_pages; i++) {
-
-    //     get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
-    //       params: {
-    //         per_page: 100,
-    //         page: i,
-    //         "Cache-Control": "no-cache",
-    //       },
-    //     }).then((res) => {
-    //       Array.prototype.push.apply(allTasks, res.data);
-    //     });
-    //   }
-    // }
   });
-  // await flushCache();
-  console.log("yarden alltasks", allTasks)
+
+  console.log("yarden alltasks", allTasks);
   return allTasks;
 };
 
-export const getingDataRoutes = async () => {
+export const getingDataTasks = async () => {
+  let allTasks;
 
+  await get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
+    params: {
+      per_page: 100,
+      "Cache-Control": "no-cache",
+    },
+  }).then((res) => {
+    let max_pages = res.headers["x-wp-totalpages"];
+
+    allTasks = res.data;
+    if (max_pages > 1) {
+      for (let i = 2; i <= max_pages; i++) {
+        get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
+          params: {
+            per_page: 100,
+            page: i,
+            "Cache-Control": "no-cache",
+          },
+        }).then((res) => {
+          Array.prototype.push.apply(allTasks, res.data);
+        });
+      }
+    }
+  });
+  // await flushCache();
+
+  return allTasks;
+};
+
+export const getingData_Routes = async () => {
   let allRoutes;
 
   const headers = {
     "Content-Type": "application/json",
     accept: "application/json",
-    // Authorization: "Bearer" + sessionStorage.jwt,
   };
 
-  await get('https://prod-web-app0da5905.azurewebsites.net/routes', { headers: headers }
-    // params: {
-    //   // per_page: 100,
-    //   "Content-Type": "application/json",
-    //   "Cache-Control": "no-cache",
+  await get("https://prod-web-app0da5905.azurewebsites.net/routes", {
+    headers: headers,
+  }).then((res) => {
+    allRoutes = res.data;
+  });
 
-    // },
-  ).then((res) => {
-    // let max_pages = res.headers["x-wp-totalpages"];
+  return allRoutes;
+};
+export const getingDataRoutes = async () => {
+  let allRoutes;
+
+  await get(`${baseUrl}/wp-json/wp/v2/routes/`, {
+    params: {
+      per_page: 100,
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+    },
+  }).then((res) => {
+    let max_pages = res.headers["x-wp-totalpages"];
 
     allRoutes = res.data;
-    // if (max_pages > 1) {
-    //   for (let i = 2; i <= max_pages; i++) {
-
-    //     get(`${baseUrl}/wp-json/wp/v2/routes/`, {
-    //       params: {
-    //         per_page: 100,
-    //         page: i,
-    //         "Cache-Control": "no-cache",
-    //       },
-    //     }).then((res) => {
-    //       Array.prototype.push.apply(allRoutes, res.data);
-    //     });
-    //   }
-    // }
+    if (max_pages > 1) {
+      for (let i = 2; i <= max_pages; i++) {
+        get(`${baseUrl}/wp-json/wp/v2/routes/`, {
+          params: {
+            per_page: 100,
+            page: i,
+            "Cache-Control": "no-cache",
+          },
+        }).then((res) => {
+          Array.prototype.push.apply(allRoutes, res.data);
+        });
+      }
+    }
   });
   // await flushCache();
 
   return allRoutes;
 };
 export const getingDataPlaces = async () => {
-
   let allPlaces;
 
   await get(`${baseUrl}/wp-json/wp/v2/places/`, {
@@ -121,7 +125,6 @@ export const getingDataPlaces = async () => {
       per_page: 100,
       "Content-Type": "application/json",
       "Cache-Control": "no-cache",
-
     },
   }).then((res) => {
     let max_pages = res.headers["x-wp-totalpages"];
@@ -129,7 +132,6 @@ export const getingDataPlaces = async () => {
     allPlaces = res.data;
     if (max_pages > 1) {
       for (let i = 2; i <= max_pages; i++) {
-
         get(`${baseUrl}/wp-json/wp/v2/places/`, {
           params: {
             per_page: 100,
@@ -142,15 +144,15 @@ export const getingDataPlaces = async () => {
       }
     }
   });
-  // await flushCache();
 
   return allPlaces;
 };
 export const getingDataUsers = async () => {
-
-  const userNameApi = 'admin';
-  const passwordApi = 'BnDN q25U yKnr exYX xcCS qWeK';
-  const base64encodedData = Buffer.from(`${userNameApi}:${passwordApi}`).toString('base64');
+  const userNameApi = "admin";
+  const passwordApi = "BnDN q25U yKnr exYX xcCS qWeK";
+  const base64encodedData = Buffer.from(
+    `${userNameApi}:${passwordApi}`
+  ).toString("base64");
 
   let allUsers;
 
@@ -160,8 +162,6 @@ export const getingDataUsers = async () => {
       "Content-Type": "application/json",
       "Cache-Control": "no-cache",
       Authorization: `basic ${base64encodedData}`,
-
-
     },
   }).then((res) => {
     let max_pages = res.headers["x-wp-totalpages"];
@@ -169,14 +169,12 @@ export const getingDataUsers = async () => {
     allUsers = res.data;
     if (max_pages > 1) {
       for (let i = 2; i <= max_pages; i++) {
-
         get(`${baseUrl}/wp-json/wp/v2/Users/`, {
           params: {
             per_page: 100,
             page: i,
             "Cache-Control": "no-cache",
             Authorization: `basic ${base64encodedData}`,
-
           },
         }).then((res) => {
           Array.prototype.push.apply(allUsers, res.data);
@@ -185,7 +183,7 @@ export const getingDataUsers = async () => {
     }
   });
 
-  console.log("allUsers", allUsers)
+  console.log("allUsers", allUsers);
 
   return allUsers;
 };
@@ -199,34 +197,32 @@ export const insertRoute = (routeData, callback) => {
 
   const data = {
     ...routeData,
-    status: 'publish'
-  }
+    status: "publish",
+  };
 
-  return axios.post('https://taal.tech/wp-json/wp/v2/routes/', data, { headers: headers })
-    .then(async response => {
-
+  return axios
+    .post("https://taal.tech/wp-json/wp/v2/routes/", data, { headers: headers })
+    .then(async (response) => {
       return response.data;
     })
-    .catch(error => {
+    .catch((error) => {
       console.log(error);
     });
-
-
-}
+};
 
 export const uploadFile = async (file, type) => {
   const formData = new FormData();
-  formData.append('file', file);
-  formData.append('title', file.name);
-  formData.append('description', `${type} uploaded from React`);
+  formData.append("file", file);
+  formData.append("title", file.name);
+  formData.append("description", `${type} uploaded from React`);
 
   try {
-    const response = await fetch('https://taal.tech/wp-json/wp/v2/media', {
-      method: 'POST',
+    const response = await fetch("https://taal.tech/wp-json/wp/v2/media", {
+      method: "POST",
       headers: {
-        'Authorization': "Bearer" + sessionStorage.jwt,
+        Authorization: "Bearer" + sessionStorage.jwt,
       },
-      body: formData
+      body: formData,
     });
 
     if (!response.ok) {
@@ -235,22 +231,26 @@ export const uploadFile = async (file, type) => {
 
     const data = await response.json();
 
-    // await flushCache();
-
     return data;
   } catch (error) {
     throw error;
   }
-}
-export const insertStation = async (get_title, getDescription, site, imageData, audioData) => {
-  console.log("get_title YARDEN", get_title)
-  console.log("site.id YARDEN", site.id)
-  console.log("imageData YARDEN", imageData)
-  console.log("audioData YARDEN", audioData)
+};
+export const insertStation = async (
+  get_title,
+  getDescription,
+  site,
+  imageData,
+  audioData
+) => {
+  console.log("get_title YARDEN", get_title);
+  console.log("site.id YARDEN", site.id);
+  console.log("imageData YARDEN", imageData);
+  console.log("audioData YARDEN", audioData);
 
   try {
-    const response = await fetch('https://taal.tech/wp-json/wp/v2/places', {
-      method: 'POST',
+    const response = await fetch("https://taal.tech/wp-json/wp/v2/places", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         accept: "application/json",
@@ -262,19 +262,17 @@ export const insertStation = async (get_title, getDescription, site, imageData, 
         description: getDescription,
         fields: {
           image: imageData,
-          audio: audioData.id
-
+          audio: audioData.id,
         },
       }),
     });
 
     if (!response.ok) {
-      console.log("res: " + JSON.stringify(response))
+      console.log("res: " + JSON.stringify(response));
       throw new Error(`Error inserting statin: ${response.status}`);
     }
 
     const data = await response.json();
-    // await flushCache();
 
     return data;
   } catch (error) {
@@ -284,10 +282,15 @@ export const insertStation = async (get_title, getDescription, site, imageData, 
   }
 };
 
-export const insertTask = async (get_title, myPlacesChoice, imageData, audioData) => {
+export const insertTask = async (
+  get_title,
+  myPlacesChoice,
+  imageData,
+  audioData
+) => {
   try {
-    const response = await fetch('https://taal.tech/wp-json/wp/v2/tasks', {
-      method: 'POST',
+    const response = await fetch("https://taal.tech/wp-json/wp/v2/tasks", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
@@ -301,8 +304,8 @@ export const insertTask = async (get_title, myPlacesChoice, imageData, audioData
             ID: imageData.id,
           },
           audio: {
-            ID: audioData.id
-          }
+            ID: audioData.id,
+          },
         },
       }),
     });
@@ -312,7 +315,6 @@ export const insertTask = async (get_title, myPlacesChoice, imageData, audioData
     }
 
     const data = await response.json();
-    // await flushCache();
 
     return data;
   } catch (error) {

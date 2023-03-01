@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Modal.css";
-import { get, insertRoute } from "../../api/api";
+import { get, insertRoute, getingDataUsers } from "../../api/api";
 import { FcLink } from "react-icons/fc";
 import { BsExclamationLg } from "react-icons/bs";
 import Modal_Loading from "./Modal_Loading";
@@ -35,13 +35,18 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, si
     const fetchData = async () => {
       setLoading(true);
       try {
-        getData();
+        setStudent(
+          (student = getingDataUsers())
+        );
+        // getData();
       } catch (error) {
         console.error(error.message);
       }
       setLoading(false);
     };
     fetchData();
+
+    console.log('Student',student)
   }, []);
 
   const getData = () => {
@@ -401,7 +406,7 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, si
                         </div>
                       </div>
                       <div className="bodySaveRoute">
-                        <div>שיוך חניך:</div>
+                        <div>:שיוך חניך</div>
                         <div className="allStudent">
                           {student.map((value, index) => {
                             return (

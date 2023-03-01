@@ -35,34 +35,40 @@ export const post = async (url, body, header) => {
 export const getingDataTasks = async () => {
 
   let allTasks;
+  const headers = {
+    "Content-Type": "application/json",
+    accept: "application/json",
+    // Authorization: "Bearer" + sessionStorage.jwt,
+  };
 
-
-  await get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
-    params: {
-      per_page: 100,
-      "Cache-Control": "no-cache",
-    },
-  }).then((res) => {
-    let max_pages = res.headers["x-wp-totalpages"];
+  await get('https://prod-web-app0da5905.azurewebsites.net/tasks', { headers: headers }
+    // {
+    //   params: {
+    //     per_page: 100,
+    //     "Cache-Control": "no-cache",
+    //   },
+    // }
+  ).then((res) => {
+    // let max_pages = res.headers["x-wp-totalpages"];
 
     allTasks = res.data;
-    if (max_pages > 1) {
-      for (let i = 2; i <= max_pages; i++) {
+    // if (max_pages > 1) {
+    //   for (let i = 2; i <= max_pages; i++) {
 
-        get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
-          params: {
-            per_page: 100,
-            page: i,
-            "Cache-Control": "no-cache",
-          },
-        }).then((res) => {
-          Array.prototype.push.apply(allTasks, res.data);
-        });
-      }
-    }
+    //     get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
+    //       params: {
+    //         per_page: 100,
+    //         page: i,
+    //         "Cache-Control": "no-cache",
+    //       },
+    //     }).then((res) => {
+    //       Array.prototype.push.apply(allTasks, res.data);
+    //     });
+    //   }
+    // }
   });
   // await flushCache();
-
+  console.log("yarden alltasks", allTasks)
   return allTasks;
 };
 
@@ -70,37 +76,42 @@ export const getingDataRoutes = async () => {
 
   let allRoutes;
 
-  await get(`${baseUrl}/wp-json/wp/v2/routes/`, {
-    params: {
-      per_page: 100,
-      "Content-Type": "application/json",
-      "Cache-Control": "no-cache",
+  const headers = {
+    "Content-Type": "application/json",
+    accept: "application/json",
+    // Authorization: "Bearer" + sessionStorage.jwt,
+  };
 
-    },
-  }).then((res) => {
-    let max_pages = res.headers["x-wp-totalpages"];
+  await get('https://prod-web-app0da5905.azurewebsites.net/routes', { headers: headers }
+    // params: {
+    //   // per_page: 100,
+    //   "Content-Type": "application/json",
+    //   "Cache-Control": "no-cache",
+
+    // },
+  ).then((res) => {
+    // let max_pages = res.headers["x-wp-totalpages"];
 
     allRoutes = res.data;
-    if (max_pages > 1) {
-      for (let i = 2; i <= max_pages; i++) {
+    // if (max_pages > 1) {
+    //   for (let i = 2; i <= max_pages; i++) {
 
-        get(`${baseUrl}/wp-json/wp/v2/routes/`, {
-          params: {
-            per_page: 100,
-            page: i,
-            "Cache-Control": "no-cache",
-          },
-        }).then((res) => {
-          Array.prototype.push.apply(allRoutes, res.data);
-        });
-      }
-    }
+    //     get(`${baseUrl}/wp-json/wp/v2/routes/`, {
+    //       params: {
+    //         per_page: 100,
+    //         page: i,
+    //         "Cache-Control": "no-cache",
+    //       },
+    //     }).then((res) => {
+    //       Array.prototype.push.apply(allRoutes, res.data);
+    //     });
+    //   }
+    // }
   });
   // await flushCache();
 
   return allRoutes;
 };
-
 export const getingDataPlaces = async () => {
 
   let allPlaces;
@@ -134,6 +145,49 @@ export const getingDataPlaces = async () => {
   // await flushCache();
 
   return allPlaces;
+};
+export const getingDataUsers = async () => {
+
+  const userNameApi = 'admin';
+  const passwordApi = 'BnDN q25U yKnr exYX xcCS qWeK';
+  const base64encodedData = Buffer.from(`${userNameApi}:${passwordApi}`).toString('base64');
+
+  let allUsers;
+
+  await get(`${baseUrl}/wp-json/wp/v2/Users/`, {
+    params: {
+      per_page: 100,
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+      Authorization: `basic ${base64encodedData}`,
+
+
+    },
+  }).then((res) => {
+    let max_pages = res.headers["x-wp-totalpages"];
+
+    allUsers = res.data;
+    if (max_pages > 1) {
+      for (let i = 2; i <= max_pages; i++) {
+
+        get(`${baseUrl}/wp-json/wp/v2/Users/`, {
+          params: {
+            per_page: 100,
+            page: i,
+            "Cache-Control": "no-cache",
+            Authorization: `basic ${base64encodedData}`,
+
+          },
+        }).then((res) => {
+          Array.prototype.push.apply(allUsers, res.data);
+        });
+      }
+    }
+  });
+
+  console.log("allUsers", allUsers)
+
+  return allUsers;
 };
 
 export const insertRoute = (routeData, callback) => {
@@ -215,7 +269,7 @@ export const insertStation = async (get_title, getDescription, site, imageData, 
     });
 
     if (!response.ok) {
-      console.log("res: "+JSON.stringify(response))
+      console.log("res: " + JSON.stringify(response))
       throw new Error(`Error inserting statin: ${response.status}`);
     }
 

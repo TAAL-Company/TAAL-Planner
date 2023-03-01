@@ -43,7 +43,7 @@
   opacity: 1;
   /* top: 50%; */
   left: 8%;
-  transform: translate(50%, 50%);
+  transform: translate(50%, 0%);
 }
 
 .modalMyTasksContainer {
@@ -470,10 +470,10 @@ input.cancelTaskButton {
   height: 255px;
   overflow: scroll;
   overflow-x: hidden;
-  direction: rtl;
+  /* direction: rtl; */
   position: relative;
-  left: 85px;
-  width: 582px;
+  /* left: 85px; */
+  /* width: 582px; */
   border: 1px solid #C9C9C9;
   border-radius: 4px;
   opacity: 1;
@@ -730,4 +730,12 @@ input.newStationButton {
 
 .newRouteBody {
   padding: 30px;
+}
+
+.bodySaveRoute {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  padding: 30px;
+  gap: 20px;
 }

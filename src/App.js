@@ -13,6 +13,7 @@ import Gallery from "./components/Gallery/Gallery";
 import Cards from "./components/Cards/Cards";
 import { Switch, Route } from "react-router-loading";
 import PlacesCards from "./components/placesCards/placesCards";
+import Forms from "./components/Form/Forms";
 
 // import CallState from "./components/CallState/CallState";
 function App() {
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/Dashboard" component={Dashboard}></Route>
                 <Route path="/Gallery" component={Gallery}></Route>
                 <Route path="/places" component={PlacesCards}></Route>
+                <Route path="/Forms" component={Forms}></Route>
               </Switch>
             </div>
           </Router>

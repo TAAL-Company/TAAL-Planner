@@ -90,41 +90,43 @@ function Modal({
 
       // console.log("obj : ", obj)
       // console.log("obj.tasks : ", obj.tasks)
-      let url_post = `${baseUrl}/wp-json/wp/v2/routes/`;
-      fetch(url_post, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-        },
-        body: JSON.stringify({
-          title: get_Name,
-          status: "publish",
-          fields: {
-            tasks: obj.tasks.map((e) => {
-              // console.log("e.id:", e.id)
-              return e.id;
-            }),
-            users: {
-              ID: myStudentsChoice.map((e) => {
-                console.log("res of eee:00101110001010001:", e.id);
-                return e.id;
-              }),
-            },
-            my_site: obj.mySite.id,
-          },
-        }),
-      })
-        .then(function (response) {
-          return response.json();
-        })
-        .then(function (post) {
-          setDone(true);
+      // let url_post = `${baseUrl}/wp-json/wp/v2/routes/`;
+      // fetch(url_post, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      //   },
+      //   body: JSON.stringify({
+      //     title: get_Name,
+      //     status: "publish",
+      //     fields: {
+      //       tasks: obj.tasks.map((e) => {
+      //         // console.log("e.id:", e.id)
+      //         return e.id;
+      //       }),
+      //       users: {
+      //         ID: myStudentsChoice.map((e) => {
+      //           console.log("res of eee:00101110001010001:", e.id);
+      //           return e.id;
+      //         }),
+      //       },
+      //       my_site: obj.mySite.id,
+      //     },
+      //   }),
+      // })
+      //   .then(function (response) {
+      //     return response.json();
+      //   })
+      //   .then(function (post) {
+      //     setDone(true);
 
-          // alert(get_Route_ID)
-          // console.log("post:", post)
-          window.location.replace("/planner");
-        });
+      //     // alert(get_Route_ID)
+      //     // console.log("post:", post)
+      //     window.location.replace("/forms");
+      //   });
+      setDone(true);
+      window.location.replace("/forms"); //to do : delete
     }
   }
   const saveCheckbox = (val) => {

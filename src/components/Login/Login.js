@@ -29,7 +29,6 @@ function Login(props) {
     setFlagLoading((flagLoading = true));
   }
 
-
   return (
     <>
       {sessionStorage.logged_in ? (
@@ -39,15 +38,10 @@ function Login(props) {
         </h1>
       ) : (
         <>
-          <div className="App-header" >
+          <div className="App-header">
             <div className="box">
               <div className="logoHeader">
-                <img
-                  src={logo}
-                  className="App-logo"
-                  alt="logo"
-
-                ></img>
+                <img src={logo} className="App-logo" alt="logo"></img>
               </div>
               {/* <p>{props.serverMessage}</p> */}
               <div
@@ -68,7 +62,6 @@ function Login(props) {
                   <div className="p-2">
                     <div className="login">
                       <div className="input-container">
-
                         <input
                           className="inputLogin"
                           type="text"
@@ -78,17 +71,14 @@ function Login(props) {
                           onChange={handleChange}
                         />
                         <div className="img-container">
-
                           <img
                             src={userLogo}
                             className="user-logo"
                             alt="logo"
-
                           ></img>
                         </div>
                       </div>
                       <div className="input-container">
-
                         <input
                           className="inputLogin"
                           type="password"
@@ -102,7 +92,6 @@ function Login(props) {
                             src={lockLogo}
                             className="lock-logo"
                             alt="logo"
-
                           ></img>
                         </div>
                       </div>
@@ -113,14 +102,10 @@ function Login(props) {
                           value="התחברות"
                         />
                       </div>
-                      <div className="forgetPassword">
-                        שכחת סיסמא?
-                      </div>
+                      <div className="forgetPassword">שכחת סיסמא?</div>
                     </div>
                   </div>
                 </div>
-
-
               </div>
             </div>
           </div>

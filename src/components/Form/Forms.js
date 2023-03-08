@@ -6,7 +6,7 @@ import "./Forms.css";
 import Status from "./FormsComponents/classification_component/Status";
 import StatusLTR from "./FormsComponents/classification_component/StatusLTR";
 
-import taskpic from "./FormsComponents/PicturesForms/taskpic";
+import taskpic from "./FormsComponents/PicturesForms/taskpic.png";
 import taskpic1 from "./FormsComponents/PicturesForms/taskpic1.jpg";
 import taskpic2 from "./FormsComponents/PicturesForms/taskpic2.jpeg";
 import taskpic3 from "./FormsComponents/PicturesForms/taskpic3.jpg";
@@ -19,7 +19,7 @@ import { GridActionsCellItem } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { Select } from "@mui/material";
-import "flag-icon-css/css/flag-icon.min.css";
+// import "flag-icon-css/css/flag-icon.min.css";
 
 //  future animation to popup
 // import Slide from "@mui/material/Slide";
@@ -34,7 +34,7 @@ import {
   TextField,
 } from "@mui/material";
 
-function App() {
+function Forms() {
   const [explainationError, setExplainationError] = useState("");
   const [interventionError, setinterventionError] = useState("");
 
@@ -2552,7 +2552,7 @@ function App() {
   // };
 
   return (
-    <div className="App">
+    <div className="Forms">
       <div>
         <div>
           <button
@@ -3411,4 +3411,4 @@ function App() {
   );
 }
 
-export default App;
+export default Forms;

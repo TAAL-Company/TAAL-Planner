@@ -6,7 +6,7 @@ const Status = (props) => {
   if (flagColor === "red") {
     return (
       <div className="status" style={{ background: "#DD001A" }}>
-        <div className="content">
+        <div className="contentStatus">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -42,7 +42,7 @@ const Status = (props) => {
   } else if (flagColor === "yellow") {
     return (
       <div className="status" style={{ background: "#F49A40" }}>
-        <div className="content">
+        <div className="contentStatus">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="23.85"
@@ -83,8 +83,8 @@ const Status = (props) => {
   } else {
     return (
       <div className="status" style={{ background: "#71AA6F" }}>
-        <div className="content">
-          <div className="icon"></div>
+        <div className="contentStatus">
+          <div className="iconStatus"></div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="23.85"

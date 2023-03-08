@@ -1,5 +1,6 @@
 import axios from "axios";
 import { baseUrl } from "../config";
+import { Buffer } from "buffer";
 
 export const get = async (url, header) => {
   try {
@@ -35,7 +36,6 @@ export const getingData_Tasks = async () => {
     allTasks = res.data;
   });
 
-  console.log("yarden alltasks", allTasks);
   return allTasks;
 };
 
@@ -73,16 +73,12 @@ export const getingDataTasks = async () => {
 export const getingData_Routes = async () => {
   let allRoutes;
 
-  const headers = {
-    "Content-Type": "application/json",
-    accept: "application/json",
-  };
-
-  await get("https://prod-web-app0da5905.azurewebsites.net/routes", {
-    headers: headers,
-  }).then((res) => {
-    allRoutes = res.data;
-  });
+  await get("https://prod-web-app0da5905.azurewebsites.net/routes").then(
+    (res) => {
+      allRoutes = res.data;
+    }
+  );
+  console.log("res allRoutes: ", allRoutes);
 
   return allRoutes;
 };
@@ -116,6 +112,36 @@ export const getingDataRoutes = async () => {
   // await flushCache();
 
   return allRoutes;
+};
+export const getingData_Places = async () => {
+  let allPlaces;
+
+  await get("https://prod-web-app0da5905.azurewebsites.net/sites", {
+    params: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+    },
+  }).then((res) => {
+    allPlaces = res.data;
+  });
+
+  console.log("res places: ", allPlaces);
+
+  return allPlaces;
+};
+export const getingDataStation = async () => {
+  let allStations;
+
+  await get("https://prod-web-app0da5905.azurewebsites.net/stations", {
+    params: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+    },
+  }).then((res) => {
+    allStations = res.data;
+  });
+
+  return allStations;
 };
 export const getingDataPlaces = async () => {
   let allPlaces;
@@ -201,7 +227,9 @@ export const insertRoute = (routeData, callback) => {
   };
 
   return axios
-    .post("https://taal.tech/wp-json/wp/v2/routes/", data, { headers: headers })
+    .post("https://prod-web-app0da5905.azurewebsites.net/routes", data, {
+      headers: headers,
+    })
     .then(async (response) => {
       return response.data;
     })
@@ -243,29 +271,27 @@ export const insertStation = async (
   imageData,
   audioData
 ) => {
-  console.log("get_title YARDEN", get_title);
-  console.log("site.id YARDEN", site.id);
-  console.log("imageData YARDEN", imageData);
-  console.log("audioData YARDEN", audioData);
-
   try {
-    const response = await fetch("https://taal.tech/wp-json/wp/v2/places", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        accept: "application/json",
-        Authorization: "Bearer" + sessionStorage.jwt,
-      },
-      body: JSON.stringify({
-        name: get_title,
-        parent: site.id,
-        description: getDescription,
-        fields: {
-          image: imageData,
-          audio: audioData.id,
+    const response = await fetch(
+      "https://prod-web-app0da5905.azurewebsites.net/stations",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "application/json",
+          // Authorization: "Bearer" + sessionStorage.jwt,
         },
-      }),
-    });
+        body: JSON.stringify({
+          title: get_title,
+          parent: site.id,
+          description: getDescription,
+          // fields: {
+          //   image: imageData,
+          //   audio: audioData.id,
+          // },
+        }),
+      }
+    );
 
     if (!response.ok) {
       console.log("res: " + JSON.stringify(response));
@@ -286,29 +312,35 @@ export const insertTask = async (
   get_title,
   myPlacesChoice,
   imageData,
-  audioData
+  audioData,
+  siteIds
 ) => {
   try {
-    const response = await fetch("https://taal.tech/wp-json/wp/v2/tasks", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-      },
-      body: JSON.stringify({
-        status: "publish",
-        title: get_title,
-        places: myPlacesChoice,
-        fields: {
-          image: {
-            ID: imageData.id,
-          },
-          audio: {
-            ID: audioData.id,
-          },
+    const response = await fetch(
+      "https://prod-web-app0da5905.azurewebsites.net/tasks",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
         },
-      }),
-    });
+        body: JSON.stringify({
+          status: "publish",
+          title: get_title,
+          siteIds: [siteIds],
+          stationIds: myPlacesChoice,
+          estimatedTimeSeconds: 0,
+          // fields: {
+          //   image: {
+          //     ID: imageData.id,
+          //   },
+          //   audio: {
+          //     ID: audioData.id,
+          //   },
+          // },
+        }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Error inserting task: ${response.statusText}`);

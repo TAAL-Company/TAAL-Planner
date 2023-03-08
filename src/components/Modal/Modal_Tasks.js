@@ -6,7 +6,7 @@ import { IoMdCheckbox } from "react-icons/io";
 import Modal_Loading from "./Modal_Loading";
 import { baseUrl } from "../../config";
 import Modal_no_site_selected from "./Modal_no_site_selected";
-import { uploadFile, insertTask } from '../../api/api';
+import { uploadFile, insertTask } from "../../api/api";
 
 //--------------------------
 let ichour = "אישור";
@@ -14,7 +14,16 @@ let file = "";
 let myPlacesChoiceTemp = [];
 
 //--------------------------
-function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setModalOpenNoSiteSelected, mySite , setAllTasksOfTheSite, language }) {
+function Modal_Tasks({
+  setOpenModalPlaces,
+  allStations,
+  help,
+  siteSelected,
+  setModalOpenNoSiteSelected,
+  mySite,
+  setAllTasksOfTheSite,
+  language,
+}) {
   const [, setDone] = useState(false);
   const [get_title, setTitle] = useState("");
   const [picture, setPicture] = useState(null);
@@ -22,9 +31,9 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
   const [getDescription, setDescription] = useState("");
   const [, setFile] = useState("");
   const [flagClickOK, setFlagClickOK] = useState(false);
-  const [myPlacesChoice, setMyPlacesChoice] = useState([mySite.id]);
+  const [myPlacesChoice, setMyPlacesChoice] = useState([]);
 
-  console.log("allStations: ", allStations)
+  console.log("allStations: ", allStations);
 
   const handleTitleInput = (e) => {
     setTitle(e.target.value);
@@ -45,7 +54,6 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
   //   }
   // };
   const Post_Task = async () => {
-
     setFlagClickOK(true);
 
     // resultMyPlacesChoice();
@@ -54,11 +62,11 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
 
     try {
       if (picture) {
-        imageData = await uploadFile(picture, 'Image');
+        imageData = await uploadFile(picture, "Image");
         console.log(`Image uploaded successfully:`, imageData);
       }
       if (audio) {
-        audioData = await uploadFile(audio, 'Audio');
+        audioData = await uploadFile(audio, "Audio");
         console.log(`Audio uploaded successfully:`, audioData);
       }
     } catch (error) {
@@ -69,72 +77,77 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
       alert("עליך למלא שדות חובה המסומנים בכוכבית");
     } else {
       try {
-        const post = await insertTask(get_title, myPlacesChoice, imageData, audioData);
-          setDone(true);
-          console.log("post Modale Tasks:", post)
-          setFlagClickOK(false);
-          setOpenModalPlaces(false);
-          let color = allStations.find(item => item.id === myPlacesChoice[1]).color
-          setAllTasksOfTheSite(prev => [...prev, post])
+        const post = await insertTask(
+          get_title,
+          myPlacesChoice,
+          imageData,
+          audioData,
+          mySite.id
+        );
+        setDone(true);
+        console.log("post Modale Tasks:", post);
+        setFlagClickOK(false);
+        setOpenModalPlaces(false);
+        let color = allStations.find(
+          (item) => item.id === myPlacesChoice[1]
+        ).color;
+        setAllTasksOfTheSite((prev) => [...prev, post]);
       } catch (error) {
         console.error(error);
       }
 
-      console.log("insertTask: ", insertTask      )
+      console.log("insertTask: ", insertTask);
 
-    //   let url_post = `${baseUrl}/wp-json/wp/v2/tasks/`;
-    //   fetch(url_post, {
-    //     method: "POST",
-    //     mode: "cors",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-    //     },
-    //     body: JSON.stringify({
-    //       // password: "sdfsdf",
-    //       status: "publish",
+      //   let url_post = `${baseUrl}/wp-json/wp/v2/tasks/`;
+      //   fetch(url_post, {
+      //     method: "POST",
+      //     mode: "cors",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      //     },
+      //     body: JSON.stringify({
+      //       // password: "sdfsdf",
+      //       status: "publish",
 
-    //       title: get_title,
-    //       // "description": getDescription,
-    //       places: myPlacesChoice,
-    //       fields: {
-    //         image: {
-    //           ID: imageData.id,
-    //         },
-    //         audio: {
-    //           ID: audioData.id
-    //         }
-    //         // minimum_profile: 6
-    //       },
-    //     }),
-    //   })
-    //     .then(function (response) {
-    //       return response.json();
+      //       title: get_title,
+      //       // "description": getDescription,
+      //       places: myPlacesChoice,
+      //       fields: {
+      //         image: {
+      //           ID: imageData.id,
+      //         },
+      //         audio: {
+      //           ID: audioData.id
+      //         }
+      //         // minimum_profile: 6
+      //       },
+      //     }),
+      //   })
+      //     .then(function (response) {
+      //       return response.json();
 
-    //       // props.setAllTasksOfTheSite
-    //     })
-    //     .then(function (post) {
-    //       setDone(true);
-    //       // alert("ok")
-    //       console.log("post Modale Tasks:", post)
-    //       // window.location.replace("/planner");
-    //       setFlagClickOK(false);
-    //       setOpenModalPlaces(false);
-    //     });
+      //       // props.setAllTasksOfTheSite
+      //     })
+      //     .then(function (post) {
+      //       setDone(true);
+      //       // alert("ok")
+      //       console.log("post Modale Tasks:", post)
+      //       // window.location.replace("/planner");
+      //       setFlagClickOK(false);
+      //       setOpenModalPlaces(false);
+      //     });
     }
-
-
-  }
+  };
   const saveCheckbox = (val) => {
     // console.log(val)
-    setMyPlacesChoice(prev => [...prev, val.id])
+    setMyPlacesChoice((prev) => [...prev, val.id]);
     // setMyStudents(myStudents.push(val))
     // sortById();
   };
   useEffect(() => {
     console.log("myPlacesChoice:", myPlacesChoice);
-
-  }, [myPlacesChoice])
+  }, [myPlacesChoice]);
 
   // const sortById = () => {
   //   if (myPlacesChoiceTemp.length > 1)
@@ -170,30 +183,43 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
       }
   };
 
-
   return (
     <>
-      {!help && !siteSelected ? (<>
-        <Modal_no_site_selected setOpenModal={setOpenModalPlaces}></Modal_no_site_selected>
-
-      </>) : (<></>)}
+      {!help && !siteSelected ? (
+        <>
+          <Modal_no_site_selected
+            setOpenModal={setOpenModalPlaces}
+          ></Modal_no_site_selected>
+        </>
+      ) : (
+        <></>
+      )}
       {!help && siteSelected ? (
         <>
-          <div className="BackgroundTasks" style={{textAlign: language === 'English' ?  "right": "left",
-        direction: language === 'English' ?  "ltr": "rtl",
-        transform: language === 'English' ?  " translate(-50%, -50%)": " translate(50%, -50%)"}}>
+          <div
+            className="BackgroundTasks"
+            style={{
+              textAlign: language === "English" ? "right" : "left",
+              direction: language === "English" ? "ltr" : "rtl",
+              transform:
+                language === "English"
+                  ? " translate(-50%, -50%)"
+                  : " translate(50%, -50%)",
+            }}
+          >
             <div className="modalContainerTasks">
               <div className="headerNewTask">
                 <div className="NewTaskTitle">
-                {language !== 'English' ? 'New task' : ':משימה חדשה'}
-
+                  {language !== "English" ? "New task" : ":משימה חדשה"}
                 </div>
               </div>
               <div className="bodyNewTask">
                 {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
                 <form id="IPU" className="w3-container">
                   <h6>
-                  {language !== 'English' ? 'Write the name of the task' : ':רשום את שם המשימה '}
+                    {language !== "English"
+                      ? "Write the name of the task"
+                      : ":רשום את שם המשימה "}
 
                     <RiAsterisk style={{ color: "red" }} />
                   </h6>
@@ -206,14 +232,16 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                         width: "100%",
                         height: "38px",
                         paddingRight: "20px",
-                        direction: language === 'English' ?  "rtl": "ltr"
+                        direction: language === "English" ? "rtl" : "ltr",
                       }}
                     ></input>
                   </p>
                 </form>
                 <form id="IPU" className="w3-container">
                   <h6>
-                  {language !== 'English' ? 'Describe the task' : ':תאר במשפט את משימה '}
+                    {language !== "English"
+                      ? "Describe the task"
+                      : ":תאר במשפט את משימה "}
                     <RiAsterisk style={{ color: "red" }} />
                   </h6>
                   <p>
@@ -224,16 +252,18 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                         width: "100%",
                         height: "38px",
                         paddingRight: "20px",
-                        direction: language === 'English' ?  "rtl": "ltr"
+                        direction: language === "English" ? "rtl" : "ltr",
                       }}
                     ></input>
                   </p>
                 </form>
                 <form id="IPU" className="w3-container">
                   <h6>
-                  {language !== 'English' ? 'Add a picture of a task' : ':הוסף תמונה של משימה '}
+                    {language !== "English"
+                      ? "Add a picture of a task"
+                      : ":הוסף תמונה של משימה "}
 
-                   <FcMultipleInputs />
+                    <FcMultipleInputs />
                   </h6>
                   <div className="input-group mb-3">
                     <input
@@ -246,14 +276,17 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                         textAlign: "right",
                         width: "100%",
                         height: "38px",
-                        direction: language === 'English' ?  "rtl": "ltr"
+                        direction: language === "English" ? "rtl" : "ltr",
                       }}
                     ></input>
                   </div>
                 </form>
                 <form id="IPU" className="w3-container">
                   <h6>
-                  {language !== 'English' ? 'Add a voice clip describing the task' : ':הוסף קטע קול המתאר את המשימה '}<FcMultipleInputs />
+                    {language !== "English"
+                      ? "Add a voice clip describing the task"
+                      : ":הוסף קטע קול המתאר את המשימה "}
+                    <FcMultipleInputs />
                   </h6>
                   <p>
                     <input
@@ -266,14 +299,16 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                         textAlign: "right",
                         width: "100%",
                         height: "38px",
-                        direction: language === 'English' ?  "rtl": "ltr"
+                        direction: language === "English" ? "rtl" : "ltr",
                       }}
                     ></input>
                   </p>
 
                   <div className="list-group">
                     <h6>
-                    {language !== 'English' ? 'Select the stations you want to associate the task with' : ':בחר את התחנות שברצונך לשייך את המשימה'}
+                      {language !== "English"
+                        ? "Select the stations you want to associate the task with"
+                        : ":בחר את התחנות שברצונך לשייך את המשימה"}
                       <IoMdCheckbox style={{ color: "blue" }} />
                     </h6>
                     <div className="allTasks">
@@ -283,10 +318,11 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                             <input
                               onChange={() => saveCheckbox(value)}
                               className="form-check-input me-1"
+                              style={{ marginLeft: "5px" }}
                               type="checkbox"
                               value=""
                             ></input>
-                            {value.name}
+                            {value.title}
                           </label>
                         );
                       })}
@@ -294,31 +330,32 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                   </div>
                 </form>
               </div>
-              <div style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                gap: "16px",
-                height: "100px",
-                alignItems: "center",
-                padding: "40px",
-                marginBottom: "20px",
-              }}
-                className="footerNewTasks">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  gap: "16px",
+                  height: "100px",
+                  alignItems: "center",
+                  padding: "40px",
+                  marginBottom: "20px",
+                }}
+                className="footerNewTasks"
+              >
                 <input
                   type="submit"
                   className="saveTaskButton"
-                  value={language !== 'English' ? 'Save Task' : 'שמור משימה'}
+                  value={language !== "English" ? "Save Task" : "שמור משימה"}
                   onClick={Post_Task}
                 />
                 <input
                   type="submit"
                   className="cancelTaskButton"
-                  value={language !== 'English' ? 'Cancel' : 'ביטול'}
+                  value={language !== "English" ? "Cancel" : "ביטול"}
                   onClick={() => {
                     setOpenModalPlaces(false);
                   }}
                 />
-
               </div>
               {flagClickOK ? (
                 <>
@@ -374,8 +411,7 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
         //     </div>
         //   </div>
         // </div>
-      )
-      }
+      )}
     </>
   );
 }

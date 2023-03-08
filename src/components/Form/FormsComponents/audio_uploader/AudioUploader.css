@@ -1,0 +1,22 @@
+a {
+  margin: 0.3rem;
+  color: rgb(1, 93, 174);
+  cursor: pointer;
+}
+
+.AudioXBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.AudioXBtn:hover {
+  background: rgb(98, 95, 95, 0.3);
+}
+
+.AudioXBtn:active {
+  background: rgb(98, 95, 95, 0.4);
+}

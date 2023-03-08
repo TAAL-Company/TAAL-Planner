@@ -6,8 +6,8 @@ import { BsExclamationLg } from "react-icons/bs";
 import Modal_Loading from "./Modal_Loading";
 import { baseUrl } from "../../config";
 import { RiAsterisk } from "react-icons/ri";
-import stopIcon from '../../Pictures/stopIcon.svg'
-import Modal_no_site_selected from "./Modal_no_site_selected"
+import stopIcon from "../../Pictures/stopIcon.svg";
+import Modal_no_site_selected from "./Modal_no_site_selected";
 
 //--------------------------
 let obj = { tasks: [], users: [], mySite: [] };
@@ -16,7 +16,14 @@ let myStudents = [];
 let myStudentsChoice = [];
 let flagClickOK = false;
 //--------------------------
-function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, siteSelected, language }) {
+function Modal({
+  setOpenModal,
+  setFlagStudent,
+  flagTest,
+  setNewTitleForRoute,
+  siteSelected,
+  language,
+}) {
   console.log("flagTest:", flagTest);
   const [, set_obj] = useState(null); // for TextView
   const [, setDone] = useState(false);
@@ -28,25 +35,23 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, si
   const [, setFlagClickOK] = useState(false);
   const [get_Name, setName] = useState(null); // for TextView
 
-  const [routeTitle, setRouteTitle] = useState('');
+  const [routeTitle, setRouteTitle] = useState("");
   const [newRoute, setNewRoute] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        setStudent(
-          (student = getingDataUsers())
-        );
+        setStudent((student = getingDataUsers()));
         // getData();
       } catch (error) {
         console.error(error.message);
       }
       setLoading(false);
     };
-    fetchData();
+    // fetchData();
 
-    console.log('Student',student)
+    console.log("Student", student);
   }, []);
 
   const getData = () => {
@@ -171,29 +176,27 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, si
   const handleSubmitRouteTitle = (event) => {
     event.preventDefault();
 
+    console.log("routeTitle", localStorage.getItem("MySite").id);
     // setNewTitleForRoute(routeTitle);
 
     const routeData = {
       title: routeTitle,
-      places: [
-        JSON.parse(localStorage.getItem("MySite")).id
-      ]
+      siteIds: [{ siteId: JSON.parse(localStorage.getItem("MySite")).id }],
     };
 
-    insertRoute(routeData).then(data => {
+    insertRoute(routeData).then((data) => {
       setNewRoute(data);
       setNewTitleForRoute(data);
-      setRouteTitle('');
+      setRouteTitle("");
       setFlagStudent(false);
       setOpenModal(false);
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     console.log("newRoute: ", newRoute);
-
-  }, [newRoute])
-
+    console.log("!! id", JSON.parse(localStorage.getItem("MySite")).id);
+  }, [newRoute]);
 
   return (
     <>
@@ -269,8 +272,7 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, si
                     </button>
 
                     <button className="cancelSaveAs" onClick={() => saveData()}>
-                      {language !== 'English' ? 'Cancel' : 'ביטול'}
-
+                      {language !== "English" ? "Cancel" : "ביטול"}
                     </button>
                   </>
                 ) : (
@@ -278,13 +280,12 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, si
                     {" "}
                     <div className="body">
                       <h5>
-                        {language !== 'English' ? 'Save route' : 'שמירת מסלול'}
+                        {language !== "English" ? "Save route" : "שמירת מסלול"}
                       </h5>
                     </div>
                     <div className="footer">
                       <button className="continueBtn" onClick={Post_Route}>
-                        {language !== 'English' ? 'Save route' : 'שמירת מסלול'}
-
+                        {language !== "English" ? "Save route" : "שמירת מסלול"}
                       </button>
                       &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
                       &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -294,7 +295,7 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, si
                           setOpenModal(false);
                         }}
                       >
-                        {language !== 'English' ? 'Cancel' : 'ביטול'}
+                        {language !== "English" ? "Cancel" : "ביטול"}
                       </button>
                       {flagClickOK ? (
                         <>
@@ -348,61 +349,81 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, si
             </>
           ) : (
             <div className="modalContainerNewRoute">
-              {!siteSelected ? (<>
-            
-                <Modal_no_site_selected styleTransform={{ transform: "translate(150%, 50%)" }} setOpenModal={setOpenModal}></Modal_no_site_selected>
-
-              </>) : (
+              {!siteSelected ? (
+                <>
+                  <Modal_no_site_selected
+                    styleTransform={{ transform: "translate(150%, 50%)" }}
+                    setOpenModal={setOpenModal}
+                  ></Modal_no_site_selected>
+                </>
+              ) : (
                 <>
                   {setFlagStudent ? (
                     <>
                       <div className="headerNewRoute">
-                        <div className="newRoutTitle" style={{textAlign: language === 'English' ?  "right": "left"}}>
-                          {language !== 'English' ? 'New route' : 'מסלול חדש'}
-
+                        <div
+                          className="newRoutTitle"
+                          style={{
+                            textAlign:
+                              language === "English" ? "right" : "left",
+                          }}
+                        >
+                          {language !== "English" ? "New route" : "מסלול חדש"}
                         </div>
                       </div>
                       <div className="newRouteBody">
-                      <form id="IPU" className="w3-container" onSubmit={handleSubmitRouteTitle}>
-                        <div className="nameRoutTitle" style={{textAlign: language === 'English' ?  "right": "left"}} >
-                          {language !== 'English' ? 'route name:' : ':שם המסלול'}
-
-                        </div>
-                        <p>
-                          <input
-                            dir="rtl"
-                            className="inputRouteName"
-                            required={true}
-                            type="text"
-                            // onChange={getName}
-                            value={routeTitle}
-                            onChange={e => setRouteTitle(e.target.value)}
-                          ></input>
-                        </p>
-
-                        <button type="submit" className="saveAs" >
-                          {/* onClick={() => saveData()}> */}
-                          <div style={{ color: "white" }}>
-                            {language !== 'English' ? 'Save as' : 'שמירה בשם'}
-
+                        <form
+                          id="IPU"
+                          className="w3-container"
+                          onSubmit={handleSubmitRouteTitle}
+                        >
+                          <div
+                            className="nameRoutTitle"
+                            style={{
+                              textAlign:
+                                language === "English" ? "right" : "left",
+                            }}
+                          >
+                            {language !== "English"
+                              ? "route name:"
+                              : ":שם המסלול"}
                           </div>
-                        </button>
+                          <p>
+                            <input
+                              dir="rtl"
+                              className="inputRouteName"
+                              required={true}
+                              type="text"
+                              // onChange={getName}
+                              value={routeTitle}
+                              onChange={(e) => setRouteTitle(e.target.value)}
+                            ></input>
+                          </p>
 
-                        <button className="cancelSaveAs" onClick={() => saveData()}>
-                          {language !== 'English' ? 'Cancel' : 'ביטול'}
+                          <button type="submit" className="saveAs">
+                            {/* onClick={() => saveData()}> */}
+                            <div style={{ color: "white" }}>
+                              {language !== "English" ? "Save as" : "שמירה בשם"}
+                            </div>
+                          </button>
 
-                        </button>
-                      </form>
+                          <button
+                            className="cancelSaveAs"
+                            onClick={() => saveData()}
+                          >
+                            {language !== "English" ? "Cancel" : "ביטול"}
+                          </button>
+                        </form>
                       </div>
-
                     </>
                   ) : (
                     <>
                       {" "}
                       <div className="headerNewRoute">
                         <div className="newRoutTitle">
-                          {language !== 'English' ? 'save route' : 'שמירת מסלול'}
-
+                          {language !== "English"
+                            ? "save route"
+                            : "שמירת מסלול"}
                         </div>
                       </div>
                       <div className="bodySaveRoute">
@@ -428,17 +449,16 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, si
                       </div>
                       <div className="footer">
                         <button className="continueBtn" onClick={Post_Route}>
-                          {language !== 'English' ? 'Save route' : 'שמור מסלול'}
-
+                          {language !== "English" ? "Save route" : "שמור מסלול"}
                         </button>
-                   
+
                         <button
                           className="cancelBtn"
                           onClick={() => {
                             setOpenModal(false);
                           }}
                         >
-                          {language !== 'English' ? 'Cancel' : 'ביטול'}
+                          {language !== "English" ? "Cancel" : "ביטול"}
                         </button>
                         {flagClickOK ? (
                           <>
@@ -450,7 +470,6 @@ function Modal({ setOpenModal, setFlagStudent, flagTest, setNewTitleForRoute, si
                       </div>
                     </>
                   )}
-
                 </>
               )}
             </div>

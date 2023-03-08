@@ -13,9 +13,8 @@ import ReorderBoard from "../ReorderBoard/ReorderBoard";
 import Dot from "../Dot/Dot";
 import Clock from "../Clock/Clock";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import textArea from '../../Pictures/textArea.svg'
+import textArea from "../../Pictures/textArea.svg";
 import ProgressBar from "../ProgressBar/ProgressBar";
-
 
 let Route = [];
 let dndArray = [];
@@ -47,8 +46,7 @@ let countTemp = 0;
 //-------------------------
 function DragnDrop(props) {
   // console.log(" props.allTasksOfTheSiteeee drag ", props.allTasksOfTheSite)
-  console.log(" props.allTasks 1: ", props.allTasksOfTheSite)
-
+  console.log(" props.allTasks 1: ", props.allTasksOfTheSite);
 
   const [board, setBoard] = useState([]);
   const [reorderBoardFlag, setReorderBoardFlag] = useState(false);
@@ -67,9 +65,10 @@ function DragnDrop(props) {
 
   console.log("props mySite:", props.mySite);
   console.log("props dragFrom:", props.dragFrom);
+  console.log("props.myStation:", props.myStation);
 
   // console.log("JSON.parse(localStorage.getItem('New_Routes')):", JSON.parse(localStorage.getItem('New_Routes')))
-  console.log("propsDataTask:", props.propDataTask)
+  console.log("propsDataTask:", props.propDataTask);
   // nameStation = props.myStation.name
   // const [, setFlagFirst] = useState(true)
   const [, setLoading] = useState(false);
@@ -96,28 +95,25 @@ function DragnDrop(props) {
   const [, setBorderLeft] = useState("2px solid #c2bfbf");
   const [, setFlagStress] = useState(false);
   const [activeButton, setActiveButton] = useState("tree");
-  const [siteSelected, setSiteSelected] = useState(false)
+  const [siteSelected, setSiteSelected] = useState(false);
   // const [prevStation,setPrevStation] = useState("test");
-  console.log(" props.boardArrayDND1 ", props.boardArrayDND)
-  const [boardArrayDND, setboardArrayDND] = useState(props.boardArrayDND)
+  console.log(" props.boardArrayDND1 ", props.boardArrayDND);
+  const [boardArrayDND, setboardArrayDND] = useState(props.boardArrayDND);
 
   let prevStation = "";
   useEffect(() => {
-    console.log("percent: ", props.percentProgressBar)
-
-
-  }, [props.percentProgressBar])
+    console.log("percent: ", props.percentProgressBar);
+  }, [props.percentProgressBar]);
   useEffect(() => {
     if (props.replaceRouteFlag) {
-      setBoard([])
-
+      setBoard([]);
     }
   }, [props.replaceRouteFlag]);
 
   useEffect(() => {
-    console.log('Replace ***', props.replaceSiteFlag)
+    console.log("Replace ***", props.replaceSiteFlag);
     if (props.replaceSiteFlag) {
-      setBoard([])
+      setBoard([]);
       dndArray = [];
     }
   }, [props.replaceSiteFlag]);
@@ -125,7 +121,6 @@ function DragnDrop(props) {
   useEffect(() => {
     if (props.mySite.name != "") {
       setSiteSelected(true);
-
     }
   }, [props.mySite.name]);
 
@@ -143,30 +138,25 @@ function DragnDrop(props) {
   saveProps = props;
 
   useEffect(() => {
-
-    if (props.tasksOfRoutes && props.tasksOfRoutes.acf) {
-      console.log("props.tasksOfRoutes ", props.tasksOfRoutes)
-      countTemp = 50 / props.tasksOfRoutes.acf.tasks.length;
+    if (props.tasksOfRoutes && props.tasksOfRoutes.tasks) {
+      console.log("props.tasksOfRoutes ", props.tasksOfRoutes);
+      countTemp = 50 / props.tasksOfRoutes.tasks.length;
       // props.setProgressBarFlag(true)
-      if (props.tasksOfRoutes.acf.tasks) {
-        props.tasksOfRoutes.acf.tasks.forEach(async (element, index) => {
-          await addImageToBoard(element.ID, "routes")
-          props.setPercentProgressBar(percentProgressBar => percentProgressBar + countTemp)
-        }
-        )
-
+      if (props.tasksOfRoutes.tasks) {
+        props.tasksOfRoutes.tasks.forEach(async (element, index) => {
+          await addImageToBoard(element.taskId, "routes");
+          props.setPercentProgressBar(
+            (percentProgressBar) => percentProgressBar + countTemp
+          );
+        });
       }
       // props.setProgressBarFlag(false)
-
     }
-
-  }, [props.tasksOfRoutes])
+  }, [props.tasksOfRoutes]);
 
   useEffect(() => {
-    console.log("props.progressBarFlag: ", props.progressBarFlag)
-  }, [props.progressBarFlag])
-
-
+    console.log("props.progressBarFlag: ", props.progressBarFlag);
+  }, [props.progressBarFlag]);
 
   // alert("hi")
   dndArray = props.propDataTask.map((element) => {
@@ -178,9 +168,7 @@ function DragnDrop(props) {
     }
     return {
       id: element.id,
-      title: element.title.rendered
-        .replace("&#8211;", "-")
-        .replace("&#8217;", "' "),
+      title: element.title.replace("&#8211;", "-").replace("&#8217;", "' "),
       mySite: props.mySite,
       myStation: props.myStation.name,
       data: props.myStation.data,
@@ -193,8 +181,8 @@ function DragnDrop(props) {
       kavTopWidth: kavTopWidth,
       newkavTaskTop: newkavTaskTop,
       // idImg: thisId,
-      dataImg: element.acf.image.url,
-      color: element.color
+      dataImg: element.picture_url,
+      color: element.color,
     };
   });
   console.log("dndArray check:", dndArray);
@@ -202,39 +190,40 @@ function DragnDrop(props) {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "image",
     drop(item, monitor) {
-      const itemData = monitor.getItem()
+      const itemData = monitor.getItem();
       // const board = itemData.boardName
       // const id = itemData.id
-      console.log("item.board: ", itemData.boardName)
-      addImageToBoard(itemData.id, itemData.boardName)
+      console.log("item.board: ", itemData.boardName);
+      addImageToBoard(itemData.id, itemData.boardName);
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
   }));
   useEffect(() => {
-    console.log('isOver: ', isOver);
-  }, [isOver])
+    console.log("isOver: ", isOver);
+  }, [isOver]);
   useEffect(() => {
-    console.log("activeButton: " + activeButton)
-  }, [activeButton])
+    console.log("activeButton: " + activeButton);
+  }, [activeButton]);
 
   useEffect(() => {
-    console.log('board111: ', board);
-  }, [board])
+    console.log("board111: ", board);
+  }, [board]);
   //---------------------------------------------------------
   const addImageToBoard = async (id, boardName) => {
-
-    console.log("id alltasks: ", id)
+    console.log("id alltasks: ", id);
 
     if (boardName !== "border") {
-
       if (saveTag.props !== undefined) {
+        console.log("saveTag.props.myStation DND", saveTag);
+        console.log(
+          "saveTag.props.myLastStation dnd",
+          saveTag.props.myLastStation
+        );
 
-        console.log("saveTag.props.myStation DND", saveTag)
-        console.log("saveTag.props.myLastStation dnd", saveTag.props.myLastStation)
-
-        if (saveTag.props.myLastStation === saveTag.props.myStation) {  //same station
+        if (saveTag.props.myLastStation === saveTag.props.myStation) {
+          //same station
           setFlagPhoneOne((flagPhoneOne = true));
           setWidth((width = "-84px"));
           setBorderLeft((borderLeft = "2x solid #c2bfbf"));
@@ -257,31 +246,31 @@ function DragnDrop(props) {
           setKavTaskTopMarginTop((kavTaskTopMarginTop = "-7px"));
         }
       }
-      console.log(" props.allTasks ", props.allTasksOfTheSite.find(task => task.id === id))
-
+      console.log(
+        " props.allTasks ",
+        props.allTasksOfTheSite.find((task) => task.id === id)
+      );
 
       setCount(count++);
       // alert(count)
       // setFlagFirst(flagFirst = false)
       if (props.boardArrayDND.length > 0) {
-        console.log("id boardArrayDND: ", id)
+        console.log("id boardArrayDND: ", id);
 
         Route = await props.boardArrayDND.filter((tag) => id === tag.id);
 
-        console.log("Route boardArrayDND: ", Route)
+        console.log("Route boardArrayDND: ", Route);
 
         await setBoard((board) => [...board, Route[0]]);
-      }
-      else {
+      } else {
         Route = await dndArray.filter((tag) => id === tag.id);
         await setBoard((board) => [...board, Route[0]]);
-
       }
-      console.log("dnd Route: ", Route)
+      console.log("dnd Route: ", Route);
 
       // setBoard((board) => [...board, Route[0]]);
 
-      console.log("dnd setBoard: ", board)
+      console.log("dnd setBoard: ", board);
       // thisIdArray.push(thisId);
       myTask = saveProps.propDataTask.filter((item) => item.id === id);
       // console.log("myTAsk:", myTask[0])
@@ -294,7 +283,6 @@ function DragnDrop(props) {
       // localStorage.setItem("MySite", JSON.stringify(props.mySite));
     }
   };
-
 
   const treeFunction = (e) => {
     setFlagPhone((flagPhone = false));
@@ -331,46 +319,45 @@ function DragnDrop(props) {
     setReorderBoardFlag(false);
 
     setActiveButton(e.currentTarget.className);
-
   };
   const computerFunction = (e) => {
     // setFlagTree(false);
     // alert("computer")
     setActiveButton(e.currentTarget.className);
-
-  }
+  };
   const reorderFunction = (e) => {
     setFlagTree((flagTree = false));
     setFlagPhone((flagPhone = false));
     setModalFlagTablet((modalFlagTablet = false));
     setReorderBoardFlag(true);
     setActiveButton(e.currentTarget.className);
-
-  }
+  };
   //---------------------------------------------------------
   return (
-
     <>
-
-
       {modalOpenAddRoute && (
-        <Modal siteSelected={siteSelected}
+        <Modal
+          siteSelected={siteSelected}
           language={props.language}
-          setOpenModal={setModalOpenAddRoute} setText={get_Name} />
+          setOpenModal={setModalOpenAddRoute}
+          setText={get_Name}
+        />
       )}
-      <div
-        className="Cover_Tasks"
-
-      >
-
+      <div className="Cover_Tasks">
         <div
           className="TitleTasks"
-        // style={{
-        //   background: props.titleTaskCss,
-        // }}
+          // style={{
+          //   background: props.titleTaskCss,
+          // }}
         >
           {/* <BsThreeDotsVertical className='threeDotsVertical' /> */}
-          <div className={`MyTitle text ${props.language !== 'English' ? 'english' : ''}`}>{props.myTasks}</div>
+          <div
+            className={`MyTitle text ${
+              props.language !== "English" ? "english" : ""
+            }`}
+          >
+            {props.myTasks}
+          </div>
         </div>
         <div
           className="search"
@@ -384,17 +371,25 @@ function DragnDrop(props) {
           <input
             className="searchButton"
             // dir="rtl"
-            placeholder={props.language === "English" ? "חפש משימה" : "search task"}
+            placeholder={
+              props.language === "English" ? "חפש משימה" : "search task"
+            }
             label={<CgSearch style={{ fontSize: "x-large" }} />}
-          // onChange={inputHandler}
+            // onChange={inputHandler}
           ></input>
         </div>
 
         {/* המשימות */}
         <div className="TasksCover">
-          {dndArray.length === 0
-            ? <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>{props.tasksBeforeChoosingSite}</div>
-            : dndArray.map((tag) => {
+          {dndArray.length === 0 ? (
+            <div
+              className="textBeforeStation"
+              style={{ backgroundImage: `url(${textArea})` }}
+            >
+              {props.tasksBeforeChoosingSite}
+            </div>
+          ) : (
+            dndArray.map((tag) => {
               return (
                 <Tag
                   title={tag.title}
@@ -411,7 +406,8 @@ function DragnDrop(props) {
                   language={props.language}
                 />
               );
-            })}
+            })
+          )}
         </div>
         <div className="addTaskCover">
           <button
@@ -427,7 +423,10 @@ function DragnDrop(props) {
       </div>
       <>
         <>
-          <div className={`Board ${props.language !== 'English' ? 'english' : ''}`} ref={drop}>
+          <div
+            className={`Board ${props.language !== "English" ? "english" : ""}`}
+            ref={drop}
+          >
             <button
               className="AddRoute"
               type="submit"
@@ -437,12 +436,13 @@ function DragnDrop(props) {
             >
               {props.saveButton}
             </button>
-            <div className={`txt ${props.language !== 'English' ? 'english' : ''}`}>
+            <div
+              className={`txt ${props.language !== "English" ? "english" : ""}`}
+            >
               {" "}
               {props.drag}&nbsp;&nbsp;
               <div style={{ fontSize: "20px", left: "185px" }}></div>
             </div>
-
 
             {/* <div className='my_Buttons_icons'>
                                 <button className='tree'></button>
@@ -455,34 +455,40 @@ function DragnDrop(props) {
                                 <div className='kavIconsTablet'></div>
                                 <button className='computer'></button>
                             </div> */}
-            <div className={`my_Buttons_icons ${props.language !== 'English' ? 'english' : ''}`}>
+            <div
+              className={`my_Buttons_icons ${
+                props.language !== "English" ? "english" : ""
+              }`}
+            >
               <button
-                className={'reorder' + (activeButton === 'reorder' ? ' active' : '')}
+                className={
+                  "reorder" + (activeButton === "reorder" ? " active" : "")
+                }
                 onClick={reorderFunction}
-              >
-              </button>
+              ></button>
               <button
-                className={'tree' + (activeButton === 'tree' ? ' active' : '')}
+                className={"tree" + (activeButton === "tree" ? " active" : "")}
                 onClick={treeFunction}
-              >
-              </button>
+              ></button>
 
               <button
-                className={'phone' + (activeButton === 'phone' ? ' active' : '')}
+                className={
+                  "phone" + (activeButton === "phone" ? " active" : "")
+                }
                 onClick={phoneFunction}
-              >
-              </button>
+              ></button>
               <button
-                className={'tablet' + (activeButton === 'tablet' ? ' active' : '')}
-                onClick={
-                  tabletFunction}
-              >
-              </button>
+                className={
+                  "tablet" + (activeButton === "tablet" ? " active" : "")
+                }
+                onClick={tabletFunction}
+              ></button>
               <button
-                className={'watch' + (activeButton === 'watch' ? ' active' : '')}
+                className={
+                  "watch" + (activeButton === "watch" ? " active" : "")
+                }
                 onClick={watchFunction}
-              >
-              </button>
+              ></button>
               {/* <button
                   className={'computer' + (activeButton === 'computer' ? ' active' : '')}
                   onClick={
@@ -490,28 +496,40 @@ function DragnDrop(props) {
                 </button> */}
             </div>
             <div className="MyTasks">
-              {props.progressBarFlag ?
-                <ProgressBar setProgressBarFlag={props.setProgressBarFlag}
-                  percent={Math.ceil(props.percentProgressBar)}></ProgressBar>
-                : <></>}
+              {props.progressBarFlag ? (
+                <ProgressBar
+                  setProgressBarFlag={props.setProgressBarFlag}
+                  percent={Math.ceil(props.percentProgressBar)}
+                ></ProgressBar>
+              ) : (
+                <></>
+              )}
               {/* flagTree   */}
               {flagTree ? (
                 <>
                   {props.mySite.name ? (
                     <>
-                      <div className={`kavT ${props.language !== 'English' ? 'english' : ''}`}></div>
-                      <div className={`mySiteChois ${props.language !== 'English' ? 'english' : ''}`}>
-                        {props.tasksOfRoutes && props.tasksOfRoutes.title ? props.tasksOfRoutes.title.rendered : ''}
-                        &nbsp;&nbsp;{" "}
+                      <div
+                        className={`kavT ${
+                          props.language !== "English" ? "english" : ""
+                        }`}
+                      ></div>
+                      <div
+                        className={`mySiteChois ${
+                          props.language !== "English" ? "english" : ""
+                        }`}
+                      >
+                        {props.tasksOfRoutes && props.tasksOfRoutes.name
+                          ? props.tasksOfRoutes.name
+                          : ""}
                       </div>
-
                     </>
                   ) : (
                     <></>
                   )}
-                  {board == undefined && board.length == 0 ?
-                    <div></div> :
-
+                  {board == undefined && board.length == 0 ? (
+                    <div></div>
+                  ) : (
                     board.map((tag, keyCount) => {
                       console.log("tag.id: ", tag.id);
                       return (saveTag = (
@@ -541,29 +559,46 @@ function DragnDrop(props) {
                           flagTree={flagTree}
                           dragFromCover={"border"}
                           language={props.language}
-
                         />
                       ));
                     })
-                  }
+                  )}
                   {flagPhoneOne ? (
                     <>
                       <div className="kavB"></div>
                     </>
                   ) : (
-                    <>
-                      {/* <div className="kavBOne"></div> */}
-                    </>
+                    <>{/* <div className="kavBOne"></div> */}</>
                   )}
                 </>
               ) : (
                 <>
                   {/* flagPhone */}
-                  {
-                    flagPhone ? (
+                  {flagPhone ? (
+                    <>
                       <>
+                        <Phone
+                          modalFlagTablet={modalFlagTablet}
+                          flagPhone={flagPhone}
+                          board={board}
+                          saveTag={saveTag}
+                          count={count}
+                          myStation={props.myStation}
+                          flagTree={flagTree}
+                          flagStress={flagStress}
+                          mySite={props.mySite}
+                        />
+                      </>
+
+                      {/* --------------------------------------------------- */}
+
+                      {/* --------------------------------------------------- */}
+                    </>
+                  ) : (
+                    <>
+                      {modalFlagTablet ? (
                         <>
-                          <Phone
+                          <Tablet
                             modalFlagTablet={modalFlagTablet}
                             flagPhone={flagPhone}
                             board={board}
@@ -575,36 +610,17 @@ function DragnDrop(props) {
                             mySite={props.mySite}
                           />
                         </>
-
-                        {/* --------------------------------------------------- */}
-
-                        {/* --------------------------------------------------- */}
-                      </>
-                    ) : (
-                      <>
-                        {modalFlagTablet ? (
-                          <>
-                            <Tablet
-                              modalFlagTablet={modalFlagTablet}
-                              flagPhone={flagPhone}
-                              board={board}
-                              saveTag={saveTag}
-                              count={count}
-                              myStation={props.myStation}
-                              flagTree={flagTree}
-                              flagStress={flagStress}
-                              mySite={props.mySite}
-                            />
-                          </>
-                        ) : (
-                          <>
-                            <ReorderBoard
-                              board={board} setBoard={setBoard} language={props.language}
-                            />
-                          </>
-                        )}
-                      </>
-                    )}
+                      ) : (
+                        <>
+                          <ReorderBoard
+                            board={board}
+                            setBoard={setBoard}
+                            language={props.language}
+                          />
+                        </>
+                      )}
+                    </>
+                  )}
                 </>
               )}
             </div>
@@ -624,7 +640,9 @@ function DragnDrop(props) {
           mySite={props.mySite}
           help={helpFlag}
         />
-      ) : (<></>)}
+      ) : (
+        <></>
+      )}
     </>
   );
 }

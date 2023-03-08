@@ -6,6 +6,8 @@ import {
   getingDataPlaces,
   getingData_Routes,
   getingData_Tasks,
+  getingData_Places,
+  getingDataStation,
 } from "../../api/api";
 import "./style.css";
 // import { MdOutlineAdsClick } from "react-icons/md";
@@ -29,15 +31,14 @@ import Modal_site_chosen from "../Modal/Modal_site_chosen";
 // const { baseUrl } = require
 //-----------------------
 
-let allRoutes = [];
+// let allRoutes = [];
 let allPlaces = [];
-let places = [];
-let myRoutes = [];
-let onlyAllStation = [];
+// let places = [];
+// let myRoutes = [];
 let Places_and_their_stations = [];
 let thisIdTask = 0;
 // let filteredData = [];
-let filteredDataRoutes = [];
+// let filteredDataRoutes = [];
 let inputText = "";
 let inputTextRouts = "";
 let mySite = { name: "", id: "" };
@@ -60,11 +61,12 @@ const Places = (props) => {
   const [, setClickAddRoute] = useState(false);
   const [, setFlagStudent] = useState(false);
   const [, setThisIdTask] = useState(0);
-  const [, setOnlyAllStation] = useState([]);
-  const [, setPlaces] = useState([]);
-  const [, setRoutes] = useState([]);
+  const [onlyAllStation, setOnlyAllStation] = useState([]);
+  // const [, setPlaces] = useState([]);
+  const [allRoutes, setAllRoutes] = useState([]);
+  const [myRoutes, setRoutes] = useState([]);
   // const [, setFilteredData] = useState([]);
-  const [, setFilteredDataRoutes] = useState([]);
+  const [filteredDataRoutes, setFilteredDataRoutes] = useState([]);
   const [, setInputText] = useState("");
   const [, setInputTextRouts] = useState("");
   const [, setMySite] = useState(null);
@@ -81,7 +83,7 @@ const Places = (props) => {
   const [replaceSite, setReplaceSite] = useState([]);
   const [allTasks, setAllTasks] = useState([]);
   const [allTasksOfTheSite, setAllTasksOfTheSite] = useState([]);
-  const [firstStationName, setFirstStationName] = useState("כללי");
+  const [firstStationName, setFirstStationName] = useState();
   const [boardArrayDND, setBoardArrayDND] = useState([]);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [replaceRoute, setReplaceRoute] = useState([]);
@@ -131,26 +133,16 @@ const Places = (props) => {
   let inputHandlerRoutes = (e) => {
     //convert input text to lower case
     setInputTextRouts((inputTextRouts = e.target.value.toLowerCase()));
-    setFilteredDataRoutes(
-      (filteredDataRoutes = myRoutes.filter((el) => {
-        // setInputText(lowerCase);
-        if (inputTextRouts === "") {
-          return el;
-        }
-        //return the item which contains the user input
-        else {
-          return el.title.rendered.toLowerCase().includes(inputTextRouts);
-        }
-      }))
-    );
+    searchRoute();
   };
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        setAllTasks(await getingDataTasks()); //get request for tasks
-        allRoutes = await getingDataRoutes(); //get request for routes
+        setAllTasks(await getingData_Tasks()); //get request for tasks
+        setAllRoutes(await getingData_Routes()); //get request for routes
+        setOnlyAllStation(await getingDataStation()); //get request for station
       } catch (error) {
         console.error(error.message);
       }
@@ -161,7 +153,9 @@ const Places = (props) => {
 
     console.log("allRoutes", allRoutes);
   }, []);
-
+  useEffect(() => {
+    console.log("@@ allTasks", allTasks);
+  }, [allTasks]);
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -178,38 +172,27 @@ const Places = (props) => {
 
   const getData = async () => {
     try {
-      allPlaces = await getingDataPlaces(); //get request for places
+      allPlaces = await getingData_Places(); //get request for places
     } catch (error) {
       console.error(error.message);
     }
 
     console.log("res places: ", allPlaces);
 
-    setPlaces((places = allPlaces.filter((item) => item.parent === 0))); //parent === 0 means site and not station
+    // setPlaces(allPlaces); //(places = allPlaces.filter((item) => item.parent === 0))); //parent === 0 means site and not station
 
-    setOnlyAllStation(
-      (onlyAllStation = allPlaces.filter((item) => item.parent > 0)) //parent > 0 means station
-    );
+    // setOnlyAllStation(
+    //   (onlyAllStation = allPlaces.filter((item) => item.parent > 0)) //parent > 0 means station
+    // );
 
     console.log("onlyAllStation: ", onlyAllStation);
 
-    Places_and_their_stations = places.map((element) => {
+    Places_and_their_stations = allPlaces.map((element) => {
       return {
         parent: element,
         related: allPlaces.filter((r) => r.parent === element.id),
       };
     });
-    // setFilteredData(
-    //   (filteredData = places.filter((el) => {
-    //     if (inputText === "") {
-    //       return el;
-    //     }
-    //     //return the item which contains the user input
-    //     else {
-    //       return el.name.toLowerCase().includes(inputText);
-    //     }
-    //   }))
-    // );
 
     setDone(true);
   };
@@ -244,43 +227,56 @@ const Places = (props) => {
 
       setTasksOfRoutes((tasksOfRoutes = e));
 
-      tasksOfRoutes.title.rendered = tasksOfRoutes.title.rendered
+      tasksOfRoutes.name = tasksOfRoutes.name
         .replace("&#8211;", "-")
         .replace("&#8217;", "'"); //replace gebrish for - or '
 
-      let firstStationId = allTasks
-        .find((obj) => obj.id === tasksOfRoutes.acf.tasks[0].ID)
-        .places.find((item) => item !== mySite.id);
-      console.log("firstStationId:", firstStationId);
+      let firstStation = allTasks.find(
+        (obj) => obj.id === tasksOfRoutes.tasks[0].taskId
+      );
+      let firstStationId;
+      let stationName;
+      if (firstStation != undefined) {
+        firstStation.stations.map((station) => {
+          console.log("!! station.parentSiteId: ", station.parentSiteId);
+          console.log("!! mySite.id: ", mySite.id);
 
-      let name = onlyAllStation.find((item) => item.id === firstStationId);
-      if (name != undefined) {
-        setFirstStationName(
-          onlyAllStation.find((item) => item.id === firstStationId).name
-        );
+          if (station.parentSiteId === mySite.id) {
+            console.log("!! station.title: ", station.title);
+            firstStationId = station.id;
+
+            stationName = station.title;
+          }
+        });
+
+        setFirstStationName(stationName);
+
+        //
       }
+
+      console.log("!! firstStationName:", firstStationName);
 
       let prevStation = "";
 
-      let percentTemp = 50 / tasksOfRoutes.acf.tasks.length;
+      let percentTemp = 50 / tasksOfRoutes.tasks.length;
 
       setBoardArrayDND(
-        tasksOfRoutes.acf.tasks.map((element) => {
+        tasksOfRoutes.tasks.map((element) => {
           setPercentProgressBar(
             (percentProgressBar) => percentProgressBar + percentTemp
           );
           //allTasksOfTheSite
           let taskTemp = allTasksOfTheSite.find(
-            (item) => item.id === element.ID
+            (item) => item.id === element.taskId
           );
           console.log("taskTemp: yyyyy", taskTemp);
-          console.log("element.ID: yyyyy", element.ID);
+          console.log("element.ID: yyyyy", element.taskId);
 
           if (taskTemp == undefined) {
             return {
-              id: element.ID,
+              id: element.taskId,
               title:
-                element.ID +
+                element.taskId +
                 " לא משוייך".replace("&#8211;", "-").replace("&#8217;", "' "),
               mySite: mySite,
               myStation: "לא משוייך",
@@ -299,18 +295,23 @@ const Places = (props) => {
           }
 
           let color;
-          let stationID = taskTemp.places.find(
-            (item) =>
-              item !== mySite.id && isStationOfMySite(item).includes(true)
+          let stationID = taskTemp.stations.find(
+            (station) => {
+              if (station.parentSiteId === mySite.id) return true;
+            }
+            // isStationOfMySite(item).includes(true)
           );
           let stationName = "";
 
           console.log("stationID: ", stationID);
           if (stationID != undefined) {
-            stationName = onlyAllStation.find(
-              (item) => item.id === stationID
-            ).name;
-            color = stationArray.find((item) => item.id === stationID).color;
+            stationName = stationID.title;
+            console.log(
+              "!! : ",
+              stationArray.find((item) => item.id === stationID.id)
+            );
+
+            color = stationArray.find((item) => item.id === stationID.id).color;
           } else {
             stationName = "כללי";
             color = stationArray.find((item) => item.id === 0).color;
@@ -358,7 +359,7 @@ const Places = (props) => {
 
           return {
             id: taskTemp.id,
-            title: taskTemp.title.rendered
+            title: taskTemp.title
               .replace("&#8211;", "-")
               .replace("&#8217;", "' "),
             mySite: mySite,
@@ -372,7 +373,7 @@ const Places = (props) => {
             bottom: bottom,
             kavTopWidth: kavTopWidth,
             newkavTaskTop: newkavTaskTop,
-            dataImg: taskTemp.acf.image.url,
+            dataImg: taskTemp.picture_url,
             color: color,
           };
         })
@@ -420,7 +421,6 @@ const Places = (props) => {
 
     if (!siteSelected) {
       setReplaceSite(selectedValue);
-      console.log("selectedValue: " + event.target.value);
       Display_The_Stations(selectedValue);
       setSiteSelected(true);
     } else {
@@ -430,7 +430,6 @@ const Places = (props) => {
   };
 
   const Display_The_Stations = async (selectedValue) => {
-    // console.log("selectedValue: ***" + selectedValue)
     console.log("Display_The_Stations ***");
 
     // const selectedValue = JSON.parse(event.target.value);
@@ -452,7 +451,7 @@ const Places = (props) => {
 
     setStationArray(
       onlyAllStation.filter((item) => {
-        if (item.parent === selectedValue.id) {
+        if (item.parentSiteId === selectedValue.id) {
           item.color = pastelColors[colorTemp];
           colorTemp++;
           return item;
@@ -465,7 +464,7 @@ const Places = (props) => {
         id: 0,
         color: pastelColors[colorTemp],
         parent: selectedValue.id,
-        name: "כללי",
+        title: "כללי",
       },
     ]);
 
@@ -474,41 +473,37 @@ const Places = (props) => {
     //myRoutes saves only the routes that belong to the site that choosen
     if (myRoutes.length > 0) myRoutes = [];
     setRoutes(
-      (myRoutes = allRoutes.filter(
-        (item) =>
-          item.acf.my_site === String(mySite.id) ||
-          item.places.includes(mySite.id)
-      ))
-    );
+      allRoutes.filter(
+        (route) =>
+          //   route.sites.map((site) => {
+          //     if (site.siteId === mySite.id) {
+          //       console.log("@@ site.siteId: ", site.siteId);
+          //       console.log("@@ mySite.id: ", mySite.id);
+          //       return true;
+          //     }
+          //     return false;
+          //   })
+          route.sites.some((site) => site.siteId === mySite.id)
 
-    // handle search word in "searce route"
-    setFilteredDataRoutes(
-      (filteredDataRoutes = myRoutes.filter((el) => {
-        if (inputTextRouts === "") {
-          return el;
-        }
-        //return the item which contains the user input
-        else {
-          return el.title.rendered.toLowerCase().includes(inputTextRouts);
-        }
-      }))
+        // route.sites.includes((site) => site.siteId === mySite.id)
+      )
     );
 
     let temp = [];
 
     allTasks.map((task) => {
-      if (task.places.includes(mySite.id))
+      if (task.sites.some((site) => site.siteId === mySite.id))
         setAllTasksOfTheSite((prev) => [...prev, task]);
-      else {
-        //if there is station of my site
-        let temp = task.places.find((element) =>
-          onlyAllStation.find(
-            (item) => item.id === element && item.parent === mySite.id
-          )
-        );
+      // else {
+      //   //if there is station of my site
+      //   let temp = task.sites.find((element) =>
+      //     onlyAllStation.find(
+      //       (item) => item.id === element && item.parentSiteId === mySite.id
+      //     )
+      //   );
 
-        if (temp !== undefined) setAllTasksOfTheSite((prev) => [...prev, task]);
-      }
+      //   if (temp !== undefined) setAllTasksOfTheSite((prev) => [...prev, task]);
+      // }
     });
   };
   useEffect(() => {
@@ -519,10 +514,6 @@ const Places = (props) => {
     if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);
   };
-
-  // useEffect(() => {
-  //   console.log("filteredData: ", filteredData)
-  // }, [filteredData])
 
   useEffect(() => {
     //after adding new routes
@@ -537,8 +528,27 @@ const Places = (props) => {
     }
   }, [newTitleForRoute]);
   useEffect(() => {
-    console.log("Places_and_their_stations: ", Places_and_their_stations);
-  }, [Places_and_their_stations]);
+    console.log("@@ filteredDataRoutes: ", filteredDataRoutes);
+  }, [filteredDataRoutes]);
+
+  // handle search word in "searce route"
+  const searchRoute = () => {
+    setFilteredDataRoutes(
+      myRoutes.filter((el) => {
+        if (inputTextRouts === "") {
+          return el;
+        }
+        //return the item which contains the user input
+        else {
+          return el.name.toLowerCase().includes(inputTextRouts);
+        }
+      })
+    );
+  };
+
+  useEffect(() => {
+    searchRoute();
+  }, [myRoutes]);
 
   //----------------------------------------------------------------------
   return (
@@ -557,7 +567,7 @@ const Places = (props) => {
             {props.siteLanguage}
           </option>
 
-          {places.map((value, index) => {
+          {allPlaces.map((value, index) => {
             return (
               <option key={index} value={JSON.stringify(value)}>
                 {value.name}
@@ -662,7 +672,7 @@ const Places = (props) => {
                       className="nameOfButton"
                       onClick={() => DisplayTasks(value)} //הצגת המסלול
                     >
-                      {value.title.rendered
+                      {value.name
                         .replace("&#8211;", "-")
                         .replace("&#8217;", "'")}
                     </button>

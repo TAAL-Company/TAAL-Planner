@@ -12,6 +12,8 @@ import Dashboard from "./components/Dashboard/Dashboard";
 import Gallery from "./components/Gallery/Gallery";
 import Cards from "./components/Cards/Cards";
 import { Switch, Route } from "react-router-loading";
+import PlacesCards from "./components/placesCards/placesCards";
+
 // import CallState from "./components/CallState/CallState";
 function App() {
   return (
@@ -33,6 +35,7 @@ function App() {
                 <Route path="/routes_cards" component={Cards}></Route>
                 <Route path="/Dashboard" component={Dashboard}></Route>
                 <Route path="/Gallery" component={Gallery}></Route>
+                <Route path="/places" component={PlacesCards}></Route>
               </Switch>
             </div>
           </Router>

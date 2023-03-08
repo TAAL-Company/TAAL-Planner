@@ -1548,6 +1548,22 @@ function Forms() {
       align: "center",
     },
     {
+      field: "routeTaskabilityHE",
+      headerName: "מסלול",
+      width: 180,
+      editable: false,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "siteTaskabilityHE",
+      headerName: "אתר",
+      width: 180,
+      editable: false,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
       field: "hebrew",
       headerName: "עברית",
       width: 90,

@@ -367,8 +367,8 @@ const DataTableRTL = ({
           sx={{
             direction: "rtl",
             "& .MuiDataGrid-virtualScroller": {
-              overflow: "unset !important",
-              mt: "0 !important",
+              // overflow: "unset !important",
+              // mt: "0 !important",
             },
 
             "& .MuiDataGrid-columnHeaders": {

@@ -55,16 +55,16 @@ function CustomToolbar({
         </div>
 
         {isInfoUserRoute && (
-          <div className="info">
-            <div className="workerName">שם עובד: {workerName}</div>
-            <div className="workerRoute">שם מסלול: {routeName}</div>
+          <div className="infoTableRTL">
+            <div className="workerNameTableRTL">שם עובד: {workerName}</div>
+            <div className="workerRouteTableRTL">שם מסלול: {routeName}</div>
           </div>
         )}
 
         {isInfoUserSite && (
-          <div className="info">
-            <div className="workerName">שם עובד: {workerName}</div>
-            <div className="workerRoute">שם אתר: {siteName}</div>
+          <div className="infoTableRTL">
+            <div className="workerNameTableRTL">שם עובד: {workerName}</div>
+            <div className="workerRouteTableRTL">שם אתר: {siteName}</div>
           </div>
         )}
 

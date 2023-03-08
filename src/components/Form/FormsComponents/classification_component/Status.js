@@ -5,8 +5,8 @@ const Status = (props) => {
 
   if (flagColor === "red") {
     return (
-      <div className="status" style={{ background: "#DD001A" }}>
-        <div className="contentStatus">
+      <div className="statusRTL" style={{ background: "#DD001A" }}>
+        <div className="contentStatusRTL">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -33,7 +33,7 @@ const Status = (props) => {
               />
             </g>
           </svg>
-          <div className="textStatus" style={{ color: "white" }}>
+          <div className="textStatusRTL" style={{ color: "white" }}>
             לא תקין
           </div>
         </div>
@@ -41,8 +41,8 @@ const Status = (props) => {
     );
   } else if (flagColor === "yellow") {
     return (
-      <div className="status" style={{ background: "#F49A40" }}>
-        <div className="contentStatus">
+      <div className="statusRTL" style={{ background: "#F49A40" }}>
+        <div className="contentStatusRTL">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="23.85"
@@ -57,7 +57,7 @@ const Status = (props) => {
                 transform="translate(0 1.876)"
                 fill="white"
                 stroke="#f3ae69"
-                strokeWidth="2"
+                strokeWidtextStatusRTLth="2"
               />
               <text
                 id="_"
@@ -74,7 +74,7 @@ const Status = (props) => {
               </text>
             </g>
           </svg>
-          <div className="textStatus" style={{ color: "white" }}>
+          <div className="textStatusRTL" style={{ color: "white" }}>
             להתאמה
           </div>
         </div>
@@ -82,8 +82,8 @@ const Status = (props) => {
     );
   } else {
     return (
-      <div className="status" style={{ background: "#71AA6F" }}>
-        <div className="contentStatus">
+      <div className="statusRTL" style={{ background: "#71AA6F" }}>
+        <div className="contentStatusRTL">
           <div className="iconStatus"></div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -113,7 +113,7 @@ const Status = (props) => {
               />
             </g>
           </svg>
-          <div className="textStatus" style={{ color: "white" }}>
+          <div className="textStatusRTL" style={{ color: "white" }}>
             תקין
           </div>
         </div>

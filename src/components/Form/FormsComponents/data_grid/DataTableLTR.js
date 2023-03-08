@@ -47,17 +47,23 @@ function CustomToolbar({
         </div>
 
         {isInfoUserRoute && (
-          <div className="info">
-            <div className="workerName">Worker: {workerName}</div>
-            <div className="workerRoute" style={{ paddingLeft: "25px" }}>
+          <div className="infoTableLTR">
+            <div className="workerNameTableLTR">Worker: {workerName}</div>
+            <div
+              className="workerRouteTableLTR"
+              style={{ paddingLeft: "25px" }}
+            >
               Route: {routeName}
             </div>
           </div>
         )}
         {isInfoUserSite && (
-          <div className="info">
-            <div className="workerName">Worker: {workerName}</div>
-            <div className="workerRoute" style={{ paddingLeft: "25px" }}>
+          <div className="infoTableLTR">
+            <div className="workerNameTableLTR">Worker: {workerName}</div>
+            <div
+              className="workerRouteTableLTR"
+              style={{ paddingLeft: "25px" }}
+            >
               Site: {siteName}
             </div>
           </div>

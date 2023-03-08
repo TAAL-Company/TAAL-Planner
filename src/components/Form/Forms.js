@@ -2556,7 +2556,7 @@ function Forms() {
       <div>
         <div>
           <button
-            className={`switch-button ${
+            className={`switch-button-forms ${
               language === "hebrew" ? "hebrew" : "english"
             }`}
             onClick={() =>
@@ -2580,28 +2580,28 @@ function Forms() {
 
         {language === "hebrew" ? (
           <>
-            <div className="Navbar" style={{ direction: "rtl" }}>
+            <div className="NavbarForms" style={{ direction: "rtl" }}>
               <nav>
                 <button
-                  className="btn_nav"
+                  className="btn_nav_forms"
                   onClick={() => handleSelectTable("flags")}
                 >
                   דגלים
                 </button>
                 <button
-                  className="btn_nav"
+                  className="btn_nav_forms"
                   onClick={() => handleSelectTable("privateCard")}
                 >
                   כרטסת אישית
                 </button>
                 <button
-                  className="btn_nav"
+                  className="btn_nav_forms"
                   onClick={() => handleSelectTable("cognitiveProfile")}
                 >
                   פרופיל קוגנטיבי
                 </button>
                 <button
-                  className="btn_nav"
+                  className="btn_nav_forms"
                   onClick={() => handleSelectTable("taskability")}
                 >
                   דרישות למשימה
@@ -2610,8 +2610,8 @@ function Forms() {
             </div>
             {selectedTable === "flags" && (
               <div>
-                <div className="headline">דגלים</div>
-                <div className="table">
+                <div className="headlineForms">דגלים</div>
+                <div className="tableForms">
                   {isDialogOpen && (
                     // <Draggable>
                     <Dialog
@@ -2922,8 +2922,8 @@ function Forms() {
 
             {selectedTable === "cognitiveProfile" && (
               <div>
-                <div className="headline">פרופיל קוגנטיבי</div>
-                <div className="table">
+                <div className="headlineForms">פרופיל קוגנטיבי</div>
+                <div className="tableForms">
                   <DataTableRTL
                     tableType={"CognitiveProfileHE"}
                     columns={columnsCognitiveHE}
@@ -2942,8 +2942,8 @@ function Forms() {
 
             {selectedTable === "privateCard" && (
               <div>
-                <div className="headline">כרטסת אישית</div>
-                <div className="table">
+                <div className="headlineForms">כרטסת אישית</div>
+                <div className="tableForms">
                   <DataTableRTL
                     tableType={"PrivateCardHE"}
                     columns={columnsPrivateCardHE}
@@ -2962,8 +2962,8 @@ function Forms() {
 
             {selectedTable === "taskability" && (
               <div>
-                <div className="headline">דרישות למשימה</div>
-                <div className="table">
+                <div className="headlineForms">דרישות למשימה</div>
+                <div className="tableForms">
                   <DataTableRTL
                     tableType={"TaskabilityHE"}
                     columns={columnsTaskabilityHE}
@@ -2982,28 +2982,28 @@ function Forms() {
           </>
         ) : (
           <>
-            <div className="Navbar">
+            <div className="NavbarForms">
               <nav>
                 <button
-                  className="btn_nav"
+                  className="btn_nav_forms"
                   onClick={() => handleSelectTable("flags")}
                 >
                   Flags
                 </button>
                 <button
-                  className="btn_nav"
+                  className="btn_nav_forms"
                   onClick={() => handleSelectTable("privateCard")}
                 >
                   Priavte Card
                 </button>
                 <button
-                  className="btn_nav"
+                  className="btn_nav_forms"
                   onClick={() => handleSelectTable("cognitiveProfile")}
                 >
                   Cogntive Profile
                 </button>
                 <button
-                  className="btn_nav"
+                  className="btn_nav_forms"
                   onClick={() => handleSelectTable("taskability")}
                 >
                   Taskability
@@ -3012,8 +3012,8 @@ function Forms() {
             </div>
             {selectedTable === "flags" && (
               <div>
-                <div className="headline">Flags</div>
-                <div className="table">
+                <div className="headlineForms">Flags</div>
+                <div className="tableForms">
                   {isDialogOpen && (
                     // <Draggable>
                     <Dialog
@@ -3347,8 +3347,8 @@ function Forms() {
 
             {selectedTable === "cognitiveProfile" && (
               <div>
-                <div className="headline">Cogntive Profile</div>
-                <div className="table">
+                <div className="headlineForms">Cogntive Profile</div>
+                <div className="tableForms">
                   <DataTableLTR
                     tableType={"CognitiveProfileEN"}
                     columns={columnsCognitiveHE}
@@ -3367,8 +3367,8 @@ function Forms() {
 
             {selectedTable === "privateCard" && (
               <div>
-                <div className="headline">Private Card</div>
-                <div className="table">
+                <div className="headlineForms">Private Card</div>
+                <div className="tableForms">
                   <DataTableLTR
                     tableType={"PrivateCardEN"}
                     columns={columnsPrivateCardHE}
@@ -3387,8 +3387,8 @@ function Forms() {
 
             {selectedTable === "taskability" && (
               <div>
-                <div className="headline">Taskability</div>
-                <div className="table">
+                <div className="headlineForms">Taskability</div>
+                <div className="tableForms">
                   <DataTableLTR
                     tableType={"TaskabilityEN"}
                     columns={columnsTaskabilityHE}

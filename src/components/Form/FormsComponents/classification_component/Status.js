@@ -57,7 +57,7 @@ const Status = (props) => {
                 transform="translate(0 1.876)"
                 fill="white"
                 stroke="#f3ae69"
-                strokeWidtextStatusRTLth="2"
+                // strokeWidtextStatusRTLth="2"
               />
               <text
                 id="_"

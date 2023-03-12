@@ -182,8 +182,8 @@ function Modal({
     // setNewTitleForRoute(routeTitle);
 
     const routeData = {
-      title: routeTitle,
-      siteIds: [{ siteId: JSON.parse(localStorage.getItem("MySite")).id }],
+      name: routeTitle,
+      siteIds: [JSON.parse(localStorage.getItem("MySite")).id],
     };
 
     insertRoute(routeData).then((data) => {

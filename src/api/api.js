@@ -218,16 +218,15 @@ export const insertRoute = (routeData, callback) => {
   const headers = {
     "Content-Type": "application/json",
     accept: "application/json",
-    Authorization: "Bearer" + sessionStorage.jwt,
+    // Authorization: "Bearer" + sessionStorage.jwt,
   };
 
-  const data = {
-    ...routeData,
-    status: "publish",
-  };
+  // const data = {
+  //   ...routeData
+  // };
 
   return axios
-    .post("https://prod-web-app0da5905.azurewebsites.net/routes", data, {
+    .post("https://prod-web-app0da5905.azurewebsites.net/routes", routeData, {
       headers: headers,
     })
     .then(async (response) => {
@@ -283,8 +282,8 @@ export const insertStation = async (
         },
         body: JSON.stringify({
           title: get_title,
-          parent: site.id,
-          description: getDescription,
+          parentSiteId: site.id,
+          subtitle: getDescription,
           // fields: {
           //   image: imageData,
           //   audio: audioData.id,
@@ -325,19 +324,11 @@ export const insertTask = async (
           // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
         },
         body: JSON.stringify({
-          status: "publish",
           title: get_title,
           siteIds: [siteIds],
           stationIds: myPlacesChoice,
           estimatedTimeSeconds: 0,
-          // fields: {
-          //   image: {
-          //     ID: imageData.id,
-          //   },
-          //   audio: {
-          //     ID: audioData.id,
-          //   },
-          // },
+          // subtitle
         }),
       }
     );

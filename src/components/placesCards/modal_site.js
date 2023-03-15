@@ -47,9 +47,8 @@ const Modal_Stations = (props) => {
     if (picture.length > 0) {
       setPicturePreview(true);
       setSrcImage(URL.createObjectURL(picture));
-      console.log("srcImage", srcImage);
     }
-    console.log("srcImage picture", picture);
+    console.log("picture", picture);
   }, [picture]);
 
   async function Post_Station() {

@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./Modal.css";
-import { get, insertRoute, getingDataUsers } from "../../api/api";
+import {
+  get,
+  insertRoute,
+  getingDataUsers,
+  getingData_Users,
+} from "../../api/api";
 import { FcLink } from "react-icons/fc";
 import { BsExclamationLg } from "react-icons/bs";
 import Modal_Loading from "./Modal_Loading";
@@ -11,7 +16,7 @@ import Modal_no_site_selected from "./Modal_no_site_selected";
 
 //--------------------------
 let obj = { tasks: [], users: [], mySite: [] };
-let student = [];
+// let student = [];
 let myStudents = [];
 let myStudentsChoice = [];
 let flagClickOK = false;
@@ -23,54 +28,46 @@ function Modal({
   setNewTitleForRoute,
   siteSelected,
   language,
+  routeName,
+  tasksForNewRoute,
 }) {
   console.log("flagTest:", flagTest);
-  const [, set_obj] = useState(null); // for TextView
+  const [obj, set_obj] = useState({
+    name: "",
+    studentIds: [],
+    taskIds: [],
+    siteIds: [],
+  }); // for TextView
+  const [site, setSite] = useState(localStorage.getItem("MySite"));
+
   const [, setDone] = useState(false);
   const [, setLoading] = useState(false);
-  const [, setStudent] = useState([]);
+  const [student, setStudent] = useState([]);
   const [, setMyStudents] = useState([]);
 
   const [, setMyStudentsChoice] = useState([]);
   const [, setFlagClickOK] = useState(false);
   const [get_Name, setName] = useState(null); // for TextView
 
-  const [routeTitle, setRouteTitle] = useState("");
+  const [routeTitle, setRouteTitle] = useState(routeName);
   const [newRoute, setNewRoute] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        setStudent((student = getingDataUsers()));
+        setStudent(await getingData_Users());
         // getData();
       } catch (error) {
         console.error(error.message);
       }
       setLoading(false);
     };
-    // fetchData();
+    fetchData();
 
     console.log("Student", student);
   }, []);
 
-  const getData = () => {
-    get(`${baseUrl}/wp-json/wp/v2/users/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-      },
-      params: {
-        per_page: 99,
-        "Cache-Control": "no-cache",
-      },
-    }).then((res) => {
-      setStudent(
-        (student = res.data.filter((item) => item.acf.risk_profile > 0))
-      );
-      // console.log("student:", student);
-    });
-  };
   function Post_Route() {
     setFlagClickOK((flagClickOK = true));
     resultMyArrayStudent();
@@ -83,50 +80,28 @@ function Modal({
       alert("Route is empty ! ");
       return;
     } else {
-      set_obj((obj.tasks = JSON.parse(localStorage.getItem("New_Routes"))));
-      console.log("obj.tasks:", obj.tasks);
-      set_obj((obj.mySite = JSON.parse(localStorage.getItem("MySite"))));
-      console.log("obj.mySite:", obj.mySite.id);
+      let taskIdList = [];
+      tasksForNewRoute.map((task) => taskIdList.push(task.id));
+      let studentIdList = [];
+      myStudents.map((student) => studentIdList.push(student.id));
+      let newRouteObj = {
+        name: routeTitle,
+        studentIds: studentIdList,
+        taskIds: taskIdList,
+        siteIds: [JSON.parse(localStorage.getItem("MySite")).id],
+      };
+      console.log("obj:", newRouteObj);
+      // set_obj((obj.mySite = JSON.parse(localStorage.getItem("MySite"))));
+      // console.log("obj.mySite:", obj.mySite.id);
 
-      // console.log("obj : ", obj)
-      // console.log("obj.tasks : ", obj.tasks)
-      // let url_post = `${baseUrl}/wp-json/wp/v2/routes/`;
-      // fetch(url_post, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-      //     Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-      //   },
-      //   body: JSON.stringify({
-      //     title: get_Name,
-      //     status: "publish",
-      //     fields: {
-      //       tasks: obj.tasks.map((e) => {
-      //         // console.log("e.id:", e.id)
-      //         return e.id;
-      //       }),
-      //       users: {
-      //         ID: myStudentsChoice.map((e) => {
-      //           console.log("res of eee:00101110001010001:", e.id);
-      //           return e.id;
-      //         }),
-      //       },
-      //       my_site: obj.mySite.id,
-      //     },
-      //   }),
-      // })
-      //   .then(function (response) {
-      //     return response.json();
-      //   })
-      //   .then(function (post) {
-      //     setDone(true);
+      console.log("tasksForNewRoute : ", tasksForNewRoute);
 
-      //     // alert(get_Route_ID)
-      //     // console.log("post:", post)
-      //     window.location.replace("/forms");
-      //   });
-      setDone(true);
-      window.location.replace("/forms"); //to do : delete
+      insertRoute(newRouteObj).then((data) => {
+        console.log("obj", data);
+        setDone(true);
+        setFlagClickOK((flagClickOK = false));
+        window.location.replace("/forms");
+      });
     }
   }
   const saveCheckbox = (val) => {
@@ -256,6 +231,7 @@ function Modal({
                         return (
                           <label key={index} className="list-group-item">
                             <input
+                              style={{ marginLeft: "10px" }}
                               dir="ltr"
                               onChange={() => saveCheckbox(value)}
                               className="form-check-input me-1"
@@ -429,6 +405,16 @@ function Modal({
                         </div>
                       </div>
                       <div className="bodySaveRoute">
+                        <div>:שם המסלול</div>
+                        <input
+                          dir="rtl"
+                          className="inputRouteName"
+                          required={true}
+                          type="text"
+                          // onChange={getName}
+                          value={routeTitle}
+                          onChange={(e) => setRouteTitle(e.target.value)}
+                        ></input>
                         <div>:שיוך חניך</div>
                         <div className="allStudent">
                           {student.map((value, index) => {
@@ -436,6 +422,7 @@ function Modal({
                               <label key={index} className="list-group-item">
                                 <input
                                   dir="ltr"
+                                  style={{ marginLeft: "10px" }}
                                   onChange={() => saveCheckbox(value)}
                                   className="form-check-input me-1"
                                   type="checkbox"

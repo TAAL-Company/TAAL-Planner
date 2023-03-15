@@ -35,6 +35,14 @@ const Stations = (props) => {
   const [myRouteClick, setMyRouteClick] = useState(0);
   const [stationArray, updateStationArray] = useState(props.stationArray);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
+  const [requestForEditing, setRequestForEditing] = useState("");
+
+  useEffect(() => {
+    console.log("stations requestForEditing: ", requestForEditing);
+
+    if (requestForEditing == "edit" || requestForEditing == "details")
+      setModalOpen(true);
+  }, [requestForEditing]);
 
   useEffect(() => {
     updateStationArray(props.stationArray);
@@ -107,7 +115,7 @@ const Stations = (props) => {
     if (e != 0) setMyStation((myStation.data = props.stationArray));
     setMyStation((myStation.name = n));
     setMyStation((myStation.id = e));
-    // console.log("console myStat myStation:", myStation)
+    console.log("console myStat myStation:", myStation);
     if (tasks.length > 0) {
       tasks = [];
     }
@@ -116,6 +124,7 @@ const Stations = (props) => {
       let colorTemp = props.stationArray.find((item) => item.id === e).color;
 
       if (e === 0) {
+        //כללי
         if (
           element.stations.length == 0 &&
           element.sites.some((site) => site.siteId === props.mySite.id)
@@ -156,12 +165,14 @@ const Stations = (props) => {
         <>
           {modalOpen && (
             <ModalStations
+              stationIndex={openThreeDotsVertical}
               stationArray={props.stationArray}
               setOpenModalPlaces={setModalOpen}
               idTasks={props.idTask}
               mySite={props.mySite}
               pastelColors={props.pastelColors}
               language={props.language}
+              setRequestForEditing={setRequestForEditing}
             />
           )}
 
@@ -235,8 +246,8 @@ const Stations = (props) => {
                                             : "",
                                         background:
                                           props.language === "English"
-                                            ? `linear-gradient(270deg, ${color} 7%, #F8F9F3 1%)`
-                                            : `linear-gradient(90deg, ${color} 7%, #F8F9F3 1%)`,
+                                            ? `linear-gradient(270deg, ${color} 7%, #ffffff 1%)`
+                                            : `linear-gradient(90deg, ${color} 7%, #ffffff 1%)`,
                                         flexDirection:
                                           props.language === "English"
                                             ? "row"
@@ -259,7 +270,11 @@ const Stations = (props) => {
                                         </button>
 
                                         {openThreeDotsVertical === index ? (
-                                          <Modal_dropdown />
+                                          <Modal_dropdown
+                                            setRequestForEditing={
+                                              setRequestForEditing
+                                            }
+                                          />
                                         ) : (
                                           <></>
                                         )}

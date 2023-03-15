@@ -8,6 +8,7 @@ import {
   getingData_Tasks,
   getingData_Places,
   getingDataStation,
+  getingData_Users,
 } from "../../api/api";
 import "./style.css";
 // import { MdOutlineAdsClick } from "react-icons/md";
@@ -91,6 +92,12 @@ const Places = (props) => {
   const [replaceSiteFlag, setReplaceSiteFlag] = useState(false);
   const [progressBarFlag, setProgressBarFlag] = useState(false);
   const [percentProgressBar, setPercentProgressBar] = useState(5);
+  const [requestForEditing, setRequestForEditing] = useState("");
+  const [allUsers, setAllUsers] = useState([]);
+
+  useEffect(() => {
+    console.log("requestForEditing: ", requestForEditing);
+  }, [requestForEditing]);
 
   const [pastelColors, setPastelColors] = useState([
     "#91D3A8", //
@@ -143,6 +150,7 @@ const Places = (props) => {
         setAllTasks(await getingData_Tasks()); //get request for tasks
         setAllRoutes(await getingData_Routes()); //get request for routes
         setOnlyAllStation(await getingDataStation()); //get request for station
+        setAllUsers(await getingData_Users()); //get request for Users
       } catch (error) {
         console.error(error.message);
       }
@@ -156,6 +164,16 @@ const Places = (props) => {
   useEffect(() => {
     console.log("@@ allTasks", allTasks);
   }, [allTasks]);
+  useEffect(() => {
+    let user;
+    if (allUsers != undefined) {
+      user = allUsers.find(
+        (user) =>
+          user.name.toLowerCase() === sessionStorage.userName.toLowerCase()
+      );
+    }
+    console.log("user:", user);
+  }, [allUsers]);
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -230,10 +248,14 @@ const Places = (props) => {
       tasksOfRoutes.name = tasksOfRoutes.name
         .replace("&#8211;", "-")
         .replace("&#8217;", "'"); //replace gebrish for - or '
+      let firstStation;
 
-      let firstStation = allTasks.find(
-        (obj) => obj.id === tasksOfRoutes.tasks[0].taskId
-      );
+      if (tasksOfRoutes.tasks.length > 0) {
+        firstStation = allTasks.find(
+          (obj) => obj.id === tasksOfRoutes.tasks[0].taskId
+        );
+      }
+
       let firstStationId;
       let stationName;
       if (firstStation != undefined) {
@@ -483,16 +505,17 @@ const Places = (props) => {
           //     }
           //     return false;
           //   })
-          route.sites.some((site) => site.siteId === mySite.id)
+          route.sites.some((site) => site.id === mySite.id)
 
         // route.sites.includes((site) => site.siteId === mySite.id)
       )
     );
+    console.log("routes ", myRoutes);
 
     let temp = [];
 
     allTasks.map((task) => {
-      if (task.sites.some((site) => site.siteId === mySite.id))
+      if (task.sites.some((site) => site.id === mySite.id))
         setAllTasksOfTheSite((prev) => [...prev, task]);
       // else {
       //   //if there is station of my site
@@ -662,7 +685,9 @@ const Places = (props) => {
                       </button>
 
                       {openThreeDotsVertical === index ? (
-                        <Modal_dropdown />
+                        <Modal_dropdown
+                          setRequestForEditing={setRequestForEditing}
+                        />
                       ) : (
                         <></>
                       )}

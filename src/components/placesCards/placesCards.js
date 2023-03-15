@@ -17,22 +17,29 @@ const PlacesCards = () => {
   }, []);
 
   return (
-    <div className="place_cards_warpper">
-      {places.map((place) => (
-        <div key={place.id} className="place_card">
-          <img
-            src={
-              place.acf.image ? place.acf.image.sizes.thumbnail : defualtSiteImg
-            }
-            alt="Avatar"
-            style={{ width: "100%" }}
-          />
-          <div className="places_cards_container" key={place.name}>
-            <h5>{place.name}</h5>
-            <p>{place.description}</p>
+    <div>
+      <button className="buttonForNewSite" onClick={() => ""}>
+        הוספת אתר חדש
+      </button>
+      <div className="place_cards_warpper">
+        {places.map((place) => (
+          <div key={place.id} className="place_card">
+            <img
+              src={
+                place.acf.image
+                  ? place.acf.image.sizes.thumbnail
+                  : defualtSiteImg
+              }
+              alt="Avatar"
+              style={{ width: "100%" }}
+            />
+            <div className="places_cards_container" key={place.name}>
+              <h5>{place.name}</h5>
+              <p>{place.description}</p>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

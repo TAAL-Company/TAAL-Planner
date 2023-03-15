@@ -341,6 +341,8 @@ function DragnDrop(props) {
           language={props.language}
           setOpenModal={setModalOpenAddRoute}
           setText={get_Name}
+          routeName={props.tasksOfRoutes.name}
+          tasksForNewRoute={board}
         />
       )}
       <div className="Cover_Tasks">

@@ -15,7 +15,7 @@
 .place_cards_warpper {
   padding-top: 1%;
   display: grid;
-  grid-gap: 10px;
+  grid-gap: 25px;
   grid-template-columns: repeat(auto-fill, 250px);
   justify-content: center;
   text-align: center;

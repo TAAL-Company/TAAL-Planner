@@ -54,7 +54,7 @@ const Cards = () => {
   }, []);
 
   return (
-    <div>
+    <div style={{ marginTop: "14px", textAlign: "-webkit-center" }}>
       <Button variant="outlined" onClick={handleClickOpen}>
         הוספת משתמש חדש
       </Button>

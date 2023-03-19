@@ -51,8 +51,8 @@ const PlacesCards = () => {
   }, []);
 
   return (
-    <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
+    <div style={{ marginTop: "14px", textAlign: "-webkit-center" }}>
+      <Button size="large" variant="outlined" onClick={handleClickOpen}>
         הוספת משתמש חדש
       </Button>
       <Dialog open={open} onClose={handleClose}>

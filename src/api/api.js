@@ -355,3 +355,62 @@ export const insertTask = async (
     throw error;
   }
 };
+export const insertUser = async (user) => {
+  try {
+    const response = await fetch(
+      "https://prod-web-app0da5905.azurewebsites.net/students",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+        },
+        body: JSON.stringify({
+          email: user.email,
+          name: user.name,
+          coachId: user.coachId ? user.coachId : null,
+          pictureId: user.picture_url ? user.picture_url : null,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error inserting user: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const insertSite = async (site) => {
+  try {
+    const response = await fetch(
+      "https://prod-web-app0da5905.azurewebsites.net/sites",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+        },
+        body: JSON.stringify({
+          name: site.name,
+          description: site.description,
+          // pictureId: site.picture_url ? site.picture_url : null,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error inserting user: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};

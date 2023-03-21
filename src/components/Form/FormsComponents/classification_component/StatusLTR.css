@@ -1,14 +1,22 @@
-.statusLTR {
+.statusForms {
   display: flex;
   flex-direction: row;
   height: 100%;
   width: 100%;
   align-items: center;
   justify-content: center;
+  /* direction: rtl; */
+  /* justify-content: center; */
+  /* height: 30px;
+  width: 110px; */
+  /* align-items: center;
+  justify-content: center;
+  /* border-radius: 25px; */
 }
 
-.textStatusLTR {
+.textStatusForms {
   position: relative;
+  /* top: 0.5px; */
   display: table-cell;
   vertical-align: middle;
   left: 10px;
@@ -16,10 +24,12 @@
   font-size: medium;
 }
 
-.contentLTR {
+.contentForms {
   display: flex;
   flex-direction: row;
   align-items: center;
+  /* justify-content: center; */
+
   height: 100%;
   width: 100%;
   margin-left: 15px;

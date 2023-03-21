@@ -5,8 +5,8 @@ const Status = (props) => {
 
   if (flagColor === "red") {
     return (
-      <div className="statusRTL" style={{ background: "#DD001A" }}>
-        <div className="contentStatusRTL">
+      <div className="statusForms" style={{ background: "#DD001A" }}>
+        <div className="contentForms">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="20"
@@ -33,7 +33,7 @@ const Status = (props) => {
               />
             </g>
           </svg>
-          <div className="textStatusRTL" style={{ color: "white" }}>
+          <div className="textStatusForms" style={{ color: "white" }}>
             לא תקין
           </div>
         </div>
@@ -41,8 +41,8 @@ const Status = (props) => {
     );
   } else if (flagColor === "yellow") {
     return (
-      <div className="statusRTL" style={{ background: "#F49A40" }}>
-        <div className="contentStatusRTL">
+      <div className="statusForms" style={{ background: "#F49A40" }}>
+        <div className="contentForms">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="23.85"
@@ -57,7 +57,7 @@ const Status = (props) => {
                 transform="translate(0 1.876)"
                 fill="white"
                 stroke="#f3ae69"
-                // strokeWidtextStatusRTLth="2"
+                strokeWidth="2"
               />
               <text
                 id="_"
@@ -74,7 +74,7 @@ const Status = (props) => {
               </text>
             </g>
           </svg>
-          <div className="textStatusRTL" style={{ color: "white" }}>
+          <div className="textStatusForms" style={{ color: "white" }}>
             להתאמה
           </div>
         </div>
@@ -82,9 +82,9 @@ const Status = (props) => {
     );
   } else {
     return (
-      <div className="statusRTL" style={{ background: "#71AA6F" }}>
-        <div className="contentStatusRTL">
-          <div className="iconStatus"></div>
+      <div className="statusForms" style={{ background: "#71AA6F" }}>
+        <div className="contentForms">
+          <div className="iconForms"></div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="23.85"
@@ -113,7 +113,7 @@ const Status = (props) => {
               />
             </g>
           </svg>
-          <div className="textStatusRTL" style={{ color: "white" }}>
+          <div className="textStatusForms" style={{ color: "white" }}>
             תקין
           </div>
         </div>

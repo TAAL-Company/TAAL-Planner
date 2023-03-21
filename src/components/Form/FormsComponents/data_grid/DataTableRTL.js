@@ -3,6 +3,8 @@ import Box from "@mui/material/Box";
 import "./DataTableRTL.css";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
+import { useEffect, useState } from "react";
+
 import {
   GridToolbarContainer,
   GridToolbarExport,
@@ -14,165 +16,28 @@ import {
 // import MultipleSelectChip from "./MultipleSelectChip";
 // import AccessibleTabs1 from "./AccessibleTabs1";
 import { heIL } from "@mui/x-data-grid";
-import { Button } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from "@mui/material";
 import MultipleEdit from "../multiple_edit/MultipleEdit";
 import AddColumn from "../add_column/AddColumn";
 import { DataGridPro } from "@mui/x-data-grid-pro";
 import SaveIcon from "@mui/icons-material/Save";
+import CustomToolbar from "./CustomToolbar";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
 
-// const [columnsIds, setColumnsIds] = React.useState([
-//   { id: 3, fill: true },
-//   { id: 2, fill: false },
-//   { id: 1, fill: false },
-// ]);
-
-function CustomToolbar({
-  isInfoUserRoute,
-  isInfoUserSite,
-  tableType,
-  selectedRows,
-  columns,
-  setColumns,
-  workerName,
-  routeName,
-  siteName,
-}) {
-  return (
-    <div>
-      <GridToolbarContainer
-        style={{
-          paddingTop: "20px",
-          paddingBottom: "15px",
-          direction: "rtl",
-          justifyContent: "space-between",
-        }}
-      >
-        <div>
-          <GridToolbarColumnsButton style={{ color: "black" }} />
-          <GridToolbarFilterButton style={{ color: "black" }} />
-          <GridToolbarDensitySelector style={{ color: "black" }} />
-          <GridToolbarExport style={{ color: "black" }} />
-        </div>
-
-        {isInfoUserRoute && (
-          <div className="infoTableRTL">
-            <div className="workerNameTableRTL">שם עובד: {workerName}</div>
-            <div className="workerRouteTableRTL">שם מסלול: {routeName}</div>
-          </div>
-        )}
-
-        {isInfoUserSite && (
-          <div className="infoTableRTL">
-            <div className="workerNameTableRTL">שם עובד: {workerName}</div>
-            <div className="workerRouteTableRTL">שם אתר: {siteName}</div>
-          </div>
-        )}
-
-        <div>
-          <InputAdornment position="start">
-            <GridToolbarQuickFilter
-              InputProps={{ disableUnderline: true }}
-              placeholder="חיפוש"
-              style={{
-                paddingRight: "10px",
-                width: "250px",
-                position: "relative",
-                borderRadius: "8px",
-                paddingBottom: "2px",
-                marginTop: "2px",
-                background: "white",
-              }}
-              sx={{
-                "& .MuiInputBase-root": {
-                  // background: "blue",
-                  width: "87%",
-                  height: "28px",
-                },
-              }}
-            />
-            <SearchIcon
-              style={{
-                marginRight: "-30px",
-                zIndex: "5",
-              }}
-            />
-          </InputAdornment>
-        </div>
-      </GridToolbarContainer>
-
-      {tableType === "TaskabilityHE" && selectedRows.length >= 2 ? (
-        <>
-          <div
-            className="buttonaNavbar"
-            style={{ display: "flex", right: 0, paddingBottom: "10px" }}
-          >
-            <div style={{ marginLeft: "10px" }}>
-              <MultipleEdit
-                textButton={"עריכה קבוצתית"}
-                selectedRows={selectedRows}
-                fieldsCount={columns.length}
-                columns={columns}
-              />{" "}
-            </div>
-
-            <AddColumn columns={columns} setColumns={setColumns}></AddColumn>
-            {/* {selectedRows.map((item) => item.tasks)} */}
-          </div>
-        </>
-      ) : tableType === "TaskabilityHE" ? (
-        <>
-          <div
-            className="buttonaNavbar"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              paddingBottom: "10px",
-            }}
-          >
-            {" "}
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <Button
-                variant="outlined"
-                disabled
-                style={{ marginLeft: "10px" }}
-              >
-                עריכה קבוצתית
-              </Button>
-              <AddColumn columns={columns} setColumns={setColumns}></AddColumn>
-            </div>
-            <div style={{ display: "flex" }}>
-              <SaveIcon
-                fontSize="large"
-                color="primary"
-                style={{ zIndex: "5" }}
-              />
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div
-            className="buttonaNavbar"
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              paddingBottom: "10px",
-            }}
-          >
-            <AddColumn columns={columns} setColumns={setColumns}></AddColumn>
-            <div style={{ display: "flex", right: 0 }}>
-              <SaveIcon
-                fontSize="large"
-                color="primary"
-                style={{ zIndex: "5" }}
-              />
-            </div>
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const DataTableRTL = ({
   columns,
@@ -185,6 +50,18 @@ const DataTableRTL = ({
   workerName,
   routeName,
   siteName,
+  setWorker,
+  worker,
+  allUsers,
+  setChangeUser,
+  setChangeRoute,
+  setRows,
+  setCognitiveProfileValues,
+  cognitiveProfileValues,
+  setSaveProfileChanges,
+  allRoutes,
+  routeForTasksAbility,
+  setRouteForTasksAbility,
 }) => {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [columnFillRows, setColumnFillRows] = React.useState({
@@ -194,24 +71,79 @@ const DataTableRTL = ({
     LanguagesHE: true,
   });
 
+  useEffect(() => {
+    console.log("rows:", rows);
+  }, [rows]);
+
+  const [openDialogTrueFalse, setOpenDialogTrueFalse] = React.useState(false);
+  const [groupName, setGroupName] = React.useState("");
+
+  const handleClose = () => {
+    setOpenDialogTrueFalse(false);
+  };
+
+  const handleCellEdit = (params) => {
+    console.log("params", params);
+    console.log("params", params.field);
+    console.log("params", params.value);
+    if (params.value >= 0 && params.value < 6) {
+      const updatedRows = rows.map((row) => {
+        if (row.id === params.id) {
+          return {
+            ...row,
+            [params.field]: params.value,
+          };
+        } else {
+          return row;
+        }
+      });
+
+      setRows(updatedRows);
+      setCognitiveProfileValues(
+        cognitiveProfileValues.map((cog, index) => {
+          if (index === params.id) {
+            return parseInt(params.value);
+          } else {
+            return cog;
+          }
+        })
+      );
+    }
+  };
+
+  const handleChange = (event) => {
+    fillFalse({ groupingColumn: "Languages", show: event.target.value });
+    console.log("PrivateInfoHE");
+    fillFalse({
+      groupingColumn: "PrivateInfoHE",
+      show: !columnFillRows.PrivateInfoHE,
+    });
+    setColumnFillRows((prev) => ({
+      ...prev,
+      PrivateInfoHE: !prev.PrivateInfoHE,
+    }));
+  };
+
   const columnGroupingModel = [
     {
       groupId: "PrivateInfoHE",
       description: "",
       renderHeaderGroup: (params) => (
         <div
-          className="groupingHeaderName"
+          className="groupingHeaderNameForms"
           style={{ cursor: "pointer", color: "white" }}
           onClick={() => {
             console.log("PrivateInfoHE");
-            fillFalse({
-              groupingColumn: "PrivateInfoHE",
-              show: !columnFillRows.PrivateInfoHE,
-            });
-            setColumnFillRows((prev) => ({
-              ...prev,
-              PrivateInfoHE: !prev.PrivateInfoHE,
-            }));
+            // fillFalse({
+            //   groupingColumn: "PrivateInfoHE",
+            //   show: !columnFillRows.PrivateInfoHE,
+            // });
+            // setColumnFillRows((prev) => ({
+            //   ...prev,
+            //   PrivateInfoHE: !prev.PrivateInfoHE,
+            // }));
+            setOpenDialogTrueFalse(true);
+            setGroupName("פרטים אישיים");
           }}
         >
           פרטים אישיים
@@ -229,18 +161,20 @@ const DataTableRTL = ({
       groupId: "HistoryHE",
       renderHeaderGroup: (params) => (
         <div
-          className="groupingHeaderName"
+          className="groupingHeaderNameForms"
           style={{ cursor: "pointer", color: "white" }}
           onClick={() => {
             console.log("HistoryHE");
-            fillFalse({
-              groupingColumn: "HistoryHE",
-              show: !columnFillRows.HistoryHE,
-            });
-            setColumnFillRows((prev) => ({
-              ...prev,
-              HistoryHE: !prev.HistoryHE,
-            }));
+            // fillFalse({
+            //   groupingColumn: "HistoryHE",
+            //   show: !columnFillRows.HistoryHE,
+            // });
+            // setColumnFillRows((prev) => ({
+            //   ...prev,
+            //   HistoryHE: !prev.HistoryHE,
+            // }));
+            setOpenDialogTrueFalse(true);
+            setGroupName("היסטוריה");
           }}
         >
           היסטוריה
@@ -258,18 +192,20 @@ const DataTableRTL = ({
       groupId: "LanguageComprehensionHE",
       renderHeaderGroup: (params) => (
         <div
-          className="groupingHeaderName"
+          className="groupingHeaderNameForms"
           style={{ cursor: "pointer", color: "white" }}
           onClick={() => {
             console.log("LanguageComprehensionHE");
-            fillFalse({
-              groupingColumn: "LanguageComprehensionHE",
-              show: !columnFillRows.LanguageComprehensionHE,
-            });
-            setColumnFillRows((prev) => ({
-              ...prev,
-              LanguageComprehensionHE: !prev.LanguageComprehensionHE,
-            }));
+            // fillFalse({
+            //   groupingColumn: "LanguageComprehensionHE",
+            //   show: !columnFillRows.LanguageComprehensionHE,
+            // });
+            // setColumnFillRows((prev) => ({
+            //   ...prev,
+            //   LanguageComprehensionHE: !prev.LanguageComprehensionHE,
+            // }));
+            setOpenDialogTrueFalse(true);
+            setGroupName("הבנת שפה");
           }}
         >
           הבנת שפה
@@ -285,18 +221,20 @@ const DataTableRTL = ({
       groupId: "LanguagesHE",
       renderHeaderGroup: (params) => (
         <div
-          className="groupingHeaderName"
+          className="groupingHeaderNameForms"
           style={{ cursor: "pointer", color: "white" }}
           onClick={() => {
             console.log("LanguagesHE");
-            fillFalse({
-              groupingColumn: "LanguagesHE",
-              show: !columnFillRows.LanguagesHE,
-            });
-            setColumnFillRows((prev) => ({
-              ...prev,
-              LanguagesHE: !prev.LanguagesHE,
-            }));
+            // fillFalse({
+            //   groupingColumn: "LanguagesHE",
+            //   show: !columnFillRows.LanguagesHE,
+            // });
+            // setColumnFillRows((prev) => ({
+            //   ...prev,
+            //   LanguagesHE: !prev.LanguagesHE,
+            // }));
+            setOpenDialogTrueFalse(true);
+            setGroupName("שפות");
           }}
         >
           שפות
@@ -307,7 +245,7 @@ const DataTableRTL = ({
   ];
 
   return (
-    <div className="all">
+    <div className="allForms">
       <Box
         sx={{
           height: "80vh",
@@ -364,11 +302,12 @@ const DataTableRTL = ({
         <div></div>
 
         <DataGridPro
+          onCellEditCommit={handleCellEdit}
           sx={{
             direction: "rtl",
             "& .MuiDataGrid-virtualScroller": {
-              // overflow: "unset !important",
-              // mt: "0 !important",
+              overflow: "unset !important",
+              mt: "0 !important",
             },
 
             "& .MuiDataGrid-columnHeaders": {
@@ -416,7 +355,7 @@ const DataTableRTL = ({
           }
           rows={rows}
           columns={columns}
-          pageSize={10}
+          pageSize={100}
           // rowHeight={52}
           getRowHeight={() => "auto"}
           // getEstimatedRowHeight={() => 150}
@@ -437,6 +376,13 @@ const DataTableRTL = ({
           components={{
             Toolbar: () => (
               <CustomToolbar
+                allRoutes={allRoutes}
+                setSaveProfileChanges={setSaveProfileChanges}
+                setChangeUser={setChangeUser}
+                setChangeRoute={setChangeRoute}
+                allUsers={allUsers}
+                setWorker={setWorker}
+                worker={worker}
                 tableType={tableType}
                 isInfoUserRoute={isInfoUserRoute}
                 isInfoUserSite={isInfoUserSite}
@@ -446,6 +392,10 @@ const DataTableRTL = ({
                 workerName={workerName}
                 routeName={routeName}
                 siteName={siteName}
+                openDialogTrueFalse={openDialogTrueFalse}
+                setOpenDialogTrueFalse={setOpenDialogTrueFalse}
+                routeForTasksAbility={routeForTasksAbility}
+                setRouteForTasksAbility={setRouteForTasksAbility}
               />
             ),
           }}
@@ -460,6 +410,58 @@ const DataTableRTL = ({
             },
           }}
         />
+
+        <div>
+          <Dialog
+            style={{ direction: "rtl" }}
+            open={openDialogTrueFalse}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={handleClose}
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle> ?רלוונטי {groupName} האם</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                בחירה של אופציה לא רלוונטי ימלא את את כל העמודות תחת הקטגוריה "
+                {groupName}" כלא רלוונטיות, ובחירה של רלוונטי יאפס את כל המשבצות
+                לריקות.
+              </DialogContentText>
+              <FormControl
+                sx={{
+                  m: 1,
+                  minWidth: 220,
+                  maxWidth: 220,
+                  "& 	.MuiInputLabel-formControl": {
+                    background: "#d3e2ec",
+                  },
+                }}
+                size="small"
+              >
+                {/* <InputLabel id="example1">{headers}</InputLabel> */}
+                <InputLabel id="example1">{groupName}</InputLabel>
+
+                <Select
+                  labelId="example1"
+                  id="example1"
+                  // defaultValue={true}
+                  value={columnFillRows.PrivateInfoHE}
+                  onChange={handleChange}
+                  autoWidth
+                  label={groupName}
+                >
+                  <MenuItem value={true}>הכרחי לביצוע המשימה</MenuItem>
+                  <MenuItem value={false}>לא הכרחי לביצוע המשימה</MenuItem>
+                </Select>
+              </FormControl>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Disagree</Button>
+              <Button onClick={handleClose}>Agree</Button>
+            </DialogActions>
+          </Dialog>
+          *
+        </div>
       </Box>
       {/* <pre style={{ fontSize: 10 }}>
         {JSON.stringify(selectedRows, null, 4)}

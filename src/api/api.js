@@ -23,6 +23,17 @@ export const post = async (url, body, header) => {
     console.log(e);
   }
 };
+export const patch = async (url, body, headers) => {
+  try {
+    const res = await axios.patch(url, body, { headers });
+    if (res) {
+      console.log("success");
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const getingData_Tasks = async () => {
   let allTasks;
   const headers = {
@@ -413,4 +424,34 @@ export const insertSite = async (site) => {
   } catch (error) {
     throw error;
   }
+};
+export const postDataCognitiveProfile = async (
+  workerId,
+  cognitiveProfileValues
+) => {
+  const url =
+    "https://prod-web-app0da5905.azurewebsites.net/cognitive-profiles/" +
+    workerId;
+  const body = {
+    value: cognitiveProfileValues,
+  };
+  const headers = {
+    "Content-Type": "application/json",
+    Accept: "*/*",
+  };
+
+  await patch(url, body, headers);
+};
+export const getCognitiveProfile = async (user_id) => {
+  let CognitiveProfile;
+
+  await get(
+    "https://prod-web-app0da5905.azurewebsites.net/cognitive-profiles/" +
+      user_id
+  ).then((res) => {
+    CognitiveProfile = res.data.value;
+  });
+  console.log("res CognitiveProfile: ", CognitiveProfile);
+
+  return CognitiveProfile;
 };

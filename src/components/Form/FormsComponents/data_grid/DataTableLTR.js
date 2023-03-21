@@ -47,23 +47,17 @@ function CustomToolbar({
         </div>
 
         {isInfoUserRoute && (
-          <div className="infoTableLTR">
-            <div className="workerNameTableLTR">Worker: {workerName}</div>
-            <div
-              className="workerRouteTableLTR"
-              style={{ paddingLeft: "25px" }}
-            >
+          <div className="infoForms">
+            <div className="workerNameForms">Worker: {workerName}</div>
+            <div className="workerRouteForms" style={{ paddingLeft: "25px" }}>
               Route: {routeName}
             </div>
           </div>
         )}
         {isInfoUserSite && (
-          <div className="infoTableLTR">
-            <div className="workerNameTableLTR">Worker: {workerName}</div>
-            <div
-              className="workerRouteTableLTR"
-              style={{ paddingLeft: "25px" }}
-            >
+          <div className="infoForms">
+            <div className="workerNameForms">Worker: {workerName}</div>
+            <div className="workerRouteForms" style={{ paddingLeft: "25px" }}>
               Site: {siteName}
             </div>
           </div>
@@ -102,7 +96,7 @@ function CustomToolbar({
       {tableType === "TaskabilityEN" && selectedRows.length >= 2 ? (
         <>
           <div
-            className="buttonaNavbar"
+            className="buttonaNavbarForms"
             style={{ display: "flex", right: 0, paddingBottom: "10px" }}
           >
             <div style={{ marginRight: "10px" }}>
@@ -120,7 +114,7 @@ function CustomToolbar({
       ) : tableType === "TaskabilityEN" ? (
         <>
           <div
-            className="buttonaNavbar"
+            className="buttonaNavbarForms"
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -149,7 +143,7 @@ function CustomToolbar({
       ) : (
         <>
           <div
-            className="buttonaNavbar"
+            className="buttonaNavbarForms"
             style={{
               display: "flex",
               justifyContent: "space-between",
@@ -182,6 +176,7 @@ const DataTableLTR = ({
   workerName,
   routeName,
   siteName,
+  allRoutes,
 }) => {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [columnFillRows, setColumnFillRows] = React.useState({
@@ -197,7 +192,7 @@ const DataTableLTR = ({
       description: "",
       renderHeaderGroup: (params) => (
         <div
-          className="groupingHeaderName"
+          className="groupingHeaderNameForms"
           style={{ cursor: "pointer", color: "white" }}
           onClick={() => {
             console.log("PrivateInfoEN");
@@ -226,7 +221,7 @@ const DataTableLTR = ({
       groupId: "HistoryEN",
       renderHeaderGroup: (params) => (
         <div
-          className="groupingHeaderName"
+          className="groupingHeaderNameForms"
           style={{ cursor: "pointer", color: "white" }}
           onClick={() => {
             console.log("HistoryEN");
@@ -255,7 +250,7 @@ const DataTableLTR = ({
       groupId: "LanguageComprehensionEN",
       renderHeaderGroup: (params) => (
         <div
-          className="groupingHeaderName"
+          className="groupingHeaderNameForms"
           style={{ cursor: "pointer", color: "white" }}
           onClick={() => {
             console.log("LanguageComprehensionEN");
@@ -282,7 +277,7 @@ const DataTableLTR = ({
       groupId: "LanguagesEN",
       renderHeaderGroup: (params) => (
         <div
-          className="groupingHeaderName"
+          className="groupingHeaderNameForms"
           style={{ cursor: "pointer", color: "white" }}
           onClick={() => {
             console.log("LanguagesEN");
@@ -304,7 +299,7 @@ const DataTableLTR = ({
   ];
 
   return (
-    <div className="all">
+    <div className="allForms">
       <Box
         sx={{
           height: 750,
@@ -407,7 +402,7 @@ const DataTableLTR = ({
           }
           rows={rows}
           columns={columns}
-          pageSize={10}
+          pageSize={100}
           // rowHeight={52}
           getRowHeight={() => "auto"}
           // getEstimatedRowHeight={() => 150}
@@ -434,6 +429,7 @@ const DataTableLTR = ({
           components={{
             Toolbar: () => (
               <CustomToolbar
+                allRoutes={allRoutes}
                 tableType={tableType}
                 isInfoUserRoute={isInfoUserRoute}
                 isInfoUserSite={isInfoUserSite}

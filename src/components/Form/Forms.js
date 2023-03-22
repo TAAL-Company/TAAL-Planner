@@ -50,6 +50,8 @@ function Forms() {
   const [siteNameEN, setSiteNameEN] = useState("Azrieli Tel Aviv");
 
   const [worker, setWorker] = useState([]);
+  const [prevSelectedWorker, setPrevSelected] = useState([]);
+
   const [routeForTasksAbility, setRouteForTasksAbility] = useState([]);
 
   const [workerNameHE, setWorkerNameHE] = useState("אייל אנגל");
@@ -91,14 +93,14 @@ function Forms() {
       headerAlign: "center",
       align: "center",
     },
-    {
-      field: "siteTaskabilityHE",
-      headerName: "אתר",
-      width: 180,
-      editable: false,
-      headerAlign: "center",
-      align: "center",
-    },
+    // {
+    //   field: "siteTaskabilityHE",
+    //   headerName: "אתר",
+    //   width: 180,
+    //   editable: false,
+    //   headerAlign: "center",
+    //   align: "center",
+    // },
   ]);
   // taskability
   // ToDo - A function that calculates the width each column needs according to the number of characters (length)
@@ -196,10 +198,12 @@ function Forms() {
       if (changeUser) setRowsCognitiveHE([]);
       loadingCog = true;
 
+      setPrevSelected((prevSelectedUsers) => [...prevSelectedUsers, worker]);
+
       cognitiveList.map((cognitive) => {
         let cogValue = 0;
         if (cognitiveProfileValues != undefined)
-          cogValue = cognitiveProfileValues[cognitive.NO];
+          cogValue = cognitiveProfileValues[cognitive.NO - 1]; //delete -1 when the data came from DB
 
         setRowsCognitiveHE((prev) => [
           ...prev,
@@ -1938,6 +1942,7 @@ function Forms() {
                   )}
                   <DataTableRTL
                     setChangeUser={setChangeUser}
+                    prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
@@ -1973,6 +1978,7 @@ function Forms() {
                     columns={columnsCognitiveHE}
                     setColumns={setColumnsCognitiveHE}
                     rows={rowsCognitiveHE}
+                    prevSelectedWorker={prevSelectedWorker}
                     setRows={setRowsCognitiveHE}
                     setCognitiveProfileValues={setCognitiveProfileValues}
                     setSaveProfileChanges={setSaveProfileChanges}
@@ -1999,6 +2005,7 @@ function Forms() {
                 <div className="tableForms">
                   <DataTableRTL
                     setChangeUser={setChangeUser}
+                    prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
@@ -2027,6 +2034,7 @@ function Forms() {
                 <div className="tableForms">
                   <DataTableRTL
                     setChangeUser={setChangeUser}
+                    prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
@@ -2398,6 +2406,7 @@ function Forms() {
                   )}
                   <DataTableLTR
                     setChangeUser={setChangeUser}
+                    prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
@@ -2424,6 +2433,7 @@ function Forms() {
                 <div className="tableForms">
                   <DataTableLTR
                     setChangeUser={setChangeUser}
+                    prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
@@ -2451,6 +2461,7 @@ function Forms() {
                 <div className="tableForms">
                   <DataTableLTR
                     setChangeUser={setChangeUser}
+                    prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
@@ -2477,6 +2488,7 @@ function Forms() {
                 <div className="tableForms">
                   <DataTableLTR
                     setChangeUser={setChangeUser}
+                    prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}

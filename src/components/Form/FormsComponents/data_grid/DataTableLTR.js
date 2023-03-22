@@ -177,6 +177,7 @@ const DataTableLTR = ({
   routeName,
   siteName,
   allRoutes,
+  prevSelectedWorker,
 }) => {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [columnFillRows, setColumnFillRows] = React.useState({
@@ -439,6 +440,7 @@ const DataTableLTR = ({
                 workerName={workerName}
                 routeName={routeName}
                 siteName={siteName}
+                prevSelectedWorker={prevSelectedWorker}
               />
             ),
           }}

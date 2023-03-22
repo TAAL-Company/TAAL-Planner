@@ -3,3 +3,6 @@
   font-family: calibri;
   border-radius: 5px;
 }
+select option:selected {
+  font-weight: bold;
+}

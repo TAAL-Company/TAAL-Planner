@@ -62,6 +62,7 @@ const DataTableRTL = ({
   allRoutes,
   routeForTasksAbility,
   setRouteForTasksAbility,
+  prevSelectedWorker,
 }) => {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [columnFillRows, setColumnFillRows] = React.useState({
@@ -396,6 +397,7 @@ const DataTableRTL = ({
                 setOpenDialogTrueFalse={setOpenDialogTrueFalse}
                 routeForTasksAbility={routeForTasksAbility}
                 setRouteForTasksAbility={setRouteForTasksAbility}
+                prevSelectedWorker={prevSelectedWorker}
               />
             ),
           }}

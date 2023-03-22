@@ -41,13 +41,20 @@ const CustomToolbar = ({
   allRoutes,
   routeForTasksAbility,
   setRouteForTasksAbility,
+  prevSelectedWorker,
 }) => {
+  // const [prevSelected, setPrevSelected] = useState([]);
+  useEffect(() => {
+    console.log("prevSelectedWorker", prevSelectedWorker);
+  }, [prevSelectedWorker]);
+
   const saveProfileChanges = (e) => {
     console.log("true");
     setSaveProfileChanges(true);
   };
   const handleChangeUser = (event) => {
     const selectedValue = JSON.parse(event.target.value);
+    // setPrevSelected((prevSelected) => [...prevSelected, selectedValue]);
 
     console.log("worker", selectedValue);
     setWorker(selectedValue);
@@ -128,7 +135,18 @@ const CustomToolbar = ({
                 </option>
                 {allUsers.map((value, index) => {
                   return (
-                    <option key={index} value={JSON.stringify(value)}>
+                    <option
+                      key={index}
+                      value={JSON.stringify(value)}
+                      style={
+                        prevSelectedWorker.some((u) => u.id === value.id)
+                          ? {
+                              fontWeight: "bold",
+                              backgroundColor: "#efff00c9",
+                            }
+                          : {}
+                      }
+                    >
                       {value.name}
                     </option>
                   );

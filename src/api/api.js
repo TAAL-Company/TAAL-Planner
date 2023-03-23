@@ -379,6 +379,7 @@ export const insertUser = async (user) => {
         body: JSON.stringify({
           email: user.email,
           name: user.name,
+          user_name: user.userName,
           coachId: user.coachId ? user.coachId : null,
           pictureId: user.picture_url ? user.picture_url : null,
         }),

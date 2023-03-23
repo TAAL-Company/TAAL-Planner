@@ -42,6 +42,9 @@ const Stations = (props) => {
 
     if (requestForEditing == "edit" || requestForEditing == "details")
       setModalOpen(true);
+    else if (requestForEditing == "duplication") {
+      console.log("openThreeDotsVertical", openThreeDotsVertical);
+    }
   }, [requestForEditing]);
 
   useEffect(() => {

@@ -11,10 +11,14 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { insertUser } from "../../api/api";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import Modal_dropdown from "../Modal/Modal_dropdown";
 
 const Cards = () => {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
+  const [requestForEditing, setRequestForEditing] = useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -26,12 +30,15 @@ const Cards = () => {
   const handleConfirm = () => {
     const email = document.getElementById("email").value;
     const fullName = document.getElementById("name").value;
+    const userName = document.getElementById("userName").value;
+
     // const coachId = document.getElementById("coach").value;
     const image = document.getElementById("image-input").files[0];
 
     const user = {
       email: email,
       name: fullName,
+      userName: userName,
       // coachId: coachId,
       pictureId: image,
     };
@@ -52,7 +59,10 @@ const Cards = () => {
     fetchData();
     // console.log("usersData", usersData);
   }, []);
-
+  const clickOnhreeDotsVerticaIcont = (value) => {
+    if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
+    else setOpenThreeDotsVertical(value);
+  };
   return (
     <div style={{ marginTop: "14px", textAlign: "-webkit-center" }}>
       <Button variant="outlined" onClick={handleClickOpen}>
@@ -83,6 +93,15 @@ const Cards = () => {
             fullWidth
             variant="standard"
           />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="userName"
+            label="שם משתמש"
+            type="name"
+            fullWidth
+            variant="standard"
+          />
           {/* <TextField
             autoFocus
             margin="dense"
@@ -101,8 +120,22 @@ const Cards = () => {
         </DialogActions>
       </Dialog>
       <div className="user_cards_warpper">
-        {users.map((user) => (
+        {users.map((user, index) => (
           <div key={user.id} className="user_card">
+            <div className="dropdownThreeDotsUsers">
+              <button
+                className="threeDotsVerticalEng"
+                onClick={() => clickOnhreeDotsVerticaIcont(index)}
+              >
+                <BsThreeDotsVertical />
+              </button>
+
+              {openThreeDotsVertical === index ? (
+                <Modal_dropdown setRequestForEditing={setRequestForEditing} />
+              ) : (
+                <></>
+              )}
+            </div>
             <img
               src={user.picture_url ? user.picture_url : defualtSiteImg}
               alt="Avatar"

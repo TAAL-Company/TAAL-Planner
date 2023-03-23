@@ -53,10 +53,10 @@ const PlacesCards = () => {
   return (
     <div style={{ marginTop: "14px", textAlign: "-webkit-center" }}>
       <Button size="large" variant="outlined" onClick={handleClickOpen}>
-        הוספת משתמש חדש
+        הוספת אתר חדש
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>משתמש חדש</DialogTitle>
+        <DialogTitle>אתר חדש</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {/* To subscribe to this website, please enter your email address here.

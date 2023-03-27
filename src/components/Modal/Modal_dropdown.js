@@ -11,6 +11,7 @@ function Modal_dropdown(props) {
         <a onClick={() => props.setRequestForEditing("edit")}>עריכה</a>
         <a onClick={() => props.setRequestForEditing("duplication")}>שכפול</a>
         <a onClick={() => props.setRequestForEditing("details")}>פרטים</a>
+        <a onClick={() => props.setRequestForEditing("delete")}>מחיקה</a>
       </div>
     </>
   );

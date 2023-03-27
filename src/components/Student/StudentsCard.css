@@ -11,6 +11,7 @@
 }
 .users_cards_container {
   padding: 2px 16px;
+  overflow-wrap: anywhere;
 }
 .user_cards_warpper {
   padding-top: 1%;
@@ -33,6 +34,6 @@
   margin: 1px;
 }
 .dropdownThreeDotsUsers {
-  position: fixed;
+  position: absolute;
   margin: 10px;
 }

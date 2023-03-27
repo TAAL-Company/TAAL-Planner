@@ -28,8 +28,12 @@ export const patch = async (url, body, headers) => {
     const res = await axios.patch(url, body, { headers });
     if (res) {
       console.log("success");
+      return res;
     }
   } catch (e) {
+    if (e.response && e.response.status === 404) {
+      throw e;
+    }
     console.log(e);
   }
 };
@@ -379,7 +383,7 @@ export const insertUser = async (user) => {
         body: JSON.stringify({
           email: user.email,
           name: user.name,
-          user_name: user.userName,
+          user_name: user.user_name,
           coachId: user.coachId ? user.coachId : null,
           pictureId: user.picture_url ? user.picture_url : null,
         }),
@@ -441,7 +445,27 @@ export const postDataCognitiveProfile = async (
     Accept: "*/*",
   };
 
-  await patch(url, body, headers);
+  try {
+    await patch(url, body, headers);
+  } catch (e) {
+    if (e.response && e.response.status === 404) {
+      const postUrl =
+        "https://prod-web-app0da5905.azurewebsites.net/cognitive-profiles";
+      const postData = {
+        studentId: workerId,
+        ...body,
+      };
+      try {
+        const res = await axios.post(postUrl, postData, { headers });
+        console.log("success");
+        return res;
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      console.log(e);
+    }
+  }
 };
 export const getCognitiveProfile = async (user_id) => {
   let CognitiveProfile;
@@ -455,4 +479,71 @@ export const getCognitiveProfile = async (user_id) => {
   console.log("res CognitiveProfile: ", CognitiveProfile);
 
   return CognitiveProfile;
+};
+export const deleteUser = async (user_id) => {
+  let confirm;
+
+  await fetch(
+    "https://prod-web-app0da5905.azurewebsites.net/students/" + user_id,
+    { method: "DELETE" }
+  ).then((res) => {
+    confirm = res;
+  });
+  console.log("res deleteUser: ", confirm);
+
+  return confirm;
+};
+export const patchForUser = async (userId, user) => {
+  const url =
+    "https://prod-web-app0da5905.azurewebsites.net/students/" + userId;
+  const body = {
+    email: user.email,
+    name: user.name,
+    user_name: user.user_name,
+    coachId: user.coachId ? user.coachId : null,
+    pictureId: user.picture_url ? user.picture_url : null,
+  };
+  const headers = {
+    "Content-Type": "application/json",
+    Accept: "*/*",
+  };
+
+  return await patch(url, body, headers);
+};
+
+export const post_cognitive_abillities = async (cognitive) => {
+  const url =
+    "https://prod-web-app0da5905.azurewebsites.net/cognitive-abillities";
+
+  const headers = {
+    "Content-Type": "application/json",
+    Accept: "*/*",
+  };
+
+  await post(url, cognitive, headers);
+};
+export const deleteRoute = async (route_id) => {
+  let confirm;
+
+  await fetch(
+    "https://prod-web-app0da5905.azurewebsites.net/routes/" + route_id,
+    { method: "DELETE" }
+  ).then((res) => {
+    confirm = res;
+  });
+  console.log("res deleteUser: ", confirm);
+
+  return confirm;
+};
+export const getCognitiveAbillities = async () => {
+  let CognitiveAbillities;
+
+  await get(
+    "https://prod-web-app0da5905.azurewebsites.net/cognitive-abillities"
+  ).then((res) => {
+    CognitiveAbillities = res.data;
+  });
+  console.log("res CognitiveAbillities: ", CognitiveAbillities);
+
+  return CognitiveAbillities;
 };

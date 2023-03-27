@@ -9,7 +9,15 @@ import {
   getingData_Places,
   getingDataStation,
   getingData_Users,
+  deleteRoute,
 } from "../../api/api";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import "./style.css";
 // import { MdOutlineAdsClick } from "react-icons/md";
 // import { FcAddDatabase, FcSearch } from "react-icons/fc";
@@ -94,11 +102,44 @@ const Places = (props) => {
   const [percentProgressBar, setPercentProgressBar] = useState(5);
   const [requestForEditing, setRequestForEditing] = useState("");
   const [allUsers, setAllUsers] = useState([]);
+  const [openRemove, setOpenRemove] = React.useState(false);
 
   useEffect(() => {
     console.log("requestForEditing: ", requestForEditing);
+    if (requestForEditing == "edit" || requestForEditing == "details") {
+      // setOpen(true);
+    } else if (requestForEditing == "duplication") {
+      console.log("duplication openThreeDotsVertical", openThreeDotsVertical);
+    } else if (requestForEditing == "delete") {
+      console.log("delete openThreeDotsVertical", openThreeDotsVertical);
+
+      setOpenRemove(true);
+    }
   }, [requestForEditing]);
 
+  const handleCloseRemove = () => {
+    setOpenRemove(false);
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing("");
+  };
+  const handleCloseRemoveConfirm = async () => {
+    console.log("DELETE:", filteredDataRoutes[openThreeDotsVertical].id);
+    let deleteRoutes = await deleteRoute(
+      filteredDataRoutes[openThreeDotsVertical].id
+    );
+
+    console.log("deleteRoute:", deleteRoutes);
+    if (deleteRoutes.status === 200) {
+      alert("המחיקה בוצעה בהצלחה!");
+      const newRoutes = [...filteredDataRoutes];
+      newRoutes.splice(openThreeDotsVertical, 1); // remove one element at index x
+      setFilteredDataRoutes(newRoutes);
+    }
+
+    setOpenRemove(false);
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing("");
+  };
   const [pastelColors, setPastelColors] = useState([
     "#91D3A8", //
     "#F2B965", //
@@ -784,7 +825,28 @@ const Places = (props) => {
         )
 
         }
-      </div> */}
+        
+                      {/* sure for Remove */}
+      <Dialog
+        open={openRemove}
+        onClose={handleCloseRemove}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"מחיקת משתמש"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            האם אתה בטוח במחיקת המשתמש?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseRemove}>cancel</Button>
+          <Button onClick={handleCloseRemoveConfirm} autoFocus>
+            מחיקה
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* </div> */}
     </>
   );
 };

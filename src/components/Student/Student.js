@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { getingDatausers } from "../../api/api";
 import "./StudentsCard.css";
 import defualtSiteImg from "../../Pictures/defualtSiteImg.svg";
-import { getingData_Users } from "../../api/api";
+import {
+  getingData_Users,
+  deleteUser,
+  patchForUser,
+  post_cognitive_abillities,
+} from "../../api/api";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -13,12 +17,31 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { insertUser } from "../../api/api";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Modal_dropdown from "../Modal/Modal_dropdown";
+import cognitiveList from "../Form/cognitive.json";
 
 const Cards = () => {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const [openRemove, setOpenRemove] = React.useState(false);
+
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState("");
+  useEffect(() => {
+    console.log("student openThreeDotsVertical: ", openThreeDotsVertical);
+  }, [openThreeDotsVertical]);
+
+  useEffect(() => {
+    console.log("student requestForEditing: ", requestForEditing);
+
+    if (requestForEditing == "edit" || requestForEditing == "details") {
+      setOpen(true);
+    } else if (requestForEditing == "duplication") {
+      console.log("openThreeDotsVertical", openThreeDotsVertical);
+    } else if (requestForEditing == "delete") {
+      console.log("openThreeDotsVertical", openThreeDotsVertical);
+      setOpenRemove(true);
+    }
+  }, [requestForEditing]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -26,11 +49,59 @@ const Cards = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setRequestForEditing("");
+    setOpenThreeDotsVertical(-1);
   };
+
+  const handleClickOpenRemove = () => {
+    setOpenRemove(true);
+  };
+
+  const handleCloseRemove = () => {
+    setOpenRemove(false);
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing("");
+  };
+  const handleCloseRemoveConfirm = async () => {
+    console.log("DELETE:", users[openThreeDotsVertical].id);
+    let deletedUser = await deleteUser(users[openThreeDotsVertical].id);
+
+    console.log("deletedUser:", deletedUser);
+    if (deletedUser.status === 200) {
+      alert("המחיקה בוצעה בהצלחה!");
+      const newUsers = [...users];
+      newUsers.splice(openThreeDotsVertical, 1); // remove one element at index x
+      setUsers(newUsers);
+    }
+
+    setOpenRemove(false);
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing("");
+  };
+  const handleJson = () => {
+    cognitiveList.map(async (cognitive) => {
+      let cognitiveTemp = {
+        trait: cognitive.trait === undefined ? "" : cognitive.trait,
+        requiredField: cognitive.RequiredField === "לא" ? false : true,
+        score: cognitive.score === undefined ? "" : cognitive.score,
+        general: cognitive.general === undefined ? "" : cognitive.general,
+        category: cognitive.category === undefined ? "" : cognitive.category,
+        classification:
+          cognitive.classification === undefined
+            ? ""
+            : cognitive.classification,
+        ML: cognitive.ML === "לא" ? false : true,
+      };
+
+      let post_cognitive = await post_cognitive_abillities(cognitiveTemp);
+      console.log("post_cognitive", post_cognitive);
+    });
+  };
+
   const handleConfirm = () => {
     const email = document.getElementById("email").value;
     const fullName = document.getElementById("name").value;
-    const userName = document.getElementById("userName").value;
+    const user_name = document.getElementById("userName").value;
 
     // const coachId = document.getElementById("coach").value;
     const image = document.getElementById("image-input").files[0];
@@ -38,14 +109,24 @@ const Cards = () => {
     const user = {
       email: email,
       name: fullName,
-      userName: userName,
+      user_name: user_name,
       // coachId: coachId,
       pictureId: image,
     };
 
-    insertUser(user).then((data) => {
-      setUsers([data, ...users]);
-    });
+    if (openThreeDotsVertical !== -1) {
+      patchForUser(users[openThreeDotsVertical].id, user).then((data) => {
+        users[openThreeDotsVertical].name = data.data.name;
+        users[openThreeDotsVertical].email = data.data.email;
+        users[openThreeDotsVertical].user_name = data.data.user_name;
+
+        console.log("data", data);
+      });
+    } else {
+      insertUser(user).then((data) => {
+        setUsers([data, ...users]);
+      });
+    }
 
     handleClose(); // Close the dialog after the form is submitted
   };
@@ -65,6 +146,9 @@ const Cards = () => {
   };
   return (
     <div style={{ marginTop: "14px", textAlign: "-webkit-center" }}>
+      {/* <Button variant="outlined" onClick={handleJson}>
+        הכנסת יכולות קוגנטיביות
+      </Button> */}
       <Button variant="outlined" onClick={handleClickOpen}>
         הוספת משתמש חדש
       </Button>
@@ -83,6 +167,11 @@ const Cards = () => {
             type="email"
             fullWidth
             variant="standard"
+            defaultValue={
+              openThreeDotsVertical !== -1
+                ? users[openThreeDotsVertical].email
+                : ""
+            }
           />
           <TextField
             autoFocus
@@ -92,6 +181,11 @@ const Cards = () => {
             type="name"
             fullWidth
             variant="standard"
+            defaultValue={
+              openThreeDotsVertical !== -1
+                ? users[openThreeDotsVertical].name
+                : ""
+            }
           />
           <TextField
             autoFocus
@@ -101,6 +195,11 @@ const Cards = () => {
             type="name"
             fullWidth
             variant="standard"
+            defaultValue={
+              openThreeDotsVertical !== -1
+                ? users[openThreeDotsVertical].user_name
+                : ""
+            }
           />
           {/* <TextField
             autoFocus
@@ -110,6 +209,11 @@ const Cards = () => {
             type="name"
             fullWidth
             variant="standard"
+               defaultValue={
+              openThreeDotsVertical != -1
+                ? users[openThreeDotsVertical].coach
+                : ""
+            }
           /> */}
           <div>תמונה:</div>
           <input label="שם מלא" accept="image/*" id="image-input" type="file" />
@@ -119,6 +223,27 @@ const Cards = () => {
           <Button onClick={handleConfirm}>שמירה</Button>
         </DialogActions>
       </Dialog>
+      {/* sure for Remove */}
+      <Dialog
+        open={openRemove}
+        onClose={handleCloseRemove}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"מחיקת משתמש"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            האם אתה בטוח במחיקת המשתמש?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseRemove}>cancel</Button>
+          <Button onClick={handleCloseRemoveConfirm} autoFocus>
+            מחיקה
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* end cencel */}
       <div className="user_cards_warpper">
         {users.map((user, index) => (
           <div key={user.id} className="user_card">
@@ -144,14 +269,15 @@ const Cards = () => {
             <div className="users_cards_container" key={user.name}>
               <h5>{user.name}</h5>
               {/* <p>{user.description}</p> */}
-              <button
+              <p>{user.email}</p>
+              {/* <button
                 className="btn btn-primary"
                 id="dropdown-basic-button"
 
                 // onClick={() => myUsersfunc(value)}
               >
                 מידע נוסף
-              </button>
+              </button> */}
             </div>
           </div>
         ))}

@@ -12,6 +12,7 @@ import {
   getingData_Routes,
   postDataCognitiveProfile,
   getCognitiveProfile,
+  getCognitiveAbillities,
 } from "../../api/api";
 import taskpic1 from "./FormsComponents/PicturesForms/taskpic1.jpg";
 import taskpic2 from "./FormsComponents/PicturesForms/taskpic2.jpeg";
@@ -66,6 +67,7 @@ function Forms() {
   const [tasksOfChosenRoute, setTasksOfChosenRoute] = useState([]);
 
   const [saveProfileChanges, setSaveProfileChanges] = useState(false);
+  const [cognitiveAbillities, setCognitiveAbillities] = useState([]);
 
   const [cognitiveProfileValues, setCognitiveProfileValues] = useState([]);
   const [columnsTaskabilityHE, setColumnsTaskabilityHE] = useState([
@@ -112,6 +114,7 @@ function Forms() {
         setAllUsers(await getingData_Users()); //get request for Users
         setAllTasks(await getingData_Tasks());
         setAllRoutes(await getingData_Routes());
+        setCognitiveAbillities(await getCognitiveAbillities());
       } catch (error) {
         console.error(error.message);
       }
@@ -147,15 +150,20 @@ function Forms() {
   }, [changeRoute]);
 
   useEffect(() => {
-    console.log("columnsTaskabilityHE", columnsTaskabilityHE);
-    if (columnsTaskabilityHE.length > 0 && !loadingTaskAb) {
+    if (
+      cognitiveAbillities.length > 0 &&
+      columnsTaskabilityHE.length > 0 &&
+      !loadingTaskAb
+    ) {
+      console.log("cognitiveAbillities", cognitiveAbillities);
+
       loadingTaskAb = true;
-      cognitiveList.map((cognitive) => {
+      cognitiveAbillities.map((cognitive, index) => {
         if (cognitive.score === "A-D") {
           setColumnsTaskabilityHE((prev) => [
             ...prev,
             {
-              field: cognitive.NO.toString(),
+              field: index.toString(), // cognitive.NO.toString(),
               headerName: cognitive.trait,
               width: 200,
               editable: false,
@@ -166,7 +174,7 @@ function Forms() {
         }
       });
     }
-  }, []);
+  }, [cognitiveAbillities]);
 
   useEffect(() => {
     if (saveProfileChanges === true) {
@@ -194,24 +202,31 @@ function Forms() {
   }, [worker]);
 
   useEffect(() => {
-    if ((rowsCognitiveHE.length === 0 && !loadingCog) || changeUser) {
+    if (
+      (cognitiveAbillities.length > 0 &&
+        rowsCognitiveHE.length === 0 &&
+        !loadingCog) ||
+      changeUser
+    ) {
+      console.log("cognitiveAbillities2", cognitiveAbillities);
+
       if (changeUser) setRowsCognitiveHE([]);
       loadingCog = true;
 
       setPrevSelected((prevSelectedUsers) => [...prevSelectedUsers, worker]);
 
-      cognitiveList.map((cognitive) => {
+      cognitiveAbillities.map((cognitive, index) => {
         let cogValue = 0;
         if (cognitiveProfileValues != undefined)
-          cogValue = cognitiveProfileValues[cognitive.NO - 1]; //delete -1 when the data came from DB
+          cogValue = cognitiveProfileValues[index];
 
         setRowsCognitiveHE((prev) => [
           ...prev,
           {
-            id: cognitive.NO,
+            id: index,
             fieldHE: cognitive.trait,
             mustField: cognitive.requiredField,
-            subfield: cognitive.subTrait,
+            // subfield: cognitive.subTrait,
             grade: cogValue,
             // fieldEN: "first languege",
             classificationHE: cognitive.category,

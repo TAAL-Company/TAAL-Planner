@@ -1043,26 +1043,7 @@
     "ML": "לא",
     "possibleIntervention": ""
   },
-  {
-    "NO": 173,
-    "trait": "שמיעה באוזן ימין",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "category": "חושים",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": 174,
-    "trait": "שמיעה באוזן שמאל",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "category": "חושים",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
+
   {
     "NO": 101,
     "trait": "יכולת להיות במאמץ גופני (סיבולת)",
@@ -1784,6 +1765,26 @@
     "possibleIntervention": ""
   },
   {
+    "NO": 173,
+    "trait": "שמיעה באוזן ימין",
+    "requiredField": "כן",
+    "subTrait": "",
+    "score": "A-D",
+    "category": "חושים",
+    "ML": "לא",
+    "possibleIntervention": ""
+  },
+  {
+    "NO": 174,
+    "trait": "שמיעה באוזן שמאל",
+    "requiredField": "כן",
+    "subTrait": "",
+    "score": "A-D",
+    "category": "חושים",
+    "ML": "לא",
+    "possibleIntervention": ""
+  },
+  {
     "NO": 175,
     "trait": "טווח רגשי",
     "requiredField": "לא",
@@ -2311,7 +2312,7 @@
     "score": "A-D",
     "category": "תקשורת",
     "ML": "לא",
-    "התערבות אפשרית": 100,
+    "התערבות אפשרית": "",
     "possibleIntervention": ""
   },
   {

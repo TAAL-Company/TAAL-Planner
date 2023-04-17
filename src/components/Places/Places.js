@@ -506,6 +506,14 @@ const Places = (props) => {
     setMySite((mySite.name = selectedValue.name));
     setMySite((mySite.id = selectedValue.id));
 
+    allTasks.map(async (task) => {
+      if (task.sites.some((site) => site.id === mySite.id)) {
+        console.log("yarden task", task);
+
+        await setAllTasksOfTheSite((prev) => [...prev, task]);
+      }
+    });
+
     localStorage.setItem("MySite", JSON.stringify(mySite));
 
     console.log("onlyAllStation:", onlyAllStation);
@@ -521,15 +529,6 @@ const Places = (props) => {
         }
       })
     );
-    setStationArray((prev) => [
-      ...prev,
-      {
-        id: 0,
-        color: pastelColors[colorTemp],
-        parent: selectedValue.id,
-        title: "כללי",
-      },
-    ]);
 
     console.log("setStationArray: ", stationArray);
 
@@ -554,25 +553,27 @@ const Places = (props) => {
     console.log("routes ", myRoutes);
 
     let temp = [];
-
-    allTasks.map((task) => {
-      if (task.sites.some((site) => site.id === mySite.id))
-        setAllTasksOfTheSite((prev) => [...prev, task]);
-      // else {
-      //   //if there is station of my site
-      //   let temp = task.sites.find((element) =>
-      //     onlyAllStation.find(
-      //       (item) => item.id === element && item.parentSiteId === mySite.id
-      //     )
-      //   );
-
-      //   if (temp !== undefined) setAllTasksOfTheSite((prev) => [...prev, task]);
-      // }
-    });
   };
   useEffect(() => {
     console.log("stationArray dnd: ", stationArray);
-  }, [stationArray]);
+
+    if (allTasksOfTheSite.length > 0) {
+      console.log("allTasksOfTheSite yarden", allTasksOfTheSite);
+      let tasksWithoutStation = allTasksOfTheSite.filter((task) => {
+        if (task.stations.length == 0) return task;
+      });
+      setStationArray((prev) => [
+        ...prev,
+        {
+          id: 0,
+          color: pastelColors[stationArray.length],
+          parent: mySite.id,
+          title: "כללי",
+          tasks: tasksWithoutStation,
+        },
+      ]);
+    }
+  }, [allTasksOfTheSite]);
 
   const clickOnhreeDotsVerticaIcont = (value) => {
     if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);

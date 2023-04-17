@@ -139,6 +139,8 @@ const Stations = (props) => {
 
   const Display_The_Tasks = (e, n) => {
     console.log("eeeeeeeeeeeeeeeeeee: ", e);
+    console.log("eeeeeeeeeeeeeeeeeee myStation.id: ", myStation.id);
+
     if (myStation.id === e) {
       setMyStation((myStation.flag = false));
     } else {
@@ -152,23 +154,9 @@ const Stations = (props) => {
       tasks = [];
     }
 
-    props.allTasksOfTheSite.forEach((element) => {
-      let colorTemp = props.stationArray.find((item) => item.id === e).color;
+    let stationTemp = props.stationArray.find((station) => station.id === e);
 
-      if (e === 0) {
-        //כללי
-        if (
-          element.stations.length == 0 &&
-          element.sites.some((site) => site.siteId === props.mySite.id)
-        ) {
-          element.color = colorTemp;
-          tasks.push(element);
-        }
-      } else if (element.stations.some((station) => station.id === e)) {
-        element.color = colorTemp;
-        tasks.push(element);
-      }
-    });
+    stationTemp.tasks.map((task) => tasks.push(task));
 
     console.log("props.allTasks yyy", tasks);
     setFilteredData(

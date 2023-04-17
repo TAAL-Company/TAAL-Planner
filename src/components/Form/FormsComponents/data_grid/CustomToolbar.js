@@ -97,7 +97,20 @@ const CustomToolbar = ({
           <GridToolbarColumnsButton style={{ color: "black" }} />
           <GridToolbarFilterButton style={{ color: "black" }} />
           <GridToolbarDensitySelector style={{ color: "black" }} />
-          <GridToolbarExport style={{ color: "black" }} />
+          <GridToolbarExport
+            csvOptions={{
+              fileName: `${
+                tableType === "TaskabilityHE"
+                  ? "Taskability"
+                  : tableType === "CognitiveProfileHE"
+                  ? "CognitiveProfile"
+                  : "TA'AL EDITOR"
+              }_${new Date()
+                .toLocaleDateString("en-GB")
+                .replace(/\//g, "-")}.csv`,
+            }}
+            style={{ color: "black" }}
+          />
         </div>
 
         {isInfoUserRoute && (
@@ -125,7 +138,9 @@ const CustomToolbar = ({
                 {allRoutes.map((value, index) => {
                   return (
                     <option key={index} value={JSON.stringify(value)}>
-                      {value.name}
+                      {value.name
+                        .replace("&#8211;", "-")
+                        .replace("&#8217;", "'")}
                     </option>
                   );
                 })}

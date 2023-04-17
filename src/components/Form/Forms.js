@@ -1692,12 +1692,12 @@ function Forms() {
             {language === "hebrew" ? (
               <>
                 <i className="flag-icon flag-icon-il"></i>
-                <h4 style={{ marginLeft: "d" }}>HE</h4>
+                <h4 style={{ marginLeft: "d" }}>EN</h4>
               </>
             ) : (
               <>
                 <i className="flag-icon flag-icon-us"></i>
-                <h4 style={{ marginLeft: "d" }}>EN</h4>
+                <h4 style={{ marginLeft: "d" }}>HE</h4>
               </>
             )}
           </button>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DataTableLTR from "./FormsComponents/data_grid/DataTableLTR";
 import DataTableRTL from "./FormsComponents/data_grid/DataTableRTL";
+import TaskAbility from "./FormsComponents/data_grid/TaskAbility";
 import "./Forms.css";
 import Status from "./FormsComponents/classification_component/Status";
 import StatusLTR from "./FormsComponents/classification_component/StatusLTR";
@@ -13,6 +14,7 @@ import {
   postDataCognitiveProfile,
   getCognitiveProfile,
   getCognitiveAbillities,
+  gettaskCognitiveRequirements,
 } from "../../api/api";
 import taskpic1 from "./FormsComponents/PicturesForms/taskpic1.jpg";
 import taskpic2 from "./FormsComponents/PicturesForms/taskpic2.jpeg";
@@ -123,25 +125,78 @@ function Forms() {
   }, []);
   useEffect(() => {
     console.log("tasksOfChosenRoute", tasksOfChosenRoute);
-    tasksOfChosenRoute.map((task, index) => {
-      setRowsTaskabilityHE((prev) => [
-        ...prev,
-        {
-          id: index,
-          taskTaskabilityHE: task.title,
-          routeTaskabilityHE: routeForTasksAbility.name,
-          // siteTaskabilityHE:
-        },
-      ]);
+    let cognitiveRequirements;
+    let accept = false;
+    tasksOfChosenRoute.map(async (task, index) => {
+      try {
+        cognitiveRequirements = await gettaskCognitiveRequirements(task.id);
+        accept = true;
+      } catch (e) {
+        accept = false;
+      }
+      let cognitiveRequirementsValues = [];
+      console.log("task-cognitive-requirements", cognitiveRequirements);
+
+      if (cognitiveRequirements != undefined) {
+        for (
+          let index = 0;
+          index < cognitiveRequirements.value.length;
+          index++
+        ) {
+          console.log("ENTER");
+          const value = cognitiveRequirements.value[index];
+          const weight = cognitiveRequirements.weights[index];
+
+          let charCode = weight + 64;
+          let char = String.fromCharCode(charCode);
+
+          let valueAndWeight = char + value;
+          cognitiveRequirementsValues[index] = valueAndWeight;
+        }
+      }
+
+      console.log("cognitiveRequirementsValues", cognitiveRequirementsValues);
+      if (accept) {
+        setRowsTaskabilityHE((prev) => [
+          ...prev,
+          {
+            id: task.position,
+            taskTaskabilityHE: task.title,
+            routeTaskabilityHE: routeForTasksAbility.name,
+            uuid: task.id,
+            cognitiveRequirements: cognitiveRequirements,
+            ...cognitiveRequirementsValues.reduce((acc, value, index) => {
+              acc[index] = value;
+              return acc;
+            }, {}),
+            // siteTaskabilityHE:
+          },
+        ]);
+      } else {
+        setRowsTaskabilityHE((prev) => [
+          ...prev,
+          {
+            id: task.position,
+            taskTaskabilityHE: task.title,
+            routeTaskabilityHE: routeForTasksAbility.name,
+            uuid: task.id,
+          },
+        ]);
+      }
     });
   }, [tasksOfChosenRoute]);
 
   useEffect(() => {
     console.log("changeRoute", changeRoute);
     if (changeRoute) {
-      routeForTasksAbility.tasks.map((task) => {
-        let taskTemp = allTasks.find((temp) => temp.id == task.taskId);
+      routeForTasksAbility.tasks.map(async (task) => {
+        // let cogniitiveRequirements = await gettaskCognitiveRequirements(
+        //   task.id
+        // );
 
+        let taskTemp = allTasks.find((temp) => temp.id == task.taskId);
+        taskTemp.position = task.position;
+        // taskTemp.cogniitiveRequirements = cogniitiveRequirements;
         setTasksOfChosenRoute((prev) => [...prev, taskTemp]);
       });
 
@@ -159,16 +214,18 @@ function Forms() {
 
       loadingTaskAb = true;
       cognitiveAbillities.map((cognitive, index) => {
-        if (cognitive.score === "A-D") {
+        if (cognitive.ML) {
+          console.log("cognitive.ML", cognitive.ML);
           setColumnsTaskabilityHE((prev) => [
             ...prev,
             {
               field: index.toString(), // cognitive.NO.toString(),
               headerName: cognitive.trait,
               width: 200,
-              editable: false,
+              editable: true,
               headerAlign: "center",
               align: "center",
+              category: cognitive.category,
             },
           ]);
         }
@@ -182,6 +239,8 @@ function Forms() {
       if (worker.length != 0) {
         postDataCognitiveProfile(worker.id, cognitiveProfileValues);
         console.log("66 cognitiveProfileValues", cognitiveProfileValues);
+
+        alert("המידע נשמר !");
       }
     }
   }, [saveProfileChanges]);
@@ -220,6 +279,21 @@ function Forms() {
         if (cognitiveProfileValues != undefined)
           cogValue = cognitiveProfileValues[index];
 
+        const valueMap = {
+          5: "A",
+          4: "A",
+          3: "B",
+          2: "C",
+          1: "D",
+          0: "D",
+        };
+
+        // Convert input value to its corresponding numerical value
+        let outputValue = 0;
+        if (valueMap.hasOwnProperty(cogValue)) {
+          outputValue = valueMap[cogValue];
+        }
+
         setRowsCognitiveHE((prev) => [
           ...prev,
           {
@@ -227,7 +301,7 @@ function Forms() {
             fieldHE: cognitive.trait,
             mustField: cognitive.requiredField,
             // subfield: cognitive.subTrait,
-            grade: cogValue,
+            grade: outputValue,
             // fieldEN: "first languege",
             classificationHE: cognitive.category,
             // classificationEN: "languege",
@@ -2046,8 +2120,9 @@ function Forms() {
             {selectedTable === "taskability" && (
               <div>
                 <div className="headlineForms">דרישות למשימה</div>
+                {/* <TaskAbility /> */}
                 <div className="tableForms">
-                  <DataTableRTL
+                  <TaskAbility
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}

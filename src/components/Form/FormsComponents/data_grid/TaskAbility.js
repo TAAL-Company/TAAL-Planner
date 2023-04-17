@@ -39,7 +39,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const DataTableRTL = ({
+const TaskAbility = ({
   columns,
   setColumns,
   rows,
@@ -194,126 +194,25 @@ const DataTableRTL = ({
     }));
   };
 
-  const columnGroupingModel = [
-    {
-      groupId: "PrivateInfoHE",
-      description: "",
-      renderHeaderGroup: (params) => (
-        <div
-          className="groupingHeaderNameForms"
-          style={{ cursor: "pointer", color: "white" }}
-          onClick={() => {
-            console.log("PrivateInfoHE");
-            // fillFalse({
-            //   groupingColumn: "PrivateInfoHE",
-            //   show: !columnFillRows.PrivateInfoHE,
-            // });
-            // setColumnFillRows((prev) => ({
-            //   ...prev,
-            //   PrivateInfoHE: !prev.PrivateInfoHE,
-            // }));
-            setOpenDialogTrueFalse(true);
-            setGroupName("פרטים אישיים");
-          }}
-        >
-          פרטים אישיים
-        </div>
-      ),
-      children: [
-        { field: "fieldHEPrivateCard" },
-        { field: "xPrivateCard" },
-        { field: "yPrivateCard" },
-        { field: "fieldENPrivateCard" },
-        { field: "classificationHEPrivateCard" },
-      ],
-    },
-    {
-      groupId: "HistoryHE",
-      renderHeaderGroup: (params) => (
-        <div
-          className="groupingHeaderNameForms"
-          style={{ cursor: "pointer", color: "white" }}
-          onClick={() => {
-            console.log("HistoryHE");
-            // fillFalse({
-            //   groupingColumn: "HistoryHE",
-            //   show: !columnFillRows.HistoryHE,
-            // });
-            // setColumnFillRows((prev) => ({
-            //   ...prev,
-            //   HistoryHE: !prev.HistoryHE,
-            // }));
-            setOpenDialogTrueFalse(true);
-            setGroupName("היסטוריה");
-          }}
-        >
-          היסטוריה
-        </div>
-      ),
-      children: [
-        { field: "beginningOfWorkPrivateCard" },
-        { field: "employersPrivateCard" },
-        { field: "reportsPrivateCard" },
-        { field: "improvementPrivateCard" },
-        { field: "interventionHEPrivateCard" },
-      ],
-    },
-    {
-      groupId: "LanguageComprehensionHE",
-      renderHeaderGroup: (params) => (
-        <div
-          className="groupingHeaderNameForms"
-          style={{ cursor: "pointer", color: "white" }}
-          onClick={() => {
-            console.log("LanguageComprehensionHE");
-            // fillFalse({
-            //   groupingColumn: "LanguageComprehensionHE",
-            //   show: !columnFillRows.LanguageComprehensionHE,
-            // });
-            // setColumnFillRows((prev) => ({
-            //   ...prev,
-            //   LanguageComprehensionHE: !prev.LanguageComprehensionHE,
-            // }));
-            setOpenDialogTrueFalse(true);
-            setGroupName("הבנת שפה");
-          }}
-        >
-          הבנת שפה
-        </div>
-      ),
-      children: [
-        { field: "understandSpokenLanguageComprehension" },
-        { field: "understandWrittenLanguageComprehension" },
-      ],
-    },
+  useEffect(() => {
+    columns.map((col) => {});
+  }, []);
+  const groups = columns.reduce((groups, column) => {
+    const group = column.category;
+    if (group != undefined) {
+      if (!groups[group]) {
+        groups[group] = {
+          groupId: group,
+          children: [],
+        };
+      }
+      groups[group].children.push({ field: column.field });
+    }
+    return groups;
+  }, {});
+  const columnGroups = Object.values(groups);
 
-    {
-      groupId: "LanguagesHE",
-      renderHeaderGroup: (params) => (
-        <div
-          className="groupingHeaderNameForms"
-          style={{ cursor: "pointer", color: "white" }}
-          onClick={() => {
-            console.log("LanguagesHE");
-            // fillFalse({
-            //   groupingColumn: "LanguagesHE",
-            //   show: !columnFillRows.LanguagesHE,
-            // });
-            // setColumnFillRows((prev) => ({
-            //   ...prev,
-            //   LanguagesHE: !prev.LanguagesHE,
-            // }));
-            setOpenDialogTrueFalse(true);
-            setGroupName("שפות");
-          }}
-        >
-          שפות
-        </div>
-      ),
-      children: [{ field: "hebrew" }, { field: "english" }],
-    },
-  ];
-
+  console.log("columnGroups", columnGroups);
   return (
     <div className="allForms">
       <Box
@@ -450,7 +349,7 @@ const DataTableRTL = ({
 
             setSelectedRows(selectedRows);
           }}
-          columnGroupingModel={columnGroupingModel}
+          columnGroupingModel={columnGroups}
           localeText={heIL.components.MuiDataGrid.defaultProps.localeText}
           components={{
             Toolbar: () => (
@@ -551,4 +450,4 @@ const DataTableRTL = ({
   );
 };
 
-export default DataTableRTL;
+export default TaskAbility;

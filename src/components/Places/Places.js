@@ -826,17 +826,17 @@ const Places = (props) => {
 
         }
         
-                      {/* sure for Remove */}
+     {/* sure for Remove */}
       <Dialog
         open={openRemove}
         onClose={handleCloseRemove}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"מחיקת משתמש"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"מחיקת מסלול"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            האם אתה בטוח במחיקת המשתמש?
+            האם אתה בטוח במחיקת המסלול?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

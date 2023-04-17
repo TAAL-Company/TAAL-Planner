@@ -30,6 +30,7 @@ function Modal({
   language,
   routeName,
   tasksForNewRoute,
+  routeUUID,
 }) {
   console.log("flagTest:", flagTest);
   const [obj, set_obj] = useState({
@@ -96,11 +97,11 @@ function Modal({
 
       console.log("tasksForNewRoute : ", tasksForNewRoute);
 
-      insertRoute(newRouteObj).then((data) => {
+      insertRoute(routeUUID, newRouteObj).then((data) => {
         console.log("obj", data);
         setDone(true);
         setFlagClickOK((flagClickOK = false));
-        window.location.replace("/forms");
+        // window.location.replace("/forms");
       });
     }
   }
@@ -153,7 +154,7 @@ function Modal({
   const handleSubmitRouteTitle = (event) => {
     event.preventDefault();
 
-    console.log("routeTitle", localStorage.getItem("MySite").id);
+    console.log("routeTitle", [JSON.parse(localStorage.getItem("MySite")).id]);
     // setNewTitleForRoute(routeTitle);
 
     const routeData = {

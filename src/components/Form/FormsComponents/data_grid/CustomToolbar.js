@@ -3,7 +3,10 @@ import "./DataTableRTL.css";
 import InputAdornment from "@mui/material/InputAdornment";
 import SearchIcon from "@mui/icons-material/Search";
 import { useEffect, useState } from "react";
-import { getingDataUsers } from "../../../../api/api";
+import {
+  getingDataUsers,
+  postTaskCognitiveRequirements,
+} from "../../../../api/api";
 import "./CustomToolbar.css";
 
 import {
@@ -42,6 +45,7 @@ const CustomToolbar = ({
   routeForTasksAbility,
   setRouteForTasksAbility,
   prevSelectedWorker,
+  newTaskCognitiveRequirements,
 }) => {
   // const [prevSelected, setPrevSelected] = useState([]);
   useEffect(() => {
@@ -49,8 +53,20 @@ const CustomToolbar = ({
   }, [prevSelectedWorker]);
 
   const saveProfileChanges = (e) => {
-    console.log("true");
-    setSaveProfileChanges(true);
+    console.log("HII");
+    if (tableType === "CognitiveProfileHE") {
+      console.log("true");
+      setSaveProfileChanges(true);
+    } else if (tableType === "TaskabilityHE") {
+      console.log("HII");
+      newTaskCognitiveRequirements.forEach((element) => {
+        try {
+          let post = postTaskCognitiveRequirements(element);
+        } catch (error) {}
+
+        alert("המידע נשמר !");
+      });
+    }
   };
   const handleChangeUser = (event) => {
     const selectedValue = JSON.parse(event.target.value);
@@ -233,6 +249,7 @@ const CustomToolbar = ({
                 fontSize="large"
                 color="primary"
                 style={{ zIndex: "5" }}
+                onClick={saveProfileChanges}
               />
             </div>
           </div>

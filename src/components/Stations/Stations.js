@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getingDataTasks } from "../../api/api";
+import { getingDataTasks, deleteStation } from "../../api/api";
 import "./style.css";
 import TasksComp from "../Tasks_comp/Tasks_comp";
 import ModalStations from "../Modal/Modal_Stations";
@@ -10,6 +10,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import textArea from "../../Pictures/textArea.svg";
 import Modal_dropdown from "../Modal/Modal_dropdown";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import Modal_Delete from "../Modal/Modal_Delete";
 
 //-----------------------
 // let allTasks = [];
@@ -36,7 +37,8 @@ const Stations = (props) => {
   const [stationArray, updateStationArray] = useState(props.stationArray);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState("");
-
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+  const [openRemove, setOpenRemove] = React.useState(false);
   useEffect(() => {
     console.log("stations requestForEditing: ", requestForEditing);
 
@@ -44,8 +46,35 @@ const Stations = (props) => {
       setModalOpen(true);
     else if (requestForEditing == "duplication") {
       console.log("openThreeDotsVertical", openThreeDotsVertical);
+    } else if (requestForEditing == "delete") {
+      setOpenRemove(true);
+      //Modal_Delete
     }
   }, [requestForEditing]);
+
+  const handleCloseRemove = () => {
+    setOpenRemove(false);
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing("");
+  };
+  const handleCloseRemoveConfirm = async () => {
+    console.log("DELETE:", stationArray[openThreeDotsVertical].id);
+    let deleteStationTemp = deleteStation(
+      stationArray[openThreeDotsVertical].id
+    );
+
+    console.log("deleteStation:", deleteStationTemp);
+    if (deleteStationTemp.status === 200) {
+      alert("המחיקה בוצעה בהצלחה!");
+      const newStations = [...stationArray];
+      newStations.splice(openThreeDotsVertical, 1); // remove one element at index x
+      updateStationArray(newStations);
+    }
+
+    setOpenRemove(false);
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing("");
+  };
 
   useEffect(() => {
     updateStationArray(props.stationArray);
@@ -352,6 +381,14 @@ const Stations = (props) => {
           />
         </>
       )}
+
+      <Modal_Delete
+        openRemove={openRemove}
+        handleCloseRemove={handleCloseRemove}
+        DialogTitle={"מחיקת תחנה"}
+        DialogContent={"האם אתה בטוח במחיקת התחנה?"}
+        handleCloseRemoveConfirm={handleCloseRemoveConfirm}
+      />
     </>
   );
 };

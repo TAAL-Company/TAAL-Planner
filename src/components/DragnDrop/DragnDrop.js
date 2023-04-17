@@ -342,6 +342,7 @@ function DragnDrop(props) {
           setOpenModal={setModalOpenAddRoute}
           setText={get_Name}
           routeName={props.tasksOfRoutes.name}
+          routeUUID={props.tasksOfRoutes.id}
           tasksForNewRoute={board}
         />
       )}

@@ -155,20 +155,7 @@ export const getingData_Places = async () => {
 
   return allPlaces;
 };
-export const getingDataStation = async () => {
-  let allStations;
 
-  await get("https://prod-web-app0da5905.azurewebsites.net/stations", {
-    params: {
-      "Content-Type": "application/json",
-      "Cache-Control": "no-cache",
-    },
-  }).then((res) => {
-    allStations = res.data;
-  });
-
-  return allStations;
-};
 export const getingDataPlaces = async () => {
   let allPlaces;
 
@@ -240,7 +227,7 @@ export const getingDataUsers = async () => {
   return allUsers;
 };
 
-export const insertRoute = (routeData, callback) => {
+export const insertRoute = async (routeUUID, routeData, callback) => {
   const headers = {
     "Content-Type": "application/json",
     accept: "application/json",
@@ -251,10 +238,13 @@ export const insertRoute = (routeData, callback) => {
   //   ...routeData
   // };
 
-  return axios
-    .post("https://prod-web-app0da5905.azurewebsites.net/routes", routeData, {
+  return await patch(
+    "https://prod-web-app0da5905.azurewebsites.net/routes/" + routeUUID,
+    routeData,
+    {
       headers: headers,
-    })
+    }
+  )
     .then(async (response) => {
       return response.data;
     })
@@ -286,49 +276,6 @@ export const uploadFile = async (file, type) => {
 
     return data;
   } catch (error) {
-    throw error;
-  }
-};
-export const insertStation = async (
-  get_title,
-  getDescription,
-  site,
-  imageData,
-  audioData
-) => {
-  try {
-    const response = await fetch(
-      "https://prod-web-app0da5905.azurewebsites.net/stations",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "application/json",
-          // Authorization: "Bearer" + sessionStorage.jwt,
-        },
-        body: JSON.stringify({
-          title: get_title,
-          parentSiteId: site.id,
-          subtitle: getDescription,
-          // fields: {
-          //   image: imageData,
-          //   audio: audioData.id,
-          // },
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      console.log("res: " + JSON.stringify(response));
-      throw new Error(`Error inserting statin: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    return data;
-  } catch (error) {
-    console.error(error);
-
     throw error;
   }
 };
@@ -546,4 +493,142 @@ export const getCognitiveAbillities = async () => {
   console.log("res CognitiveAbillities: ", CognitiveAbillities);
 
   return CognitiveAbillities;
+};
+export const gettaskCognitiveRequirements = async (task_id) => {
+  let cognitiveRequirements;
+
+  await get(
+    "https://prod-web-app0da5905.azurewebsites.net/task-cognitive-requirements/" +
+      task_id
+  ).then((res) => {
+    cognitiveRequirements = res.data;
+  });
+  console.log("res task-cognitive-requirements: ", cognitiveRequirements);
+
+  return cognitiveRequirements;
+};
+export function postTaskCognitiveRequirements(data) {
+  const url =
+    "https://prod-web-app0da5905.azurewebsites.net/task-cognitive-requirements/";
+  const body = JSON.stringify(data);
+  const headers = {
+    "Content-Type": "application/json",
+    accept: "application/json",
+  };
+
+  // Make a PATCH request to the server
+  fetch(url + data.taskId, {
+    method: "PATCH",
+    body: body,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (response.status === 404) {
+        // If the resource is not found, make a POST request instead
+        return fetch(url, {
+          method: "POST",
+          body: body,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+      } else {
+        return response;
+      }
+    })
+    .then((response) => {
+      return response;
+      // Handle the response
+    })
+    .catch((error) => {
+      // Handle errors
+    });
+}
+
+/* STATIONS */
+export const insertStation = async (
+  get_title,
+  getDescription,
+  site,
+  imageData,
+  audioData
+) => {
+  try {
+    const response = await fetch(
+      "https://prod-web-app0da5905.azurewebsites.net/stations",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          accept: "application/json",
+          // Authorization: "Bearer" + sessionStorage.jwt,
+        },
+        body: JSON.stringify({
+          title: get_title,
+          parentSiteId: site.id,
+          subtitle: getDescription,
+          // fields: {
+          //   image: imageData,
+          //   audio: audioData.id,
+          // },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.log("res: " + JSON.stringify(response));
+      throw new Error(`Error inserting statin: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    console.error(error);
+
+    throw error;
+  }
+};
+
+export function deleteStation(stationUUID) {
+  const url =
+    "https://prod-web-app0da5905.azurewebsites.net/stations/" + stationUUID;
+  const options = {
+    method: "DELETE",
+    headers: {
+      Accept: "*/*",
+    },
+  };
+
+  return fetch(url, options) // add return statement here
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      return data; // return data from the fetch request
+    })
+    .catch((error) => {
+      console.error("There was a problem with the DELETE request:", error);
+    });
+}
+
+export const getingDataStation = async () => {
+  let allStations;
+
+  await get("https://prod-web-app0da5905.azurewebsites.net/stations", {
+    params: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+    },
+  }).then((res) => {
+    allStations = res.data;
+  });
+
+  return allStations;
 };

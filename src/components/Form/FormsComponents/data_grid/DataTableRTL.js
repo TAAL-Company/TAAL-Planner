@@ -318,7 +318,7 @@ const DataTableRTL = ({
     <div className="allForms">
       <Box
         sx={{
-          height: "80vh",
+          // height: "80vh",
           width: "100%",
           direction: "ltr",
           // backgroundColor: "#256FA133",
@@ -370,6 +370,7 @@ const DataTableRTL = ({
         }}
       >
         <DataGridPro
+          autoHeight
           columnTypes={{
             string: {
               autoWidth: true,

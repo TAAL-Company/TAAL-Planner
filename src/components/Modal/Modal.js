@@ -3,6 +3,7 @@ import "./Modal.css";
 import {
   get,
   insertRoute,
+  updateRoute,
   getingDataUsers,
   getingData_Users,
 } from "../../api/api";
@@ -97,7 +98,7 @@ function Modal({
 
       console.log("tasksForNewRoute : ", tasksForNewRoute);
 
-      insertRoute(routeUUID, newRouteObj).then((data) => {
+      updateRoute(routeUUID, newRouteObj).then((data) => {
         console.log("obj", data);
         setDone(true);
         setFlagClickOK((flagClickOK = false));
@@ -155,14 +156,17 @@ function Modal({
     event.preventDefault();
 
     console.log("routeTitle", [JSON.parse(localStorage.getItem("MySite")).id]);
-    // setNewTitleForRoute(routeTitle);
+    setNewTitleForRoute(routeTitle);
 
     const routeData = {
       name: routeTitle,
       siteIds: [JSON.parse(localStorage.getItem("MySite")).id],
     };
 
+    console.log("routeData", routeData);
+
     insertRoute(routeData).then((data) => {
+      console.log("data: ", data);
       setNewRoute(data);
       setNewTitleForRoute(data);
       setRouteTitle("");

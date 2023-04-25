@@ -47,7 +47,6 @@
 }
 
 .MyTitle {
-
   padding-right: 4%;
   height: 48px;
   padding-right: 4%;
@@ -66,7 +65,8 @@
 .eyeIcon {
   width: 66px;
   height: 24px;
-  background: transparent url('../../Pictures/ic_duplicate.svg') 0% 0% no-repeat padding-box;
+  background: transparent url("../../Pictures/ic_duplicate.svg") 0% 0% no-repeat
+    padding-box;
   opacity: 1;
   position: relative;
   top: 2px;
@@ -87,7 +87,7 @@
   align-content: center;
 }
 
-.threeDotsVerticalEng:hover+.ModalIcons {
+.threeDotsVerticalEng:hover + .ModalIcons {
   display: block;
 }
 
@@ -133,7 +133,6 @@
   }
 
   .Planner {
-
     overflow-x: scroll;
     height: fit-content;
   }
@@ -170,14 +169,13 @@
 
 .buttons.english {
   margin-left: 56px;
-
 }
 
 .AddButton {
   height: 56px;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 4px 10px #00000033;
-  border: 2px dashed #9B9B9B;
+  border: 2px dashed #9b9b9b;
   border-radius: 8px;
   opacity: 1;
   width: 236px;
@@ -190,7 +188,7 @@
 .plus {
   width: 93px;
   height: 24px;
-  color: #9B9B9B;
+  color: #9b9b9b;
   opacity: 1;
   align-self: center;
 }
@@ -209,12 +207,12 @@
   /* opacity: 1;
   margin-bottom: 17px; */
   /* width: 272px; */
-  background: #256FA1;
+  background: #256fa1;
   color: white;
 }
 
 .name_of_site_title {
-  color: #7A78B7;
+  color: #7a78b7;
   /* font-size: 23px; */
 }
 
@@ -252,7 +250,7 @@ h3 {
 }
 
 .nameOfButton {
-  width: 100%;
+  width: fit-content;
   font: normal normal bold 15px/20px Assistant;
   letter-spacing: 0px;
   color: #505050;
@@ -280,12 +278,12 @@ h3 {
 .searchButton {
   width: 231px;
   height: 29px;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 2px 2px #00000080;
   border-radius: 21px;
   border: #dde2fa;
   /* margin-right: 19px; */
-  background-image: url('../../Pictures/Search.svg');
+  background-image: url("../../Pictures/Search.svg");
   background-position: 202px 5px;
   padding: 12px 50px 12px 40px;
   font-size: 12px;

@@ -729,6 +729,10 @@ const Places = (props) => {
                       {openThreeDotsVertical === index ? (
                         <Modal_dropdown
                           setRequestForEditing={setRequestForEditing}
+                          editable={true}
+                          Reproducible={true}
+                          details={true}
+                          erasable={true}
                         />
                       ) : (
                         <></>
@@ -762,6 +766,7 @@ const Places = (props) => {
           </div>
         </div>
         <Stations
+          setAllTasksOfTheSite={setAllTasksOfTheSite}
           percentProgressBar={percentProgressBar}
           setPercentProgressBar={setPercentProgressBar}
           progressBarFlag={progressBarFlag}
@@ -771,6 +776,7 @@ const Places = (props) => {
           firstStationName={firstStationName}
           boardArrayDND={boardArrayDND}
           stationArray={stationArray}
+          setStationArray={setStationArray}
           idTask={thisIdTask}
           allStations={onlyAllStation}
           setOnlyAllStation={setOnlyAllStation}

@@ -4,9 +4,10 @@ import { FcMultipleInputs } from "react-icons/fc";
 import { RiAsterisk } from "react-icons/ri";
 import { BsExclamationLg } from "react-icons/bs";
 import Modal_Loading from "./Modal_Loading";
+import CircularProgressWithLabel from "./progressbar";
 import { baseUrl } from "../../config";
 import stopIcon from "../../Pictures/stopIcon.svg";
-import { uploadFile, insertStation } from "../../api/api";
+import { uploadFile, insertStation, updateStation } from "../../api/api";
 
 //--------------------------
 // let getPicture, getSound;
@@ -55,25 +56,46 @@ const Modal_Stations = (props) => {
   async function Post_Station() {
     setFlagClickOK((flagClickOK = true));
 
-    let imageData;
-    let audioData;
-
-    try {
-      if (picture) {
-        imageData = await uploadFile(picture, "Image");
-        console.log(`Image uploaded successfully:`, imageData);
-      }
-      if (audio) {
-        audioData = await uploadFile(audio, "Audio");
-        console.log(`Audio uploaded successfully:`, audioData);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-
     if (get_title === "" || getDescription === "") {
       alert("עליך למלא שדות חובה המסומנים בכוכבית");
+    } else if (
+      props.requestForEditing === "edit" ||
+      props.requestForEditing == "details"
+    ) {
+      let response = await updateStation(
+        props.stationArray[props.stationIndex].id,
+        get_title,
+        getDescription,
+        props.mySite.id
+      );
+      if (response.status === 200) {
+        alert("התחנה עודכנה");
+        setFlagClickOK((flagClickOK = false));
+        props.setOpenModalPlaces(false);
+        props.stationArray[props.stationIndex].title = get_title;
+        props.stationArray[props.stationIndex].subtitle = getDescription;
+
+        props.setOpenModalPlaces(false);
+        props.setOpenThreeDotsVertical(-1);
+        props.setRequestForEditing("");
+      }
     } else {
+      let imageData;
+      let audioData;
+
+      try {
+        if (picture) {
+          imageData = await uploadFile(picture, "Image");
+          console.log(`Image uploaded successfully:`, imageData);
+        }
+        if (audio) {
+          audioData = await uploadFile(audio, "Audio");
+          console.log(`Audio uploaded successfully:`, audioData);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+
       try {
         const post = await insertStation(
           get_title,
@@ -83,12 +105,11 @@ const Modal_Stations = (props) => {
         setDone(true);
         setFlagClickOK((flagClickOK = false));
 
-        let length = props.stationArray.length;
+        let length = props.stationArray.length + 1;
         let color = props.pastelColors[length];
         post.color = color;
         props.setOpenModalPlaces(false);
-
-        await props.stationArray.push(post);
+        await props.setStationArray((stations) => [...stations, post]);
       } catch (error) {
         alert("שם התחנה כבר קיים - בחר שם אחר");
         console.error(error);

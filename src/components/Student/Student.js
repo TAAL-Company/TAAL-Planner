@@ -256,7 +256,13 @@ const Cards = () => {
               </button>
 
               {openThreeDotsVertical === index ? (
-                <Modal_dropdown setRequestForEditing={setRequestForEditing} />
+                <Modal_dropdown
+                  setRequestForEditing={setRequestForEditing}
+                  editable={true}
+                  Reproducible={true}
+                  details={true}
+                  erasable={true}
+                />
               ) : (
                 <></>
               )}

@@ -38,52 +38,6 @@ export const patch = async (url, body, headers) => {
   }
 };
 
-export const getingData_Tasks = async () => {
-  let allTasks;
-  const headers = {
-    "Content-Type": "application/json",
-    accept: "application/json",
-  };
-
-  await get("https://prod-web-app0da5905.azurewebsites.net/tasks", {
-    headers: headers,
-  }).then((res) => {
-    allTasks = res.data;
-  });
-
-  return allTasks;
-};
-
-export const getingDataTasks = async () => {
-  let allTasks;
-
-  await get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
-    params: {
-      per_page: 100,
-      "Cache-Control": "no-cache",
-    },
-  }).then((res) => {
-    let max_pages = res.headers["x-wp-totalpages"];
-
-    allTasks = res.data;
-    if (max_pages > 1) {
-      for (let i = 2; i <= max_pages; i++) {
-        get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
-          params: {
-            per_page: 100,
-            page: i,
-            "Cache-Control": "no-cache",
-          },
-        }).then((res) => {
-          Array.prototype.push.apply(allTasks, res.data);
-        });
-      }
-    }
-  });
-  // await flushCache();
-
-  return allTasks;
-};
 export const getingData_Users = async () => {
   let all_Users;
 
@@ -227,7 +181,32 @@ export const getingDataUsers = async () => {
   return allUsers;
 };
 
-export const insertRoute = async (routeUUID, routeData, callback) => {
+export const insertRoute = async (routeData, callback) => {
+  const headers = {
+    "Content-Type": "application/json",
+    accept: "application/json",
+    // Authorization: "Bearer" + sessionStorage.jwt,
+  };
+
+  // const data = {
+  //   ...routeData
+  // };
+
+  return await post(
+    "https://prod-web-app0da5905.azurewebsites.net/routes/",
+    routeData,
+    {
+      headers: headers,
+    }
+  )
+    .then(async (response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+export const updateRoute = async (routeUUID, routeData, callback) => {
   const headers = {
     "Content-Type": "application/json",
     accept: "application/json",
@@ -280,43 +259,6 @@ export const uploadFile = async (file, type) => {
   }
 };
 
-export const insertTask = async (
-  get_title,
-  myPlacesChoice,
-  imageData,
-  audioData,
-  siteIds
-) => {
-  try {
-    const response = await fetch(
-      "https://prod-web-app0da5905.azurewebsites.net/tasks",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-        },
-        body: JSON.stringify({
-          title: get_title,
-          siteIds: [siteIds],
-          stationIds: myPlacesChoice,
-          estimatedTimeSeconds: 0,
-          // subtitle
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Error inserting task: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-
-    return data;
-  } catch (error) {
-    throw error;
-  }
-};
 export const insertUser = async (user) => {
   try {
     const response = await fetch(
@@ -546,8 +488,134 @@ export function postTaskCognitiveRequirements(data) {
       // Handle errors
     });
 }
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  TASKS  ~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+export const getingData_Tasks = async () => {
+  let allTasks;
+  const headers = {
+    "Content-Type": "application/json",
+    accept: "application/json",
+  };
 
-/* STATIONS */
+  await get("https://prod-web-app0da5905.azurewebsites.net/tasks", {
+    headers: headers,
+  }).then((res) => {
+    allTasks = res.data;
+  });
+
+  return allTasks;
+};
+export const insertTask = async (
+  get_title,
+  subtitle,
+  myPlacesChoice,
+  imageData,
+  audioData,
+  siteIds
+) => {
+  try {
+    const response = await fetch(
+      "https://prod-web-app0da5905.azurewebsites.net/tasks",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+        },
+        body: JSON.stringify({
+          title: get_title,
+          siteIds: [siteIds],
+          stationIds: myPlacesChoice,
+          estimatedTimeSeconds: 0,
+          subtitle: subtitle,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error inserting task: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const updateTask = async (id, newTask) => {
+  const url = "https://prod-web-app0da5905.azurewebsites.net/tasks/" + id;
+  // const body = {
+  //   title: get_title,
+  //   siteIds: [siteIds],
+  //   stationIds: stationIds,
+  //   estimatedTimeSeconds: 0,
+  //   subtitle: subtitle,
+  // };
+  const headers = {
+    "Content-Type": "application/json",
+    Accept: "*/*",
+  };
+
+  return await patch(url, newTask, headers);
+};
+export const getingDataTasks = async () => {
+  let allTasks;
+
+  await get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
+    params: {
+      per_page: 100,
+      "Cache-Control": "no-cache",
+    },
+  }).then((res) => {
+    let max_pages = res.headers["x-wp-totalpages"];
+
+    allTasks = res.data;
+    if (max_pages > 1) {
+      for (let i = 2; i <= max_pages; i++) {
+        get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
+          params: {
+            per_page: 100,
+            page: i,
+            "Cache-Control": "no-cache",
+          },
+        }).then((res) => {
+          Array.prototype.push.apply(allTasks, res.data);
+        });
+      }
+    }
+  });
+  // await flushCache();
+
+  return allTasks;
+};
+export const deleteTask = async (taskUUID) => {
+  const url = "https://prod-web-app0da5905.azurewebsites.net/tasks/" + taskUUID;
+  const options = {
+    method: "DELETE",
+    headers: {
+      Accept: "*/*",
+    },
+  };
+
+  try {
+    const response = await fetch(url, options); // add return statement here
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error("There was a problem with the DELETE request:", error);
+  }
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  STATIONS  ~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
 export const insertStation = async (
   get_title,
   getDescription,
@@ -592,7 +660,7 @@ export const insertStation = async (
   }
 };
 
-export function deleteStation(stationUUID) {
+export async function deleteStation(stationUUID) {
   const url =
     "https://prod-web-app0da5905.azurewebsites.net/stations/" + stationUUID;
   const options = {
@@ -602,20 +670,17 @@ export function deleteStation(stationUUID) {
     },
   };
 
-  return fetch(url, options) // add return statement here
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      console.log(data);
-      return data; // return data from the fetch request
-    })
-    .catch((error) => {
-      console.error("There was a problem with the DELETE request:", error);
-    });
+  try {
+    const response = await fetch(url, options); // add return statement here
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = response;
+    console.log("data", data);
+    return data;
+  } catch (error) {
+    console.error("There was a problem with the DELETE request:", error);
+  }
 }
 
 export const getingDataStation = async () => {
@@ -631,4 +696,19 @@ export const getingDataStation = async () => {
   });
 
   return allStations;
+};
+
+export const updateStation = async (id, title, subtitle, parentSiteId) => {
+  const url = "https://prod-web-app0da5905.azurewebsites.net/stations/" + id;
+  const body = {
+    title: title,
+    subtitle: subtitle,
+    parentSiteId: parentSiteId,
+  };
+  const headers = {
+    "Content-Type": "application/json",
+    Accept: "*/*",
+  };
+
+  return await patch(url, body, headers);
 };

@@ -36,26 +36,34 @@ function Tag({
   dragFromCover,
   stationColor,
   language,
+  openThreeDotsVertical,
+  setOpenThreeDotsVertical,
+  requestForEditing,
+  setRequestForEditing,
+  openThreeDotsVerticalBoard,
+  setOpenThreeDotsVerticalBoard,
+  requestForEditingBoard,
+  setRequestForEditingBoard,
 }) {
   localStorage.setItem("myLastStation", JSON.stringify(myLastStation));
-  console.log("title in Tag:", title);
-  console.log("myLastStation:", myLastStation);
-  console.log("width width width widthwidthwidth:", kavTaskTopMarginTop);
-  console.log("myStation:", myStation);
-  console.log("countcountcountcount:", count);
-  console.log("id:", id);
-  console.log("image data tag: ", dataImg);
+  // console.log("title in Tag:", title);
+  // console.log("myLastStation:", myLastStation);
+  // console.log("width width width widthwidthwidth:", kavTaskTopMarginTop);
+  // console.log("myStation:", myStation);
+  // console.log("countcountcountcount:", count);
+  // console.log("id:", id);
+  // console.log("image data tag: ", dataImg);
 
-  console.log("flagBoard:", flagBoard);
-  console.log("nameStation:", nameStation);
-  console.log("borderLeft:", borderLeft);
-  console.log("data:", data);
-  // console.log("idImg: ", idImg)
+  // console.log("flagBoard:", flagBoard);
+  // console.log("nameStation:", nameStation);
+  // console.log("borderLeft:", borderLeft);
+  // console.log("data:", data);
+  // // console.log("idImg: ", idImg)
 
   const [, setIdListen] = useState(0);
   const [, setDataListen] = useState({});
-  const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
-  const [requestForEditing, setRequestForEditing] = useState("");
+  // const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
+  // const [requestForEditing, setRequestForEditing] = useState("");
 
   // console.log("flag Tag", flag)
 
@@ -70,6 +78,12 @@ function Tag({
   useEffect(() => {
     console.log("isDragging: ", isDragging);
   }, [isDragging]);
+
+  const clickOnhreeDotsVerticaIcontBoard = (value) => {
+    console.log("value", value);
+    if (openThreeDotsVerticalBoard == value) setOpenThreeDotsVerticalBoard(-1);
+    else setOpenThreeDotsVerticalBoard(value);
+  };
 
   const clickOnhreeDotsVerticaIcont = (value) => {
     if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
@@ -192,24 +206,46 @@ function Tag({
                 ref={drag}
                 src={title}
               >
-                {/* {dragFromCover !== "reorderBoard" ?
-                  <BsThreeDotsVertical className="threeDotsVerticalTasks" /> :
-                  <BsList className="threeDotsVerticalTasks" />
-                } */}
                 <div className="dropdownThreeDots">
                   <button
                     className="threeDotsVerticalEng"
-                    onClick={() => clickOnhreeDotsVerticaIcont(id)}
+                    onClick={() => {
+                      {
+                        if (dragFromCover === "TasksCover") {
+                          clickOnhreeDotsVerticaIcont(id);
+                        } else clickOnhreeDotsVerticaIcontBoard(id);
+                      }
+                    }}
                   >
                     <BsThreeDotsVertical />
                   </button>
 
                   {openThreeDotsVertical !== id ? (
                     <></>
-                  ) : (
+                  ) : dragFromCover === "TasksCover" ? (
                     <Modal_dropdown
                       setRequestForEditing={setRequestForEditing}
+                      editable={true}
+                      Reproducible={true}
+                      details={true}
+                      erasable={true}
                     />
+                  ) : (
+                    <></>
+                  )}
+
+                  {openThreeDotsVerticalBoard !== id ? (
+                    <></>
+                  ) : dragFromCover === "border" ? (
+                    <Modal_dropdown
+                      setRequestForEditing={setRequestForEditingBoard}
+                      editable={true}
+                      Reproducible={true}
+                      details={true}
+                      erasable={true}
+                    />
+                  ) : (
+                    <></>
                   )}
                 </div>
                 <div className="nameOfTask"> {title}</div>

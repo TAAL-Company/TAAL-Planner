@@ -37,7 +37,7 @@
 .modalContainerNewRoute {
   position: fixed;
   z-index: 10;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 10px #0000004d;
   border-radius: 8px;
   opacity: 1;
@@ -129,17 +129,18 @@
 }
 
 .modalContainerLittleLoading {
-  background-color: #728596;
+  background-color: #256fa1;
   box-shadow: rgb(0 0 0 / 35%) 0px 5px 15px;
   flex-direction: column;
+  text-align: -webkit-center;
   position: fixed;
-  margin-top: -390px;
-  margin-left: 140px;
+  margin-top: -50%;
+  margin-left: 50%;
   z-index: 10;
   width: 200px;
   height: 200px;
-  border-radius: 100%;
-  padding: 30px;
+  border-radius: 20%;
+  padding: 40px;
 }
 
 .modalContainerHelpPlanner {
@@ -175,7 +176,6 @@
   display: inline-block;
   text-align: center;
   margin-top: 10px;
-
 }
 
 .titleCloseBtn {
@@ -215,7 +215,7 @@
 .saveAs {
   width: 119px;
   height: 36px;
-  background: #256FA1 0% 0% no-repeat padding-box;
+  background: #256fa1 0% 0% no-repeat padding-box;
   border-radius: 6px;
   opacity: 1;
   margin-top: 20px;
@@ -235,13 +235,13 @@
   width: 119px;
   height: 36px;
   /* UI Properties */
-  border: 1px solid #99999B;
+  border: 1px solid #99999b;
   border-radius: 6px;
   opacity: 1;
 }
 
 .cancelBtn:hover {
-  border: 1px solid #99999B;
+  border: 1px solid #99999b;
 }
 
 .RouteName {
@@ -252,7 +252,6 @@
   width: 100%;
   background-color: rgb(180, 180, 180);
   border-color: rgb(180, 180, 180);
-  ;
   color: rgb(255, 255, 255);
   position: absolute;
   right: 0px;
@@ -262,7 +261,8 @@
   border: none;
   width: 39px;
   height: 35px;
-  background: transparent url('../../Pictures/Ellipse\ 1\ copy\ 8.svg') 0% 0% no-repeat padding-box;
+  background: transparent url("../../Pictures/Ellipse\ 1\ copy\ 8.svg") 0% 0%
+    no-repeat padding-box;
   opacity: 1;
   position: relative;
 }
@@ -286,7 +286,7 @@
   width: 372px;
   height: 340px;
   text-align: right;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 10px #0000004d;
   border-radius: 8px;
   opacity: 1;
@@ -305,14 +305,14 @@
 
 .modalContainerHelp {
   position: relative;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 10px #0000004d;
   border-radius: 3px;
   top: -348px;
   height: 279px;
   width: 240px;
   left: 11px;
-  border: 3px solid #99999B;
+  border: 3px solid #99999b;
 }
 
 .HelpTxt {
@@ -329,7 +329,7 @@
   left: 860px;
   width: 119px;
   height: 36px;
-  border: 1px solid #99999B;
+  border: 1px solid #99999b;
   border-radius: 6px;
   opacity: 1;
 }
@@ -361,7 +361,6 @@
   top: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0px 3px 10px #0000004d;
-
 }
 
 .headerNewTask {
@@ -377,7 +376,7 @@
 .allTasks {
   height: 135px;
   overflow: scroll;
-  border: 1px solid #C9C9C9;
+  border: 1px solid #c9c9c9;
   border-radius: 4px;
   direction: rtl;
   overflow-x: auto;
@@ -398,8 +397,6 @@
   -webkit-box-shadow: inset 0 0 6px rgb(201 201 201);
   background-color: rgb(201 201 201);
 }
-
-
 
 .footerNewStation {
   display: flex;
@@ -459,8 +456,8 @@ input.cancelTaskButton {
   position: relative;
   /* left: 62px; */
   height: 40px;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
-  border: 1px solid #C9C9C9;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #c9c9c9;
   border-radius: 4px;
   opacity: 1;
   padding-right: 20px;
@@ -474,7 +471,7 @@ input.cancelTaskButton {
   position: relative;
   /* left: 85px; */
   /* width: 582px; */
-  border: 1px solid #C9C9C9;
+  border: 1px solid #c9c9c9;
   border-radius: 4px;
   opacity: 1;
 }
@@ -509,14 +506,14 @@ input.newStationButton {
   font-size: 20px;
   font: normal normal 20px/26px Assistant;
   letter-spacing: 0px;
-  color: #FFFFFF;
+  color: #ffffff;
   opacity: 1;
 }
 
 .headerAddPlases {
   width: 520px;
   height: 65px;
-  background: #256FA1 0% 0% no-repeat padding-box;
+  background: #256fa1 0% 0% no-repeat padding-box;
   border-radius: 8px 8px 0px 0px;
   opacity: 1;
   margin-top: 8px;
@@ -544,7 +541,7 @@ input.newStationButton {
   left: 642px;
   width: 750px;
   height: 65px;
-  background: #256FA1 0% 0% no-repeat padding-box;
+  background: #256fa1 0% 0% no-repeat padding-box;
   border-radius: 8px 8px 0px 0px;
   opacity: 1;
 }
@@ -591,7 +588,8 @@ input.newStationButton {
 .ModalIcons {
   width: 160px;
   height: 33px;
-  background: transparent url('../../Pictures/Component\ Icons.svg') 0% 0% no-repeat padding-box;
+  background: transparent url("../../Pictures/Component\ Icons.svg") 0% 0%
+    no-repeat padding-box;
   border: 0px solid white;
   opacity: 1;
   position: relative;
@@ -601,15 +599,14 @@ input.newStationButton {
 }
 
 .ModalIcons:hover {
-
   display: none;
-
 }
 
 .ModalIconsStation {
   width: 160px;
   height: 33px;
-  background: transparent url('../../Pictures/Component\ Icons.svg') 0% 0% no-repeat padding-box;
+  background: transparent url("../../Pictures/Component\ Icons.svg") 0% 0%
+    no-repeat padding-box;
   border: 0px solid white;
   opacity: 1;
   position: relative;
@@ -621,19 +618,20 @@ input.newStationButton {
 .penIcon {
   height: 16px;
   width: 16px;
-  background: transparent url('../../Pictures/Ic_pen.svg') 0% 0% no-repeat padding-box;
+  background: transparent url("../../Pictures/Ic_pen.svg") 0% 0% no-repeat
+    padding-box;
   opacity: 1;
   position: relative;
   right: -14px;
   top: -6px;
   border: none;
-
 }
 
 .penIconStation {
   height: 16px;
   width: 16px;
-  background: transparent url('../../Pictures/Ic_pen.svg') 0% 0% no-repeat padding-box;
+  background: transparent url("../../Pictures/Ic_pen.svg") 0% 0% no-repeat
+    padding-box;
   opacity: 1;
   position: relative;
   right: 41px;
@@ -642,7 +640,8 @@ input.newStationButton {
 
 .linkIcon {
   height: 32px;
-  background: transparent url('../../Pictures/ic_link.svg') 0% 0% no-repeat padding-box;
+  background: transparent url("../../Pictures/ic_link.svg") 0% 0% no-repeat
+    padding-box;
   opacity: 1;
   top: 3px;
   left: 22px;
@@ -653,7 +652,8 @@ input.newStationButton {
 
 .duplicateIcon {
   height: 24px;
-  background: transparent url('../../Pictures/ic_duplicate.svg') 0% 0% no-repeat padding-box;
+  background: transparent url("../../Pictures/ic_duplicate.svg") 0% 0% no-repeat
+    padding-box;
   opacity: 1;
   position: relative;
   top: -2px;
@@ -664,7 +664,8 @@ input.newStationButton {
 
 .duplicateIconStation {
   height: 24px;
-  background: transparent url('../../Pictures/ic_duplicate.svg') 0% 0% no-repeat padding-box;
+  background: transparent url("../../Pictures/ic_duplicate.svg") 0% 0% no-repeat
+    padding-box;
   opacity: 1;
   position: relative;
   top: 5px;
@@ -673,10 +674,10 @@ input.newStationButton {
   border: none;
 }
 
-
 .shareIcon {
   height: 24px;
-  background: transparent url('../../Pictures/ic_share.svg') 0% 0% no-repeat padding-box;
+  background: transparent url("../../Pictures/ic_share.svg") 0% 0% no-repeat
+    padding-box;
   opacity: 1;
   position: relative;
   top: -3px;
@@ -692,7 +693,7 @@ input.newStationButton {
   /* width: 372px; */
   height: 340px;
   text-align: right;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
+  background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 3px 10px #0000004d;
   border-radius: 8px;
   opacity: 1;

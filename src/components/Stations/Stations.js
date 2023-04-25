@@ -11,6 +11,9 @@ import textArea from "../../Pictures/textArea.svg";
 import Modal_dropdown from "../Modal/Modal_dropdown";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Modal_Delete from "../Modal/Modal_Delete";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
+import DragnDrop from "../DragnDrop/DragnDrop";
 
 //-----------------------
 // let allTasks = [];
@@ -24,7 +27,7 @@ let myCategory = "stationCategory";
 const Stations = (props) => {
   console.log("yyy props.allStations ", props.allStations);
   console.log("props.stationArray: ", props.stationArray);
-  console.log("propsDataStations:", props.propsData);
+
   const [, setStateTask] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -34,17 +37,19 @@ const Stations = (props) => {
   const [, setMyStation] = useState(null);
   const [modalIconsOpen, setModalIconsOpen] = useState(false);
   const [myRouteClick, setMyRouteClick] = useState(0);
-  const [stationArray, updateStationArray] = useState(props.stationArray);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState("");
   const [openModalDelete, setOpenModalDelete] = useState(false);
   const [openRemove, setOpenRemove] = React.useState(false);
+  const [tasksOfChosenStation, setTasksOfChosenStation] = useState([]);
+
   useEffect(() => {
     console.log("stations requestForEditing: ", requestForEditing);
 
-    if (requestForEditing == "edit" || requestForEditing == "details")
+    if (requestForEditing == "edit" || requestForEditing == "details") {
+      console.log("openThreeDotsVertical", openThreeDotsVertical);
       setModalOpen(true);
-    else if (requestForEditing == "duplication") {
+    } else if (requestForEditing == "duplication") {
       console.log("openThreeDotsVertical", openThreeDotsVertical);
     } else if (requestForEditing == "delete") {
       setOpenRemove(true);
@@ -58,17 +63,17 @@ const Stations = (props) => {
     setRequestForEditing("");
   };
   const handleCloseRemoveConfirm = async () => {
-    console.log("DELETE:", stationArray[openThreeDotsVertical].id);
-    let deleteStationTemp = deleteStation(
-      stationArray[openThreeDotsVertical].id
+    console.log("DELETE:", props.stationArray[openThreeDotsVertical].id);
+    let deleteStationTemp = await deleteStation(
+      props.stationArray[openThreeDotsVertical].id
     );
 
     console.log("deleteStation:", deleteStationTemp);
     if (deleteStationTemp.status === 200) {
       alert("המחיקה בוצעה בהצלחה!");
-      const newStations = [...stationArray];
+      const newStations = [...props.stationArray];
       newStations.splice(openThreeDotsVertical, 1); // remove one element at index x
-      updateStationArray(newStations);
+      props.setStationArray(newStations);
     }
 
     setOpenRemove(false);
@@ -77,18 +82,19 @@ const Stations = (props) => {
   };
 
   useEffect(() => {
-    updateStationArray(props.stationArray);
+    console.log("props.stationArray", props.stationArray);
+    // updateStationArray(props.stationArray);
   }, [props.stationArray]);
 
   //changing the order of the stations
   function handleOnDragEnd(result) {
     if (!result.destination) return;
 
-    const items = Array.from(stationArray);
+    const items = Array.from(props.stationArray);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    updateStationArray(items);
+    props.setStationArray(items);
   }
 
   const clickOnhreeDotsVerticaIcont = (value) => {
@@ -150,15 +156,15 @@ const Stations = (props) => {
     setMyStation((myStation.name = n));
     setMyStation((myStation.id = e));
     console.log("console myStat myStation:", myStation);
-    if (tasks.length > 0) {
-      tasks = [];
+    if (tasksOfChosenStation.length > 0) {
+      setTasksOfChosenStation([]);
     }
 
     let stationTemp = props.stationArray.find((station) => station.id === e);
 
-    stationTemp.tasks.map((task) => tasks.push(task));
+    stationTemp.tasks.map((task) => tasksOfChosenStation.push(task));
 
-    console.log("props.allTasks yyy", tasks);
+    console.log("props.allTasks yyy", tasksOfChosenStation);
     setFilteredData(
       (filteredData = props.stationArray.filter((el) => {
         if (inputText === "") {
@@ -171,7 +177,7 @@ const Stations = (props) => {
       }))
     );
     // console.log("filteredData from st:", filteredData)
-    setStateTask({ data: tasks }); //Updating the state
+    setStateTask({ data: tasksOfChosenStation }); //Updating the state
   };
 
   useEffect(() => {
@@ -186,13 +192,16 @@ const Stations = (props) => {
           {modalOpen && (
             <ModalStations
               stationIndex={openThreeDotsVertical}
+              setStationArray={props.setStationArray}
               stationArray={props.stationArray}
               setOpenModalPlaces={setModalOpen}
               idTasks={props.idTask}
               mySite={props.mySite}
               pastelColors={props.pastelColors}
               language={props.language}
+              requestForEditing={requestForEditing}
               setRequestForEditing={setRequestForEditing}
+              setOpenThreeDotsVertical={setOpenThreeDotsVertical}
             />
           )}
 
@@ -231,7 +240,7 @@ const Stations = (props) => {
               ></input>
             </div>
             <div className="Stations">
-              {stationArray.length > 0 ? ( //DND
+              {props.stationArray.length > 0 ? ( //DND
                 <>
                   <DragDropContext onDragEnd={handleOnDragEnd}>
                     <Droppable droppableId="stationArray">
@@ -286,7 +295,11 @@ const Stations = (props) => {
                                             clickOnhreeDotsVerticaIcont(index)
                                           }
                                         >
-                                          <BsThreeDotsVertical />
+                                          {id != 0 ? (
+                                            <BsThreeDotsVertical />
+                                          ) : (
+                                            <></>
+                                          )}
                                         </button>
 
                                         {openThreeDotsVertical === index ? (
@@ -294,6 +307,10 @@ const Stations = (props) => {
                                             setRequestForEditing={
                                               setRequestForEditing
                                             }
+                                            editable={true}
+                                            Reproducible={false}
+                                            details={true}
+                                            erasable={true}
                                           />
                                         ) : (
                                           <></>
@@ -339,34 +356,39 @@ const Stations = (props) => {
               </button>
             </div>
           </div>
-          <TasksComp
-            percentProgressBar={props.percentProgressBar}
-            setPercentProgressBar={props.setPercentProgressBar}
-            progressBarFlag={props.progressBarFlag}
-            setProgressBarFlag={props.setProgressBarFlag}
-            replaceRouteFlag={props.replaceRouteFlag}
-            replaceSiteFlag={props.replaceSiteFlag}
-            firstStationName={props.firstStationName}
-            boardArrayDND={props.boardArrayDND}
-            propsDataTask={tasks}
-            allStations={props.allStations}
-            allTasks={props.allTasks}
-            language={props.language}
-            myTasks={props.myTasks}
-            drag={props.drag}
-            addMyTask={props.addMyTask}
-            titleTaskCss={props.titleTaskCss}
-            mySite={props.mySite}
-            myStation={myStation}
-            flagHebrew={props.flagHebrew}
-            tasksOfRoutes={props.tasksOfRoutes}
-            myStations={props.stationArray}
-            saveButton={props.saveButton}
-            siteQuestionLanguage={props.siteQuestionLanguage}
-            tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
-            allTasksOfTheSite={props.allTasksOfTheSite}
-            setAllTasksOfTheSite={props.setAllTasksOfTheSite}
-          />
+          <DndProvider backend={HTML5Backend}>
+            <DragnDrop
+              setStationArray={props.setStationArray}
+              percentProgressBar={props.percentProgressBar}
+              setPercentProgressBar={props.setPercentProgressBar}
+              progressBarFlag={props.progressBarFlag}
+              setProgressBarFlag={props.setProgressBarFlag}
+              replaceRouteFlag={props.replaceRouteFlag}
+              replaceSiteFlag={props.replaceSiteFlag}
+              firstStationName={props.firstStationName}
+              boardArrayDND={props.boardArrayDND}
+              tasksOfChosenStation={tasksOfChosenStation}
+              setTasksOfChosenStation={setTasksOfChosenStation}
+              allStations={props.allStations}
+              allTasks={props.allTasks}
+              language={props.language}
+              myTasks={props.myTasks}
+              drag={props.drag}
+              addMyTask={props.addMyTask}
+              titleTaskCss={props.titleTaskCss}
+              mySite={props.mySite}
+              myStation={myStation}
+              flagHebrew={props.flagHebrew}
+              tasksOfRoutes={props.tasksOfRoutes}
+              stationArray={props.stationArray}
+              saveButton={props.saveButton}
+              siteQuestionLanguage={props.siteQuestionLanguage}
+              tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
+              allTasksOfTheSite={props.allTasksOfTheSite}
+              setAllTasksOfTheSite={props.setAllTasksOfTheSite}
+              setMyStation={setMyStation}
+            />
+          </DndProvider>
         </>
       )}
 

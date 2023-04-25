@@ -15,6 +15,8 @@ import Clock from "../Clock/Clock";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import textArea from "../../Pictures/textArea.svg";
 import ProgressBar from "../ProgressBar/ProgressBar";
+import Modal_Delete from "../Modal/Modal_Delete";
+import { deleteTask } from "../../api/api.js";
 
 let Route = [];
 let dndArray = [];
@@ -45,11 +47,12 @@ let currentIndex = 0;
 let countTemp = 0;
 //-------------------------
 function DragnDrop(props) {
-  // console.log(" props.allTasksOfTheSiteeee drag ", props.allTasksOfTheSite)
+  console.log(" props.allTasksOfTheSiteeee drag ", props.allTasksOfTheSite);
   console.log(" props.allTasks 1: ", props.allTasksOfTheSite);
 
   const [board, setBoard] = useState([]);
   const [reorderBoardFlag, setReorderBoardFlag] = useState(false);
+  const [openRemove, setOpenRemove] = React.useState(false);
 
   // if (props.tasksOfRoutes && props.tasksOfRoutes.acf) {
   //   if (props.tasksOfRoutes.acf.tasks) {
@@ -68,7 +71,7 @@ function DragnDrop(props) {
   console.log("props.myStation:", props.myStation);
 
   // console.log("JSON.parse(localStorage.getItem('New_Routes')):", JSON.parse(localStorage.getItem('New_Routes')))
-  console.log("propsDataTask:", props.propDataTask);
+  console.log("propsDataTask:", props.tasksOfChosenStation);
   // nameStation = props.myStation.name
   // const [, setFlagFirst] = useState(true)
   const [, setLoading] = useState(false);
@@ -100,6 +103,79 @@ function DragnDrop(props) {
   console.log(" props.boardArrayDND1 ", props.boardArrayDND);
   const [boardArrayDND, setboardArrayDND] = useState(props.boardArrayDND);
 
+  const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
+  const [requestForEditing, setRequestForEditing] = useState("");
+
+  const [openThreeDotsVerticalBoard, setOpenThreeDotsVerticalBoard] =
+    useState(-1);
+  const [requestForEditingBoard, setRequestForEditingBoard] = useState("");
+
+  useEffect(() => {
+    console.log("stations requestForEditing: ", requestForEditing);
+    console.log("stations openThreeDotsVertical: ", openThreeDotsVertical);
+
+    if (requestForEditing == "edit" || requestForEditing == "details") {
+      console.log("openThreeDotsVertical", openThreeDotsVertical);
+      setModalOpen(true);
+    } else if (requestForEditing == "duplication") {
+      console.log("openThreeDotsVertical", openThreeDotsVertical);
+    } else if (requestForEditing == "delete") {
+      setOpenRemove(true);
+      //Modal_Delete
+    }
+  }, [requestForEditing]);
+
+  useEffect(() => {
+    console.log("stations requestForEditing: ", requestForEditing);
+
+    // if (requestForEditing == "edit" || requestForEditing == "details") {
+    //   console.log("openThreeDotsVertical", openThreeDotsVertical);
+    //   setModalOpen(true);
+    // } else if (requestForEditing == "duplication") {
+    //   console.log("openThreeDotsVertical", openThreeDotsVertical);
+    // } else if (requestForEditing == "delete") {
+    //   setOpenRemove(true);
+    //   //Modal_Delete
+    // }
+  }, [requestForEditing]);
+
+  const handleCloseRemove = () => {
+    setOpenRemove(false);
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing("");
+  };
+  const handleCloseRemoveConfirm = async () => {
+    console.log("DELETE:"); //, stationArray[openThreeDotsVertical].id);
+
+    let deleteTaskTemp = await deleteTask(openThreeDotsVertical);
+
+    console.log("deleteTaskTemp:", deleteTaskTemp);
+    console.log(" props.tasksOfChosenStation:", props.tasksOfChosenStation);
+    console.log(" props.tasksOfChosenStation:", props.tasksOfChosenStation);
+
+    if (deleteTaskTemp != undefined) {
+      alert("המחיקה בוצעה בהצלחה!");
+      const newTasks = [...props.tasksOfChosenStation];
+      let indexaTask = props.tasksOfChosenStation.findIndex(
+        (task) => task.id === openThreeDotsVertical
+      );
+      newTasks.splice(indexaTask, 1); // remove one element at index x
+      props.setTasksOfChosenStation(newTasks);
+
+      let indexStation = props.stationArray.findIndex(
+        (station) => station.id === props.myStation.id
+      );
+      console.log("indexStation 123", indexStation);
+
+      props.stationArray[indexStation].tasks = newTasks;
+      console.log("newTasks 123", newTasks);
+      console.log("dndArray 123", dndArray);
+    }
+
+    setOpenRemove(false);
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing("");
+  };
   let prevStation = "";
   useEffect(() => {
     console.log("percent: ", props.percentProgressBar);
@@ -159,7 +235,7 @@ function DragnDrop(props) {
   }, [props.progressBarFlag]);
 
   // alert("hi")
-  dndArray = props.propDataTask.map((element) => {
+  dndArray = props.tasksOfChosenStation.map((element) => {
     // let color = stationArray.find(item => item.id === stationID).color
 
     if (count1 === 0) {
@@ -272,7 +348,7 @@ function DragnDrop(props) {
 
       console.log("dnd setBoard: ", board);
       // thisIdArray.push(thisId);
-      myTask = saveProps.propDataTask.filter((item) => item.id === id);
+      myTask = saveProps.tasksOfChosenStation.filter((item) => item.id === id);
       // console.log("myTAsk:", myTask[0])
       thisIdArray.push(myTask[0]);
 
@@ -407,6 +483,14 @@ function DragnDrop(props) {
                   data={tag.data}
                   dragFromCover={"TasksCover"}
                   language={props.language}
+                  openThreeDotsVertical={openThreeDotsVertical}
+                  setOpenThreeDotsVertical={setOpenThreeDotsVertical}
+                  openThreeDotsVerticalBoard={openThreeDotsVerticalBoard}
+                  setOpenThreeDotsVerticalBoard={setOpenThreeDotsVerticalBoard}
+                  requestForEditing={requestForEditing}
+                  setRequestForEditing={setRequestForEditing}
+                  requestForEditingBoard={requestForEditing}
+                  setRequestForEditingBoard={setRequestForEditingBoard}
                 />
               );
             })
@@ -562,6 +646,18 @@ function DragnDrop(props) {
                           flagTree={flagTree}
                           dragFromCover={"border"}
                           language={props.language}
+                          openThreeDotsVertical={openThreeDotsVertical}
+                          setOpenThreeDotsVertical={setOpenThreeDotsVertical}
+                          openThreeDotsVerticalBoard={
+                            openThreeDotsVerticalBoard
+                          }
+                          setOpenThreeDotsVerticalBoard={
+                            setOpenThreeDotsVerticalBoard
+                          }
+                          requestForEditing={requestForEditing}
+                          setRequestForEditing={setRequestForEditing}
+                          requestForEditingBoard={requestForEditing}
+                          setRequestForEditingBoard={setRequestForEditingBoard}
                         />
                       ));
                     })
@@ -634,18 +730,50 @@ function DragnDrop(props) {
 
       {modalOpen ? (
         <ModalTasks
+          uuid={openThreeDotsVertical}
+          requestForEditing={requestForEditing}
+          handleClose={handleCloseRemove}
           language={props.language}
-          setOpenModalPlaces={setModalOpen}
+          setModalOpen={setModalOpen}
           setAllTasksOfTheSite={props.setAllTasksOfTheSite}
+          setMyStation={props.setMyStation}
+          myStation={props.myStation}
           // setModalOpenNoSiteSelected={setModalOpenNoSiteSelected}
-          allStations={props.myStations}
+          allStations={props.stationArray}
           siteSelected={siteSelected}
           mySite={props.mySite}
           help={helpFlag}
+          title={
+            openThreeDotsVertical != -1
+              ? dndArray.find((task) => task.id === openThreeDotsVertical).title
+              : ""
+          }
+          subtitle={
+            openThreeDotsVertical != -1
+              ? props.allTasksOfTheSite.find(
+                  (task) => task.id === openThreeDotsVertical
+                ).subtitle
+              : ""
+          }
+          stationOfTask={
+            openThreeDotsVertical != -1
+              ? props.allTasksOfTheSite.find(
+                  (task) => task.id === openThreeDotsVertical
+                ).stations
+              : ""
+          }
         />
       ) : (
         <></>
       )}
+
+      <Modal_Delete
+        openRemove={openRemove}
+        handleCloseRemove={handleCloseRemove}
+        DialogTitle={"מחיקת משימה"}
+        DialogContent={"האם אתה בטוח במחיקת המשימה?"}
+        handleCloseRemoveConfirm={handleCloseRemoveConfirm}
+      />
     </>
   );
 }

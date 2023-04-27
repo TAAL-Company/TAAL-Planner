@@ -689,7 +689,11 @@ const Places = (props) => {
               placeholder={
                 props.language === "English" ? "חפש מסלול" : "search route"
               }
-              label={<CgSearch style={{ fontSize: "x-large" }} />}
+              label={
+                <CgSearch
+                  style={{ fontSize: "x-large", textAlign: "-webkit-center" }}
+                />
+              }
               onChange={inputHandlerRoutes}
             ></input>
           </div>

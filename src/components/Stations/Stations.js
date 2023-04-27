@@ -262,6 +262,7 @@ const Stations = (props) => {
                               >
                                 {(provided) => (
                                   <div
+                                    className="draggableItems"
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}

@@ -8,6 +8,8 @@ import {
   postTaskCognitiveRequirements,
 } from "../../../../api/api";
 import "./CustomToolbar.css";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 
 import {
   GridToolbarContainer,
@@ -153,18 +155,35 @@ const CustomToolbar = ({
         {isInfoUserSite && (
           <div className="infoForms">
             <div className="workerNameForms">
-              <InputLabel id="demo-simple-select-label-forms">
+              {/* <InputLabel id="demo-simple-select-label-forms">
                 שם העובד:
-              </InputLabel>
-              <select
+              </InputLabel> */}
+              {/* <select
                 className="selectUserForms"
                 defaultValue={"DEFAULT"}
                 onChange={handleChangeUser}
-              >
-                <option value="DEFAULT" disabled>
+              > */}
+              <Autocomplete
+                freeSolo
+                onChange={handleChangeUser}
+                id="free-solo-2-demo"
+                disableClearable
+                options={allUsers.map((option) => option.name)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label=" שם העובד"
+                    InputProps={{
+                      ...params.InputProps,
+                      type: "search",
+                    }}
+                  />
+                )}
+              />
+              {/* <option value="DEFAULT" disabled>
                   {worker.length == 0 ? "בחירת משתמש" : worker.name}
-                </option>
-                {allUsers.map((value, index) => {
+                </option> */}
+              {/* {allUsers.map((value, index) => {
                   return (
                     <option
                       key={index}
@@ -181,8 +200,8 @@ const CustomToolbar = ({
                       {value.name}
                     </option>
                   );
-                })}
-              </select>
+                })} */}
+              {/* </select> */}
             </div>
             {/* <div className="workerRoute">שם אתר: {siteName}</div> */}
           </div>

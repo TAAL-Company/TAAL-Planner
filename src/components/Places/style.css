@@ -23,6 +23,7 @@
   width: 272px;
   padding-right: 10px;
   padding-left: 10px;
+  border: 1px black solid;
 }
 
 .routs {
@@ -332,4 +333,94 @@ h3 {
   border-radius: 10px;
   background-color: #bfc4ce;
   border: 1px solid rgb(235, 235, 235);
+}
+
+@media (max-width: 1200px) {
+  .Cover_Places {
+    width: 22%;
+  }
+  .Cover_Stations {
+    width: 22%;
+  }
+  .Cover_Tasks {
+    width: 22%;
+  }
+  .TasksCover {
+    width: 100% !important;
+  }
+  /* .buttons {
+    width: 90% !important;
+  } */
+  .MyTasks {
+    width: 100%;
+  }
+  .routs {
+    width: 100%;
+  }
+  .Stations {
+    width: 100% !important;
+  }
+  .addTaskCover {
+    text-align: center;
+    width: 100%;
+  }
+  .AddButton {
+    width: 90%;
+    left: unset;
+  }
+  .addStationCover {
+    text-align: center;
+  }
+  .addPlaceCover {
+    text-align: center;
+  }
+  .draggableItems {
+    width: 100%;
+    text-align: -webkit-center;
+  }
+  .textBeforeStation {
+    width: 90%;
+    background-size: 100% !important;
+    background-position: center !important;
+    padding-top: 50px !important;
+  }
+  .Board {
+    width: 25% !important;
+  }
+
+  .MyTasks {
+    width: 100% !important;
+  }
+
+  .my_Buttons_icons {
+    width: 100% !important;
+  }
+
+  .txt {
+    width: 100% !important;
+  }
+  .kavT {
+    left: 202px !important;
+  }
+
+  .nameStationBoard {
+    /* width: 100%; */
+    text-align-last: right !important;
+  }
+
+  .kavTop {
+    left: 187px !important;
+  }
+
+  .kavTask2 {
+    left: 9px !important;
+  }
+
+  .kavTaskTop {
+    left: -26px !important;
+  }
+
+  .kav {
+    left: 210px !important;
+  }
 }

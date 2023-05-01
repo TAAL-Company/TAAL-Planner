@@ -803,6 +803,9 @@ const Places = (props) => {
           allTasks={allTasks}
           allTasksOfTheSite={allTasksOfTheSite}
           pastelColors={pastelColors}
+          hebrew={props.hebrew}
+          english={props.english}
+          Hebrew={props.Hebrew}
         />
 
         {/* )} */}

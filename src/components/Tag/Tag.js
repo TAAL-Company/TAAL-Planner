@@ -202,7 +202,7 @@ function Tag({
                     language !== "English" && dragFromCover === "border"
                       ? "56px"
                       : "",
-                  width: dragFromCover === "border" ? "75%" : "90%",
+                  // width: dragFromCover === "border" ? "85%" : "90%",
                 }}
                 ref={drag}
                 src={title}

@@ -388,6 +388,9 @@ const Stations = (props) => {
               allTasksOfTheSite={props.allTasksOfTheSite}
               setAllTasksOfTheSite={props.setAllTasksOfTheSite}
               setMyStation={setMyStation}
+              hebrew={props.hebrew}
+              english={props.english}
+              Hebrew={props.Hebrew}
             />
           </DndProvider>
         </>

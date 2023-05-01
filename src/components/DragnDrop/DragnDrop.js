@@ -514,15 +514,28 @@ function DragnDrop(props) {
             className={`Board ${props.language !== "English" ? "english" : ""}`}
             ref={drop}
           >
-            <button
-              className="AddRoute"
-              type="submit"
-              onClick={() => {
-                setModalOpenAddRoute(true);
-              }}
-            >
-              {props.saveButton}
-            </button>
+            <div className="topButtons">
+              <button
+                className="AddRoute"
+                type="submit"
+                onClick={() => {
+                  setModalOpenAddRoute(true);
+                }}
+              >
+                {props.saveButton}
+              </button>
+              {/* כפתור שפות */}
+              <button
+                className="language"
+                // style={{ marginLeft: marginHebrew, marginTop: "22px" }}
+                onClick={() => {
+                  if (props.Hebrew !== false) props.hebrew();
+                  else props.english();
+                }}
+              >
+                {props.language}
+              </button>
+            </div>
             <div
               className={`txt ${props.language !== "English" ? "english" : ""}`}
             >

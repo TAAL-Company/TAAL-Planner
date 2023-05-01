@@ -217,23 +217,6 @@
   /* font-size: 23px; */
 }
 
-.TitlePlaces {
-  /* top: 301px; */
-  /* height: 48px; */
-  /* font: normal normal bold 26px/34px Assistant; */
-  /* letter-spacing: 0px; */
-  /* color: #505050; */
-  /* opacity: 1; */
-  /* margin-top: 25px; */
-  /* text-align: right; */
-  /* font-size: large; */
-  /* display: flow-root; */
-  /* padding-right: 4%; */
-  /* justify-content: right; */
-  /* margin: 0; */
-  /* align-items: center; */
-}
-
 h3 {
   display: flex;
   justify-content: center;
@@ -277,7 +260,7 @@ h3 {
 }
 
 .searchButton {
-  width: 231px;
+  width: 90%;
   height: 29px;
   background: #ffffff 0% 0% no-repeat padding-box;
   box-shadow: 0px 2px 2px #00000080;
@@ -334,7 +317,10 @@ h3 {
   background-color: #bfc4ce;
   border: 1px solid rgb(235, 235, 235);
 }
-
+.topButtons {
+  display: flex;
+  gap: 2%;
+}
 @media (max-width: 1200px) {
   .Cover_Places {
     width: 22%;
@@ -347,18 +333,19 @@ h3 {
   }
   .TasksCover {
     width: 100% !important;
+    height: 40vh !important;
   }
-  /* .buttons {
-    width: 90% !important;
-  } */
-  .MyTasks {
-    width: 100%;
+  .buttons {
+    width: 90%;
   }
+
   .routs {
     width: 100%;
+    height: 40vh;
   }
   .Stations {
     width: 100% !important;
+    height: 40vh !important;
   }
   .addTaskCover {
     text-align: center;
@@ -379,7 +366,7 @@ h3 {
     text-align: -webkit-center;
   }
   .textBeforeStation {
-    width: 90%;
+    width: 100%;
     background-size: 100% !important;
     background-position: center !important;
     padding-top: 50px !important;
@@ -390,6 +377,7 @@ h3 {
 
   .MyTasks {
     width: 100% !important;
+    height: 60vh !important;
   }
 
   .my_Buttons_icons {
@@ -417,7 +405,8 @@ h3 {
   }
 
   .kavTaskTop {
-    left: -26px !important;
+    left: -17px !important;
+    width: 25px !important;
   }
 
   .kav {

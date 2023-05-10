@@ -63,6 +63,8 @@ const DataTableRTL = ({
   routeForTasksAbility,
   setRouteForTasksAbility,
   prevSelectedWorker,
+  handleChangeUserFlags,
+  handleChangeRouteFlags,
 }) => {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [columnFillRows, setColumnFillRows] = React.useState({
@@ -456,6 +458,8 @@ const DataTableRTL = ({
           components={{
             Toolbar: () => (
               <CustomToolbar
+                handleChangeUserFlags={handleChangeUserFlags}
+                handleChangeRouteFlags={handleChangeRouteFlags}
                 allRoutes={allRoutes}
                 setSaveProfileChanges={setSaveProfileChanges}
                 setChangeUser={setChangeUser}

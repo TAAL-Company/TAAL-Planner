@@ -44,6 +44,14 @@ export const getingData_Users = async () => {
   await get("https://prod-web-app0da5905.azurewebsites.net/students").then(
     (res) => {
       all_Users = res.data;
+
+      const sortedArray = all_Users.sort(
+        (a, b) =>
+          a.name.localeCompare(b.name, "he", { sensitivity: "base" }) ||
+          a.name.localeCompare(b.name, "en", { sensitivity: "base" })
+      );
+
+      console.log(sortedArray);
     }
   );
   console.log("res all_Users: ", all_Users);
@@ -188,10 +196,6 @@ export const insertRoute = async (routeData, callback) => {
     // Authorization: "Bearer" + sessionStorage.jwt,
   };
 
-  // const data = {
-  //   ...routeData
-  // };
-
   return await post(
     "https://prod-web-app0da5905.azurewebsites.net/routes/",
     routeData,
@@ -206,6 +210,7 @@ export const insertRoute = async (routeData, callback) => {
       console.log(error);
     });
 };
+
 export const updateRoute = async (routeUUID, routeData, callback) => {
   const headers = {
     "Content-Type": "application/json",
@@ -711,4 +716,98 @@ export const updateStation = async (id, title, subtitle, parentSiteId) => {
   };
 
   return await patch(url, body, headers);
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  evaluation-events = flags  ~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+export const getingDataFlags = async () => {
+  let allEvaluation;
+
+  await get("https://prod-web-app0da5905.azurewebsites.net/evaluation-events", {
+    params: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+    },
+  }).then((res) => {
+    allEvaluation = res.data;
+  });
+
+  return allEvaluation;
+};
+export const postEvaluationEvents = async (
+  studentId,
+  taskId,
+  flag,
+  alternativeTaskId = null,
+  intervention = "",
+  explanation = ""
+) => {
+  try {
+    const response = await fetch(
+      "https://prod-web-app0da5905.azurewebsites.net/evaluation-events",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+        },
+        body: JSON.stringify({
+          studentId: studentId,
+          taskId: taskId,
+          flag: flag,
+          alternativeTaskId: alternativeTaskId,
+          intervention: intervention,
+          explanation: explanation,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error inserting task: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postEvaluation = async (studentIds, taskIds) => {
+  try {
+    const response = await fetch(
+      "https://prod-web-app0da5905.azurewebsites.net/evaluation",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+        },
+        body: JSON.stringify({
+          taskIds: taskIds,
+          studentIds: studentIds,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Error inserting task: ${response.statusText}`);
+    }
+    console.log("response b:", response);
+
+    const data = await response.json();
+    console.log("data b:", data);
+
+    const objectArray = data.map((jsonString) => JSON.parse(jsonString));
+
+    objectArray.map(async (flag) => {
+      await postEvaluationEvents(flag.userId, flag.taskId, flag.evaluation);
+    });
+
+    return objectArray;
+  } catch (error) {
+    throw error;
+  }
 };

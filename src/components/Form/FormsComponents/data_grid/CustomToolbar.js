@@ -34,9 +34,6 @@ const CustomToolbar = ({
   selectedRows,
   columns,
   setColumns,
-  workerName,
-  routeName,
-  siteName,
   setWorker,
   worker,
   allUsers,
@@ -48,6 +45,8 @@ const CustomToolbar = ({
   setRouteForTasksAbility,
   prevSelectedWorker,
   newTaskCognitiveRequirements,
+  handleChangeUserFlags,
+  handleChangeRouteFlags,
 }) => {
   // const [prevSelected, setPrevSelected] = useState([]);
   useEffect(() => {
@@ -70,12 +69,12 @@ const CustomToolbar = ({
       });
     }
   };
-  const handleChangeUser = (event) => {
-    const selectedValue = JSON.parse(event.target.value);
+  const handleChangeUser = (event, value) => {
+    // const selectedValue = JSON.parse(value);
     // setPrevSelected((prevSelected) => [...prevSelected, selectedValue]);
 
-    console.log("worker", selectedValue);
-    setWorker(selectedValue);
+    console.log("worker", value);
+    setWorker(value);
     setChangeUser(true);
   };
   const handleChangeRoute = (event) => {
@@ -117,8 +116,59 @@ const CustomToolbar = ({
 
         {isInfoUserRoute && (
           <div className="infoForms">
-            <div className="workerNameForms">שם עובד: {workerName}</div>
-            <div className="workerRouteForms">שם מסלול: {routeName}</div>
+            <div className="workerNameForms">
+              שם עובד:
+              <Autocomplete
+                freeSolo
+                onChange={handleChangeUserFlags}
+                id="free-solo-2-demo"
+                disableClearable
+                options={allUsers}
+                getOptionLabel={(option) => option.name}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label=" שם העובד"
+                    InputProps={{
+                      ...params.InputProps,
+                      type: "search",
+                    }}
+                  />
+                )}
+              />
+            </div>
+            <div className="workerRouteForms">
+              שם מסלול:
+              <Autocomplete
+                style={{ width: "250px" }}
+                freeSolo
+                onChange={handleChangeRouteFlags}
+                id="free-solo-2-demo"
+                disableClearable
+                options={worker.routes}
+                getOptionLabel={(option) =>
+                  option.name.replace("&#8211;", "-").replace("&#8217;", "'")
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={
+                      worker.length !== 0 && worker.routes.length !== 0
+                        ? "בחירת מסלול"
+                        : worker.length !== 0 && worker.routes.length === 0
+                        ? "אין מסלולים עבור העובד"
+                        : worker.length === 0
+                        ? "בחר עובד"
+                        : ""
+                    }
+                    InputProps={{
+                      ...params.InputProps,
+                      type: "search",
+                    }}
+                  />
+                )}
+              />
+            </div>
           </div>
         )}
         {tableType === "TaskabilityHE" ? (
@@ -164,21 +214,20 @@ const CustomToolbar = ({
                 onChange={handleChangeUser}
               > */}
               <Autocomplete
-                freeSolo
+                disablePortal
+                autoHighlight
                 onChange={handleChangeUser}
                 id="free-solo-2-demo"
-                disableClearable
-                options={allUsers.map((option) => option.name)}
+                // disableClearable
+                options={allUsers}
+                getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label=" שם העובד"
-                    InputProps={{
-                      ...params.InputProps,
-                      type: "search",
-                    }}
+                    label={worker.name ? worker.name : "שם העובד"}
                   />
                 )}
+                label={worker.name}
               />
               {/* <option value="DEFAULT" disabled>
                   {worker.length == 0 ? "בחירת משתמש" : worker.name}

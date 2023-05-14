@@ -26,7 +26,7 @@ function Modal_Tasks(props) {
 
   useEffect(() => {
     console.log("stationOfTask", props.stationOfTask);
-    if (props.requestForEditing === "edit") {
+    if (props.requestForEditing === "edit" && props.stationOfTask) {
       props.stationOfTask.map((station) => {
         setMyPlacesChoice((prev) => [...prev, station.id]);
       });

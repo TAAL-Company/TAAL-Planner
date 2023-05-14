@@ -763,14 +763,14 @@ function DragnDrop(props) {
           }
           subtitle={
             openThreeDotsVertical != -1
-              ? props.allTasksOfTheSite.find(
+              ? props.tasksOfChosenStation.find(
                   (task) => task.id === openThreeDotsVertical
                 ).subtitle
               : ""
           }
           stationOfTask={
             openThreeDotsVertical != -1
-              ? props.allTasksOfTheSite.find(
+              ? props.tasksOfChosenStation.find(
                   (task) => task.id === openThreeDotsVertical
                 ).stations
               : ""

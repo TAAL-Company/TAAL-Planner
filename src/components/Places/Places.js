@@ -10,6 +10,7 @@ import {
   getingDataStation,
   getingData_Users,
   deleteRoute,
+  updateRoute,
 } from "../../api/api";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -103,6 +104,7 @@ const Places = (props) => {
   const [requestForEditing, setRequestForEditing] = useState("");
   const [allUsers, setAllUsers] = useState([]);
   const [openRemove, setOpenRemove] = React.useState(false);
+  const [newRoute, setNewRoute] = useState([]);
 
   useEffect(() => {
     console.log("requestForEditing: ", requestForEditing);
@@ -585,13 +587,22 @@ const Places = (props) => {
     console.log("newTitleForRoute: ", newTitleForRoute);
 
     console.log("filteredDataRoutes: ", filteredDataRoutes);
+    console.log("newRoute: ", newRoute);
 
-    if (Object.keys(newTitleForRoute).length > 0) {
-      filteredDataRoutes.push(newTitleForRoute);
-      setFilteredDataRoutes(filteredDataRoutes);
+    if (Object.keys(newRoute).length > 0) {
+      // filteredDataRoutes.push(newRoute);
+      setFilteredDataRoutes((temp) => [...temp, newRoute]);
+      let uuidRoute = newRoute.id;
+      console.log("Setting timeout for route with ID:", uuidRoute);
+
+      setTimeout(() => {
+        console.log("Timeout complete for route with ID:", uuidRoute);
+        updateRoute(uuidRoute, { siteIds: mySite.id });
+      }, 60000);
       console.log("HHII");
+      setNewRoute([]);
     }
-  }, [newTitleForRoute]);
+  }, [newRoute]);
   useEffect(() => {
     console.log("@@ filteredDataRoutes: ", filteredDataRoutes);
   }, [filteredDataRoutes]);
@@ -652,6 +663,7 @@ const Places = (props) => {
         {modalOpen && (
           <Modal
             setNewTitleForRoute={setNewTitleForRoute}
+            setNewRoute={setNewRoute}
             setOpenModal={setModalOpen}
             setFlagStudent={setFlagStudent}
             flagTest={flagTest}

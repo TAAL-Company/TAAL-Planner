@@ -32,6 +32,7 @@ function Modal({
   routeName,
   tasksForNewRoute,
   routeUUID,
+  setNewRoute,
 }) {
   console.log("flagTest:", flagTest);
   const [obj, set_obj] = useState({
@@ -52,7 +53,7 @@ function Modal({
   const [get_Name, setName] = useState(null); // for TextView
 
   const [routeTitle, setRouteTitle] = useState(routeName);
-  const [newRoute, setNewRoute] = useState();
+  // const [newRoute, setNewRoute] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -175,10 +176,10 @@ function Modal({
     });
   };
 
-  useEffect(() => {
-    console.log("newRoute: ", newRoute);
-    console.log("!! id", JSON.parse(localStorage.getItem("MySite")).id);
-  }, [newRoute]);
+  // useEffect(() => {
+  //   console.log("newRoute: ", newRoute);
+  //   console.log("!! id", JSON.parse(localStorage.getItem("MySite")).id);
+  // }, [newRoute]);
 
   return (
     <>

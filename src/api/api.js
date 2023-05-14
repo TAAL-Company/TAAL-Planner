@@ -17,6 +17,7 @@ export const post = async (url, body, header) => {
   try {
     const res = await axios.post(url, body, header); //body and header shuld be an object
     if (res) {
+      return res;
       // console.log("succses");
     }
   } catch (e) {
@@ -204,6 +205,8 @@ export const insertRoute = async (routeData, callback) => {
     }
   )
     .then(async (response) => {
+      console.log("response route: ", response.data);
+
       return response.data;
     })
     .catch((error) => {

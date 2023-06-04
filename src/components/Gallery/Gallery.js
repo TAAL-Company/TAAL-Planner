@@ -40,7 +40,9 @@ function Gallery(props) {
     setOpen(true);
     setUrlAudio(url);
   };
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(async () => {
     console.log("blobList", blobList);

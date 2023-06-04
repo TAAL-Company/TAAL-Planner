@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { getingDataTasks } from "../../api/api";
+import { getingDataTasks, deleteStation } from "../../api/api";
 import "./style.css";
 import TasksComp from "../Tasks_comp/Tasks_comp";
 import ModalStations from "../Modal/Modal_Stations";
@@ -7,9 +7,13 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { CgSearch } from "react-icons/cg";
 import "@fontsource/assistant";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import textArea from '../../Pictures/textArea.svg'
+import textArea from "../../Pictures/textArea.svg";
 import Modal_dropdown from "../Modal/Modal_dropdown";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import Modal_Delete from "../Modal/Modal_Delete";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DndProvider } from "react-dnd";
+import DragnDrop from "../DragnDrop/DragnDrop";
 
 //-----------------------
 // let allTasks = [];
@@ -21,10 +25,9 @@ let myStation = { name: "", id: "", flag: true, data: [] };
 let myCategory = "stationCategory";
 //-----------------------
 const Stations = (props) => {
-
-  console.log("yyy props.allStations ", props.allStations)
+  console.log("yyy props.allStations ", props.allStations);
   console.log("props.stationArray: ", props.stationArray);
-  console.log("propsDataStations:", props.propsData);
+
   const [, setStateTask] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -34,37 +37,76 @@ const Stations = (props) => {
   const [, setMyStation] = useState(null);
   const [modalIconsOpen, setModalIconsOpen] = useState(false);
   const [myRouteClick, setMyRouteClick] = useState(0);
-  const [stationArray, updateStationArray] = useState(props.stationArray);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
+  const [requestForEditing, setRequestForEditing] = useState("");
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+  const [openRemove, setOpenRemove] = React.useState(false);
+  const [tasksOfChosenStation, setTasksOfChosenStation] = useState([]);
 
   useEffect(() => {
-    updateStationArray(props.stationArray);
-  }, [props.stationArray])
+    console.log("stations requestForEditing: ", requestForEditing);
 
+    if (requestForEditing == "edit" || requestForEditing == "details") {
+      console.log("openThreeDotsVertical", openThreeDotsVertical);
+      setModalOpen(true);
+    } else if (requestForEditing == "duplication") {
+      console.log("openThreeDotsVertical", openThreeDotsVertical);
+    } else if (requestForEditing == "delete") {
+      setOpenRemove(true);
+      //Modal_Delete
+    }
+  }, [requestForEditing]);
+
+  const handleCloseRemove = () => {
+    setOpenRemove(false);
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing("");
+  };
+  const handleCloseRemoveConfirm = async () => {
+    console.log("DELETE:", props.stationArray[openThreeDotsVertical].id);
+    let deleteStationTemp = await deleteStation(
+      props.stationArray[openThreeDotsVertical].id
+    );
+
+    console.log("deleteStation:", deleteStationTemp);
+    if (deleteStationTemp.status === 200) {
+      alert("המחיקה בוצעה בהצלחה!");
+      const newStations = [...props.stationArray];
+      newStations.splice(openThreeDotsVertical, 1); // remove one element at index x
+      props.setStationArray(newStations);
+    }
+
+    setOpenRemove(false);
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing("");
+  };
+
+  useEffect(() => {
+    console.log("props.stationArray", props.stationArray);
+    // updateStationArray(props.stationArray);
+  }, [props.stationArray]);
 
   //changing the order of the stations
   function handleOnDragEnd(result) {
     if (!result.destination) return;
 
-    const items = Array.from(stationArray);
+    const items = Array.from(props.stationArray);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    updateStationArray(items);
+    props.setStationArray(items);
   }
 
   const clickOnhreeDotsVerticaIcont = (value) => {
-    if (openThreeDotsVertical == value)
-      setOpenThreeDotsVertical(-1)
-    else
-      setOpenThreeDotsVertical(value)
+    if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
+    else setOpenThreeDotsVertical(value);
   };
 
   if (flagFirstTime === true) {
     filteredData = props.stationArray;
   }
 
-  // handle search station name 
+  // handle search station name
   let inputHandler = (e) => {
     setInputText((inputText = e.target.value.toLowerCase()));
     setFlagFirstTime((flagFirstTime = false));
@@ -78,15 +120,15 @@ const Stations = (props) => {
         }
         //return the item which contains the user input
         else {
-          return el.name.toLowerCase().includes(inputText);
+          return el.title.toLowerCase().includes(inputText);
         }
       }))
     );
     // console.log("filtered Data 3:", filteredData)
   };
   useEffect(() => {
-    console.log("charactersss: ", props.boardArrayDND)
-  }, [props.boardArrayDND]);
+    console.log("inputText: ", inputText);
+  }, [inputText]);
 
   // useEffect(() => {
   //   const fetchData = async () => {
@@ -103,38 +145,26 @@ const Stations = (props) => {
 
   const Display_The_Tasks = (e, n) => {
     console.log("eeeeeeeeeeeeeeeeeee: ", e);
+    console.log("eeeeeeeeeeeeeeeeeee myStation.id: ", myStation.id);
+
     if (myStation.id === e) {
       setMyStation((myStation.flag = false));
     } else {
       setMyStation((myStation.flag = true));
     }
-    if (e != 0)
-      setMyStation((myStation.data = props.stationArray));
+    if (e != 0) setMyStation((myStation.data = props.stationArray));
     setMyStation((myStation.name = n));
     setMyStation((myStation.id = e));
-    // console.log("console myStat myStation:", myStation)
-    if (tasks.length > 0) {
-      tasks = [];
+    console.log("console myStat myStation:", myStation);
+    if (tasksOfChosenStation.length > 0) {
+      setTasksOfChosenStation([]);
     }
 
+    let stationTemp = props.stationArray.find((station) => station.id === e);
 
-    props.allTasksOfTheSite.forEach((element) => {
-      let colorTemp = props.stationArray.find((item) => item.id === e).color;
+    stationTemp.tasks.map((task) => tasksOfChosenStation.push(task));
 
-      if (e === 0) {
-        if (element.places.length == 1 && element.places.includes(props.mySite.id)) {
-          element.color = colorTemp;
-          tasks.push(element);
-        }
-      }
-      else if (element.places.includes(e)) {
-        element.color = colorTemp;
-        tasks.push(element);
-      }
-
-    });
-
-    console.log("props.allTasks yyy", tasks)
+    console.log("props.allTasks yyy", tasksOfChosenStation);
     setFilteredData(
       (filteredData = props.stationArray.filter((el) => {
         if (inputText === "") {
@@ -142,18 +172,17 @@ const Stations = (props) => {
         }
         //return the item which contains the user input
         else {
-          return el.name.toLowerCase().includes(inputText);
+          return el.title.toLowerCase().includes(inputText);
         }
       }))
     );
     // console.log("filteredData from st:", filteredData)
-    setStateTask({ data: tasks }); //Updating the state
+    setStateTask({ data: tasksOfChosenStation }); //Updating the state
   };
 
   useEffect(() => {
-    console.log("onlyAllStation stations: ", props.onlyAllStation)
-
-  }, [props.onlyAllStation])
+    console.log("onlyAllStation stations: ", props.onlyAllStation);
+  }, [props.onlyAllStation]);
   //----------------------------------------------------------
   return (
     <>
@@ -162,25 +191,31 @@ const Stations = (props) => {
         <>
           {modalOpen && (
             <ModalStations
+              stationIndex={openThreeDotsVertical}
+              setStationArray={props.setStationArray}
               stationArray={props.stationArray}
               setOpenModalPlaces={setModalOpen}
               idTasks={props.idTask}
               mySite={props.mySite}
               pastelColors={props.pastelColors}
-              language = {props.language}
-
-
+              language={props.language}
+              requestForEditing={requestForEditing}
+              setRequestForEditing={setRequestForEditing}
+              setOpenThreeDotsVertical={setOpenThreeDotsVertical}
             />
           )}
 
           <div className="Cover_Stations">
-
             <>
-              <div
-                className="TitleStation"
-
-              >
-                <div className={`MyTitle text ${props.language !== 'English' ? 'english' : ''}`}> {props.stationsName}</div>
+              <div className="TitleStation">
+                <div
+                  className={`MyTitle text ${
+                    props.language !== "English" ? "english" : ""
+                  }`}
+                >
+                  {" "}
+                  {props.stationsName}
+                </div>
               </div>
             </>
 
@@ -191,19 +226,21 @@ const Stations = (props) => {
                 // borderStyle: "none none solid none",
                 // borderColor: "#fff",
                 // borderWidth: "5px",
-                padding: "13px 0px 13px 0px"
+                padding: "13px 0px 13px 0px",
               }}
             >
               <input
                 className="searchButton"
                 dir="rtl"
-                placeholder={props.language === "English" ? "חפש תחנה" : "search station"}
+                placeholder={
+                  props.language === "English" ? "חפש תחנה" : "search station"
+                }
                 label={<CgSearch style={{ fontSize: "x-large" }} />}
                 onChange={inputHandler}
               ></input>
             </div>
             <div className="Stations">
-              {stationArray.length > 0 ? ( //DND
+              {props.stationArray.length > 0 ? ( //DND
                 <>
                   <DragDropContext onDragEnd={handleOnDragEnd}>
                     <Droppable droppableId="stationArray">
@@ -213,7 +250,7 @@ const Stations = (props) => {
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                         >
-                          {stationArray.map(({ id, name, color }, index) => {
+                          {filteredData.map(({ id, title, color }, index) => {
                             let ID = "" + id;
                             console.log("id: ", typeof ID);
 
@@ -225,43 +262,68 @@ const Stations = (props) => {
                               >
                                 {(provided) => (
                                   <div
+                                    className="draggableItems"
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
                                   >
                                     <div
                                       className="buttons"
-                                      style={
-                                        {
-                                          border: (id === myStation.id) ? "1px solid #cc0127" : "",
-                                          background: props.language === 'English' ?
-                                            `linear-gradient(270deg, ${color} 7%, #F8F9F3 1%)`
-                                            :
-                                            `linear-gradient(90deg, ${color} 7%, #F8F9F3 1%)`
-                                          ,
-                                          flexDirection: props.language === 'English' ? "row" : "row-reverse",
-                                          textAlignLast: props.language === 'English' ? "end" : "left"
-
-                                        }
-                                      }
-
-
+                                      style={{
+                                        border:
+                                          id === myStation.id
+                                            ? "1px solid #cc0127"
+                                            : "",
+                                        background:
+                                          props.language === "English"
+                                            ? `linear-gradient(270deg, ${color} 7%, #ffffff 1%)`
+                                            : `linear-gradient(90deg, ${color} 7%, #ffffff 1%)`,
+                                        flexDirection:
+                                          props.language === "English"
+                                            ? "row"
+                                            : "row-reverse",
+                                        textAlignLast:
+                                          props.language === "English"
+                                            ? "end"
+                                            : "left",
+                                      }}
                                       key={index}
                                     >
                                       <div className="dropdownThreeDots">
-
-                                        <button className="threeDotsVerticalEng"
-                                          onClick={() => clickOnhreeDotsVerticaIcont(index)} >
-                                          <BsThreeDotsVertical />
+                                        <button
+                                          className="threeDotsVerticalEng"
+                                          onClick={() =>
+                                            clickOnhreeDotsVerticaIcont(index)
+                                          }
+                                        >
+                                          {id != 0 ? (
+                                            <BsThreeDotsVertical />
+                                          ) : (
+                                            <></>
+                                          )}
                                         </button>
 
-                                        {openThreeDotsVertical === index ?
-                                          <Modal_dropdown /> : <></>
-
-                                        }
+                                        {openThreeDotsVertical === index ? (
+                                          <Modal_dropdown
+                                            setRequestForEditing={
+                                              setRequestForEditing
+                                            }
+                                            editable={true}
+                                            Reproducible={false}
+                                            details={true}
+                                            erasable={true}
+                                          />
+                                        ) : (
+                                          <></>
+                                        )}
                                       </div>
-                                      <button className="nameOfButton" onClick={() => Display_The_Tasks(id, name)}>
-                                        {name}
+                                      <button
+                                        className="nameOfButton"
+                                        onClick={() =>
+                                          Display_The_Tasks(id, title)
+                                        }
+                                      >
+                                        {title}
                                       </button>
                                     </div>
                                   </div>
@@ -276,7 +338,12 @@ const Stations = (props) => {
                   </DragDropContext>
                 </>
               ) : (
-                <div className="textBeforeStation" style={{ backgroundImage: `url(${textArea})` }}>{props.stationsBeforeChoosingSite}</div>
+                <div
+                  className="textBeforeStation"
+                  style={{ backgroundImage: `url(${textArea})` }}
+                >
+                  {props.stationsBeforeChoosingSite}
+                </div>
               )}
             </div>
             <div className="addStationCover">
@@ -290,39 +357,52 @@ const Stations = (props) => {
               </button>
             </div>
           </div>
-          <TasksComp
-            percentProgressBar={props.percentProgressBar}
-            setPercentProgressBar={props.setPercentProgressBar}
-            progressBarFlag={props.progressBarFlag}
-            setProgressBarFlag={props.setProgressBarFlag}
-            replaceRouteFlag={props.replaceRouteFlag}
-            replaceSiteFlag={props.replaceSiteFlag}
-            firstStationName={props.firstStationName}
-            boardArrayDND={props.boardArrayDND}
-            propsDataTask={tasks}
-            allStations={props.allStations}
-            allTasks={props.allTasks}
-            language={props.language}
-            myTasks={props.myTasks}
-            drag={props.drag}
-            addMyTask={props.addMyTask}
-            titleTaskCss={props.titleTaskCss}
-            mySite={props.mySite}
-            myStation={myStation}
-            flagHebrew={props.flagHebrew}
-            tasksOfRoutes={props.tasksOfRoutes}
-            myStations={props.stationArray}
-            saveButton={props.saveButton}
-            siteQuestionLanguage={props.siteQuestionLanguage}
-            tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
-            allTasksOfTheSite={props.allTasksOfTheSite}
-            setAllTasksOfTheSite={props.setAllTasksOfTheSite}
-
-
-          />
+          <DndProvider backend={HTML5Backend}>
+            <DragnDrop
+              setStationArray={props.setStationArray}
+              percentProgressBar={props.percentProgressBar}
+              setPercentProgressBar={props.setPercentProgressBar}
+              progressBarFlag={props.progressBarFlag}
+              setProgressBarFlag={props.setProgressBarFlag}
+              replaceRouteFlag={props.replaceRouteFlag}
+              replaceSiteFlag={props.replaceSiteFlag}
+              firstStationName={props.firstStationName}
+              boardArrayDND={props.boardArrayDND}
+              tasksOfChosenStation={tasksOfChosenStation}
+              setTasksOfChosenStation={setTasksOfChosenStation}
+              allStations={props.allStations}
+              allTasks={props.allTasks}
+              language={props.language}
+              myTasks={props.myTasks}
+              drag={props.drag}
+              addMyTask={props.addMyTask}
+              titleTaskCss={props.titleTaskCss}
+              mySite={props.mySite}
+              myStation={myStation}
+              flagHebrew={props.flagHebrew}
+              tasksOfRoutes={props.tasksOfRoutes}
+              stationArray={props.stationArray}
+              saveButton={props.saveButton}
+              siteQuestionLanguage={props.siteQuestionLanguage}
+              tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
+              allTasksOfTheSite={props.allTasksOfTheSite}
+              setAllTasksOfTheSite={props.setAllTasksOfTheSite}
+              setMyStation={setMyStation}
+              hebrew={props.hebrew}
+              english={props.english}
+              Hebrew={props.Hebrew}
+            />
+          </DndProvider>
         </>
-      )
-      }
+      )}
+
+      <Modal_Delete
+        openRemove={openRemove}
+        handleCloseRemove={handleCloseRemove}
+        DialogTitle={"מחיקת תחנה"}
+        DialogContent={"האם אתה בטוח במחיקת התחנה?"}
+        handleCloseRemoveConfirm={handleCloseRemoveConfirm}
+      />
     </>
   );
 };

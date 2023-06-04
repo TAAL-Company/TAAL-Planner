@@ -6,7 +6,7 @@ import { IoMdCheckbox } from "react-icons/io";
 import Modal_Loading from "./Modal_Loading";
 import { baseUrl } from "../../config";
 import Modal_no_site_selected from "./Modal_no_site_selected";
-import { uploadFile, insertTask } from '../../api/api';
+import { uploadFile, insertTask, updateTask } from "../../api/api";
 
 //--------------------------
 let ichour = "אישור";
@@ -14,17 +14,27 @@ let file = "";
 let myPlacesChoiceTemp = [];
 
 //--------------------------
-function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setModalOpenNoSiteSelected, mySite , setAllTasksOfTheSite, language }) {
+function Modal_Tasks(props) {
   const [, setDone] = useState(false);
-  const [get_title, setTitle] = useState("");
+  const [get_title, setTitle] = useState(props.title);
   const [picture, setPicture] = useState(null);
   const [audio, setAudio] = useState(null);
-  const [getDescription, setDescription] = useState("");
+  const [getDescription, setDescription] = useState(props.subtitle);
   const [, setFile] = useState("");
   const [flagClickOK, setFlagClickOK] = useState(false);
-  const [myPlacesChoice, setMyPlacesChoice] = useState([mySite.id]);
+  const [myPlacesChoice, setMyPlacesChoice] = useState([]);
 
-  console.log("allStations: ", allStations)
+  useEffect(() => {
+    console.log("stationOfTask", props.stationOfTask);
+    if (props.requestForEditing === "edit") {
+      props.stationOfTask.map((station) => {
+        setMyPlacesChoice((prev) => [...prev, station.id]);
+      });
+    }
+  }, []);
+
+  console.log("allStations: ", props.allStations);
+  console.log("myStation: ", props.myStation);
 
   const handleTitleInput = (e) => {
     setTitle(e.target.value);
@@ -44,97 +54,99 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
   //     // console.log(file)
   //   }
   // };
-  const Post_Task = async () => {
-
+  const saveTask = async () => {
     setFlagClickOK(true);
-
-    // resultMyPlacesChoice();
-    let imageData;
-    let audioData;
-
-    try {
-      if (picture) {
-        imageData = await uploadFile(picture, 'Image');
-        console.log(`Image uploaded successfully:`, imageData);
-      }
-      if (audio) {
-        audioData = await uploadFile(audio, 'Audio');
-        console.log(`Audio uploaded successfully:`, audioData);
-      }
-    } catch (error) {
-      console.error(error);
-    }
 
     if (get_title === "" || getDescription === "") {
       alert("עליך למלא שדות חובה המסומנים בכוכבית");
     } else {
+      let imageData;
+      let audioData;
+
       try {
-        const post = await insertTask(get_title, myPlacesChoice, imageData, audioData);
-          setDone(true);
-          console.log("post Modale Tasks:", post)
-          setFlagClickOK(false);
-          setOpenModalPlaces(false);
-          let color = allStations.find(item => item.id === myPlacesChoice[1]).color
-          setAllTasksOfTheSite(prev => [...prev, post])
+        if (picture) {
+          imageData = await uploadFile(picture, "Image");
+          console.log(`Image uploaded successfully:`, imageData);
+        }
+        if (audio) {
+          audioData = await uploadFile(audio, "Audio");
+          console.log(`Audio uploaded successfully:`, audioData);
+        }
       } catch (error) {
         console.error(error);
       }
 
-      console.log("insertTask: ", insertTask      )
-
-    //   let url_post = `${baseUrl}/wp-json/wp/v2/tasks/`;
-    //   fetch(url_post, {
-    //     method: "POST",
-    //     mode: "cors",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-    //     },
-    //     body: JSON.stringify({
-    //       // password: "sdfsdf",
-    //       status: "publish",
-
-    //       title: get_title,
-    //       // "description": getDescription,
-    //       places: myPlacesChoice,
-    //       fields: {
-    //         image: {
-    //           ID: imageData.id,
-    //         },
-    //         audio: {
-    //           ID: audioData.id
-    //         }
-    //         // minimum_profile: 6
-    //       },
-    //     }),
-    //   })
-    //     .then(function (response) {
-    //       return response.json();
-
-    //       // props.setAllTasksOfTheSite
-    //     })
-    //     .then(function (post) {
-    //       setDone(true);
-    //       // alert("ok")
-    //       console.log("post Modale Tasks:", post)
-    //       // window.location.replace("/planner");
-    //       setFlagClickOK(false);
-    //       setOpenModalPlaces(false);
-    //     });
+      if (props.requestForEditing === "edit") {
+        const newTask = {
+          title: get_title,
+          subtitle: getDescription,
+          stationIds: myPlacesChoice,
+        };
+        update_task(props.uuid, newTask);
+      } else {
+        Post_Task(imageData, audioData);
+      }
     }
+  };
+  const update_task = async (uuid, newTask) => {
+    try {
+      const update = await updateTask(uuid, newTask);
+      console.log("update Modale Tasks:", update);
 
+      if (update.status === 200) {
+        setFlagClickOK(false);
+        props.setModalOpen(false);
+        let color = props.allStations.find(
+          (item) => item.id === myPlacesChoice[0]
+        ).color;
 
-  }
+        update.data.color = color;
+        props.setAllTasksOfTheSite((prev) => [...prev, update.data]);
+
+        console.log("insertTask: ", update.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const Post_Task = async (imageData, audioData) => {
+    // resultMyPlacesChoice();
+
+    try {
+      const post = await insertTask(
+        get_title,
+        getDescription,
+        myPlacesChoice,
+        imageData,
+        audioData,
+        props.mySite.id
+      );
+      setDone(true);
+      console.log("post Modale Tasks:", post);
+
+      setFlagClickOK(false);
+      props.setModalOpen(false);
+      let color = props.allStations.find(
+        (item) => item.id === myPlacesChoice[0]
+      ).color;
+
+      post.color = color;
+      props.setAllTasksOfTheSite((prev) => [...prev, post]);
+
+      console.log("insertTask: ", post);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const saveCheckbox = (val) => {
     // console.log(val)
-    setMyPlacesChoice(prev => [...prev, val.id])
+    setMyPlacesChoice((prev) => [...prev, val.id]);
     // setMyStudents(myStudents.push(val))
     // sortById();
   };
   useEffect(() => {
     console.log("myPlacesChoice:", myPlacesChoice);
-
-  }, [myPlacesChoice])
+  }, [myPlacesChoice]);
 
   // const sortById = () => {
   //   if (myPlacesChoiceTemp.length > 1)
@@ -170,30 +182,43 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
       }
   };
 
-
   return (
     <>
-      {!help && !siteSelected ? (<>
-        <Modal_no_site_selected setOpenModal={setOpenModalPlaces}></Modal_no_site_selected>
-
-      </>) : (<></>)}
-      {!help && siteSelected ? (
+      {!props.help && !props.siteSelected ? (
         <>
-          <div className="BackgroundTasks" style={{textAlign: language === 'English' ?  "right": "left",
-        direction: language === 'English' ?  "ltr": "rtl",
-        transform: language === 'English' ?  " translate(-50%, -50%)": " translate(50%, -50%)"}}>
+          <Modal_no_site_selected
+            setOpenModal={props.setModalOpen}
+          ></Modal_no_site_selected>
+        </>
+      ) : (
+        <></>
+      )}
+      {!props.help && props.siteSelected ? (
+        <>
+          <div
+            className="BackgroundTasks"
+            style={{
+              textAlign: props.language === "English" ? "right" : "left",
+              direction: props.language === "English" ? "ltr" : "rtl",
+              transform:
+                props.language === "English"
+                  ? " translate(-50%, -50%)"
+                  : " translate(50%, -50%)",
+            }}
+          >
             <div className="modalContainerTasks">
               <div className="headerNewTask">
                 <div className="NewTaskTitle">
-                {language !== 'English' ? 'New task' : ':משימה חדשה'}
-
+                  {props.language !== "English" ? "New task" : ":משימה חדשה"}
                 </div>
               </div>
               <div className="bodyNewTask">
                 {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
                 <form id="IPU" className="w3-container">
                   <h6>
-                  {language !== 'English' ? 'Write the name of the task' : ':רשום את שם המשימה '}
+                    {props.language !== "English"
+                      ? "Write the name of the task"
+                      : ":רשום את שם המשימה "}
 
                     <RiAsterisk style={{ color: "red" }} />
                   </h6>
@@ -206,34 +231,40 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                         width: "100%",
                         height: "38px",
                         paddingRight: "20px",
-                        direction: language === 'English' ?  "rtl": "ltr"
+                        direction: props.language === "English" ? "rtl" : "ltr",
                       }}
+                      value={get_title}
                     ></input>
                   </p>
                 </form>
                 <form id="IPU" className="w3-container">
                   <h6>
-                  {language !== 'English' ? 'Describe the task' : ':תאר במשפט את משימה '}
+                    {props.language !== "English"
+                      ? "Describe the task"
+                      : ":תאר במשפט את משימה "}
                     <RiAsterisk style={{ color: "red" }} />
                   </h6>
                   <p>
                     <input
+                      value={getDescription}
                       type="text"
                       onChange={handleDescriptionInput}
                       style={{
                         width: "100%",
                         height: "38px",
                         paddingRight: "20px",
-                        direction: language === 'English' ?  "rtl": "ltr"
+                        direction: props.language === "English" ? "rtl" : "ltr",
                       }}
                     ></input>
                   </p>
                 </form>
                 <form id="IPU" className="w3-container">
                   <h6>
-                  {language !== 'English' ? 'Add a picture of a task' : ':הוסף תמונה של משימה '}
+                    {props.language !== "English"
+                      ? "Add a picture of a task"
+                      : ":הוסף תמונה של משימה "}
 
-                   <FcMultipleInputs />
+                    <FcMultipleInputs />
                   </h6>
                   <div className="input-group mb-3">
                     <input
@@ -246,14 +277,17 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                         textAlign: "right",
                         width: "100%",
                         height: "38px",
-                        direction: language === 'English' ?  "rtl": "ltr"
+                        direction: props.language === "English" ? "rtl" : "ltr",
                       }}
                     ></input>
                   </div>
                 </form>
                 <form id="IPU" className="w3-container">
                   <h6>
-                  {language !== 'English' ? 'Add a voice clip describing the task' : ':הוסף קטע קול המתאר את המשימה '}<FcMultipleInputs />
+                    {props.language !== "English"
+                      ? "Add a voice clip describing the task"
+                      : ":הוסף קטע קול המתאר את המשימה "}
+                    <FcMultipleInputs />
                   </h6>
                   <p>
                     <input
@@ -266,27 +300,31 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                         textAlign: "right",
                         width: "100%",
                         height: "38px",
-                        direction: language === 'English' ?  "rtl": "ltr"
+                        direction: props.language === "English" ? "rtl" : "ltr",
                       }}
                     ></input>
                   </p>
 
                   <div className="list-group">
                     <h6>
-                    {language !== 'English' ? 'Select the stations you want to associate the task with' : ':בחר את התחנות שברצונך לשייך את המשימה'}
+                      {props.language !== "English"
+                        ? "Select the stations you want to associate the task with"
+                        : ":בחר את התחנות שברצונך לשייך את המשימה"}
                       <IoMdCheckbox style={{ color: "blue" }} />
                     </h6>
                     <div className="allTasks">
-                      {allStations.map((value, index) => {
+                      {props.allStations.map((value, index) => {
                         return (
                           <label key={index} className="list-group-item">
                             <input
                               onChange={() => saveCheckbox(value)}
                               className="form-check-input me-1"
+                              style={{ marginLeft: "5px" }}
                               type="checkbox"
                               value=""
+                              checked={myPlacesChoice.includes(value.id)}
                             ></input>
-                            {value.name}
+                            {value.title}
                           </label>
                         );
                       })}
@@ -294,31 +332,36 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
                   </div>
                 </form>
               </div>
-              <div style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                gap: "16px",
-                height: "100px",
-                alignItems: "center",
-                padding: "40px",
-                marginBottom: "20px",
-              }}
-                className="footerNewTasks">
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  gap: "16px",
+                  height: "100px",
+                  alignItems: "center",
+                  padding: "40px",
+                  marginBottom: "20px",
+                }}
+                className="footerNewTasks"
+              >
                 <input
                   type="submit"
                   className="saveTaskButton"
-                  value={language !== 'English' ? 'Save Task' : 'שמור משימה'}
-                  onClick={Post_Task}
+                  value={
+                    props.language !== "English" ? "Save Task" : "שמור משימה"
+                  }
+                  onClick={saveTask}
                 />
                 <input
                   type="submit"
                   className="cancelTaskButton"
-                  value={language !== 'English' ? 'Cancel' : 'ביטול'}
+                  value={props.language !== "English" ? "Cancel" : "ביטול"}
                   onClick={() => {
-                    setOpenModalPlaces(false);
+                    setMyPlacesChoice([]);
+                    props.setModalOpen(false);
+                    props.handleClose();
                   }}
                 />
-
               </div>
               {flagClickOK ? (
                 <>
@@ -337,7 +380,7 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
         //     <div className="titleCloseBtn">
         //       <button
         //         onClick={() => {
-        //           setOpenModalPlaces(false);
+        //           setModalOpen(false);
         //         }}
         //       >
         //         {" "}
@@ -374,8 +417,7 @@ function Modal_Tasks({ setOpenModalPlaces, allStations, help, siteSelected, setM
         //     </div>
         //   </div>
         // </div>
-      )
-      }
+      )}
     </>
   );
 }

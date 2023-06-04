@@ -1,0 +1,2 @@
+export const muiLicenseKey =
+  "ce92799e7ae9d9d0e84eafc1e0491a54Tz01OTczMyxFPTE3MDc4OTk4MTU0MzQsUz1wcm8sTE09c3Vic2NyaXB0aW9uLEtWPTI=";

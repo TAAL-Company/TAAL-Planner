@@ -35,27 +35,35 @@ function Tag({
   modalFlagTablet,
   dragFromCover,
   stationColor,
-  language
+  language,
+  openThreeDotsVertical,
+  setOpenThreeDotsVertical,
+  requestForEditing,
+  setRequestForEditing,
+  openThreeDotsVerticalBoard,
+  setOpenThreeDotsVerticalBoard,
+  requestForEditingBoard,
+  setRequestForEditingBoard,
 }) {
   localStorage.setItem("myLastStation", JSON.stringify(myLastStation));
-  console.log("title in Tag:", title);
-  console.log("myLastStation:", myLastStation);
-  console.log("width width width widthwidthwidth:", kavTaskTopMarginTop);
-  console.log("myStation:", myStation);
-  console.log("countcountcountcount:", count);
-  console.log("id:", id);
-  console.log("image data tag: ", dataImg)
+  // console.log("title in Tag:", title);
+  // console.log("myLastStation:", myLastStation);
+  // console.log("width width width widthwidthwidth:", kavTaskTopMarginTop);
+  // console.log("myStation:", myStation);
+  // console.log("countcountcountcount:", count);
+  // console.log("id:", id);
+  // console.log("image data tag: ", dataImg);
 
-  console.log("flagBoard:", flagBoard);
-  console.log("nameStation:", nameStation);
-  console.log("borderLeft:", borderLeft);
-  console.log("data:", data);
-  // console.log("idImg: ", idImg)
+  // console.log("flagBoard:", flagBoard);
+  // console.log("nameStation:", nameStation);
+  // console.log("borderLeft:", borderLeft);
+  // console.log("data:", data);
+  // // console.log("idImg: ", idImg)
 
   const [, setIdListen] = useState(0);
   const [, setDataListen] = useState({});
-  const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
-
+  // const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
+  // const [requestForEditing, setRequestForEditing] = useState("");
 
   // console.log("flag Tag", flag)
 
@@ -68,28 +76,27 @@ function Tag({
   }));
   console.log("dragFromCover: ", dragFromCover);
   useEffect(() => {
-    console.log('isDragging: ', isDragging);
-  }, [isDragging])
+    console.log("isDragging: ", isDragging);
+  }, [isDragging]);
 
+  const clickOnhreeDotsVerticaIcontBoard = (value) => {
+    console.log("value", value);
+    if (openThreeDotsVerticalBoard == value) setOpenThreeDotsVerticalBoard(-1);
+    else setOpenThreeDotsVerticalBoard(value);
+  };
 
   const clickOnhreeDotsVerticaIcont = (value) => {
-    if (openThreeDotsVertical == value)
-      setOpenThreeDotsVertical(-1)
-    else
-      setOpenThreeDotsVertical(value)
-
-  }
+    if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
+    else setOpenThreeDotsVertical(value);
+  };
   useEffect(() => {
-    console.log("openThree" + openThreeDotsVertical)
-
-  }, [openThreeDotsVertical])
-
-
+    console.log("openThree" + openThreeDotsVertical);
+  }, [openThreeDotsVertical]);
 
   const listen = () => {
     setIdListen((idListen = id));
     setDataListen((dataListen = dataImg));
-    console.log("dataListen:", dataListen)
+    console.log("dataListen:", dataListen);
   };
   const listenMyStation = () => {
     data.forEach((val) => {
@@ -105,18 +112,41 @@ function Tag({
         <>
           {/* {myLastStation !== myStation && flagBoard ? <>  <div className='kavTask3'></div></> : <></>} */}
 
-          <div className={`kav ${language !== 'English' ? 'english' : ''}`}></div>
-          <div className={`kavTop ${language !== 'English' ? 'english' : ''}`} style={{ width: kavTopWidth }}>
-            <div className={`titleStat ${language !== 'English' ? 'english' : ''}`}>{nameStation}</div>
-            <div className={`kavTask ${language !== 'English' ? 'english' : ''}`} style={{ borderLeft: borderLeft }}>
+          <div
+            className={`kav ${language !== "English" ? "english" : ""}`}
+          ></div>
+          <div
+            className={`kavTop ${language !== "English" ? "english" : ""}`}
+            style={{ width: kavTopWidth }}
+          >
+            <div
+              className={`titleStat ${language !== "English" ? "english" : ""}`}
+            >
+              {nameStation}
+            </div>
+            <div
+              className={`kavTask ${language !== "English" ? "english" : ""}`}
+              style={{ borderLeft: borderLeft }}
+            >
               {/* <div className='kavB'></div> */}
             </div>
             <div
-              className={`kavTask2 ${language !== 'English' ? 'english' : ''}`}
+              className={`kavTask2 ${language !== "English" ? "english" : ""}`}
               style={{ height: height, bottom: bottom }}
             ></div>
-            <div className={`kavTaskTop ${language !== 'English' ? 'english' : ''}`} style={{ marginTop: width }}></div>
-            <div className={`nameStationBoard ${language !== 'English' ? 'english' : ''}`}>{nameStation}</div>
+            <div
+              className={`kavTaskTop ${
+                language !== "English" ? "english" : ""
+              }`}
+              style={{ marginTop: width }}
+            ></div>
+            <div
+              className={`nameStationBoard ${
+                language !== "English" ? "english" : ""
+              }`}
+            >
+              {nameStation}
+            </div>
           </div>
         </>
       ) : (
@@ -160,34 +190,64 @@ function Tag({
             <>
               <div
                 className="buttons"
-
-                style={
-                  {
-                    background: (dragFromCover === "reorderBoard") ? `linear-gradient(270deg, ${stationColor} 7%)` : "",
-                    marginTop: myMarginTop,
-                    flexDirection: language === 'English' ? "row" : "row-reverse",
-                    textAlignLast: language === 'English' ? "end" : "left",
-                    marginLeft: language !== 'English' && dragFromCover === "border" ? "56px" : ""
-                  }
-                }
+                style={{
+                  background:
+                    dragFromCover === "reorderBoard"
+                      ? `linear-gradient(270deg, ${stationColor} 7%)`
+                      : "",
+                  marginTop: myMarginTop,
+                  flexDirection: language === "English" ? "row" : "row-reverse",
+                  textAlignLast: language === "English" ? "end" : "left",
+                  marginLeft:
+                    language !== "English" && dragFromCover === "border"
+                      ? "56px"
+                      : "",
+                  // width: dragFromCover === "border" ? "85%" : "90%",
+                }}
                 ref={drag}
                 src={title}
               >
-                {/* {dragFromCover !== "reorderBoard" ?
-                  <BsThreeDotsVertical className="threeDotsVerticalTasks" /> :
-                  <BsList className="threeDotsVerticalTasks" />
-                } */}
                 <div className="dropdownThreeDots">
-
-                  <button className="threeDotsVerticalEng"
-                    onClick={() => clickOnhreeDotsVerticaIcont(id)} >
+                  <button
+                    className="threeDotsVerticalEng"
+                    onClick={() => {
+                      {
+                        if (dragFromCover === "TasksCover") {
+                          clickOnhreeDotsVerticaIcont(id);
+                        } else clickOnhreeDotsVerticaIcontBoard(id);
+                      }
+                    }}
+                  >
                     <BsThreeDotsVertical />
                   </button>
 
-                  {openThreeDotsVertical !== id ?
-                    <></> : <Modal_dropdown />
+                  {openThreeDotsVertical !== id ? (
+                    <></>
+                  ) : dragFromCover === "TasksCover" ? (
+                    <Modal_dropdown
+                      setRequestForEditing={setRequestForEditing}
+                      editable={true}
+                      Reproducible={true}
+                      details={true}
+                      erasable={true}
+                    />
+                  ) : (
+                    <></>
+                  )}
 
-                  }
+                  {openThreeDotsVerticalBoard !== id ? (
+                    <></>
+                  ) : dragFromCover === "border" ? (
+                    <Modal_dropdown
+                      setRequestForEditing={setRequestForEditingBoard}
+                      editable={true}
+                      Reproducible={true}
+                      details={true}
+                      erasable={true}
+                    />
+                  ) : (
+                    <></>
+                  )}
                 </div>
                 <div className="nameOfTask"> {title}</div>
               </div>

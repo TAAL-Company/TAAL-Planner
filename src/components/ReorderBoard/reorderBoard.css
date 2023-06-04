@@ -1,11 +1,11 @@
-.tasksRorder {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
-    padding-top: 10px;
+.tasksReorder {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding-top: 10px;
 }
 
-.nameStationReorder{
-    text-align: right;
+.nameStationReorder {
+  text-align: right;
 }

@@ -1,0 +1,28 @@
+a {
+  margin: 0.3rem;
+  color: rgb(1, 93, 174);
+  cursor: pointer;
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.ImageXBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.ImageXBtn:hover {
+  background: rgb(98, 95, 95, 0.3);
+}
+
+.ImageXBtn:active {
+  background: rgb(98, 95, 95, 0.4);
+}

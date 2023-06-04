@@ -1,1 +1,7 @@
 node_modules
+
+# Top Secret
+TopSecret.js
+
+# production
+/build

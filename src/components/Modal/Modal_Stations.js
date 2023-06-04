@@ -23,6 +23,7 @@ const Modal_Stations = (props) => {
   const [, setFlagClickOK] = useState(false);
   const [picturePreview, setPicturePreview] = useState(false);
   const [srcImage, setSrcImage] = useState("");
+  const [stationUUId, setStationUUId] = useState("");
 
   console.log("stationIndex: ", props.stationIndex);
   console.log("stationArray: ", props.stationArray);
@@ -30,6 +31,7 @@ const Modal_Stations = (props) => {
     if (props.stationIndex != -1) {
       settitle(props.stationArray[props.stationIndex].title);
       setDescription(props.stationArray[props.stationIndex].subtitle);
+      setStationUUId(props.stationArray[props.stationIndex].id);
     }
   }, []);
 
@@ -56,6 +58,9 @@ const Modal_Stations = (props) => {
   async function Post_Station() {
     setFlagClickOK((flagClickOK = true));
 
+    console.log("props.stationArray", props.stationArray);
+    console.log("props.stationUUId", stationUUId);
+
     if (get_title === "" || getDescription === "") {
       alert("עליך למלא שדות חובה המסומנים בכוכבית");
     } else if (
@@ -63,7 +68,7 @@ const Modal_Stations = (props) => {
       props.requestForEditing == "details"
     ) {
       let response = await updateStation(
-        props.stationArray[props.stationIndex].id,
+        stationUUId,
         get_title,
         getDescription,
         props.mySite.id
@@ -72,8 +77,11 @@ const Modal_Stations = (props) => {
         alert("התחנה עודכנה");
         setFlagClickOK((flagClickOK = false));
         props.setOpenModalPlaces(false);
-        props.stationArray[props.stationIndex].title = get_title;
-        props.stationArray[props.stationIndex].subtitle = getDescription;
+        let station = props.stationArray.find(
+          (station) => station.id === stationUUId
+        );
+        station.title = get_title;
+        station.subtitle = getDescription;
 
         props.setOpenModalPlaces(false);
         props.setOpenThreeDotsVertical(-1);

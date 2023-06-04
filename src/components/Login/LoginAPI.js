@@ -12,7 +12,7 @@ function LoginAPI(props) {
   const [, login_token] = useState("");
   const [, setFlag] = useState(false);
   if (props.APIDetailsLogin.user.length > 0) {
-    const url = `${baseUrl}/wp-json/jwt-auth/v1/token/`;
+    const url = `https://taal.tech/wp-json/jwt-auth/v1/token/`;
     fetch(url, {
       method: "POST",
       headers: {

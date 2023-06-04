@@ -258,6 +258,7 @@ const Cards = () => {
               {openThreeDotsVertical === index ? (
                 <Modal_dropdown
                   setRequestForEditing={setRequestForEditing}
+                  setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                   editable={true}
                   Reproducible={true}
                   details={true}
@@ -426,7 +427,7 @@ export default Cards;
 //   const getData = () => {
 //     if (flag_show_page === true) setDone(true);
 //     if (flag_show_page === false)
-//       get(`${baseUrl}/wp-json/wp/v2/users/`, {
+//       get(`https://taal.tech/wp-json/wp/v2/users/`, {
 //         headers: {
 //           "Content-Type": "application/json",
 //           Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,

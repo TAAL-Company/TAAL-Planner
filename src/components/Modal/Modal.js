@@ -33,6 +33,8 @@ function Modal({
   tasksForNewRoute,
   routeUUID,
   setNewRoute,
+  requestForEditing,
+  newRoute,
 }) {
   console.log("flagTest:", flagTest);
   const [obj, set_obj] = useState({
@@ -165,15 +167,25 @@ function Modal({
     };
 
     console.log("routeData", routeData);
-
-    insertRoute(routeData).then((data) => {
-      console.log("data: ", data);
-      setNewRoute(data);
-      setNewTitleForRoute(data);
-      setRouteTitle("");
-      setFlagStudent(false);
-      setOpenModal(false);
-    });
+    if (requestForEditing == "edit" || requestForEditing == "details") {
+      updateRoute(routeUUID, routeData).then((data) => {
+        console.log("data: ", data);
+        setNewRoute(data);
+        // setNewTitleForRoute(data);
+        setRouteTitle("");
+        // setFlagStudent(false);
+        setOpenModal(false);
+      });
+    } else {
+      insertRoute(routeData).then((data) => {
+        console.log("data: ", data);
+        setNewRoute(data);
+        setNewTitleForRoute(data);
+        setRouteTitle("");
+        setFlagStudent(false);
+        setOpenModal(false);
+      });
+    }
   };
 
   // useEffect(() => {

@@ -147,15 +147,18 @@ const Stations = (props) => {
     console.log("eeeeeeeeeeeeeeeeeee: ", e);
     console.log("eeeeeeeeeeeeeeeeeee myStation.id: ", myStation.id);
 
-    if (myStation.id === e) {
-      setMyStation((myStation.flag = false));
-    } else {
-      setMyStation((myStation.flag = true));
-    }
+    // if (myStation.id === e) {
+    //   setMyStation((myStation.flag = false));
+    // } else {
+    //   setMyStation((myStation.flag = true));
+    // }
     if (e != 0) setMyStation((myStation.data = props.stationArray));
     setMyStation((myStation.name = n));
     setMyStation((myStation.id = e));
+
     console.log("console myStat myStation:", myStation);
+    console.log("console myStat myStation:", myStation);
+
     if (tasksOfChosenStation.length > 0) {
       setTasksOfChosenStation([]);
     }
@@ -307,6 +310,9 @@ const Stations = (props) => {
                                           <Modal_dropdown
                                             setRequestForEditing={
                                               setRequestForEditing
+                                            }
+                                            setOpenThreeDotsVertical={
+                                              setOpenThreeDotsVertical
                                             }
                                             editable={true}
                                             Reproducible={false}

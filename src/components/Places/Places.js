@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   get,
   getingDataRoutes,
@@ -105,11 +105,18 @@ const Places = (props) => {
   const [allUsers, setAllUsers] = useState([]);
   const [openRemove, setOpenRemove] = React.useState(false);
   const [newRoute, setNewRoute] = useState([]);
+  const [routeName, setRouteName] = useState([]);
+  const [routeUUID, setRouteUUID] = useState([]);
+  // const menuRef = useRef(null);
 
   useEffect(() => {
     console.log("requestForEditing: ", requestForEditing);
+    console.log("openThreeDotsVertical", openThreeDotsVertical);
+
     if (requestForEditing == "edit" || requestForEditing == "details") {
-      // setOpen(true);
+      setModalOpen(true);
+      setRouteName(filteredDataRoutes[openThreeDotsVertical].name);
+      setRouteUUID(filteredDataRoutes[openThreeDotsVertical].id);
     } else if (requestForEditing == "duplication") {
       console.log("duplication openThreeDotsVertical", openThreeDotsVertical);
     } else if (requestForEditing == "delete") {
@@ -293,10 +300,12 @@ const Places = (props) => {
         .replace("&#8217;", "'"); //replace gebrish for - or '
       let firstStation;
 
-      if (tasksOfRoutes.tasks.length > 0) {
+      if (tasksOfRoutes.tasks && tasksOfRoutes.tasks.length > 0) {
         firstStation = allTasks.find(
           (obj) => obj.id === tasksOfRoutes.tasks[0].taskId
         );
+      } else {
+        setProgressBarFlag(false);
       }
 
       let firstStationId;
@@ -589,16 +598,23 @@ const Places = (props) => {
     console.log("filteredDataRoutes: ", filteredDataRoutes);
     console.log("newRoute: ", newRoute);
 
+    let route = filteredDataRoutes.find((route) => route.id === newRoute.id);
+    console.log("route ", route);
+
     if (Object.keys(newRoute).length > 0) {
       // filteredDataRoutes.push(newRoute);
-      setFilteredDataRoutes((temp) => [...temp, newRoute]);
-      let uuidRoute = newRoute.id;
-      console.log("Setting timeout for route with ID:", uuidRoute);
+      if (route !== undefined) {
+        route.name = newRoute.name;
+      } else {
+        setFilteredDataRoutes((temp) => [...temp, newRoute]);
+        let uuidRoute = newRoute.id;
+        console.log("Setting timeout for route with ID:", uuidRoute);
 
-      setTimeout(() => {
-        console.log("Timeout complete for route with ID:", uuidRoute);
-        updateRoute(uuidRoute, { siteIds: mySite.id });
-      }, 60000);
+        setTimeout(() => {
+          console.log("Timeout complete for route with ID:", uuidRoute);
+          updateRoute(uuidRoute, { siteIds: mySite.id });
+        }, 60000);
+      }
       console.log("HHII");
       setNewRoute([]);
     }
@@ -606,6 +622,19 @@ const Places = (props) => {
   useEffect(() => {
     console.log("@@ filteredDataRoutes: ", filteredDataRoutes);
   }, [filteredDataRoutes]);
+
+  // useEffect(() => {
+  //   function handleClickOutside(event) {
+  //     if (menuRef.current && !menuRef.current.contains(event.target)) {
+  //       setOpenThreeDotsVertical(null);
+  //     }
+  //   }
+
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, []);
 
   // handle search word in "searce route"
   const searchRoute = () => {
@@ -662,6 +691,8 @@ const Places = (props) => {
         {/* modal for adding new route */}
         {modalOpen && (
           <Modal
+            routeName={routeName}
+            requestForEditing={requestForEditing}
             setNewTitleForRoute={setNewTitleForRoute}
             setNewRoute={setNewRoute}
             setOpenModal={setModalOpen}
@@ -669,6 +700,7 @@ const Places = (props) => {
             flagTest={flagTest}
             siteSelected={siteSelected}
             language={props.language}
+            routeUUID={routeUUID}
           />
         )}
         <div className="Cover_Places">
@@ -743,14 +775,17 @@ const Places = (props) => {
                       </button>
 
                       {openThreeDotsVertical === index ? (
+                        // <div ref={menuRef}>
                         <Modal_dropdown
                           setRequestForEditing={setRequestForEditing}
+                          setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                           editable={true}
                           Reproducible={true}
                           details={true}
                           erasable={true}
                         />
                       ) : (
+                        // </div>
                         <></>
                       )}
                     </div>

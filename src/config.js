@@ -1,5 +1,8 @@
 module.exports = {
-  baseUrl: "https://taal.tech",
+  // baseUrl: "https://taal.tech",
+
+  baseUrl: "https://prod-web-app0da5905.azurewebsites.net",
+  // baseUrl: "http://localhost:3000",
 };
 
 //'https://taal.tech' // prodaction

@@ -6,7 +6,7 @@ import { IoMdCheckbox } from "react-icons/io";
 import Modal_Loading from "./Modal_Loading";
 import { baseUrl } from "../../config";
 import Modal_no_site_selected from "./Modal_no_site_selected";
-import { uploadFile, insertTask, updateTask } from "../../api/api";
+import { uploadImage, uploadFile, insertTask, updateTask } from "../../api/api";
 
 //--------------------------
 let ichour = "אישור";
@@ -65,7 +65,7 @@ function Modal_Tasks(props) {
 
       try {
         if (picture) {
-          imageData = await uploadFile(picture, "Image");
+          imageData = await uploadImage(picture, "Image");
           console.log(`Image uploaded successfully:`, imageData);
         }
         if (audio) {

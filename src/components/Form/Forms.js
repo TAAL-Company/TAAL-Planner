@@ -396,21 +396,22 @@ function Forms() {
         console.log("task xx", task);
         console.log("evaluation xx", evaluation);
         console.log("taskInfo xx", taskInfo);
-
-        setRowsFlagsHE((prev) => [
-          ...prev,
-          {
-            id: task.position,
-            // image: taskpic,
-            classification: evaluation.flag,
-            task: taskInfo.title,
-            intervention: evaluation.intervention,
-            Alternatives: evaluation.alternativeTaskId,
-            explaination: evaluation.explanation,
-            // date: "5/12/2020",
-            // status: "לא פעיל",
-          },
-        ]);
+        if (evaluation !== undefined) {
+          setRowsFlagsHE((prev) => [
+            ...prev,
+            {
+              id: task.position,
+              // image: taskpic,
+              classification: evaluation.flag,
+              task: taskInfo.title,
+              intervention: evaluation.intervention,
+              Alternatives: evaluation.alternativeTaskId,
+              explaination: evaluation.explanation,
+              // date: "5/12/2020",
+              // status: "לא פעיל",
+            },
+          ]);
+        }
       });
     }
   }, [allFlags]);

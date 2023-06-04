@@ -127,7 +127,7 @@ const Calculator = () => {
     // https://taal.tech/wp-json/wp/v2/routes/
     if (flag_show_page === true) setDone(true);
     if (flag_show_page === false)
-      get(`${baseUrl}/wp-json/wp/v2/routes/`, {
+      get(`https://taal.tech/wp-json/wp/v2/routes/`, {
         params: {
           per_page: 99,
           "Cache-Control": "no-cache",
@@ -190,7 +190,7 @@ const Calculator = () => {
         size = (dataCards.length - sizeMod) / number;
       });
 
-    get(`${baseUrl}/wp-json/wp/v2/users/`, {
+    get(`https://taal.tech/wp-json/wp/v2/users/`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,

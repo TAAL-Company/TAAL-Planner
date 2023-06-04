@@ -226,6 +226,7 @@ function Tag({
                   ) : dragFromCover === "TasksCover" ? (
                     <Modal_dropdown
                       setRequestForEditing={setRequestForEditing}
+                      setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                       editable={true}
                       Reproducible={true}
                       details={true}
@@ -239,7 +240,8 @@ function Tag({
                     <></>
                   ) : dragFromCover === "border" ? (
                     <Modal_dropdown
-                      setRequestForEditing={setRequestForEditingBoard}
+                      setRequestForEditing={setRequestForEditing}
+                      setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                       editable={true}
                       Reproducible={true}
                       details={true}

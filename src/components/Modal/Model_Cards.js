@@ -53,7 +53,7 @@ function Modal_Cards({
   }, []);
 
   const getData = () => {
-    get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
+    get(`https://taal.tech/wp-json/wp/v2/tasks/`, {
       params: {
         per_page: 99,
         "Cache-Control": "no-cache",
@@ -62,7 +62,7 @@ function Modal_Cards({
       setDataTasks((dataTasks = res.data));
     });
 
-    get(`${baseUrl}/wp-json/wp/v2/users/`, {
+    get(`https://taal.tech/wp-json/wp/v2/users/`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
@@ -85,7 +85,7 @@ function Modal_Cards({
       alert("Route is empty ! ");
       return;
     } else {
-      let url_post = `${baseUrl}/wp-json/wp/v2/routes/`;
+      let url_post = `https://taal.tech/wp-json/wp/v2/routes/`;
       fetch(url_post, {
         method: "POST",
         headers: {

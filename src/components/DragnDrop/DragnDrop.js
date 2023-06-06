@@ -109,6 +109,8 @@ function DragnDrop(props) {
   const [openThreeDotsVerticalBoard, setOpenThreeDotsVerticalBoard] =
     useState(-1);
   const [requestForEditingBoard, setRequestForEditingBoard] = useState("");
+  const [taskUuidForEdit, setTaskUuidForEdit] = useState("");
+  const [taskForEdit, setTaskForEdit] = useState("");
 
   useEffect(() => {
     console.log("stations requestForEditing: ", requestForEditing);
@@ -116,6 +118,7 @@ function DragnDrop(props) {
 
     if (requestForEditing == "edit" || requestForEditing == "details") {
       console.log("openThreeDotsVertical", openThreeDotsVertical);
+      setTaskUuidForEdit(openThreeDotsVertical);
       setModalOpen(true);
     } else if (requestForEditing == "duplication") {
       console.log("openThreeDotsVertical", openThreeDotsVertical);
@@ -126,18 +129,25 @@ function DragnDrop(props) {
   }, [requestForEditing]);
 
   useEffect(() => {
-    console.log("stations requestForEditing: ", requestForEditing);
+    if (taskForEdit !== "") {
+      console.log("task for edit", taskForEdit);
+      editTask();
+    }
+  }, [taskForEdit]);
 
-    // if (requestForEditing == "edit" || requestForEditing == "details") {
-    //   console.log("openThreeDotsVertical", openThreeDotsVertical);
-    //   setModalOpen(true);
-    // } else if (requestForEditing == "duplication") {
-    //   console.log("openThreeDotsVertical", openThreeDotsVertical);
-    // } else if (requestForEditing == "delete") {
-    //   setOpenRemove(true);
-    //   //Modal_Delete
-    // }
-  }, [requestForEditing]);
+  const editTask = () => {
+    const updatedTasks = props.allTasksOfTheSite.map((task) => {
+      if (task.id === taskForEdit.id) {
+        return taskForEdit;
+      }
+      return task;
+    });
+
+    console.log("task: ", updatedTasks);
+
+    props.setAllTasksOfTheSite(updatedTasks);
+    // setTaskForEdit("");
+  };
 
   const handleCloseRemove = () => {
     setOpenRemove(false);
@@ -234,7 +244,6 @@ function DragnDrop(props) {
     console.log("props.progressBarFlag: ", props.progressBarFlag);
   }, [props.progressBarFlag]);
 
-  // alert("hi")
   dndArray = props.tasksOfChosenStation.map((element) => {
     // let color = stationArray.find(item => item.id === stationID).color
 
@@ -743,7 +752,8 @@ function DragnDrop(props) {
 
       {modalOpen ? (
         <ModalTasks
-          uuid={openThreeDotsVertical}
+          setTaskForEdit={setTaskForEdit}
+          uuid={taskUuidForEdit}
           requestForEditing={requestForEditing}
           handleClose={handleCloseRemove}
           language={props.language}

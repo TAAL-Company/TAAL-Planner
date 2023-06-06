@@ -101,7 +101,9 @@ function Modal_Tasks(props) {
         ).color;
 
         update.data.color = color;
-        props.setAllTasksOfTheSite((prev) => [...prev, update.data]);
+
+        props.setTaskForEdit(update.data);
+        // props.setAllTasksOfTheSite((prev) => [...prev, update.data]);
 
         console.log("insertTask: ", update.data);
       }

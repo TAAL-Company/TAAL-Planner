@@ -546,19 +546,8 @@ const Places = (props) => {
     //myRoutes saves only the routes that belong to the site that choosen
     if (myRoutes.length > 0) myRoutes = [];
     setRoutes(
-      allRoutes.filter(
-        (route) =>
-          //   route.sites.map((site) => {
-          //     if (site.siteId === mySite.id) {
-          //       console.log("@@ site.siteId: ", site.siteId);
-          //       console.log("@@ mySite.id: ", mySite.id);
-          //       return true;
-          //     }
-          //     return false;
-          //   })
-          route.sites.some((site) => site.id === mySite.id)
-
-        // route.sites.includes((site) => site.siteId === mySite.id)
+      allRoutes.filter((route) =>
+        route.sites.some((site) => site.id === mySite.id)
       )
     );
     console.log("routes ", myRoutes);

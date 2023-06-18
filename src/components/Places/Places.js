@@ -23,6 +23,7 @@ import "./style.css";
 // import { MdOutlineAdsClick } from "react-icons/md";
 // import { FcAddDatabase, FcSearch } from "react-icons/fc";
 import Stations from "../Stations/Stations";
+import Tasks from "../Tasks/Tasks";
 import ModalPlaces from "../Modal/Model_Places";
 // import ModalLoading from '../Modal/Modal_Loading';
 import Modal from "../Modal/Modal";
@@ -108,6 +109,8 @@ const Places = (props) => {
   const [routeName, setRouteName] = useState([]);
   const [routeUUID, setRouteUUID] = useState([]);
   const [routrForDelete, setRouteForDelete] = useState([]);
+  const [tasksOfChosenStation, setTasksOfChosenStation] = useState([]);
+  const [chosenStation, setChosenStation] = useState([]);
 
   useEffect(() => {
     console.log("requestForEditing: ", requestForEditing);
@@ -842,9 +845,20 @@ const Places = (props) => {
           hebrew={props.hebrew}
           english={props.english}
           Hebrew={props.Hebrew}
+          setTasksOfChosenStation={setTasksOfChosenStation}
+          setChosenStation={setChosenStation}
         />
-
-        {/* )} */}
+        <Tasks
+          setAllTasksOfTheSite={setAllTasksOfTheSite}
+          setTasksOfChosenStation={setTasksOfChosenStation}
+          tasksOfChosenStation={tasksOfChosenStation}
+          myTasks={props.myTasks}
+          language={props.language}
+          tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
+          chosenStation={chosenStation}
+          stationArray={stationArray}
+          mySite={mySite}
+        />
       </div>
       {openModalRouteChosen ? (
         <>

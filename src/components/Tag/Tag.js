@@ -212,7 +212,7 @@ function Tag({
                     className="threeDotsVerticalEng"
                     onClick={() => {
                       {
-                        if (dragFromCover === "TasksCover") {
+                        if (dragFromCover === "TasksNew") {
                           clickOnhreeDotsVerticaIcont(id);
                         } else clickOnhreeDotsVerticaIcontBoard(id);
                       }
@@ -223,7 +223,7 @@ function Tag({
 
                   {openThreeDotsVertical !== id ? (
                     <></>
-                  ) : dragFromCover === "TasksCover" ? (
+                  ) : dragFromCover === "TasksNew" ? (
                     <Modal_dropdown
                       setRequestForEditing={setRequestForEditing}
                       setOpenThreeDotsVertical={setOpenThreeDotsVertical}

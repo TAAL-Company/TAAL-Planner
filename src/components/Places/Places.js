@@ -107,7 +107,7 @@ const Places = (props) => {
   const [newRoute, setNewRoute] = useState([]);
   const [routeName, setRouteName] = useState([]);
   const [routeUUID, setRouteUUID] = useState([]);
-  // const menuRef = useRef(null);
+  const [routrForDelete, setRouteForDelete] = useState([]);
 
   useEffect(() => {
     console.log("requestForEditing: ", requestForEditing);
@@ -123,6 +123,7 @@ const Places = (props) => {
       console.log("delete openThreeDotsVertical", openThreeDotsVertical);
 
       setOpenRemove(true);
+      setRouteForDelete(openThreeDotsVertical);
     }
   }, [requestForEditing]);
 
@@ -132,21 +133,20 @@ const Places = (props) => {
     setRequestForEditing("");
   };
   const handleCloseRemoveConfirm = async () => {
-    console.log("DELETE:", filteredDataRoutes[openThreeDotsVertical].id);
-    let deleteRoutes = await deleteRoute(
-      filteredDataRoutes[openThreeDotsVertical].id
-    );
+    console.log("DELETE:", filteredDataRoutes[routrForDelete].id);
+    let deleteRoutes = await deleteRoute(filteredDataRoutes[routrForDelete].id);
 
     console.log("deleteRoute:", deleteRoutes);
     if (deleteRoutes.status === 200) {
       alert("המחיקה בוצעה בהצלחה!");
       const newRoutes = [...filteredDataRoutes];
-      newRoutes.splice(openThreeDotsVertical, 1); // remove one element at index x
+      newRoutes.splice(routrForDelete, 1); // remove one element at index x
       setFilteredDataRoutes(newRoutes);
     }
 
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
+    setRouteForDelete(-1);
     setRequestForEditing("");
   };
   const [pastelColors, setPastelColors] = useState([

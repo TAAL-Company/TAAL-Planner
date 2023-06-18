@@ -81,6 +81,24 @@ export const getingData_Users = async () => {
 
   return all_Users;
 };
+export const getingData_coaches = async () => {
+  let all_Users;
+
+  await get(baseUrl + "/coaches").then((res) => {
+    all_Users = res.data;
+
+    const sortedArray = all_Users.sort(
+      (a, b) =>
+        a.name.localeCompare(b.name, "he", { sensitivity: "base" }) ||
+        a.name.localeCompare(b.name, "en", { sensitivity: "base" })
+    );
+
+    console.log(sortedArray);
+  });
+  console.log("res all_Users: ", all_Users);
+
+  return all_Users;
+};
 export const getingData_Routes = async () => {
   let allRoutes;
 
@@ -307,6 +325,33 @@ export const insertUser = async (user) => {
     throw error;
   }
 };
+export const insertCoach = async (user) => {
+  try {
+    const response = await fetch(baseUrl + "/coaches", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({
+        email: user.email,
+        name: user.name,
+        user_name: user.user_name,
+        phone: user.phone,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error inserting user: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
 export const insertSite = async (site) => {
   try {
     const response = await fetch(baseUrl + "/sites", {
@@ -377,6 +422,18 @@ export const getCognitiveProfile = async (user_id) => {
 
   return CognitiveProfile;
 };
+export const deleteCoach = async (user_id) => {
+  let confirm;
+
+  await fetch(baseUrl + "/coaches/" + user_id, { method: "DELETE" }).then(
+    (res) => {
+      confirm = res;
+    }
+  );
+  console.log("res deletecoaches: ", confirm);
+
+  return confirm;
+};
 export const deleteUser = async (user_id) => {
   let confirm;
 
@@ -397,6 +454,21 @@ export const patchForUser = async (userId, user) => {
     user_name: user.user_name,
     coachId: user.coachId ? user.coachId : null,
     pictureId: user.picture_url ? user.picture_url : null,
+  };
+  const headers = {
+    "Content-Type": "application/json",
+    Accept: "*/*",
+  };
+
+  return await patch(url, body, headers);
+};
+export const patchForCoach = async (userId, user) => {
+  const url = baseUrl + "/coaches/" + userId;
+  const body = {
+    email: user.email,
+    name: user.name,
+    user_name: user.user_name,
+    phone: user.phone ? user.phone : null,
   };
   const headers = {
     "Content-Type": "application/json",

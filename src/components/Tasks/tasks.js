@@ -5,9 +5,9 @@ import { CgSearch } from "react-icons/cg";
 import textArea from "../../Pictures/textArea.svg";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useDrag } from "react-dnd";
-import ModalTasks from "../Modal/Modal_Tasks";
+import ModalTasks from "../Modal/Modal_Tasks.js";
 import { deleteTask } from "../../api/api.js";
-import Modal_Delete from "../Modal/Modal_Delete";
+import Modal_Delete from "../Modal/Modal_Delete.js";
 
 const Tasks = (props) => {
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);

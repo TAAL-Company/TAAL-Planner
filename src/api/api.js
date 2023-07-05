@@ -12,18 +12,16 @@ const blobServiceClient = new BlobServiceClient(connectionString);
 // const storageAccountName = process.env.storageresourcename || “taalmedia”; // Fill string with your Storage resource name
 export const uploadImage = async (selectedFile) => {
   console.log("enter", selectedFile);
-  if (selectedFile) {
-    const containerName = ""; // The name of the container in Azure Blob Storage
-    const containerClient = blobServiceClient.getContainerClient(containerName);
+  const containerName = ""; // The name of the container in Azure Blob Storage
+  const containerClient = blobServiceClient.getContainerClient(containerName);
 
-    const blobName = selectedFile.name;
-    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+  const blobName = selectedFile.name;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
-    const options = { blobHTTPHeaders: { blobContentType: selectedFile.type } };
+  const options = { blobHTTPHeaders: { blobContentType: selectedFile.type } };
 
-    await blockBlobClient.uploadData(selectedFile, options);
-    console.log("Image uploaded successfully.");
-  }
+  await blockBlobClient.uploadData(selectedFile, options);
+  console.log("Image uploaded successfully.");
 };
 
 export const get = async (url, header) => {

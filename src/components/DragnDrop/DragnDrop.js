@@ -54,18 +54,6 @@ function DragnDrop(props) {
   const [reorderBoardFlag, setReorderBoardFlag] = useState(false);
   const [openRemove, setOpenRemove] = React.useState(false);
 
-  // if (props.tasksOfRoutes && props.tasksOfRoutes.acf) {
-  //   if (props.tasksOfRoutes.acf.tasks) {
-  //     props.tasksOfRoutes.acf.tasks.forEach((element) => {
-  //       console.log("element:", element.post_title);
-  //     });
-  //     console.log("tasksOfRoutes: ", props.tasksOfRoutes);
-  //     console.log("board: ", board);
-  //     // setBoard((board) => [...board, ]);
-  //   }
-
-  // }
-
   console.log("props mySite:", props.mySite);
   console.log("props dragFrom:", props.dragFrom);
   console.log("props.myStation:", props.myStation);

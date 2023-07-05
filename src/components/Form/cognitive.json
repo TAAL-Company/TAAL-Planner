@@ -1,1640 +1,2042 @@
 [
   {
-    "NO": "1",
+    "NO": 1,
     "trait": "מקום תעסוקה קודם",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "שאלה פתוחה",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": false,
     "category": "היסטוריה עיסוקית",
-    "classification": "past relevant work (PRW)",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "שאלה פתוחה",
+    "ML": false
   },
   {
-    "NO": "2",
+    "NO": 2,
     "trait": "תפקיד בתעסוקה קודמת",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "שאלה פתוחה",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": false,
     "category": "היסטוריה עיסוקית",
-    "classification": "past relevant work (PRW)",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "שאלה פתוחה",
+    "ML": false
   },
   {
-    "NO": "3",
+    "NO": 3,
     "trait": "שנות תעסוקה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "שאלה סגורה",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": false,
     "category": "היסטוריה עיסוקית",
-    "classification": "past relevant work (PRW)",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "שאלה סגורה",
+    "ML": false
   },
   {
-    "NO": "4",
+    "NO": 4,
     "trait": "משך זמן מאז תעסוקה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "שאלה סגורה",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": false,
     "category": "היסטוריה עיסוקית",
-    "classification": "past relevant work (PRW)",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "שאלה סגורה",
+    "ML": false
   },
   {
-    "NO": "5",
+    "NO": 5,
     "trait": "משך זמן ההכשרה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "שאלה סגורה",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": false,
     "category": "היסטוריה עיסוקית",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "שאלה סגורה",
+    "ML": false
   },
   {
-    "NO": "6",
+    "NO": 6,
     "trait": "משך זמן מאז ההכשרה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "שאלה סגורה",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": false,
     "category": "היסטוריה עיסוקית",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "שאלה סגורה",
+    "ML": false
   },
   {
-    "NO": "7",
+    "NO": 7,
     "trait": "רמת תפקוד בתעסוקה קודמת בתפקיד דומה",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": true,
     "category": "היסטוריה עיסוקית",
-    "classification": "past relevant work (PRW)",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "8",
+    "NO": 8,
     "trait": "רמת תפקוד בתעסוקה קודמת",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": true,
     "category": "היסטוריה עיסוקית",
-    "classification": "past relevant work (PRW)",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "9",
-    "trait": "עבר הכשרה",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "NO": 9,
+    "trait": "רמת הכשרה",
+    "requiredField": true,
     "category": "היסטוריה עיסוקית",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "10",
+    "NO": 10,
     "trait": "רמת הצלחה בהכשרה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "שאלה סגורה",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": false,
     "category": "היסטוריה עיסוקית",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "11",
+    "NO": 20,
     "trait": "תואר אקדמי",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "שאלה פתוחה",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": false,
     "category": "השכלה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "שאלה פתוחה",
+    "ML": false
   },
   {
-    "NO": "12",
+    "NO": 21,
     "trait": "תעודת בגרות",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": false,
     "category": "השכלה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "13",
+    "NO": 22,
     "trait": "מעבר ל 12 שנות לימוד",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "שאלה פתוחה",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": false,
     "category": "השכלה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "שאלה סגורה",
+    "ML": false
   },
   {
-    "NO": "14",
+    "NO": 23,
     "trait": "8-12 שנות לימוד",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "שאלה פתוחה",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": false,
     "category": "השכלה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "שאלה סגורה",
+    "ML": false
   },
   {
-    "NO": "15",
+    "NO": 24,
     "trait": "שנות לימוד 3-8",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "שאלה פתוחה",
-    "english": "",
-    "general": "רקע כללי - העובד",
+    "requiredField": false,
     "category": "השכלה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "שאלה סגורה",
+    "ML": false
   },
   {
-    "NO": "16",
-    "trait": "עצמאי בהכנת אוכל",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "17",
-    "trait": "עצמאי באכילה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "18",
-    "trait": "עצמאי בליבוש חלק עליון",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "19",
-    "trait": "עצמאי בליבוש חלק תחתון",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "20",
-    "trait": "עצמאי בנעילת נעליים",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "21",
-    "trait": "יודע איך להגיע לשירותים",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "22",
-    "trait": "מבקש ללכת לשירותים",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "23",
-    "trait": "עצמאי בשירותים",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "24",
-    "trait": "מודע לנושא לבוש הולם",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "25",
-    "trait": "שומר על נקיון והגיינה עצמי",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "26",
-    "trait": "שומר על נקיון והגיינה של הסביבה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "27",
-    "trait": "פתרון בעיות פשוטות",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "יישום ידע",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "28",
-    "trait": "פתרון בעיות מורכבות",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "יישום ידע",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "29",
-    "trait": "למידה עצמית - דבר מתוך דבר",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "רקע כללי - העובד",
-    "category": "יישום ידע",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "30",
-    "trait": "מסוגלות לעבוד בסביבת ריחות חזקים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "סביבת עבודה - כללי",
-    "category": "גירויים",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "31",
-    "trait": "מסוגלות לעבוד בסביבה עם מרקמים ומשטחים שונים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "סביבת עבודה - כללי",
-    "category": "גירויים",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "32",
-    "trait": "מסוגלות לעבוד בסביבה רועשת",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "סביבת עבודה - כללי",
-    "category": "גירויים",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "33",
-    "trait": "מסוגלות לעבוד בסביבה עם אורות חזקים",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "סביבת עבודה - כללי",
-    "category": "גירויים",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "34",
-    "trait": "מסוגלות לעבוד בסביבה עם מכשור מסוכן",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "סביבת עבודה - כללי",
-    "category": "בטיחות אישית וסביבתית",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "35",
-    "trait": "מסוגלות לעבוד בסביבה עם חומרים מסוכנים",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "סביבת עבודה - כללי",
-    "category": "בטיחות אישית וסביבתית",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "36",
-    "trait": "מסוגלות לעבוד בסביבה עם לכלוך ואבק",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "סביבת עבודה - כללי",
-    "category": "בטיחות אישית וסביבתית",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "37",
-    "trait": "מסוגלות לעבוד בסביבה של ממצבי קור או חום קיצוניים",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "סביבת עבודה - כללי",
-    "category": "בטיחות אישית וסביבתית",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "38",
-    "trait": "ויסות פיזי-התנהגותי ( תנועות רפיטטיביות - נפנופי ידיים, רצון לפציעה עצמית )",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "סביבת עבודה - כללי",
-    "category": "בטיחות אישית וסביבתית",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "64",
-    "trait": "התניידות במרחב ומודעות למיקום ומנח הגוף",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "תפיסה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "65",
-    "trait": "מהירות פסיכומוטורית (חשיבה ופעולה, תיאום עין-יד)",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "פסיכו-מוטורי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "66",
-    "trait": "איכות פסיכו-מוטורית",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "פסיכו-מוטורי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "67",
-    "trait": "מיקוד קשב",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "תפקודי קשב",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "68",
-    "trait": "שימור קשב",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "תפקודי קשב",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "69",
-    "trait": "הסטת קשב (shifting)",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "תפקודי קשב",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "81",
-    "trait": "גמישות קוגניטיבית",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "תפקודי חשיבה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "82",
-    "trait": "תובנה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "תפקודי חשיבה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "83",
-    "trait": "יכולת הכללה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "תפקודי חשיבה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "84",
-    "trait": "קצב, ארגון, תוכן מותאם ושליטה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "תפקודי חשיבה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "85",
-    "trait": "אמינות",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "פסיכו-חברתי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "86",
-    "trait": "ביטוי רגשות חיוביים",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "פסיכו-חברתי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "87",
-    "trait": "ביטוי רגשות שליליים",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "פסיכו-חברתי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "88",
-    "trait": "יכולת ביטוי בשפת סימנים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "שפה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "92",
-    "trait": "מזהה ומסוגל לקיים רוטינה יומית",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "Recognizes and is able to maintain a daily routine",
-    "general": "",
-    "category": "ביצוע",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "",
-    "trait": "תכנון תנועה - ארגון וביצוע פעולות ברצף ובתזמון",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "Movement planning - organization and execution of actions in sequence and timing",
-    "general": "",
-    "category": "ביצוע",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "109",
+    "NO": 30,
     "trait": "ראיה בעין ימין",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "חושים",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "110",
+    "NO": 31,
     "trait": "ראיה בעין שמאל",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "חושים",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "111",
+    "NO": 32,
     "trait": "שמיעה באוזן ימין",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "חושים",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "112",
+    "NO": 33,
     "trait": "שמיעה באוזן שמאל",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "חושים",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "127",
-    "trait": "עצמאי בלבישת בגד עליון כגון: סינר/ חלוק/סרבל",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "Independent in wearing an outer garment such as: apron/robe/overalls",
-    "general": "",
-    "category": "יכולת פיזית",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 40,
+    "trait": "משקפיים",
+    "requiredField": true,
+    "category": "אביזרי עזר",
+    "score": "שאלה סגורה",
+    "ML": false
   },
   {
-    "NO": "138",
-    "trait": "מבין כמויות בסיסי",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "כמותי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 41,
+    "trait": "מכשיר שמיעה",
+    "requiredField": true,
+    "category": "אביזרי עזר",
+    "score": "שאלה סגורה",
+    "ML": false
   },
   {
-    "NO": "152",
-    "trait": "חיקוי",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "למידה בסיסית",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 42,
+    "trait": "ציוד תקשורת מיוחד",
+    "requiredField": true,
+    "category": "אביזרי עזר",
+    "score": "שאלה סגורה",
+    "ML": false
   },
   {
-    "NO": "153",
-    "trait": "יכולת למידה מסרטונים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "למידה בסיסית",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 43,
+    "trait": "הליכון/מקל הליכה",
+    "requiredField": true,
+    "category": "אביזרי עזר",
+    "score": "שאלה סגורה",
+    "ML": false
   },
   {
-    "NO": "160",
-    "trait": "מזהה לוח שנה",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "Calendar recognition",
-    "general": "",
-    "category": "עזרים וטכנולוגיה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 44,
+    "trait": "כיסא גלגלים",
+    "requiredField": true,
+    "category": "אביזרי עזר",
+    "score": "שאלה סגורה",
+    "ML": false
   },
   {
-    "NO": "162",
-    "trait": "רמת אוריינות בטבלט",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "עזרים וטכנולוגיה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 50,
+    "trait": "מידת עצמאות באכילה",
+    "requiredField": false,
+    "category": "טיפול עצמי",
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "167",
-    "trait": "משלם חשבונות באופן עצמאי",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "",
-    "category": "פעולות בכסף",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 51,
+    "trait": "מידת עצמאות בלבישת חלק עליון",
+    "requiredField": false,
+    "category": "טיפול עצמי",
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "168",
-    "trait": "מנהל חשבון בנק באופן עצמאי",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "",
-    "category": "פעולות בכסף",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 52,
+    "trait": "מידת עצמאות בהכנת אוכל",
+    "requiredField": false,
+    "category": "טיפול עצמי",
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "174",
-    "trait": "התבוננות",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "קשב",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 53,
+    "trait": "מידת עצמאות בלבישת חלק תחתון",
+    "requiredField": false,
+    "category": "טיפול עצמי",
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "182",
-    "trait": "יודע לנהוג",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "ניידות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 54,
+    "trait": "מידת עצמאות בלבישת בגד עליון כגון: סינר/ חלוק/סרבל",
+    "requiredField": true,
+    "category": "טיפול עצמי",
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "183",
+    "NO": 55,
+    "trait": "מידת עצמאות בנעילת נעליים",
+    "requiredField": false,
+    "category": "טיפול עצמי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 56,
+    "trait": "עצמאות בהגעה לשירותים",
+    "requiredField": false,
+    "category": "טיפול עצמי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 57,
+    "trait": "עמצאות בבקשה ללכת לשירותים",
+    "requiredField": false,
+    "category": "טיפול עצמי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 58,
+    "trait": "מידת עצמאות בשירותים",
+    "requiredField": false,
+    "category": "טיפול עצמי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 59,
+    "trait": "מודעות לנושא לבוש הולם",
+    "requiredField": false,
+    "category": "טיפול עצמי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 60,
+    "trait": "מידת שמירה על נקיון והגיינה עצמי",
+    "requiredField": false,
+    "category": "טיפול עצמי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 61,
+    "trait": "מידת שמירה על נקיון והגיינה של הסביבה",
+    "requiredField": false,
+    "category": "טיפול עצמי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 70,
     "trait": "בעל רשיון נהיגה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "ניידות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "184",
-    "trait": "משתמש עצמאית במונית",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "NO": 71,
+    "trait": "משתמש מידת עצמאותת במונית",
+    "requiredField": false,
     "category": "ניידות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "185",
-    "trait": "טווח רגשי",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "רגשי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "186",
-    "trait": "מותאמות רגשית",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "רגשי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "187",
-    "trait": "מרגיע עצמית",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "רגשי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "188",
-    "trait": "ויסות רגשי (שליטה בעוצמת ביטוי רגשות, חיוביים או שליליים)",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "Emotional regulation (controlling the intensity of expressing emotions, positive or negative)",
-    "general": "",
-    "category": "רגשי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "189",
-    "trait": "שליטה בדחפים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "רגשי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "190",
-    "trait": "שליטה בכעסים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "רגשי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "191",
-    "trait": "יציבות רגשית",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "רגשי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "192",
-    "trait": "מוחצנות",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "רוח האדם",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "193",
-    "trait": "מצפוניות",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "רוח האדם",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "194",
-    "trait": "מוטיבציה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "רוח האדם",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "195",
-    "trait": "הנעה עצמית",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "רוח האדם",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "196",
-    "trait": "פתיחות",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "",
-    "category": "רוח האדם",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "197",
-    "trait": "אופטימיות",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "",
-    "category": "רוח האדם",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "198",
-    "trait": "ביטחון עצמי",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "רוח האדם",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "199",
-    "trait": "חשיבה מערכתית",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "רוח האדם",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "200",
-    "trait": "יודע איך להגיע לשירותים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "201",
-    "trait": "מבקש ללכת לשירותים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "202",
-    "trait": "עצמאי בשירותים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "203",
-    "trait": "מודע לנושא לבוש הולם",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "204",
-    "trait": "שומר על נקיון והגיינה עצמי",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "205",
-    "trait": "שומר על נקיון והגיינה של הסביבה",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "טיפול עצמי",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "213",
-    "trait": "שימוש עצמאי בתחבורה ציבורית למקום מוכר",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "NO": 72,
+    "trait": "שימוש מידת עצמאות בתחבורה ציבורית למקום מוכר",
+    "requiredField": true,
     "category": "ניידות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "214",
-    "trait": "שימוש עצמאי בתחבורה ציבורית למקום חדש",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "NO": 73,
+    "trait": "שימוש מידת עצמאות בתחבורה ציבורית למקום חדש",
+    "requiredField": true,
     "category": "ניידות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "215",
-    "trait": "אין אין שימוש במשקפיים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "",
-    "category": "אביזרי עזר",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 80,
+    "trait": "זיהוי לוח שנה",
+    "requiredField": true,
+    "category": "טכנולוגיה וכסף",
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "216",
-    "trait": "אין אין שימוש במכשיר שמיעה",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "",
-    "category": "אביזרי עזר",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 81,
+    "trait": "משלם חשבונות באופן מידת עצמאות",
+    "requiredField": false,
+    "category": "טכנולוגיה וכסף",
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "217",
-    "trait": "אין אין שימוש בציוד תקשורת מיוחד",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "",
-    "category": "אביזרי עזר",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "NO": 82,
+    "trait": "מנהל חשבון בנק באופן מידת עצמאות",
+    "requiredField": false,
+    "category": "טכנולוגיה וכסף",
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "218",
-    "trait": "אין אין שימוש בהליכון/מקל הליכה",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "",
-    "category": "אביזרי עזר",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "219",
-    "trait": "אין אין שימוש בכיסא גלגלים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "",
-    "category": "אביזרי עזר",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "220",
-    "trait": "ערנות וחיוניות",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
-    "category": "תפקודי שינה",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
-  },
-  {
-    "NO": "222",
+    "NO": 90,
     "trait": "הבנת מידע לא מילולי ופרשנות לרמזים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": true,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "224",
+    "NO": 91,
     "trait": "שיחה עם אדם יחיד (יזימה, שימור, סיום)",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "225",
+    "NO": 92,
     "trait": "שיחה קבוצתית",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "227",
+    "NO": 93,
     "trait": "מתאים את כמות המלל בהתאם לסיטואציה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "228",
+    "NO": 94,
     "trait": "מנהל שיחה שוטפת",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": true,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "229",
+    "NO": 95,
     "trait": "אינטרקציה חברתית בסיסית (מותאמות חברתית, קודים חברתיים)",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "230",
+    "NO": 96,
     "trait": "אינטראקציה חברתית מורכבת (יכולת ליזום ולסיים מערכות יחסים)",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "231",
+    "NO": 97,
     "trait": "יוזם שיחה עם אנשים באופן אקראי",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "232",
+    "NO": 98,
     "trait": "מקיים שיחה עם אנשים באופן אקראי",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "233",
+    "NO": 99,
     "trait": "תקשורת עם עמיתים",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "234",
+    "NO": 100,
     "trait": "מחכה לתורו במהלך השיחה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "235",
+    "NO": 101,
     "trait": "דיבור חזרתי",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "236",
+    "NO": 102,
     "trait": "זוכר קשרי עבודה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "238",
+    "NO": 103,
     "trait": "משתמש בג'סטות",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "239",
+    "NO": 104,
     "trait": "מביע התנגדות",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "240",
+    "NO": 105,
     "trait": "מצביע על חפצים",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": false,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "241",
+    "NO": 106,
     "trait": "ביטוי עצמי",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": true,
     "category": "תקשורת",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "242",
+    "NO": 110,
     "trait": "יצירת קשר עין",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": true,
     "category": "מיומנויות חברתיות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "243",
+    "NO": 111,
     "trait": "שמירה על מרחב אישי",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": true,
     "category": "מיומנויות חברתיות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "244",
+    "NO": 112,
     "trait": "התנהלות על פי קודים חברתיים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": true,
     "category": "מיומנויות חברתיות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "245",
+    "NO": 113,
     "trait": "קבלת סמכות",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": true,
     "category": "מיומנויות חברתיות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "246",
+    "NO": 114,
     "trait": "ציות להוראות",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": true,
     "category": "מיומנויות חברתיות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "247",
+    "NO": 115,
     "trait": "שיקול דעת לגבי מצבים חברתיים עוינים",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": true,
     "category": "מיומנויות חברתיות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "248",
+    "NO": 116,
     "trait": "יכולת מתן עזרה",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": true,
     "category": "מיומנויות חברתיות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "249",
+    "NO": 117,
     "trait": "יכולת קבלת עזרה",
-    "requiredField": "כן",
-    "subTrait": "",
-    "score": "A-D",
-    "english": "",
-    "general": "",
+    "requiredField": true,
     "category": "מיומנויות חברתיות",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "250",
+    "NO": 120,
+    "trait": "פתרון בעיות פשוטות",
+    "requiredField": false,
+    "category": "יישום ידע",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 121,
+    "trait": "פתרון בעיות מורכבות",
+    "requiredField": false,
+    "category": "יישום ידע",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 122,
+    "trait": "למידה עצמית - דבר מתוך דבר",
+    "requiredField": false,
+    "category": "יישום ידע",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 130,
+    "trait": "התניידות במרחב ומודעות למיקום ומנח הגוף",
+    "requiredField": true,
+    "category": "פסיכו-מוטורי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 131,
+    "trait": "מהירות פסיכומוטורית (חשיבה ופעולה, תיאום עין-יד)",
+    "requiredField": false,
+    "category": "פסיכו-מוטורי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 132,
+    "trait": "איכות פסיכו-מוטורית",
+    "requiredField": false,
+    "category": "פסיכו-מוטורי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 140,
+    "trait": "מיקוד קשב",
+    "requiredField": false,
+    "category": "תפקודי קשב",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 141,
+    "trait": "שימור קשב",
+    "requiredField": true,
+    "category": "תפקודי קשב",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 142,
+    "trait": "הסטת קשב (shifting)",
+    "requiredField": true,
+    "category": "תפקודי קשב",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 143,
+    "trait": "ערנות וחיוניות",
+    "requiredField": true,
+    "category": "תפקודי קשב",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 150,
+    "trait": "גמישות קוגניטיבית",
+    "requiredField": false,
+    "category": "תפקודי חשיבה ולמידה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 151,
+    "trait": "תובנה",
+    "requiredField": false,
+    "category": "תפקודי חשיבה ולמידה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 152,
+    "trait": "יכולת הכללה",
+    "requiredField": false,
+    "category": "תפקודי חשיבה ולמידה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 153,
+    "trait": "קצב, ארגון, תוכן מותאם ושליטה",
+    "requiredField": false,
+    "category": "תפקודי חשיבה ולמידה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 154,
+    "trait": "יכולת זיהוי ומסוגלות לקיים רוטינה יומית",
+    "requiredField": true,
+    "category": "תפקודי חשיבה ולמידה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 155,
+    "trait": "התבוננות",
+    "requiredField": false,
+    "category": "תפקודי חשיבה ולמידה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 156,
+    "trait": "חיקוי",
+    "requiredField": false,
+    "category": "תפקודי חשיבה ולמידה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 157,
+    "trait": "יכולת למידה מסרטונים",
+    "requiredField": true,
+    "category": "תפקודי חשיבה ולמידה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 160,
+    "trait": "טווח רגשי",
+    "requiredField": false,
+    "category": "רגשי וויסות",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 161,
+    "trait": "מותאמות רגשית",
+    "requiredField": false,
+    "category": "רגשי וויסות",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 162,
+    "trait": "מרגיע עצמית",
+    "requiredField": false,
+    "category": "רגשי וויסות",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 163,
+    "trait": "ויסות רגשי (שליטה בעוצמת ביטוי רגשות, חיוביים או שליליים)",
+    "requiredField": true,
+    "category": "רגשי וויסות",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 164,
+    "trait": "שליטה בדחפים",
+    "requiredField": true,
+    "category": "רגשי וויסות",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 165,
+    "trait": "שליטה בכעסים",
+    "requiredField": true,
+    "category": "רגשי וויסות",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 166,
+    "trait": "יציבות רגשית",
+    "requiredField": true,
+    "category": "רגשי וויסות",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 167,
+    "trait": "ויסות פיזי-התנהגותי ( תנועות רפיטטיביות - נפנופי ידיים, רצון לפציעה עצמית )",
+    "requiredField": false,
+    "category": "רגשי וויסות",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 170,
+    "trait": "מוחצנות",
+    "requiredField": false,
+    "category": "רוח האדם",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 171,
+    "trait": "מצפוניות",
+    "requiredField": false,
+    "category": "רוח האדם",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 172,
+    "trait": "מוטיבציה",
+    "requiredField": false,
+    "category": "רוח האדם",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 173,
+    "trait": "הנעה עצמית",
+    "requiredField": false,
+    "category": "רוח האדם",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 174,
+    "trait": "פתיחות",
+    "requiredField": false,
+    "category": "רוח האדם",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 175,
+    "trait": "אופטימיות",
+    "requiredField": false,
+    "category": "רוח האדם",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 176,
+    "trait": "ביטחון עצמי",
+    "requiredField": false,
+    "category": "רוח האדם",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 177,
+    "trait": "אמינות",
+    "requiredField": false,
+    "category": "פסיכו-חברתי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 178,
+    "trait": "ביטוי רגשות חיוביים",
+    "requiredField": false,
+    "category": "פסיכו-חברתי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 179,
+    "trait": "ביטוי רגשות שליליים",
+    "requiredField": false,
+    "category": "פסיכו-חברתי",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 180,
+    "trait": "חשיבה מערכתית",
+    "requiredField": true,
+    "category": "רוח האדם",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 181,
     "trait": "מבין שיגרה כללית",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "",
-    "category": "שגרה/מצבים יוצאי דופן",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "requiredField": false,
+    "category": "רוח האדם",
+    "score": "1-5",
+    "ML": false
   },
   {
-    "NO": "251",
+    "NO": 182,
     "trait": "מבין חריגות מהשיגרה",
-    "requiredField": "לא",
-    "subTrait": "",
-    "score": "A/D",
-    "english": "",
-    "general": "",
-    "category": "שגרה/מצבים יוצאי דופן",
-    "classification": "",
-    "ML": "לא",
-    "possibleIntervention": ""
+    "requiredField": false,
+    "category": "רוח האדם",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 190,
+    "trait": "מסוגלות לעבוד בסביבת ריחות חזקים",
+    "requiredField": true,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 191,
+    "trait": "מסוגלות לעבוד בסביבה עם מרקמים ומשטחים שונים",
+    "requiredField": true,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 192,
+    "trait": "מסוגלות לעבוד בסביבה רועשת",
+    "requiredField": true,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 193,
+    "trait": "מסוגלות לעבוד בסביבה עם אורות חזקים",
+    "requiredField": false,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 194,
+    "trait": "מסוגלות לעבוד בסביבה עם מכשור מסוכן",
+    "requiredField": false,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 195,
+    "trait": "מסוגלות לעבוד בסביבה עם חומרים מסוכנים",
+    "requiredField": false,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 196,
+    "trait": "מסוגלות לעבוד בסביבה עם לכלוך ואבק",
+    "requiredField": false,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 197,
+    "trait": "מסוגלות לעבוד בסביבה של מצבי קור או חום קיצוניים",
+    "requiredField": false,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": false
+  },
+  {
+    "NO": 201,
+    "trait": "שימוש א\"ב -שפה 1",
+    "requiredField": true,
+    "category": "שפה 1",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 202,
+    "trait": "כתיבה שוטפת-שפה 1",
+    "requiredField": true,
+    "category": "שפה 1",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 203,
+    "trait": "כתיבת מילים בודדות ומוכרות-שפה 1",
+    "requiredField": true,
+    "category": "שפה 1",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 204,
+    "trait": "כתיבת מילים בודדות לא מוכרות-שפה 1",
+    "requiredField": true,
+    "category": "שפה 1",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 205,
+    "trait": "כתב יד קריא וברור, מסר ברור-שפה 1",
+    "requiredField": true,
+    "category": "שפה 1",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 206,
+    "trait": "קריאה שוטפת-שפה 1",
+    "requiredField": true,
+    "category": "שפה 1",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 207,
+    "trait": "קריאה מילים בודדות ומוכרות-שפה 1",
+    "requiredField": true,
+    "category": "שפה 1",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 208,
+    "trait": "קריאה מילים בודדות לא מוכרות-שפה 1",
+    "requiredField": true,
+    "category": "שפה 1",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 209,
+    "trait": "שימוש א\"ב -שפה 2",
+    "requiredField": true,
+    "category": "שפה 2",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 210,
+    "trait": "כתיבה שוטפת-שפה 2",
+    "requiredField": true,
+    "category": "שפה 2",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 211,
+    "trait": "כתיבת מילים בודדות ומוכרות-שפה 2",
+    "requiredField": true,
+    "category": "שפה 2",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 212,
+    "trait": "כתיבת מילים בודדות לא מוכרות-שפה 2",
+    "requiredField": true,
+    "category": "שפה 2",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 213,
+    "trait": "כתב יד קריא וברור, מסר ברור-שפה 2",
+    "requiredField": true,
+    "category": "שפה 2",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 214,
+    "trait": "קריאה שוטפת-שפה 2",
+    "requiredField": true,
+    "category": "שפה 2",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 215,
+    "trait": "קריאה מילים בודדות ומוכרות-שפה 2",
+    "requiredField": true,
+    "category": "שפה 2",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 216,
+    "trait": "קריאה מילים בודדות לא מוכרות-שפה 2",
+    "requiredField": true,
+    "category": "שפה 2",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 217,
+    "trait": "תקשורת בשפת סימנים",
+    "requiredField": true,
+    "category": "שפת סימנים",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 218,
+    "trait": "תפיסה קולית",
+    "requiredField": true,
+    "category": "הבנה קולית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 219,
+    "trait": "הבנת אותות קוליות",
+    "requiredField": true,
+    "category": "הבנה קולית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 220,
+    "trait": "הבנת הוראות קוליות פשוטות",
+    "requiredField": true,
+    "category": "הבנה קולית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 221,
+    "trait": "הבנת הוראות קוליות מורכבות",
+    "requiredField": true,
+    "category": "הבנה קולית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 222,
+    "trait": "שטף דיבור",
+    "requiredField": true,
+    "category": "קול ודיבור",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 223,
+    "trait": "הפקת קול",
+    "requiredField": true,
+    "category": "קול ודיבור",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 224,
+    "trait": "הגייה",
+    "requiredField": true,
+    "category": "קול ודיבור",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 225,
+    "trait": "תפיסה חזותית - כללי",
+    "requiredField": true,
+    "category": "תפיסה חזותית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 226,
+    "trait": "זיהוי צורות (דו מימד)",
+    "requiredField": true,
+    "category": "תפיסה חזותית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 227,
+    "trait": "זיהוי סמלים גרפיים פשוטים",
+    "requiredField": true,
+    "category": "תפיסה חזותית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 228,
+    "trait": "זיהוי תמונות",
+    "requiredField": true,
+    "category": "תפיסה חזותית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 229,
+    "trait": "זיהוי צורות מורכבות",
+    "requiredField": true,
+    "category": "תפיסה חזותית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 230,
+    "trait": "זיהוי צורות תלת מימד",
+    "requiredField": true,
+    "category": "תפיסה חזותית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 231,
+    "trait": "זיהוי אייקונים",
+    "requiredField": true,
+    "category": "תפיסה חזותית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 232,
+    "trait": "זיהוי צבעים פשוטים",
+    "requiredField": true,
+    "category": "תפיסה חזותית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 233,
+    "trait": "זיהוי צבעים מורכבים",
+    "requiredField": true,
+    "category": "תפיסה חזותית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 234,
+    "trait": "זיהוי מגדר",
+    "requiredField": true,
+    "category": "תפיסה חברתית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 235,
+    "trait": "זיהוי אנשים (פנים)",
+    "requiredField": true,
+    "category": "תפיסה חברתית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 236,
+    "trait": "זוכר שמות",
+    "requiredField": true,
+    "category": "תפיסה חברתית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 237,
+    "trait": "זוכר פנים",
+    "requiredField": true,
+    "category": "תפיסה חברתית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 238,
+    "trait": "זיהוי תפקידים",
+    "requiredField": true,
+    "category": "תפיסה חברתית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 239,
+    "trait": "יכולת הפשטה",
+    "requiredField": true,
+    "category": "תפקודי חשיבה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 240,
+    "trait": "מהירות חשיבה",
+    "requiredField": true,
+    "category": "תפקודי חשיבה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 241,
+    "trait": "פתרון בעיות פשוטות",
+    "requiredField": true,
+    "category": "תפקודי חשיבה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 242,
+    "trait": "פתרון בעיות מורכבות",
+    "requiredField": true,
+    "category": "תפקודי חשיבה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 243,
+    "trait": "יכולת הבנת סיבה ותוצאה",
+    "requiredField": true,
+    "category": "תפקודי חשיבה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 244,
+    "trait": "ניהול זמן עצמאי",
+    "requiredField": true,
+    "category": "תפקודי חשיבה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 245,
+    "trait": "סדר ארגון ותכנון",
+    "requiredField": true,
+    "category": "תפקודי חשיבה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 246,
+    "trait": "מהירות תגובה",
+    "requiredField": true,
+    "category": "תפקודי חשיבה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 247,
+    "trait": "מודעות לסכנה (שיפוט)",
+    "requiredField": true,
+    "category": "מודעות לסכנה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 248,
+    "trait": "זהירות שימוש במכשירי חשמל",
+    "requiredField": true,
+    "category": "מודעות לסכנה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 249,
+    "trait": "זהירות שימוש באמעצים חדים",
+    "requiredField": true,
+    "category": "מודעות לסכנה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 250,
+    "trait": "זהירות שימוש באש ובחום",
+    "requiredField": true,
+    "category": "מודעות לסכנה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 251,
+    "trait": "זהירת בשימוש בחומרים מסוכנים",
+    "requiredField": true,
+    "category": "מודעות לסכנה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 252,
+    "trait": "זיהוי מצב חירום (שיפוט)",
+    "requiredField": true,
+    "category": "מודעות לסכנה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 253,
+    "trait": "מסוגלות במצבי לכלוך ואבק",
+    "requiredField": true,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 254,
+    "trait": "מסוגלות בתנאי חום או קור",
+    "requiredField": true,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 255,
+    "trait": "מסוגלות בסביבת ריחות חזקים",
+    "requiredField": true,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 256,
+    "trait": "מסוגלות בסביבה עם מרקמים ומשטחים שונים",
+    "requiredField": true,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 257,
+    "trait": "מסוגלות בסביבה רועשת",
+    "requiredField": true,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 258,
+    "trait": "מסוגלות בסביבה עם אורות חזקים",
+    "requiredField": true,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 259,
+    "trait": "מסוגלות לעבוד בסביבה עם מכשור מסוכן",
+    "requiredField": true,
+    "category": "סביבת עבודה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 260,
+    "trait": "מיקוד קשב",
+    "requiredField": true,
+    "category": "תפקודי קשב",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 261,
+    "trait": "שימור קשב",
+    "requiredField": true,
+    "category": "תפקודי קשב",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 262,
+    "trait": "פיצול קשב (dividing)",
+    "requiredField": true,
+    "category": "תפקודי קשב",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 263,
+    "trait": "הסטת קשב (shifting)",
+    "requiredField": true,
+    "category": "תפקודי קשב",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 264,
+    "trait": "ביצוע מטלה יחידה",
+    "requiredField": true,
+    "category": "ביצוע",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 265,
+    "trait": "ביצוע ריבוי מטלות",
+    "requiredField": true,
+    "category": "ביצוע",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 266,
+    "trait": "ביצוע מטלה רב שלבית",
+    "requiredField": true,
+    "category": "ביצוע",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 267,
+    "trait": "יכולת תיעדוף בין מטלות",
+    "requiredField": true,
+    "category": "ביצוע",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 268,
+    "trait": "קבלת החלטות",
+    "requiredField": true,
+    "category": "ביצוע",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 269,
+    "trait": "שמירה על חפצים",
+    "requiredField": true,
+    "category": "ביצוע",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 270,
+    "trait": "שמירה על ציוד",
+    "requiredField": true,
+    "category": "ביצוע",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 271,
+    "trait": "זיכרון לטווח קצר (30 שניות)",
+    "requiredField": true,
+    "category": "זכרון",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 272,
+    "trait": "שליפה מזיכרון לטווח ארוך",
+    "requiredField": true,
+    "category": "זכרון",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 273,
+    "trait": "זכירת הוראות / זכרון עבודה",
+    "requiredField": true,
+    "category": "זכרון",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 274,
+    "trait": "ראיה כללי",
+    "requiredField": true,
+    "category": "חושים",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 275,
+    "trait": "ראיה לקרוב",
+    "requiredField": true,
+    "category": "חושים",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 276,
+    "trait": "ראיה לרחוק",
+    "requiredField": true,
+    "category": "חושים",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 277,
+    "trait": "הבחנה בין צבעים",
+    "requiredField": true,
+    "category": "חושים",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 278,
+    "trait": "חוש ריח",
+    "requiredField": true,
+    "category": "חושים",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 279,
+    "trait": "חוש שמיעה",
+    "requiredField": true,
+    "category": "חושים",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 280,
+    "trait": "חוש טעם",
+    "requiredField": true,
+    "category": "חושים",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 281,
+    "trait": "שיווי משקל",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 282,
+    "trait": "שיווי משקל בהליכה",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 283,
+    "trait": "שיווי משקל בעמידה",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 284,
+    "trait": "שיווי משקל בישיבה",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 285,
+    "trait": "ישיבה ממושכת",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 286,
+    "trait": "יכולת להיות במאמץ גופני (סיבולת)",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 287,
+    "trait": "בעל כח פיזי בידיים",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 288,
+    "trait": "אוחז בדברים גדולים בשתי הידים",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 289,
+    "trait": "יכולת משיכה",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 290,
+    "trait": "יכולת דחיפה",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 291,
+    "trait": "יכולת הרכבה ופירוק",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 292,
+    "trait": "שימוש 2 ידיים וזרועות",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 293,
+    "trait": "קואודינציה בי לאטרלית",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 294,
+    "trait": "מוטוריקה עדינה",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 295,
+    "trait": "כח פיזי ברגליים",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 296,
+    "trait": "עצמאות בהליכה",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 297,
+    "trait": "טיפוס על סולם/מדרגות",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 298,
+    "trait": "עמידה ממושכת",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 299,
+    "trait": "הליכה למרחקים ארוכים",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 300,
+    "trait": "הליכה עם ציוד",
+    "requiredField": true,
+    "category": "יכולת פיזית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 301,
+    "trait": "זיהוי מספרים 0-10",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 302,
+    "trait": "זיהוי מספרים 10-100",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 303,
+    "trait": "זיהוי מספרים 100-1000",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 304,
+    "trait": "זיהוי מספרים ללא הגבלה",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 305,
+    "trait": "ספירה עד 10",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 306,
+    "trait": "ספירה עד 100",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 307,
+    "trait": "ספירה ללא הגבלה",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 308,
+    "trait": "הבנת כמויות בסיסית",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 309,
+    "trait": "הבנת כמויות יחסיות",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 310,
+    "trait": "הבנת כמויות של משקל",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 311,
+    "trait": "הבנת כמויות גובה/אורך",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 312,
+    "trait": "הבנת מרחקים",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 313,
+    "trait": "פעולות חילוק",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 314,
+    "trait": "אחוזים",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 315,
+    "trait": "שברים",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 316,
+    "trait": "פעולות חיסור",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 317,
+    "trait": "חישוב מורכב (בעיות מילוליות, נוסחאות , מניפולציות מספריות)",
+    "requiredField": true,
+    "category": "כמותי",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 318,
+    "trait": "מעקב אחר צ'ק ליסט",
+    "requiredField": true,
+    "category": "למידה בסיסית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 319,
+    "trait": "רכישת מיומנויות בסיסיות (כגון שימוש במזלג)",
+    "requiredField": true,
+    "category": "למידה בסיסית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 320,
+    "trait": "רכישת מיומנויות מורכבות (כגון כללי משחק)",
+    "requiredField": true,
+    "category": "למידה בסיסית",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 321,
+    "trait": "תפיסת זמן",
+    "requiredField": true,
+    "category": "התמצאות בזמן",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 322,
+    "trait": "זיהוי זמן",
+    "requiredField": true,
+    "category": "התמצאות בזמן",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 323,
+    "trait": "זיהוי זמן מוחלט (אף פעם, תמיד)",
+    "requiredField": true,
+    "category": "התמצאות בזמן",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 324,
+    "trait": "זיהוי זמן יחסי (לפני, אחרי, מקודם)",
+    "requiredField": true,
+    "category": "התמצאות בזמן",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 325,
+    "trait": "זיהוי מקום פיזי (חדר, קומה, בנין, עיר, מדינה)",
+    "requiredField": true,
+    "category": "התמצאות במרחב",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 326,
+    "trait": "זיהוי מקום יחסי: קרוב, רחוק",
+    "requiredField": true,
+    "category": "התמצאות במרחב",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 327,
+    "trait": "תפיסה מרחבית (תלת מימד)",
+    "requiredField": true,
+    "category": "התמצאות במרחב",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 328,
+    "trait": "זיהוי כיוונים - ימין שמאל",
+    "requiredField": true,
+    "category": "התמצאות במרחב",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 329,
+    "trait": "זיהוי מרחקים",
+    "requiredField": true,
+    "category": "התמצאות במרחב",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 330,
+    "trait": "קורא שעון אנלוגי",
+    "requiredField": true,
+    "category": "עזרי טכנולוגיה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 331,
+    "trait": "קורא שעון דיגיטלי",
+    "requiredField": true,
+    "category": "עזרי טכנולוגיה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 332,
+    "trait": "אוריינות טלפון חכם/אפליקציות - בסיסית",
+    "requiredField": true,
+    "category": "עזרי טכנולוגיה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 333,
+    "trait": "אוריינות טלפון חכם/אפליקציות - מתקדמת",
+    "requiredField": true,
+    "category": "עזרי טכנולוגיה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 334,
+    "trait": "אוריינות בטאבלט",
+    "requiredField": true,
+    "category": "עזרי טכנולוגיה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 335,
+    "trait": "אוריינות במחשב בסיסית",
+    "requiredField": true,
+    "category": "עזרי טכנולוגיה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 336,
+    "trait": "אוריינות במחשב מתקדמת",
+    "requiredField": true,
+    "category": "עזרי טכנולוגיה",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 337,
+    "trait": "שימוש בכסף",
+    "requiredField": true,
+    "category": "פעולות כסף",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 338,
+    "trait": "חישובי כספים (עודף)",
+    "requiredField": true,
+    "category": "פעולות כסף",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 339,
+    "trait": "גביית תשלום",
+    "requiredField": true,
+    "category": "פעולות כסף",
+    "score": "1-5",
+    "ML": true
+  },
+  {
+    "NO": 340,
+    "trait": "תשלום חשבונות באופן עצמאי",
+    "requiredField": true,
+    "category": "פעולות כסף",
+    "score": "1-5",
+    "ML": true
   }
 ]

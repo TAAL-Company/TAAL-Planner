@@ -7,7 +7,7 @@ import Status from "./FormsComponents/classification_component/Status";
 import StatusLTR from "./FormsComponents/classification_component/StatusLTR";
 import cognitiveList from "./cognitive.json";
 import taskpic from "./FormsComponents/PicturesForms/taskpic.png";
-import CognitiveAbilllities from "../CognitiveAbillities";
+import CognitiveAbillities from "../CognitiveAbillities";
 import {
   getingData_Users,
   getingData_Tasks,
@@ -1804,7 +1804,7 @@ function Forms() {
                 </button>
                 <button
                   className="btn_nav_forms"
-                  onClick={() => handleSelectTable("flags")}
+                  onClick={() => handleSelectTable("abillities")}
                 >
                   יכולות קוגנטיביות כלליות
                 </button>
@@ -2220,6 +2220,14 @@ function Forms() {
                     routeForTasksAbility={routeForTasksAbility}
                     setRouteForTasksAbility={setRouteForTasksAbility}
                   />
+                </div>
+              </div>
+            )}
+            {selectedTable === "abillities" && (
+              <div>
+                <div className="headlineForms">Taskability</div>
+                <div className="tableForms">
+                  <CognitiveAbillities></CognitiveAbillities>
                 </div>
               </div>
             )}
@@ -2681,27 +2689,7 @@ function Forms() {
             {selectedTable === "abillities" && (
               <div>
                 <div className="headlineForms">Taskability</div>
-                <div className="tableForms">
-                  <DataTableLTR
-                    setChangeUser={setChangeUser}
-                    prevSelectedWorker={prevSelectedWorker}
-                    setChangeRoute={setChangeRoute}
-                    allUsers={allUsers}
-                    allRoutes={allRoutes}
-                    tableType={"TaskabilityEN"}
-                    columns={columnsTaskabilityHE}
-                    setColumns={setColumnsTaskabilityHE}
-                    rows={rowsTaskabilityHE}
-                    isInfoUserRoute={false}
-                    isInfoUserSite={false}
-                    fillFalse={fillFalse}
-                    workerName={null}
-                    routeName={routeNameEN}
-                    siteName={siteNameEN}
-                    routeForTasksAbility={routeForTasksAbility}
-                    setRouteForTasksAbility={setRouteForTasksAbility}
-                  />
-                </div>
+                <div className="tableForms">HELLO</div>
               </div>
             )}
           </>

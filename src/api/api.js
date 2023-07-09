@@ -486,6 +486,28 @@ export const post_cognitive_abillities = async (cognitive) => {
 
   await post(url, cognitive, headers);
 };
+export const delete_cognitive_abillities = async (id) => {
+  const url = baseUrl + "/cognitive-abillities" + id;
+
+  const options = {
+    method: "DELETE",
+    headers: {
+      Accept: "*/*",
+    },
+  };
+
+  try {
+    const response = await fetch(url, options); // add return statement here
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error("There was a problem with the DELETE request:", error);
+  }
+};
 export const deleteRoute = async (route_id) => {
   let confirm;
 

@@ -81,7 +81,6 @@ const ReorderBoard = (props) => {
                       {...provided.dragHandleProps}
                     >
                       <div className="nameStationReorder">
-                        {" "}
                         {task.nameStation}
                       </div>
 

@@ -369,42 +369,44 @@ const Stations = (props) => {
               </button>
             </div>
           </div>
-          <DndProvider backend={HTML5Backend}>
-            <DragnDrop
-              setStationArray={props.setStationArray}
-              percentProgressBar={props.percentProgressBar}
-              setPercentProgressBar={props.setPercentProgressBar}
-              progressBarFlag={props.progressBarFlag}
-              setProgressBarFlag={props.setProgressBarFlag}
-              replaceRouteFlag={props.replaceRouteFlag}
-              replaceSiteFlag={props.replaceSiteFlag}
-              firstStationName={props.firstStationName}
-              boardArrayDND={props.boardArrayDND}
-              tasksOfChosenStation={tasksOfChosenStation}
-              setTasksOfChosenStation={setTasksOfChosenStation}
-              allStations={props.allStations}
-              allTasks={props.allTasks}
-              language={props.language}
-              myTasks={props.myTasks}
-              drag={props.drag}
-              addMyTask={props.addMyTask}
-              titleTaskCss={props.titleTaskCss}
-              mySite={props.mySite}
-              myStation={myStation}
-              flagHebrew={props.flagHebrew}
-              tasksOfRoutes={props.tasksOfRoutes}
-              stationArray={props.stationArray}
-              saveButton={props.saveButton}
-              siteQuestionLanguage={props.siteQuestionLanguage}
-              tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
-              allTasksOfTheSite={props.allTasksOfTheSite}
-              setAllTasksOfTheSite={props.setAllTasksOfTheSite}
-              setMyStation={setMyStation}
-              hebrew={props.hebrew}
-              english={props.english}
-              Hebrew={props.Hebrew}
-            />
-          </DndProvider>
+          {/* <DndProvider backend={HTML5Backend}> */}
+          <DragnDrop
+            dropToBoard={props.dropToBoard}
+            setDropToBoard={props.setDropToBoard}
+            setStationArray={props.setStationArray}
+            percentProgressBar={props.percentProgressBar}
+            setPercentProgressBar={props.setPercentProgressBar}
+            progressBarFlag={props.progressBarFlag}
+            setProgressBarFlag={props.setProgressBarFlag}
+            replaceRouteFlag={props.replaceRouteFlag}
+            replaceSiteFlag={props.replaceSiteFlag}
+            firstStationName={props.firstStationName}
+            boardArrayDND={props.boardArrayDND}
+            tasksOfChosenStation={tasksOfChosenStation}
+            setTasksOfChosenStation={setTasksOfChosenStation}
+            allStations={props.allStations}
+            allTasks={props.allTasks}
+            language={props.language}
+            myTasks={props.myTasks}
+            drag={props.drag}
+            addMyTask={props.addMyTask}
+            titleTaskCss={props.titleTaskCss}
+            mySite={props.mySite}
+            myStation={myStation}
+            flagHebrew={props.flagHebrew}
+            tasksOfRoutes={props.tasksOfRoutes}
+            stationArray={props.stationArray}
+            saveButton={props.saveButton}
+            siteQuestionLanguage={props.siteQuestionLanguage}
+            tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
+            allTasksOfTheSite={props.allTasksOfTheSite}
+            setAllTasksOfTheSite={props.setAllTasksOfTheSite}
+            setMyStation={setMyStation}
+            hebrew={props.hebrew}
+            english={props.english}
+            Hebrew={props.Hebrew}
+          />
+          {/* </DndProvider> */}
         </>
       )}
 

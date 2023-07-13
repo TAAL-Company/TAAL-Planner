@@ -38,6 +38,7 @@ import textArea from "../../Pictures/textArea.svg";
 import Modal_route_chosen from "../Modal/Modal_route_chosen";
 import { MdNoStroller } from "react-icons/md";
 import Modal_site_chosen from "../Modal/Modal_site_chosen";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 // const { baseUrl } = require
 //-----------------------
@@ -111,6 +112,8 @@ const Places = (props) => {
   const [routrForDelete, setRouteForDelete] = useState([]);
   const [tasksOfChosenStation, setTasksOfChosenStation] = useState([]);
   const [chosenStation, setChosenStation] = useState([]);
+  const [dropToBoard, setDropToBoard] = useState({});
+  const [tasksLength, setTasksLength] = useState(0);
 
   useEffect(() => {
     console.log("requestForEditing: ", requestForEditing);
@@ -519,12 +522,14 @@ const Places = (props) => {
     }
     setMySite((mySite.name = selectedValue.name));
     setMySite((mySite.id = selectedValue.id));
-
+    let length = 0;
     allTasks.map(async (task) => {
       if (task.sites.some((site) => site.id === mySite.id)) {
         console.log("yarden task", task);
-
+        length++;
         await setAllTasksOfTheSite((prev) => [...prev, task]);
+
+        setTasksLength(length);
       }
     });
 
@@ -554,27 +559,59 @@ const Places = (props) => {
       )
     );
     console.log("routes ", myRoutes);
-
-    let temp = [];
   };
   useEffect(() => {
-    console.log("stationArray dnd: ", stationArray);
+    console.log("stationArray dnd: yardeb", stationArray);
 
     if (allTasksOfTheSite.length > 0) {
       console.log("allTasksOfTheSite yarden", allTasksOfTheSite);
       let tasksWithoutStation = allTasksOfTheSite.filter((task) => {
         if (task.stations.length == 0) return task;
       });
-      setStationArray((prev) => [
-        ...prev,
-        {
-          id: 0,
-          color: pastelColors[stationArray.length],
-          parent: mySite.id,
-          title: "כללי",
-          tasks: tasksWithoutStation,
-        },
-      ]);
+      const generalStation = stationArray.find(
+        (zeroStation) => zeroStation.id === 0
+      );
+      if (generalStation === undefined) {
+        setStationArray((prev) => [
+          ...prev,
+          {
+            id: 0,
+            color: pastelColors[stationArray.length],
+            parent: mySite.id,
+            title: "כללי",
+            tasks: tasksWithoutStation,
+          },
+        ]);
+      } else {
+        generalStation.tasks = tasksWithoutStation;
+      }
+
+      if (tasksLength < allTasksOfTheSite.length) {
+        console.log(
+          "tasksLength yardeb",
+          allTasksOfTheSite[allTasksOfTheSite.length - 1]
+        );
+        let newTask = allTasksOfTheSite[allTasksOfTheSite.length - 1];
+
+        allTasksOfTheSite[allTasksOfTheSite.length - 1].stations.map(
+          (newTaskStation) => {
+            let station = stationArray.find(
+              (stationTemp) => stationTemp.id === newTaskStation.id
+            );
+
+            console.log("yardeb", station);
+            station.tasks.push({
+              audio_url: newTask.audio_url,
+              estimatedTimeSeconds: newTask.estimatedTimeSeconds,
+              id: newTask.id,
+              multi_language_description: newTask.multi_language_description,
+              picture_url: newTask.picture_url,
+              subtitle: newTask.subtitle,
+              title: newTask.title,
+            });
+          }
+        );
+      }
     }
   }, [allTasksOfTheSite]);
 
@@ -646,6 +683,12 @@ const Places = (props) => {
   useEffect(() => {
     searchRoute();
   }, [myRoutes]);
+
+  function handleDragEnd(result) {
+    // Your logic for handling drag and drop result
+    console.log("result: ", result);
+    setDropToBoard(result);
+  }
 
   //----------------------------------------------------------------------
   return (
@@ -808,57 +851,63 @@ const Places = (props) => {
             </button>
           </div>
         </div>
-        <Stations
-          setAllTasksOfTheSite={setAllTasksOfTheSite}
-          percentProgressBar={percentProgressBar}
-          setPercentProgressBar={setPercentProgressBar}
-          progressBarFlag={progressBarFlag}
-          setProgressBarFlag={setProgressBarFlag}
-          replaceRouteFlag={replaceRouteFlag}
-          replaceSiteFlag={replaceSiteFlag}
-          firstStationName={firstStationName}
-          boardArrayDND={boardArrayDND}
-          stationArray={stationArray}
-          setStationArray={setStationArray}
-          idTask={thisIdTask}
-          allStations={onlyAllStation}
-          setOnlyAllStation={setOnlyAllStation}
-          language={props.language}
-          stationsName={props.stations}
-          myTasks={props.myTasks}
-          drag={props.drag}
-          addStation={props.addStation}
-          addMyTask={props.addMyTask}
-          titleStationCss={props.titleStationCss}
-          titleTaskCss={props.titleTaskCss}
-          mySite={mySite}
-          flagHebrew={props.flagHebrew}
-          tasksOfRoutes={tasksOfRoutes}
-          clickAddRoute={clickAddRoute}
-          saveButton={props.saveButton}
-          siteQuestionLanguage={props.siteQuestionLanguage}
-          stationsBeforeChoosingSite={props.stationsBeforeChoosingSite}
-          tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
-          allTasks={allTasks}
-          allTasksOfTheSite={allTasksOfTheSite}
-          pastelColors={pastelColors}
-          hebrew={props.hebrew}
-          english={props.english}
-          Hebrew={props.Hebrew}
-          setTasksOfChosenStation={setTasksOfChosenStation}
-          setChosenStation={setChosenStation}
-        />
-        <Tasks
-          setAllTasksOfTheSite={setAllTasksOfTheSite}
-          setTasksOfChosenStation={setTasksOfChosenStation}
-          tasksOfChosenStation={tasksOfChosenStation}
-          myTasks={props.myTasks}
-          language={props.language}
-          tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
-          chosenStation={chosenStation}
-          stationArray={stationArray}
-          mySite={mySite}
-        />
+        <DragDropContext onDragEnd={handleDragEnd}>
+          <Stations
+            setDropToBoard={setDropToBoard}
+            dropToBoard={dropToBoard}
+            setAllTasksOfTheSite={setAllTasksOfTheSite}
+            percentProgressBar={percentProgressBar}
+            setPercentProgressBar={setPercentProgressBar}
+            progressBarFlag={progressBarFlag}
+            setProgressBarFlag={setProgressBarFlag}
+            replaceRouteFlag={replaceRouteFlag}
+            replaceSiteFlag={replaceSiteFlag}
+            firstStationName={firstStationName}
+            boardArrayDND={boardArrayDND}
+            stationArray={stationArray}
+            setStationArray={setStationArray}
+            idTask={thisIdTask}
+            allStations={onlyAllStation}
+            setOnlyAllStation={setOnlyAllStation}
+            language={props.language}
+            stationsName={props.stations}
+            myTasks={props.myTasks}
+            drag={props.drag}
+            addStation={props.addStation}
+            addMyTask={props.addMyTask}
+            titleStationCss={props.titleStationCss}
+            titleTaskCss={props.titleTaskCss}
+            mySite={mySite}
+            flagHebrew={props.flagHebrew}
+            tasksOfRoutes={tasksOfRoutes}
+            clickAddRoute={clickAddRoute}
+            saveButton={props.saveButton}
+            siteQuestionLanguage={props.siteQuestionLanguage}
+            stationsBeforeChoosingSite={props.stationsBeforeChoosingSite}
+            tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
+            allTasks={allTasks}
+            allTasksOfTheSite={allTasksOfTheSite}
+            pastelColors={pastelColors}
+            hebrew={props.hebrew}
+            english={props.english}
+            Hebrew={props.Hebrew}
+            setTasksOfChosenStation={setTasksOfChosenStation}
+            setChosenStation={setChosenStation}
+          />
+          <Tasks
+            setDropToBoard={setDropToBoard}
+            dropToBoard={dropToBoard}
+            setAllTasksOfTheSite={setAllTasksOfTheSite}
+            setTasksOfChosenStation={setTasksOfChosenStation}
+            tasksOfChosenStation={tasksOfChosenStation}
+            myTasks={props.myTasks}
+            language={props.language}
+            tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
+            chosenStation={chosenStation}
+            stationArray={stationArray}
+            mySite={mySite}
+          />
+        </DragDropContext>
       </div>
       {openModalRouteChosen ? (
         <>

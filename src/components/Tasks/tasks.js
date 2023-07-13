@@ -8,6 +8,7 @@ import { useDrag } from "react-dnd";
 import ModalTasks from "../Modal/Modal_Tasks.js";
 import { deleteTask } from "../../api/api.js";
 import Modal_Delete from "../Modal/Modal_Delete.js";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const Tasks = (props) => {
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
@@ -19,9 +20,15 @@ const Tasks = (props) => {
   const [modalOpenNoSiteSelected, setModalOpenNoSiteSelected] = useState(false);
   const [filteredDataTasks, setFilteredDataTasks] = useState([]);
   const [taskForDelete, setTaskForDelete] = useState("");
+  const [siteSelected, setSiteSelected] = useState(false);
   // useEffect(() => {
   //   setFilteredDataTasks(props.tasksOfChosenStation);
   // }, []);
+  useEffect(() => {
+    if (props.mySite.name != "") {
+      setSiteSelected(true);
+    }
+  }, [props.mySite.name]);
   const handleCloseRemove = () => {
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
@@ -145,34 +152,56 @@ const Tasks = (props) => {
             {props.tasksBeforeChoosingSite}
           </div>
         ) : (
-          // <></>
-          filteredDataTasks.map((tag, index) => {
-            let ID = "" + tag.id;
-            console.log("id: ", typeof ID);
-            console.log("tag: ", tag);
+          // <></
+          <Droppable droppableId="tasks-droppable">
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className="TasksCover"
+              >
+                {filteredDataTasks.map((tag, index) => {
+                  let ID = "" + tag.id;
+                  console.log("id: ", typeof ID);
+                  console.log("tag: ", tag);
 
-            return (
-              <Tag
-                title={tag.title}
-                id={ID}
-                key={ID}
-                dataImg={tag.dataImg}
-                flagBoard={false}
-                myLastStation={
-                  props.chosenStation ? props.chosenStation.name : ""
-                }
-                data={tag.data}
-                dragFromCover={"TasksNew"}
-                language={props.language}
-                openThreeDotsVertical={openThreeDotsVertical}
-                setOpenThreeDotsVertical={setOpenThreeDotsVertical}
-                requestForEditing={requestForEditing}
-                setRequestForEditing={setRequestForEditing}
-                requestForEditingBoard={requestForEditing}
-                // setRequestForEditingBoard={setRequestForEditingBoard}
-              />
-            );
-          })
+                  return (
+                    <Draggable key={ID} draggableId={ID} index={index}>
+                      {(provided) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <Tag
+                            title={tag.title}
+                            id={ID}
+                            key={ID}
+                            dataImg={tag.dataImg}
+                            flagBoard={false}
+                            myLastStation={
+                              props.chosenStation
+                                ? props.chosenStation.name
+                                : ""
+                            }
+                            data={tag.data}
+                            dragFromCover={"TasksNew"}
+                            language={props.language}
+                            openThreeDotsVertical={openThreeDotsVertical}
+                            setOpenThreeDotsVertical={setOpenThreeDotsVertical}
+                            requestForEditing={requestForEditing}
+                            setRequestForEditing={setRequestForEditing}
+                            requestForEditingBoard={requestForEditing}
+                            // setRequestForEditingBoard={setRequestForEditingBoard}
+                          />
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
+              </div>
+            )}
+          </Droppable>
         )}
       </div>
       <div className="addTaskCover">
@@ -200,7 +229,7 @@ const Tasks = (props) => {
           myStation={props.chosenStation}
           // setModalOpenNoSiteSelected={setModalOpenNoSiteSelected}
           allStations={props.stationArray}
-          siteSelected={props.tasksOfChosenStation.length > 0}
+          siteSelected={siteSelected}
           mySite={props.mySite}
           // help={helpFlag}
           title={

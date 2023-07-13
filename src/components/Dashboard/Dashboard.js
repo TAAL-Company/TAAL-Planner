@@ -14,7 +14,7 @@ const Dashboard = () => {
     },
     {
       id: 2,
-      headline: "חניכים",
+      headline: "עובדים",
       addLabel: "הוספת חניך",
       image: pic,
     },

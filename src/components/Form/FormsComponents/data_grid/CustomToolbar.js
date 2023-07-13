@@ -158,7 +158,7 @@ const CustomToolbar = ({
                         : worker.length !== 0 && worker.routes.length === 0
                         ? "אין מסלולים עבור העובד"
                         : worker.length === 0
-                        ? "בחר עובד"
+                        ? "בחר מסלול"
                         : ""
                     }
                     InputProps={{

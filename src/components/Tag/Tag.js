@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDrag } from "react-dnd";
+// import { useDrag } from "react-dnd";
 // import { RiDragMove2Line } from "react-icons/ri";
 import "./style.css";
 // import Dot from "../Dot/Dot"
@@ -8,6 +8,7 @@ import Images from "../Images/Images";
 import Audios from "../Audios/Audios";
 import Modal_dropdown from "../Modal/Modal_dropdown";
 import { CgOpenCollective } from "react-icons/cg";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 let idListen = 0;
 let dataListen = {};
@@ -67,17 +68,17 @@ function Tag({
 
   // console.log("flag Tag", flag)
 
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: "image",
-    item: { id: id, boardName: dragFromCover },
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  }));
+  // const [{ isDragging }, drag] = useDrag(() => ({
+  //   type: "image",
+  //   item: { id: id, boardName: dragFromCover },
+  //   collect: (monitor) => ({
+  //     isDragging: !!monitor.isDragging(),
+  //   }),
+  // }));
   console.log("dragFromCover: ", dragFromCover);
-  useEffect(() => {
-    console.log("isDragging: ", isDragging);
-  }, [isDragging]);
+  // useEffect(() => {
+  //   console.log("isDragging: ", isDragging);
+  // }, [isDragging]);
 
   const clickOnhreeDotsVerticaIcontBoard = (value) => {
     console.log("value", value);
@@ -204,7 +205,7 @@ function Tag({
                       : "",
                   // width: dragFromCover === "border" ? "85%" : "90%",
                 }}
-                ref={drag}
+                // ref={drag}
                 src={title}
               >
                 <div className="dropdownThreeDots">

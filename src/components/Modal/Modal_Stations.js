@@ -28,7 +28,11 @@ const Modal_Stations = (props) => {
   console.log("stationIndex: ", props.stationIndex);
   console.log("stationArray: ", props.stationArray);
   useEffect(() => {
-    if (props.stationIndex != -1) {
+    if (
+      props.stationArray.length > 0 &&
+      props.stationIndex != undefined &&
+      props.stationIndex > -1
+    ) {
       settitle(props.stationArray[props.stationIndex].title);
       setDescription(props.stationArray[props.stationIndex].subtitle);
       setStationUUId(props.stationArray[props.stationIndex].id);

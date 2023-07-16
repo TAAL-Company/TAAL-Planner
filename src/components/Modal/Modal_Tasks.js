@@ -65,7 +65,8 @@ function Modal_Tasks(props) {
 
       try {
         if (picture) {
-          imageData = await uploadImage(picture, "Image");
+          console.log("enter site: ", props.mySite.name);
+          imageData = await uploadImage(picture, props.mySite.name);
           console.log(`Image uploaded successfully:`, imageData);
         }
         if (audio) {

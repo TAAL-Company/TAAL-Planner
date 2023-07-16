@@ -5,14 +5,14 @@ import { BlobServiceClient } from "@azure/storage-blob";
 import React, { useState } from "react";
 
 const connectionString =
-  "https://taalmedia.blob.core.windows.net/?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-05-30T02:59:11Z&st=2023-05-29T18:59:11Z&spr=https,http&sig=sDFubscNhYqL5K%2Bq08SzqJrAnVLeYfUbuuRhgd1zK%2BE%3D";
+  "https://taalmedia.blob.core.windows.net/?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-07-13T20:36:30Z&st=2023-07-13T12:36:30Z&spr=https,http&sig=KYpOne6cQ3JiOruEykY0a%2BxiEDcDYAb%2BdV%2F%2BypnOMxs%3D";
 const blobServiceClient = new BlobServiceClient(connectionString);
-// const sasToken = process.env.storagesastoken || “sp=racwdl&st=2023-05-29T18:50:18Z&se=2023-05-30T02:50:18Z&sv=2022-11-02&sr=c&sig=Yid5n%2B40gDGwM1IhT7r%2F5mgbKNx80ebI%2B4s4NkBqRuw%3D”; // Fill string with your SAS token
-// const containerName = `images`;
-// const storageAccountName = process.env.storageresourcename || “taalmedia”; // Fill string with your Storage resource name
-export const uploadImage = async (selectedFile) => {
+
+export const uploadImage = async (selectedFile, folder) => {
   console.log("enter", selectedFile);
-  const containerName = ""; // The name of the container in Azure Blob Storage
+  console.log("enter folder", folder);
+
+  const containerName = "images/" + folder; // The name of the container in Azure Blob Storage
   const containerClient = blobServiceClient.getContainerClient(containerName);
 
   const blobName = selectedFile.name;
@@ -22,6 +22,10 @@ export const uploadImage = async (selectedFile) => {
 
   await blockBlobClient.uploadData(selectedFile, options);
   console.log("Image uploaded successfully.");
+  3;
+
+  const imageUrl = blockBlobClient.url;
+  return imageUrl;
 };
 
 export const get = async (url, header) => {

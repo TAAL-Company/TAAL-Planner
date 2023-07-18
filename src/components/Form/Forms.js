@@ -280,24 +280,24 @@ function Forms() {
       setPrevSelected((prevSelectedUsers) => [...prevSelectedUsers, worker]);
 
       cognitiveAbillities.map((cognitive, index) => {
-        let cogValue = 0;
+        let cogValue = 1;
         if (cognitiveProfileValues != undefined)
           cogValue = cognitiveProfileValues[index];
 
-        const valueMap = {
-          5: "A",
-          4: "A",
-          3: "B",
-          2: "C",
-          1: "D",
-          0: "D",
-        };
+        // const valueMap = {
+        //   5: "A",
+        //   4: "A",
+        //   3: "B",
+        //   2: "C",
+        //   1: "D",
+        //   0: "D",
+        // };
 
         // Convert input value to its corresponding numerical value
         let outputValue = 0;
-        if (valueMap.hasOwnProperty(cogValue)) {
-          outputValue = valueMap[cogValue];
-        }
+        // if (valueMap.hasOwnProperty(cogValue)) {
+        //   outputValue = valueMap[cogValue];
+        // }
 
         setRowsCognitiveHE((prev) => [
           ...prev,
@@ -306,7 +306,7 @@ function Forms() {
             fieldHE: cognitive.trait,
             mustField: cognitive.requiredField,
             // subfield: cognitive.subTrait,
-            grade: outputValue,
+            grade: cogValue,
             // fieldEN: "first languege",
             classificationHE: cognitive.category,
             // classificationEN: "languege",

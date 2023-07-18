@@ -22,7 +22,6 @@ export const uploadImage = async (selectedFile, folder) => {
 
   await blockBlobClient.uploadData(selectedFile, options);
   console.log("Image uploaded successfully.");
-  3;
 
   const imageUrl = blockBlobClient.url;
   return imageUrl;
@@ -384,35 +383,35 @@ export const postDataCognitiveProfile = async (
   workerId,
   cognitiveProfileValues
 ) => {
-  const url = baseUrl + "/cognitive-profiles/" + workerId;
-  const body = {
+  // const url = baseUrl + "/cognitive-profiles/" + workerId;
+  // const body = {
+  //   value: cognitiveProfileValues,
+  // };
+  // const headers = {
+  //   "Content-Type": "application/json",
+  //   Accept: "*/*",
+  // };
+
+  // try {
+  //   await patch(url, body, headers);
+  // } catch (e) {
+  //   if (e.response && e.response.status === 400) {
+  const postUrl = baseUrl + "/cognitive-profiles";
+  const postData = {
+    studentId: workerId,
     value: cognitiveProfileValues,
   };
-  const headers = {
-    "Content-Type": "application/json",
-    Accept: "*/*",
-  };
-
   try {
-    await patch(url, body, headers);
+    const res = await axios.post(postUrl, postData);
+    console.log("success");
+    return res;
   } catch (e) {
-    if (e.response && e.response.status === 404) {
-      const postUrl = baseUrl + "/cognitive-profiles";
-      const postData = {
-        studentId: workerId,
-        ...body,
-      };
-      try {
-        const res = await axios.post(postUrl, postData, { headers });
-        console.log("success");
-        return res;
-      } catch (e) {
-        console.log(e);
-      }
-    } else {
-      console.log(e);
-    }
+    console.log(e);
   }
+  // } else {
+  //   console.log(e);
+  // }
+  // }
 };
 export const getCognitiveProfile = async (user_id) => {
   let CognitiveProfile;

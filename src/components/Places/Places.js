@@ -506,6 +506,7 @@ const Places = (props) => {
     } else {
       setReplaceSite(event);
       setOpenModalSiteChosen(true);
+      setSiteSelected(false);
     }
   };
 
@@ -524,14 +525,15 @@ const Places = (props) => {
     setMySite((mySite.id = selectedValue.id));
     let length = 0;
     allTasks.map(async (task) => {
-      if (task.sites.some((site) => site.id === mySite.id)) {
+      if (task.sites.find((site) => site.id === mySite.id)) {
         console.log("yarden task", task);
         length++;
         await setAllTasksOfTheSite((prev) => [...prev, task]);
 
-        setTasksLength(length);
+        //setTasksLength(length);
       }
     });
+    setTasksLength(length);
 
     localStorage.setItem("MySite", JSON.stringify(mySite));
 
@@ -552,7 +554,7 @@ const Places = (props) => {
     console.log("setStationArray: ", stationArray);
 
     //myRoutes saves only the routes that belong to the site that choosen
-    if (myRoutes.length > 0) myRoutes = [];
+    if (myRoutes.length > 0) setRoutes([]);//myRoutes = [];
     setRoutes(
       allRoutes.filter((route) =>
         route.sites.some((site) => site.id === mySite.id)

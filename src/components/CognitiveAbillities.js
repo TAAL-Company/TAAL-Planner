@@ -10,6 +10,7 @@ import {
   getingData_Users,
   insertUser,
   postDataCognitiveProfile,
+  postTaskCognitiveRequirements,
 } from "../api/api";
 
 const CognitiveAbillities = () => {
@@ -23,6 +24,8 @@ const CognitiveAbillities = () => {
 
     fetchData();
     // console.log("usersData", usersData);
+
+    taskAbilityPost();
   }, []);
 
   // Transform the data of cognitive Profiles
@@ -77,9 +80,9 @@ const CognitiveAbillities = () => {
     setCognitiveList(get);
     // postCognitiveABillities();
   }, []);
-  useEffect(() => {
-    cognitiveProfiles();
-  }, [users]);
+  // useEffect(() => {
+  //   cognitiveProfiles();
+  // }, [users]);
 
   // const transData = taskAbility.map((item) => {
   //   const value = [];
@@ -104,6 +107,35 @@ const CognitiveAbillities = () => {
   //     weights: weights,
   //   };
   // });
+
+  const taskAbilityPost = () => {
+    taskAbility.map((item) => {
+      const value = [];
+      const weights = [];
+
+      item.weights.map((weight) => {
+        if (weight === "A") {
+          weights.push(0);
+        } else if (weight === "B") {
+          weights.push(1);
+        } else if (weight === "C") {
+          weights.push(2);
+        } else if (weight === "D") {
+          weights.push(3);
+        } else if (weight === "E") {
+          weights.push(4);
+        } else {
+          weights.push(5);
+        }
+      });
+
+      postTaskCognitiveRequirements({
+        taskId: item.taskId,
+        value: item.value,
+        weights: weights,
+      });
+    });
+  };
 
   // // Convert the transformed data to JSON
   // const transformedJson = JSON.stringify(transformedData, null, 2);

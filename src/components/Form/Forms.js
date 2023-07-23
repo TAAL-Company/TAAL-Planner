@@ -655,10 +655,27 @@ function Forms() {
       field: "intervention",
       headerName: "התאמה",
       width: 180,
-      editable: false,
+      editable: true,
       headerAlign: "center",
       align: "left",
       renderCell: (params) => {
+        const handleEdit = (newValue) => {
+          // Step 3: Handle the editing logic
+          const data = params.api.getRow(params.id);
+          data.intervention = newValue;
+          params.api.updateRow(data);
+        };
+
+        if (params.editing) {
+          // Show this when the cell is being edited
+          return (
+            <input
+              type="text"
+              value={params.row.intervention}
+              onChange={(e) => handleEdit(e.target.value)}
+            />
+          );
+        }
         if (params.row.intervention === " ") {
           return (
             <div

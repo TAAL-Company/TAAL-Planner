@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Tag from "../Tag/Tag.js";
-import { useDrop } from "react-dnd";
+// import { useDrop } from "react-dnd";
 import "./style.css";
 import ModalTasks from "../Modal/Modal_Tasks";
 import Modal from "../Modal/Modal";
@@ -12,11 +12,11 @@ import Tablet from "../Tablet/Tablet";
 import ReorderBoard from "../ReorderBoard/ReorderBoard";
 import Dot from "../Dot/Dot";
 import Clock from "../Clock/Clock";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import textArea from "../../Pictures/textArea.svg";
 import ProgressBar from "../ProgressBar/ProgressBar";
 import Modal_Delete from "../Modal/Modal_Delete";
 import { deleteTask } from "../../api/api.js";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 let Route = [];
 let dndArray = [];
@@ -37,7 +37,6 @@ let count1 = 0;
 let kavTaskTopMarginTop = "-7px";
 let borderLeft = "2px solid #c2bfbf";
 let flagPhone = false;
-let flagTree = true;
 // let flagTablet = false;
 let flagPhoneOne = false;
 let flagStress = false;
@@ -51,20 +50,8 @@ function DragnDrop(props) {
   console.log(" props.allTasks 1: ", props.allTasksOfTheSite);
 
   const [board, setBoard] = useState([]);
-  const [reorderBoardFlag, setReorderBoardFlag] = useState(false);
+  const [reorderBoardFlag, setReorderBoardFlag] = useState(true);
   const [openRemove, setOpenRemove] = React.useState(false);
-
-  // if (props.tasksOfRoutes && props.tasksOfRoutes.acf) {
-  //   if (props.tasksOfRoutes.acf.tasks) {
-  //     props.tasksOfRoutes.acf.tasks.forEach((element) => {
-  //       console.log("element:", element.post_title);
-  //     });
-  //     console.log("tasksOfRoutes: ", props.tasksOfRoutes);
-  //     console.log("board: ", board);
-  //     // setBoard((board) => [...board, ]);
-  //   }
-
-  // }
 
   console.log("props mySite:", props.mySite);
   console.log("props dragFrom:", props.dragFrom);
@@ -84,7 +71,7 @@ function DragnDrop(props) {
 
   const [, setCount] = useState(0);
   const [get_Name] = useState(null); // for TextView
-  const [, setFlagTree] = useState(true);
+  const [flagTree, setFlagTree] = useState(false);
   const [, setFlagPhone] = useState(false);
   // const [, setFlagTablet] = useState(false);
   const [, setFlagPhoneOne] = useState(false);
@@ -109,6 +96,8 @@ function DragnDrop(props) {
   const [openThreeDotsVerticalBoard, setOpenThreeDotsVerticalBoard] =
     useState(-1);
   const [requestForEditingBoard, setRequestForEditingBoard] = useState("");
+  const [taskUuidForEdit, setTaskUuidForEdit] = useState("");
+  const [taskForEdit, setTaskForEdit] = useState("");
 
   useEffect(() => {
     console.log("stations requestForEditing: ", requestForEditing);
@@ -116,6 +105,7 @@ function DragnDrop(props) {
 
     if (requestForEditing == "edit" || requestForEditing == "details") {
       console.log("openThreeDotsVertical", openThreeDotsVertical);
+      setTaskUuidForEdit(openThreeDotsVertical);
       setModalOpen(true);
     } else if (requestForEditing == "duplication") {
       console.log("openThreeDotsVertical", openThreeDotsVertical);
@@ -126,18 +116,25 @@ function DragnDrop(props) {
   }, [requestForEditing]);
 
   useEffect(() => {
-    console.log("stations requestForEditing: ", requestForEditing);
+    if (taskForEdit !== "") {
+      console.log("task for edit", taskForEdit);
+      editTask();
+    }
+  }, [taskForEdit]);
 
-    // if (requestForEditing == "edit" || requestForEditing == "details") {
-    //   console.log("openThreeDotsVertical", openThreeDotsVertical);
-    //   setModalOpen(true);
-    // } else if (requestForEditing == "duplication") {
-    //   console.log("openThreeDotsVertical", openThreeDotsVertical);
-    // } else if (requestForEditing == "delete") {
-    //   setOpenRemove(true);
-    //   //Modal_Delete
-    // }
-  }, [requestForEditing]);
+  const editTask = () => {
+    const updatedTasks = props.allTasksOfTheSite.map((task) => {
+      if (task.id === taskForEdit.id) {
+        return taskForEdit;
+      }
+      return task;
+    });
+
+    console.log("task: ", updatedTasks);
+
+    props.setAllTasksOfTheSite(updatedTasks);
+    // setTaskForEdit("");
+  };
 
   const handleCloseRemove = () => {
     setOpenRemove(false);
@@ -234,7 +231,6 @@ function DragnDrop(props) {
     console.log("props.progressBarFlag: ", props.progressBarFlag);
   }, [props.progressBarFlag]);
 
-  // alert("hi")
   dndArray = props.tasksOfChosenStation.map((element) => {
     // let color = stationArray.find(item => item.id === stationID).color
 
@@ -263,25 +259,31 @@ function DragnDrop(props) {
   });
   console.log("dndArray check:", dndArray);
   //---------------------------------------------------------
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: "image",
-    drop(item, monitor) {
-      const itemData = monitor.getItem();
-      // const board = itemData.boardName
-      // const id = itemData.id
-      console.log("item.board: ", itemData.boardName);
-      addImageToBoard(itemData.id, itemData.boardName);
-    },
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
-    }),
-  }));
+  // const [{ isOver }, drop] = useDrop(() => ({
+  //   accept: "image",
+  //   drop(item, monitor) {
+  //     const itemData = monitor.getItem();
+  //     // const board = itemData.boardName
+  //     // const id = itemData.id
+  //     console.log("item.board: ", itemData.boardName);
+  //     addImageToBoard(itemData.id, itemData.boardName);
+  //   },
+  //   collect: (monitor) => ({
+  //     isOver: !!monitor.isOver(),
+  //   }),
+  // }));
+
   useEffect(() => {
-    console.log("isOver: ", isOver);
-  }, [isOver]);
-  useEffect(() => {
-    console.log("activeButton: " + activeButton);
-  }, [activeButton]);
+    if (Object.keys(props.dropToBoard).length > 0) {
+      console.log("result: ", props.dropToBoard);
+      if (
+        props.dropToBoard.destination != undefined &&
+        props.dropToBoard.destination.droppableId === "board-droppable"
+      )
+        addImageToBoard(props.dropToBoard.draggableId, "tasks");
+      props.setDropToBoard({});
+    }
+  }, [props.dropToBoard]);
 
   useEffect(() => {
     console.log("board111: ", board);
@@ -364,7 +366,7 @@ function DragnDrop(props) {
     setFlagPhone((flagPhone = false));
     // setFlagTablet(flagTablet = false)
     setModalFlagTablet((modalFlagTablet = false));
-    setFlagTree((flagTree = true));
+    setFlagTree(true);
     setReorderBoardFlag(false);
     // alert("tree")
     // alert(flagPhone)
@@ -374,7 +376,7 @@ function DragnDrop(props) {
     setFlagStress((flagStress = true));
   };
   const watchFunction = (e) => {
-    setFlagTree((flagTree = false));
+    setFlagTree(false);
     // setFlagTablet(flagTablet = false);
     setModalFlagTablet((modalFlagTablet = false));
     setReorderBoardFlag(false);
@@ -382,14 +384,14 @@ function DragnDrop(props) {
     setActiveButton(e.currentTarget.className);
   };
   const phoneFunction = (e) => {
-    setFlagTree((flagTree = false));
+    setFlagTree(false);
     setFlagPhone((flagPhone = true));
     setReorderBoardFlag(false);
     setModalFlagTablet((modalFlagTablet = false));
     setActiveButton(e.currentTarget.className);
   };
   const tabletFunction = (e) => {
-    setFlagTree((flagTree = false));
+    setFlagTree(false);
     setFlagPhone((flagPhone = false));
     setModalFlagTablet((modalFlagTablet = true));
     setReorderBoardFlag(false);
@@ -402,7 +404,7 @@ function DragnDrop(props) {
     setActiveButton(e.currentTarget.className);
   };
   const reorderFunction = (e) => {
-    setFlagTree((flagTree = false));
+    setFlagTree(false);
     setFlagPhone((flagPhone = false));
     setModalFlagTablet((modalFlagTablet = false));
     setReorderBoardFlag(true);
@@ -422,97 +424,12 @@ function DragnDrop(props) {
           tasksForNewRoute={board}
         />
       )}
-      <div className="Cover_Tasks">
-        <div
-          className="TitleTasks"
-          // style={{
-          //   background: props.titleTaskCss,
-          // }}
-        >
-          {/* <BsThreeDotsVertical className='threeDotsVertical' /> */}
-          <div
-            className={`MyTitle text ${
-              props.language !== "English" ? "english" : ""
-            }`}
-          >
-            {props.myTasks}
-          </div>
-        </div>
-        <div
-          className="search"
-          style={{
-            backgroundColor: "#F5F5F5",
-            // borderStyle: "none none solid none",
-            // borderColor: "#fff",
-            // borderWidth: "5px",
-          }}
-        >
-          <input
-            className="searchButton"
-            // dir="rtl"
-            placeholder={
-              props.language === "English" ? "חפש משימה" : "search task"
-            }
-            label={<CgSearch style={{ fontSize: "x-large" }} />}
-            // onChange={inputHandler}
-          ></input>
-        </div>
 
-        {/* המשימות */}
-        <div className="TasksCover">
-          {dndArray.length === 0 ? (
-            <div
-              className="textBeforeStation"
-              style={{ backgroundImage: `url(${textArea})` }}
-            >
-              {props.tasksBeforeChoosingSite}
-            </div>
-          ) : (
-            dndArray.map((tag) => {
-              return (
-                <Tag
-                  title={tag.title}
-                  id={tag.id}
-                  key={tag.id}
-                  // idImg={tag.id}
-                  dataImg={tag.dataImg}
-                  flagBoard={false}
-                  myStation={tag.myStation}
-                  myLastStation={props.myStation.name}
-                  count={count}
-                  data={tag.data}
-                  dragFromCover={"TasksCover"}
-                  language={props.language}
-                  openThreeDotsVertical={openThreeDotsVertical}
-                  setOpenThreeDotsVertical={setOpenThreeDotsVertical}
-                  openThreeDotsVerticalBoard={openThreeDotsVerticalBoard}
-                  setOpenThreeDotsVerticalBoard={setOpenThreeDotsVerticalBoard}
-                  requestForEditing={requestForEditing}
-                  setRequestForEditing={setRequestForEditing}
-                  requestForEditingBoard={requestForEditing}
-                  setRequestForEditingBoard={setRequestForEditingBoard}
-                />
-              );
-            })
-          )}
-        </div>
-        <div className="addTaskCover">
-          <button
-            className="AddButton"
-            onClick={() => {
-              setModalOpen(true);
-              setModalOpenNoSiteSelected(true);
-            }}
-          >
-            <AiOutlinePlus className="plus" />
-          </button>
-        </div>
-      </div>
       <>
         <>
           <div
             className={`Board ${props.language !== "English" ? "english" : ""}`}
-            ref={drop}
+            // ref={drop}
           >
             <div className="topButtons">
               <button
@@ -595,147 +512,161 @@ function DragnDrop(props) {
                     computerFunction}>
                 </button> */}
             </div>
-            <div className="MyTasks">
-              {props.progressBarFlag ? (
-                <ProgressBar
-                  setProgressBarFlag={props.setProgressBarFlag}
-                  percent={Math.ceil(props.percentProgressBar)}
-                ></ProgressBar>
-              ) : (
-                <></>
-              )}
-              {/* flagTree   */}
-              {flagTree ? (
-                <>
-                  {props.mySite.name ? (
-                    <>
-                      <div
-                        className={`kavT ${
-                          props.language !== "English" ? "english" : ""
-                        }`}
-                      ></div>
-                      <div
-                        className={`mySiteChois ${
-                          props.language !== "English" ? "english" : ""
-                        }`}
-                      >
-                        {props.tasksOfRoutes && props.tasksOfRoutes.name
-                          ? props.tasksOfRoutes.name
-                          : ""}
-                      </div>
-                    </>
+            <Droppable droppableId="board-droppable">
+              {(provided) => (
+                <div
+                  className="MyTasks"
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {props.progressBarFlag ? (
+                    <ProgressBar
+                      setProgressBarFlag={props.setProgressBarFlag}
+                      percent={Math.ceil(props.percentProgressBar)}
+                    ></ProgressBar>
                   ) : (
                     <></>
                   )}
-                  {board == undefined && board.length == 0 ? (
-                    <div></div>
-                  ) : (
-                    board.map((tag, keyCount) => {
-                      console.log("tag.id: ", tag.id);
-                      return (saveTag = (
-                        <Tag
-                          modalFlagTablet={modalFlagTablet}
-                          title={tag.title}
-                          id={tag.id}
-                          data={tag.data}
-                          // idImg={tag.id}
-                          dataImg={tag.dataImg}
-                          key={keyCount}
-                          flagBoard={true}
-                          myLastStation={props.myStation.name}
-                          myStation={tag.myStation}
-                          myMarginTop={"-68px"}
-                          count={count}
-                          flag={tag.flag}
-                          width={tag.width}
-                          borderLeft={tag.borderLeft}
-                          height={tag.height}
-                          setKavTaskTopMarginTop={tag.setKavTaskTopMarginTop}
-                          bottom={tag.bottom}
-                          kavTopWidth={tag.kavTopWidth}
-                          newkavTaskTop={tag.newkavTaskTop}
-                          nameStation={tag.nameStation}
-                          flagPhone={flagPhone}
-                          flagTree={flagTree}
-                          dragFromCover={"border"}
-                          language={props.language}
-                          openThreeDotsVertical={openThreeDotsVertical}
-                          setOpenThreeDotsVertical={setOpenThreeDotsVertical}
-                          openThreeDotsVerticalBoard={
-                            openThreeDotsVerticalBoard
-                          }
-                          setOpenThreeDotsVerticalBoard={
-                            setOpenThreeDotsVerticalBoard
-                          }
-                          requestForEditing={requestForEditing}
-                          setRequestForEditing={setRequestForEditing}
-                          requestForEditingBoard={requestForEditing}
-                          setRequestForEditingBoard={setRequestForEditingBoard}
-                        />
-                      ));
-                    })
-                  )}
-                  {flagPhoneOne ? (
+                  {/* flagTree   */}
+                  {flagTree ? (
                     <>
-                      <div className="kavB"></div>
-                    </>
-                  ) : (
-                    <>{/* <div className="kavBOne"></div> */}</>
-                  )}
-                </>
-              ) : (
-                <>
-                  {/* flagPhone */}
-                  {flagPhone ? (
-                    <>
-                      <>
-                        <Phone
-                          modalFlagTablet={modalFlagTablet}
-                          flagPhone={flagPhone}
-                          board={board}
-                          saveTag={saveTag}
-                          count={count}
-                          myStation={props.myStation}
-                          flagTree={flagTree}
-                          flagStress={flagStress}
-                          mySite={props.mySite}
-                        />
-                      </>
-
-                      {/* --------------------------------------------------- */}
-
-                      {/* --------------------------------------------------- */}
-                    </>
-                  ) : (
-                    <>
-                      {modalFlagTablet ? (
+                      {props.mySite.name ? (
                         <>
-                          <Tablet
-                            modalFlagTablet={modalFlagTablet}
-                            flagPhone={flagPhone}
-                            board={board}
-                            saveTag={saveTag}
-                            count={count}
-                            myStation={props.myStation}
-                            flagTree={flagTree}
-                            flagStress={flagStress}
-                            mySite={props.mySite}
-                          />
+                          <div
+                            className={`kavT ${
+                              props.language !== "English" ? "english" : ""
+                            }`}
+                          ></div>
+                          <div
+                            className={`mySiteChois ${
+                              props.language !== "English" ? "english" : ""
+                            }`}
+                          >
+                            {props.tasksOfRoutes && props.tasksOfRoutes.name
+                              ? props.tasksOfRoutes.name
+                              : ""}
+                          </div>
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      {board == undefined && board.length == 0 ? (
+                        <div></div>
+                      ) : (
+                        board.map((tag, keyCount) => {
+                          console.log("tag.id: ", tag.id);
+                          return (saveTag = (
+                            <Tag
+                              modalFlagTablet={modalFlagTablet}
+                              title={tag.title}
+                              id={tag.id}
+                              data={tag.data}
+                              // idImg={tag.id}
+                              dataImg={tag.dataImg}
+                              key={keyCount}
+                              flagBoard={true}
+                              myLastStation={props.myStation.name}
+                              myStation={tag.myStation}
+                              myMarginTop={"-68px"}
+                              count={count}
+                              flag={tag.flag}
+                              width={tag.width}
+                              borderLeft={tag.borderLeft}
+                              height={tag.height}
+                              setKavTaskTopMarginTop={
+                                tag.setKavTaskTopMarginTop
+                              }
+                              bottom={tag.bottom}
+                              kavTopWidth={tag.kavTopWidth}
+                              newkavTaskTop={tag.newkavTaskTop}
+                              nameStation={tag.nameStation}
+                              flagPhone={flagPhone}
+                              flagTree={flagTree}
+                              dragFromCover={"border"}
+                              language={props.language}
+                              openThreeDotsVertical={openThreeDotsVertical}
+                              setOpenThreeDotsVertical={
+                                setOpenThreeDotsVertical
+                              }
+                              openThreeDotsVerticalBoard={
+                                openThreeDotsVerticalBoard
+                              }
+                              setOpenThreeDotsVerticalBoard={
+                                setOpenThreeDotsVerticalBoard
+                              }
+                              requestForEditing={requestForEditing}
+                              setRequestForEditing={setRequestForEditing}
+                              requestForEditingBoard={requestForEditing}
+                              setRequestForEditingBoard={
+                                setRequestForEditingBoard
+                              }
+                            />
+                          ));
+                        })
+                      )}
+                      {flagPhoneOne ? (
+                        <>
+                          <div className="kavB"></div>
+                        </>
+                      ) : (
+                        <>{/* <div className="kavBOne"></div> */}</>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      {/* flagPhone */}
+                      {flagPhone ? (
+                        <>
+                          <>
+                            <Phone
+                              modalFlagTablet={modalFlagTablet}
+                              flagPhone={flagPhone}
+                              board={board}
+                              saveTag={saveTag}
+                              count={count}
+                              myStation={props.myStation}
+                              flagTree={flagTree}
+                              flagStress={flagStress}
+                              mySite={props.mySite}
+                            />
+                          </>
+
+                          {/* --------------------------------------------------- */}
+
+                          {/* --------------------------------------------------- */}
                         </>
                       ) : (
                         <>
-                          <ReorderBoard
-                            board={board}
-                            setBoard={setBoard}
-                            language={props.language}
-                          />
+                          {modalFlagTablet ? (
+                            <>
+                              <Tablet
+                                modalFlagTablet={modalFlagTablet}
+                                flagPhone={flagPhone}
+                                board={board}
+                                saveTag={saveTag}
+                                count={count}
+                                myStation={props.myStation}
+                                flagTree={flagTree}
+                                flagStress={flagStress}
+                                mySite={props.mySite}
+                              />
+                            </>
+                          ) : (
+                            <>
+                              <ReorderBoard
+                                board={board}
+                                setBoard={setBoard}
+                                language={props.language}
+                              />
+                            </>
+                          )}
                         </>
                       )}
                     </>
                   )}
-                </>
+                </div>
               )}
-            </div>
+            </Droppable>
           </div>
         </>
         {/* // )} */}
@@ -743,7 +674,8 @@ function DragnDrop(props) {
 
       {modalOpen ? (
         <ModalTasks
-          uuid={openThreeDotsVertical}
+          setTaskForEdit={setTaskForEdit}
+          uuid={taskUuidForEdit}
           requestForEditing={requestForEditing}
           handleClose={handleCloseRemove}
           language={props.language}
@@ -763,14 +695,14 @@ function DragnDrop(props) {
           }
           subtitle={
             openThreeDotsVertical != -1
-              ? props.allTasksOfTheSite.find(
+              ? props.tasksOfChosenStation.find(
                   (task) => task.id === openThreeDotsVertical
                 ).subtitle
               : ""
           }
           stationOfTask={
             openThreeDotsVertical != -1
-              ? props.allTasksOfTheSite.find(
+              ? props.tasksOfChosenStation.find(
                   (task) => task.id === openThreeDotsVertical
                 ).stations
               : ""

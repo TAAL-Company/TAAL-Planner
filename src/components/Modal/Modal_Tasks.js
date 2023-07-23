@@ -6,7 +6,7 @@ import { IoMdCheckbox } from "react-icons/io";
 import Modal_Loading from "./Modal_Loading";
 import { baseUrl } from "../../config";
 import Modal_no_site_selected from "./Modal_no_site_selected";
-import { uploadFile, insertTask, updateTask } from "../../api/api";
+import { uploadImage, uploadFile, insertTask, updateTask } from "../../api/api";
 
 //--------------------------
 let ichour = "אישור";
@@ -26,7 +26,7 @@ function Modal_Tasks(props) {
 
   useEffect(() => {
     console.log("stationOfTask", props.stationOfTask);
-    if (props.requestForEditing === "edit") {
+    if (props.requestForEditing === "edit" && props.stationOfTask) {
       props.stationOfTask.map((station) => {
         setMyPlacesChoice((prev) => [...prev, station.id]);
       });
@@ -65,7 +65,8 @@ function Modal_Tasks(props) {
 
       try {
         if (picture) {
-          imageData = await uploadFile(picture, "Image");
+          console.log("enter site: ", props.mySite.name);
+          imageData = await uploadImage(picture, props.mySite.name);
           console.log(`Image uploaded successfully:`, imageData);
         }
         if (audio) {
@@ -101,7 +102,9 @@ function Modal_Tasks(props) {
         ).color;
 
         update.data.color = color;
-        props.setAllTasksOfTheSite((prev) => [...prev, update.data]);
+
+        props.setTaskForEdit(update.data);
+        // props.setAllTasksOfTheSite((prev) => [...prev, update.data]);
 
         console.log("insertTask: ", update.data);
       }

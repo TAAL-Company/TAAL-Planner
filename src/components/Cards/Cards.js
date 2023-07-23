@@ -125,7 +125,7 @@ const Cards = () => {
   const getData = () => {
     if (flag_show_page === true) setDone(true);
     if (flag_show_page === false)
-      get(`${baseUrl}/wp-json/wp/v2/routes/`, {
+      get(`https://taal.tech/wp-json/wp/v2/routes/`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,

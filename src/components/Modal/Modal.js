@@ -32,6 +32,9 @@ function Modal({
   routeName,
   tasksForNewRoute,
   routeUUID,
+  setNewRoute,
+  requestForEditing,
+  newRoute,
 }) {
   console.log("flagTest:", flagTest);
   const [obj, set_obj] = useState({
@@ -52,7 +55,7 @@ function Modal({
   const [get_Name, setName] = useState(null); // for TextView
 
   const [routeTitle, setRouteTitle] = useState(routeName);
-  const [newRoute, setNewRoute] = useState();
+  // const [newRoute, setNewRoute] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -164,21 +167,31 @@ function Modal({
     };
 
     console.log("routeData", routeData);
-
-    insertRoute(routeData).then((data) => {
-      console.log("data: ", data);
-      setNewRoute(data);
-      setNewTitleForRoute(data);
-      setRouteTitle("");
-      setFlagStudent(false);
-      setOpenModal(false);
-    });
+    if (requestForEditing == "edit" || requestForEditing == "details") {
+      updateRoute(routeUUID, routeData).then((data) => {
+        console.log("data: ", data);
+        setNewRoute(data);
+        // setNewTitleForRoute(data);
+        setRouteTitle("");
+        // setFlagStudent(false);
+        setOpenModal(false);
+      });
+    } else {
+      insertRoute(routeData).then((data) => {
+        console.log("data: ", data);
+        setNewRoute(data);
+        setNewTitleForRoute(data);
+        setRouteTitle("");
+        setFlagStudent(false);
+        setOpenModal(false);
+      });
+    }
   };
 
-  useEffect(() => {
-    console.log("newRoute: ", newRoute);
-    console.log("!! id", JSON.parse(localStorage.getItem("MySite")).id);
-  }, [newRoute]);
+  // useEffect(() => {
+  //   console.log("newRoute: ", newRoute);
+  //   console.log("!! id", JSON.parse(localStorage.getItem("MySite")).id);
+  // }, [newRoute]);
 
   return (
     <>

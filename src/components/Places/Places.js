@@ -393,8 +393,8 @@ const Places = (props) => {
 
             color = stationArray.find((item) => item.id === stationID.id).color;
           } else {
-            stationName = "כללי";
-            color = stationArray.find((item) => item.id === 0).color;
+            // stationName = "כללי";
+            // color = stationArray.find((item) => item.id === 0).color;
           }
 
           // let color = stationArray.find(item => item.id === stationID).color
@@ -574,13 +574,13 @@ const Places = (props) => {
       if (generalStation === undefined) {
         setStationArray((prev) => [
           ...prev,
-          {
-            id: 0,
-            color: pastelColors[stationArray.length],
-            parent: mySite.id,
-            title: "כללי",
-            tasks: tasksWithoutStation,
-          },
+          // {
+          //   id: 0,
+          //   color: pastelColors[stationArray.length],
+          //   parent: mySite.id,
+          //   title: "כללי",
+          //   tasks: tasksWithoutStation,
+          // },
         ]);
       } else {
         generalStation.tasks = tasksWithoutStation;

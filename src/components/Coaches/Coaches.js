@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import "./StudentsCard.css";
+import "./Coaches.css";
 import defualtSiteImg from "../../Pictures/defualtSiteImg.svg";
 import {
-  getingData_Users,
-  deleteUser,
-  patchForUser,
-  post_cognitive_abillities,
   getingData_coaches,
+  deleteCoach,
+  patchForCoach,
+  post_cognitive_abillities,
 } from "../../api/api";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -15,43 +14,34 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { insertUser } from "../../api/api";
+import { insertCoach } from "../../api/api";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Modal_dropdown from "../Modal/Modal_dropdown";
 import cognitiveList from "../Form/cognitive.json";
-import Autocomplete from "@mui/material/Autocomplete";
+const Coaches = () => {
+  const [users, setUsers] = useState([]); // State to store the users
+  const [userForRemove, setUserForRemove] = useState([]); // State to store the user to be removed
+  const [userForUpdate, setUserForUpdate] = useState(-1); // State to store the index of the user to be updated
+  const [open, setOpen] = React.useState(false); // State to manage the open state of the dialog
+  const [openRemove, setOpenRemove] = React.useState(false); // State to manage the open state of the remove dialog
 
-const Cards = () => {
-  const [users, setUsers] = useState([]);
-  const [open, setOpen] = React.useState(false);
-  const [openRemove, setOpenRemove] = React.useState(false);
-  const [coaches, setCoaches] = useState([]);
-  const [coach, setCoach] = useState([]);
+  const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1); // State to manage the open state of the vertical three dots
+  const [requestForEditing, setRequestForEditing] = useState(""); // State to store the request for editing
 
-  const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
-  const [requestForEditing, setRequestForEditing] = useState("");
   useEffect(() => {
     console.log("student openThreeDotsVertical: ", openThreeDotsVertical);
   }, [openThreeDotsVertical]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const coachesData = await getingData_coaches();
-      setCoaches(coachesData);
-    };
-
-    fetchData();
-    // console.log("usersData", usersData);
-  }, []);
-
-  useEffect(() => {
     console.log("student requestForEditing: ", requestForEditing);
 
-    if (requestForEditing == "edit" || requestForEditing == "details") {
+    if (requestForEditing === "edit" || requestForEditing === "details") {
       setOpen(true);
-    } else if (requestForEditing == "duplication") {
+      setUserForUpdate(openThreeDotsVertical);
+    } else if (requestForEditing === "duplication") {
       console.log("openThreeDotsVertical", openThreeDotsVertical);
-    } else if (requestForEditing == "delete") {
+    } else if (requestForEditing === "delete") {
+      setUserForRemove(openThreeDotsVertical);
       console.log("openThreeDotsVertical", openThreeDotsVertical);
       setOpenRemove(true);
     }
@@ -76,15 +66,16 @@ const Cards = () => {
     setOpenThreeDotsVertical(-1);
     setRequestForEditing("");
   };
+
   const handleCloseRemoveConfirm = async () => {
-    console.log("DELETE:", users[openThreeDotsVertical].id);
-    let deletedUser = await deleteUser(users[openThreeDotsVertical].id);
+    console.log("DELETE:", userForRemove);
+    let deletedUser = await deleteCoach(users[userForRemove].id);
 
     console.log("deletedUser:", deletedUser);
     if (deletedUser.status === 200) {
       alert("המחיקה בוצעה בהצלחה!");
       const newUsers = [...users];
-      newUsers.splice(openThreeDotsVertical, 1); // remove one element at index x
+      newUsers.splice(userForRemove, 1); // Remove one element at index x
       setUsers(newUsers);
     }
 
@@ -92,6 +83,7 @@ const Cards = () => {
     setOpenThreeDotsVertical(-1);
     setRequestForEditing("");
   };
+
   const handleJson = () => {
     cognitiveList.map(async (cognitive) => {
       let cognitiveTemp = {
@@ -115,31 +107,23 @@ const Cards = () => {
   const handleConfirm = () => {
     const email = document.getElementById("email").value;
     const fullName = document.getElementById("name").value;
-    const user_name = document.getElementById("userName").value;
-    // const coach = document.getElementById("coach").value;
-
-    // const coachId = document.getElementById("coach").value;
-    const image = document.getElementById("image-input").files[0];
+    const phone = document.getElementById("phone").value;
 
     const user = {
       email: email,
       name: fullName,
-      user_name: user_name,
-      coachId: coach.id,
-      pictureId: image,
+      phone: phone,
     };
 
-    if (openThreeDotsVertical !== -1) {
-      patchForUser(users[openThreeDotsVertical].id, user).then((data) => {
+    if (userForUpdate !== -1) {
+      patchForCoach(users[openThreeDotsVertical].id, user).then((data) => {
         users[openThreeDotsVertical].name = data.data.name;
         users[openThreeDotsVertical].email = data.data.email;
-        users[openThreeDotsVertical].user_name = data.data.user_name;
-        users[openThreeDotsVertical].coach = data.data.coach;
-
+        users[openThreeDotsVertical].phone = data.data.phone;
         console.log("data", data);
       });
     } else {
-      insertUser(user).then((data) => {
+      insertCoach(user).then((data) => {
         setUsers([data, ...users]);
       });
     }
@@ -149,32 +133,27 @@ const Cards = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const usersData = await getingData_Users();
+      const usersData = await getingData_coaches();
       setUsers(usersData);
     };
 
     fetchData();
-    // console.log("usersData", usersData);
   }, []);
+
   const clickOnhreeDotsVerticaIcont = (value) => {
-    if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
+    if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);
   };
+
   return (
     <div style={{ marginTop: "14px", textAlign: "-webkit-center" }}>
-      {/* <Button variant="outlined" onClick={handleJson}>
-        הכנסת יכולות קוגנטיביות
-      </Button> */}
       <Button variant="outlined" onClick={handleClickOpen}>
         הוספת משתמש חדש
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>משתמש חדש</DialogTitle>
         <DialogContent>
-          <DialogContentText>
-            {/* To subscribe to this website, please enter your email address here.
-            We will send updates occasionally. */}
-          </DialogContentText>
+          <DialogContentText></DialogContentText>
           <TextField
             autoFocus
             margin="dense"
@@ -206,49 +185,17 @@ const Cards = () => {
           <TextField
             autoFocus
             margin="dense"
-            id="userName"
-            label="שם משתמש"
-            type="name"
+            id="phone"
+            label="מספר פלאפון"
+            type="phone"
             fullWidth
             variant="standard"
             defaultValue={
               openThreeDotsVertical !== -1
-                ? users[openThreeDotsVertical].user_name
+                ? users[openThreeDotsVertical].phone
                 : ""
             }
           />
-
-          <Autocomplete
-            disablePortal
-            id="coach"
-            options={coaches}
-            sx={{ width: 300 }}
-            getOptionLabel={(option) => option.name || ""}
-            renderInput={(params) => <TextField {...params} label="מדריך" />}
-            onChange={(event, value) => {
-              console.log("value", value);
-              setCoach(value);
-            }}
-            defaultValue={
-              openThreeDotsVertical !== -1 &&
-              coaches.some(
-                (coach) => coach.id === users[openThreeDotsVertical]?.coach?.id
-              )
-                ? users[openThreeDotsVertical]?.coach
-                : null
-            }
-            value={
-              (openThreeDotsVertical !== -1 &&
-                coaches.find(
-                  (coach) =>
-                    coach.id === users[openThreeDotsVertical]?.coach?.id
-                )) ||
-              null
-            }
-            renderOption={(option) => option.name}
-          />
-          <div>תמונה:</div>
-          <input label="שם מלא" accept="image/*" id="image-input" type="file" />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>ביטול</Button>
@@ -269,7 +216,7 @@ const Cards = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseRemove}>cancel</Button>
+          <Button onClick={handleCloseRemove}>ביטול</Button>
           <Button onClick={handleCloseRemoveConfirm} autoFocus>
             מחיקה
           </Button>
@@ -307,16 +254,7 @@ const Cards = () => {
             />
             <div className="users_cards_container" key={user.name}>
               <h5>{user.name}</h5>
-              {/* <p>{user.description}</p> */}
               <p>{user.email}</p>
-              {/* <button
-                className="btn btn-primary"
-                id="dropdown-basic-button"
-
-                // onClick={() => myUsersfunc(value)}
-              >
-                מידע נוסף
-              </button> */}
             </div>
           </div>
         ))}
@@ -325,4 +263,4 @@ const Cards = () => {
   );
 };
 
-export default Cards;
+export default Coaches;

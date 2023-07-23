@@ -12,7 +12,7 @@ const Modal_Help = ({ setModalOpen, idTasks }) => {
   const [, login_token] = useState("");
   const [complete_name, setcomplete_name] = useState("");
   useEffect(() => {
-    const url = `${baseUrl}/wp-json/wp/v2/users/me/`;
+    const url = `https://taal.tech/wp-json/wp/v2/users/me/`;
     fetch(url, {
       method: "GET",
       headers: {

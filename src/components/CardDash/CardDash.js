@@ -33,8 +33,9 @@ const CardDash = (props) => {
       window.location.replace("/subjects");
     } else if (id === 5) {
       window.location.replace("/gallery");
-    }
-    else console.log("fail");
+    } else if (id === 6) {
+      window.location.replace("/coaches");
+    } else console.log("fail");
   };
 
   return (

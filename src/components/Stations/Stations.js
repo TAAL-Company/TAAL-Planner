@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getingDataTasks, deleteStation } from "../../api/api";
 import "./style.css";
-import TasksComp from "../Tasks_comp/Tasks_comp";
 import ModalStations from "../Modal/Modal_Stations";
 import { AiOutlinePlus } from "react-icons/ai";
 import { CgSearch } from "react-icons/cg";
@@ -42,16 +41,20 @@ const Stations = (props) => {
   const [openModalDelete, setOpenModalDelete] = useState(false);
   const [openRemove, setOpenRemove] = React.useState(false);
   const [tasksOfChosenStation, setTasksOfChosenStation] = useState([]);
+  const [stationForDelete, setStationForDelete] = useState("");
+  const [stationForEdit, setStationForEdit] = useState("");
 
   useEffect(() => {
     console.log("stations requestForEditing: ", requestForEditing);
 
     if (requestForEditing == "edit" || requestForEditing == "details") {
+      setStationForEdit(openThreeDotsVertical);
       console.log("openThreeDotsVertical", openThreeDotsVertical);
       setModalOpen(true);
     } else if (requestForEditing == "duplication") {
       console.log("openThreeDotsVertical", openThreeDotsVertical);
     } else if (requestForEditing == "delete") {
+      setStationForDelete(openThreeDotsVertical);
       setOpenRemove(true);
       //Modal_Delete
     }
@@ -63,16 +66,16 @@ const Stations = (props) => {
     setRequestForEditing("");
   };
   const handleCloseRemoveConfirm = async () => {
-    console.log("DELETE:", props.stationArray[openThreeDotsVertical].id);
+    console.log("DELETE:", props.stationArray[stationForDelete].id);
     let deleteStationTemp = await deleteStation(
-      props.stationArray[openThreeDotsVertical].id
+      props.stationArray[stationForDelete].id
     );
 
     console.log("deleteStation:", deleteStationTemp);
     if (deleteStationTemp.status === 200) {
       alert("המחיקה בוצעה בהצלחה!");
       const newStations = [...props.stationArray];
-      newStations.splice(openThreeDotsVertical, 1); // remove one element at index x
+      newStations.splice(stationForDelete, 1); // remove one element at index x
       props.setStationArray(newStations);
     }
 
@@ -147,23 +150,29 @@ const Stations = (props) => {
     console.log("eeeeeeeeeeeeeeeeeee: ", e);
     console.log("eeeeeeeeeeeeeeeeeee myStation.id: ", myStation.id);
 
-    if (myStation.id === e) {
-      setMyStation((myStation.flag = false));
-    } else {
-      setMyStation((myStation.flag = true));
-    }
+    // if (myStation.id === e) {
+    //   setMyStation((myStation.flag = false));
+    // } else {
+    //   setMyStation((myStation.flag = true));
+    // }
     if (e != 0) setMyStation((myStation.data = props.stationArray));
     setMyStation((myStation.name = n));
     setMyStation((myStation.id = e));
+    props.setChosenStation(myStation);
+
     console.log("console myStat myStation:", myStation);
+    console.log("console myStat myStation:", myStation);
+
     if (tasksOfChosenStation.length > 0) {
       setTasksOfChosenStation([]);
+      props.setTasksOfChosenStation([]);
     }
 
     let stationTemp = props.stationArray.find((station) => station.id === e);
 
-    stationTemp.tasks.map((task) => tasksOfChosenStation.push(task));
-
+    // stationTemp.tasks.map((task) => tasksOfChosenStation.push(task));
+    props.setTasksOfChosenStation(stationTemp.tasks);
+    setTasksOfChosenStation(stationTemp.tasks);
     console.log("props.allTasks yyy", tasksOfChosenStation);
     setFilteredData(
       (filteredData = props.stationArray.filter((el) => {
@@ -191,7 +200,7 @@ const Stations = (props) => {
         <>
           {modalOpen && (
             <ModalStations
-              stationIndex={openThreeDotsVertical}
+              stationIndex={stationForEdit}
               setStationArray={props.setStationArray}
               stationArray={props.stationArray}
               setOpenModalPlaces={setModalOpen}
@@ -308,6 +317,9 @@ const Stations = (props) => {
                                             setRequestForEditing={
                                               setRequestForEditing
                                             }
+                                            setOpenThreeDotsVertical={
+                                              setOpenThreeDotsVertical
+                                            }
                                             editable={true}
                                             Reproducible={false}
                                             details={true}
@@ -357,42 +369,44 @@ const Stations = (props) => {
               </button>
             </div>
           </div>
-          <DndProvider backend={HTML5Backend}>
-            <DragnDrop
-              setStationArray={props.setStationArray}
-              percentProgressBar={props.percentProgressBar}
-              setPercentProgressBar={props.setPercentProgressBar}
-              progressBarFlag={props.progressBarFlag}
-              setProgressBarFlag={props.setProgressBarFlag}
-              replaceRouteFlag={props.replaceRouteFlag}
-              replaceSiteFlag={props.replaceSiteFlag}
-              firstStationName={props.firstStationName}
-              boardArrayDND={props.boardArrayDND}
-              tasksOfChosenStation={tasksOfChosenStation}
-              setTasksOfChosenStation={setTasksOfChosenStation}
-              allStations={props.allStations}
-              allTasks={props.allTasks}
-              language={props.language}
-              myTasks={props.myTasks}
-              drag={props.drag}
-              addMyTask={props.addMyTask}
-              titleTaskCss={props.titleTaskCss}
-              mySite={props.mySite}
-              myStation={myStation}
-              flagHebrew={props.flagHebrew}
-              tasksOfRoutes={props.tasksOfRoutes}
-              stationArray={props.stationArray}
-              saveButton={props.saveButton}
-              siteQuestionLanguage={props.siteQuestionLanguage}
-              tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
-              allTasksOfTheSite={props.allTasksOfTheSite}
-              setAllTasksOfTheSite={props.setAllTasksOfTheSite}
-              setMyStation={setMyStation}
-              hebrew={props.hebrew}
-              english={props.english}
-              Hebrew={props.Hebrew}
-            />
-          </DndProvider>
+          {/* <DndProvider backend={HTML5Backend}> */}
+          <DragnDrop
+            dropToBoard={props.dropToBoard}
+            setDropToBoard={props.setDropToBoard}
+            setStationArray={props.setStationArray}
+            percentProgressBar={props.percentProgressBar}
+            setPercentProgressBar={props.setPercentProgressBar}
+            progressBarFlag={props.progressBarFlag}
+            setProgressBarFlag={props.setProgressBarFlag}
+            replaceRouteFlag={props.replaceRouteFlag}
+            replaceSiteFlag={props.replaceSiteFlag}
+            firstStationName={props.firstStationName}
+            boardArrayDND={props.boardArrayDND}
+            tasksOfChosenStation={tasksOfChosenStation}
+            setTasksOfChosenStation={setTasksOfChosenStation}
+            allStations={props.allStations}
+            allTasks={props.allTasks}
+            language={props.language}
+            myTasks={props.myTasks}
+            drag={props.drag}
+            addMyTask={props.addMyTask}
+            titleTaskCss={props.titleTaskCss}
+            mySite={props.mySite}
+            myStation={myStation}
+            flagHebrew={props.flagHebrew}
+            tasksOfRoutes={props.tasksOfRoutes}
+            stationArray={props.stationArray}
+            saveButton={props.saveButton}
+            siteQuestionLanguage={props.siteQuestionLanguage}
+            tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
+            allTasksOfTheSite={props.allTasksOfTheSite}
+            setAllTasksOfTheSite={props.setAllTasksOfTheSite}
+            setMyStation={setMyStation}
+            hebrew={props.hebrew}
+            english={props.english}
+            Hebrew={props.Hebrew}
+          />
+          {/* </DndProvider> */}
         </>
       )}
 

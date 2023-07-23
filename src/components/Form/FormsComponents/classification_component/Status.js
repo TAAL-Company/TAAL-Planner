@@ -3,7 +3,7 @@ import "./Status.css";
 const Status = (props) => {
   const flagColor = props.classification;
 
-  if (flagColor === "red") {
+  if (flagColor === "RED") {
     return (
       <div className="statusForms" style={{ background: "#DD001A" }}>
         <div className="contentForms">
@@ -39,7 +39,7 @@ const Status = (props) => {
         </div>
       </div>
     );
-  } else if (flagColor === "yellow") {
+  } else if (flagColor === "yellow" || flagColor == "YELLOW") {
     return (
       <div className="statusForms" style={{ background: "#F49A40" }}>
         <div className="contentForms">

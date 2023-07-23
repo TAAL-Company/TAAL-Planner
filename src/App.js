@@ -14,34 +14,40 @@ import Cards from "./components/Cards/Cards";
 import { Switch, Route } from "react-router-loading";
 import PlacesCards from "./components/placesCards/placesCards";
 import Forms from "./components/Form/Forms";
+import Coaches from "./components/Coaches/Coaches";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 // import CallState from "./components/CallState/CallState";
 function App() {
   return (
     <>
       <div>
-        <Provider store={store}>
-          <Router>
-            <div>
-              {sessionStorage.logged_in == 1 ? (
-                <>
-                  <Nav />
-                </>
-              ) : null}
-              <Switch>
-                <Route path="/" exact component={Home}></Route>
-                <Route path="/planner" component={Planner}></Route>
-                <Route path="/student" component={Student}></Route>
-                <Route path="/Calculator" component={Calculator}></Route>
-                <Route path="/routes_cards" component={Cards}></Route>
-                <Route path="/Dashboard" component={Dashboard}></Route>
-                <Route path="/Gallery" component={Gallery}></Route>
-                <Route path="/places" component={PlacesCards}></Route>
-                <Route path="/Forms" component={Forms}></Route>
-              </Switch>
-            </div>
-          </Router>
-        </Provider>
+        <DndProvider backend={HTML5Backend}>
+          <Provider store={store}>
+            <Router>
+              <div>
+                {sessionStorage.logged_in == 1 ? (
+                  <>
+                    <Nav />
+                  </>
+                ) : null}
+                <Switch>
+                  <Route path="/" exact component={Home}></Route>
+                  <Route path="/planner" component={Planner}></Route>
+                  <Route path="/student" component={Student}></Route>
+                  <Route path="/Calculator" component={Calculator}></Route>
+                  <Route path="/routes_cards" component={Cards}></Route>
+                  <Route path="/Dashboard" component={Dashboard}></Route>
+                  <Route path="/Gallery" component={Gallery}></Route>
+                  <Route path="/places" component={PlacesCards}></Route>
+                  <Route path="/Forms" component={Forms}></Route>
+                  <Route path="/coaches" component={Coaches}></Route>
+                </Switch>
+              </div>
+            </Router>
+          </Provider>
+        </DndProvider>
       </div>
     </>
   );

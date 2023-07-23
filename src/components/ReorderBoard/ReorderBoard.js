@@ -68,37 +68,37 @@ const ReorderBoard = (props) => {
             {tasks.map((task, index) => {
               return (
                 <Draggable
-                  key={task.id}
-                  draggableId={"" + task.id}
+                  key={index}
+                  draggableId={"" + index}
                   index={index}
-                  style={{ width: "100%" }}
+                  //   style={{ width: "100%" }}
                 >
                   {(provided) => (
                     <div
+                      style={{ width: "100%" }}
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
-                      style={{ width: "100%" }}
                     >
                       <div className="nameStationReorder">
-                        {" "}
                         {task.nameStation}
                       </div>
-                      <>
-                        <div
-                          className="buttons"
-                          style={{
-                            background:
-                              props.language === "English"
-                                ? `linear-gradient(270deg, ${task.color} 7%, #ffffff 1%)`
-                                : `linear-gradient(90deg, ${task.color} 7%, #ffffff 1%)`,
-                            justifyContent: "flex-end",
-                            padding: "22px",
-                          }}
-                        >
-                          <div className="nameOfTask"> {task.title}</div>
-                        </div>
-                      </>
+
+                      <div
+                        className="buttons"
+                        //   style={{ width: "100%" }}
+                        style={{
+                          // width: "100%",
+                          background:
+                            props.language === "English"
+                              ? `linear-gradient(270deg, ${task.color} 7%, #ffffff 1%)`
+                              : `linear-gradient(90deg, ${task.color} 7%, #ffffff 1%)`,
+                          justifyContent: "flex-end",
+                          padding: "22px",
+                        }}
+                      >
+                        <div className="nameOfTask"> {task.title}</div>
+                      </div>
                     </div>
                   )}
                 </Draggable>

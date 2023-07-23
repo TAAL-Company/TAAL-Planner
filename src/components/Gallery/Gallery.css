@@ -1,27 +1,35 @@
 .galleryImg {
-    width: 100% !important;
-    height: auto !important;
-    margin-bottom: 5px;
+  width: 100% !important;
+  height: auto !important;
+  margin-bottom: 5px;
 }
 
 .gallery {
-    line-height: 0;
-    -webkit-column-count: 5;
-    -webkit-column-gap: 5px;
-    column-count: 5;
-    -moz-column-gap: 5px;
-    column-count: 5;
-    column-gap: 5px;
+  line-height: 0;
+  -webkit-column-count: 5;
+  -webkit-column-gap: 5px;
+  column-count: 5;
+  -moz-column-gap: 5px;
+  column-count: 5;
+  column-gap: 5px;
 }
 
 .loadMoreButton {
-    width: 97%;
-    margin: 18px;
-    background-color: #256fa1;
-    border: none;
-    font-weight: bold;
+  width: 97%;
+  margin: 18px;
+  background-color: #256fa1;
+  border: none;
+  font-weight: bold;
 }
 
 .loadMoreButton:hover {
-    box-shadow: 3px 3px 4px #888888;
+  box-shadow: 3px 3px 4px #888888;
+}
+
+.galleryImages {
+  display: grid;
+  justify-items: center;
+  grid-gap: 0;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  /* grid-template-columns: auto auto auto auto; */
 }

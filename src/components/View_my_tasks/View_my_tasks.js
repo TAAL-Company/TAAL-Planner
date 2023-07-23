@@ -14,7 +14,7 @@ function View_my_tasks({ prop }) {
   const [, setDataTask] = useState([]);
   const clickTask = async (e) => {
     setIdTask((IdTask = e.ID));
-    await get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
+    await get(`https://taal.tech/wp-json/wp/v2/tasks/`, {
       params: {
         per_page: 99,
         "Cache-Control": "no-cache",

@@ -1,6 +1,31 @@
 import axios from "axios";
 import { baseUrl } from "../config";
 import { Buffer } from "buffer";
+import { BlobServiceClient } from "@azure/storage-blob";
+import React, { useState } from "react";
+
+const connectionString =
+  "https://taalmedia.blob.core.windows.net/?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-07-13T20:36:30Z&st=2023-07-13T12:36:30Z&spr=https,http&sig=KYpOne6cQ3JiOruEykY0a%2BxiEDcDYAb%2BdV%2F%2BypnOMxs%3D";
+const blobServiceClient = new BlobServiceClient(connectionString);
+
+export const uploadImage = async (selectedFile, folder) => {
+  console.log("enter", selectedFile);
+  console.log("enter folder", folder);
+
+  const containerName = "images/" + folder; // The name of the container in Azure Blob Storage
+  const containerClient = blobServiceClient.getContainerClient(containerName);
+
+  const blobName = selectedFile.name;
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+  const options = { blobHTTPHeaders: { blobContentType: selectedFile.type } };
+
+  await blockBlobClient.uploadData(selectedFile, options);
+  console.log("Image uploaded successfully.");
+
+  const imageUrl = blockBlobClient.url;
+  return imageUrl;
+};
 
 export const get = async (url, header) => {
   try {
@@ -17,6 +42,7 @@ export const post = async (url, body, header) => {
   try {
     const res = await axios.post(url, body, header); //body and header shuld be an object
     if (res) {
+      return res;
       // console.log("succses");
     }
   } catch (e) {
@@ -41,11 +67,35 @@ export const patch = async (url, body, headers) => {
 export const getingData_Users = async () => {
   let all_Users;
 
-  await get("https://prod-web-app0da5905.azurewebsites.net/students").then(
-    (res) => {
-      all_Users = res.data;
-    }
-  );
+  await get(baseUrl + "/students").then((res) => {
+    all_Users = res.data;
+
+    const sortedArray = all_Users.sort(
+      (a, b) =>
+        a.name.localeCompare(b.name, "he", { sensitivity: "base" }) ||
+        a.name.localeCompare(b.name, "en", { sensitivity: "base" })
+    );
+
+    console.log(sortedArray);
+  });
+  console.log("res all_Users: ", all_Users);
+
+  return all_Users;
+};
+export const getingData_coaches = async () => {
+  let all_Users;
+
+  await get(baseUrl + "/coaches").then((res) => {
+    all_Users = res.data;
+
+    const sortedArray = all_Users.sort(
+      (a, b) =>
+        a.name.localeCompare(b.name, "he", { sensitivity: "base" }) ||
+        a.name.localeCompare(b.name, "en", { sensitivity: "base" })
+    );
+
+    console.log(sortedArray);
+  });
   console.log("res all_Users: ", all_Users);
 
   return all_Users;
@@ -53,11 +103,9 @@ export const getingData_Users = async () => {
 export const getingData_Routes = async () => {
   let allRoutes;
 
-  await get("https://prod-web-app0da5905.azurewebsites.net/routes").then(
-    (res) => {
-      allRoutes = res.data;
-    }
-  );
+  await get(`${baseUrl}/routes`).then((res) => {
+    allRoutes = res.data;
+  });
   console.log("res allRoutes: ", allRoutes);
 
   return allRoutes;
@@ -65,7 +113,7 @@ export const getingData_Routes = async () => {
 export const getingDataRoutes = async () => {
   let allRoutes;
 
-  await get(`${baseUrl}/wp-json/wp/v2/routes/`, {
+  await get(`https://taal.tech/wp-json/wp/v2/routes/`, {
     params: {
       per_page: 100,
       "Content-Type": "application/json",
@@ -77,7 +125,7 @@ export const getingDataRoutes = async () => {
     allRoutes = res.data;
     if (max_pages > 1) {
       for (let i = 2; i <= max_pages; i++) {
-        get(`${baseUrl}/wp-json/wp/v2/routes/`, {
+        get(`https://taal.tech/wp-json/wp/v2/routes/`, {
           params: {
             per_page: 100,
             page: i,
@@ -96,7 +144,7 @@ export const getingDataRoutes = async () => {
 export const getingData_Places = async () => {
   let allPlaces;
 
-  await get("https://prod-web-app0da5905.azurewebsites.net/sites", {
+  await get(`${baseUrl}/sites`, {
     params: {
       "Content-Type": "application/json",
       "Cache-Control": "no-cache",
@@ -113,7 +161,7 @@ export const getingData_Places = async () => {
 export const getingDataPlaces = async () => {
   let allPlaces;
 
-  await get(`${baseUrl}/wp-json/wp/v2/places/`, {
+  await get(`https://taal.tech/wp-json/wp/v2/places/`, {
     params: {
       per_page: 100,
       "Content-Type": "application/json",
@@ -125,7 +173,7 @@ export const getingDataPlaces = async () => {
     allPlaces = res.data;
     if (max_pages > 1) {
       for (let i = 2; i <= max_pages; i++) {
-        get(`${baseUrl}/wp-json/wp/v2/places/`, {
+        get(`https://taal.tech/wp-json/wp/v2/places/`, {
           params: {
             per_page: 100,
             page: i,
@@ -149,7 +197,7 @@ export const getingDataUsers = async () => {
 
   let allUsers;
 
-  await get(`${baseUrl}/wp-json/wp/v2/Users/`, {
+  await get(`https://taal.tech/wp-json/wp/v2/Users/`, {
     params: {
       per_page: 100,
       "Content-Type": "application/json",
@@ -162,7 +210,7 @@ export const getingDataUsers = async () => {
     allUsers = res.data;
     if (max_pages > 1) {
       for (let i = 2; i <= max_pages; i++) {
-        get(`${baseUrl}/wp-json/wp/v2/Users/`, {
+        get(`https://taal.tech/wp-json/wp/v2/Users/`, {
           params: {
             per_page: 100,
             page: i,
@@ -188,24 +236,19 @@ export const insertRoute = async (routeData, callback) => {
     // Authorization: "Bearer" + sessionStorage.jwt,
   };
 
-  // const data = {
-  //   ...routeData
-  // };
-
-  return await post(
-    "https://prod-web-app0da5905.azurewebsites.net/routes/",
-    routeData,
-    {
-      headers: headers,
-    }
-  )
+  return await post(`${baseUrl}/routes/`, routeData, {
+    headers: headers,
+  })
     .then(async (response) => {
+      console.log("response route: ", response.data);
+
       return response.data;
     })
     .catch((error) => {
       console.log(error);
     });
 };
+
 export const updateRoute = async (routeUUID, routeData, callback) => {
   const headers = {
     "Content-Type": "application/json",
@@ -217,13 +260,9 @@ export const updateRoute = async (routeUUID, routeData, callback) => {
   //   ...routeData
   // };
 
-  return await patch(
-    "https://prod-web-app0da5905.azurewebsites.net/routes/" + routeUUID,
-    routeData,
-    {
-      headers: headers,
-    }
-  )
+  return await patch(`${baseUrl}/routes/` + routeUUID, routeData, {
+    headers: headers,
+  })
     .then(async (response) => {
       return response.data;
     })
@@ -261,23 +300,47 @@ export const uploadFile = async (file, type) => {
 
 export const insertUser = async (user) => {
   try {
-    const response = await fetch(
-      "https://prod-web-app0da5905.azurewebsites.net/students",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-        },
-        body: JSON.stringify({
-          email: user.email,
-          name: user.name,
-          user_name: user.user_name,
-          coachId: user.coachId ? user.coachId : null,
-          pictureId: user.picture_url ? user.picture_url : null,
-        }),
-      }
-    );
+    const response = await fetch(baseUrl + "/students", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({
+        email: user.email,
+        name: user.name,
+        user_name: user.user_name,
+        coachId: user.coachId ? user.coachId : null,
+        pictureId: user.picture_url ? user.picture_url : null,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error inserting user: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const insertCoach = async (user) => {
+  try {
+    const response = await fetch(baseUrl + "/coaches", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({
+        email: user.email,
+        name: user.name,
+        user_name: user.user_name,
+        phone: user.phone,
+      }),
+    });
 
     if (!response.ok) {
       throw new Error(`Error inserting user: ${response.statusText}`);
@@ -292,21 +355,18 @@ export const insertUser = async (user) => {
 };
 export const insertSite = async (site) => {
   try {
-    const response = await fetch(
-      "https://prod-web-app0da5905.azurewebsites.net/sites",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-        },
-        body: JSON.stringify({
-          name: site.name,
-          description: site.description,
-          // pictureId: site.picture_url ? site.picture_url : null,
-        }),
-      }
-    );
+    const response = await fetch(baseUrl + "/sites", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({
+        name: site.name,
+        description: site.description,
+        // pictureId: site.picture_url ? site.picture_url : null,
+      }),
+    });
 
     if (!response.ok) {
       throw new Error(`Error inserting user: ${response.statusText}`);
@@ -323,68 +383,72 @@ export const postDataCognitiveProfile = async (
   workerId,
   cognitiveProfileValues
 ) => {
-  const url =
-    "https://prod-web-app0da5905.azurewebsites.net/cognitive-profiles/" +
-    workerId;
-  const body = {
+  // const url = baseUrl + "/cognitive-profiles/" + workerId;
+  // const body = {
+  //   value: cognitiveProfileValues,
+  // };
+  // const headers = {
+  //   "Content-Type": "application/json",
+  //   Accept: "*/*",
+  // };
+
+  // try {
+  //   await patch(url, body, headers);
+  // } catch (e) {
+  //   if (e.response && e.response.status === 400) {
+  const postUrl = baseUrl + "/cognitive-profiles";
+  const postData = {
+    studentId: workerId,
     value: cognitiveProfileValues,
   };
-  const headers = {
-    "Content-Type": "application/json",
-    Accept: "*/*",
-  };
-
   try {
-    await patch(url, body, headers);
+    const res = await axios.post(postUrl, postData);
+    console.log("success");
+    return res;
   } catch (e) {
-    if (e.response && e.response.status === 404) {
-      const postUrl =
-        "https://prod-web-app0da5905.azurewebsites.net/cognitive-profiles";
-      const postData = {
-        studentId: workerId,
-        ...body,
-      };
-      try {
-        const res = await axios.post(postUrl, postData, { headers });
-        console.log("success");
-        return res;
-      } catch (e) {
-        console.log(e);
-      }
-    } else {
-      console.log(e);
-    }
+    console.log(e);
   }
+  // } else {
+  //   console.log(e);
+  // }
+  // }
 };
 export const getCognitiveProfile = async (user_id) => {
   let CognitiveProfile;
 
-  await get(
-    "https://prod-web-app0da5905.azurewebsites.net/cognitive-profiles/" +
-      user_id
-  ).then((res) => {
+  await get(baseUrl + "/cognitive-profiles/" + user_id).then((res) => {
     CognitiveProfile = res.data.value;
   });
   console.log("res CognitiveProfile: ", CognitiveProfile);
 
   return CognitiveProfile;
 };
+export const deleteCoach = async (user_id) => {
+  let confirm;
+
+  await fetch(baseUrl + "/coaches/" + user_id, { method: "DELETE" }).then(
+    (res) => {
+      confirm = res;
+    }
+  );
+  console.log("res deletecoaches: ", confirm);
+
+  return confirm;
+};
 export const deleteUser = async (user_id) => {
   let confirm;
 
-  await fetch(
-    "https://prod-web-app0da5905.azurewebsites.net/students/" + user_id,
-    { method: "DELETE" }
-  ).then((res) => {
-    confirm = res;
-  });
+  await fetch(baseUrl + "/students/" + user_id, { method: "DELETE" }).then(
+    (res) => {
+      confirm = res;
+    }
+  );
   console.log("res deleteUser: ", confirm);
 
   return confirm;
 };
 export const patchForUser = async (userId, user) => {
-  const url =
-    "https://prod-web-app0da5905.azurewebsites.net/students/" + userId;
+  const url = baseUrl + "/students/" + userId;
   const body = {
     email: user.email,
     name: user.name,
@@ -399,10 +463,24 @@ export const patchForUser = async (userId, user) => {
 
   return await patch(url, body, headers);
 };
+export const patchForCoach = async (userId, user) => {
+  const url = baseUrl + "/coaches/" + userId;
+  const body = {
+    email: user.email,
+    name: user.name,
+    user_name: user.user_name,
+    phone: user.phone ? user.phone : null,
+  };
+  const headers = {
+    "Content-Type": "application/json",
+    Accept: "*/*",
+  };
+
+  return await patch(url, body, headers);
+};
 
 export const post_cognitive_abillities = async (cognitive) => {
-  const url =
-    "https://prod-web-app0da5905.azurewebsites.net/cognitive-abillities";
+  const url = baseUrl + "/cognitive-abillities";
 
   const headers = {
     "Content-Type": "application/json",
@@ -411,15 +489,36 @@ export const post_cognitive_abillities = async (cognitive) => {
 
   await post(url, cognitive, headers);
 };
+export const delete_cognitive_abillities = async (id) => {
+  const url = baseUrl + "/cognitive-abillities" + id;
+
+  const options = {
+    method: "DELETE",
+    headers: {
+      Accept: "*/*",
+    },
+  };
+
+  try {
+    const response = await fetch(url, options); // add return statement here
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error("There was a problem with the DELETE request:", error);
+  }
+};
 export const deleteRoute = async (route_id) => {
   let confirm;
 
-  await fetch(
-    "https://prod-web-app0da5905.azurewebsites.net/routes/" + route_id,
-    { method: "DELETE" }
-  ).then((res) => {
-    confirm = res;
-  });
+  await fetch(baseUrl + "/routes/" + route_id, { method: "DELETE" }).then(
+    (res) => {
+      confirm = res;
+    }
+  );
   console.log("res deleteUser: ", confirm);
 
   return confirm;
@@ -427,9 +526,7 @@ export const deleteRoute = async (route_id) => {
 export const getCognitiveAbillities = async () => {
   let CognitiveAbillities;
 
-  await get(
-    "https://prod-web-app0da5905.azurewebsites.net/cognitive-abillities"
-  ).then((res) => {
+  await get(baseUrl + "/cognitive-abillities").then((res) => {
     CognitiveAbillities = res.data;
   });
   console.log("res CognitiveAbillities: ", CognitiveAbillities);
@@ -439,10 +536,7 @@ export const getCognitiveAbillities = async () => {
 export const gettaskCognitiveRequirements = async (task_id) => {
   let cognitiveRequirements;
 
-  await get(
-    "https://prod-web-app0da5905.azurewebsites.net/task-cognitive-requirements/" +
-      task_id
-  ).then((res) => {
+  await get(baseUrl + "/task-cognitive-requirements/" + task_id).then((res) => {
     cognitiveRequirements = res.data;
   });
   console.log("res task-cognitive-requirements: ", cognitiveRequirements);
@@ -450,8 +544,7 @@ export const gettaskCognitiveRequirements = async (task_id) => {
   return cognitiveRequirements;
 };
 export function postTaskCognitiveRequirements(data) {
-  const url =
-    "https://prod-web-app0da5905.azurewebsites.net/task-cognitive-requirements/";
+  const url = baseUrl + "/task-cognitive-requirements/";
   const body = JSON.stringify(data);
   const headers = {
     "Content-Type": "application/json",
@@ -498,7 +591,7 @@ export const getingData_Tasks = async () => {
     accept: "application/json",
   };
 
-  await get("https://prod-web-app0da5905.azurewebsites.net/tasks", {
+  await get(baseUrl + "/tasks", {
     headers: headers,
   }).then((res) => {
     allTasks = res.data;
@@ -515,23 +608,20 @@ export const insertTask = async (
   siteIds
 ) => {
   try {
-    const response = await fetch(
-      "https://prod-web-app0da5905.azurewebsites.net/tasks",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-        },
-        body: JSON.stringify({
-          title: get_title,
-          siteIds: [siteIds],
-          stationIds: myPlacesChoice,
-          estimatedTimeSeconds: 0,
-          subtitle: subtitle,
-        }),
-      }
-    );
+    const response = await fetch(baseUrl + "/tasks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({
+        title: get_title,
+        siteIds: [siteIds],
+        stationIds: myPlacesChoice,
+        estimatedTimeSeconds: 0,
+        subtitle: subtitle,
+      }),
+    });
 
     if (!response.ok) {
       throw new Error(`Error inserting task: ${response.statusText}`);
@@ -545,7 +635,7 @@ export const insertTask = async (
   }
 };
 export const updateTask = async (id, newTask) => {
-  const url = "https://prod-web-app0da5905.azurewebsites.net/tasks/" + id;
+  const url = baseUrl + "/tasks/" + id;
   // const body = {
   //   title: get_title,
   //   siteIds: [siteIds],
@@ -563,7 +653,7 @@ export const updateTask = async (id, newTask) => {
 export const getingDataTasks = async () => {
   let allTasks;
 
-  await get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
+  await get(`https://taal.tech/wp-json/wp/v2/tasks/`, {
     params: {
       per_page: 100,
       "Cache-Control": "no-cache",
@@ -574,7 +664,7 @@ export const getingDataTasks = async () => {
     allTasks = res.data;
     if (max_pages > 1) {
       for (let i = 2; i <= max_pages; i++) {
-        get(`${baseUrl}/wp-json/wp/v2/tasks/`, {
+        get(`https://taal.tech/wp-json/wp/v2/tasks/`, {
           params: {
             per_page: 100,
             page: i,
@@ -591,7 +681,7 @@ export const getingDataTasks = async () => {
   return allTasks;
 };
 export const deleteTask = async (taskUUID) => {
-  const url = "https://prod-web-app0da5905.azurewebsites.net/tasks/" + taskUUID;
+  const url = baseUrl + "/tasks/" + taskUUID;
   const options = {
     method: "DELETE",
     headers: {
@@ -624,26 +714,23 @@ export const insertStation = async (
   audioData
 ) => {
   try {
-    const response = await fetch(
-      "https://prod-web-app0da5905.azurewebsites.net/stations",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "application/json",
-          // Authorization: "Bearer" + sessionStorage.jwt,
-        },
-        body: JSON.stringify({
-          title: get_title,
-          parentSiteId: site.id,
-          subtitle: getDescription,
-          // fields: {
-          //   image: imageData,
-          //   audio: audioData.id,
-          // },
-        }),
-      }
-    );
+    const response = await fetch(baseUrl + "/stations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json",
+        // Authorization: "Bearer" + sessionStorage.jwt,
+      },
+      body: JSON.stringify({
+        title: get_title,
+        parentSiteId: site.id,
+        subtitle: getDescription,
+        // fields: {
+        //   image: imageData,
+        //   audio: audioData.id,
+        // },
+      }),
+    });
 
     if (!response.ok) {
       console.log("res: " + JSON.stringify(response));
@@ -661,8 +748,7 @@ export const insertStation = async (
 };
 
 export async function deleteStation(stationUUID) {
-  const url =
-    "https://prod-web-app0da5905.azurewebsites.net/stations/" + stationUUID;
+  const url = baseUrl + "/stations/" + stationUUID;
   const options = {
     method: "DELETE",
     headers: {
@@ -686,7 +772,7 @@ export async function deleteStation(stationUUID) {
 export const getingDataStation = async () => {
   let allStations;
 
-  await get("https://prod-web-app0da5905.azurewebsites.net/stations", {
+  await get(baseUrl + "/stations", {
     params: {
       "Content-Type": "application/json",
       "Cache-Control": "no-cache",
@@ -699,7 +785,7 @@ export const getingDataStation = async () => {
 };
 
 export const updateStation = async (id, title, subtitle, parentSiteId) => {
-  const url = "https://prod-web-app0da5905.azurewebsites.net/stations/" + id;
+  const url = baseUrl + "/stations/" + id;
   const body = {
     title: title,
     subtitle: subtitle,
@@ -711,4 +797,92 @@ export const updateStation = async (id, title, subtitle, parentSiteId) => {
   };
 
   return await patch(url, body, headers);
+};
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  evaluation-events = flags  ~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+export const getingDataFlags = async () => {
+  let allEvaluation;
+
+  await get(baseUrl + "/evaluation-events", {
+    params: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-cache",
+    },
+  }).then((res) => {
+    allEvaluation = res.data;
+  });
+
+  return allEvaluation;
+};
+export const postEvaluationEvents = async (
+  studentId,
+  taskId,
+  flag,
+  alternativeTaskId = null,
+  intervention = "",
+  explanation = ""
+) => {
+  try {
+    const response = await fetch(baseUrl + "/evaluation-events", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({
+        studentId: studentId,
+        taskId: taskId,
+        flag: flag,
+        alternativeTaskId: alternativeTaskId,
+        intervention: intervention,
+        explanation: explanation,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error inserting task: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const postEvaluation = async (studentIds, taskIds) => {
+  try {
+    const response = await fetch(baseUrl + "/evaluation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({
+        taskIds: taskIds,
+        studentIds: studentIds,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error inserting task: ${response.statusText}`);
+    }
+    console.log("response b:", response);
+
+    const data = await response.json();
+    console.log("data b:", data);
+
+    const objectArray = data.map((jsonString) => JSON.parse(jsonString));
+
+    objectArray.map(async (flag) => {
+      await postEvaluationEvents(flag.userId, flag.taskId, flag.evaluation);
+    });
+
+    return objectArray;
+  } catch (error) {
+    throw error;
+  }
 };

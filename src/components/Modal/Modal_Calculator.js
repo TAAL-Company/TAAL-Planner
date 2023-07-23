@@ -30,7 +30,7 @@ function Modal({
     } else {
       setFlagClickOK((flagClickOK = true));
 
-      let url_post = `${baseUrl}/wp-json/wp/v2/routes/`;
+      let url_post = `https://taal.tech/wp-json/wp/v2/routes/`;
       fetch(url_post, {
         method: "POST",
         headers: {

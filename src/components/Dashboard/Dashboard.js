@@ -14,7 +14,7 @@ const Dashboard = () => {
     },
     {
       id: 2,
-      headline: "חניכים",
+      headline: "עובדים",
       addLabel: "הוספת חניך",
       image: pic,
     },
@@ -36,6 +36,12 @@ const Dashboard = () => {
       addLabel: "הוספת תמונה",
       image: pic,
     },
+    {
+      id: 6,
+      headline: "מדריכים",
+      addLabel: "הוספת מדריך",
+      image: pic,
+    },
   ];
 
   return (
@@ -54,6 +60,7 @@ const Dashboard = () => {
           </div>
           <div className="cardsLine">
             <CardDash cards={cards[4]} />
+            <CardDash cards={cards[5]} />
           </div>
         </div>
       </div>

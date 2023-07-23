@@ -7,6 +7,7 @@ import Status from "./FormsComponents/classification_component/Status";
 import StatusLTR from "./FormsComponents/classification_component/StatusLTR";
 import cognitiveList from "./cognitive.json";
 import taskpic from "./FormsComponents/PicturesForms/taskpic.png";
+import CognitiveAbillities from "../CognitiveAbillities";
 import {
   getingData_Users,
   getingData_Tasks,
@@ -15,6 +16,9 @@ import {
   getCognitiveProfile,
   getCognitiveAbillities,
   gettaskCognitiveRequirements,
+  getingDataFlags,
+  postEvaluation,
+  postEvaluationEvents,
 } from "../../api/api";
 import taskpic1 from "./FormsComponents/PicturesForms/taskpic1.jpg";
 import taskpic2 from "./FormsComponents/PicturesForms/taskpic2.jpeg";
@@ -46,6 +50,7 @@ function Forms() {
   const [allUsers, setAllUsers] = useState([]);
   const [allTasks, setAllTasks] = useState([]);
   const [allRoutes, setAllRoutes] = useState([]);
+  const [allFlags, setAllFlags] = useState([]);
 
   // this six variables will be get as props from editor window (editor will take this from DB)
   const [workerNameEN, setWorkerNameEN] = useState("Eyal Engel");
@@ -54,7 +59,7 @@ function Forms() {
 
   const [worker, setWorker] = useState([]);
   const [prevSelectedWorker, setPrevSelected] = useState([]);
-
+  const [routesOfFlags, setRoutesOfFlags] = useState([]);
   const [routeForTasksAbility, setRouteForTasksAbility] = useState([]);
 
   const [workerNameHE, setWorkerNameHE] = useState("אייל אנגל");
@@ -275,24 +280,24 @@ function Forms() {
       setPrevSelected((prevSelectedUsers) => [...prevSelectedUsers, worker]);
 
       cognitiveAbillities.map((cognitive, index) => {
-        let cogValue = 0;
+        let cogValue = 1;
         if (cognitiveProfileValues != undefined)
           cogValue = cognitiveProfileValues[index];
 
-        const valueMap = {
-          5: "A",
-          4: "A",
-          3: "B",
-          2: "C",
-          1: "D",
-          0: "D",
-        };
+        // const valueMap = {
+        //   5: "A",
+        //   4: "A",
+        //   3: "B",
+        //   2: "C",
+        //   1: "D",
+        //   0: "D",
+        // };
 
         // Convert input value to its corresponding numerical value
         let outputValue = 0;
-        if (valueMap.hasOwnProperty(cogValue)) {
-          outputValue = valueMap[cogValue];
-        }
+        // if (valueMap.hasOwnProperty(cogValue)) {
+        //   outputValue = valueMap[cogValue];
+        // }
 
         setRowsCognitiveHE((prev) => [
           ...prev,
@@ -301,7 +306,7 @@ function Forms() {
             fieldHE: cognitive.trait,
             mustField: cognitive.requiredField,
             // subfield: cognitive.subTrait,
-            grade: outputValue,
+            grade: cogValue,
             // fieldEN: "first languege",
             classificationHE: cognitive.category,
             // classificationEN: "languege",
@@ -322,6 +327,7 @@ function Forms() {
 
   const [selectedTable, setSelectedTable] = useState("flags");
   const handleSelectTable = (table) => {
+    console.log("table: ", table);
     setSelectedTable(table);
   };
 
@@ -329,6 +335,90 @@ function Forms() {
     useState("initial");
   const [interventionBorderColor, setinterventionBorderColor] =
     useState("initial");
+
+  //flags functions
+  const handleChangeUserFlags = (event, values) => {
+    console.log("worker", event);
+    console.log("worker", values);
+
+    setWorker(values);
+  };
+
+  const handleChangeRouteFlags = async (event, value) => {
+    console.log("route", allFlags);
+    // {
+    //   "studentId": "string",
+    //   "taskId": "string",
+    //   "flag": {},
+    //   "alternativeTaskId": "string",
+    //   "intervention": "string",
+    //   "explanation": "string"
+
+    // }
+
+    let route = allRoutes.find((route) => route.id === value.id);
+
+    setRoutesOfFlags(route);
+    const studentIds = [worker.id]; //route.students.map((student) => student.id);
+    const taskIds = route.tasks.map((task) => task.taskId);
+
+    // route.students.map(()=>{
+
+    // })
+    console.log("studentIds", studentIds);
+
+    postEvaluation(studentIds, taskIds).then(async (data) => {
+      console.log("data:", data);
+      data.map(async (flag) => {
+        await postEvaluationEvents(worker.id, flag.taskId, flag.evaluation);
+      });
+    });
+    setAllFlags(await getingDataFlags());
+    // let flagsOfRoute = route.tasks.map((taskInRoute) => {
+    //   // let task = allTasks.find((task) => task.id === taskInRoute.taskId);
+
+    //   return allFlags.find(
+    //     (flag) => flag.studentId === worker.id && flag.taskId === taskInRoute.id
+    //   );
+    // });
+
+    // console.log("route", flagsOfRoute);
+
+    // route.tasks.map((task) => {});
+  };
+
+  useEffect(() => {
+    console.log("allFlags: ", allFlags);
+    console.log("route: ", routesOfFlags);
+    if (Object.keys(routesOfFlags).length > 0) {
+      routesOfFlags.tasks.map((task) => {
+        let evaluation = allFlags.find((flag) => flag.taskId === task.taskId);
+        let taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
+
+        console.log("task xx", task);
+        console.log("evaluation xx", evaluation);
+        console.log("taskInfo xx", taskInfo);
+        if (evaluation !== undefined) {
+          setRowsFlagsHE((prev) => [
+            ...prev,
+            {
+              id: task.position,
+              // image: taskpic,
+              classification: evaluation.flag,
+              task: taskInfo.title,
+              intervention: evaluation.intervention,
+              Alternatives: evaluation.alternativeTaskId,
+              explaination: evaluation.explanation,
+              // date: "5/12/2020",
+              // status: "לא פעיל",
+            },
+          ]);
+        }
+      });
+    }
+  }, [allFlags]);
+
+  //end flags functions
 
   const validateExplaination = (value) => {
     if (value.length > 100) {
@@ -859,338 +949,319 @@ function Forms() {
   const [language, setLanguage] = useState("hebrew");
 
   const [rowsFlagsHE, setRowsFlagsHE] = useState([
-    {
-      id: 1,
-      image: taskpic,
-      classification: "red",
-      task: "לבוש סינר",
-      intervention: " ",
-      Alternatives: "הסבר בקול",
-      explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה על כפתור העזרה.",
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-    },
-    {
-      id: 2,
-      image: taskpic1,
-      classification: "yellow",
-      task: "לנעול את חדר המחזור עם המפתח הירוק",
-      intervention: "טקסט מילולי על המפתח",
-      Alternatives: " ",
-      explaination: "טקסט הסבר זה יוצג בהודעת עזרה.",
-
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-    },
-    {
-      id: 3,
-      image: taskpic2,
-      classification: "green",
-      task: "לנקות את הקופסאות ולייבש",
-      intervention: " ",
-      Alternatives: " ",
-      explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה על כפתור העזרה.",
-
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-    },
-    {
-      id: 4,
-      image: taskpic3,
-      classification: "yellow",
-      task: "לפזר גבינה על הפיצה",
-      intervention: "עזרה",
-      Alternatives: " ",
-      explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה על כפתור העזרה.",
-
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-    },
-    {
-      id: 5,
-      image: taskpic4,
-      classification: "green",
-      task: "לנעול את חדר המחזור עם המפתח הירוק",
-      intervention: " ",
-      Alternatives: " ",
-      explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר .",
-
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-    },
-    {
-      id: 6,
-      image: taskpic5,
-      classification: "green",
-      task: "לשים תג שם על הסינר",
-      intervention: " ",
-      Alternatives: " ",
-      explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה.",
-
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-    },
-    {
-      id: 7,
-      image: taskpic6,
-      classification: "red",
-      task: "לשטוף את המלפפונים בכיור",
-      intervention: " ",
-      Alternatives: "הסבר בקול",
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-      explaination: "טקסט הסבר זה יוצג בהודעת עזרה.",
-    },
-    {
-      id: 8,
-      image: taskpic7,
-      classification: "yellow",
-      task: "למיין את הבקבוקים שבשקית הכחולה",
-      intervention: "טקסט מילולי על השקית",
-      Alternatives: " ",
-      explaination: "טקסט הסבר זה יוצג בהודעת עזרה.",
-
-      // date: "5/12/2020",
-      // status: "פעיל",
-    },
-    {
-      id: 9,
-      image: taskpic1,
-      classification: "red",
-      task: "לנעול את חדר המחזור עם המפתח הירוק",
-      intervention: " ",
-      Alternatives: "הסבר בקול",
-      explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה על כפתור העזרה.",
-
-      // date: "5/12/2020",
-      // status: "פעיל",
-    },
-    {
-      id: 10,
-      image: taskpic2,
-      classification: "yellow",
-      task: "לנקות את הקופסאות ולייבש",
-      intervention: "עזרה בההפעלה וכיבוי הברז",
-      Alternatives: " ",
-      explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה על כפתור העזרה.",
-
-      // date: "5/12/2020",
-      // status: "פעיל",
-    },
-    {
-      id: 11,
-      image: taskpic3,
-      classification: "green",
-      task: "לפזר גבינה על הפיצה",
-      intervention: " ",
-      Alternatives: " ",
-      explaination: "טקסט הסבר זה יוצג",
-      // date: "5/12/2020",
-      // status: "פעיל",
-    },
-    {
-      id: 12,
-      image: taskpic4,
-      classification: "red",
-      task: "לנעול את חדר המחזור עם המפתח הירוק",
-      intervention: " ",
-      Alternatives: "הסבר בקול",
-      explaination: "טקסט הסבר זה יוצג.",
-
-      // date: "5/12/2020",
-      // status: "פעיל",
-    },
-    {
-      id: 13,
-      image: taskpic2,
-      classification: "green",
-      task: "לנקות את הקופסאות ולייבש",
-      intervention: " ",
-      Alternatives: " ",
-      explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה על כפתור העזרה.",
-
-      // date: "5/12/2020",
-      // status: "פעיל",
-    },
-    {
-      id: 14,
-      image: taskpic1,
-      classification: "green",
-      task: "לנעול את חדר המחזור עם המפתח הירוק",
-      intervention: " ",
-      Alternatives: " ",
-      explaination: "טקסט הסבר.",
-
-      // date: "5/12/2020",
-      // status: "פעיל",
-    },
+    // {
+    //   id: 1,
+    //   image: taskpic,
+    //   classification: "red",
+    //   task: "לבוש סינר",
+    //   intervention: " ",
+    //   Alternatives: "הסבר בקול",
+    //   explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה על כפתור העזרה.",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    // },
+    // {
+    //   id: 2,
+    //   image: taskpic1,
+    //   classification: "yellow",
+    //   task: "לנעול את חדר המחזור עם המפתח הירוק",
+    //   intervention: "טקסט מילולי על המפתח",
+    //   Alternatives: " ",
+    //   explaination: "טקסט הסבר זה יוצג בהודעת עזרה.",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    // },
+    // {
+    //   id: 3,
+    //   image: taskpic2,
+    //   classification: "green",
+    //   task: "לנקות את הקופסאות ולייבש",
+    //   intervention: " ",
+    //   Alternatives: " ",
+    //   explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה על כפתור העזרה.",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    // },
+    // {
+    //   id: 4,
+    //   image: taskpic3,
+    //   classification: "yellow",
+    //   task: "לפזר גבינה על הפיצה",
+    //   intervention: "עזרה",
+    //   Alternatives: " ",
+    //   explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה על כפתור העזרה.",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    // },
+    // {
+    //   id: 5,
+    //   image: taskpic4,
+    //   classification: "green",
+    //   task: "לנעול את חדר המחזור עם המפתח הירוק",
+    //   intervention: " ",
+    //   Alternatives: " ",
+    //   explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר .",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    // },
+    // {
+    //   id: 6,
+    //   image: taskpic5,
+    //   classification: "green",
+    //   task: "לשים תג שם על הסינר",
+    //   intervention: " ",
+    //   Alternatives: " ",
+    //   explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה.",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    // },
+    // {
+    //   id: 7,
+    //   image: taskpic6,
+    //   classification: "red",
+    //   task: "לשטוף את המלפפונים בכיור",
+    //   intervention: " ",
+    //   Alternatives: "הסבר בקול",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    //   explaination: "טקסט הסבר זה יוצג בהודעת עזרה.",
+    // },
+    // {
+    //   id: 8,
+    //   image: taskpic7,
+    //   classification: "yellow",
+    //   task: "למיין את הבקבוקים שבשקית הכחולה",
+    //   intervention: "טקסט מילולי על השקית",
+    //   Alternatives: " ",
+    //   explaination: "טקסט הסבר זה יוצג בהודעת עזרה.",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    // },
+    // {
+    //   id: 9,
+    //   image: taskpic1,
+    //   classification: "red",
+    //   task: "לנעול את חדר המחזור עם המפתח הירוק",
+    //   intervention: " ",
+    //   Alternatives: "הסבר בקול",
+    //   explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה על כפתור העזרה.",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    // },
+    // {
+    //   id: 10,
+    //   image: taskpic2,
+    //   classification: "yellow",
+    //   task: "לנקות את הקופסאות ולייבש",
+    //   intervention: "עזרה בההפעלה וכיבוי הברז",
+    //   Alternatives: " ",
+    //   explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה על כפתור העזרה.",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    // },
+    // {
+    //   id: 11,
+    //   image: taskpic3,
+    //   classification: "green",
+    //   task: "לפזר גבינה על הפיצה",
+    //   intervention: " ",
+    //   Alternatives: " ",
+    //   explaination: "טקסט הסבר זה יוצג",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    // },
+    // {
+    //   id: 12,
+    //   image: taskpic4,
+    //   classification: "red",
+    //   task: "לנעול את חדר המחזור עם המפתח הירוק",
+    //   intervention: " ",
+    //   Alternatives: "הסבר בקול",
+    //   explaination: "טקסט הסבר זה יוצג.",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    // },
+    // {
+    //   id: 13,
+    //   image: taskpic2,
+    //   classification: "green",
+    //   task: "לנקות את הקופסאות ולייבש",
+    //   intervention: " ",
+    //   Alternatives: " ",
+    //   explaination: "טקסט הסבר זה יוצג בהודעת עזרה לאחר לחיצה על כפתור העזרה.",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    // },
+    // {
+    //   id: 14,
+    //   image: taskpic1,
+    //   classification: "green",
+    //   task: "לנעול את חדר המחזור עם המפתח הירוק",
+    //   intervention: " ",
+    //   Alternatives: " ",
+    //   explaination: "טקסט הסבר.",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    // },
   ]);
 
   const [rowsFlagsEN, setRowsFlagsEN] = useState([
-    {
-      id: 1,
-      image: taskpic,
-      classification: "red",
-      task: "wearing an apron",
-      intervention: " ",
-      Alternatives: "tab",
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-      explaination:
-        "helpful text, this will be showed on help msg after clicking the help button.",
-    },
-    {
-      id: 2,
-      image: taskpic1,
-      classification: "yellow",
-      task: "Lock the cycle room with the green key",
-      Alternatives: " ",
-      explaination: "helpful text, this will be showed on help message.",
-
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-    },
-    {
-      id: 3,
-      image: taskpic2,
-      classification: "green",
-      task: "Clean the boxes and dry",
-      intervention: " ",
-      Alternatives: " ",
-      explaination: "",
-
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-    },
-    {
-      id: 4,
-      image: taskpic3,
-      classification: "yellow",
-      task: "Put cheese on the pizza",
-      intervention: "helping",
-      Alternatives: " ",
-      explaination: "short text",
-
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-    },
-    {
-      id: 5,
-      image: taskpic4,
-      classification: "green",
-      task: "Lock the cycle room with the green key",
-      intervention: " ",
-      Alternatives: " ",
-      explaination: "helpful text, this will be showed on help msg after.",
-
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-    },
-    {
-      id: 6,
-      image: taskpic5,
-      classification: "green",
-      task: "Put a name tag on the apron",
-      intervention: " ",
-      Alternatives: " ",
-      explaination:
-        "helpful text, this will be showed on help msg after clicking.",
-
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-    },
-    {
-      id: 7,
-      image: taskpic6,
-      classification: "red",
-      task: "Wash the cucumbers in the sink",
-      intervention: " ",
-      Alternatives: "tab",
-      // date: "5/12/2020",
-      // status: "לא פעיל",
-      explaination: "helpful text, this will be showed on help.",
-    },
-    {
-      id: 8,
-      image: taskpic7,
-      classification: "yellow",
-      task: "Sort the bottles inside the blue bag",
-      intervention: "helping",
-      Alternatives: " ",
-      explaination: "helpful text, this will be showed on help msg.",
-
-      // date: "5/12/2020",
-      // status: "פעיל",
-    },
-    {
-      id: 9,
-      image: taskpic1,
-      classification: "red",
-      task: "Lock the cycle room with the green key",
-      intervention: " ",
-      Alternatives: "tab",
-      // date: "5/12/2020",
-      // status: "פעיל",
-      explaination: "helpful text",
-    },
-    {
-      id: 10,
-      image: taskpic2,
-      classification: "yellow",
-      task: "Clean the boxes and dry",
-      intervention: "helping",
-      Alternatives: " ",
-      explaination:
-        "helpful text, this will be showed on help msg after clicking the help button.",
-
-      // date: "5/12/2020",
-      // status: "פעיל",
-    },
-    {
-      id: 11,
-      image: taskpic3,
-      classification: "green",
-      task: "Put cheese on the pizza",
-      intervention: " ",
-      Alternatives: " ",
-      explaination: "helpful text, this will.",
-
-      // date: "5/12/2020",
-      // status: "פעיל",
-    },
-    {
-      id: 12,
-      image: taskpic4,
-      classification: "red",
-      task: "Lock the cycle room with the green key",
-      intervention: " ",
-      Alternatives: "tab",
-      // date: "5/12/2020",
-      // status: "פעיל",
-      explaination: "helpful text, this will be showed.",
-    },
-    {
-      id: 13,
-      image: taskpic2,
-      classification: "green",
-      task: "Clean the boxes and dry",
-      intervention: " ",
-      Alternatives: " ",
-      // date: "5/12/2020",
-      // status: "פעיל",
-      explaination: "",
-    },
-    {
-      id: 14,
-      image: taskpic1,
-      classification: "green",
-      task: "Lock the cycle room with the green key",
-      intervention: " ",
-      Alternatives: " ",
-      // date: "5/12/2020",
-      // status: "פעיל",
-      explaination: "helpful text.",
-    },
+    // {
+    //   id: 1,
+    //   image: taskpic,
+    //   classification: "red",
+    //   task: "wearing an apron",
+    //   intervention: " ",
+    //   Alternatives: "tab",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    //   explaination:
+    //     "helpful text, this will be showed on help msg after clicking the help button.",
+    // },
+    // {
+    //   id: 2,
+    //   image: taskpic1,
+    //   classification: "yellow",
+    //   task: "Lock the cycle room with the green key",
+    //   Alternatives: " ",
+    //   explaination: "helpful text, this will be showed on help message.",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    // },
+    // {
+    //   id: 3,
+    //   image: taskpic2,
+    //   classification: "green",
+    //   task: "Clean the boxes and dry",
+    //   intervention: " ",
+    //   Alternatives: " ",
+    //   explaination: "",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    // },
+    // {
+    //   id: 4,
+    //   image: taskpic3,
+    //   classification: "yellow",
+    //   task: "Put cheese on the pizza",
+    //   intervention: "helping",
+    //   Alternatives: " ",
+    //   explaination: "short text",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    // },
+    // {
+    //   id: 5,
+    //   image: taskpic4,
+    //   classification: "green",
+    //   task: "Lock the cycle room with the green key",
+    //   intervention: " ",
+    //   Alternatives: " ",
+    //   explaination: "helpful text, this will be showed on help msg after.",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    // },
+    // {
+    //   id: 6,
+    //   image: taskpic5,
+    //   classification: "green",
+    //   task: "Put a name tag on the apron",
+    //   intervention: " ",
+    //   Alternatives: " ",
+    //   explaination:
+    //     "helpful text, this will be showed on help msg after clicking.",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    // },
+    // {
+    //   id: 7,
+    //   image: taskpic6,
+    //   classification: "red",
+    //   task: "Wash the cucumbers in the sink",
+    //   intervention: " ",
+    //   Alternatives: "tab",
+    //   // date: "5/12/2020",
+    //   // status: "לא פעיל",
+    //   explaination: "helpful text, this will be showed on help.",
+    // },
+    // {
+    //   id: 8,
+    //   image: taskpic7,
+    //   classification: "yellow",
+    //   task: "Sort the bottles inside the blue bag",
+    //   intervention: "helping",
+    //   Alternatives: " ",
+    //   explaination: "helpful text, this will be showed on help msg.",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    // },
+    // {
+    //   id: 9,
+    //   image: taskpic1,
+    //   classification: "red",
+    //   task: "Lock the cycle room with the green key",
+    //   intervention: " ",
+    //   Alternatives: "tab",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    //   explaination: "helpful text",
+    // },
+    // {
+    //   id: 10,
+    //   image: taskpic2,
+    //   classification: "yellow",
+    //   task: "Clean the boxes and dry",
+    //   intervention: "helping",
+    //   Alternatives: " ",
+    //   explaination:
+    //     "helpful text, this will be showed on help msg after clicking the help button.",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    // },
+    // {
+    //   id: 11,
+    //   image: taskpic3,
+    //   classification: "green",
+    //   task: "Put cheese on the pizza",
+    //   intervention: " ",
+    //   Alternatives: " ",
+    //   explaination: "helpful text, this will.",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    // },
+    // {
+    //   id: 12,
+    //   image: taskpic4,
+    //   classification: "red",
+    //   task: "Lock the cycle room with the green key",
+    //   intervention: " ",
+    //   Alternatives: "tab",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    //   explaination: "helpful text, this will be showed.",
+    // },
+    // {
+    //   id: 13,
+    //   image: taskpic2,
+    //   classification: "green",
+    //   task: "Clean the boxes and dry",
+    //   intervention: " ",
+    //   Alternatives: " ",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    //   explaination: "",
+    // },
+    // {
+    //   id: 14,
+    //   image: taskpic1,
+    //   classification: "green",
+    //   task: "Lock the cycle room with the green key",
+    //   intervention: " ",
+    //   Alternatives: " ",
+    //   // date: "5/12/2020",
+    //   // status: "פעיל",
+    //   explaination: "helpful text.",
+    // },
   ]);
 
   // cognitive profile
@@ -1731,6 +1802,12 @@ function Forms() {
                 >
                   דרישות למשימה
                 </button>
+                <button
+                  className="btn_nav_forms"
+                  onClick={() => handleSelectTable("abillities")}
+                >
+                  יכולות קוגנטיביות כלליות
+                </button>
               </nav>
             </div>
             {selectedTable === "flags" && (
@@ -2030,6 +2107,8 @@ function Forms() {
                     // </Draggable>
                   )}
                   <DataTableRTL
+                    handleChangeUserFlags={handleChangeUserFlags}
+                    handleChangeRouteFlags={handleChangeRouteFlags}
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
@@ -2141,6 +2220,14 @@ function Forms() {
                     routeForTasksAbility={routeForTasksAbility}
                     setRouteForTasksAbility={setRouteForTasksAbility}
                   />
+                </div>
+              </div>
+            )}
+            {selectedTable === "abillities" && (
+              <div>
+                <div className="headlineForms">Taskability</div>
+                <div className="tableForms">
+                  <CognitiveAbillities></CognitiveAbillities>
                 </div>
               </div>
             )}
@@ -2596,6 +2683,13 @@ function Forms() {
                     setRouteForTasksAbility={setRouteForTasksAbility}
                   />
                 </div>
+              </div>
+            )}
+
+            {selectedTable === "abillities" && (
+              <div>
+                <div className="headlineForms">Taskability</div>
+                <div className="tableForms">HELLO</div>
               </div>
             )}
           </>

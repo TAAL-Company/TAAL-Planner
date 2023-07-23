@@ -222,8 +222,11 @@ const Cards = () => {
             disablePortal
             id="coach"
             options={coaches}
-            sx={{ width: 300 }}
+            renderOption={(props, option) => (
+              <li {...props}id={option.id}>{option.name}</li>
+            )}
             getOptionLabel={(option) => option.name || ""}
+            sx={{ width: 300 }}
             renderInput={(params) => <TextField {...params} label="מדריך" />}
             onChange={(event, value) => {
               console.log("value", value);
@@ -245,8 +248,8 @@ const Cards = () => {
                 )) ||
               null
             }
-            renderOption={(option) => option.name}
           />
+
           <div>תמונה:</div>
           <input label="שם מלא" accept="image/*" id="image-input" type="file" />
         </DialogContent>

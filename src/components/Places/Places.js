@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import {
   get,
   getingDataRoutes,
@@ -11,34 +11,34 @@ import {
   getingData_Users,
   deleteRoute,
   updateRoute,
-} from "../../api/api";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import "./style.css";
+} from '../../api/api';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import './style.css';
 // import { MdOutlineAdsClick } from "react-icons/md";
 // import { FcAddDatabase, FcSearch } from "react-icons/fc";
-import Stations from "../Stations/Stations";
-import Tasks from "../Tasks/Tasks";
-import ModalPlaces from "../Modal/Model_Places";
+import Stations from '../Stations/Stations';
+import Tasks from '../Tasks/tasks';
+import ModalPlaces from '../Modal/Model_Places';
 // import ModalLoading from '../Modal/Modal_Loading';
-import Modal from "../Modal/Modal";
-import Modal_dropdown from "../Modal/Modal_dropdown";
+import Modal from '../Modal/Modal';
+import Modal_dropdown from '../Modal/Modal_dropdown';
 // import TextField from "@mui/material/TextField";
-import { baseUrl } from "../../config";
-import { AiOutlinePlus } from "react-icons/ai";
+import { baseUrl } from '../../config';
+import { AiOutlinePlus } from 'react-icons/ai';
 // import Dot from "../Dot/Dot";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { CgSearch } from "react-icons/cg";
-import textArea from "../../Pictures/textArea.svg";
-import Modal_route_chosen from "../Modal/Modal_route_chosen";
-import { MdNoStroller } from "react-icons/md";
-import Modal_site_chosen from "../Modal/Modal_site_chosen";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { CgSearch } from 'react-icons/cg';
+import textArea from '../../Pictures/textArea.svg';
+import Modal_route_chosen from '../Modal/Modal_route_chosen';
+import { MdNoStroller } from 'react-icons/md';
+import Modal_site_chosen from '../Modal/Modal_site_chosen';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 // const { baseUrl } = require
 //-----------------------
@@ -51,9 +51,9 @@ let Places_and_their_stations = [];
 let thisIdTask = 0;
 // let filteredData = [];
 // let filteredDataRoutes = [];
-let inputText = "";
-let inputTextRouts = "";
-let mySite = { name: "", id: "" };
+let inputText = '';
+let inputTextRouts = '';
+let mySite = { name: '', id: '' };
 // let flagButtonRoute = false;
 let tasksOfRoutes = [];
 let clickAddRoute = false;
@@ -79,8 +79,8 @@ const Places = (props) => {
   const [myRoutes, setRoutes] = useState([]);
   // const [, setFilteredData] = useState([]);
   const [filteredDataRoutes, setFilteredDataRoutes] = useState([]);
-  const [, setInputText] = useState("");
-  const [, setInputTextRouts] = useState("");
+  const [, setInputText] = useState('');
+  const [, setInputTextRouts] = useState('');
   const [, setMySite] = useState(null);
   // const [get_logged_in, setLogged_in] = useState(false);// for TextView
   const [, setFlagButtonRoute] = useState(false);
@@ -103,7 +103,7 @@ const Places = (props) => {
   const [replaceSiteFlag, setReplaceSiteFlag] = useState(false);
   const [progressBarFlag, setProgressBarFlag] = useState(false);
   const [percentProgressBar, setPercentProgressBar] = useState(5);
-  const [requestForEditing, setRequestForEditing] = useState("");
+  const [requestForEditing, setRequestForEditing] = useState('');
   const [allUsers, setAllUsers] = useState([]);
   const [openRemove, setOpenRemove] = React.useState(false);
   const [newRoute, setNewRoute] = useState([]);
@@ -116,17 +116,17 @@ const Places = (props) => {
   const [tasksLength, setTasksLength] = useState(0);
 
   useEffect(() => {
-    console.log("requestForEditing: ", requestForEditing);
-    console.log("openThreeDotsVertical", openThreeDotsVertical);
+    console.log('requestForEditing: ', requestForEditing);
+    console.log('openThreeDotsVertical', openThreeDotsVertical);
 
-    if (requestForEditing == "edit" || requestForEditing == "details") {
+    if (requestForEditing === 'edit' || requestForEditing === 'details') {
       setModalOpen(true);
       setRouteName(filteredDataRoutes[openThreeDotsVertical].name);
       setRouteUUID(filteredDataRoutes[openThreeDotsVertical].id);
-    } else if (requestForEditing == "duplication") {
-      console.log("duplication openThreeDotsVertical", openThreeDotsVertical);
-    } else if (requestForEditing == "delete") {
-      console.log("delete openThreeDotsVertical", openThreeDotsVertical);
+    } else if (requestForEditing === 'duplication') {
+      console.log('duplication openThreeDotsVertical', openThreeDotsVertical);
+    } else if (requestForEditing === 'delete') {
+      console.log('delete openThreeDotsVertical', openThreeDotsVertical);
 
       setOpenRemove(true);
       setRouteForDelete(openThreeDotsVertical);
@@ -136,15 +136,15 @@ const Places = (props) => {
   const handleCloseRemove = () => {
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
-    setRequestForEditing("");
+    setRequestForEditing('');
   };
   const handleCloseRemoveConfirm = async () => {
-    console.log("DELETE:", filteredDataRoutes[routrForDelete].id);
+    console.log('DELETE:', filteredDataRoutes[routrForDelete].id);
     let deleteRoutes = await deleteRoute(filteredDataRoutes[routrForDelete].id);
 
-    console.log("deleteRoute:", deleteRoutes);
+    console.log('deleteRoute:', deleteRoutes);
     if (deleteRoutes.status === 200) {
-      alert("המחיקה בוצעה בהצלחה!");
+      alert('המחיקה בוצעה בהצלחה!');
       const newRoutes = [...filteredDataRoutes];
       newRoutes.splice(routrForDelete, 1); // remove one element at index x
       setFilteredDataRoutes(newRoutes);
@@ -153,44 +153,44 @@ const Places = (props) => {
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
     setRouteForDelete(-1);
-    setRequestForEditing("");
+    setRequestForEditing('');
   };
   const [pastelColors, setPastelColors] = useState([
-    "#91D3A8", //
-    "#F2B965", //
-    "#F07F85", //
-    "#9EA8EF", //
-    "#DEBCF0", //
-    "#F49AC2", //(pale pink)
-    "#77DD77", //(pastel green)
-    "#FFB347", //(pastel orange)
-    "#B39EB5", //(lavender)
-    "#FF6961", //(salmon)
-    "#CB99C9", //(pastel purple)
-    "#87CEFA", //(light blue)
-    "#FDFD96", //(pastel yellow)
-    "#F5A9A9", //(light coral)
-    "#ADD8E6", //(light cyan)
-    "#D9B611", //(pastel gold)
-    "#A8D8EA", //(light sky blue)
-    "#F4C2C2", //(light salmon)
-    "#93A8A8", //(light gray-green)
-    "#E8E3E3", //(light gray)
+    '#91D3A8', //
+    '#F2B965', //
+    '#F07F85', //
+    '#9EA8EF', //
+    '#DEBCF0', //
+    '#F49AC2', //(pale pink)
+    '#77DD77', //(pastel green)
+    '#FFB347', //(pastel orange)
+    '#B39EB5', //(lavender)
+    '#FF6961', //(salmon)
+    '#CB99C9', //(pastel purple)
+    '#87CEFA', //(light blue)
+    '#FDFD96', //(pastel yellow)
+    '#F5A9A9', //(light coral)
+    '#ADD8E6', //(light cyan)
+    '#D9B611', //(pastel gold)
+    '#A8D8EA', //(light sky blue)
+    '#F4C2C2', //(light salmon)
+    '#93A8A8', //(light gray-green)
+    '#E8E3E3', //(light gray)
 
-    "#F5A9E1", //(light pink)
-    "#F5D0A9", //(light tan)
-    "#F5A9BB", //
-    "#A9F5A9", //(pastel green)
-    "#F5A9F2", //(light lavender pink)
-    "#F5E6CB", //(light yellow)
-    "#F5D7CB", //(light apricot)
-    "#F5CBDC", //(light lavender)
-    "#C9F5CB", //(light green)
-    "#CBF5E6", //(light blue-green)
-    "#CBE6F5", //(light periwinkle)
-    "#CBD7F5", //(light blue)
-    "#C9CBF5", //(light purple)
-    "#E6CBF5", //(light magenta)
+    '#F5A9E1', //(light pink)
+    '#F5D0A9', //(light tan)
+    '#F5A9BB', //
+    '#A9F5A9', //(pastel green)
+    '#F5A9F2', //(light lavender pink)
+    '#F5E6CB', //(light yellow)
+    '#F5D7CB', //(light apricot)
+    '#F5CBDC', //(light lavender)
+    '#C9F5CB', //(light green)
+    '#CBF5E6', //(light blue-green)
+    '#CBE6F5', //(light periwinkle)
+    '#CBD7F5', //(light blue)
+    '#C9CBF5', //(light purple)
+    '#E6CBF5', //(light magenta)
   ]);
 
   let inputHandlerRoutes = (e) => {
@@ -215,20 +215,20 @@ const Places = (props) => {
     };
     fetchData();
 
-    console.log("allRoutes", allRoutes);
+    console.log('allRoutes', allRoutes);
   }, []);
   useEffect(() => {
-    console.log("@@ allTasks", allTasks);
+    console.log('@@ allTasks', allTasks);
   }, [allTasks]);
   useEffect(() => {
     let user;
-    if (allUsers != undefined) {
+    if (allUsers !== undefined) {
       user = allUsers.find(
         (user) =>
           user.name.toLowerCase() === sessionStorage.userName.toLowerCase()
       );
     }
-    console.log("user:", user);
+    console.log('user:', user);
   }, [allUsers]);
   useEffect(() => {
     const fetchData = async () => {
@@ -251,7 +251,7 @@ const Places = (props) => {
       console.error(error.message);
     }
 
-    console.log("res places: ", allPlaces);
+    console.log('res places: ', allPlaces);
 
     // setPlaces(allPlaces); //(places = allPlaces.filter((item) => item.parent === 0))); //parent === 0 means site and not station
 
@@ -259,7 +259,7 @@ const Places = (props) => {
     //   (onlyAllStation = allPlaces.filter((item) => item.parent > 0)) //parent > 0 means station
     // );
 
-    console.log("onlyAllStation: ", onlyAllStation);
+    console.log('onlyAllStation: ', onlyAllStation);
 
     Places_and_their_stations = allPlaces.map((element) => {
       return {
@@ -272,15 +272,15 @@ const Places = (props) => {
   };
 
   useEffect(async () => {
-    console.log("replaceRouteFlag flagRoute", replaceRouteFlag);
+    console.log('replaceRouteFlag flagRoute', replaceRouteFlag);
     if (replaceRouteFlag) {
       setRouteFlags(false);
-      console.log("flagRoute flagRoute", flagRoute);
+      console.log('flagRoute flagRoute', flagRoute);
     }
   }, [replaceRouteFlag]);
 
   useEffect(() => {
-    if (!flagRoute && replaceRouteFlag) {
+    if (!flagRoute || replaceRouteFlag) {
       setReplaceRouteFlag(false);
       setOpenModalRouteChosen(false);
 
@@ -289,21 +289,21 @@ const Places = (props) => {
   }, [flagRoute]);
 
   const DisplayTasks = async (e) => {
-    console.log("flagRoute e ENTER", e);
+    console.log('flagRoute e ENTER', e);
 
     // Check if another route is already selected
     if (!flagRoute) {
       setProgressBarFlag(true);
       setPercentProgressBar(6);
-      console.log("flagRoute e", e);
+      console.log('flagRoute e', e);
 
       setRouteFlags(true);
 
       setTasksOfRoutes((tasksOfRoutes = e));
 
       tasksOfRoutes.name = tasksOfRoutes.name
-        .replace("&#8211;", "-")
-        .replace("&#8217;", "'"); //replace gebrish for - or '
+        .replace('&#8211;', '-')
+        .replace('&#8217;', "'"); //replace gebrish for - or '
       let firstStation;
 
       if (tasksOfRoutes.tasks && tasksOfRoutes.tasks.length > 0) {
@@ -316,13 +316,13 @@ const Places = (props) => {
 
       let firstStationId;
       let stationName;
-      if (firstStation != undefined) {
+      if (firstStation !== undefined) {
         firstStation.stations.map((station) => {
-          console.log("!! station.parentSiteId: ", station.parentSiteId);
-          console.log("!! mySite.id: ", mySite.id);
+          console.log('!! station.parentSiteId: ', station.parentSiteId);
+          console.log('!! mySite.id: ', mySite.id);
 
           if (station.parentSiteId === mySite.id) {
-            console.log("!! station.title: ", station.title);
+            console.log('!! station.title: ', station.title);
             firstStationId = station.id;
 
             stationName = station.title;
@@ -334,9 +334,9 @@ const Places = (props) => {
         //
       }
 
-      console.log("!! firstStationName:", firstStationName);
+      console.log('!! firstStationName:', firstStationName);
 
-      let prevStation = "";
+      let prevStation = '';
 
       let percentTemp = 50 / tasksOfRoutes.tasks.length;
 
@@ -349,28 +349,28 @@ const Places = (props) => {
           let taskTemp = allTasksOfTheSite.find(
             (item) => item.id === element.taskId
           );
-          console.log("taskTemp: yyyyy", taskTemp);
-          console.log("element.ID: yyyyy", element.taskId);
+          console.log('taskTemp: yyyyy', taskTemp);
+          console.log('element.ID: yyyyy', element.taskId);
 
           if (taskTemp == undefined) {
             return {
               id: element.taskId,
               title:
                 element.taskId +
-                " לא משוייך".replace("&#8211;", "-").replace("&#8217;", "' "),
+                ' לא משוייך'.replace('&#8211;', '-').replace('&#8217;', "' "),
               mySite: mySite,
-              myStation: "לא משוייך",
+              myStation: 'לא משוייך',
               data: stationArray,
-              nameStation: "לא משוייך",
-              width: "-13px",
-              borderLeft: "2px solid #c2bfbf",
-              height: "70px",
-              kavTaskTopMarginTop: "-7px",
-              bottom: "-27px",
-              kavTopWidth: "25px",
-              newkavTaskTop: "100px",
-              dataImg: "",
-              color: "black",
+              nameStation: 'לא משוייך',
+              width: '-13px',
+              borderLeft: '2px solid #c2bfbf',
+              height: '70px',
+              kavTaskTopMarginTop: '-7px',
+              bottom: '-27px',
+              kavTopWidth: '25px',
+              newkavTaskTop: '100px',
+              dataImg: '',
+              color: 'black',
             };
           }
 
@@ -381,67 +381,67 @@ const Places = (props) => {
             }
             // isStationOfMySite(item).includes(true)
           );
-          let stationName = "";
+          let stationName = '';
 
-          console.log("stationID: ", stationID);
-          if (stationID != undefined) {
+          console.log('stationID: ', stationID);
+          if (stationID !== undefined) {
             stationName = stationID.title;
             console.log(
-              "!! : ",
+              '!! : ',
               stationArray.find((item) => item.id === stationID.id)
             );
 
             color = stationArray.find((item) => item.id === stationID.id).color;
           } else {
-            stationName = "כללי";
+            stationName = 'כללי';
             color = stationArray.find((item) => item.id === 0).color;
           }
 
           // let color = stationArray.find(item => item.id === stationID).color
-          let width = "-13px";
-          let height = "70px";
-          let nameStation = "14px";
-          let bottom = "-27px";
-          let kavTopWidth = "25px";
-          let newkavTaskTop = "100px";
-          let kavTaskTopMarginTop = "-7px";
-          let borderLeft = "2px solid #c2bfbf";
+          let width = '-13px';
+          let height = '70px';
+          let nameStation = '14px';
+          let bottom = '-27px';
+          let kavTopWidth = '25px';
+          let newkavTaskTop = '100px';
+          let kavTaskTopMarginTop = '-7px';
+          let borderLeft = '2px solid #c2bfbf';
 
-          console.log("stationName dnd new:", stationName);
-          console.log("prevStation dnd new:", prevStation);
+          console.log('stationName dnd new:', stationName);
+          console.log('prevStation dnd new:', prevStation);
 
           if (prevStation === stationName) {
             // sameStation
 
-            console.log("same stationnnn", prevStation);
-            width = "-84px";
-            borderLeft = "2x solid #c2bfbf";
-            height = "86px";
-            bottom = "45px";
-            kavTopWidth = "0px";
-            newkavTaskTop = "100px";
-            nameStation = "";
-            kavTaskTopMarginTop = "-27px";
+            console.log('same stationnnn', prevStation);
+            width = '-84px';
+            borderLeft = '2x solid #c2bfbf';
+            height = '86px';
+            bottom = '45px';
+            kavTopWidth = '0px';
+            newkavTaskTop = '100px';
+            nameStation = '';
+            kavTaskTopMarginTop = '-27px';
           } else {
-            borderLeft = "0x solid #c2bfbf";
-            width = "-13px";
-            height = "70px";
-            bottom = "-27px";
-            kavTopWidth = "25px";
-            newkavTaskTop = "0px";
+            borderLeft = '0x solid #c2bfbf';
+            width = '-13px';
+            height = '70px';
+            bottom = '-27px';
+            kavTopWidth = '25px';
+            newkavTaskTop = '0px';
             nameStation = stationName;
-            kavTaskTopMarginTop = "-7px";
+            kavTaskTopMarginTop = '-7px';
           }
 
           prevStation = stationName;
 
-          console.log("routeClicked nameStation: ", nameStation);
+          console.log('routeClicked nameStation: ', nameStation);
 
           return {
             id: taskTemp.id,
             title: taskTemp.title
-              .replace("&#8211;", "-")
-              .replace("&#8217;", "' "),
+              .replace('&#8211;', '-')
+              .replace('&#8217;', "' "),
             mySite: mySite,
             myStation: stationName,
             data: stationArray,
@@ -470,11 +470,11 @@ const Places = (props) => {
   }, [replaceSiteFlag]);
 
   useEffect(async () => {
-    console.log("replaceSiteFlag ***", replaceSiteFlag);
-    console.log("siteSelected ***", siteSelected);
+    console.log('replaceSiteFlag ***', replaceSiteFlag);
+    console.log('siteSelected ***', siteSelected);
 
     if (!siteSelected && replaceSiteFlag) {
-      console.log("DONE ***");
+      console.log('DONE ***');
       setReplaceSiteFlag(false);
       setOpenModalSiteChosen(false);
 
@@ -485,10 +485,10 @@ const Places = (props) => {
   }, [siteSelected]);
 
   const isStationOfMySite = (stationId) => {
-    console.log("isStationOfMySite yyyyy", stationId);
+    console.log('isStationOfMySite yyyyy', stationId);
     return stationArray.map((item) => {
       if (item.id === stationId) {
-        console.log("true yyyyy", true);
+        console.log('true yyyyy', true);
         return true;
       } else {
         return false;
@@ -506,11 +506,12 @@ const Places = (props) => {
     } else {
       setReplaceSite(event);
       setOpenModalSiteChosen(true);
+      setSiteSelected(false);
     }
   };
 
   const Display_The_Stations = async (selectedValue) => {
-    console.log("Display_The_Stations ***");
+    console.log('Display_The_Stations ***');
 
     // const selectedValue = JSON.parse(event.target.value);
 
@@ -524,18 +525,17 @@ const Places = (props) => {
     setMySite((mySite.id = selectedValue.id));
     let length = 0;
     allTasks.map(async (task) => {
-      if (task.sites.some((site) => site.id === mySite.id)) {
-        console.log("yarden task", task);
+      if (task.sites.find((site) => site.id === mySite.id)) {
+        console.log('yarden task', task);
         length++;
         await setAllTasksOfTheSite((prev) => [...prev, task]);
-
-        setTasksLength(length);
       }
     });
+    setTasksLength(length);
 
-    localStorage.setItem("MySite", JSON.stringify(mySite));
+    localStorage.setItem('MySite', JSON.stringify(mySite));
 
-    console.log("onlyAllStation:", onlyAllStation);
+    console.log('onlyAllStation:', onlyAllStation);
 
     let colorTemp = 0;
 
@@ -549,24 +549,24 @@ const Places = (props) => {
       })
     );
 
-    console.log("setStationArray: ", stationArray);
+    console.log('setStationArray: ', stationArray);
 
     //myRoutes saves only the routes that belong to the site that choosen
-    if (myRoutes.length > 0) myRoutes = [];
+    if (myRoutes.length > 0) setRoutes([]);
     setRoutes(
       allRoutes.filter((route) =>
         route.sites.some((site) => site.id === mySite.id)
       )
     );
-    console.log("routes ", myRoutes);
+    console.log('routes ', myRoutes);
   };
   useEffect(() => {
-    console.log("stationArray dnd: yardeb", stationArray);
+    console.log('stationArray dnd: yardeb', stationArray);
 
     if (allTasksOfTheSite.length > 0) {
-      console.log("allTasksOfTheSite yarden", allTasksOfTheSite);
+      console.log('allTasksOfTheSite yarden', allTasksOfTheSite);
       let tasksWithoutStation = allTasksOfTheSite.filter((task) => {
-        if (task.stations.length == 0) return task;
+        if (task.stations.length === 0) return task;
       });
       const generalStation = stationArray.find(
         (zeroStation) => zeroStation.id === 0
@@ -574,13 +574,13 @@ const Places = (props) => {
       if (generalStation === undefined) {
         setStationArray((prev) => [
           ...prev,
-          {
-            id: 0,
-            color: pastelColors[stationArray.length],
-            parent: mySite.id,
-            title: "כללי",
-            tasks: tasksWithoutStation,
-          },
+          // {
+          //   id: 0,
+          //   color: pastelColors[stationArray.length],
+          //   parent: mySite.id,
+          //   title: 'כללי',
+          //   tasks: tasksWithoutStation,
+          // },
         ]);
       } else {
         generalStation.tasks = tasksWithoutStation;
@@ -588,7 +588,7 @@ const Places = (props) => {
 
       if (tasksLength < allTasksOfTheSite.length) {
         console.log(
-          "tasksLength yardeb",
+          'tasksLength yardeb',
           allTasksOfTheSite[allTasksOfTheSite.length - 1]
         );
         let newTask = allTasksOfTheSite[allTasksOfTheSite.length - 1];
@@ -599,7 +599,7 @@ const Places = (props) => {
               (stationTemp) => stationTemp.id === newTaskStation.id
             );
 
-            console.log("yardeb", station);
+            console.log('yardeb', station);
             station.tasks.push({
               audio_url: newTask.audio_url,
               estimatedTimeSeconds: newTask.estimatedTimeSeconds,
@@ -622,13 +622,13 @@ const Places = (props) => {
 
   useEffect(() => {
     //after adding new routes
-    console.log("newTitleForRoute: ", newTitleForRoute);
+    console.log('newTitleForRoute: ', newTitleForRoute);
 
-    console.log("filteredDataRoutes: ", filteredDataRoutes);
-    console.log("newRoute: ", newRoute);
+    console.log('filteredDataRoutes: ', filteredDataRoutes);
+    console.log('newRoute: ', newRoute);
 
     let route = filteredDataRoutes.find((route) => route.id === newRoute.id);
-    console.log("route ", route);
+    console.log('route ', route);
 
     if (Object.keys(newRoute).length > 0) {
       // filteredDataRoutes.push(newRoute);
@@ -637,19 +637,19 @@ const Places = (props) => {
       } else {
         setFilteredDataRoutes((temp) => [...temp, newRoute]);
         let uuidRoute = newRoute.id;
-        console.log("Setting timeout for route with ID:", uuidRoute);
+        console.log('Setting timeout for route with ID:', uuidRoute);
 
         setTimeout(() => {
-          console.log("Timeout complete for route with ID:", uuidRoute);
+          console.log('Timeout complete for route with ID:', uuidRoute);
           updateRoute(uuidRoute, { siteIds: mySite.id });
         }, 60000);
       }
-      console.log("HHII");
+      console.log('HHII');
       setNewRoute([]);
     }
   }, [newRoute]);
   useEffect(() => {
-    console.log("@@ filteredDataRoutes: ", filteredDataRoutes);
+    console.log('@@ filteredDataRoutes: ', filteredDataRoutes);
   }, [filteredDataRoutes]);
 
   // useEffect(() => {
@@ -669,7 +669,7 @@ const Places = (props) => {
   const searchRoute = () => {
     setFilteredDataRoutes(
       myRoutes.filter((el) => {
-        if (inputTextRouts === "") {
+        if (inputTextRouts === '') {
           return el;
         }
         //return the item which contains the user input
@@ -686,24 +686,24 @@ const Places = (props) => {
 
   function handleDragEnd(result) {
     // Your logic for handling drag and drop result
-    console.log("result: ", result);
+    console.log('result: ', result);
     setDropToBoard(result);
   }
 
   //----------------------------------------------------------------------
   return (
     <>
-      {" "}
+      {' '}
       <div
-        className={`Places ${props.language !== "English" ? "english" : ""}`}
+        className={`Places ${props.language !== 'English' ? 'english' : ''}`}
       >
-        <div className="placesTitle">{props.siteQuestionLanguage}</div>
+        <div className='placesTitle'>{props.siteQuestionLanguage}</div>
         <select
-          className="selectPlace"
-          defaultValue={"DEFAULT"}
+          className='selectPlace'
+          defaultValue={'DEFAULT'}
           onChange={handleSelectChange}
         >
-          <option value="DEFAULT" disabled>
+          <option value='DEFAULT' disabled>
             {props.siteLanguage}
           </option>
 
@@ -718,7 +718,7 @@ const Places = (props) => {
       </div>
       <div
         className={`mainRectangles ${
-          props.language !== "English" ? "english" : ""
+          props.language !== 'English' ? 'english' : ''
         }`}
       >
         {/* routes */}
@@ -738,48 +738,48 @@ const Places = (props) => {
             routeUUID={routeUUID}
           />
         )}
-        <div className="Cover_Places">
+        <div className='Cover_Places'>
           <>
-            <div className="TitlePlacesCover">
-              <div className="TitlePlaces">
+            <div className='TitlePlacesCover'>
+              <div className='TitlePlaces'>
                 <div
                   className={`MyTitle text ${
-                    props.language !== "English" ? "english" : ""
+                    props.language !== 'English' ? 'english' : ''
                   }`}
                 >
-                  {props.language === "English" ? "מסלולים" : "Routes"}
+                  {props.language === 'English' ? 'מסלולים' : 'Routes'}
                 </div>
               </div>
             </div>
           </>
 
           <div
-            className="search"
+            className='search'
             style={{
-              backgroundColor: "#F5F5F5",
+              backgroundColor: '#F5F5F5',
               // borderStyle: "none none solid none",
               // borderColor: "#fff",
               // borderWidth: "5px",
             }}
           >
             <input
-              className="searchButton"
-              dir="rtl"
+              className='searchButton'
+              dir='rtl'
               placeholder={
-                props.language === "English" ? "חפש מסלול" : "search route"
+                props.language === 'English' ? 'חפש מסלול' : 'search route'
               }
               label={
                 <CgSearch
-                  style={{ fontSize: "x-large", textAlign: "-webkit-center" }}
+                  style={{ fontSize: 'x-large', textAlign: '-webkit-center' }}
                 />
               }
               onChange={inputHandlerRoutes}
             ></input>
           </div>
-          <div className="routs">
+          <div className='routs'>
             {filteredDataRoutes.length === 0 ? (
               <div
-                className="textBeforeStation"
+                className='textBeforeStation'
                 style={{ backgroundImage: `url(${textArea})` }}
               >
                 {props.routesBeforeChoosingSite}
@@ -788,22 +788,22 @@ const Places = (props) => {
               filteredDataRoutes.map((value, index) => {
                 return (
                   <div
-                    className="buttons"
+                    className='buttons'
                     style={{
                       border:
                         value.id === tasksOfRoutes.id
-                          ? "1px solid #256fa1"
-                          : "",
+                          ? '1px solid #256fa1'
+                          : '',
                       flexDirection:
-                        props.language === "English" ? "row" : "row-reverse",
+                        props.language === 'English' ? 'row' : 'row-reverse',
                       textAlignLast:
-                        props.language === "English" ? "end" : "left",
+                        props.language === 'English' ? 'end' : 'left',
                     }}
                     key={index}
                   >
-                    <div className="dropdownThreeDots">
+                    <div className='dropdownThreeDots'>
                       <button
-                        className="threeDotsVerticalEng"
+                        className='threeDotsVerticalEng'
                         onClick={() => clickOnhreeDotsVerticaIcont(index)}
                       >
                         <BsThreeDotsVertical />
@@ -826,28 +826,28 @@ const Places = (props) => {
                     </div>
 
                     <button
-                      className="nameOfButton"
+                      className='nameOfButton'
                       onClick={() => DisplayTasks(value)} //הצגת המסלול
                     >
                       {value.name
-                        .replace("&#8211;", "-")
-                        .replace("&#8217;", "'")}
+                        .replace('&#8211;', '-')
+                        .replace('&#8217;', "'")}
                     </button>
                   </div>
                 );
               })
             )}
           </div>
-          <div className="addPlaceCover">
+          <div className='addPlaceCover'>
             <button
-              className="AddButton"
+              className='AddButton'
               onClick={() => {
                 setModalOpen(true);
                 setFlagStudent(true);
                 setClickAddRoute((clickAddRoute = true));
               }}
             >
-              <AiOutlinePlus className="plus" />
+              <AiOutlinePlus className='plus' />
             </button>
           </div>
         </div>
@@ -943,12 +943,12 @@ const Places = (props) => {
       <Dialog
         open={openRemove}
         onClose={handleCloseRemove}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
       >
-        <DialogTitle id="alert-dialog-title">{"מחיקת מסלול"}</DialogTitle>
+        <DialogTitle id='alert-dialog-title'>{'מחיקת מסלול'}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText id='alert-dialog-description'>
             האם אתה בטוח במחיקת המסלול?
           </DialogContentText>
         </DialogContent>

@@ -103,13 +103,13 @@ function DragnDrop(props) {
     console.log("stations requestForEditing: ", requestForEditing);
     console.log("stations openThreeDotsVertical: ", openThreeDotsVertical);
 
-    if (requestForEditing == "edit" || requestForEditing == "details") {
+    if (requestForEditing === "edit" || requestForEditing == "details") {
       console.log("openThreeDotsVertical", openThreeDotsVertical);
       setTaskUuidForEdit(openThreeDotsVertical);
       setModalOpen(true);
-    } else if (requestForEditing == "duplication") {
+    } else if (requestForEditing === "duplication") {
       console.log("openThreeDotsVertical", openThreeDotsVertical);
-    } else if (requestForEditing == "delete") {
+    } else if (requestForEditing === "delete") {
       setOpenRemove(true);
       //Modal_Delete
     }
@@ -150,7 +150,7 @@ function DragnDrop(props) {
     console.log(" props.tasksOfChosenStation:", props.tasksOfChosenStation);
     console.log(" props.tasksOfChosenStation:", props.tasksOfChosenStation);
 
-    if (deleteTaskTemp != undefined) {
+    if (deleteTaskTemp !== undefined) {
       alert("המחיקה בוצעה בהצלחה!");
       const newTasks = [...props.tasksOfChosenStation];
       let indexaTask = props.tasksOfChosenStation.findIndex(
@@ -192,7 +192,7 @@ function DragnDrop(props) {
   }, [props.replaceSiteFlag]);
 
   useEffect(() => {
-    if (props.mySite.name != "") {
+    if (props.mySite.name !== "") {
       setSiteSelected(true);
     }
   }, [props.mySite.name]);

@@ -155,7 +155,7 @@ const Stations = (props) => {
     // } else {
     //   setMyStation((myStation.flag = true));
     // }
-    if (e != 0) setMyStation((myStation.data = props.stationArray));
+    if (e !== 0) setMyStation((myStation.data = props.stationArray));
     setMyStation((myStation.name = n));
     setMyStation((myStation.id = e));
     props.setChosenStation(myStation);

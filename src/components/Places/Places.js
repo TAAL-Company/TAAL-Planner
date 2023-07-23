@@ -23,7 +23,7 @@ import "./style.css";
 // import { MdOutlineAdsClick } from "react-icons/md";
 // import { FcAddDatabase, FcSearch } from "react-icons/fc";
 import Stations from "../Stations/Stations";
-import Tasks from "../Tasks/Tasks";
+import Tasks from "../Tasks/tasks";
 import ModalPlaces from "../Modal/Model_Places";
 // import ModalLoading from '../Modal/Modal_Loading';
 import Modal from "../Modal/Modal";

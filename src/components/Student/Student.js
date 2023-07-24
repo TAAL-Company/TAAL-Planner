@@ -300,7 +300,6 @@ const Cards = () => {
                   setRequestForEditing={setRequestForEditing}
                   setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                   editable={true}
-                  isopen={requestForEditing}
                   Reproducible={true}
                   details={true}
                   erasable={true}

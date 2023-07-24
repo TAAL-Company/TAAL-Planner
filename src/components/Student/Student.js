@@ -30,6 +30,7 @@ const Cards = () => {
 
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState("");
+  
   useEffect(() => {
     console.log("student openThreeDotsVertical: ", openThreeDotsVertical);
   }, [openThreeDotsVertical]);
@@ -128,8 +129,10 @@ const Cards = () => {
       coachId: coach.id,
       pictureId: image,
     };
-
+    console.log("khalid - user - "+user);
+    console.log("khalid - openThreeDotsVertical - "+openThreeDotsVertical);
     if (openThreeDotsVertical !== -1) {
+      console.log("khalid - test - edite");
       patchForUser(users[openThreeDotsVertical].id, user).then((data) => {
         users[openThreeDotsVertical].name = data.data.name;
         users[openThreeDotsVertical].email = data.data.email;
@@ -137,8 +140,10 @@ const Cards = () => {
         users[openThreeDotsVertical].coach = data.data.coach;
 
         console.log("data", data);
+        
       });
     } else {
+      console.log("khalid - test - add");
       insertUser(user).then((data) => {
         setUsers([data, ...users]);
       });
@@ -295,6 +300,7 @@ const Cards = () => {
                   setRequestForEditing={setRequestForEditing}
                   setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                   editable={true}
+                  isopen={requestForEditing}
                   Reproducible={true}
                   details={true}
                   erasable={true}

@@ -529,8 +529,6 @@ const Places = (props) => {
         console.log("yarden task", task);
         length++;
         await setAllTasksOfTheSite((prev) => [...prev, task]);
-
-        //setTasksLength(length);
       }
     });
     setTasksLength(length);

@@ -55,7 +55,7 @@ let inputText = '';
 let inputTextRouts = '';
 let mySite = { name: '', id: '' };
 // let flagButtonRoute = false;
-let tasksOfRoutes = [];
+// let tasksOfRoutes = [];
 let clickAddRoute = false;
 let myCategory = false;
 let flagTest = false;
@@ -84,7 +84,7 @@ const Places = (props) => {
   const [, setMySite] = useState(null);
   // const [get_logged_in, setLogged_in] = useState(false);// for TextView
   const [, setFlagButtonRoute] = useState(false);
-  const [, setTasksOfRoutes] = useState([]);
+  const [tasksOfRoutes, setTasksOfRoutes] = useState([]);
   const [, setFlagTest] = useState(false);
   const [siteSelected, setSiteSelected] = useState(false);
   const [isFirstSelection, setIsFirstSelection] = useState(false);
@@ -271,24 +271,31 @@ const Places = (props) => {
     setDone(true);
   };
 
-  useEffect(async () => {
-    console.log('replaceRouteFlag flagRoute', replaceRouteFlag);
-    if (replaceRouteFlag) {
-      setRouteFlags(false);
-      console.log('flagRoute flagRoute', flagRoute);
-    }
-  }, [replaceRouteFlag]);
+  // useEffect(() => {
+  //   console.log('replaceRouteFlag flagRoute', replaceRouteFlag);
+  //   if (replaceRouteFlag) {
+  //     setRouteFlags(false);
+  //     Display_The_Stations(
+  //       allRoutes.filter((route) =>
+  //         route.sites.some((site) => site.id === mySite.id)
+  //       )
+  //     );
+  //     DisplayTasks(tasksOfRoutes);
+  //     setReplaceRouteFlag(false);
+  //     console.log('flagRoute flagRoute', flagRoute);
+  //   }
+  // }, [replaceRouteFlag]);
 
   useEffect(() => {
-    if (!flagRoute || replaceRouteFlag) {
-      setReplaceRouteFlag(false);
-      setOpenModalRouteChosen(false);
-
+    if (!flagRoute && replaceRouteFlag) {
+      setReplaceRouteFlag(true);
+      setOpenModalRouteChosen(true);
+      setRouteFlags(false);
       DisplayTasks(replaceRoute);
     }
   }, [flagRoute]);
 
-  const DisplayTasks = async (e) => {
+  const DisplayTasks = (e) => {
     console.log('flagRoute e ENTER', e);
 
     // Check if another route is already selected
@@ -299,7 +306,7 @@ const Places = (props) => {
 
       setRouteFlags(true);
 
-      setTasksOfRoutes((tasksOfRoutes = e));
+      setTasksOfRoutes(e);
 
       tasksOfRoutes.name = tasksOfRoutes.name
         .replace('&#8211;', '-')
@@ -463,13 +470,8 @@ const Places = (props) => {
       setOpenModalRouteChosen(true);
     }
   };
-  useEffect(async () => {
-    if (replaceSiteFlag) {
-      setSiteSelected(false);
-    }
-  }, [replaceSiteFlag]);
 
-  useEffect(async () => {
+  useEffect(() => {
     console.log('replaceSiteFlag ***', replaceSiteFlag);
     console.log('siteSelected ***', siteSelected);
 
@@ -477,9 +479,8 @@ const Places = (props) => {
       console.log('DONE ***');
       setReplaceSiteFlag(false);
       setOpenModalSiteChosen(false);
-
-      await handleSelectChange(replaceSite);
-      setTasksOfRoutes((tasksOfRoutes = []));
+      setSiteSelected(false);
+      setTasksOfRoutes([]);
       setRouteFlags(false);
     }
   }, [siteSelected]);
@@ -499,14 +500,12 @@ const Places = (props) => {
   const handleSelectChange = (event) => {
     const selectedValue = JSON.parse(event.target.value);
 
-    if (!siteSelected) {
+    if (!siteSelected || !replaceSiteFlag) {
       setReplaceSite(selectedValue);
       Display_The_Stations(selectedValue);
+      DisplayTasks(selectedValue);
       setSiteSelected(true);
-    } else {
-      setReplaceSite(event);
-      setOpenModalSiteChosen(true);
-      setSiteSelected(false);
+      setReplaceSiteFlag(false);
     }
   };
 
@@ -521,14 +520,14 @@ const Places = (props) => {
     if (stationArray.length > 0) {
       setStationArray([]);
     }
-    setMySite((mySite.name = selectedValue.name));
+    // setMySite((mySite.name = selectedValue.name));
     setMySite((mySite.id = selectedValue.id));
     let length = 0;
-    allTasks.map(async (task) => {
+    allTasks.map((task) => {
       if (task.sites.find((site) => site.id === mySite.id)) {
         console.log('yarden task', task);
         length++;
-        await setAllTasksOfTheSite((prev) => [...prev, task]);
+        setAllTasksOfTheSite(task);
       }
     });
     setTasksLength(length);
@@ -912,8 +911,8 @@ const Places = (props) => {
       {openModalRouteChosen ? (
         <>
           <Modal_route_chosen
-            setReplaceRouteFlag={setReplaceRouteFlag}
-            setOpenModalRouteChosen={setOpenModalRouteChosen}
+            setReplaceRouteFlag
+            setOpenModalRouteChosen
           ></Modal_route_chosen>
         </>
       ) : (
@@ -922,8 +921,8 @@ const Places = (props) => {
       {openModalSiteChosen ? (
         <>
           <Modal_site_chosen
-            setReplaceSiteFlag={setReplaceSiteFlag}
-            setOpenModalSiteChosen={setOpenModalSiteChosen}
+            setReplaceSiteFlag
+            setOpenModalSiteChosen
           ></Modal_site_chosen>
         </>
       ) : (

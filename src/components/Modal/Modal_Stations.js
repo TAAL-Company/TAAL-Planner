@@ -33,9 +33,11 @@ const Modal_Stations = (props) => {
       props.stationIndex != undefined &&
       props.stationIndex > -1
     ) {
-      settitle(props.stationArray[props.stationIndex].title);
-      setDescription(props.stationArray[props.stationIndex].subtitle);
-      setStationUUId(props.stationArray[props.stationIndex].id);
+      console.log("khalid - test "+props.stationIndex);
+      console.log("khalid - test "+props.stationArray[0].title);
+     // settitle(props.stationArray[props.stationIndex].title);
+     // setDescription(props.stationArray[props.stationIndex].subtitle);
+     // setStationUUId(props.stationArray[props.stationIndex].id);
     }
   }, []);
 

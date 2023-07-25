@@ -23,7 +23,7 @@ import "./style.css";
 // import { MdOutlineAdsClick } from "react-icons/md";
 // import { FcAddDatabase, FcSearch } from "react-icons/fc";
 import Stations from "../Stations/Stations";
-import Tasks from "../Tasks/Tasks";
+import Tasks from "../Tasks/tasks";
 import ModalPlaces from "../Modal/Model_Places";
 // import ModalLoading from '../Modal/Modal_Loading';
 import Modal from "../Modal/Modal";
@@ -393,8 +393,8 @@ const Places = (props) => {
 
             color = stationArray.find((item) => item.id === stationID.id).color;
           } else {
-            stationName = "כללי";
-            color = stationArray.find((item) => item.id === 0).color;
+            // stationName = "כללי";
+            // color = stationArray.find((item) => item.id === 0).color;
           }
 
           // let color = stationArray.find(item => item.id === stationID).color
@@ -506,6 +506,7 @@ const Places = (props) => {
     } else {
       setReplaceSite(event);
       setOpenModalSiteChosen(true);
+      setSiteSelected(false);
     }
   };
 
@@ -524,14 +525,13 @@ const Places = (props) => {
     setMySite((mySite.id = selectedValue.id));
     let length = 0;
     allTasks.map(async (task) => {
-      if (task.sites.some((site) => site.id === mySite.id)) {
+      if (task.sites.find((site) => site.id === mySite.id)) {
         console.log("yarden task", task);
         length++;
         await setAllTasksOfTheSite((prev) => [...prev, task]);
-
-        setTasksLength(length);
       }
     });
+    setTasksLength(length);
 
     localStorage.setItem("MySite", JSON.stringify(mySite));
 
@@ -552,7 +552,7 @@ const Places = (props) => {
     console.log("setStationArray: ", stationArray);
 
     //myRoutes saves only the routes that belong to the site that choosen
-    if (myRoutes.length > 0) myRoutes = [];
+    if (myRoutes.length > 0) setRoutes([]);//myRoutes = [];
     setRoutes(
       allRoutes.filter((route) =>
         route.sites.some((site) => site.id === mySite.id)
@@ -574,13 +574,13 @@ const Places = (props) => {
       if (generalStation === undefined) {
         setStationArray((prev) => [
           ...prev,
-          {
-            id: 0,
-            color: pastelColors[stationArray.length],
-            parent: mySite.id,
-            title: "כללי",
-            tasks: tasksWithoutStation,
-          },
+          // {
+          //   id: 0,
+          //   color: pastelColors[stationArray.length],
+          //   parent: mySite.id,
+          //   title: "כללי",
+          //   tasks: tasksWithoutStation,
+          // },
         ]);
       } else {
         generalStation.tasks = tasksWithoutStation;

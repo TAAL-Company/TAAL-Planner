@@ -30,6 +30,7 @@ const Cards = () => {
 
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState("");
+  
   useEffect(() => {
     console.log("student openThreeDotsVertical: ", openThreeDotsVertical);
   }, [openThreeDotsVertical]);
@@ -128,8 +129,10 @@ const Cards = () => {
       coachId: coach.id,
       pictureId: image,
     };
-
+    console.log("khalid - user - "+user);
+    console.log("khalid - openThreeDotsVertical - "+openThreeDotsVertical);
     if (openThreeDotsVertical !== -1) {
+      console.log("khalid - test - edite");
       patchForUser(users[openThreeDotsVertical].id, user).then((data) => {
         users[openThreeDotsVertical].name = data.data.name;
         users[openThreeDotsVertical].email = data.data.email;
@@ -137,8 +140,10 @@ const Cards = () => {
         users[openThreeDotsVertical].coach = data.data.coach;
 
         console.log("data", data);
+        
       });
     } else {
+      console.log("khalid - test - add");
       insertUser(user).then((data) => {
         setUsers([data, ...users]);
       });
@@ -222,8 +227,11 @@ const Cards = () => {
             disablePortal
             id="coach"
             options={coaches}
-            sx={{ width: 300 }}
+            renderOption={(props, option) => (
+              <li {...props}id={option.id}>{option.name}</li>
+            )}
             getOptionLabel={(option) => option.name || ""}
+            sx={{ width: 300 }}
             renderInput={(params) => <TextField {...params} label="מדריך" />}
             onChange={(event, value) => {
               console.log("value", value);
@@ -245,8 +253,8 @@ const Cards = () => {
                 )) ||
               null
             }
-            renderOption={(option) => option.name}
           />
+
           <div>תמונה:</div>
           <input label="שם מלא" accept="image/*" id="image-input" type="file" />
         </DialogContent>

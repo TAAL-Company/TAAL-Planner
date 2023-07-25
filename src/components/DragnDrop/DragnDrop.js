@@ -216,8 +216,8 @@ function DragnDrop(props) {
       countTemp = 50 / props.tasksOfRoutes.tasks.length;
       // props.setProgressBarFlag(true)
       if (props.tasksOfRoutes.tasks) {
-        props.tasksOfRoutes.tasks.forEach(async (element, index) => {
-          await addImageToBoard(element.taskId, 'routes');
+        props.tasksOfRoutes.tasks.forEach((element, index) => {
+          addImageToBoard(element.taskId, 'routes');
           props.setPercentProgressBar(
             (percentProgressBar) => percentProgressBar + countTemp
           );
@@ -231,13 +231,37 @@ function DragnDrop(props) {
     console.log('props.progressBarFlag: ', props.progressBarFlag);
   }, [props.progressBarFlag]);
 
-  dndArray = props.tasksOfChosenStation.map((element) => {
-    // let color = stationArray.find(item => item.id === stationID).color
+  // dndArray = props.tasksOfChosenStation.map((element) => {
+  //   // let color = stationArray.find(item => item.id === stationID).color
 
-    if (count1 === 0) {
-      nameStation = props.myStation.name;
-      count1++;
-    }
+  //   if (count1 === 0) {
+  //     nameStation = props.myStation.name;
+  //     count1++;
+  //   }
+  //   return {
+  //     id: element.id,
+  //     title: element.title.replace('&#8211;', '-').replace('&#8217;', "' "),
+  //     mySite: props.mySite,
+  //     myStation: props.myStation.name,
+  //     data: props.myStation.data,
+  //     nameStation: nameStation,
+  //     width: width,
+  //     borderLeft: borderLeft,
+  //     height: height,
+  //     kavTaskTopMarginTop: kavTaskTopMarginTop,
+  //     bottom: bottom,
+  //     kavTopWidth: kavTopWidth,
+  //     newkavTaskTop: newkavTaskTop,
+  //     // idImg: thisId,
+  //     dataImg: element.picture_url,
+  //     color: element.color,
+  //   };
+  // });
+
+  // Set the nameStation value outside the map function
+  let nameStation = props.myStation.name;
+
+  const mapTask = (element) => {
     return {
       id: element.id,
       title: element.title.replace('&#8211;', '-').replace('&#8217;', "' "),
@@ -251,12 +275,14 @@ function DragnDrop(props) {
       kavTaskTopMarginTop: kavTaskTopMarginTop,
       bottom: bottom,
       kavTopWidth: kavTopWidth,
-      newkavTaskTop: newkavTaskTop,
-      // idImg: thisId,
+      newKavTaskTop: newkavTaskTop,
       dataImg: element.picture_url,
       color: element.color,
     };
-  });
+  };
+
+  const dndArray = props.tasksOfChosenStation.map(mapTask);
+
   console.log('dndArray check:', dndArray);
   //---------------------------------------------------------
   // const [{ isOver }, drop] = useDrop(() => ({
@@ -274,22 +300,10 @@ function DragnDrop(props) {
   // }));
 
   useEffect(() => {
-    if (Object.keys(props.dropToBoard).length > 0) {
-      console.log('result: ', props.dropToBoard);
-      if (
-        props.dropToBoard.destination != undefined &&
-        props.dropToBoard.destination.droppableId === 'board-droppable'
-      )
-        addImageToBoard(props.dropToBoard.draggableId, 'tasks');
-      props.setDropToBoard({});
-    }
-  }, [props.dropToBoard]);
-
-  useEffect(() => {
     console.log('board111: ', board);
   }, [board]);
   //---------------------------------------------------------
-  const addImageToBoard = async (id, boardName) => {
+  const addImageToBoard = (id, boardName) => {
     console.log('id alltasks: ', id);
 
     if (boardName !== 'border') {
@@ -335,14 +349,15 @@ function DragnDrop(props) {
       if (props.boardArrayDND.length > 0) {
         console.log('id boardArrayDND: ', id);
 
-        Route = await props.boardArrayDND.filter((tag) => id === tag.id);
+        Route = props.boardArrayDND.find((tag) => id === tag.id);
 
         console.log('Route boardArrayDND: ', Route);
 
-        await setBoard((board) => [...board, Route[0]]);
+        setBoard((board) => [...board, Route]);
       } else {
-        Route = await dndArray.filter((tag) => id === tag.id);
-        await setBoard((board) => [...board, Route[0]]);
+        setFlagTree(true);
+        Route = dndArray.find((tag) => id === tag.id);
+        setBoard((board) => [...board, Route]);
       }
       console.log('dnd Route: ', Route);
 
@@ -350,7 +365,7 @@ function DragnDrop(props) {
 
       console.log('dnd setBoard: ', board);
       // thisIdArray.push(thisId);
-      myTask = saveProps.tasksOfChosenStation.filter((item) => item.id === id);
+      myTask = saveProps.tasksOfChosenStation.find((item) => item.id === id);
       // console.log("myTAsk:", myTask[0])
       thisIdArray.push(myTask[0]);
 
@@ -361,6 +376,18 @@ function DragnDrop(props) {
       // localStorage.setItem("MySite", JSON.stringify(props.mySite));
     }
   };
+
+  useEffect(() => {
+    if (Object.keys(props.dropToBoard).length > 0) {
+      console.log('result: ', props.dropToBoard);
+      if (
+        props.dropToBoard.destination !== undefined &&
+        props.dropToBoard.destination.droppableId === 'board-droppable'
+      )
+        addImageToBoard(props.dropToBoard.draggableId, 'tasks');
+      // props.setDropToBoard({});
+    }
+  }, [props.dropToBoard]);
 
   const treeFunction = (e) => {
     setFlagPhone((flagPhone = false));
@@ -550,7 +577,7 @@ function DragnDrop(props) {
                       ) : (
                         <></>
                       )}
-                      {board == undefined && board.length == 0 ? (
+                      {board === undefined && board.length === 0 ? (
                         <div></div>
                       ) : (
                         board.map((tag, keyCount) => {

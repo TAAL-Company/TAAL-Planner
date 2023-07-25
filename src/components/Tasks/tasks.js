@@ -143,7 +143,7 @@ const Tasks = (props) => {
 
       {/* המשימות */}
       <div className='TasksCover'>
-        {props.tasksOfChosenStation.length === 0 &&
+        {props.tasksOfChosenStation.length === 0 ||
         props.chosenStation.length === 0 ? (
           <div
             className='textBeforeStation'

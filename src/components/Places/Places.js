@@ -286,14 +286,17 @@ const Places = (props) => {
   //   }
   // }, [replaceRouteFlag]);
 
-  useEffect(() => {
-    if (!flagRoute && replaceRouteFlag) {
-      setReplaceRouteFlag(true);
-      setOpenModalRouteChosen(true);
-      setRouteFlags(false);
-      DisplayTasks(replaceRoute);
-    }
-  }, [flagRoute]);
+  // useEffect(() => {
+  //   if (
+  //     flagRoute === true &&
+  //     replaceRouteFlag === true &&
+  //     openModalSiteChosen === true
+  //   ) {
+  //     setReplaceRouteFlag(false);
+  //     setOpenModalRouteChosen(false);
+  //     setRouteFlags(false);
+  //   }
+  // }, [flagRoute]);
 
   const DisplayTasks = (e) => {
     console.log('flagRoute e ENTER', e);
@@ -359,7 +362,7 @@ const Places = (props) => {
           console.log('taskTemp: yyyyy', taskTemp);
           console.log('element.ID: yyyyy', element.taskId);
 
-          if (taskTemp == undefined) {
+          if (taskTemp === undefined) {
             return {
               id: element.taskId,
               title:
@@ -471,19 +474,24 @@ const Places = (props) => {
     }
   };
 
-  useEffect(() => {
-    console.log('replaceSiteFlag ***', replaceSiteFlag);
-    console.log('siteSelected ***', siteSelected);
+  // useEffect(() => {
+  //   console.log('replaceSiteFlag ***', replaceSiteFlag);
+  //   console.log('siteSelected ***', siteSelected);
 
-    if (!siteSelected && replaceSiteFlag) {
-      console.log('DONE ***');
-      setReplaceSiteFlag(false);
-      setOpenModalSiteChosen(false);
-      setSiteSelected(false);
-      setTasksOfRoutes([]);
-      setRouteFlags(false);
-    }
-  }, [siteSelected]);
+  //   if (
+  //     siteSelected === false &&
+  //     replaceSiteFlag === false &&
+  //     openModalSiteChosen === false
+  //   ) {
+  //     console.log('DONE ***');
+  //     setReplaceSiteFlag(false);
+  //     // setReplaceRoute([]);
+  //     setOpenModalSiteChosen(false);
+  //     setSiteSelected(false);
+  //     // setTasksOfRoutes([]);
+  //     // setRouteFlags(false);
+  //   }
+  // }, [siteSelected]);
 
   const isStationOfMySite = (stationId) => {
     console.log('isStationOfMySite yyyyy', stationId);
@@ -503,9 +511,13 @@ const Places = (props) => {
     if (!siteSelected || !replaceSiteFlag) {
       setReplaceSite(selectedValue);
       Display_The_Stations(selectedValue);
-      DisplayTasks(selectedValue);
       setSiteSelected(true);
+      setRouteFlags(true);
       setReplaceSiteFlag(false);
+      setOpenModalSiteChosen(false);
+      setTasksLength(0);
+      setTasksOfChosenStation([]);
+      setTasksOfRoutes([]);
     }
   };
 
@@ -908,21 +920,21 @@ const Places = (props) => {
           />
         </DragDropContext>
       </div>
-      {openModalRouteChosen ? (
+      {/* {openModalRouteChosen ? (
         <>
           <Modal_route_chosen
-            setReplaceRouteFlag
-            setOpenModalRouteChosen
+            setReplaceRouteFlag={setReplaceRouteFlag}
+            setOpenModalRouteChosen={setOpenModalRouteChosen}
           ></Modal_route_chosen>
         </>
       ) : (
         <></>
-      )}
+      )} */}
       {openModalSiteChosen ? (
         <>
           <Modal_site_chosen
-            setReplaceSiteFlag
-            setOpenModalSiteChosen
+            setReplaceSiteFlag={setReplaceSiteFlag}
+            setOpenModalSiteChosen={setOpenModalSiteChosen}
           ></Modal_site_chosen>
         </>
       ) : (

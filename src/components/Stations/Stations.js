@@ -1,59 +1,58 @@
-import React, { useState, useEffect } from "react";
-import { getingDataTasks, deleteStation } from "../../api/api";
-import "./style.css";
-import ModalStations from "../Modal/Modal_Stations";
-import { AiOutlinePlus } from "react-icons/ai";
-import { CgSearch } from "react-icons/cg";
-import "@fontsource/assistant";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import textArea from "../../Pictures/textArea.svg";
-import Modal_dropdown from "../Modal/Modal_dropdown";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import Modal_Delete from "../Modal/Modal_Delete";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { DndProvider } from "react-dnd";
-import DragnDrop from "../DragnDrop/DragnDrop";
+import React, { useState, useEffect } from 'react';
+import { getingDataTasks, deleteStation } from '../../api/api';
+import './style.css';
+import ModalStations from '../Modal/Modal_Stations';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { CgSearch } from 'react-icons/cg';
+import '@fontsource/assistant';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import textArea from '../../Pictures/textArea.svg';
+import Modal_dropdown from '../Modal/Modal_dropdown';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import Modal_Delete from '../Modal/Modal_Delete';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
+import DragnDrop from '../DragnDrop/DragnDrop';
 
 //-----------------------
 // let allTasks = [];
 let tasks = [];
 let filteredData = [];
-let inputText = "";
+let inputText = '';
 let flagFirstTime = true;
-let myStation = { name: "", id: "", flag: true, data: [] };
-let myCategory = "stationCategory";
+let myStation = { name: '', id: '', flag: true, data: [] };
+let myCategory = 'stationCategory';
 //-----------------------
 const Stations = (props) => {
-  console.log("yyy props.allStations ", props.allStations);
-  console.log("props.stationArray: ", props.stationArray);
+  console.log('yyy props.allStations ', props.allStations);
+  console.log('props.stationArray: ', props.stationArray);
 
   const [, setStateTask] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [, setFilteredData] = useState([]);
-  const [, setInputText] = useState("");
+  const [, setInputText] = useState('');
   const [, setFlagFirstTime] = useState(false);
   const [, setMyStation] = useState(null);
   const [modalIconsOpen, setModalIconsOpen] = useState(false);
   const [myRouteClick, setMyRouteClick] = useState(0);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
-  const [requestForEditing, setRequestForEditing] = useState("");
+  const [requestForEditing, setRequestForEditing] = useState('');
   const [openModalDelete, setOpenModalDelete] = useState(false);
   const [openRemove, setOpenRemove] = React.useState(false);
   const [tasksOfChosenStation, setTasksOfChosenStation] = useState([]);
-  const [stationForDelete, setStationForDelete] = useState("");
-  const [stationForEdit, setStationForEdit] = useState("");
+  const [stationForDelete, setStationForDelete] = useState('');
+  const [stationForEdit, setStationForEdit] = useState('');
 
   useEffect(() => {
-    console.log("stations requestForEditing: ", requestForEditing);
-
-    if (requestForEditing == "edit" || requestForEditing == "details") {
+    console.log('stations requestForEditing: ', requestForEditing);
+    if (requestForEditing === 'edit' || requestForEditing === 'details') {
       setStationForEdit(openThreeDotsVertical);
-      console.log("openThreeDotsVertical", openThreeDotsVertical);
+      console.log('openThreeDotsVertical', openThreeDotsVertical);
       setModalOpen(true);
-    } else if (requestForEditing == "duplication") {
-      console.log("openThreeDotsVertical", openThreeDotsVertical);
-    } else if (requestForEditing == "delete") {
+    } else if (requestForEditing === 'duplication') {
+      console.log('openThreeDotsVertical', openThreeDotsVertical);
+    } else if (requestForEditing === 'delete') {
       setStationForDelete(openThreeDotsVertical);
       setOpenRemove(true);
       //Modal_Delete
@@ -63,17 +62,17 @@ const Stations = (props) => {
   const handleCloseRemove = () => {
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
-    setRequestForEditing("");
+    setRequestForEditing('');
   };
   const handleCloseRemoveConfirm = async () => {
-    console.log("DELETE:", props.stationArray[stationForDelete].id);
+    console.log('DELETE:', props.stationArray[stationForDelete].id);
     let deleteStationTemp = await deleteStation(
       props.stationArray[stationForDelete].id
     );
 
-    console.log("deleteStation:", deleteStationTemp);
+    console.log('deleteStation:', deleteStationTemp);
     if (deleteStationTemp.status === 200) {
-      alert("המחיקה בוצעה בהצלחה!");
+      alert('המחיקה בוצעה בהצלחה!');
       const newStations = [...props.stationArray];
       newStations.splice(stationForDelete, 1); // remove one element at index x
       props.setStationArray(newStations);
@@ -81,11 +80,11 @@ const Stations = (props) => {
 
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
-    setRequestForEditing("");
+    setRequestForEditing('');
   };
 
   useEffect(() => {
-    console.log("props.stationArray", props.stationArray);
+    console.log('props.stationArray', props.stationArray);
     // updateStationArray(props.stationArray);
   }, [props.stationArray]);
 
@@ -101,7 +100,7 @@ const Stations = (props) => {
   }
 
   const clickOnhreeDotsVerticaIcont = (value) => {
-    if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
+    if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);
   };
 
@@ -118,7 +117,7 @@ const Stations = (props) => {
     // console.log("filtered Data 2:", filteredData)
     setFilteredData(
       (filteredData = props.stationArray.filter((el) => {
-        if (inputText === "") {
+        if (inputText === '') {
           return el;
         }
         //return the item which contains the user input
@@ -130,7 +129,7 @@ const Stations = (props) => {
     // console.log("filtered Data 3:", filteredData)
   };
   useEffect(() => {
-    console.log("inputText: ", inputText);
+    console.log('inputText: ', inputText);
   }, [inputText]);
 
   // useEffect(() => {
@@ -147,36 +146,38 @@ const Stations = (props) => {
   // }, []);
 
   const Display_The_Tasks = (e, n) => {
-    console.log("eeeeeeeeeeeeeeeeeee: ", e);
-    console.log("eeeeeeeeeeeeeeeeeee myStation.id: ", myStation.id);
+    console.log('eeeeeeeeeeeeeeeeeee: ', e);
+    console.log('eeeeeeeeeeeeeeeeeee myStation.id: ', myStation.id);
 
     // if (myStation.id === e) {
     //   setMyStation((myStation.flag = false));
     // } else {
     //   setMyStation((myStation.flag = true));
     // }
+    if (tasksOfChosenStation.length === 0 || e === 0) {
+      setTasksOfChosenStation([]);
+      setMyStation((myStation.data = []));
+      setStateTask({ data: [] });
+      props.setTasksOfChosenStation([]);
+    }
+
     if (e !== 0) setMyStation((myStation.data = props.stationArray));
     setMyStation((myStation.name = n));
     setMyStation((myStation.id = e));
     props.setChosenStation(myStation);
 
-    console.log("console myStat myStation:", myStation);
-    console.log("console myStat myStation:", myStation);
-
-    if (tasksOfChosenStation.length > 0) {
-      setTasksOfChosenStation([]);
-      props.setTasksOfChosenStation([]);
-    }
+    console.log('console myStat myStation:', myStation);
+    console.log('console myStat myStation:', myStation);
 
     let stationTemp = props.stationArray.find((station) => station.id === e);
 
     // stationTemp.tasks.map((task) => tasksOfChosenStation.push(task));
     props.setTasksOfChosenStation(stationTemp.tasks);
     setTasksOfChosenStation(stationTemp.tasks);
-    console.log("props.allTasks yyy", tasksOfChosenStation);
+    console.log('props.allTasks yyy', tasksOfChosenStation);
     setFilteredData(
       (filteredData = props.stationArray.filter((el) => {
-        if (inputText === "") {
+        if (inputText === '') {
           return el;
         }
         //return the item which contains the user input
@@ -190,8 +191,9 @@ const Stations = (props) => {
   };
 
   useEffect(() => {
-    console.log("onlyAllStation stations: ", props.onlyAllStation);
+    console.log('onlyAllStation stations: ', props.onlyAllStation);
   }, [props.onlyAllStation]);
+
   //----------------------------------------------------------
   return (
     <>
@@ -214,54 +216,54 @@ const Stations = (props) => {
             />
           )}
 
-          <div className="Cover_Stations">
+          <div className='Cover_Stations'>
             <>
-              <div className="TitleStation">
+              <div className='TitleStation'>
                 <div
                   className={`MyTitle text ${
-                    props.language !== "English" ? "english" : ""
+                    props.language !== 'English' ? 'english' : ''
                   }`}
                 >
-                  {" "}
+                  {' '}
                   {props.stationsName}
                 </div>
               </div>
             </>
 
             <div
-              className="search"
+              className='search'
               style={{
-                backgroundColor: "#F5F5F5",
+                backgroundColor: '#F5F5F5',
                 // borderStyle: "none none solid none",
                 // borderColor: "#fff",
                 // borderWidth: "5px",
-                padding: "13px 0px 13px 0px",
+                padding: '13px 0px 13px 0px',
               }}
             >
               <input
-                className="searchButton"
-                dir="rtl"
+                className='searchButton'
+                dir='rtl'
                 placeholder={
-                  props.language === "English" ? "חפש תחנה" : "search station"
+                  props.language === 'English' ? 'חפש תחנה' : 'search station'
                 }
-                label={<CgSearch style={{ fontSize: "x-large" }} />}
+                label={<CgSearch style={{ fontSize: 'x-large' }} />}
                 onChange={inputHandler}
               ></input>
             </div>
-            <div className="Stations">
+            <div className='Stations'>
               {props.stationArray.length > 0 ? ( //DND
                 <>
                   <DragDropContext onDragEnd={handleOnDragEnd}>
-                    <Droppable droppableId="stationArray">
+                    <Droppable droppableId='stationArray'>
                       {(provided) => (
                         <ul
-                          className="stationArray"
+                          className='stationArray'
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                         >
                           {filteredData.map(({ id, title, color }, index) => {
-                            let ID = "" + id;
-                            console.log("id: ", typeof ID);
+                            let ID = '' + id;
+                            console.log('id: ', typeof ID);
 
                             return (
                               <Draggable
@@ -271,36 +273,36 @@ const Stations = (props) => {
                               >
                                 {(provided) => (
                                   <div
-                                    className="draggableItems"
+                                    className='draggableItems'
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
                                   >
                                     <div
-                                      className="buttons"
+                                      className='buttons'
                                       style={{
                                         border:
                                           id === myStation.id
-                                            ? "1px solid #cc0127"
-                                            : "",
+                                            ? '1px solid #cc0127'
+                                            : '',
                                         background:
-                                          props.language === "English"
+                                          props.language === 'English'
                                             ? `linear-gradient(270deg, ${color} 7%, #ffffff 1%)`
                                             : `linear-gradient(90deg, ${color} 7%, #ffffff 1%)`,
                                         flexDirection:
-                                          props.language === "English"
-                                            ? "row"
-                                            : "row-reverse",
+                                          props.language === 'English'
+                                            ? 'row'
+                                            : 'row-reverse',
                                         textAlignLast:
-                                          props.language === "English"
-                                            ? "end"
-                                            : "left",
+                                          props.language === 'English'
+                                            ? 'end'
+                                            : 'left',
                                       }}
                                       key={index}
                                     >
-                                      <div className="dropdownThreeDots">
+                                      <div className='dropdownThreeDots'>
                                         <button
-                                          className="threeDotsVerticalEng"
+                                          className='threeDotsVerticalEng'
                                           onClick={() =>
                                             clickOnhreeDotsVerticaIcont(index)
                                           }
@@ -330,7 +332,7 @@ const Stations = (props) => {
                                         )}
                                       </div>
                                       <button
-                                        className="nameOfButton"
+                                        className='nameOfButton'
                                         onClick={() =>
                                           Display_The_Tasks(id, title)
                                         }
@@ -351,21 +353,21 @@ const Stations = (props) => {
                 </>
               ) : (
                 <div
-                  className="textBeforeStation"
+                  className='textBeforeStation'
                   style={{ backgroundImage: `url(${textArea})` }}
                 >
                   {props.stationsBeforeChoosingSite}
                 </div>
               )}
             </div>
-            <div className="addStationCover">
+            <div className='addStationCover'>
               <button
-                className="AddButton"
+                className='AddButton'
                 onClick={() => {
                   setModalOpen(true);
                 }}
               >
-                <AiOutlinePlus className="plus" />
+                <AiOutlinePlus className='plus' />
               </button>
             </div>
           </div>
@@ -413,8 +415,8 @@ const Stations = (props) => {
       <Modal_Delete
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
-        DialogTitle={"מחיקת תחנה"}
-        DialogContent={"האם אתה בטוח במחיקת התחנה?"}
+        DialogTitle={'מחיקת תחנה'}
+        DialogContent={'האם אתה בטוח במחיקת התחנה?'}
         handleCloseRemoveConfirm={handleCloseRemoveConfirm}
       />
     </>

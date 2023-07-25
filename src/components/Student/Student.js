@@ -27,6 +27,7 @@ const Cards = () => {
   const [openRemove, setOpenRemove] = React.useState(false);
   const [coaches, setCoaches] = useState([]);
   const [coach, setCoach] = useState([]);
+  const [updateAdd, setupdateAdd] = useState(false);
 
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState("");
@@ -147,6 +148,7 @@ const Cards = () => {
       insertUser(user).then((data) => {
         setUsers([data, ...users]);
       });
+      setupdateAdd(true)
     }
 
     handleClose(); // Close the dialog after the form is submitted
@@ -161,6 +163,17 @@ const Cards = () => {
     fetchData();
     // console.log("usersData", usersData);
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const usersData = await getingData_Users();
+      setUsers(usersData);
+    };
+
+    fetchData();
+    // console.log("usersData", usersData);
+  }, [updateAdd]);
+
   const clickOnhreeDotsVerticaIcont = (value) => {
     if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);
@@ -239,7 +252,7 @@ const Cards = () => {
             }}
             defaultValue={
               openThreeDotsVertical !== -1 &&
-              coaches.some(
+              coaches.find(
                 (coach) => coach.id === users[openThreeDotsVertical]?.coach?.id
               )
                 ? users[openThreeDotsVertical]?.coach

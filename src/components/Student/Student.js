@@ -31,7 +31,7 @@ const Cards = () => {
 
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState("");
-  
+
   useEffect(() => {
     console.log("student openThreeDotsVertical: ", openThreeDotsVertical);
   }, [openThreeDotsVertical]);
@@ -57,6 +57,8 @@ const Cards = () => {
       console.log("openThreeDotsVertical", openThreeDotsVertical);
       setOpenRemove(true);
     }
+
+
   }, [requestForEditing]);
 
   const handleClickOpen = () => {
@@ -130,8 +132,8 @@ const Cards = () => {
       coachId: coach.id,
       pictureId: image,
     };
-    console.log("khalid - user - "+user);
-    console.log("khalid - openThreeDotsVertical - "+openThreeDotsVertical);
+    console.log("khalid - user - " + user);
+    console.log("khalid - openThreeDotsVertical - " + openThreeDotsVertical);
     if (openThreeDotsVertical !== -1) {
       console.log("khalid - test - edite");
       patchForUser(users[openThreeDotsVertical].id, user).then((data) => {
@@ -141,7 +143,10 @@ const Cards = () => {
         users[openThreeDotsVertical].coach = data.data.coach;
 
         console.log("data", data);
-        
+        //
+        const newUsers = [...users];
+        setUsers(newUsers);
+        // setUsers([data, ...users]);
       });
     } else {
       console.log("khalid - test - add");
@@ -154,15 +159,15 @@ const Cards = () => {
     handleClose(); // Close the dialog after the form is submitted
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const usersData = await getingData_Users();
-      setUsers(usersData);
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const usersData = await getingData_Users();
+  //     setUsers(usersData);
+  //   };
 
-    fetchData();
-    // console.log("usersData", usersData);
-  }, []);
+  //   fetchData();
+  //   // console.log("usersData", usersData);
+  // }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -241,7 +246,7 @@ const Cards = () => {
             id="coach"
             options={coaches}
             renderOption={(props, option) => (
-              <li {...props}id={option.id}>{option.name}</li>
+              <li {...props} id={option.id}>{option.name}</li>
             )}
             getOptionLabel={(option) => option.name || ""}
             sx={{ width: 300 }}
@@ -252,9 +257,9 @@ const Cards = () => {
             }}
             defaultValue={
               openThreeDotsVertical !== -1 &&
-              coaches.find(
-                (coach) => coach.id === users[openThreeDotsVertical]?.coach?.id
-              )
+                coaches.find(
+                  (coach) => coach.id === users[openThreeDotsVertical]?.coach?.id
+                )
                 ? users[openThreeDotsVertical]?.coach
                 : null
             }

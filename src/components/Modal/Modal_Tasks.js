@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import "./Modal.css";
-import { FcMultipleInputs, FcAbout } from "react-icons/fc";
-import { RiAsterisk } from "react-icons/ri";
-import { IoMdCheckbox } from "react-icons/io";
-import Modal_Loading from "./Modal_Loading";
-import { baseUrl } from "../../config";
-import Modal_no_site_selected from "./Modal_no_site_selected";
-import { uploadImage, uploadFile, insertTask, updateTask } from "../../api/api";
+import React, { useState, useEffect } from 'react';
+import './Modal.css';
+import { FcMultipleInputs, FcAbout } from 'react-icons/fc';
+import { RiAsterisk } from 'react-icons/ri';
+import { IoMdCheckbox } from 'react-icons/io';
+import Modal_Loading from './Modal_Loading';
+import { baseUrl } from '../../config';
+import Modal_no_site_selected from './Modal_no_site_selected';
+import { uploadImage, uploadFile, insertTask, updateTask } from '../../api/api';
 
 //--------------------------
-let ichour = "אישור";
-let file = "";
+let ichour = 'אישור';
+let file = '';
 let myPlacesChoiceTemp = [];
 
 //--------------------------
@@ -20,21 +20,21 @@ function Modal_Tasks(props) {
   const [picture, setPicture] = useState(null);
   const [audio, setAudio] = useState(null);
   const [getDescription, setDescription] = useState(props.subtitle);
-  const [, setFile] = useState("");
+  const [, setFile] = useState('');
   const [flagClickOK, setFlagClickOK] = useState(false);
   const [myPlacesChoice, setMyPlacesChoice] = useState([]);
 
   useEffect(() => {
-    console.log("stationOfTask", props.stationOfTask);
-    if (props.requestForEditing === "edit" && props.stationOfTask) {
+    console.log('stationOfTask', props.stationOfTask);
+    if (props.requestForEditing === 'edit' && props.stationOfTask) {
       props.stationOfTask.map((station) => {
         setMyPlacesChoice((prev) => [...prev, station.id]);
       });
     }
   }, []);
 
-  console.log("allStations: ", props.allStations);
-  console.log("myStation: ", props.myStation);
+  console.log('allStations: ', props.allStations);
+  console.log('myStation: ', props.myStation);
 
   const handleTitleInput = (e) => {
     setTitle(e.target.value);
@@ -57,27 +57,27 @@ function Modal_Tasks(props) {
   const saveTask = async () => {
     setFlagClickOK(true);
 
-    if (get_title === "" || getDescription === "") {
-      alert("עליך למלא שדות חובה המסומנים בכוכבית");
+    if (get_title === '' || getDescription === '') {
+      alert('עליך למלא שדות חובה המסומנים בכוכבית');
     } else {
       let imageData;
       let audioData;
 
       try {
         if (picture) {
-          console.log("enter site: ", props.mySite.name);
+          console.log('enter site: ', props.mySite.name);
           imageData = await uploadImage(picture, props.mySite.name);
           console.log(`Image uploaded successfully:`, imageData);
         }
         if (audio) {
-          audioData = await uploadFile(audio, "Audio");
+          audioData = await uploadFile(audio, 'Audio');
           console.log(`Audio uploaded successfully:`, audioData);
         }
       } catch (error) {
         console.error(error);
       }
 
-      if (props.requestForEditing === "edit") {
+      if (props.requestForEditing === 'edit') {
         const newTask = {
           title: get_title,
           subtitle: getDescription,
@@ -92,7 +92,7 @@ function Modal_Tasks(props) {
   const update_task = async (uuid, newTask) => {
     try {
       const update = await updateTask(uuid, newTask);
-      console.log("update Modale Tasks:", update);
+      console.log('update Modale Tasks:', update);
 
       if (update.status === 200) {
         setFlagClickOK(false);
@@ -106,7 +106,7 @@ function Modal_Tasks(props) {
         props.setTaskForEdit(update.data);
         // props.setAllTasksOfTheSite((prev) => [...prev, update.data]);
 
-        console.log("insertTask: ", update.data);
+        console.log('insertTask: ', update.data);
       }
     } catch (error) {
       console.error(error);
@@ -125,7 +125,7 @@ function Modal_Tasks(props) {
         props.mySite.id
       );
       setDone(true);
-      console.log("post Modale Tasks:", post);
+      console.log('post Modale Tasks:', post);
 
       setFlagClickOK(false);
       props.setModalOpen(false);
@@ -136,7 +136,7 @@ function Modal_Tasks(props) {
       post.color = color;
       props.setAllTasksOfTheSite((prev) => [...prev, post]);
 
-      console.log("insertTask: ", post);
+      console.log('insertTask: ', post);
     } catch (error) {
       console.error(error);
     }
@@ -148,7 +148,7 @@ function Modal_Tasks(props) {
     // sortById();
   };
   useEffect(() => {
-    console.log("myPlacesChoice:", myPlacesChoice);
+    console.log('myPlacesChoice:', myPlacesChoice);
   }, [myPlacesChoice]);
 
   // const sortById = () => {
@@ -199,132 +199,132 @@ function Modal_Tasks(props) {
       {!props.help && props.siteSelected ? (
         <>
           <div
-            className="BackgroundTasks"
+            className='BackgroundTasks'
             style={{
-              textAlign: props.language === "English" ? "right" : "left",
-              direction: props.language === "English" ? "ltr" : "rtl",
+              textAlign: props.language === 'English' ? 'right' : 'left',
+              direction: props.language === 'English' ? 'ltr' : 'rtl',
               transform:
-                props.language === "English"
-                  ? " translate(-50%, -50%)"
-                  : " translate(50%, -50%)",
+                props.language === 'English'
+                  ? ' translate(-50%, -50%)'
+                  : ' translate(50%, -50%)',
             }}
           >
-            <div className="modalContainerTasks">
-              <div className="headerNewTask">
-                <div className="NewTaskTitle">
-                  {props.language !== "English" ? "New task" : ":משימה חדשה"}
+            <div className='modalContainerTasks'>
+              <div className='headerNewTask'>
+                <div className='NewTaskTitle'>
+                  {props.language !== 'English' ? 'New task' : ':משימה חדשה'}
                 </div>
               </div>
-              <div className="bodyNewTask">
+              <div className='bodyNewTask'>
                 {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
-                <form id="IPU" className="w3-container">
+                <form id='IPU' className='w3-container'>
                   <h6>
-                    {props.language !== "English"
-                      ? "Write the name of the task"
-                      : ":רשום את שם המשימה "}
+                    {props.language !== 'English'
+                      ? 'Write the name of the task'
+                      : ':רשום את שם המשימה '}
 
-                    <RiAsterisk style={{ color: "red" }} />
+                    <RiAsterisk style={{ color: 'red' }} />
                   </h6>
                   <p>
                     <input
                       required={true}
-                      type="text"
+                      type='text'
                       onChange={handleTitleInput}
                       style={{
-                        width: "100%",
-                        height: "38px",
-                        paddingRight: "20px",
-                        direction: props.language === "English" ? "rtl" : "ltr",
+                        width: '100%',
+                        height: '38px',
+                        paddingRight: '20px',
+                        direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                       value={get_title}
                     ></input>
                   </p>
                 </form>
-                <form id="IPU" className="w3-container">
+                <form id='IPU' className='w3-container'>
                   <h6>
-                    {props.language !== "English"
-                      ? "Describe the task"
-                      : ":תאר במשפט את משימה "}
-                    <RiAsterisk style={{ color: "red" }} />
+                    {props.language !== 'English'
+                      ? 'Describe the task'
+                      : ':תאר במשפט את משימה '}
+                    <RiAsterisk style={{ color: 'red' }} />
                   </h6>
                   <p>
                     <input
                       value={getDescription}
-                      type="text"
+                      type='text'
                       onChange={handleDescriptionInput}
                       style={{
-                        width: "100%",
-                        height: "38px",
-                        paddingRight: "20px",
-                        direction: props.language === "English" ? "rtl" : "ltr",
+                        width: '100%',
+                        height: '38px',
+                        paddingRight: '20px',
+                        direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     ></input>
                   </p>
                 </form>
-                <form id="IPU" className="w3-container">
+                <form id='IPU' className='w3-container'>
                   <h6>
-                    {props.language !== "English"
-                      ? "Add a picture of a task"
-                      : ":הוסף תמונה של משימה "}
+                    {props.language !== 'English'
+                      ? 'Add a picture of a task'
+                      : ':הוסף תמונה של משימה '}
 
                     <FcMultipleInputs />
                   </h6>
-                  <div className="input-group mb-3">
+                  <div className='input-group mb-3'>
                     <input
                       required={true}
-                      accept=".png, .jpg, .jpeg"
-                      className="form-control"
-                      type="file"
+                      accept='.png, .jpg, .jpeg'
+                      className='form-control'
+                      type='file'
                       onChange={(e) => setPicture(e.target.files[0])}
                       style={{
-                        textAlign: "right",
-                        width: "100%",
-                        height: "38px",
-                        direction: props.language === "English" ? "rtl" : "ltr",
+                        textAlign: 'right',
+                        width: '100%',
+                        height: '38px',
+                        direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     ></input>
                   </div>
                 </form>
-                <form id="IPU" className="w3-container">
+                <form id='IPU' className='w3-container'>
                   <h6>
-                    {props.language !== "English"
-                      ? "Add a voice clip describing the task"
-                      : ":הוסף קטע קול המתאר את המשימה "}
+                    {props.language !== 'English'
+                      ? 'Add a voice clip describing the task'
+                      : ':הוסף קטע קול המתאר את המשימה '}
                     <FcMultipleInputs />
                   </h6>
                   <p>
                     <input
                       required={true}
-                      accept=".mp3"
-                      type="file"
-                      className="form-control"
+                      accept='.mp3'
+                      type='file'
+                      className='form-control'
                       onChange={(e) => setAudio(e.target.files[0])}
                       style={{
-                        textAlign: "right",
-                        width: "100%",
-                        height: "38px",
-                        direction: props.language === "English" ? "rtl" : "ltr",
+                        textAlign: 'right',
+                        width: '100%',
+                        height: '38px',
+                        direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     ></input>
                   </p>
 
-                  <div className="list-group">
+                  <div className='list-group'>
                     <h6>
-                      {props.language !== "English"
-                        ? "Select the stations you want to associate the task with"
-                        : ":בחר את התחנות שברצונך לשייך את המשימה"}
-                      <IoMdCheckbox style={{ color: "blue" }} />
+                      {props.language !== 'English'
+                        ? 'Select the stations you want to associate the task with'
+                        : ':בחר את התחנות שברצונך לשייך את המשימה'}
+                      <IoMdCheckbox style={{ color: 'blue' }} />
                     </h6>
-                    <div className="allTasks">
+                    <div className='allTasks'>
                       {props.allStations.map((value, index) => {
                         return (
-                          <label key={index} className="list-group-item">
+                          <label key={index} className='list-group-item'>
                             <input
                               onChange={() => saveCheckbox(value)}
-                              className="form-check-input me-1"
-                              style={{ marginLeft: "5px" }}
-                              type="checkbox"
-                              value=""
+                              className='form-check-input me-1'
+                              style={{ marginLeft: '5px' }}
+                              type='checkbox'
+                              value=''
                               checked={myPlacesChoice.includes(value.id)}
                             ></input>
                             {value.title}
@@ -337,28 +337,28 @@ function Modal_Tasks(props) {
               </div>
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "flex-start",
-                  gap: "16px",
-                  height: "100px",
-                  alignItems: "center",
-                  padding: "40px",
-                  marginBottom: "20px",
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  gap: '16px',
+                  height: '100px',
+                  alignItems: 'center',
+                  padding: '40px',
+                  marginBottom: '20px',
                 }}
-                className="footerNewTasks"
+                className='footerNewTasks'
               >
                 <input
-                  type="submit"
-                  className="saveTaskButton"
+                  type='submit'
+                  className='saveTaskButton'
                   value={
-                    props.language !== "English" ? "Save Task" : "שמור משימה"
+                    props.language !== 'English' ? 'Save Task' : 'שמור משימה'
                   }
                   onClick={saveTask}
                 />
                 <input
-                  type="submit"
-                  className="cancelTaskButton"
-                  value={props.language !== "English" ? "Cancel" : "ביטול"}
+                  type='submit'
+                  className='cancelTaskButton'
+                  value={props.language !== 'English' ? 'Cancel' : 'ביטול'}
                   onClick={() => {
                     setMyPlacesChoice([]);
                     props.setModalOpen(false);

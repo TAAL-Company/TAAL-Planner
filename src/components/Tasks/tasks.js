@@ -1,50 +1,50 @@
-import React, { useState, useEffect, useRef } from "react";
-import { AiOutlinePlus } from "react-icons/ai";
-import Tag from "../Tag/Tag.js";
-import { CgSearch } from "react-icons/cg";
-import textArea from "../../Pictures/textArea.svg";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { useDrag } from "react-dnd";
-import ModalTasks from "../Modal/Modal_Tasks.js";
-import { deleteTask } from "../../api/api.js";
-import Modal_Delete from "../Modal/Modal_Delete.js";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import React, { useState, useEffect, useRef } from 'react';
+import { AiOutlinePlus } from 'react-icons/ai';
+import Tag from '../Tag/Tag.js';
+import { CgSearch } from 'react-icons/cg';
+import textArea from '../../Pictures/textArea.svg';
+import { BsThreeDotsVertical } from 'react-icons/bs';
+import { useDrag } from 'react-dnd';
+import ModalTasks from '../Modal/Modal_Tasks.js';
+import { deleteTask } from '../../api/api.js';
+import Modal_Delete from '../Modal/Modal_Delete.js';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const Tasks = (props) => {
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
-  const [requestForEditing, setRequestForEditing] = useState("");
-  const [taskUuidForEdit, setTaskUuidForEdit] = useState("");
-  const [taskForEdit, setTaskForEdit] = useState("");
+  const [requestForEditing, setRequestForEditing] = useState('');
+  const [taskUuidForEdit, setTaskUuidForEdit] = useState('');
+  const [taskForEdit, setTaskForEdit] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
-  const [openRemove, setOpenRemove] = React.useState(false);
+  const [openRemove, setOpenRemove] = useState(false);
   const [modalOpenNoSiteSelected, setModalOpenNoSiteSelected] = useState(false);
   const [filteredDataTasks, setFilteredDataTasks] = useState([]);
-  const [taskForDelete, setTaskForDelete] = useState("");
+  const [taskForDelete, setTaskForDelete] = useState('');
   const [siteSelected, setSiteSelected] = useState(false);
   // useEffect(() => {
   //   setFilteredDataTasks(props.tasksOfChosenStation);
   // }, []);
   useEffect(() => {
-    if (props.mySite.name != "") {
+    if (props.mySite.name !== '') {
       setSiteSelected(true);
     }
   }, [props.mySite.name]);
   const handleCloseRemove = () => {
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
-    setRequestForEditing("");
+    setRequestForEditing('');
   };
   const handleCloseRemoveConfirm = async () => {
-    console.log("DELETE:"); //, stationArray[openThreeDotsVertical].id);
+    console.log('DELETE:'); //, stationArray[openThreeDotsVertical].id);
 
     let deleteTaskTemp = await deleteTask(taskForDelete);
 
-    console.log("deleteTaskTemp:", deleteTaskTemp);
-    console.log(" props.tasksOfChosenStation:", props.tasksOfChosenStation);
-    console.log(" props.tasksOfChosenStation:", props.tasksOfChosenStation);
+    console.log('deleteTaskTemp:', deleteTaskTemp);
+    console.log(' props.tasksOfChosenStation:', props.tasksOfChosenStation);
+    console.log(' props.tasksOfChosenStation:', props.tasksOfChosenStation);
 
-    if (deleteTaskTemp != undefined) {
-      alert("המחיקה בוצעה בהצלחה!");
+    if (deleteTaskTemp !== undefined) {
+      alert('המחיקה בוצעה בהצלחה!');
       const newTasks = [...props.tasksOfChosenStation];
       let indexaTask = props.tasksOfChosenStation.findIndex(
         (task) => task.id === taskForDelete
@@ -52,41 +52,41 @@ const Tasks = (props) => {
       newTasks.splice(indexaTask, 1); // remove one element at index x
       props.setTasksOfChosenStation(newTasks);
 
-      console.log("props.stationArray 123", props.stationArray);
+      console.log('props.stationArray 123', props.stationArray);
 
       let indexStation = props.stationArray.findIndex(
         (station) => station.id === props.chosenStation.id
       );
-      console.log("indexStation 123", indexStation);
+      console.log('indexStation 123', indexStation);
 
       props.stationArray[indexStation].tasks = newTasks;
-      console.log("newTasks 123", newTasks);
+      console.log('newTasks 123', newTasks);
     }
 
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
-    setRequestForEditing("");
+    setRequestForEditing('');
   };
   useEffect(() => {
-    console.log("tasks: ", props.tasksOfChosenStation);
-    console.log("tasks: chosenStation ", props.chosenStation);
+    console.log('tasks: ', props.tasksOfChosenStation);
+    console.log('tasks: chosenStation ', props.chosenStation);
     setFilteredDataTasks(props.tasksOfChosenStation);
   }, [props.tasksOfChosenStation]);
   useEffect(() => {
-    console.log("tasks: filteredDataTasks ", filteredDataTasks);
+    console.log('tasks: filteredDataTasks ', filteredDataTasks);
   }, [filteredDataTasks]);
 
   useEffect(() => {
-    console.log("tasks b requestForEditing: ", requestForEditing);
-    console.log("tasks b openThreeDotsVertical: ", openThreeDotsVertical);
+    console.log('tasks b requestForEditing: ', requestForEditing);
+    console.log('tasks b openThreeDotsVertical: ', openThreeDotsVertical);
 
-    if (requestForEditing == "edit" || requestForEditing == "details") {
-      console.log("openThreeDotsVertical", openThreeDotsVertical);
+    if (requestForEditing === 'edit' || requestForEditing === 'details') {
+      console.log('openThreeDotsVertical', openThreeDotsVertical);
       setTaskUuidForEdit(openThreeDotsVertical);
       setModalOpen(true);
-    } else if (requestForEditing == "duplication") {
-      console.log("openThreeDotsVertical", openThreeDotsVertical);
-    } else if (requestForEditing == "delete") {
+    } else if (requestForEditing == 'duplication') {
+      console.log('openThreeDotsVertical', openThreeDotsVertical);
+    } else if (requestForEditing == 'delete') {
       setTaskForDelete(openThreeDotsVertical);
       setOpenRemove(true);
       //Modal_Delete
@@ -102,7 +102,7 @@ const Tasks = (props) => {
   const searchTask = (e) => {
     setFilteredDataTasks(
       props.tasksOfChosenStation.filter((el) => {
-        if (e.target.value === "") {
+        if (e.target.value === '') {
           return el;
         }
         //return the item which contains the user input
@@ -114,56 +114,56 @@ const Tasks = (props) => {
   };
 
   return (
-    <div className="Cover_Tasks">
-      <div className="TitleTasks">
+    <div className='Cover_Tasks'>
+      <div className='TitleTasks'>
         <div
           className={`MyTitle text ${
-            props.language !== "English" ? "english" : ""
+            props.language !== 'English' ? 'english' : ''
           }`}
         >
           {props.myTasks}
         </div>
       </div>
       <div
-        className="search"
+        className='search'
         style={{
-          backgroundColor: "#F5F5F5",
+          backgroundColor: '#F5F5F5',
         }}
       >
         <input
-          className="searchButton"
+          className='searchButton'
           // dir="rtl"
           placeholder={
-            props.language === "English" ? "חפש משימה" : "search task"
+            props.language === 'English' ? 'חפש משימה' : 'search task'
           }
-          label={<CgSearch style={{ fontSize: "x-large" }} />}
+          label={<CgSearch style={{ fontSize: 'x-large' }} />}
           onChange={searchTask}
         ></input>
       </div>
 
       {/* המשימות */}
-      <div className="TasksCover">
-        {props.tasksOfChosenStation.length === 0 &&
+      <div className='TasksCover'>
+        {props.tasksOfChosenStation.length === 0 ||
         props.chosenStation.length === 0 ? (
           <div
-            className="textBeforeStation"
+            className='textBeforeStation'
             style={{ backgroundImage: `url(${textArea})` }}
           >
             {props.tasksBeforeChoosingSite}
           </div>
         ) : (
           // <></
-          <Droppable droppableId="tasks-droppable">
+          <Droppable droppableId='tasks-droppable'>
             {(provided) => (
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className="TasksCover"
+                className='TasksCover'
               >
                 {filteredDataTasks.map((tag, index) => {
-                  let ID = "" + tag.id;
-                  console.log("id: ", typeof ID);
-                  console.log("tag: ", tag);
+                  let ID = '' + tag.id;
+                  console.log('id: ', typeof ID);
+                  console.log('tag: ', tag);
 
                   return (
                     <Draggable key={ID} draggableId={ID} index={index}>
@@ -182,10 +182,10 @@ const Tasks = (props) => {
                             myLastStation={
                               props.chosenStation
                                 ? props.chosenStation.name
-                                : ""
+                                : ''
                             }
                             data={tag.data}
-                            dragFromCover={"TasksNew"}
+                            dragFromCover={'TasksNew'}
                             language={props.language}
                             openThreeDotsVertical={openThreeDotsVertical}
                             setOpenThreeDotsVertical={setOpenThreeDotsVertical}
@@ -204,15 +204,15 @@ const Tasks = (props) => {
           </Droppable>
         )}
       </div>
-      <div className="addTaskCover">
+      <div className='addTaskCover'>
         <button
-          className="AddButton"
+          className='AddButton'
           onClick={() => {
             setModalOpen(true);
             setModalOpenNoSiteSelected(true);
           }}
         >
-          <AiOutlinePlus className="plus" />
+          <AiOutlinePlus className='plus' />
         </button>
       </div>
 
@@ -237,21 +237,21 @@ const Tasks = (props) => {
               ? props.tasksOfChosenStation.find(
                   (task) => task.id === openThreeDotsVertical
                 ).title
-              : ""
+              : ''
           }
           subtitle={
             openThreeDotsVertical != -1
               ? props.tasksOfChosenStation.find(
                   (task) => task.id === openThreeDotsVertical
                 ).subtitle
-              : ""
+              : ''
           }
           stationOfTask={
             openThreeDotsVertical != -1
               ? props.tasksOfChosenStation.find(
                   (task) => task.id === openThreeDotsVertical
                 ).stations
-              : ""
+              : ''
           }
         />
       ) : (
@@ -260,8 +260,8 @@ const Tasks = (props) => {
       <Modal_Delete
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
-        DialogTitle={"מחיקת משימה"}
-        DialogContent={"האם אתה בטוח במחיקת המשימה?"}
+        DialogTitle={'מחיקת משימה'}
+        DialogContent={'האם אתה בטוח במחיקת המשימה?'}
         handleCloseRemoveConfirm={handleCloseRemoveConfirm}
       />
     </div>

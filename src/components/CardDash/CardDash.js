@@ -10,7 +10,7 @@ const CardDash = (props) => {
   const handleAddLink = (id) => {
     console.log("done add link");
     if (id === 1) {
-      window.location.replace("/");
+      window.location.replace('/places');
     } else if (id === 2) {
       window.location("www.facebook.com");
       window.location.replace("/routes_cards");

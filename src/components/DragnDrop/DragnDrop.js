@@ -277,7 +277,7 @@ function DragnDrop(props) {
     if (Object.keys(props.dropToBoard).length > 0) {
       console.log('result: ', props.dropToBoard);
       if (
-        props.dropToBoard.destination != undefined &&
+        props.dropToBoard.destination !== undefined &&
         props.dropToBoard.destination.droppableId === 'board-droppable'
       )
         addImageToBoard(props.dropToBoard.draggableId, 'tasks');
@@ -550,7 +550,7 @@ function DragnDrop(props) {
                       ) : (
                         <></>
                       )}
-                      {board == undefined && board.length == 0 ? (
+                      {board === undefined && board.length === 0 ? (
                         <div></div>
                       ) : (
                         board.map((tag, keyCount) => {

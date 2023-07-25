@@ -25,19 +25,21 @@ const Modal_Stations = (props) => {
   const [srcImage, setSrcImage] = useState('');
   const [stationUUId, setStationUUId] = useState('');
 
-  console.log('stationIndex: ', props.stationIndex);
-  console.log('stationArray: ', props.stationArray);
-  // useEffect(() => {
-  //   if (
-  //     props.stationArray.length > 0 &&
-  //     props.stationIndex !== undefined &&
-  //     props.stationIndex > -1
-  //   ) {
-  //     settitle(props.stationArray[props.stationIndex].title);
-  //     setDescription(props.stationArray[props.stationIndex].subtitle);
-  //     setStationUUId(props.stationArray[props.stationIndex].id);
-  //   }
-  // }, []);
+  console.log("stationIndex: ", props.stationIndex);
+  console.log("stationArray: ", props.stationArray);
+  useEffect(() => {
+    if (
+      props.stationArray.length > 0 &&
+      props.stationIndex !== undefined &&
+      props.stationIndex > -1
+    ) {
+      console.log("khalid - test "+props.stationIndex);
+      console.log("khalid - test "+props.stationArray[0].title);
+     // settitle(props.stationArray[props.stationIndex].title);
+     // setDescription(props.stationArray[props.stationIndex].subtitle);
+     // setStationUUId(props.stationArray[props.stationIndex].id);
+    }
+  }, []);
 
   //----------------------------------
 

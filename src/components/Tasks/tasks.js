@@ -240,14 +240,14 @@ const Tasks = (props) => {
               : ''
           }
           subtitle={
-            openThreeDotsVertical != -1
+            openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
                   (task) => task.id === openThreeDotsVertical
                 ).subtitle
               : ''
           }
           stationOfTask={
-            openThreeDotsVertical != -1
+            openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
                   (task) => task.id === openThreeDotsVertical
                 ).stations

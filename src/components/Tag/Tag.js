@@ -61,8 +61,8 @@ function Tag({
   // console.log("data:", data);
   // // console.log("idImg: ", idImg)
 
-  const [, setIdListen] = useState(0);
-  const [, setDataListen] = useState({});
+  const [idListen, setIdListen] = useState(0);
+  const [dataListen, setDataListen] = useState({});
   // const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   // const [requestForEditing, setRequestForEditing] = useState("");
 
@@ -95,15 +95,15 @@ function Tag({
   }, [openThreeDotsVertical]);
 
   const listen = () => {
-    setIdListen((idListen = id));
-    setDataListen((dataListen = dataImg));
+    setIdListen(id);
+    setDataListen(dataImg);
     console.log('dataListen:', dataListen);
   };
   const listenMyStation = () => {
     data.forEach((val) => {
-      if (nameStation === val.name) setIdListen((idListen = val.id));
+      if (nameStation === val.name) setIdListen(val.id);
     });
-    setDataListen((dataListen = data));
+    setDataListen(data);
     console.log('idListen:', idListen);
     console.log('dataListen', dataListen);
   };
@@ -212,11 +212,9 @@ function Tag({
                   <button
                     className='threeDotsVerticalEng'
                     onClick={() => {
-                      
-                        if (dragFromCover === 'TasksNew') {
-                          clickOnhreeDotsVerticaIcont(id);
-                        } else clickOnhreeDotsVerticaIcontBoard(id);
-                      
+                      if (dragFromCover === 'TasksNew') {
+                        clickOnhreeDotsVerticaIcont(id);
+                      } else clickOnhreeDotsVerticaIcontBoard(id);
                     }}
                   >
                     <BsThreeDotsVertical />

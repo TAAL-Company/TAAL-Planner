@@ -534,15 +534,22 @@ const Places = (props) => {
     }
     // setMySite((mySite.name = selectedValue.name));
     setMySite((mySite.id = selectedValue.id));
-    let length = 0;
-    allTasks.map((task) => {
-      if (task.sites.find((site) => site.id === mySite.id)) {
-        console.log('yarden task', task);
-        length++;
-        setAllTasksOfTheSite(task);
-      }
-    });
-    setTasksLength(length);
+    // let length = 0;
+    // allTasks.map((task) => {
+    //   if (task.sites.find((site) => site.id === mySite.id)) {
+    //     console.log('yarden task', task);
+    //     length++;
+    //     setAllTasksOfTheSite((prev) => [...prev, task]);
+    //   }
+    // });
+    // setTasksLength(length);
+
+    const tasksOfTheSite = allTasks.filter((task) =>
+      task.sites.find((site) => site.id === mySite.id)
+    );
+
+    setTasksLength(tasksOfTheSite.length);
+    setAllTasksOfTheSite((prev) => [...prev, ...tasksOfTheSite]);
 
     localStorage.setItem('MySite', JSON.stringify(mySite));
 

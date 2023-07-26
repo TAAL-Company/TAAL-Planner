@@ -25,10 +25,10 @@ const Tasks = (props) => {
   //   setFilteredDataTasks(props.tasksOfChosenStation);
   // }, []);
   useEffect(() => {
-    if (props.mySite.name !== '') {
+    if (props.mySite.id !== '') {
       setSiteSelected(true);
     }
-  }, [props.mySite.name]);
+  }, [props.mySite.id]);
   const handleCloseRemove = () => {
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);

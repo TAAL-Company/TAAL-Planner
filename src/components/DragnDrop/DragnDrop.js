@@ -346,7 +346,7 @@ function DragnDrop(props) {
       setCount(count++);
       // alert(count)
       // setFlagFirst(flagFirst = false)
-      if (props.boardArrayDND.length > 0) {
+      if (props.boardArrayDND.length > 0 || boardName === 'routes') {
         console.log('id boardArrayDND: ', id);
 
         Route = props.boardArrayDND.find((tag) => id === tag.id);
@@ -354,10 +354,11 @@ function DragnDrop(props) {
         console.log('Route boardArrayDND: ', Route);
 
         setBoard((board) => [...board, Route]);
-      } else {
         setFlagTree(true);
+      } else {
         Route = dndArray.find((tag) => id === tag.id);
         setBoard((board) => [...board, Route]);
+        setFlagTree(true);
       }
       console.log('dnd Route: ', Route);
 
@@ -365,9 +366,9 @@ function DragnDrop(props) {
 
       console.log('dnd setBoard: ', board);
       // thisIdArray.push(thisId);
-      myTask = saveProps.tasksOfChosenStation.find((item) => item.id === id);
+      // myTask = saveProps.tasksOfChosenStation.find((item) => item.id === id);
       // console.log("myTAsk:", myTask[0])
-      thisIdArray.push(myTask[0]);
+      thisIdArray.push(Route.id);
 
       prevStation = myStation;
       // console.log("thisIdArray:", thisIdArray)

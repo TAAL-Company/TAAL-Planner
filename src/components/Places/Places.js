@@ -42,7 +42,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 // const { baseUrl } = require
 //-----------------------
-
+let tasksOfRoutes = [];
 // let allRoutes = [];
 let allPlaces = [];
 // let places = [];
@@ -84,7 +84,7 @@ const Places = (props) => {
   const [, setMySite] = useState(null);
   // const [get_logged_in, setLogged_in] = useState(false);// for TextView
   const [, setFlagButtonRoute] = useState(false);
-  const [tasksOfRoutes, setTasksOfRoutes] = useState([]);
+  const [, setTasksOfRoutes] = useState([]);
   const [, setFlagTest] = useState(false);
   const [siteSelected, setSiteSelected] = useState(false);
   const [isFirstSelection, setIsFirstSelection] = useState(false);
@@ -309,7 +309,7 @@ const Places = (props) => {
 
       setRouteFlags(true);
 
-      setTasksOfRoutes(e);
+      setTasksOfRoutes((tasksOfRoutes = e));
 
       tasksOfRoutes.name = tasksOfRoutes.name
         .replace('&#8211;', '-')
@@ -512,7 +512,7 @@ const Places = (props) => {
       setReplaceSite(selectedValue);
       Display_The_Stations(selectedValue);
       setSiteSelected(true);
-      setRouteFlags(true);
+      setRouteFlags(false);
       setReplaceSiteFlag(false);
       setOpenModalSiteChosen(false);
       setTasksLength(0);

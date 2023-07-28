@@ -536,7 +536,6 @@ const Places = (props) => {
       Display_The_Stations(selectedValue);
       setTasksLength(0);
       setTasksOfChosenStation([]);
-      setTasksOfRoutes([]);
       // setOpenModalRouteChosen(true);
       // setReplaceRouteFlag(true);
     }

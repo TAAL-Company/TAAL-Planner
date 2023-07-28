@@ -39,6 +39,8 @@ import Modal_route_chosen from '../Modal/Modal_route_chosen';
 import { MdNoStroller } from 'react-icons/md';
 import Modal_site_chosen from '../Modal/Modal_site_chosen';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import '../Modal/Modal.css';
+import stopIcon from '../../Pictures/stopIcon.svg';
 
 // const { baseUrl } = require
 //-----------------------
@@ -59,6 +61,7 @@ let mySite = { name: '', id: '' };
 let clickAddRoute = false;
 let myCategory = false;
 let flagTest = false;
+let selectedValue = {};
 
 //-----------------------
 const Places = (props) => {
@@ -467,7 +470,6 @@ const Places = (props) => {
       );
     } else {
       setReplaceRoute(e);
-      setOpenModalRouteChosen(true);
     }
   };
 
@@ -502,21 +504,43 @@ const Places = (props) => {
     });
   };
 
-  const handleSelectChange = (event) => {
-    const selectedValue = JSON.parse(event.target.value);
+  const handleReplaceSiteFlag = () => {
+    setReplaceSiteFlag(true);
+    setOpenModalSiteChosen(false);
+  };
 
-    if (!siteSelected || !replaceSiteFlag) {
+  const handleOpenModalSiteChosen = () => {
+    setOpenModalSiteChosen(false);
+  };
+
+  const handleSelectChange = (event) => {
+    selectedValue = JSON.parse(event.target.value);
+
+    if (!siteSelected) {
       setReplaceSite(selectedValue);
       Display_The_Stations(selectedValue);
       setSiteSelected(true);
-      setRouteFlags(false);
       setReplaceSiteFlag(false);
       setOpenModalSiteChosen(false);
+      // setRouteFlags(false);
+      // setReplaceRouteFlag(false);
+    } else {
+      setReplaceSiteFlag(false);
+      setOpenModalSiteChosen(true);
+    }
+  };
+
+  useEffect(() => {
+    if (!openModalSiteChosen && replaceSiteFlag) {
+      setReplaceSite(selectedValue);
+      Display_The_Stations(selectedValue);
       setTasksLength(0);
       setTasksOfChosenStation([]);
       setTasksOfRoutes([]);
+      // setOpenModalRouteChosen(true);
+      // setReplaceRouteFlag(true);
     }
-  };
+  }, [openModalSiteChosen, replaceSiteFlag, selectedValue]);
 
   const Display_The_Stations = async (selectedValue) => {
     console.log('Display_The_Stations ***');
@@ -631,7 +655,7 @@ const Places = (props) => {
   }, [allTasksOfTheSite]);
 
   const clickOnhreeDotsVerticaIcont = (value) => {
-    if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
+    if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);
   };
 
@@ -924,22 +948,42 @@ const Places = (props) => {
           />
         </DragDropContext>
       </div>
-      {/* {openModalRouteChosen ? (
+      {openModalRouteChosen ? (
         <>
-          <Modal_route_chosen
+          {/* <Modal_route_chosen
             setReplaceRouteFlag={setReplaceRouteFlag}
             setOpenModalRouteChosen={setOpenModalRouteChosen}
-          ></Modal_route_chosen>
+          ></Modal_route_chosen> */}
         </>
       ) : (
         <></>
-      )} */}
+      )}
       {openModalSiteChosen ? (
         <>
-          <Modal_site_chosen
+          {/* <Modal_site_chosen
             setReplaceSiteFlag={setReplaceSiteFlag}
             setOpenModalSiteChosen={setOpenModalSiteChosen}
-          ></Modal_site_chosen>
+          ></Modal_site_chosen> */}
+          <div className='modal_route_chosen'>
+            <div className='stopIconContainer'>
+              <img src={stopIcon} alt='logo'></img>
+            </div>
+            <div
+              className='body'
+              style={{ textAlign: 'center', direction: 'rtl' }}
+            >
+              <h4>בחרת כבר באתר אחר, ברצונך להחליף?</h4>
+              <div>החלפת אתר תמחק את השינויים שביצעת באתר הנוכחי</div>
+            </div>
+            <div className='footer' style={{ display: 'flex' }}>
+              <button className='cancelBtn' onClick={handleOpenModalSiteChosen}>
+                ביטול
+              </button>
+              <button className='cancelBtn' onClick={handleReplaceSiteFlag}>
+                החלף אתר
+              </button>
+            </div>
+          </div>
         </>
       ) : (
         <></>

@@ -281,7 +281,7 @@ function DragnDrop(props) {
     };
   };
 
-  const dndArray = props.tasksOfChosenStation.map(mapTask);
+  let dndArray = props.tasksOfChosenStation.map(mapTask);
 
   console.log('dndArray check:', dndArray);
   //---------------------------------------------------------

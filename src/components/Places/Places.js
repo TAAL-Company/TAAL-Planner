@@ -95,7 +95,7 @@ const Places = (props) => {
   const [replaceSite, setReplaceSite] = useState([]);
   const [allTasks, setAllTasks] = useState([]);
   const [allTasksOfTheSite, setAllTasksOfTheSite] = useState([]);
-  const [firstStationName, setFirstStationName] = useState();
+  const [firstStationName, setFirstStationName] = useState('');
   const [boardArrayDND, setBoardArrayDND] = useState([]);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [replaceRoute, setReplaceRoute] = useState([]);
@@ -325,7 +325,7 @@ const Places = (props) => {
       }
 
       let firstStationId;
-      let stationName;
+      let stationName = '';
       if (firstStation !== undefined) {
         firstStation.stations.map((station) => {
           console.log('!! station.parentSiteId: ', station.parentSiteId);
@@ -334,11 +334,9 @@ const Places = (props) => {
           if (station.parentSiteId === mySite.id) {
             console.log('!! station.title: ', station.title);
             firstStationId = station.id;
-
             stationName = station.title;
           }
         });
-
         setFirstStationName(stationName);
 
         //
@@ -391,7 +389,6 @@ const Places = (props) => {
             }
             // isStationOfMySite(item).includes(true)
           );
-          let stationName = '';
 
           console.log('stationID: ', stationID);
           if (stationID !== undefined) {

@@ -233,7 +233,7 @@ const Tasks = (props) => {
           mySite={props.mySite}
           // help={helpFlag}
           title={
-            openThreeDotsVertical != -1
+            openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
                   (task) => task.id === openThreeDotsVertical
                 ).title

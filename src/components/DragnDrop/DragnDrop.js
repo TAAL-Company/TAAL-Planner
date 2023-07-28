@@ -558,7 +558,7 @@ function DragnDrop(props) {
                   {/* flagTree   */}
                   {flagTree ? (
                     <>
-                      {props.mySite && props.mySite.id ? (
+                      {board !== undefined && board.length !== 0 ? (
                         <>
                           <div
                             className={`kavT ${
@@ -570,9 +570,11 @@ function DragnDrop(props) {
                               props.language !== 'English' ? 'english' : ''
                             }`}
                           >
-                            {props.tasksOfRoutes && props.tasksOfRoutes.name
-                              ? props.tasksOfRoutes.name
-                              : ''}
+                            {props.tasksOfRoutes && props.tasksOfRoutes.name ? (
+                              props.tasksOfRoutes.name
+                            ) : (
+                              <></>
+                            )}
                           </div>
                         </>
                       ) : (

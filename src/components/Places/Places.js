@@ -44,7 +44,7 @@ import stopIcon from '../../Pictures/stopIcon.svg';
 
 // const { baseUrl } = require
 //-----------------------
-let tasksOfRoutes = [];
+let tasksOfRoutes = {};
 // let allRoutes = [];
 let allPlaces = [];
 // let places = [];
@@ -84,10 +84,10 @@ const Places = (props) => {
   const [filteredDataRoutes, setFilteredDataRoutes] = useState([]);
   const [, setInputText] = useState('');
   const [, setInputTextRouts] = useState('');
-  const [, setMySite] = useState(null);
+  // const [, setMySite] = useState(null);
   // const [get_logged_in, setLogged_in] = useState(false);// for TextView
   const [, setFlagButtonRoute] = useState(false);
-  const [, setTasksOfRoutes] = useState([]);
+  // const [, setTasksOfRoutes] = useState([]);
   const [, setFlagTest] = useState(false);
   const [siteSelected, setSiteSelected] = useState(false);
   const [isFirstSelection, setIsFirstSelection] = useState(false);
@@ -312,7 +312,7 @@ const Places = (props) => {
 
       setRouteFlags(true);
 
-      setTasksOfRoutes((tasksOfRoutes = e));
+      tasksOfRoutes = e;
 
       tasksOfRoutes.name = tasksOfRoutes.name
         .replace('&#8211;', '-')
@@ -552,8 +552,9 @@ const Places = (props) => {
     if (stationArray.length > 0) {
       setStationArray([]);
     }
-    // setMySite((mySite.name = selectedValue.name));
-    setMySite((mySite.id = selectedValue.id));
+    mySite.name = selectedValue.name;
+    mySite.id = selectedValue.id;
+    // setMySite({ name: selectedValue.name, id: selectedValue.id });
     // let length = 0;
     // allTasks.map((task) => {
     //   if (task.sites.find((site) => site.id === mySite.id)) {

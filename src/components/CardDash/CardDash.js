@@ -1,5 +1,5 @@
-import { AiOutlinePlus } from "react-icons/ai";
-import "./style.css";
+import { AiOutlinePlus } from 'react-icons/ai';
+import './style.css';
 
 const CardDash = (props) => {
   console.log(props.cards);
@@ -8,52 +8,53 @@ const CardDash = (props) => {
   const image = props.cards.image;
 
   const handleAddLink = (id) => {
-    console.log("done add link");
+    console.log('done add link');
     if (id === 1) {
       window.location.replace('/places');
     } else if (id === 2) {
-      window.location.replace("/routes_cards");
+      window.location.replace('/student');
     } else if (id === 3) {
-      window.location.replace("/planner");
+      window.location.replace('/planner');
     } else if (id === 4) {
-    } else console.log("fail");
+      window.location('www.google.com');
+    } else console.log('fail');
   };
 
   const handleHeadlineLink = (id) => {
-    console.log("done headline link");
+    console.log('done headline link');
     if (id === 1) {
-      window.location.replace("/places");
+      window.location.replace('/places');
     } else if (id === 2) {
-      window.location.replace("/student");
+      window.location.replace('/student');
     } else if (id === 3) {
-      window.location.replace("/routes_cards");
+      window.location.replace('/routes_cards');
     } else if (id === 4) {
-      window.location.replace("/subjects");
+      window.location.replace('/subjects');
     } else if (id === 5) {
-      window.location.replace("/gallery");
+      window.location.replace('/gallery');
     } else if (id === 6) {
-      window.location.replace("/coaches");
-    } else console.log("fail");
+      window.location.replace('/coaches');
+    } else console.log('fail');
   };
 
   return (
-    <div className="CardDash">
+    <div className='CardDash'>
       <a
-        className="headlineClick"
+        className='headlineClick'
         onClick={() => handleHeadlineLink(props.cards.id)}
       >
-        <div className="headline">{headline}</div>
-        <div className="image_background">
-          <img className="cardPhoto" src={image} alt="Card Logo"></img>
+        <div className='headline'>{headline}</div>
+        <div className='image_background'>
+          <img className='cardPhoto' src={image} alt='Card Logo'></img>
         </div>
       </a>
-      <a className="add" onClick={() => handleAddLink(props.cards.id)}>
+      <a className='add' onClick={() => handleAddLink(props.cards.id)}>
         {addLabel}
         <AiOutlinePlus
           style={{
-            marginTop: "6px",
-            marginLeft: "5px",
-            fill: "rgb(116, 172, 255)",
+            marginTop: '6px',
+            marginLeft: '5px',
+            fill: 'rgb(116, 172, 255)',
           }}
         />
       </a>

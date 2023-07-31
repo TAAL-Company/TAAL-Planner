@@ -39,10 +39,12 @@ import Modal_route_chosen from '../Modal/Modal_route_chosen';
 import { MdNoStroller } from 'react-icons/md';
 import Modal_site_chosen from '../Modal/Modal_site_chosen';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import '../Modal/Modal.css';
+import stopIcon from '../../Pictures/stopIcon.svg';
 
 // const { baseUrl } = require
 //-----------------------
-
+let tasksOfRoutes = {};
 // let allRoutes = [];
 let allPlaces = [];
 // let places = [];
@@ -59,6 +61,7 @@ let mySite = { name: '', id: '' };
 let clickAddRoute = false;
 let myCategory = false;
 let flagTest = false;
+let selectedValue = {};
 
 //-----------------------
 const Places = (props) => {
@@ -81,10 +84,10 @@ const Places = (props) => {
   const [filteredDataRoutes, setFilteredDataRoutes] = useState([]);
   const [, setInputText] = useState('');
   const [, setInputTextRouts] = useState('');
-  const [, setMySite] = useState(null);
+  // const [, setMySite] = useState(null);
   // const [get_logged_in, setLogged_in] = useState(false);// for TextView
   const [, setFlagButtonRoute] = useState(false);
-  const [tasksOfRoutes, setTasksOfRoutes] = useState([]);
+  // const [, setTasksOfRoutes] = useState([]);
   const [, setFlagTest] = useState(false);
   const [siteSelected, setSiteSelected] = useState(false);
   const [isFirstSelection, setIsFirstSelection] = useState(false);
@@ -95,7 +98,7 @@ const Places = (props) => {
   const [replaceSite, setReplaceSite] = useState([]);
   const [allTasks, setAllTasks] = useState([]);
   const [allTasksOfTheSite, setAllTasksOfTheSite] = useState([]);
-  const [firstStationName, setFirstStationName] = useState();
+  const [firstStationName, setFirstStationName] = useState('');
   const [boardArrayDND, setBoardArrayDND] = useState([]);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [replaceRoute, setReplaceRoute] = useState([]);
@@ -309,7 +312,7 @@ const Places = (props) => {
 
       setRouteFlags(true);
 
-      setTasksOfRoutes(e);
+      tasksOfRoutes = e;
 
       tasksOfRoutes.name = tasksOfRoutes.name
         .replace('&#8211;', '-')
@@ -325,7 +328,7 @@ const Places = (props) => {
       }
 
       let firstStationId;
-      let stationName;
+      let stationName = '';
       if (firstStation !== undefined) {
         firstStation.stations.map((station) => {
           console.log('!! station.parentSiteId: ', station.parentSiteId);
@@ -334,11 +337,9 @@ const Places = (props) => {
           if (station.parentSiteId === mySite.id) {
             console.log('!! station.title: ', station.title);
             firstStationId = station.id;
-
             stationName = station.title;
           }
         });
-
         setFirstStationName(stationName);
 
         //
@@ -391,7 +392,6 @@ const Places = (props) => {
             }
             // isStationOfMySite(item).includes(true)
           );
-          let stationName = '';
 
           console.log('stationID: ', stationID);
           if (stationID !== undefined) {
@@ -470,7 +470,6 @@ const Places = (props) => {
       );
     } else {
       setReplaceRoute(e);
-      setOpenModalRouteChosen(true);
     }
   };
 
@@ -505,21 +504,42 @@ const Places = (props) => {
     });
   };
 
-  const handleSelectChange = (event) => {
-    const selectedValue = JSON.parse(event.target.value);
+  const handleReplaceSiteFlag = () => {
+    setReplaceSiteFlag(true);
+    setOpenModalSiteChosen(false);
+  };
 
-    if (!siteSelected || !replaceSiteFlag) {
+  const handleOpenModalSiteChosen = () => {
+    setOpenModalSiteChosen(false);
+  };
+
+  const handleSelectChange = (event) => {
+    selectedValue = JSON.parse(event.target.value);
+
+    if (!siteSelected) {
       setReplaceSite(selectedValue);
       Display_The_Stations(selectedValue);
       setSiteSelected(true);
-      setRouteFlags(true);
       setReplaceSiteFlag(false);
       setOpenModalSiteChosen(false);
-      setTasksLength(0);
-      setTasksOfChosenStation([]);
-      setTasksOfRoutes([]);
+      // setRouteFlags(false);
+      // setReplaceRouteFlag(false);
+    } else {
+      setReplaceSiteFlag(false);
+      setOpenModalSiteChosen(true);
     }
   };
+
+  useEffect(() => {
+    if (!openModalSiteChosen && replaceSiteFlag) {
+      setReplaceSite(selectedValue);
+      Display_The_Stations(selectedValue);
+      setTasksLength(0);
+      setTasksOfChosenStation([]);
+      // setOpenModalRouteChosen(true);
+      // setReplaceRouteFlag(true);
+    }
+  }, [openModalSiteChosen, replaceSiteFlag, selectedValue]);
 
   const Display_The_Stations = async (selectedValue) => {
     console.log('Display_The_Stations ***');
@@ -532,17 +552,25 @@ const Places = (props) => {
     if (stationArray.length > 0) {
       setStationArray([]);
     }
-    // setMySite((mySite.name = selectedValue.name));
-    setMySite((mySite.id = selectedValue.id));
-    let length = 0;
-    allTasks.map((task) => {
-      if (task.sites.find((site) => site.id === mySite.id)) {
-        console.log('yarden task', task);
-        length++;
-        setAllTasksOfTheSite(task);
-      }
-    });
-    setTasksLength(length);
+    mySite.name = selectedValue.name;
+    mySite.id = selectedValue.id;
+    // setMySite({ name: selectedValue.name, id: selectedValue.id });
+    // let length = 0;
+    // allTasks.map((task) => {
+    //   if (task.sites.find((site) => site.id === mySite.id)) {
+    //     console.log('yarden task', task);
+    //     length++;
+    //     setAllTasksOfTheSite((prev) => [...prev, task]);
+    //   }
+    // });
+    // setTasksLength(length);
+
+    const tasksOfTheSite = allTasks.filter((task) =>
+      task.sites.find((site) => site.id === mySite.id)
+    );
+
+    setTasksLength(tasksOfTheSite.length);
+    setAllTasksOfTheSite((prev) => [...prev, ...tasksOfTheSite]);
 
     localStorage.setItem('MySite', JSON.stringify(mySite));
 
@@ -627,7 +655,7 @@ const Places = (props) => {
   }, [allTasksOfTheSite]);
 
   const clickOnhreeDotsVerticaIcont = (value) => {
-    if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
+    if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);
   };
 
@@ -920,22 +948,42 @@ const Places = (props) => {
           />
         </DragDropContext>
       </div>
-      {/* {openModalRouteChosen ? (
+      {openModalRouteChosen ? (
         <>
-          <Modal_route_chosen
+          {/* <Modal_route_chosen
             setReplaceRouteFlag={setReplaceRouteFlag}
             setOpenModalRouteChosen={setOpenModalRouteChosen}
-          ></Modal_route_chosen>
+          ></Modal_route_chosen> */}
         </>
       ) : (
         <></>
-      )} */}
+      )}
       {openModalSiteChosen ? (
         <>
-          <Modal_site_chosen
+          {/* <Modal_site_chosen
             setReplaceSiteFlag={setReplaceSiteFlag}
             setOpenModalSiteChosen={setOpenModalSiteChosen}
-          ></Modal_site_chosen>
+          ></Modal_site_chosen> */}
+          <div className='modal_route_chosen'>
+            <div className='stopIconContainer'>
+              <img src={stopIcon} alt='logo'></img>
+            </div>
+            <div
+              className='body'
+              style={{ textAlign: 'center', direction: 'rtl' }}
+            >
+              <h4>בחרת כבר באתר אחר, ברצונך להחליף?</h4>
+              <div>החלפת אתר תמחק את השינויים שביצעת באתר הנוכחי</div>
+            </div>
+            <div className='footer' style={{ display: 'flex' }}>
+              <button className='cancelBtn' onClick={handleOpenModalSiteChosen}>
+                ביטול
+              </button>
+              <button className='cancelBtn' onClick={handleReplaceSiteFlag}>
+                החלף אתר
+              </button>
+            </div>
+          </div>
         </>
       ) : (
         <></>

@@ -124,17 +124,19 @@ function Modal_Tasks(props) {
         audioData,
         props.mySite.id
       );
-      setDone(true);
-      console.log('post Modale Tasks:', post);
 
-      setFlagClickOK(false);
-      props.setModalOpen(false);
       let color = props.allStations.find(
         (item) => item.id === myPlacesChoice[0]
       ).color;
 
       post.color = color;
       props.setAllTasksOfTheSite((prev) => [...prev, post]);
+
+      setDone(true);
+      console.log('post Modale Tasks:', post);
+
+      setFlagClickOK(false);
+      props.setModalOpen(false);
 
       console.log('insertTask: ', post);
     } catch (error) {

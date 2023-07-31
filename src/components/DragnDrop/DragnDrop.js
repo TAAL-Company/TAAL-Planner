@@ -31,7 +31,7 @@ let height = '70px';
 let nameStation = '14px';
 let bottom = '-27px';
 let kavTopWidth = '25px';
-let newkavTaskTop = '100px';
+// let newkavTaskTop = '100px';
 let saveTag = {};
 let count1 = 0;
 let kavTaskTopMarginTop = '-7px';
@@ -80,7 +80,7 @@ function DragnDrop(props) {
   const [, setNameStation] = useState('');
   const [, setBottom] = useState('-27px');
   const [, setKavTopWidth] = useState('25px');
-  const [, setNewkavTaskTop] = useState('100px');
+  const [newkavTaskTop, setNewkavTaskTop] = useState('100px');
   const [, setKavTaskTopMarginTop] = useState('-7px');
   const [, setBorderLeft] = useState('2px solid #c2bfbf');
   const [, setFlagStress] = useState(false);
@@ -281,7 +281,7 @@ function DragnDrop(props) {
     };
   };
 
-  const dndArray = props.tasksOfChosenStation.map(mapTask);
+  let dndArray = props.tasksOfChosenStation.map(mapTask);
 
   console.log('dndArray check:', dndArray);
   //---------------------------------------------------------
@@ -322,7 +322,7 @@ function DragnDrop(props) {
           setHeight((height = '86px'));
           setBottom((bottom = '45px'));
           setKavTopWidth((kavTopWidth = '0px'));
-          setNewkavTaskTop((newkavTaskTop = '100px'));
+          setNewkavTaskTop('100px');
           setNameStation((nameStation = ''));
           setKavTaskTopMarginTop((kavTaskTopMarginTop = '-27px'));
         } else {
@@ -332,7 +332,7 @@ function DragnDrop(props) {
           setHeight((height = '70px'));
           setBottom((bottom = '-27px'));
           setKavTopWidth((kavTopWidth = '25px'));
-          setNewkavTaskTop((newkavTaskTop = '0px'));
+          setNewkavTaskTop('0px');
           // setNameStation(nameStation = props.myStation.name)
           setNameStation((nameStation = props.myStation.name));
           setKavTaskTopMarginTop((kavTaskTopMarginTop = '-7px'));
@@ -346,7 +346,7 @@ function DragnDrop(props) {
       setCount(count++);
       // alert(count)
       // setFlagFirst(flagFirst = false)
-      if (props.boardArrayDND.length > 0) {
+      if (boardName === 'routes') {
         console.log('id boardArrayDND: ', id);
 
         Route = props.boardArrayDND.find((tag) => id === tag.id);
@@ -354,10 +354,11 @@ function DragnDrop(props) {
         console.log('Route boardArrayDND: ', Route);
 
         setBoard((board) => [...board, Route]);
-      } else {
         setFlagTree(true);
+      } else {
         Route = dndArray.find((tag) => id === tag.id);
         setBoard((board) => [...board, Route]);
+        setFlagTree(true);
       }
       console.log('dnd Route: ', Route);
 
@@ -365,9 +366,9 @@ function DragnDrop(props) {
 
       console.log('dnd setBoard: ', board);
       // thisIdArray.push(thisId);
-      myTask = saveProps.tasksOfChosenStation.find((item) => item.id === id);
+      // myTask = saveProps.tasksOfChosenStation.find((item) => item.id === id);
       // console.log("myTAsk:", myTask[0])
-      thisIdArray.push(myTask[0]);
+      thisIdArray.push(Route.id);
 
       prevStation = myStation;
       // console.log("thisIdArray:", thisIdArray)
@@ -557,7 +558,7 @@ function DragnDrop(props) {
                   {/* flagTree   */}
                   {flagTree ? (
                     <>
-                      {props.mySite.name ? (
+                      {board !== undefined && board.length !== 0 ? (
                         <>
                           <div
                             className={`kavT ${
@@ -569,9 +570,11 @@ function DragnDrop(props) {
                               props.language !== 'English' ? 'english' : ''
                             }`}
                           >
-                            {props.tasksOfRoutes && props.tasksOfRoutes.name
-                              ? props.tasksOfRoutes.name
-                              : ''}
+                            {props.tasksOfRoutes && props.tasksOfRoutes.name ? (
+                              props.tasksOfRoutes.name
+                            ) : (
+                              <></>
+                            )}
                           </div>
                         </>
                       ) : (
@@ -716,19 +719,19 @@ function DragnDrop(props) {
           mySite={props.mySite}
           help={helpFlag}
           title={
-            openThreeDotsVertical != -1
+            openThreeDotsVertical !== -1
               ? dndArray.find((task) => task.id === openThreeDotsVertical).title
               : ''
           }
           subtitle={
-            openThreeDotsVertical != -1
+            openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
                   (task) => task.id === openThreeDotsVertical
                 ).subtitle
               : ''
           }
           stationOfTask={
-            openThreeDotsVertical != -1
+            openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
                   (task) => task.id === openThreeDotsVertical
                 ).stations

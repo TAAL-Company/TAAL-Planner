@@ -85,10 +85,6 @@ const CustomToolbar = ({
     setChangeRoute(true);
   };
 
-  const optionsArray = allUsers.map((option) => ({
-    id: option.id,
-    name: option.name,
-  }));
   const getOptionLabel = (option) => option.name;
 
   return (
@@ -129,7 +125,7 @@ const CustomToolbar = ({
                 onChange={handleChangeUserFlags}
                 id='free-solo-2-demo'
                 disableClearable
-                options={optionsArray || []}
+                options={allUsers || []}
                 getOptionLabel={getOptionLabel}
                 renderOption={(props, option) => (
                   <div
@@ -173,11 +169,13 @@ const CustomToolbar = ({
                 <TextField
                   {...params}
                   label={
-                    worker.length !== 0 && worker.routes.length !== 0
+                    Object.keys(worker).length !== 0 &&
+                    worker.routes.length !== 0
                       ? 'בחירת מסלול'
-                      : worker.length !== 0 && worker.routes.length === 0
+                      : Object.keys(worker).length !== 0 &&
+                        worker.routes.length === 0
                       ? 'אין מסלולים עבור העובד'
-                      : worker.length === 0
+                      : worker === 0
                       ? 'בחר מסלול'
                       : ''
                   }

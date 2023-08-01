@@ -57,7 +57,7 @@ function Forms() {
   const [routeNameEN, setRouteNameEN] = useState('Azrieli Tel Aviv - Morning');
   const [siteNameEN, setSiteNameEN] = useState('Azrieli Tel Aviv');
 
-  const [worker, setWorker] = useState([]);
+  const [worker, setWorker] = useState({});
   const [prevSelectedWorker, setPrevSelected] = useState([]);
   const [routesOfFlags, setRoutesOfFlags] = useState([]);
   const [routeForTasksAbility, setRouteForTasksAbility] = useState([]);

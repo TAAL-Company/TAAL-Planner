@@ -48,9 +48,6 @@ const CustomToolbar = ({
   handleChangeUserFlags,
   handleChangeRouteFlags,
 }) => {
-  const [workerNameSelected, setWorkerNameSelected] = useState('');
-  const [routeNameSelected, setRouteNameSelected] = useState('');
-
   useEffect(() => {
     console.log('prevSelectedWorker', prevSelectedWorker);
   }, [prevSelectedWorker]);
@@ -64,7 +61,7 @@ const CustomToolbar = ({
       console.log('HII');
       newTaskCognitiveRequirements.forEach((element) => {
         try {
-          let post = postTaskCognitiveRequirements(element);
+          postTaskCognitiveRequirements(element);
         } catch (error) {}
 
         alert('המידע נשמר !');
@@ -87,7 +84,8 @@ const CustomToolbar = ({
     setChangeRoute(true);
   };
 
-  const getOptionLabel = (option) => option.name;
+  const getOptionLabel = (option) =>
+    option.name === undefined ? '' : option.name;
 
   return (
     <div>
@@ -127,12 +125,15 @@ const CustomToolbar = ({
                 onChange={handleChangeUserFlags}
                 id='free-solo-2-demo'
                 disableClearable
+                // value={workerNameSelected}
                 options={allUsers || []}
                 getOptionLabel={getOptionLabel}
                 renderOption={(props, option) => (
                   <div
                     key={option.id}
-                    onClick={() => handleChangeUserFlags(null, option)}
+                    onClick={() => {
+                      handleChangeUserFlags(null, option);
+                    }}
                     style={{
                       cursor: 'pointer',
                     }}

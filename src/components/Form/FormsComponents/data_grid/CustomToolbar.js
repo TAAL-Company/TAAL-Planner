@@ -48,7 +48,9 @@ const CustomToolbar = ({
   handleChangeUserFlags,
   handleChangeRouteFlags,
 }) => {
-  // const [prevSelected, setPrevSelected] = useState([]);
+  const [workerNameSelected, setWorkerNameSelected] = useState('');
+  const [routeNameSelected, setRouteNameSelected] = useState('');
+
   useEffect(() => {
     console.log('prevSelectedWorker', prevSelectedWorker);
   }, [prevSelectedWorker]);
@@ -169,14 +171,15 @@ const CustomToolbar = ({
                 <TextField
                   {...params}
                   label={
-                    Object.keys(worker).length !== 0 &&
-                    worker.routes.length !== 0
+                    Object.keys(worker).length === 0 &&
+                    worker.routes?.length === 0
                       ? 'בחירת מסלול'
                       : Object.keys(worker).length !== 0 &&
-                        worker.routes.length === 0
+                        worker.routes?.length === 0
                       ? 'אין מסלולים עבור העובד'
-                      : worker === 0
-                      ? 'בחר מסלול'
+                      : Object.keys(worker).length !== 0 &&
+                        worker.routes.length !== 0
+                      ? 'בחירת מסלול'
                       : ''
                   }
                   InputProps={{

@@ -128,6 +128,7 @@ function Forms() {
     };
     fetchData();
   }, []);
+
   useEffect(() => {
     console.log("tasksOfChosenRoute", tasksOfChosenRoute);
     let cognitiveRequirements;
@@ -2154,7 +2155,7 @@ function Forms() {
               <div>
                 <div className="headlineForms">פרופיל קוגנטיבי</div>
                 <div className="tableForms">
-                  <DataTableRTL
+                  <DataTableRTL // DataTableLTR
                     setChangeUser={setChangeUser}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
@@ -2188,7 +2189,7 @@ function Forms() {
               <div>
                 <div className="headlineForms">כרטסת אישית</div>
                 <div className="tableForms">
-                  <DataTableRTL
+                  <DataTableRTL //---DataTableLTR
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
@@ -2218,7 +2219,7 @@ function Forms() {
                 <div className="headlineForms">דרישות למשימה</div>
                 {/* <TaskAbility /> */}
                 <div className="tableForms">
-                  <TaskAbility
+                  <TaskAbility //------DataTableLTR
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
@@ -2240,6 +2241,7 @@ function Forms() {
                 </div>
               </div>
             )}
+            
             {selectedTable === "abillities" && (
               <div>
                 <div className="headlineForms">Taskability</div>
@@ -2249,13 +2251,13 @@ function Forms() {
               </div>
             )}
           </>
-        ) : (
+        ) : ( // EN ---------------------------------------------
           <>
             <div className="NavbarForms">
               <nav>
                 <button
                   className="btn_nav_forms"
-                  onClick={() => handleSelectTable("flags")}
+                  onClick={() => handleSelectTable("flagsForms")}
                 >
                   Flags
                 </button>
@@ -2276,6 +2278,12 @@ function Forms() {
                   onClick={() => handleSelectTable("taskability")}
                 >
                   Taskability
+                </button>
+                <button
+                  className="btn_nav_forms"
+                  onClick={() => handleSelectTable("abillities")}
+                >
+                  Abillities
                 </button>
               </nav>
             </div>
@@ -2625,7 +2633,7 @@ function Forms() {
               <div>
                 <div className="headlineForms">Cogntive Profile</div>
                 <div className="tableForms">
-                  <DataTableLTR
+                  <DataTableLTR // DataTableRTL
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
@@ -2653,7 +2661,7 @@ function Forms() {
               <div>
                 <div className="headlineForms">Private Card</div>
                 <div className="tableForms">
-                  <DataTableLTR
+                  <DataTableLTR //---DataTableRTL
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
@@ -2680,7 +2688,7 @@ function Forms() {
               <div>
                 <div className="headlineForms">Taskability</div>
                 <div className="tableForms">
-                  <DataTableLTR
+                  <DataTableLTR //-------TaskAbility
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
@@ -2705,9 +2713,11 @@ function Forms() {
 
             {selectedTable === "abillities" && (
               <div>
-                <div className="headlineForms">Taskability</div>
-                <div className="tableForms">HELLO</div>
+              <div className="headlineForms">Abillities</div>
+              <div className="tableForms">
+                <CognitiveAbillities></CognitiveAbillities>
               </div>
+            </div>
             )}
           </>
         )}

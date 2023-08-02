@@ -108,7 +108,8 @@ const CustomToolbar = ({
                   : "TA'AL EDITOR"
               }_${new Date()
                 .toLocaleDateString("en-GB")
-                .replace(/\//g, "-")}.csv`,
+                .replace(/\//g, "-")}`,
+                utf8WithBom: true,
             }}
             style={{ color: "black" }}
           />

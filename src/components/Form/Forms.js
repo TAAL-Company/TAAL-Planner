@@ -2257,7 +2257,7 @@ function Forms() {
               <nav>
                 <button
                   className="btn_nav_forms"
-                  onClick={() => handleSelectTable("flagsForms")}
+                  onClick={() => handleSelectTable("flags")}
                 >
                   Flags
                 </button>
@@ -2287,7 +2287,7 @@ function Forms() {
                 </button>
               </nav>
             </div>
-            {selectedTable === "flagsForms" && (
+            {selectedTable === "flags" && (
               <div>
                 <div className="headlineForms">Flags</div>
                 <div className="tableForms">

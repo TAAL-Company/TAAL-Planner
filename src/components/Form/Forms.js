@@ -142,7 +142,7 @@ function Forms() {
       let cognitiveRequirementsValues = [];
       console.log('task-cognitive-requirements', cognitiveRequirements);
 
-      if (cognitiveRequirements != undefined) {
+      if (cognitiveRequirements !== undefined) {
         for (
           let index = 0;
           index < cognitiveRequirements.value.length;
@@ -359,20 +359,28 @@ function Forms() {
     let route = allRoutes.find((route) => route.id === value.id);
 
     setRoutesOfFlags(route);
-    const studentIds = [worker.id]; //route.students.map((student) => student.id);
+    const studentIds = [worker.id];
     const taskIds = route.tasks.map((task) => task.taskId);
 
-    // route.students.map(()=>{
-
-    // })
     console.log('studentIds', studentIds);
 
-    // await postEvaluation(studentIds, taskIds).then(async (data) => {
-    //   console.log('data:', data);
-    //   data.map(async (flag) => {
-    //     await postEvaluationEvents(worker.id, flag.taskId, flag.evaluation);
-    //   });
-    // });
+    try {
+      const data = await postEvaluation(studentIds, taskIds);
+
+      for (const flag of data) {
+        try {
+          await postEvaluationEvents(worker.id, flag.taskId, flag.evaluation);
+        } catch (error) {
+          console.error(
+            `Error posting evaluation event for task ID ${flag.taskId}:`,
+            error
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error posting evaluations:', error);
+    }
+
     setAllFlags(await getingDataFlags());
     // let flagsOfRoute = route.tasks.map((taskInRoute) => {
     //   // let task = allTasks.find((task) => task.id === taskInRoute.taskId);
@@ -405,7 +413,7 @@ function Forms() {
           ...prev,
           {
             id: task.position,
-            // image: taskpic,
+            image: taskInfo.picture_url || taskpic,
             classification: evaluation.flag,
             task: taskInfo.title,
             intervention: evaluation.intervention,

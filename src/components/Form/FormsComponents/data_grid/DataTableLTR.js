@@ -417,6 +417,7 @@ const DataTableLTR = ({
           }
           rows={rows}
           columns={columns}
+          getRowId={(row) => row?.id}
           pageSize={100}
           // rowHeight={52}
           getRowHeight={() => "auto"}

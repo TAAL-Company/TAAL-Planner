@@ -43,7 +43,21 @@ function CustomToolbar({
           <GridToolbarColumnsButton style={{ color: "black" }} />
           <GridToolbarFilterButton style={{ color: "black" }} />
           <GridToolbarDensitySelector style={{ color: "black" }} />
-          <GridToolbarExport style={{ color: "black" }} />
+          <GridToolbarExport
+            csvOptions={{
+              fileName: `${
+                tableType === "TaskabilityHE"
+                  ? "Taskability"
+                  : tableType === "CognitiveProfileHE"
+                  ? "CognitiveProfile"
+                  : "TA'AL EDITOR"
+              }_${new Date()
+                .toLocaleDateString("en-GB")
+                .replace(/\//g, "-")}`,
+                utf8WithBom: true,
+            }}
+            style={{ color: "black" }}
+          />
         </div>
 
         {isInfoUserRoute && ( // ---------- khalid idies

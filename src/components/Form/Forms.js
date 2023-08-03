@@ -2253,7 +2253,7 @@ function Forms() {
 
             {selectedTable === 'abillities' && (
               <div>
-                <div className='headlineForms'>Taskability</div>
+                <div className='headlineForms'>Abillities</div>
                 <div className='tableForms'>
                   <CognitiveAbillities></CognitiveAbillities>
                 </div>

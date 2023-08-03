@@ -28,6 +28,7 @@ const Cards = () => {
   const [coaches, setCoaches] = useState([]);
   const [coach, setCoach] = useState([]);
   const [updateAdd, setupdateAdd] = useState(false);
+  const [manager, setmanager] = useState(null);
 
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState("");
@@ -67,6 +68,7 @@ const Cards = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setmanager(null);
     setRequestForEditing("");
     setOpenThreeDotsVertical(-1);
   };
@@ -159,15 +161,6 @@ const Cards = () => {
     handleClose(); // Close the dialog after the form is submitted
   };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const usersData = await getingData_Users();
-  //     setUsers(usersData);
-  //   };
-  //   fetchData();
-  //   // console.log("usersData", usersData);
-  // }, []);
-
   useEffect(() => {
     const fetchData = async () => {
       const usersData = await getingData_Users();
@@ -182,6 +175,7 @@ const Cards = () => {
     if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);
   };
+
   return (
     <div style={{ marginTop: "14px", textAlign: "-webkit-center" }}>
       {/* <Button variant="outlined" onClick={handleJson}>
@@ -253,14 +247,15 @@ const Cards = () => {
             onChange={(event, value) => {
               console.log("value", value);
               setCoach(value);
+              setmanager(value)
             }}
             defaultValue={
-              openThreeDotsVertical !== -1 &&
+              (openThreeDotsVertical !== -1 &&
                 coaches.find(
                   (coach) => coach.id === users[openThreeDotsVertical]?.coach?.id
                 )
                 ? users[openThreeDotsVertical]?.coach
-                : null
+                : (manager !== null ? manager : null))
             }
             value={
               (openThreeDotsVertical !== -1 &&
@@ -268,7 +263,7 @@ const Cards = () => {
                   (coach) =>
                     coach.id === users[openThreeDotsVertical]?.coach?.id
                 )) ||
-              null
+                (manager !== null ? manager : null)
             }
           />
 

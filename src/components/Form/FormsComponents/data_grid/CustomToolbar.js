@@ -110,8 +110,9 @@ const CustomToolbar = ({
                   ? 'CognitiveProfile'
                   : "TA'AL EDITOR"
               }_${new Date()
-                .toLocaleDateString('en-GB')
-                .replace(/\//g, '-')}.csv`,
+                .toLocaleDateString("en-GB")
+                .replace(/\//g, "-")}`,
+                utf8WithBom: true,
             }}
             style={{ color: 'black' }}
           />

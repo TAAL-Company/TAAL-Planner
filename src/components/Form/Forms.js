@@ -128,6 +128,7 @@ function Forms() {
     };
     fetchData();
   }, []);
+
   useEffect(() => {
     console.log('tasksOfChosenRoute', tasksOfChosenRoute);
     let cognitiveRequirements;
@@ -2249,7 +2250,8 @@ function Forms() {
                 </div>
               </div>
             )}
-            {selectedTable === 'abillities' && (
+            
+            {selectedTable === "abillities" && (
               <div>
                 <div className='headlineForms'>Taskability</div>
                 <div className='tableForms'>
@@ -2258,7 +2260,7 @@ function Forms() {
               </div>
             )}
           </>
-        ) : (
+        ) : ( // EN ---------------------------------------------
           <>
             <div className='NavbarForms'>
               <nav>
@@ -2286,9 +2288,15 @@ function Forms() {
                 >
                   Taskability
                 </button>
+                <button
+                  className="btn_nav_forms"
+                  onClick={() => handleSelectTable("abillities")}
+                >
+                  Abillities
+                </button>
               </nav>
             </div>
-            {selectedTable === 'flagsForms' && (
+            {selectedTable === "flags" && (
               <div>
                 <div className='headlineForms'>Flags</div>
                 <div className='tableForms'>
@@ -2714,9 +2722,16 @@ function Forms() {
 
             {selectedTable === 'abillities' && (
               <div>
+<<<<<<< HEAD
                 <div className='headlineForms'>Taskability</div>
                 <div className='tableForms'>HELLO</div>
+=======
+              <div className="headlineForms">Abillities</div>
+              <div className="tableForms">
+                <CognitiveAbillities></CognitiveAbillities>
+>>>>>>> master
               </div>
+            </div>
             )}
           </>
         )}

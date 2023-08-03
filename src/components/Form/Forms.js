@@ -264,7 +264,7 @@ function Forms() {
     }
 
     console.log('cognitiveProfileValues', cognitiveProfileValues);
-  }, [worker]);
+  }, []);
 
   useEffect(() => {
     if (
@@ -361,7 +361,7 @@ function Forms() {
 
     setRoutesOfFlags(route);
     const studentIds = [worker.id];
-    const taskIds = route.tasks.map((task) => task.taskId);
+    const taskIds = route.tasks?.map((task) => task.taskId);
 
     console.log('studentIds', studentIds);
 
@@ -420,8 +420,7 @@ function Forms() {
             intervention: evaluation.intervention,
             Alternatives: evaluation.alternativeTaskId,
             explaination: evaluation.explanation,
-            // date: "5/12/2020",
-            // status: "לא פעיל",
+            // Actions
           },
         ]);
       });
@@ -2151,6 +2150,7 @@ function Forms() {
                     workerName={workerNameHE}
                     setWorker={setWorker}
                     worker={worker}
+                    routesOfFlags={routesOfFlags}
                     routeForTasksAbility={routeForTasksAbility}
                     setRouteForTasksAbility={setRouteForTasksAbility}
                     routeName={routeNameHE}
@@ -2250,8 +2250,8 @@ function Forms() {
                 </div>
               </div>
             )}
-            
-            {selectedTable === "abillities" && (
+
+            {selectedTable === 'abillities' && (
               <div>
                 <div className='headlineForms'>Taskability</div>
                 <div className='tableForms'>
@@ -2260,7 +2260,8 @@ function Forms() {
               </div>
             )}
           </>
-        ) : ( // EN ---------------------------------------------
+        ) : (
+          // EN ---------------------------------------------
           <>
             <div className='NavbarForms'>
               <nav>
@@ -2289,14 +2290,14 @@ function Forms() {
                   Taskability
                 </button>
                 <button
-                  className="btn_nav_forms"
-                  onClick={() => handleSelectTable("abillities")}
+                  className='btn_nav_forms'
+                  onClick={() => handleSelectTable('abillities')}
                 >
                   Abillities
                 </button>
               </nav>
             </div>
-            {selectedTable === "flags" && (
+            {selectedTable === 'flags' && (
               <div>
                 <div className='headlineForms'>Flags</div>
                 <div className='tableForms'>
@@ -2722,16 +2723,11 @@ function Forms() {
 
             {selectedTable === 'abillities' && (
               <div>
-<<<<<<< HEAD
-                <div className='headlineForms'>Taskability</div>
-                <div className='tableForms'>HELLO</div>
-=======
-              <div className="headlineForms">Abillities</div>
-              <div className="tableForms">
-                <CognitiveAbillities></CognitiveAbillities>
->>>>>>> master
+                <div className='headlineForms'>Abillities</div>
+                <div className='tableForms'>
+                  <CognitiveAbillities></CognitiveAbillities>
+                </div>
               </div>
-            </div>
             )}
           </>
         )}

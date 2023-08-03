@@ -36,6 +36,7 @@ const CustomToolbar = ({
   setColumns,
   setWorker,
   worker,
+  routesOfFlags,
   allUsers,
   setChangeUser,
   setChangeRoute,
@@ -48,6 +49,7 @@ const CustomToolbar = ({
   handleChangeUserFlags,
   handleChangeRouteFlags,
 }) => {
+  // const [prevSelected, setPrevSelected] = useState([]);
   useEffect(() => {
     console.log('prevSelectedWorker', prevSelectedWorker);
   }, [prevSelectedWorker]);
@@ -61,7 +63,7 @@ const CustomToolbar = ({
       console.log('HII');
       newTaskCognitiveRequirements.forEach((element) => {
         try {
-          postTaskCognitiveRequirements(element);
+          let post = postTaskCognitiveRequirements(element);
         } catch (error) {}
 
         alert('המידע נשמר !');
@@ -83,10 +85,6 @@ const CustomToolbar = ({
     setRouteForTasksAbility(selectedValue);
     setChangeRoute(true);
   };
-
-  const getOptionLabel = (option) =>
-    option.name === undefined ? '' : option.name;
-
   return (
     <div>
       <GridToolbarContainer
@@ -110,38 +108,25 @@ const CustomToolbar = ({
                   ? 'CognitiveProfile'
                   : "TA'AL EDITOR"
               }_${new Date()
-                .toLocaleDateString("en-GB")
-                .replace(/\//g, "-")}`,
-                utf8WithBom: true,
+                .toLocaleDateString('en-GB')
+                .replace(/\//g, '-')}.csv`,
             }}
             style={{ color: 'black' }}
           />
         </div>
-        <div className='infoForms'>
-          <div className='workerNameForms'>
-            שם עובד:
-            {allUsers && allUsers.length > 0 && isInfoUserRoute ? (
+
+        {isInfoUserRoute && allUsers && (
+          <div className='infoForms'>
+            <div className='workerNameForms'>
+              שם עובד:
               <Autocomplete
                 freeSolo
+                value={worker}
                 onChange={handleChangeUserFlags}
                 id='free-solo-2-demo'
                 disableClearable
-                // value={workerNameSelected}
                 options={allUsers || []}
-                getOptionLabel={getOptionLabel}
-                renderOption={(props, option) => (
-                  <div
-                    key={option.id}
-                    onClick={() => {
-                      handleChangeUserFlags(null, option);
-                    }}
-                    style={{
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {option.name}
-                  </div>
-                )}
+                getOptionLabel={(option) => option.name || ''}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -153,47 +138,42 @@ const CustomToolbar = ({
                   />
                 )}
               />
-            ) : (
-              <div>Loading or no data available.</div>
-            )}
+            </div>
+            <div className='workerRouteForms'>
+              שם מסלול:
+              <Autocomplete
+                freeSolo
+                style={{ width: '250px' }}
+                value={routesOfFlags || ''}
+                onChange={handleChangeRouteFlags}
+                id='free-solo-2-demo'
+                disableClearable
+                options={worker.routes || []}
+                getOptionLabel={(option) => option.name || ''}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={
+                      Object.keys(worker).length !== 0 &&
+                      worker.routes.length !== 0
+                        ? 'בחר מסלול'
+                        : Object.keys(worker).length !== 0 &&
+                          worker.routes.length === 0
+                        ? 'אין מסלולים עבור העובד'
+                        : Object.keys(worker).length === 0
+                        ? 'בחר מסלול'
+                        : ''
+                    }
+                    InputProps={{
+                      ...params.InputProps,
+                      type: 'search',
+                    }}
+                  />
+                )}
+              />
+            </div>
           </div>
-          <div className='workerRouteForms'>
-            שם מסלול:
-            <Autocomplete
-              style={{ width: '250px' }}
-              freeSolo
-              onChange={handleChangeRouteFlags}
-              id='free-solo-2-demo'
-              disableClearable
-              options={worker.routes}
-              getOptionLabel={(option) =>
-                option.name.replace('&#8211;', '-').replace('&#8217;', "'")
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={
-                    Object.keys(worker).length === 0 &&
-                    worker.routes?.length === 0
-                      ? 'בחירת מסלול'
-                      : Object.keys(worker).length !== 0 &&
-                        worker.routes?.length === 0
-                      ? 'אין מסלולים עבור העובד'
-                      : Object.keys(worker).length !== 0 &&
-                        worker.routes.length !== 0
-                      ? 'בחירת מסלול'
-                      : ''
-                  }
-                  InputProps={{
-                    ...params.InputProps,
-                    type: 'search',
-                  }}
-                />
-              )}
-            />
-          </div>
-        </div>
-
+        )}
         {tableType === 'TaskabilityHE' ? (
           <div className='infoForms'>
             <div className='workerNameForms'>

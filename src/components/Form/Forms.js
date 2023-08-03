@@ -359,28 +359,21 @@ function Forms() {
 
     let route = allRoutes.find((route) => route.id === value.id);
 
-    setRoutesOfFlags(route);
-    const studentIds = [worker.id];
+   setRoutesOfFlags(route);
+    const studentIds = [worker.id]; //route.students.map((student) => student.id);
     const taskIds = route.tasks.map((task) => task.taskId);
 
+    // route.students.map(()=>{
+
+    // })
     console.log('studentIds', studentIds);
 
-    try {
-      const data = await postEvaluation(studentIds, taskIds);
-
-      for (const flag of data) {
-        try {
-          await postEvaluationEvents(worker.id, flag.taskId, flag.evaluation);
-        } catch (error) {
-          console.error(
-            `Error posting evaluation event for task ID ${flag.taskId}:`,
-            error
-          );
-        }
-      }
-    } catch (error) {
-      console.error('Error posting evaluations:', error);
-    }
+    // await postEvaluation(studentIds, taskIds).then(async (data) => {
+    //   console.log('data:', data);
+    //   data.map(async (flag) => {
+    //     await postEvaluationEvents(worker.id, flag.taskId, flag.evaluation);
+    //   });
+    // });
 
     setAllFlags(await getingDataFlags());
     // let flagsOfRoute = route.tasks.map((taskInRoute) => {

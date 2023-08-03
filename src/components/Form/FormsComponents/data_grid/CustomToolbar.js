@@ -48,6 +48,7 @@ const CustomToolbar = ({
   handleChangeUserFlags,
   handleChangeRouteFlags,
 }) => {
+  // const [prevSelected, setPrevSelected] = useState([]);
   useEffect(() => {
     console.log('prevSelectedWorker', prevSelectedWorker);
   }, [prevSelectedWorker]);
@@ -119,7 +120,7 @@ const CustomToolbar = ({
         </div>
         <div className='infoForms'>
           <div className='workerNameForms'>
-            שם עובד:
+              שם עובד:
             {allUsers && allUsers.length > 0 && isInfoUserRoute ? (
               <Autocomplete
                 freeSolo
@@ -156,23 +157,23 @@ const CustomToolbar = ({
             ) : (
               <div>Loading or no data available.</div>
             )}
-          </div>
+            </div>
           <div className='workerRouteForms'>
-            שם מסלול:
-            <Autocomplete
+              שם מסלול:
+              <Autocomplete
               style={{ width: '250px' }}
-              freeSolo
-              onChange={handleChangeRouteFlags}
+                freeSolo
+                onChange={handleChangeRouteFlags}
               id='free-solo-2-demo'
-              disableClearable
-              options={worker.routes}
-              getOptionLabel={(option) =>
+                disableClearable
+                options={worker.routes}
+                getOptionLabel={(option) =>
                 option.name.replace('&#8211;', '-').replace('&#8217;', "'")
-              }
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label={
+                }
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={
                     Object.keys(worker).length === 0 &&
                     worker.routes?.length === 0
                       ? 'בחירת מסלול'
@@ -183,16 +184,16 @@ const CustomToolbar = ({
                         worker.routes.length !== 0
                       ? 'בחירת מסלול'
                       : ''
-                  }
-                  InputProps={{
-                    ...params.InputProps,
+                    }
+                    InputProps={{
+                      ...params.InputProps,
                     type: 'search',
-                  }}
-                />
-              )}
-            />
+                    }}
+                  />
+                )}
+              />
+            </div>
           </div>
-        </div>
 
         {tableType === 'TaskabilityHE' ? (
           <div className='infoForms'>

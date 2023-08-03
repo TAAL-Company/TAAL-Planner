@@ -241,7 +241,7 @@ function Forms() {
   useEffect(() => {
     if (saveProfileChanges === true) {
       setSaveProfileChanges(false);
-      if (worker.length != 0) {
+      if (Object.keys(worker).length !== 0) {
         postDataCognitiveProfile(worker.id, cognitiveProfileValues);
         console.log('66 cognitiveProfileValues', cognitiveProfileValues);
 
@@ -258,7 +258,7 @@ function Forms() {
         setCognitiveProfileValues(new Array(242).fill(0));
       }
     };
-    if (worker.length != 0) {
+    if (Object.keys(worker).length !== 0) {
       fetchData();
     }
 
@@ -281,7 +281,7 @@ function Forms() {
 
       cognitiveAbillities.map((cognitive, index) => {
         let cogValue = 1;
-        if (cognitiveProfileValues != undefined)
+        if (cognitiveProfileValues !== undefined)
           cogValue = cognitiveProfileValues[index];
 
         // const valueMap = {
@@ -367,12 +367,12 @@ function Forms() {
     // })
     console.log('studentIds', studentIds);
 
-    postEvaluation(studentIds, taskIds).then(async (data) => {
-      console.log('data:', data);
-      data.map(async (flag) => {
-        await postEvaluationEvents(worker.id, flag.taskId, flag.evaluation);
-      });
-    });
+    // await postEvaluation(studentIds, taskIds).then(async (data) => {
+    //   console.log('data:', data);
+    //   data.map(async (flag) => {
+    //     await postEvaluationEvents(worker.id, flag.taskId, flag.evaluation);
+    //   });
+    // });
     setAllFlags(await getingDataFlags());
     // let flagsOfRoute = route.tasks.map((taskInRoute) => {
     //   // let task = allTasks.find((task) => task.id === taskInRoute.taskId);
@@ -391,29 +391,30 @@ function Forms() {
     console.log('allFlags: ', allFlags);
     console.log('route: ', routesOfFlags);
     if (Object.keys(routesOfFlags).length > 0) {
-      routesOfFlags.tasks.map((task) => {
+      routesOfFlags.tasks.forEach((task) => {
         let evaluation = allFlags.find((flag) => flag.taskId === task.taskId);
         let taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
 
         console.log('task xx', task);
         console.log('evaluation xx', evaluation);
         console.log('taskInfo xx', taskInfo);
-        if (evaluation !== undefined) {
-          setRowsFlagsHE((prev) => [
-            ...prev,
-            {
-              id: task.position,
-              // image: taskpic,
-              classification: evaluation.flag,
-              task: taskInfo.title,
-              intervention: evaluation.intervention,
-              Alternatives: evaluation.alternativeTaskId,
-              explaination: evaluation.explanation,
-              // date: "5/12/2020",
-              // status: "לא פעיל",
-            },
-          ]);
-        }
+
+        if (evaluation === undefined) return;
+
+        setRowsFlagsHE((prev) => [
+          ...prev,
+          {
+            id: task.position,
+            // image: taskpic,
+            classification: evaluation.flag,
+            task: taskInfo.title,
+            intervention: evaluation.intervention,
+            Alternatives: evaluation.alternativeTaskId,
+            explaination: evaluation.explanation,
+            // date: "5/12/2020",
+            // status: "לא פעיל",
+          },
+        ]);
       });
     }
   }, [allFlags]);

@@ -2722,14 +2722,9 @@ function Forms() {
 
             {selectedTable === 'abillities' && (
               <div>
-<<<<<<< HEAD
-                <div className='headlineForms'>Taskability</div>
-                <div className='tableForms'>HELLO</div>
-=======
               <div className="headlineForms">Abillities</div>
               <div className="tableForms">
                 <CognitiveAbillities></CognitiveAbillities>
->>>>>>> master
               </div>
             </div>
             )}

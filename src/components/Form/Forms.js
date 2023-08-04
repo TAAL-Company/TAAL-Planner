@@ -190,7 +190,7 @@ function Forms() {
         ]);
       }
     });
-  }, [tasksOfChosenRoute]);
+  }, [tasksOfChosenRoute, routeForTasksAbility.name]);
 
   useEffect(() => {
     console.log('changeRoute', changeRoute);
@@ -208,7 +208,7 @@ function Forms() {
 
       setChangeRoute(false);
     }
-  }, [changeRoute]);
+  }, [changeRoute, allTasks, routeForTasksAbility.tasks]);
 
   useEffect(() => {
     if (
@@ -249,7 +249,7 @@ function Forms() {
         alert('המידע נשמר !');
       }
     }
-  }, [saveProfileChanges]);
+  }, [saveProfileChanges, cognitiveProfileValues, worker]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -346,26 +346,19 @@ function Forms() {
   };
 
   const handleChangeRouteFlags = async (event, value) => {
-    console.log('route', allFlags);
-    // {
-    //   "studentId": "string",
-    //   "taskId": "string",
-    //   "flag": {},
-    //   "alternativeTaskId": "string",
-    //   "intervention": "string",
-    //   "explanation": "string"
-
-    // }
-
-    let route = allRoutes.find((route) => route.id === value.id);
-
-    setRoutesOfFlags(route);
-    const studentIds = [worker.id];
-    const taskIds = route.tasks?.map((task) => task.taskId);
-
-    console.log('studentIds', studentIds);
-
     try {
+      const route = allRoutes.find((route) => route.id === value.id);
+
+      // Fetch new flags data and update the state
+      const flagsData = await getingDataFlags();
+      setAllFlags(flagsData);
+      setRoutesOfFlags(route);
+
+      const studentIds = [worker.id];
+      const taskIds = route.tasks?.map((task) => task.taskId);
+
+      console.log('studentIds', studentIds);
+
       const data = await postEvaluation(studentIds, taskIds);
 
       for (const flag of data) {
@@ -379,21 +372,8 @@ function Forms() {
         }
       }
     } catch (error) {
-      console.error('Error posting evaluations:', error);
+      console.error('Error handling route flags change:', error);
     }
-
-    setAllFlags(await getingDataFlags());
-    // let flagsOfRoute = route.tasks.map((taskInRoute) => {
-    //   // let task = allTasks.find((task) => task.id === taskInRoute.taskId);
-
-    //   return allFlags.find(
-    //     (flag) => flag.studentId === worker.id && flag.taskId === taskInRoute.id
-    //   );
-    // });
-
-    // console.log("route", flagsOfRoute);
-
-    // route.tasks.map((task) => {});
   };
 
   useEffect(() => {
@@ -425,7 +405,7 @@ function Forms() {
         ]);
       });
     }
-  }, [allFlags]);
+  }, [allFlags, allTasks, routesOfFlags]);
 
   //end flags functions
 
@@ -2150,6 +2130,7 @@ function Forms() {
                     workerName={workerNameHE}
                     setWorker={setWorker}
                     worker={worker}
+                    setRoutesOfFlags={setRoutesOfFlags}
                     routesOfFlags={routesOfFlags}
                     routeForTasksAbility={routeForTasksAbility}
                     setRouteForTasksAbility={setRouteForTasksAbility}

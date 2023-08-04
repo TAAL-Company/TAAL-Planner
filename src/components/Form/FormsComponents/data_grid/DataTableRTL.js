@@ -81,7 +81,7 @@ const DataTableRTL = ({
   useEffect(() => {
     console.log('rows:', rows);
     console.log('columns:', columns);
-  }, [columns]);
+  }, [columns, rows]);
 
   const [openDialogTrueFalse, setOpenDialogTrueFalse] = React.useState(false);
   const [groupName, setGroupName] = React.useState('');

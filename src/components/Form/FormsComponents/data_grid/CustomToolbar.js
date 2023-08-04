@@ -36,6 +36,7 @@ const CustomToolbar = ({
   setColumns,
   setWorker,
   worker,
+  setRoutesOfFlags,
   routesOfFlags,
   allUsers,
   setChangeUser,
@@ -50,9 +51,9 @@ const CustomToolbar = ({
   handleChangeRouteFlags,
 }) => {
   // const [prevSelected, setPrevSelected] = useState([]);
-  useEffect(() => {
-    console.log('prevSelectedWorker', prevSelectedWorker);
-  }, [prevSelectedWorker]);
+  // useEffect(() => {
+  //   console.log('prevSelectedWorker', prevSelectedWorker);
+  // }, [prevSelectedWorker]);
 
   const saveProfileChanges = (e) => {
     console.log('HII');
@@ -83,6 +84,7 @@ const CustomToolbar = ({
 
     console.log('route', selectedValue);
     setRouteForTasksAbility(selectedValue);
+    setRoutesOfFlags(selectedValue);
     setChangeRoute(true);
   };
   return (
@@ -182,7 +184,7 @@ const CustomToolbar = ({
               </InputLabel>
               <select
                 className='selectUserForms'
-                defaultValue={'DEFAULT'}
+                value={'DEFAULT'}
                 onChange={handleChangeRoute}
               >
                 <option value='DEFAULT' disabled>

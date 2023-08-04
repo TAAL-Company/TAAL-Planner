@@ -19,6 +19,7 @@ import { deleteTask } from '../../api/api.js';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 let Route = [];
+let newBoard = [];
 let dndArray = [];
 let saveProps = [];
 let thisId = '';
@@ -353,11 +354,16 @@ function DragnDrop(props) {
 
         console.log('Route boardArrayDND: ', Route);
 
-        setBoard((board) => [...board, Route]);
+        newBoard = board.slice();
+        newBoard.unshift(Route);
+
+        setBoard(newBoard);
         setFlagTree(true);
       } else {
         Route = dndArray.find((tag) => id === tag.id);
-        setBoard((board) => [...board, Route]);
+        newBoard = board.slice();
+        newBoard.unshift(Route);
+        setBoard(newBoard);
         setFlagTree(true);
       }
       console.log('dnd Route: ', Route);

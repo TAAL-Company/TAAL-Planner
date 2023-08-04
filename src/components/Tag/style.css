@@ -72,7 +72,7 @@
   left: 356px;
   width: 16px;
   height: 16px;
-  border: 3px solid #C4CE9C;
+  border: 3px solid #c4ce9c;
   opacity: 1;
   border-radius: 200%;
 }
@@ -81,7 +81,8 @@
   border: none;
   height: 167.2px;
   width: 36px;
-  background: transparent url('../../Pictures/ic_listen\ .svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/ic_listen\ .svg') 0% 0% no-repeat
+    padding-box;
   position: relative;
   top: -115px;
   left: 56px;
@@ -92,7 +93,8 @@
   border: none;
   height: 117.2px;
   width: 36px;
-  background: transparent url('../../Pictures/ic_listen\ .svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/ic_listen\ .svg') 0% 0% no-repeat
+    padding-box;
   position: relative;
   top: -75px;
   left: 6px;
@@ -105,7 +107,7 @@
   color: #505050;
   text-align: end;
   position: relative;
-  top: 232px;
+  top: 145px;
   text-align: center;
 }
 
@@ -144,7 +146,7 @@
   right: 185px;
   text-align-last: end;
 }
-.nameStationBoard.english{
+.nameStationBoard.english {
   color: #ffffff00;
 }
 
@@ -191,7 +193,6 @@
 .titleStat.english {
   color: #00000000;
   left: 34px;
-
 }
 
 .titleStat1 {
@@ -212,7 +213,7 @@
   left: 268px;
   bottom: -40px;
   border-radius: 50%;
-  background: #256FA1;
+  background: #256fa1;
   height: 16px;
   width: 16px;
   z-index: 1;
@@ -291,9 +292,7 @@
 
 .kavTaskTop.english {
   left: 13px;
-
 }
-
 
 .newkavTaskTop {
   border-top: 2px solid #c2bfbf;
@@ -322,7 +321,7 @@
   left: 356px;
   width: 16px;
   height: 16px;
-  border: 3px solid #C4CE9C;
+  border: 3px solid #c4ce9c;
   opacity: 1;
   border-radius: 200%;
 }
@@ -343,7 +342,7 @@
   left: 356px;
   width: 16px;
   height: 16px;
-  border: 3px solid #C4CE9C;
+  border: 3px solid #c4ce9c;
   opacity: 1;
   border-radius: 200%;
 }

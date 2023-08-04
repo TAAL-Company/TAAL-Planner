@@ -1,11 +1,13 @@
-.img {
-  position: relative;
-  top: -115px;
-  left: 4px;
-}
-
 .imgTablet {
   position: relative;
   top: -23px;
   left: 5px;
+}
+
+.taskImagePhone {
+  width: 133px;
+  height: 89px;
+  margin-bottom: 7px;
+  object-fit: contain;
+  object-position: 50% 50%;
 }

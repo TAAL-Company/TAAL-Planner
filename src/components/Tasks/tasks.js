@@ -84,9 +84,9 @@ const Tasks = (props) => {
       console.log('openThreeDotsVertical', openThreeDotsVertical);
       setTaskUuidForEdit(openThreeDotsVertical);
       setModalOpen(true);
-    } else if (requestForEditing == 'duplication') {
+    } else if (requestForEditing === 'duplication') {
       console.log('openThreeDotsVertical', openThreeDotsVertical);
-    } else if (requestForEditing == 'delete') {
+    } else if (requestForEditing === 'delete') {
       setTaskForDelete(openThreeDotsVertical);
       setOpenRemove(true);
       //Modal_Delete

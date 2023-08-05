@@ -104,7 +104,7 @@ function DragnDrop(props) {
     console.log('stations requestForEditing: ', requestForEditing);
     console.log('stations openThreeDotsVertical: ', openThreeDotsVertical);
 
-    if (requestForEditing === 'edit' || requestForEditing == 'details') {
+    if (requestForEditing === 'edit' || requestForEditing === 'details') {
       console.log('openThreeDotsVertical', openThreeDotsVertical);
       setTaskUuidForEdit(openThreeDotsVertical);
       setModalOpen(true);

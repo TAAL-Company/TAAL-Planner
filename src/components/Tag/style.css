@@ -102,10 +102,9 @@
 }
 
 .nameOfTaskPhone {
-  width: 160px;
+  width: 170px;
   font: normal normal bold 15px/20px Assistant;
   color: #505050;
-  text-align: end;
   position: relative;
   top: 145px;
   text-align: center;

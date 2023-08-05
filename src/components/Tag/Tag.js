@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 // import { useDrag } from "react-dnd";
 // import { RiDragMove2Line } from "react-icons/ri";
 import './style.css';
-import TaskImage from '../../Pictures/TaskImage.jpg';
+import TaskImage from '../../Pictures/TaskImage.png';
 // import Dot from "../Dot/Dot"
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Images from '../Images/Images';

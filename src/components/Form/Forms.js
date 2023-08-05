@@ -200,7 +200,7 @@ function Forms() {
         //   task.id
         // );
 
-        let taskTemp = allTasks.find((temp) => temp.id == task.taskId);
+        let taskTemp = allTasks.find((temp) => temp.id === task.taskId);
         taskTemp.position = task.position;
         // taskTemp.cogniitiveRequirements = cogniitiveRequirements;
         setTasksOfChosenRoute((prev) => [...prev, taskTemp]);
@@ -346,19 +346,18 @@ function Forms() {
   };
 
   const handleChangeRouteFlags = async (event, value) => {
+    const route = allRoutes.find((route) => route.id === value.id);
+
+    // Fetch new flags data and update the state
+    const flagsData = await getingDataFlags();
+    setAllFlags(flagsData);
+    setRoutesOfFlags(route);
+
+    const studentIds = [worker.id];
+    const taskIds = route.tasks?.map((task) => task.taskId);
+
+    console.log('studentIds', studentIds);
     try {
-      const route = allRoutes.find((route) => route.id === value.id);
-
-      // Fetch new flags data and update the state
-      const flagsData = await getingDataFlags();
-      setAllFlags(flagsData);
-      setRoutesOfFlags(route);
-
-      const studentIds = [worker.id];
-      const taskIds = route.tasks?.map((task) => task.taskId);
-
-      console.log('studentIds', studentIds);
-
       const data = await postEvaluation(studentIds, taskIds);
 
       for (const flag of data) {

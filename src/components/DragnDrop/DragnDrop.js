@@ -389,6 +389,7 @@ function DragnDrop(props) {
       console.log('result: ', props.dropToBoard);
       if (
         props.dropToBoard.destination !== undefined &&
+        props.dropToBoard.destination !== null &&
         props.dropToBoard.destination.droppableId === 'board-droppable'
       )
         addImageToBoard(props.dropToBoard.draggableId, 'tasks');

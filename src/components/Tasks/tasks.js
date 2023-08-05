@@ -154,11 +154,16 @@ const Tasks = (props) => {
         ) : (
           // <></
           <Droppable droppableId='tasks-droppable'>
-            {(provided) => (
+            {(provided, snapshot) => (
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
                 className='TasksCover'
+                style={{
+                  backgroundColor: snapshot.isDraggingOver
+                    ? '#BBBBBB'
+                    : '#F5F5F5',
+                }}
               >
                 {filteredDataTasks.map((tag, index) => {
                   let ID = '' + tag.id;
@@ -199,6 +204,7 @@ const Tasks = (props) => {
                     </Draggable>
                   );
                 })}
+                {provided.placeholder}
               </div>
             )}
           </Droppable>

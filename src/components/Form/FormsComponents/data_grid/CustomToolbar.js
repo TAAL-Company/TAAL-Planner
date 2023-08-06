@@ -87,6 +87,7 @@ const CustomToolbar = ({
     setRoutesOfFlags(selectedValue);
     setChangeRoute(true);
   };
+
   return (
     <div>
       <GridToolbarContainer
@@ -129,6 +130,15 @@ const CustomToolbar = ({
                 disableClearable
                 options={allUsers || []}
                 getOptionLabel={(option) => option.name || ''}
+                renderOption={(props, option) => (
+                  <div
+                    className='workerName-autoComplete'
+                    key={option.id}
+                    onClick={() => handleChangeUserFlags(null, option)}
+                  >
+                    {option.name}
+                  </div>
+                )}
                 renderInput={(params) => (
                   <TextField
                     {...params}

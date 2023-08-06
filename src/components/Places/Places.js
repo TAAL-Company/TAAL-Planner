@@ -311,6 +311,7 @@ const Places = (props) => {
       console.log('flagRoute e', e);
 
       setRouteFlags(true);
+      setRouteFlags(false);
 
       tasksOfRoutes = e;
 
@@ -470,6 +471,7 @@ const Places = (props) => {
       );
     } else {
       setReplaceRoute(e);
+      setRouteFlags(false);
     }
   };
 

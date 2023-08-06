@@ -334,7 +334,6 @@ function DragnDrop(props) {
           setBottom((bottom = '-27px'));
           setKavTopWidth((kavTopWidth = '25px'));
           setNewkavTaskTop('0px');
-          // setNameStation(nameStation = props.myStation.name)
           setNameStation((nameStation = props.myStation.name));
           setKavTaskTopMarginTop((kavTaskTopMarginTop = '-7px'));
         }

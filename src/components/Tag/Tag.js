@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 // import { useDrag } from "react-dnd";
 // import { RiDragMove2Line } from "react-icons/ri";
 import './style.css';
+import TaskImage from '../../Pictures/TaskImage.png';
 // import Dot from "../Dot/Dot"
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Images from '../Images/Images';
@@ -175,9 +176,8 @@ function Tag({
           <BsThreeDotsVertical className='threeDotsVerticalTasks' />
           <div className='borderTask'>
             <div className='nameOfTaskPhone'>
-              {' '}
+              <Images id={id} url={dataImg || TaskImage} />
               {title}
-              <Images id={id} url={dataImg} />
             </div>
           </div>
           <button className='listenIcon' onClick={() => listen()}></button>

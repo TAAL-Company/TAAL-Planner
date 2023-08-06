@@ -190,7 +190,7 @@ function Forms() {
         ]);
       }
     });
-  }, [tasksOfChosenRoute]);
+  }, [tasksOfChosenRoute, routeForTasksAbility.name]);
 
   useEffect(() => {
     console.log("changeRoute", changeRoute);
@@ -200,7 +200,7 @@ function Forms() {
         //   task.id
         // );
 
-        let taskTemp = allTasks.find((temp) => temp.id == task.taskId);
+        let taskTemp = allTasks.find((temp) => temp.id === task.taskId);
         taskTemp.position = task.position;
         // taskTemp.cogniitiveRequirements = cogniitiveRequirements;
         setTasksOfChosenRoute((prev) => [...prev, taskTemp]);
@@ -208,7 +208,7 @@ function Forms() {
 
       setChangeRoute(false);
     }
-  }, [changeRoute]);
+  }, [changeRoute, allTasks, routeForTasksAbility.tasks]);
 
   useEffect(() => {
     if (
@@ -249,7 +249,7 @@ function Forms() {
         alert("המידע נשמר !");
       }
     }
-  }, [saveProfileChanges]);
+  }, [saveProfileChanges, cognitiveProfileValues, worker]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -263,8 +263,8 @@ function Forms() {
       fetchData();
     }
 
-    console.log("cognitiveProfileValues", cognitiveProfileValues);
-  }, [worker]);
+    console.log('cognitiveProfileValues', cognitiveProfileValues);
+  }, []);
 
   useEffect(() => {
     if (
@@ -346,46 +346,33 @@ function Forms() {
   };
 
   const handleChangeRouteFlags = async (event, value) => {
-    console.log("route", allFlags);
-    // {
-    //   "studentId": "string",
-    //   "taskId": "string",
-    //   "flag": {},
-    //   "alternativeTaskId": "string",
-    //   "intervention": "string",
-    //   "explanation": "string"
+    const route = allRoutes.find((route) => route.id === value.id);
 
-    // }
-
-    let route = allRoutes.find((route) => route.id === value.id);
-
+    // Fetch new flags data and update the state
+    const flagsData = await getingDataFlags();
+    setAllFlags(flagsData);
     setRoutesOfFlags(route);
-    const studentIds = [worker.id]; //route.students.map((student) => student.id);
-    const taskIds = route.tasks.map((task) => task.taskId);
 
-    // route.students.map(()=>{
+    const studentIds = [worker.id];
+    const taskIds = route.tasks?.map((task) => task.taskId);
 
-    // })
-    console.log("studentIds", studentIds);
+    console.log('studentIds', studentIds);
+    try {
+      const data = await postEvaluation(studentIds, taskIds);
 
-    postEvaluation(studentIds, taskIds).then(async (data) => {
-      console.log("data:", data);
-      data.map(async (flag) => {
-        await postEvaluationEvents(worker.id, flag.taskId, flag.evaluation);
-      });
-    });
-    setAllFlags(await getingDataFlags());
-    // let flagsOfRoute = route.tasks.map((taskInRoute) => {
-    //   // let task = allTasks.find((task) => task.id === taskInRoute.taskId);
-
-    //   return allFlags.find(
-    //     (flag) => flag.studentId === worker.id && flag.taskId === taskInRoute.id
-    //   );
-    // });
-
-    // console.log("route", flagsOfRoute);
-
-    // route.tasks.map((task) => {});
+      for (const flag of data) {
+        try {
+          await postEvaluationEvents(worker.id, flag.taskId, flag.evaluation);
+        } catch (error) {
+          console.error(
+            `Error posting evaluation event for task ID ${flag.taskId}:`,
+            error
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error handling route flags change:', error);
+    }
   };
 
   useEffect(() => {
@@ -396,28 +383,28 @@ function Forms() {
         let evaluation = allFlags.find((flag) => flag.taskId === task.taskId);
         let taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
 
-        console.log("task xx", task);
-        console.log("evaluation xx", evaluation);
-        console.log("taskInfo xx", taskInfo);
-        if (evaluation !== undefined) {
-          setRowsFlagsHE((prev) => [
-            ...prev,
-            {
-              id: task.position,
-              // image: taskpic,
-              classification: evaluation.flag,
-              task: taskInfo.title,
-              intervention: evaluation.intervention,
-              Alternatives: evaluation.alternativeTaskId,
-              explaination: evaluation.explanation,
-              // date: "5/12/2020",
-              // status: "לא פעיל",
-            },
-          ]);
-        }
+        console.log('task xx', task);
+        console.log('evaluation xx', evaluation);
+        console.log('taskInfo xx', taskInfo);
+
+        if (evaluation === undefined) return;
+
+        setRowsFlagsHE((prev) => [
+          ...prev,
+          {
+            id: task.position,
+            image: taskInfo.picture_url || taskpic,
+            classification: evaluation.flag,
+            task: taskInfo.title,
+            intervention: evaluation.intervention,
+            Alternatives: evaluation.alternativeTaskId,
+            explaination: evaluation.explanation,
+            // Actions
+          },
+        ]);
       });
     }
-  }, [allFlags]);
+  }, [allFlags, allTasks, routesOfFlags]);
 
   //end flags functions
 
@@ -2142,6 +2129,8 @@ function Forms() {
                     workerName={workerNameHE}
                     setWorker={setWorker}
                     worker={worker}
+                    setRoutesOfFlags={setRoutesOfFlags}
+                    routesOfFlags={routesOfFlags}
                     routeForTasksAbility={routeForTasksAbility}
                     setRouteForTasksAbility={setRouteForTasksAbility}
                     routeName={routeNameHE}
@@ -2241,8 +2230,8 @@ function Forms() {
                 </div>
               </div>
             )}
-            
-            {selectedTable === "abillities" && (
+
+            {selectedTable === 'abillities' && (
               <div>
                 <div className="headlineForms">Abillities</div>
                 <div className="tableForms">
@@ -2251,7 +2240,8 @@ function Forms() {
               </div>
             )}
           </>
-        ) : ( // EN ---------------------------------------------
+        ) : (
+          // EN ---------------------------------------------
           <>
             <div className="NavbarForms">
               <nav>
@@ -2280,14 +2270,14 @@ function Forms() {
                   Taskability
                 </button>
                 <button
-                  className="btn_nav_forms"
-                  onClick={() => handleSelectTable("abillities")}
+                  className='btn_nav_forms'
+                  onClick={() => handleSelectTable('abillities')}
                 >
                   Abillities
                 </button>
               </nav>
             </div>
-            {selectedTable === "flags" && (
+            {selectedTable === 'flags' && (
               <div>
                 <div className="headlineForms">Flags</div>
                 <div className="tableForms">
@@ -2713,11 +2703,11 @@ function Forms() {
 
             {selectedTable === "abillities" && (
               <div>
-              <div className="headlineForms">Abillities</div>
-              <div className="tableForms">
-                <CognitiveAbillities></CognitiveAbillities>
+                <div className='headlineForms'>Abillities</div>
+                <div className='tableForms'>
+                  <CognitiveAbillities></CognitiveAbillities>
+                </div>
               </div>
-            </div>
             )}
           </>
         )}

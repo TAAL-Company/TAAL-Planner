@@ -36,6 +36,8 @@ const CustomToolbar = ({
   setColumns,
   setWorker,
   worker,
+  setRoutesOfFlags,
+  routesOfFlags,
   allUsers,
   setChangeUser,
   setChangeRoute,
@@ -84,8 +86,10 @@ const CustomToolbar = ({
 
     console.log("route", selectedValue);
     setRouteForTasksAbility(selectedValue);
+    setRoutesOfFlags(selectedValue);
     setChangeRoute(true);
   };
+
   return (
     <div>
       <GridToolbarContainer
@@ -109,25 +113,34 @@ const CustomToolbar = ({
                   ? "CognitiveProfile"
                   : "TA'AL EDITOR"
               }_${new Date()
-                .toLocaleDateString("en-GB")
-                .replace(/\//g, "-")}`,
-                utf8WithBom: true,
+                .toLocaleDateString('en-GB')
+                .replace(/\//g, '-')}.csv`,
             }}
             style={{ color: "black" }}
           />
         </div>
 
-        {isInfoUserRoute && (
-          <div className="infoForms">
-            <div className="workerNameForms">
+        {isInfoUserRoute && allUsers && (
+          <div className='infoForms'>
+            <div className='workerNameForms'>
               שם עובד:
               <Autocomplete
                 freeSolo
+                value={worker}
                 onChange={handleChangeUserFlags}
                 id="free-solo-2-demo"
                 disableClearable
-                options={allUsers}
-                getOptionLabel={(option) => option.name}
+                options={allUsers || []}
+                getOptionLabel={(option) => option.name || ''}
+                renderOption={(props, option) => (
+                  <div
+                    className='workerName-autoComplete'
+                    key={option.id}
+                    onClick={() => handleChangeUserFlags(null, option)}
+                  >
+                    {option.name}
+                  </div>
+                )}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -140,33 +153,34 @@ const CustomToolbar = ({
                 )}
               />
             </div>
-            <div className="workerRouteForms">
+            <div className='workerRouteForms'>
               שם מסלול:
               <Autocomplete
-                style={{ width: "250px" }}
                 freeSolo
+                style={{ width: '250px' }}
+                value={routesOfFlags || ''}
                 onChange={handleChangeRouteFlags}
-                id="free-solo-2-demo"
+                id='free-solo-2-demo'
                 disableClearable
-                options={worker.routes}
-                getOptionLabel={(option) =>
-                  option.name.replace("&#8211;", "-").replace("&#8217;", "'")
-                }
+                options={worker.routes || []}
+                getOptionLabel={(option) => option.name || ''}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     label={
-                      worker.length !== 0 && worker.routes.length !== 0
-                        ? "בחירת מסלול"
-                        : worker.length !== 0 && worker.routes.length === 0
-                        ? "אין מסלולים עבור העובד"
-                        : worker.length === 0
-                        ? "בחר מסלול"
-                        : ""
+                      Object.keys(worker).length !== 0 &&
+                      worker.routes.length !== 0
+                        ? 'בחר מסלול'
+                        : Object.keys(worker).length !== 0 &&
+                          worker.routes.length === 0
+                        ? 'אין מסלולים עבור העובד'
+                        : Object.keys(worker).length === 0
+                        ? 'בחר מסלול'
+                        : ''
                     }
                     InputProps={{
                       ...params.InputProps,
-                      type: "search",
+                      type: 'search',
                     }}
                   />
                 )}
@@ -174,15 +188,15 @@ const CustomToolbar = ({
             </div>
           </div>
         )}
-        {tableType === "TaskabilityHE" ? (
-          <div className="infoForms">
-            <div className="workerNameForms">
-              <InputLabel id="demo-simple-select-label-forms">
+        {tableType === 'TaskabilityHE' ? (
+          <div className='infoForms'>
+            <div className='workerNameForms'>
+              <InputLabel id='demo-simple-select-label-forms'>
                 בחירת מסלול:
               </InputLabel>
               <select
-                className="selectUserForms"
-                defaultValue={"DEFAULT"}
+                className='selectUserForms'
+                value={'DEFAULT'}
                 onChange={handleChangeRoute}
               >
                 <option value="DEFAULT" disabled>

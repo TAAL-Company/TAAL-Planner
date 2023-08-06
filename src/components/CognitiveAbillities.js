@@ -342,7 +342,6 @@ return (
         // onSelectionModelChange={(ids) => {
         //   const selectedIDs = new Set(ids);
         //   const selectedRows = rows.filter((row) => selectedIDs.has(row.id));
-
         //   setSelectedRows(selectedRows);
         // }}
         //columnGroupingModel={columnGroupingModel}

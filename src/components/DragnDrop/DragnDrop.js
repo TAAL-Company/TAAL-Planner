@@ -19,6 +19,7 @@ import { deleteTask } from '../../api/api.js';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 let Route = [];
+let newBoard = [];
 let dndArray = [];
 let saveProps = [];
 let thisId = '';
@@ -103,7 +104,7 @@ function DragnDrop(props) {
     console.log('stations requestForEditing: ', requestForEditing);
     console.log('stations openThreeDotsVertical: ', openThreeDotsVertical);
 
-    if (requestForEditing === 'edit' || requestForEditing == 'details') {
+    if (requestForEditing === 'edit' || requestForEditing === 'details') {
       console.log('openThreeDotsVertical', openThreeDotsVertical);
       setTaskUuidForEdit(openThreeDotsVertical);
       setModalOpen(true);
@@ -333,7 +334,6 @@ function DragnDrop(props) {
           setBottom((bottom = '-27px'));
           setKavTopWidth((kavTopWidth = '25px'));
           setNewkavTaskTop('0px');
-          // setNameStation(nameStation = props.myStation.name)
           setNameStation((nameStation = props.myStation.name));
           setKavTaskTopMarginTop((kavTaskTopMarginTop = '-7px'));
         }
@@ -353,11 +353,16 @@ function DragnDrop(props) {
 
         console.log('Route boardArrayDND: ', Route);
 
-        setBoard((board) => [...board, Route]);
+        newBoard = board.slice();
+        newBoard.unshift(Route);
+
+        setBoard(newBoard);
         setFlagTree(true);
       } else {
         Route = dndArray.find((tag) => id === tag.id);
-        setBoard((board) => [...board, Route]);
+        newBoard = board.slice();
+        newBoard.unshift(Route);
+        setBoard(newBoard);
         setFlagTree(true);
       }
       console.log('dnd Route: ', Route);
@@ -383,6 +388,7 @@ function DragnDrop(props) {
       console.log('result: ', props.dropToBoard);
       if (
         props.dropToBoard.destination !== undefined &&
+        props.dropToBoard.destination !== null &&
         props.dropToBoard.destination.droppableId === 'board-droppable'
       )
         addImageToBoard(props.dropToBoard.draggableId, 'tasks');

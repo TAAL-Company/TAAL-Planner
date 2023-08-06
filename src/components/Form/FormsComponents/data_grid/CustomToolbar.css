@@ -6,3 +6,14 @@
 select option:selected {
   font-weight: bold;
 }
+.workerName-autoComplete {
+  position: relative;
+  margin: 2px;
+  padding: 10px;
+  border: 1px solid #f0f0f0;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.workerName-autoComplete:hover {
+  border-color: gray;
+}

@@ -61,11 +61,12 @@ let mySite = { name: '', id: '' };
 let clickAddRoute = false;
 let myCategory = false;
 let flagTest = false;
-let selectedValue = {};
+// let selectedValue = {};
 
 //-----------------------
 const Places = (props) => {
   // console.log("setFloatLan:", props.setFloatLang)
+  const [selectedValue, setSelectedValue] = useState(null);
   const [done, setDone] = useState(false);
   const [, setLoading] = useState(false);
   const [, setStateStation] = useState([]);
@@ -311,6 +312,7 @@ const Places = (props) => {
       console.log('flagRoute e', e);
 
       setRouteFlags(true);
+      setRouteFlags(false);
 
       tasksOfRoutes = e;
 
@@ -470,6 +472,7 @@ const Places = (props) => {
       );
     } else {
       setReplaceRoute(e);
+      setRouteFlags(false);
     }
   };
 
@@ -514,20 +517,23 @@ const Places = (props) => {
   };
 
   const handleSelectChange = (event) => {
-    selectedValue = JSON.parse(event.target.value);
+    const newValue = JSON.parse(event.target.value);
 
-    if (!siteSelected) {
-      setReplaceSite(selectedValue);
-      Display_The_Stations(selectedValue);
+    if (!siteSelected && !replaceSiteFlag) {
+      setReplaceSite(newValue);
+      Display_The_Stations(newValue);
       setSiteSelected(true);
-      setReplaceSiteFlag(false);
+      setReplaceSiteFlag(true); 
       setOpenModalSiteChosen(false);
       // setRouteFlags(false);
       // setReplaceRouteFlag(false);
     } else {
+      setSelectedValue(null);
       setReplaceSiteFlag(false);
       setOpenModalSiteChosen(true);
     }
+
+    setSelectedValue(newValue); 
   };
 
   useEffect(() => {

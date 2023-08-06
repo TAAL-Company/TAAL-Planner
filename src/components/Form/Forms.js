@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import DataTableLTR from './FormsComponents/data_grid/DataTableLTR';
-import DataTableRTL from './FormsComponents/data_grid/DataTableRTL';
-import TaskAbility from './FormsComponents/data_grid/TaskAbility';
-import './Forms.css';
-import Status from './FormsComponents/classification_component/Status';
-import StatusLTR from './FormsComponents/classification_component/StatusLTR';
-import cognitiveList from './cognitive.json';
-import taskpic from './FormsComponents/PicturesForms/taskpic.png';
-import CognitiveAbillities from '../CognitiveAbillities';
+import React, { useState } from "react";
+import DataTableLTR from "./FormsComponents/data_grid/DataTableLTR";
+import DataTableRTL from "./FormsComponents/data_grid/DataTableRTL";
+import TaskAbility from "./FormsComponents/data_grid/TaskAbility";
+import "./Forms.css";
+import Status from "./FormsComponents/classification_component/Status";
+import StatusLTR from "./FormsComponents/classification_component/StatusLTR";
+import cognitiveList from "./cognitive.json";
+import taskpic from "./FormsComponents/PicturesForms/taskpic.png";
+import CognitiveAbillities from "../CognitiveAbillities";
 import {
   getingData_Users,
   getingData_Tasks,
@@ -19,18 +19,18 @@ import {
   getingDataFlags,
   postEvaluation,
   postEvaluationEvents,
-} from '../../api/api';
-import taskpic1 from './FormsComponents/PicturesForms/taskpic1.jpg';
-import taskpic2 from './FormsComponents/PicturesForms/taskpic2.jpeg';
-import taskpic3 from './FormsComponents/PicturesForms/taskpic3.jpg';
-import taskpic4 from './FormsComponents/PicturesForms/taskpic4.jpg';
-import taskpic5 from './FormsComponents/PicturesForms/taskpic5.jpeg';
-import taskpic6 from './FormsComponents/PicturesForms/taskpic6.jpeg';
-import taskpic7 from './FormsComponents/PicturesForms/taskpic7.jpg';
-import { GridActionsCellItem } from '@mui/x-data-grid';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import { Select } from '@mui/material';
+} from "../../api/api";
+import taskpic1 from "./FormsComponents/PicturesForms/taskpic1.jpg";
+import taskpic2 from "./FormsComponents/PicturesForms/taskpic2.jpeg";
+import taskpic3 from "./FormsComponents/PicturesForms/taskpic3.jpg";
+import taskpic4 from "./FormsComponents/PicturesForms/taskpic4.jpg";
+import taskpic5 from "./FormsComponents/PicturesForms/taskpic5.jpeg";
+import taskpic6 from "./FormsComponents/PicturesForms/taskpic6.jpeg";
+import taskpic7 from "./FormsComponents/PicturesForms/taskpic7.jpg";
+import { GridActionsCellItem } from "@mui/x-data-grid";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { Select } from "@mui/material";
 // import "flag-icon-css/css/flag-icon.min.css";
 import {
   Button,
@@ -39,13 +39,13 @@ import {
   DialogContent,
   DialogTitle,
   TextField,
-} from '@mui/material';
-import { useEffect } from 'react';
-import { id } from 'date-fns/locale';
+} from "@mui/material";
+import { useEffect } from "react";
+import { id } from "date-fns/locale";
 
 function Forms() {
-  const [explainationError, setExplainationError] = useState('');
-  const [interventionError, setinterventionError] = useState('');
+  const [explainationError, setExplainationError] = useState("");
+  const [interventionError, setinterventionError] = useState("");
 
   const [allUsers, setAllUsers] = useState([]);
   const [allTasks, setAllTasks] = useState([]);
@@ -53,18 +53,18 @@ function Forms() {
   const [allFlags, setAllFlags] = useState([]);
 
   // this six variables will be get as props from editor window (editor will take this from DB)
-  const [workerNameEN, setWorkerNameEN] = useState('Eyal Engel');
-  const [routeNameEN, setRouteNameEN] = useState('Azrieli Tel Aviv - Morning');
-  const [siteNameEN, setSiteNameEN] = useState('Azrieli Tel Aviv');
+  const [workerNameEN, setWorkerNameEN] = useState("Eyal Engel");
+  const [routeNameEN, setRouteNameEN] = useState("Azrieli Tel Aviv - Morning");
+  const [siteNameEN, setSiteNameEN] = useState("Azrieli Tel Aviv");
 
-  const [worker, setWorker] = useState({});
+  const [worker, setWorker] = useState([]);
   const [prevSelectedWorker, setPrevSelected] = useState([]);
   const [routesOfFlags, setRoutesOfFlags] = useState([]);
   const [routeForTasksAbility, setRouteForTasksAbility] = useState([]);
 
-  const [workerNameHE, setWorkerNameHE] = useState('אייל אנגל');
-  const [routeNameHE, setRouteNameHE] = useState('עזריאלי תל אביב - בוקר');
-  const [siteNameHE, setSiteNameHE] = useState('');
+  const [workerNameHE, setWorkerNameHE] = useState("אייל אנגל");
+  const [routeNameHE, setRouteNameHE] = useState("עזריאלי תל אביב - בוקר");
+  const [siteNameHE, setSiteNameHE] = useState("");
   let loadingCog = false;
   let loadingTaskAb = false;
 
@@ -79,28 +79,28 @@ function Forms() {
   const [cognitiveProfileValues, setCognitiveProfileValues] = useState([]);
   const [columnsTaskabilityHE, setColumnsTaskabilityHE] = useState([
     {
-      field: 'id',
-      headerName: 'ID',
+      field: "id",
+      headerName: "ID",
       width: 90,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'taskTaskabilityHE',
-      headerName: 'משימה',
+      field: "taskTaskabilityHE",
+      headerName: "משימה",
       width: 180,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'routeTaskabilityHE',
-      headerName: 'מסלול',
+      field: "routeTaskabilityHE",
+      headerName: "מסלול",
       width: 180,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     // {
     //   field: "siteTaskabilityHE",
@@ -130,7 +130,7 @@ function Forms() {
   }, []);
 
   useEffect(() => {
-    console.log('tasksOfChosenRoute', tasksOfChosenRoute);
+    console.log("tasksOfChosenRoute", tasksOfChosenRoute);
     let cognitiveRequirements;
     let accept = false;
     tasksOfChosenRoute.map(async (task, index) => {
@@ -141,15 +141,15 @@ function Forms() {
         accept = false;
       }
       let cognitiveRequirementsValues = [];
-      console.log('task-cognitive-requirements', cognitiveRequirements);
+      console.log("task-cognitive-requirements", cognitiveRequirements);
 
-      if (cognitiveRequirements !== undefined) {
+      if (cognitiveRequirements != undefined) {
         for (
           let index = 0;
           index < cognitiveRequirements.value.length;
           index++
         ) {
-          console.log('ENTER');
+          console.log("ENTER");
           const value = cognitiveRequirements.value[index];
           const weight = cognitiveRequirements.weights[index];
 
@@ -161,7 +161,7 @@ function Forms() {
         }
       }
 
-      console.log('cognitiveRequirementsValues', cognitiveRequirementsValues);
+      console.log("cognitiveRequirementsValues", cognitiveRequirementsValues);
       if (accept) {
         setRowsTaskabilityHE((prev) => [
           ...prev,
@@ -190,17 +190,17 @@ function Forms() {
         ]);
       }
     });
-  }, [tasksOfChosenRoute]);
+  }, [tasksOfChosenRoute, routeForTasksAbility.name]);
 
   useEffect(() => {
-    console.log('changeRoute', changeRoute);
+    console.log("changeRoute", changeRoute);
     if (changeRoute) {
       routeForTasksAbility.tasks.map(async (task) => {
         // let cogniitiveRequirements = await gettaskCognitiveRequirements(
         //   task.id
         // );
 
-        let taskTemp = allTasks.find((temp) => temp.id == task.taskId);
+        let taskTemp = allTasks.find((temp) => temp.id === task.taskId);
         taskTemp.position = task.position;
         // taskTemp.cogniitiveRequirements = cogniitiveRequirements;
         setTasksOfChosenRoute((prev) => [...prev, taskTemp]);
@@ -208,7 +208,7 @@ function Forms() {
 
       setChangeRoute(false);
     }
-  }, [changeRoute]);
+  }, [changeRoute, allTasks, routeForTasksAbility.tasks]);
 
   useEffect(() => {
     if (
@@ -216,12 +216,12 @@ function Forms() {
       columnsTaskabilityHE.length > 0 &&
       !loadingTaskAb
     ) {
-      console.log('cognitiveAbillities', cognitiveAbillities);
+      console.log("cognitiveAbillities", cognitiveAbillities);
 
       loadingTaskAb = true;
       cognitiveAbillities.map((cognitive, index) => {
         if (cognitive.ML) {
-          // console.log("cognitive.ML", cognitive.ML);
+          console.log("cognitive.ML", cognitive.ML);
           setColumnsTaskabilityHE((prev) => [
             ...prev,
             {
@@ -229,8 +229,8 @@ function Forms() {
               headerName: cognitive.trait,
               width: 200,
               editable: true,
-              headerAlign: 'center',
-              align: 'center',
+              headerAlign: "center",
+              align: "center",
               category: cognitive.category,
             },
           ]);
@@ -242,14 +242,14 @@ function Forms() {
   useEffect(() => {
     if (saveProfileChanges === true) {
       setSaveProfileChanges(false);
-      if (Object.keys(worker).length !== 0) {
+      if (worker.length != 0) {
         postDataCognitiveProfile(worker.id, cognitiveProfileValues);
-        console.log('66 cognitiveProfileValues', cognitiveProfileValues);
+        console.log("66 cognitiveProfileValues", cognitiveProfileValues);
 
-        alert('המידע נשמר !');
+        alert("המידע נשמר !");
       }
     }
-  }, [saveProfileChanges]);
+  }, [saveProfileChanges, cognitiveProfileValues, worker]);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -259,12 +259,12 @@ function Forms() {
         setCognitiveProfileValues(new Array(242).fill(0));
       }
     };
-    if (Object.keys(worker).length !== 0) {
+    if (worker.length != 0) {
       fetchData();
     }
 
     console.log('cognitiveProfileValues', cognitiveProfileValues);
-  }, [worker]);
+  }, []);
 
   useEffect(() => {
     if (
@@ -273,7 +273,7 @@ function Forms() {
         !loadingCog) ||
       changeUser
     ) {
-      console.log('cognitiveAbillities2', cognitiveAbillities);
+      console.log("cognitiveAbillities2", cognitiveAbillities);
 
       if (changeUser) setRowsCognitiveHE([]);
       loadingCog = true;
@@ -282,7 +282,7 @@ function Forms() {
 
       cognitiveAbillities.map((cognitive, index) => {
         let cogValue = 1;
-        if (cognitiveProfileValues !== undefined)
+        if (cognitiveProfileValues != undefined)
           cogValue = cognitiveProfileValues[index];
 
         // const valueMap = {
@@ -323,77 +323,66 @@ function Forms() {
       setChangeUser(false);
     }
 
-    console.log('rowsCognitiveHE', rowsCognitiveHE);
+    console.log("rowsCognitiveHE", rowsCognitiveHE);
   }, [cognitiveProfileValues]);
 
-  const [selectedTable, setSelectedTable] = useState('flags');
+  const [selectedTable, setSelectedTable] = useState("flags");
   const handleSelectTable = (table) => {
-    console.log('table: ', table);
+    console.log("table: ", table);
     setSelectedTable(table);
   };
 
   const [explainationBorderColor, setExplainationBorderColor] =
-    useState('initial');
+    useState("initial");
   const [interventionBorderColor, setinterventionBorderColor] =
-    useState('initial');
+    useState("initial");
 
   //flags functions
   const handleChangeUserFlags = (event, values) => {
-    console.log('worker', event);
-    console.log('worker', values);
+    console.log("worker", event);
+    console.log("worker", values);
 
     setWorker(values);
   };
 
   const handleChangeRouteFlags = async (event, value) => {
-    console.log('route', allFlags);
-    // {
-    //   "studentId": "string",
-    //   "taskId": "string",
-    //   "flag": {},
-    //   "alternativeTaskId": "string",
-    //   "intervention": "string",
-    //   "explanation": "string"
+    const route = allRoutes.find((route) => route.id === value.id);
 
-    // }
+    // Fetch new flags data and update the state
+    const flagsData = await getingDataFlags();
+    setAllFlags(flagsData);
+    setRoutesOfFlags(route);
 
-    let route = allRoutes.find((route) => route.id === value.id);
-
-   setRoutesOfFlags(route);
-    const studentIds = [worker.id]; //route.students.map((student) => student.id);
-    const taskIds = route.tasks.map((task) => task.taskId);
+    const studentIds = [worker.id];
+    const taskIds = route.tasks?.map((task) => task.taskId);
 
     // route.students.map(()=>{
 
     // })
     console.log('studentIds', studentIds);
+    try {
+      const data = await postEvaluation(studentIds, taskIds);
 
-    // await postEvaluation(studentIds, taskIds).then(async (data) => {
-    //   console.log('data:', data);
-    //   data.map(async (flag) => {
-    //     await postEvaluationEvents(worker.id, flag.taskId, flag.evaluation);
-    //   });
-    // });
-
-    setAllFlags(await getingDataFlags());
-    // let flagsOfRoute = route.tasks.map((taskInRoute) => {
-    //   // let task = allTasks.find((task) => task.id === taskInRoute.taskId);
-
-    //   return allFlags.find(
-    //     (flag) => flag.studentId === worker.id && flag.taskId === taskInRoute.id
-    //   );
-    // });
-
-    // console.log("route", flagsOfRoute);
-
-    // route.tasks.map((task) => {});
+      for (const flag of data) {
+        try {
+          await postEvaluationEvents(worker.id, flag.taskId, flag.evaluation);
+        } catch (error) {
+          console.error(
+            `Error posting evaluation event for task ID ${flag.taskId}:`,
+            error
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error handling route flags change:', error);
+    }
   };
 
   useEffect(() => {
-    console.log('allFlags: ', allFlags);
-    console.log('route: ', routesOfFlags);
+    console.log("allFlags: ", allFlags);
+    console.log("route: ", routesOfFlags);
     if (Object.keys(routesOfFlags).length > 0) {
-      routesOfFlags.tasks.forEach((task) => {
+      routesOfFlags.tasks.map((task) => {
         let evaluation = allFlags.find((flag) => flag.taskId === task.taskId);
         let taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
 
@@ -413,36 +402,35 @@ function Forms() {
             intervention: evaluation.intervention,
             Alternatives: evaluation.alternativeTaskId,
             explaination: evaluation.explanation,
-            // date: "5/12/2020",
-            // status: "לא פעיל",
+            // Actions
           },
         ]);
       });
     }
-  }, [allFlags]);
+  }, [allFlags, allTasks, routesOfFlags]);
 
   //end flags functions
 
   const validateExplaination = (value) => {
     if (value.length > 100) {
-      setExplainationError('Maximum length is 100 characters');
-      setExplainationBorderColor('red');
+      setExplainationError("Maximum length is 100 characters");
+      setExplainationBorderColor("red");
     } else {
-      setExplainationError('');
-      setExplainationBorderColor('initial');
+      setExplainationError("");
+      setExplainationBorderColor("initial");
     }
   };
 
   const validateintervention = (value) => {
     if (!value) {
-      setinterventionError('Please enter a value');
-      setinterventionBorderColor('red');
+      setinterventionError("Please enter a value");
+      setinterventionBorderColor("red");
     } else if (value.length > 100) {
-      setinterventionError('Maximum length is 100 characters');
-      setinterventionBorderColor('red');
+      setinterventionError("Maximum length is 100 characters");
+      setinterventionBorderColor("red");
     } else {
-      setinterventionError('');
-      setinterventionBorderColor('initial');
+      setinterventionError("");
+      setinterventionBorderColor("initial");
     }
   };
 
@@ -512,80 +500,80 @@ function Forms() {
     console.log(`Setting ${props.groupingColumn}`);
     console.log(`show:  ${props.show} `);
 
-    if (props.groupingColumn === 'PrivateInfoEN') {
+    if (props.groupingColumn === "PrivateInfoEN") {
       setRowsPrivateCardHE(
         rowsPrivateCardHE.map((row) => ({
           ...row,
           // fieldHEPrivateCard: props.show ? "" : false,
-          xPrivateCard: props.show ? '' : false,
-          yPrivateCard: props.show ? '' : false,
-          fieldENPrivateCard: props.show ? '' : false,
-          classificationHEPrivateCard: props.show ? '' : false,
+          xPrivateCard: props.show ? "" : false,
+          yPrivateCard: props.show ? "" : false,
+          fieldENPrivateCard: props.show ? "" : false,
+          classificationHEPrivateCard: props.show ? "" : false,
         }))
       );
-    } else if (props.groupingColumn === 'HistoryEN') {
+    } else if (props.groupingColumn === "HistoryEN") {
       setRowsPrivateCardHE(
         rowsPrivateCardHE.map((row) => ({
           ...row,
-          beginningOfWorkPrivateCard: props.show ? '' : false,
-          employersPrivateCard: props.show ? '' : false,
-          reportsPrivateCard: props.show ? '' : false,
-          improvementPrivateCard: props.show ? '' : false,
-          interventionHEPrivateCard: props.show ? '' : false,
+          beginningOfWorkPrivateCard: props.show ? "" : false,
+          employersPrivateCard: props.show ? "" : false,
+          reportsPrivateCard: props.show ? "" : false,
+          improvementPrivateCard: props.show ? "" : false,
+          interventionHEPrivateCard: props.show ? "" : false,
         }))
       );
-    } else if (props.groupingColumn === 'LanguageComprehensionEN') {
+    } else if (props.groupingColumn === "LanguageComprehensionEN") {
       setRowsTaskabilityHE(
         rowsTaskabilityHE.map((row) => ({
           ...row,
-          understandSpokenLanguageComprehension: props.show ? '' : false,
-          understandWrittenLanguageComprehension: props.show ? '' : false,
+          understandSpokenLanguageComprehension: props.show ? "" : false,
+          understandWrittenLanguageComprehension: props.show ? "" : false,
         }))
       );
-    } else if (props.groupingColumn === 'LanguagesEN') {
+    } else if (props.groupingColumn === "LanguagesEN") {
       setRowsTaskabilityHE(
         rowsTaskabilityHE.map((row) => ({
           ...row,
-          hebrew: props.show ? '' : false,
-          english: props.show ? '' : false,
+          hebrew: props.show ? "" : false,
+          english: props.show ? "" : false,
         }))
       );
-    } else if (props.groupingColumn === 'PrivateInfoHE') {
+    } else if (props.groupingColumn === "PrivateInfoHE") {
       setRowsPrivateCardHE(
         rowsPrivateCardHE.map((row) => ({
           ...row,
           // fieldHEPrivateCard: props.show ? "" : false,
-          xPrivateCard: props.show ? '' : false,
-          yPrivateCard: props.show ? '' : false,
-          fieldENPrivateCard: props.show ? '' : false,
-          classificationHEPrivateCard: props.show ? '' : false,
+          xPrivateCard: props.show ? "" : false,
+          yPrivateCard: props.show ? "" : false,
+          fieldENPrivateCard: props.show ? "" : false,
+          classificationHEPrivateCard: props.show ? "" : false,
         }))
       );
-    } else if (props.groupingColumn === 'HistoryHE') {
+    } else if (props.groupingColumn === "HistoryHE") {
       setRowsPrivateCardHE(
         rowsPrivateCardHE.map((row) => ({
           ...row,
-          beginningOfWorkPrivateCard: props.show ? '' : false,
-          employersPrivateCard: props.show ? '' : false,
-          reportsPrivateCard: props.show ? '' : false,
-          improvementPrivateCard: props.show ? '' : false,
-          interventionHEPrivateCard: props.show ? '' : false,
+          beginningOfWorkPrivateCard: props.show ? "" : false,
+          employersPrivateCard: props.show ? "" : false,
+          reportsPrivateCard: props.show ? "" : false,
+          improvementPrivateCard: props.show ? "" : false,
+          interventionHEPrivateCard: props.show ? "" : false,
         }))
       );
-    } else if (props.groupingColumn === 'LanguageComprehensionHE') {
+    } else if (props.groupingColumn === "LanguageComprehensionHE") {
       setRowsTaskabilityHE(
         rowsTaskabilityHE.map((row) => ({
           ...row,
-          understandSpokenLanguageComprehension: props.show ? '' : false,
-          understandWrittenLanguageComprehension: props.show ? '' : false,
+          understandSpokenLanguageComprehension: props.show ? "" : false,
+          understandWrittenLanguageComprehension: props.show ? "" : false,
         }))
       );
-    } else if (props.groupingColumn === 'LanguagesHE') {
+    } else if (props.groupingColumn === "LanguagesHE") {
       setRowsTaskabilityHE(
         rowsTaskabilityHE.map((row) => ({
           ...row,
-          hebrew: props.show ? '' : false,
-          english: props.show ? '' : false,
+          hebrew: props.show ? "" : false,
+          english: props.show ? "" : false,
         }))
       );
     }
@@ -594,16 +582,16 @@ function Forms() {
   // columns and rows will be taken from DB
   const [columnsFlagsHE, setColumnsFlagsHE] = useState([
     {
-      field: 'id',
-      headerName: 'ID',
+      field: "id",
+      headerName: "ID",
       width: 90,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'image',
-      headerName: '',
+      field: "image",
+      headerName: "",
       width: 100,
       editable: false,
       sortable: false,
@@ -616,13 +604,13 @@ function Forms() {
           <div>
             <img
               src={params.row.image}
-              alt=''
+              alt=""
               style={{
-                marginRight: '10px',
-                marginTop: '4px',
-                width: '71px',
-                height: '45px',
-                borderRadius: '6px',
+                marginRight: "10px",
+                marginTop: "4px",
+                width: "71px",
+                height: "45px",
+                borderRadius: "6px",
               }}
             />
           </div>
@@ -630,37 +618,37 @@ function Forms() {
       },
     },
     {
-      field: 'task',
-      headerName: 'משימה',
+      field: "task",
+      headerName: "משימה",
       width: 150,
       editable: false,
-      headerAlign: 'center',
-      align: 'left',
+      headerAlign: "center",
+      align: "left",
       renderCell: (params) => (
-        <div style={{ textAlign: 'right', fontSize: '1rem' }}>
+        <div style={{ textAlign: "right", fontSize: "1rem" }}>
           {params.row.task}
         </div>
       ),
     },
 
     {
-      field: 'classification',
-      headerName: 'סיווג',
+      field: "classification",
+      headerName: "סיווג",
       width: 140,
       editable: false,
       renderCell: (params) => (
         <Status classification={params.row.classification} />
       ),
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'intervention',
-      headerName: 'התאמה',
+      field: "intervention",
+      headerName: "התאמה",
       width: 180,
       editable: true,
-      headerAlign: 'center',
-      align: 'left',
+      headerAlign: "center",
+      align: "left",
       renderCell: (params) => {
         const handleEdit = (newValue) => {
           // Step 3: Handle the editing logic
@@ -673,25 +661,25 @@ function Forms() {
           // Show this when the cell is being edited
           return (
             <input
-              type='text'
+              type="text"
               value={params.row.intervention}
               onChange={(e) => handleEdit(e.target.value)}
             />
           );
         }
-        if (params.row.intervention === ' ') {
+        if (params.row.intervention === " ") {
           return (
             <div
               style={{
-                background: 'rgb(220,220,220,0.7)',
-                width: '100%',
-                height: '100%',
+                background: "rgb(220,220,220,0.7)",
+                width: "100%",
+                height: "100%",
               }}
             ></div>
           );
         } else {
           return (
-            <div style={{ textAlign: 'right', fontSize: '1rem' }}>
+            <div style={{ textAlign: "right", fontSize: "1rem" }}>
               {params.row.intervention}
             </div>
           );
@@ -699,26 +687,26 @@ function Forms() {
       },
     },
     {
-      field: 'Alternatives',
-      headerName: 'חלופה',
+      field: "Alternatives",
+      headerName: "חלופה",
       width: 250,
       editable: false,
-      headerAlign: 'center',
-      align: 'left',
+      headerAlign: "center",
+      align: "left",
       renderCell: (params) => {
-        if (params.row.Alternatives === ' ') {
+        if (params.row.Alternatives === " ") {
           return (
             <div
               style={{
-                background: 'rgb(220,220,220,0.7)',
-                width: '100%',
-                height: '100%',
+                background: "rgb(220,220,220,0.7)",
+                width: "100%",
+                height: "100%",
               }}
             ></div>
           );
         } else {
           return (
-            <div style={{ textAlign: 'right', fontSize: '1rem' }}>
+            <div style={{ textAlign: "right", fontSize: "1rem" }}>
               {params.row.Alternatives}
             </div>
           );
@@ -727,26 +715,26 @@ function Forms() {
     },
 
     {
-      field: 'explaination',
-      headerName: 'הסבר',
+      field: "explaination",
+      headerName: "הסבר",
       width: 250,
       editable: false,
-      headerAlign: 'center',
-      align: 'left',
+      headerAlign: "center",
+      align: "left",
       renderCell: (params) => (
-        <div style={{ textAlign: 'right', fontSize: '1rem' }}>
+        <div style={{ textAlign: "right", fontSize: "1rem" }}>
           {params.row.explaination}
         </div>
       ),
     },
 
     {
-      field: 'actions',
-      headerName: 'אפשרויות',
-      headerAlign: 'left',
-      align: 'left',
-      type: 'actions',
-      direction: 'rtl',
+      field: "actions",
+      headerName: "אפשרויות",
+      headerAlign: "left",
+      align: "left",
+      type: "actions",
+      direction: "rtl",
       width: 470,
       editable: false,
       sortable: false,
@@ -754,11 +742,11 @@ function Forms() {
       getActions: (params) => {
         let actions = [];
 
-        if (params.row.classification !== 'green') {
+        if (params.row.classification !== "green") {
           actions.push(
             <GridActionsCellItem
-              icon={<EditIcon style={{ fill: 'gray' }} />}
-              label='Edit'
+              icon={<EditIcon style={{ fill: "gray" }} />}
+              label="Edit"
               onClick={() => handleEdit(params.row)}
               showInMenu
             />
@@ -767,8 +755,8 @@ function Forms() {
 
         actions.push(
           <GridActionsCellItem
-            icon={<DeleteIcon style={{ fill: 'gray' }} />}
-            label='Delete'
+            icon={<DeleteIcon style={{ fill: "gray" }} />}
+            label="Delete"
             onClick={() => handleDelete(params.id)}
             showInMenu
           />
@@ -781,16 +769,16 @@ function Forms() {
 
   const [columnsFlagsEN, setColumnsFlagsEN] = useState([
     {
-      field: 'id',
-      headerName: 'ID',
+      field: "id",
+      headerName: "ID",
       width: 90,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'image',
-      headerName: '',
+      field: "image",
+      headerName: "",
       width: 100,
       editable: false,
       sortable: false,
@@ -802,13 +790,13 @@ function Forms() {
           <div>
             <img
               src={params.row.image}
-              alt=''
+              alt=""
               style={{
-                marginRight: '10px',
-                marginTop: '4px',
-                width: '71px',
-                height: '45px',
-                borderRadius: '6px',
+                marginRight: "10px",
+                marginTop: "4px",
+                width: "71px",
+                height: "45px",
+                borderRadius: "6px",
               }}
             />
           </div>
@@ -816,51 +804,51 @@ function Forms() {
       },
     },
     {
-      field: 'task',
-      headerName: 'Task',
+      field: "task",
+      headerName: "Task",
       width: 200,
       editable: false,
-      headerAlign: 'center',
-      align: 'left',
+      headerAlign: "center",
+      align: "left",
       renderCell: (params) => (
-        <div style={{ textAlign: 'left', fontSize: '1rem' }}>
+        <div style={{ textAlign: "left", fontSize: "1rem" }}>
           {params.row.task}
         </div>
       ),
     },
 
     {
-      field: 'classification',
-      headerName: 'Classification',
+      field: "classification",
+      headerName: "Classification",
       width: 160,
       editable: false,
       renderCell: (params) => (
         <StatusLTR classification={params.row.classification} />
       ),
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'intervention',
-      headerName: 'Intervention',
+      field: "intervention",
+      headerName: "Intervention",
       width: 180,
       editable: false,
-      headerAlign: 'center',
-      align: 'left',
+      headerAlign: "center",
+      align: "left",
       renderCell: (params) => {
-        if (params.row.intervention === ' ') {
+        if (params.row.intervention === " ") {
           return (
             <div
               style={{
-                background: 'rgb(220,220,220,0.7)',
-                width: '100%',
-                height: '100%',
+                background: "rgb(220,220,220,0.7)",
+                width: "100%",
+                height: "100%",
               }}
             ></div>
           );
         } else {
           return (
-            <div style={{ textAlign: 'left', fontSize: '1rem' }}>
+            <div style={{ textAlign: "left", fontSize: "1rem" }}>
               {params.row.intervention}
             </div>
           );
@@ -868,26 +856,26 @@ function Forms() {
       },
     },
     {
-      field: 'Alternatives',
-      headerName: 'Alternatives',
+      field: "Alternatives",
+      headerName: "Alternatives",
       width: 250,
       editable: false,
-      headerAlign: 'center',
-      align: 'left',
+      headerAlign: "center",
+      align: "left",
       renderCell: (params) => {
-        if (params.row.Alternatives === ' ') {
+        if (params.row.Alternatives === " ") {
           return (
             <div
               style={{
-                background: 'rgb(220,220,220,0.7)',
-                width: '100%',
-                height: '100%',
+                background: "rgb(220,220,220,0.7)",
+                width: "100%",
+                height: "100%",
               }}
             ></div>
           );
         } else {
           return (
-            <div style={{ textAlign: 'left', fontSize: '1rem' }}>
+            <div style={{ textAlign: "left", fontSize: "1rem" }}>
               {params.row.Alternatives}
             </div>
           );
@@ -895,14 +883,14 @@ function Forms() {
       },
     },
     {
-      field: 'explaination',
-      headerName: 'Explaination',
+      field: "explaination",
+      headerName: "Explaination",
       width: 250,
       editable: false,
-      headerAlign: 'center',
-      align: 'left',
+      headerAlign: "center",
+      align: "left",
       renderCell: (params) => (
-        <div style={{ textAlign: 'left', fontSize: '1rem' }}>
+        <div style={{ textAlign: "left", fontSize: "1rem" }}>
           {params.row.explaination}
         </div>
       ),
@@ -922,11 +910,11 @@ function Forms() {
     },
 
     {
-      field: 'actions',
-      headerName: 'Actions',
-      headerAlign: 'center',
-      align: 'center',
-      type: 'actions',
+      field: "actions",
+      headerName: "Actions",
+      headerAlign: "center",
+      align: "center",
+      type: "actions",
       width: 80,
       editable: false,
       sortable: false,
@@ -935,12 +923,12 @@ function Forms() {
       getActions: (params) => {
         let actions = [];
 
-        if (params.row.classification !== 'green') {
+        if (params.row.classification !== "green") {
           actions.push(
             <GridActionsCellItem
-              className='grid-actions-cell'
-              icon={<EditIcon style={{ fill: 'gray' }} />}
-              label='Edit'
+              className="grid-actions-cell"
+              icon={<EditIcon style={{ fill: "gray" }} />}
+              label="Edit"
               onClick={() => handleEdit(params.row)}
               showInMenu
             />
@@ -949,9 +937,9 @@ function Forms() {
 
         actions.push(
           <GridActionsCellItem
-            className='grid-actions-cell'
-            icon={<DeleteIcon style={{ fill: 'gray' }} />}
-            label='Delete'
+            className="grid-actions-cell"
+            icon={<DeleteIcon style={{ fill: "gray" }} />}
+            label="Delete"
             onClick={() => handleDelete(params.id)}
             showInMenu
           />
@@ -966,7 +954,7 @@ function Forms() {
   const [initialValuesRow, setInitialValuesRow] = useState({});
 
   const [slide, setSlide] = React.useState(false);
-  const [language, setLanguage] = useState('hebrew');
+  const [language, setLanguage] = useState("hebrew");
 
   const [rowsFlagsHE, setRowsFlagsHE] = useState([
     // {
@@ -1287,96 +1275,96 @@ function Forms() {
   // cognitive profile
   const [columnsCognitiveHE, setColumnsCognitiveHE] = useState([
     {
-      field: 'id',
-      headerName: 'ID',
+      field: "id",
+      headerName: "ID",
       width: 90,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'fieldHE',
-      headerName: 'שדה-עברית',
+      field: "fieldHE",
+      headerName: "שדה-עברית",
       width: 200,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'mustField',
-      headerName: 'שדה חובה',
+      field: "mustField",
+      headerName: "שדה חובה",
       width: 150,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
 
     {
-      field: 'subfield',
-      headerName: 'תת שדה',
+      field: "subfield",
+      headerName: "תת שדה",
       width: 120,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'grade',
-      headerName: 'מדד ציון',
+      field: "grade",
+      headerName: "מדד ציון",
       width: 150,
       editable: true,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'fieldEN',
-      headerName: 'field - English',
+      field: "fieldEN",
+      headerName: "field - English",
       width: 160,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'classificationHE',
-      headerName: 'סיווג',
+      field: "classificationHE",
+      headerName: "סיווג",
       width: 100,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
 
     {
-      field: 'classificationEN',
-      headerName: 'classification',
+      field: "classificationEN",
+      headerName: "classification",
       width: 120,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'MLFactor',
-      headerName: 'פקטור ל ML',
+      field: "MLFactor",
+      headerName: "פקטור ל ML",
       width: 120,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'Remarks',
-      headerName: 'הערות',
+      field: "Remarks",
+      headerName: "הערות",
       width: 250,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
 
     {
-      field: 'actions',
-      type: 'actions',
+      field: "actions",
+      type: "actions",
       width: 180,
       getActions: (params) => [
         <GridActionsCellItem
-          icon={<EditIcon style={{ fill: 'gray' }} />}
-          label='Edit'
+          icon={<EditIcon style={{ fill: "gray" }} />}
+          label="Edit"
           onClick={() => handleEdit(params.row)}
           showInMenu
         />,
@@ -1395,94 +1383,94 @@ function Forms() {
 
   const [columnsPrivateCardHE, setColumnsPrivateCardHE] = useState([
     {
-      field: 'id',
-      headerName: 'ID',
+      field: "id",
+      headerName: "ID",
       width: 90,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'fieldHEPrivateCard',
-      headerName: 'שדה-עברית',
+      field: "fieldHEPrivateCard",
+      headerName: "שדה-עברית",
       width: 120,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'xPrivateCard',
-      headerName: 'x',
+      field: "xPrivateCard",
+      headerName: "x",
       width: 90,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
 
     {
-      field: 'yPrivateCard',
-      headerName: 'y',
+      field: "yPrivateCard",
+      headerName: "y",
       width: 90,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'fieldENPrivateCard',
-      headerName: 'field - English',
+      field: "fieldENPrivateCard",
+      headerName: "field - English",
       width: 150,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'classificationHEPrivateCard',
-      headerName: 'סיווג',
+      field: "classificationHEPrivateCard",
+      headerName: "סיווג",
       width: 90,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'beginningOfWorkPrivateCard',
-      headerName: 'תחילת עבודה',
+      field: "beginningOfWorkPrivateCard",
+      headerName: "תחילת עבודה",
       width: 150,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
 
     {
-      field: 'employersPrivateCard',
-      headerName: 'מעסיקים',
+      field: "employersPrivateCard",
+      headerName: "מעסיקים",
       width: 120,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'reportsPrivateCard',
-      headerName: 'דוחות',
+      field: "reportsPrivateCard",
+      headerName: "דוחות",
       width: 90,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'improvementPrivateCard',
-      headerName: 'שיפור',
+      field: "improvementPrivateCard",
+      headerName: "שיפור",
       width: 90,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     {
-      field: 'Remarks',
-      headerName: 'הערות',
+      field: "Remarks",
+      headerName: "הערות",
       width: 250,
       editable: false,
-      headerAlign: 'center',
-      align: 'center',
+      headerAlign: "center",
+      align: "center",
     },
     // {
     //   field: "interventionHEPrivateCard",
@@ -1493,13 +1481,13 @@ function Forms() {
     //   align: "center",
     // },
     {
-      field: 'actionsPrivateCard',
-      type: 'actions',
+      field: "actionsPrivateCard",
+      type: "actions",
       width: 180,
       getActions: (params) => [
         <GridActionsCellItem
-          icon={<EditIcon style={{ fill: 'gray' }} />}
-          label='Edit'
+          icon={<EditIcon style={{ fill: "gray" }} />}
+          label="Edit"
           onClick={() => handleEdit(params.row)}
           showInMenu
         />,
@@ -1510,231 +1498,231 @@ function Forms() {
   const [rowsPrivateCardHE, setRowsPrivateCardHE] = useState([
     {
       id: 1,
-      fieldHEPrivateCard: 'שם פרטי',
-      xPrivateCard: 'מהמערכת',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "שם פרטי",
+      xPrivateCard: "מהמערכת",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 2,
-      fieldHEPrivateCard: 'שם משפחה',
-      xPrivateCard: 'מהמערכת',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportPrivateCards: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "שם משפחה",
+      xPrivateCard: "מהמערכת",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportPrivateCards: "",
+      improvementPrivateCard: "",
     },
     {
       id: 3,
-      fieldHEPrivateCard: 'תמונה',
-      xPrivateCard: 'מהמערכת',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "תמונה",
+      xPrivateCard: "מהמערכת",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 4,
-      fieldHEPrivateCard: 'מין',
-      xPrivateCard: 'מהמערכת',
-      yPrivateCard: '',
-      fieldENPrivateCard: 'gender',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "מין",
+      xPrivateCard: "מהמערכת",
+      yPrivateCard: "",
+      fieldENPrivateCard: "gender",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 5,
-      fieldHEPrivateCard: 'תאריך לידה',
-      xPrivateCard: 'מהמערכת',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "תאריך לידה",
+      xPrivateCard: "מהמערכת",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 6,
-      fieldHEPrivateCard: 'מקום מגורים',
-      xPrivateCard: 'מהמערכת',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "מקום מגורים",
+      xPrivateCard: "מהמערכת",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 7,
-      fieldHEPrivateCard: 'טלפון אישי',
-      xPrivateCard: 'מהמערכת',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "טלפון אישי",
+      xPrivateCard: "מהמערכת",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 8,
-      fieldHEPrivateCard: 'טלפון למקרה חירום',
-      xPrivateCard: 'מהמערכת',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "טלפון למקרה חירום",
+      xPrivateCard: "מהמערכת",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 9,
-      fieldHEPrivateCard: 'מספר טלפון נוסף',
-      xPrivateCard: 'מהמערכת',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "מספר טלפון נוסף",
+      xPrivateCard: "מהמערכת",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 10,
-      fieldHEPrivateCard: 'ארגון נותן שירות',
-      xPrivateCard: 'מהמערכת',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "ארגון נותן שירות",
+      xPrivateCard: "מהמערכת",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 11,
-      fieldHEPrivateCard: 'מקום תעסוקה קודם',
-      xPrivateCard: '',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "מקום תעסוקה קודם",
+      xPrivateCard: "",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 12,
-      fieldHEPrivateCard: 'תפקיד בתעסוקה קודמת',
-      xPrivateCard: '',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "תפקיד בתעסוקה קודמת",
+      xPrivateCard: "",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 13,
-      fieldHEPrivateCard: 'שנת תעסוקה',
-      xPrivateCard: '',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "שנת תעסוקה",
+      xPrivateCard: "",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 14,
-      fieldHEPrivateCard: 'משך זמן מאז תעסוקה',
-      xPrivateCard: '',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "משך זמן מאז תעסוקה",
+      xPrivateCard: "",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 15,
-      fieldHEPrivateCard: 'רמת תפקוד בתעסוקה קודמת',
-      xPrivateCard: '',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "רמת תפקוד בתעסוקה קודמת",
+      xPrivateCard: "",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 16,
-      fieldHEPrivateCard: 'הכשרה קודמת',
-      xPrivateCard: '',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "הכשרה קודמת",
+      xPrivateCard: "",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 17,
-      fieldHEPrivateCard: 'משך זמן',
-      xPrivateCard: '',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "משך זמן",
+      xPrivateCard: "",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 18,
-      fieldHEPrivateCard: 'משך זמן מאז ההכשרה',
-      xPrivateCard: '',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "משך זמן מאז ההכשרה",
+      xPrivateCard: "",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
     {
       id: 19,
-      fieldHEPrivateCard: 'רמת הצלחה בהכשרה',
-      xPrivateCard: '',
-      yPrivateCard: '',
-      fieldENPrivateCard: '',
-      classificationHEPrivateCard: '',
-      beginningOfWorkPrivateCard: '',
-      employersPrivateCard: '',
-      reportsPrivateCard: '',
-      improvementPrivateCard: '',
+      fieldHEPrivateCard: "רמת הצלחה בהכשרה",
+      xPrivateCard: "",
+      yPrivateCard: "",
+      fieldENPrivateCard: "",
+      classificationHEPrivateCard: "",
+      beginningOfWorkPrivateCard: "",
+      employersPrivateCard: "",
+      reportsPrivateCard: "",
+      improvementPrivateCard: "",
     },
   ]);
 
@@ -1768,79 +1756,79 @@ function Forms() {
   // };
 
   return (
-    <div className='Forms'>
+    <div className="Forms">
       <div>
         <div>
           <button
             className={`switch-button-forms ${
-              language === 'hebrew' ? 'hebrew' : 'english'
+              language === "hebrew" ? "hebrew" : "english"
             }`}
             onClick={() =>
-              setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
+              setLanguage(language === "hebrew" ? "english" : "hebrew")
             }
           >
             {/* {language === "hebrew" ? "HE" : "EN"} */}
-            {language === 'hebrew' ? (
+            {language === "hebrew" ? (
               <>
-                <i className='flag-icon flag-icon-il'></i>
-                <h4 style={{ marginLeft: 'd' }}>EN</h4>
+                <i className="flag-icon flag-icon-il"></i>
+                <h4 style={{ marginLeft: "d" }}>EN</h4>
               </>
             ) : (
               <>
-                <i className='flag-icon flag-icon-us'></i>
-                <h4 style={{ marginLeft: 'd' }}>HE</h4>
+                <i className="flag-icon flag-icon-us"></i>
+                <h4 style={{ marginLeft: "d" }}>HE</h4>
               </>
             )}
           </button>
         </div>
 
-        {language === 'hebrew' ? (
+        {language === "hebrew" ? (
           <>
-            <div className='NavbarForms' style={{ direction: 'rtl' }}>
+            <div className="NavbarForms" style={{ direction: "rtl" }}>
               <nav>
                 <button
-                  className='btn_nav_forms'
-                  onClick={() => handleSelectTable('flags')}
+                  className="btn_nav_forms"
+                  onClick={() => handleSelectTable("flags")}
                 >
                   דגלים
                 </button>
                 <button
-                  className='btn_nav_forms'
-                  onClick={() => handleSelectTable('privateCard')}
+                  className="btn_nav_forms"
+                  onClick={() => handleSelectTable("privateCard")}
                 >
                   כרטסת אישית
                 </button>
                 <button
-                  className='btn_nav_forms'
-                  onClick={() => handleSelectTable('cognitiveProfile')}
+                  className="btn_nav_forms"
+                  onClick={() => handleSelectTable("cognitiveProfile")}
                 >
                   פרופיל קוגנטיבי
                 </button>
                 <button
-                  className='btn_nav_forms'
-                  onClick={() => handleSelectTable('taskability')}
+                  className="btn_nav_forms"
+                  onClick={() => handleSelectTable("taskability")}
                 >
                   דרישות למשימה
                 </button>
                 <button
-                  className='btn_nav_forms'
-                  onClick={() => handleSelectTable('abillities')}
+                  className="btn_nav_forms"
+                  onClick={() => handleSelectTable("abillities")}
                 >
                   יכולות קוגנטיביות כלליות
                 </button>
               </nav>
             </div>
-            {selectedTable === 'flags' && (
+            {selectedTable === "flags" && (
               <div>
-                <div className='headlineForms'>דגלים</div>
-                <div className='tableForms'>
+                <div className="headlineForms">דגלים</div>
+                <div className="tableForms">
                   {isDialogOpen && (
                     // <Draggable>
                     <Dialog
                       open={isDialogOpen}
                       onClose={handleClose}
-                      aria-labelledby={'alert-dialog-slide-title'}
-                      aria-describedby={'alert-dialog-slide-description'}
+                      aria-labelledby={"alert-dialog-slide-title"}
+                      aria-describedby={"alert-dialog-slide-description"}
                       // TransitionComponent={Transition}
                       // keepMounted={slide}
                       // transitionDuration={300}
@@ -1850,58 +1838,58 @@ function Forms() {
                     >
                       <div
                         style={{
-                          display: 'flex',
+                          display: "flex",
                         }}
                       >
                         <DialogActions
-                          style={{ direction: 'rtl', flexGrow: 1 }}
+                          style={{ direction: "rtl", flexGrow: 1 }}
                         >
                           <Button onClick={handleClose}>X</Button>
                         </DialogActions>
 
-                        <DialogTitle id='form-dialog-title'>
+                        <DialogTitle id="form-dialog-title">
                           עריכת משימה
                         </DialogTitle>
                       </div>
                       <DialogContent dividers>
                         <div
-                          className='firstRowForms'
+                          className="firstRowForms"
                           style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
                           }}
                         >
                           <TextField
                             autoFocus
-                            margin='dense'
-                            id='task'
-                            label='Task'
-                            type='text'
+                            margin="dense"
+                            id="task"
+                            label="Task"
+                            type="text"
                             value={currRow.task}
                             onChange={(e) =>
                               setCurrRow({ ...currRow, task: e.target.value })
                             }
-                            style={{ width: '75%' }}
+                            style={{ width: "75%" }}
                             disabled
                           />
                           <img
                             src={currRow.image}
-                            alt=''
+                            alt=""
                             style={{
-                              marginLeft: '20px',
-                              marginTop: '4px',
-                              width: '88px',
-                              height: '56px',
-                              borderRadius: 'd',
+                              marginLeft: "20px",
+                              marginTop: "4px",
+                              width: "88px",
+                              height: "56px",
+                              borderRadius: "d",
                             }}
                           />
                         </div>
                         <TextField
-                          margin='dense'
-                          id='classification'
-                          label='Classification'
-                          type='text'
+                          margin="dense"
+                          id="classification"
+                          label="Classification"
+                          type="text"
                           value={currRow.classification}
                           onChange={(e) =>
                             setCurrRow({
@@ -1913,12 +1901,12 @@ function Forms() {
                           disabled
                         />
 
-                        {currRow.intervention !== ' ' && (
+                        {currRow.intervention !== " " && (
                           <TextField
-                            margin='dense'
-                            id='intervention'
-                            label='intervention'
-                            type='text'
+                            margin="dense"
+                            id="intervention"
+                            label="intervention"
+                            type="text"
                             value={currRow.intervention}
                             onChange={(e) => {
                               setCurrRow({
@@ -1934,13 +1922,13 @@ function Forms() {
                           />
                         )}
 
-                        {currRow.intervention === ' ' && (
+                        {currRow.intervention === " " && (
                           <TextField
-                            margin='dense'
-                            id='intervention'
-                            label='intervention'
-                            type='text'
-                            value={'שדה זה זמין רק כאשר הסיווג הוא צהוב'}
+                            margin="dense"
+                            id="intervention"
+                            label="intervention"
+                            type="text"
+                            value={"שדה זה זמין רק כאשר הסיווג הוא צהוב"}
                             style={{
                               borderColor: interventionBorderColor,
                             }}
@@ -1949,31 +1937,31 @@ function Forms() {
                           />
                         )}
 
-                        {currRow.Alternatives === ' ' && (
+                        {currRow.Alternatives === " " && (
                           <Select
                             native
-                            value={'שדה זה זמין רק כאשר הסיווג הוא אדום'}
-                            id='select-Alternatives'
-                            label='Alternatives'
+                            value={"שדה זה זמין רק כאשר הסיווג הוא אדום"}
+                            id="select-Alternatives"
+                            label="Alternatives"
                             fullWidth
-                            style={{ direction: 'rtl' }}
+                            style={{ direction: "rtl" }}
                             disabled
                           >
-                            {' '}
+                            {" "}
                             <option
-                              value={'שדה זה זמין רק כאשר הסיווג הוא אדום'}
+                              value={"שדה זה זמין רק כאשר הסיווג הוא אדום"}
                             >
                               שדה זה זמין רק כאשר הסיווג הוא אדום
                             </option>
                           </Select>
                         )}
 
-                        {currRow.Alternatives !== ' ' && (
+                        {currRow.Alternatives !== " " && (
                           <Select
                             native
                             value={currRow.Alternatives.toString()}
-                            id='select-Alternatives'
-                            label='Alternatives'
+                            id="select-Alternatives"
+                            label="Alternatives"
                             fullWidth
                             onChange={(e) =>
                               setCurrRow({
@@ -1981,116 +1969,116 @@ function Forms() {
                                 Alternatives: e.target.value,
                               })
                             }
-                            style={{ direction: 'rtl' }}
+                            style={{ direction: "rtl" }}
                           >
                             {/* <option aria-label="None" value="" /> */}
-                            <optgroup label='כותב מילים בודדות לא מוכרות'>
-                              <option value={'מדבקות מוכנות'}>
+                            <optgroup label="כותב מילים בודדות לא מוכרות">
+                              <option value={"מדבקות מוכנות"}>
                                 מדבקות מוכנות
                               </option>
-                              <option value={'כרטיסיה'}>כרטיסיה</option>
-                              <option value={'צורות'}>צורות</option>
+                              <option value={"כרטיסיה"}>כרטיסיה</option>
+                              <option value={"צורות"}>צורות</option>
                             </optgroup>
-                            <optgroup label='רגישות יתר במישוש'>
-                              <option value={'כפפה'}>כפפה</option>
-                              <option value={'מטלית'}>מטלית</option>
+                            <optgroup label="רגישות יתר במישוש">
+                              <option value={"כפפה"}>כפפה</option>
+                              <option value={"מטלית"}>מטלית</option>
                             </optgroup>
-                            <optgroup label='מזהה צבעים מורכבים'>
-                              <option value={'ציור'}>ציור</option>
-                              <option value={'סמלול'}>סמלול</option>
-                              <option value={'הסבר בקול'}>הסבר בקול</option>
-                            </optgroup>{' '}
-                            <optgroup label='מזהה צורות מורכבות'>
-                              <option value={'ציור'}>ציור</option>
-                              <option value={'סמלול'}>סמלול</option>
-                              <option value={'הסבר בקול'}>הסבר בקול</option>
-                            </optgroup>{' '}
-                            <optgroup label='פיצול קשב (dividing)'>
-                              <option value={'חדר שקט'}>חדר שקט</option>
-                              <option value={'הפסקה'}>הפסקה</option>
-                            </optgroup>{' '}
-                            <optgroup label='זיכרון לטווח קצר (30 שניות)'>
-                              <option value={'חזרה על משימה'}>
+                            <optgroup label="מזהה צבעים מורכבים">
+                              <option value={"ציור"}>ציור</option>
+                              <option value={"סמלול"}>סמלול</option>
+                              <option value={"הסבר בקול"}>הסבר בקול</option>
+                            </optgroup>{" "}
+                            <optgroup label="מזהה צורות מורכבות">
+                              <option value={"ציור"}>ציור</option>
+                              <option value={"סמלול"}>סמלול</option>
+                              <option value={"הסבר בקול"}>הסבר בקול</option>
+                            </optgroup>{" "}
+                            <optgroup label="פיצול קשב (dividing)">
+                              <option value={"חדר שקט"}>חדר שקט</option>
+                              <option value={"הפסקה"}>הפסקה</option>
+                            </optgroup>{" "}
+                            <optgroup label="זיכרון לטווח קצר (30 שניות)">
+                              <option value={"חזרה על משימה"}>
                                 חזרה על משימה
                               </option>
-                              <option value={'תזכורות באפליקציה'}>
+                              <option value={"תזכורות באפליקציה"}>
                                 תזכורות באפליקציה
                               </option>
-                              <option value={'רשימה מודפסת'}>
+                              <option value={"רשימה מודפסת"}>
                                 רשימה מודפסת
                               </option>
-                            </optgroup>{' '}
-                            <optgroup label='זיהוי צורות (דו מימד)'>
-                              <option value={'ציור'}>ציור</option>
-                              <option value={'סמלול'}>סמלול</option>
-                              <option value={'הסבר בקול'}>הסבר בקול</option>
-                            </optgroup>{' '}
-                            <optgroup label='מזהה אנשים (פנים ושם)'>
-                              <option value={'צילום'}>צילום</option>
-                              <option value={'כרטסת מודפסת'}>
+                            </optgroup>{" "}
+                            <optgroup label="זיהוי צורות (דו מימד)">
+                              <option value={"ציור"}>ציור</option>
+                              <option value={"סמלול"}>סמלול</option>
+                              <option value={"הסבר בקול"}>הסבר בקול</option>
+                            </optgroup>{" "}
+                            <optgroup label="מזהה אנשים (פנים ושם)">
+                              <option value={"צילום"}>צילום</option>
+                              <option value={"כרטסת מודפסת"}>
                                 כרטסת מודפסת
                               </option>
                             </optgroup>
-                            <optgroup label='מזהה תמונות'>
-                              <option value={'ציור'}>ציור</option>
-                              <option value={'סמלול'}>סמלול</option>
-                              <option value={'הסבר בקול'}>הסבר בקול</option>
+                            <optgroup label="מזהה תמונות">
+                              <option value={"ציור"}>ציור</option>
+                              <option value={"סמלול"}>סמלול</option>
+                              <option value={"הסבר בקול"}>הסבר בקול</option>
                             </optgroup>
-                            <optgroup label='מזהה סמלים גרפיים פשוטים'>
-                              <option value={'ציור'}>ציור</option>
-                              <option value={'סמלול'}>סמלול</option>
-                              <option value={'הסבר בקול'}>הסבר בקול</option>
+                            <optgroup label="מזהה סמלים גרפיים פשוטים">
+                              <option value={"ציור"}>ציור</option>
+                              <option value={"סמלול"}>סמלול</option>
+                              <option value={"הסבר בקול"}>הסבר בקול</option>
                             </optgroup>
-                            <optgroup label='מזהה איקונים'>
-                              <option value={'ציור'}>ציור</option>
-                              <option value={'סמלול'}>סמלול</option>
-                              <option value={'הסבר בקול'}>הסבר בקול</option>
+                            <optgroup label="מזהה איקונים">
+                              <option value={"ציור"}>ציור</option>
+                              <option value={"סמלול"}>סמלול</option>
+                              <option value={"הסבר בקול"}>הסבר בקול</option>
                             </optgroup>
-                            <optgroup label='זהירות בשימוש בחומרים מסוכנים'>
-                              <option value={'הוספת אמצעי הגנה'}>
+                            <optgroup label="זהירות בשימוש בחומרים מסוכנים">
+                              <option value={"הוספת אמצעי הגנה"}>
                                 הוספת אמצעי הגנה
                               </option>
-                              <option value={'הרחקה'}>הרחקה</option>
-                              <option value={'הוספת אזהרה'}>הוספת אזהרה</option>
+                              <option value={"הרחקה"}>הרחקה</option>
+                              <option value={"הוספת אזהרה"}>הוספת אזהרה</option>
                             </optgroup>
-                            <optgroup label='זהירות שימוש בעצמים חדים'>
-                              <option value={'הוספת אמצעי הגנה'}>
+                            <optgroup label="זהירות שימוש בעצמים חדים">
+                              <option value={"הוספת אמצעי הגנה"}>
                                 הוספת אמצעי הגנה
                               </option>
-                              <option value={'הרחקה'}>הרחקה</option>
-                              <option value={'הוספת אזהרה'}>הוספת אזהרה</option>
+                              <option value={"הרחקה"}>הרחקה</option>
+                              <option value={"הוספת אזהרה"}>הוספת אזהרה</option>
                             </optgroup>
-                            <optgroup label='זהירות שימוש במכשירי חשמל'>
-                              <option value={'הוספת אמצעי הגנה'}>
+                            <optgroup label="זהירות שימוש במכשירי חשמל">
+                              <option value={"הוספת אמצעי הגנה"}>
                                 הוספת אמצעי הגנה
                               </option>
-                              <option value={'הרחקה'}>הרחקה</option>
-                              <option value={'הוספת אזהרה'}>הוספת אזהרה</option>
+                              <option value={"הרחקה"}>הרחקה</option>
+                              <option value={"הוספת אזהרה"}>הוספת אזהרה</option>
                             </optgroup>
-                            <optgroup label='עמידה לאורך זמן מחולשת רגליים'>
-                              <option value={'ישיבה על כיסא'}>
+                            <optgroup label="עמידה לאורך זמן מחולשת רגליים">
+                              <option value={"ישיבה על כיסא"}>
                                 ישיבה על כיסא
                               </option>
-                              <option value={'הפסקות כל 10 דקות'}>
+                              <option value={"הפסקות כל 10 דקות"}>
                                 הפסקות כל 10 דקות
                               </option>
-                              <option value={'שינוי מנח לאורך הפעילות'}>
+                              <option value={"שינוי מנח לאורך הפעילות"}>
                                 שינוי מנח לאורך הפעילות
                               </option>
                             </optgroup>
-                            <optgroup label='זיהוי מקום והתמצאות במרחב'>
-                              <option value={'שלטים עם מלל'}>
+                            <optgroup label="זיהוי מקום והתמצאות במרחב">
+                              <option value={"שלטים עם מלל"}>
                                 שלטים עם מלל
                               </option>
-                              <option value={'תמונות'}>תמונות </option>
-                              <option value={'הסבר בקול'}>הסבר בקול</option>
+                              <option value={"תמונות"}>תמונות </option>
+                              <option value={"הסבר בקול"}>הסבר בקול</option>
                             </optgroup>
-                            <optgroup label='עיוורון צבעים'>
-                              <option value={'שיטת מיון שונה'}>
+                            <optgroup label="עיוורון צבעים">
+                              <option value={"שיטת מיון שונה"}>
                                 שיטת מיון שונה
                               </option>
-                              <option value={'הסבר בקול'}>הסבר בקול</option>
-                              <option value={'בקרה חיצונית'}>
+                              <option value={"הסבר בקול"}>הסבר בקול</option>
+                              <option value={"בקרה חיצונית"}>
                                 בקרה חיצונית
                               </option>
                             </optgroup>
@@ -2098,10 +2086,10 @@ function Forms() {
                         )}
 
                         <TextField
-                          margin='dense'
-                          id='explaination'
-                          label='Explaination'
-                          type='text'
+                          margin="dense"
+                          id="explaination"
+                          label="Explaination"
+                          type="text"
                           value={currRow.explaination}
                           onChange={(e) => {
                             setCurrRow({
@@ -2116,7 +2104,7 @@ function Forms() {
                           fullWidth
                         />
                       </DialogContent>
-                      <DialogActions style={{ direction: 'rtl' }}>
+                      <DialogActions style={{ direction: "rtl" }}>
                         <Button onClick={handleReset}>איפוס</Button>
                         <Button onClick={() => handleSave(currRow)}>
                           שמור
@@ -2134,7 +2122,7 @@ function Forms() {
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
-                    tableType={'FlagsHE'}
+                    tableType={"FlagsHE"}
                     columns={columnsFlagsHE}
                     setColumns={setColumnsFlagsHE}
                     rows={rowsFlagsHE}
@@ -2144,6 +2132,8 @@ function Forms() {
                     workerName={workerNameHE}
                     setWorker={setWorker}
                     worker={worker}
+                    setRoutesOfFlags={setRoutesOfFlags}
+                    routesOfFlags={routesOfFlags}
                     routeForTasksAbility={routeForTasksAbility}
                     setRouteForTasksAbility={setRouteForTasksAbility}
                     routeName={routeNameHE}
@@ -2153,16 +2143,16 @@ function Forms() {
               </div>
             )}
 
-            {selectedTable === 'cognitiveProfile' && (
+            {selectedTable === "cognitiveProfile" && (
               <div>
-                <div className='headlineForms'>פרופיל קוגנטיבי</div>
-                <div className='tableForms'>
-                  <DataTableRTL
+                <div className="headlineForms">פרופיל קוגנטיבי</div>
+                <div className="tableForms">
+                  <DataTableRTL // DataTableLTR
                     setChangeUser={setChangeUser}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
-                    tableType={'CognitiveProfileHE'}
+                    tableType={"CognitiveProfileHE"}
                     columns={columnsCognitiveHE}
                     setColumns={setColumnsCognitiveHE}
                     rows={rowsCognitiveHE}
@@ -2187,17 +2177,17 @@ function Forms() {
               </div>
             )}
 
-            {selectedTable === 'privateCard' && (
+            {selectedTable === "privateCard" && (
               <div>
-                <div className='headlineForms'>כרטסת אישית</div>
-                <div className='tableForms'>
-                  <DataTableRTL
+                <div className="headlineForms">כרטסת אישית</div>
+                <div className="tableForms">
+                  <DataTableRTL //---DataTableLTR
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
-                    tableType={'PrivateCardHE'}
+                    tableType={"PrivateCardHE"}
                     columns={columnsPrivateCardHE}
                     setColumns={setColumnsPrivateCardHE}
                     rows={rowsPrivateCardHE}
@@ -2216,18 +2206,18 @@ function Forms() {
               </div>
             )}
 
-            {selectedTable === 'taskability' && (
+            {selectedTable === "taskability" && (
               <div>
-                <div className='headlineForms'>דרישות למשימה</div>
+                <div className="headlineForms">דרישות למשימה</div>
                 {/* <TaskAbility /> */}
-                <div className='tableForms'>
-                  <TaskAbility
+                <div className="tableForms">
+                  <TaskAbility //------DataTableLTR
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
-                    tableType={'TaskabilityHE'}
+                    tableType={"TaskabilityHE"}
                     columns={columnsTaskabilityHE}
                     setColumns={setColumnsTaskabilityHE}
                     rows={rowsTaskabilityHE}
@@ -2243,63 +2233,64 @@ function Forms() {
                 </div>
               </div>
             )}
-            
-            {selectedTable === "abillities" && (
+
+            {selectedTable === 'abillities' && (
               <div>
-                <div className='headlineForms'>Abillities</div>
-                <div className='tableForms'>
+                <div className="headlineForms">Abillities</div>
+                <div className="tableForms">
                   <CognitiveAbillities></CognitiveAbillities>
                 </div>
               </div>
             )}
           </>
-        ) : ( // EN ---------------------------------------------
+        ) : (
+          // EN ---------------------------------------------
           <>
-            <div className='NavbarForms'>
+            <div className="NavbarForms">
               <nav>
                 <button
-                  className='btn_nav_forms'
-                  onClick={() => handleSelectTable('flags')}
+                  className="btn_nav_forms"
+                  onClick={() => handleSelectTable("flags")}
                 >
                   Flags
                 </button>
                 <button
-                  className='btn_nav_forms'
-                  onClick={() => handleSelectTable('privateCard')}
+                  className="btn_nav_forms"
+                  onClick={() => handleSelectTable("privateCard")}
                 >
                   Priavte Card
                 </button>
                 <button
-                  className='btn_nav_forms'
-                  onClick={() => handleSelectTable('cognitiveProfile')}
+                  className="btn_nav_forms"
+                  onClick={() => handleSelectTable("cognitiveProfile")}
                 >
                   Cogntive Profile
                 </button>
                 <button
-                  className='btn_nav_forms'
-                  onClick={() => handleSelectTable('taskability')}
+                  className="btn_nav_forms"
+                  onClick={() => handleSelectTable("taskability")}
                 >
                   Taskability
                 </button>
                 <button
-                  className="btn_nav_forms"
-                  onClick={() => handleSelectTable("abillities")}
+                  className='btn_nav_forms'
+                  onClick={() => handleSelectTable('abillities')}
                 >
                   Abillities
                 </button>
               </nav>
             </div>
-            {selectedTable === "flags" && (
+            {selectedTable === 'flags' && (
               <div>
-                <div className='headlineForms'>Flags</div>
-                <div className='tableForms'>
+                <div className="headlineForms">Flags</div>
+                <div className="tableForms">
                   {isDialogOpen && (
                     // <Draggable>
                     <Dialog
                       open={isDialogOpen}
                       onClose={handleClose}
-                      aria-labelledby={'alert-dialog-slide-title'}
-                      aria-describedby={'alert-dialog-slide-description'}
+                      aria-labelledby={"alert-dialog-slide-title"}
+                      aria-describedby={"alert-dialog-slide-description"}
                       // TransitionComponent={Transition}
                       // keepMounted={slide}
                       // transitionDuration={300}
@@ -2307,14 +2298,14 @@ function Forms() {
                     >
                       <div
                         style={{
-                          display: 'flex',
+                          display: "flex",
                         }}
                       >
-                        <DialogTitle id='form-dialog-title'>
+                        <DialogTitle id="form-dialog-title">
                           Edit Flag
                         </DialogTitle>
                         <DialogActions
-                          style={{ direction: 'ltr', flexGrow: 1 }}
+                          style={{ direction: "ltr", flexGrow: 1 }}
                         >
                           <Button onClick={handleClose}>X</Button>
                         </DialogActions>
@@ -2322,44 +2313,44 @@ function Forms() {
 
                       <DialogContent dividers>
                         <div
-                          className='firstRowForms'
+                          className="firstRowForms"
                           style={{
-                            display: 'flex',
-                            flexDirection: 'row',
-                            alignItems: 'center',
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
                           }}
                           fullWidth
                         >
                           <TextField
                             autoFocus
-                            margin='dense'
-                            id='task'
-                            label='Task'
-                            type='text'
+                            margin="dense"
+                            id="task"
+                            label="Task"
+                            type="text"
                             value={currRow.task}
                             onChange={(e) =>
                               setCurrRow({ ...currRow, task: e.target.value })
                             }
-                            style={{ width: '75%' }}
+                            style={{ width: "75%" }}
                             disabled
                           />
                           <img
                             src={currRow.image}
-                            alt=''
+                            alt=""
                             style={{
-                              marginLeft: '20px',
-                              marginTop: '4px',
-                              width: '88px',
-                              height: '56px',
-                              borderRadius: 'd',
+                              marginLeft: "20px",
+                              marginTop: "4px",
+                              width: "88px",
+                              height: "56px",
+                              borderRadius: "d",
                             }}
                           />
                         </div>
                         <TextField
-                          margin='dense'
-                          id='classification'
-                          label='Classification'
-                          type='text'
+                          margin="dense"
+                          id="classification"
+                          label="Classification"
+                          type="text"
                           value={currRow.classification}
                           onChange={(e) =>
                             setCurrRow({
@@ -2371,12 +2362,12 @@ function Forms() {
                           disabled
                         />
 
-                        {currRow.intervention !== ' ' && (
+                        {currRow.intervention !== " " && (
                           <TextField
-                            margin='dense'
-                            id='intervention'
-                            label='intervention'
-                            type='text'
+                            margin="dense"
+                            id="intervention"
+                            label="intervention"
+                            type="text"
                             value={currRow.intervention}
                             onChange={(e) => {
                               setCurrRow({
@@ -2392,14 +2383,14 @@ function Forms() {
                           />
                         )}
 
-                        {currRow.intervention === ' ' && (
+                        {currRow.intervention === " " && (
                           <TextField
-                            margin='dense'
-                            id='intervention'
-                            label='intervention'
-                            type='text'
+                            margin="dense"
+                            id="intervention"
+                            label="intervention"
+                            type="text"
                             value={
-                              'This field is available only when classification is yellow'
+                              "This field is available only when classification is yellow"
                             }
                             style={{
                               borderColor: interventionBorderColor,
@@ -2409,21 +2400,21 @@ function Forms() {
                           />
                         )}
 
-                        {currRow.Alternatives === ' ' && (
+                        {currRow.Alternatives === " " && (
                           <Select
                             native
                             value={
-                              'This field is available only when classification is red'
+                              "This field is available only when classification is red"
                             }
-                            id='select-Alternatives'
-                            label='Alternatives'
+                            id="select-Alternatives"
+                            label="Alternatives"
                             fullWidth
                             disabled
                           >
-                            {' '}
+                            {" "}
                             <option
                               value={
-                                'This field is available only when classification is red'
+                                "This field is available only when classification is red"
                               }
                             >
                               This field is available only when classification
@@ -2432,12 +2423,12 @@ function Forms() {
                           </Select>
                         )}
 
-                        {currRow.Alternatives !== ' ' && (
+                        {currRow.Alternatives !== " " && (
                           <Select
                             native
                             value={currRow.Alternatives.toString()}
-                            id='select-Alternatives'
-                            label='Alternatives'
+                            id="select-Alternatives"
+                            label="Alternatives"
                             fullWidth
                             onChange={(e) =>
                               setCurrRow({
@@ -2447,133 +2438,133 @@ function Forms() {
                             }
                           >
                             {/* <option aria-label="None" value="" /> */}
-                            <optgroup label='writes single unfamiliar words'>
-                              <option value={'Ready stickers'}>
+                            <optgroup label="writes single unfamiliar words">
+                              <option value={"Ready stickers"}>
                                 Ready stickers
                               </option>
-                              <option value={'tab'}>tab</option>
-                              <option value={'Shapes'}>Shapes</option>
+                              <option value={"tab"}>tab</option>
+                              <option value={"Shapes"}>Shapes</option>
                             </optgroup>
-                            <optgroup label='hypersensitivity to touch'>
-                              <option value={'Glove'}>Glove</option>
-                              <option value={'cloth'}>cloth</option>
+                            <optgroup label="hypersensitivity to touch">
+                              <option value={"Glove"}>Glove</option>
+                              <option value={"cloth"}>cloth</option>
                             </optgroup>
-                            <optgroup label='Complex Color ID'>
-                              <option value={'Drawing'}>Drawing</option>
-                              <option value={'symbol'}>symbol</option>
-                              <option value={'Explain with voice'}>
+                            <optgroup label="Complex Color ID">
+                              <option value={"Drawing"}>Drawing</option>
+                              <option value={"symbol"}>symbol</option>
+                              <option value={"Explain with voice"}>
                                 Explain with voice
                               </option>
-                            </optgroup>{' '}
-                            <optgroup label='complex shape identifier'>
-                              <option value={'Drawing'}>Drawing</option>
-                              <option value={'symbol'}>symbol</option>
-                              <option value={'Explain with voice'}>
+                            </optgroup>{" "}
+                            <optgroup label="complex shape identifier">
+                              <option value={"Drawing"}>Drawing</option>
+                              <option value={"symbol"}>symbol</option>
+                              <option value={"Explain with voice"}>
                                 Explain with voice
                               </option>
-                            </optgroup>{' '}
-                            <optgroup label='dividing'>
-                              <option value={'Quiet room'}>Quiet room</option>
-                              <option value={'Pause'}>Pause</option>
-                            </optgroup>{' '}
-                            <optgroup label='Short-term memory (30 seconds)'>
-                              <option value={'Task repetition'}>
+                            </optgroup>{" "}
+                            <optgroup label="dividing">
+                              <option value={"Quiet room"}>Quiet room</option>
+                              <option value={"Pause"}>Pause</option>
+                            </optgroup>{" "}
+                            <optgroup label="Short-term memory (30 seconds)">
+                              <option value={"Task repetition"}>
                                 Task repetition
                               </option>
-                              <option value={'Reminders in the app'}>
+                              <option value={"Reminders in the app"}>
                                 Reminders in the app
                               </option>
-                              <option value={'printed list'}>
+                              <option value={"printed list"}>
                                 printed list
                               </option>
-                            </optgroup>{' '}
-                            <optgroup label='Shape recognition (2D)'>
-                              <option value={'Drawing'}>Drawing</option>
-                              <option value={'symbol'}>symbol</option>
-                              <option value={'Explain with voice'}>
+                            </optgroup>{" "}
+                            <optgroup label="Shape recognition (2D)">
+                              <option value={"Drawing"}>Drawing</option>
+                              <option value={"symbol"}>symbol</option>
+                              <option value={"Explain with voice"}>
                                 Explain with voice
                               </option>
-                            </optgroup>{' '}
-                            <optgroup label='People ID (face and name)'>
-                              <option value={'photograph'}>photograph</option>
-                              <option value={'on a printed card'}>
+                            </optgroup>{" "}
+                            <optgroup label="People ID (face and name)">
+                              <option value={"photograph"}>photograph</option>
+                              <option value={"on a printed card"}>
                                 on a printed card
                               </option>
                             </optgroup>
-                            <optgroup label='image ID'>
-                              <option value={'Drawing'}>Drawing</option>
-                              <option value={'symbol'}>symbol</option>
-                              <option value={'Explain with voice'}>
+                            <optgroup label="image ID">
+                              <option value={"Drawing"}>Drawing</option>
+                              <option value={"symbol"}>symbol</option>
+                              <option value={"Explain with voice"}>
                                 Explain with voice
                               </option>
                             </optgroup>
-                            <optgroup label='simple graphic symbol identifier'>
-                              <option value={'Drawing'}>Drawing</option>
-                              <option value={'symbol'}>symbol</option>
-                              <option value={'Explain with voice'}>
+                            <optgroup label="simple graphic symbol identifier">
+                              <option value={"Drawing"}>Drawing</option>
+                              <option value={"symbol"}>symbol</option>
+                              <option value={"Explain with voice"}>
                                 Explain with voice
                               </option>
                             </optgroup>
-                            <optgroup label='Icon ID'>
-                              <option value={'Drawing'}>Drawing</option>
-                              <option value={'symbol'}>symbol</option>
-                              <option value={'Explain with voice'}>
+                            <optgroup label="Icon ID">
+                              <option value={"Drawing"}>Drawing</option>
+                              <option value={"symbol"}>symbol</option>
+                              <option value={"Explain with voice"}>
                                 Explain with voice
                               </option>
                             </optgroup>
-                            <optgroup label='Caution in the use of hazardous materials'>
-                              <option value={'Add protection measures'}>
+                            <optgroup label="Caution in the use of hazardous materials">
+                              <option value={"Add protection measures"}>
                                 Add protection measures
                               </option>
-                              <option value={'Exclusion'}>Exclusion</option>
-                              <option value={'Add warning'}>Add warning</option>
+                              <option value={"Exclusion"}>Exclusion</option>
+                              <option value={"Add warning"}>Add warning</option>
                             </optgroup>
-                            <optgroup label='Caution use of sharp objects'>
-                              <option value={'Add protection measure'}>
+                            <optgroup label="Caution use of sharp objects">
+                              <option value={"Add protection measure"}>
                                 Add protection measures
                               </option>
-                              <option value={'Exclusion'}>Exclusion</option>
-                              <option value={'Add warning'}>Add warning</option>
+                              <option value={"Exclusion"}>Exclusion</option>
+                              <option value={"Add warning"}>Add warning</option>
                             </optgroup>
-                            <optgroup label='Caution for using electrical appliances'>
-                              <option value={'Add protection measures'}>
+                            <optgroup label="Caution for using electrical appliances">
+                              <option value={"Add protection measures"}>
                                 Add protection measures
                               </option>
-                              <option value={'Exclusion'}>Exclusion</option>
-                              <option value={'Add warning'}>Add warning</option>
+                              <option value={"Exclusion"}>Exclusion</option>
+                              <option value={"Add warning"}>Add warning</option>
                             </optgroup>
-                            <optgroup label='long standing from weak legs'>
-                              <option value={'Sitting on a chair'}>
+                            <optgroup label="long standing from weak legs">
+                              <option value={"Sitting on a chair"}>
                                 Sitting on a chair
                               </option>
-                              <option value={'Breaks every 10 minutes'}>
+                              <option value={"Breaks every 10 minutes"}>
                                 Breaks every 10 minutes
                               </option>
                               <option
                                 value={
-                                  'modification change throughout the activity'
+                                  "modification change throughout the activity"
                                 }
                               >
                                 modification change throughout the activity
                               </option>
                             </optgroup>
-                            <optgroup label='Place identification and spatial orientation'>
-                              <option value={'Signs with text'}>
+                            <optgroup label="Place identification and spatial orientation">
+                              <option value={"Signs with text"}>
                                 Signs with text
                               </option>
-                              <option value={'Images'}>Images </option>
-                              <option value={'Explain with voice'}>
+                              <option value={"Images"}>Images </option>
+                              <option value={"Explain with voice"}>
                                 Explain with voice
                               </option>
                             </optgroup>
-                            <optgroup label='color blindness'>
-                              <option value={'Different sorting method'}>
+                            <optgroup label="color blindness">
+                              <option value={"Different sorting method"}>
                                 Different sorting method
                               </option>
-                              <option value={'Explain with voice'}>
-                                Explain with voice{' '}
+                              <option value={"Explain with voice"}>
+                                Explain with voice{" "}
                               </option>
-                              <option value={'External control'}>
+                              <option value={"External control"}>
                                 External control
                               </option>
                             </optgroup>
@@ -2581,10 +2572,10 @@ function Forms() {
                         )}
 
                         <TextField
-                          margin='dense'
-                          id='explaination'
-                          label='Explaination'
-                          type='text'
+                          margin="dense"
+                          id="explaination"
+                          label="Explaination"
+                          type="text"
                           value={currRow.explaination}
                           onChange={(e) => {
                             setCurrRow({
@@ -2614,7 +2605,7 @@ function Forms() {
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
-                    tableType={'FlagsEN'}
+                    tableType={"FlagsEN"}
                     columns={columnsFlagsEN}
                     setColumns={setColumnsFlagsEN}
                     rows={rowsFlagsEN}
@@ -2631,17 +2622,17 @@ function Forms() {
               </div>
             )}
 
-            {selectedTable === 'cognitiveProfile' && (
+            {selectedTable === "cognitiveProfile" && (
               <div>
-                <div className='headlineForms'>Cogntive Profile</div>
-                <div className='tableForms'>
-                  <DataTableLTR
+                <div className="headlineForms">Cogntive Profile</div>
+                <div className="tableForms">
+                  <DataTableLTR // DataTableRTL
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
-                    tableType={'CognitiveProfileEN'}
+                    tableType={"CognitiveProfileEN"}
                     columns={columnsCognitiveHE}
                     setColumns={setColumnsCognitiveHE}
                     rows={rowsCognitiveHE}
@@ -2659,17 +2650,17 @@ function Forms() {
               </div>
             )}
 
-            {selectedTable === 'privateCard' && (
+            {selectedTable === "privateCard" && (
               <div>
-                <div className='headlineForms'>Private Card</div>
-                <div className='tableForms'>
-                  <DataTableLTR
+                <div className="headlineForms">Private Card</div>
+                <div className="tableForms">
+                  <DataTableLTR //---DataTableRTL
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
-                    tableType={'PrivateCardEN'}
+                    tableType={"PrivateCardEN"}
                     columns={columnsPrivateCardHE}
                     setColumns={setColumnsPrivateCardHE}
                     rows={rowsPrivateCardHE}
@@ -2686,17 +2677,17 @@ function Forms() {
               </div>
             )}
 
-            {selectedTable === 'taskability' && (
+            {selectedTable === "taskability" && (
               <div>
-                <div className='headlineForms'>Taskability</div>
-                <div className='tableForms'>
-                  <DataTableLTR
+                <div className="headlineForms">Taskability</div>
+                <div className="tableForms">
+                  <DataTableLTR //-------TaskAbility
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
-                    tableType={'TaskabilityEN'}
+                    tableType={"TaskabilityEN"}
                     columns={columnsTaskabilityHE}
                     setColumns={setColumnsTaskabilityHE}
                     rows={rowsTaskabilityHE}
@@ -2713,13 +2704,13 @@ function Forms() {
               </div>
             )}
 
-            {selectedTable === 'abillities' && (
+            {selectedTable === "abillities" && (
               <div>
-              <div className="headlineForms">Abillities</div>
-              <div className="tableForms">
-                <CognitiveAbillities></CognitiveAbillities>
+                <div className='headlineForms'>Abillities</div>
+                <div className='tableForms'>
+                  <CognitiveAbillities></CognitiveAbillities>
+                </div>
               </div>
-            </div>
             )}
           </>
         )}

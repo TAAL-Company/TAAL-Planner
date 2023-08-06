@@ -1,15 +1,15 @@
-import * as React from 'react';
-import './DataTableRTL.css';
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
-import { useEffect, useState } from 'react';
+import * as React from "react";
+import "./DataTableRTL.css";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
+import { useEffect, useState } from "react";
 import {
   getingDataUsers,
   postTaskCognitiveRequirements,
-} from '../../../../api/api';
-import './CustomToolbar.css';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
+} from "../../../../api/api";
+import "./CustomToolbar.css";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 
 import {
   GridToolbarContainer,
@@ -18,14 +18,14 @@ import {
   GridToolbarFilterButton,
   GridToolbarDensitySelector,
   GridToolbarQuickFilter,
-} from '@mui/x-data-grid';
+} from "@mui/x-data-grid";
 // import MultipleSelectChip from "./MultipleSelectChip";
 // import AccessibleTabs1 from "./AccessibleTabs1";
 
-import { Button, InputLabel } from '@mui/material';
-import MultipleEdit from '../multiple_edit/MultipleEdit';
-import AddColumn from '../add_column/AddColumn';
-import SaveIcon from '@mui/icons-material/Save';
+import { Button, InputLabel } from "@mui/material";
+import MultipleEdit from "../multiple_edit/MultipleEdit";
+import AddColumn from "../add_column/AddColumn";
+import SaveIcon from "@mui/icons-material/Save";
 
 const CustomToolbar = ({
   isInfoUserRoute,
@@ -36,6 +36,8 @@ const CustomToolbar = ({
   setColumns,
   setWorker,
   worker,
+  setRoutesOfFlags,
+  routesOfFlags,
   allUsers,
   setChangeUser,
   setChangeRoute,
@@ -50,22 +52,22 @@ const CustomToolbar = ({
 }) => {
   // const [prevSelected, setPrevSelected] = useState([]);
   useEffect(() => {
-    console.log('prevSelectedWorker', prevSelectedWorker);
+    console.log("prevSelectedWorker", prevSelectedWorker);
   }, [prevSelectedWorker]);
 
   const saveProfileChanges = (e) => {
-    console.log('HII');
-    if (tableType === 'CognitiveProfileHE') {
-      console.log('true');
+    console.log("HII");
+    if (tableType === "CognitiveProfileHE") {
+      console.log("true");
       setSaveProfileChanges(true);
-    } else if (tableType === 'TaskabilityHE') {
-      console.log('HII');
+    } else if (tableType === "TaskabilityHE") {
+      console.log("HII");
       newTaskCognitiveRequirements.forEach((element) => {
         try {
-          postTaskCognitiveRequirements(element);
+          let post = postTaskCognitiveRequirements(element);
         } catch (error) {}
 
-        alert('המידע נשמר !');
+        alert("המידע נשמר !");
       });
     }
   };
@@ -73,72 +75,68 @@ const CustomToolbar = ({
     // const selectedValue = JSON.parse(value);
     // setPrevSelected((prevSelected) => [...prevSelected, selectedValue]);
 
-    console.log('worker', value);
+    console.log("worker", value);
     setWorker(value);
     setChangeUser(true);
   };
   const handleChangeRoute = (event) => {
     const selectedValue = JSON.parse(event.target.value);
 
-    console.log('route', selectedValue);
+    console.log("++ allRoutes ++"+allRoutes);
+
+    console.log("route", selectedValue);
     setRouteForTasksAbility(selectedValue);
+    setRoutesOfFlags(selectedValue);
     setChangeRoute(true);
   };
-
-  const getOptionLabel = (option) =>
-    option.name === undefined ? '' : option.name;
 
   return (
     <div>
       <GridToolbarContainer
         style={{
-          paddingTop: '20px',
-          paddingBottom: '15px',
-          direction: 'rtl',
-          justifyContent: 'space-between',
+          paddingTop: "20px",
+          paddingBottom: "15px",
+          direction: "rtl",
+          justifyContent: "space-between",
         }}
       >
         <div>
-          <GridToolbarColumnsButton style={{ color: 'black' }} />
-          <GridToolbarFilterButton style={{ color: 'black' }} />
-          <GridToolbarDensitySelector style={{ color: 'black' }} />
+          <GridToolbarColumnsButton style={{ color: "black" }} />
+          <GridToolbarFilterButton style={{ color: "black" }} />
+          <GridToolbarDensitySelector style={{ color: "black" }} />
           <GridToolbarExport
             csvOptions={{
               fileName: `${
-                tableType === 'TaskabilityHE'
-                  ? 'Taskability'
-                  : tableType === 'CognitiveProfileHE'
-                  ? 'CognitiveProfile'
+                tableType === "TaskabilityHE"
+                  ? "Taskability"
+                  : tableType === "CognitiveProfileHE"
+                  ? "CognitiveProfile"
                   : "TA'AL EDITOR"
               }_${new Date()
-                .toLocaleDateString("en-GB")
-                .replace(/\//g, "-")}`,
-                utf8WithBom: true,
+                .toLocaleDateString('en-GB')
+                .replace(/\//g, '-')}.csv`,
             }}
-            style={{ color: 'black' }}
+            style={{ color: "black" }}
           />
         </div>
-        <div className='infoForms'>
-          <div className='workerNameForms'>
+
+        {isInfoUserRoute && allUsers && (
+          <div className='infoForms'>
+            <div className='workerNameForms'>
               שם עובד:
-            {allUsers && allUsers.length > 0 && isInfoUserRoute ? (
               <Autocomplete
                 freeSolo
+                value={worker}
                 onChange={handleChangeUserFlags}
-                id='free-solo-2-demo'
+                id="free-solo-2-demo"
                 disableClearable
-                // value={workerNameSelected}
                 options={allUsers || []}
-                getOptionLabel={getOptionLabel}
+                getOptionLabel={(option) => option.name || ''}
                 renderOption={(props, option) => (
                   <div
+                    className='workerName-autoComplete'
                     key={option.id}
-                    onClick={() => {
-                      handleChangeUserFlags(null, option);
-                    }}
-                    style={{
-                      cursor: 'pointer',
-                    }}
+                    onClick={() => handleChangeUserFlags(null, option)}
                   >
                     {option.name}
                   </div>
@@ -146,7 +144,40 @@ const CustomToolbar = ({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label='שם העובד'
+                    label=" שם העובד"
+                    InputProps={{
+                      ...params.InputProps,
+                      type: "search",
+                    }}
+                  />
+                )}
+              />
+            </div>
+            <div className='workerRouteForms'>
+              שם מסלול:
+              <Autocomplete
+                freeSolo
+                style={{ width: '250px' }}
+                value={routesOfFlags || ''}
+                onChange={handleChangeRouteFlags}
+                id='free-solo-2-demo'
+                disableClearable
+                options={worker.routes || []}
+                getOptionLabel={(option) => option.name || ''}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label={
+                      Object.keys(worker).length !== 0 &&
+                      worker.routes.length !== 0
+                        ? 'בחר מסלול'
+                        : Object.keys(worker).length !== 0 &&
+                          worker.routes.length === 0
+                        ? 'אין מסלולים עבור העובד'
+                        : Object.keys(worker).length === 0
+                        ? 'בחר מסלול'
+                        : ''
+                    }
                     InputProps={{
                       ...params.InputProps,
                       type: 'search',
@@ -154,47 +185,9 @@ const CustomToolbar = ({
                   />
                 )}
               />
-            ) : (
-              <div>Loading or no data available.</div>
-            )}
-            </div>
-          <div className='workerRouteForms'>
-              שם מסלול:
-              <Autocomplete
-              style={{ width: '250px' }}
-                freeSolo
-                onChange={handleChangeRouteFlags}
-              id='free-solo-2-demo'
-                disableClearable
-                options={worker.routes}
-                getOptionLabel={(option) =>
-                option.name.replace('&#8211;', '-').replace('&#8217;', "'")
-                }
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={
-                    Object.keys(worker).length === 0 &&
-                    worker.routes?.length === 0
-                      ? 'בחירת מסלול'
-                      : Object.keys(worker).length !== 0 &&
-                        worker.routes?.length === 0
-                      ? 'אין מסלולים עבור העובד'
-                      : Object.keys(worker).length !== 0 &&
-                        worker.routes.length !== 0
-                      ? 'בחירת מסלול'
-                      : ''
-                    }
-                    InputProps={{
-                      ...params.InputProps,
-                    type: 'search',
-                    }}
-                  />
-                )}
-              />
             </div>
           </div>
-
+        )}
         {tableType === 'TaskabilityHE' ? (
           <div className='infoForms'>
             <div className='workerNameForms'>
@@ -203,20 +196,20 @@ const CustomToolbar = ({
               </InputLabel>
               <select
                 className='selectUserForms'
-                defaultValue={'DEFAULT'}
+                value={'DEFAULT'}
                 onChange={handleChangeRoute}
               >
-                <option value='DEFAULT' disabled>
-                  {routeForTasksAbility.length === 0
-                    ? 'בחירת מסלול'
+                <option value="DEFAULT" disabled>
+                  {routeForTasksAbility.length == 0
+                    ? "בחירת מסלול"
                     : routeForTasksAbility.name}
                 </option>
                 {allRoutes.map((value, index) => {
                   return (
                     <option key={index} value={JSON.stringify(value)}>
                       {value.name
-                        .replace('&#8211;', '-')
-                        .replace('&#8217;', "'")}
+                        .replace("&#8211;", "-")
+                        .replace("&#8217;", "'")}
                     </option>
                   );
                 })}
@@ -227,8 +220,8 @@ const CustomToolbar = ({
           <></>
         )}
         {isInfoUserSite && (
-          <div className='infoForms'>
-            <div className='workerNameForms'>
+          <div className="infoForms">
+            <div className="workerNameForms">
               {/* <InputLabel id="demo-simple-select-label-forms">
                 שם העובד:
               </InputLabel> */}
@@ -241,14 +234,14 @@ const CustomToolbar = ({
                 disablePortal
                 autoHighlight
                 onChange={handleChangeUser}
-                id='free-solo-2-demo'
+                id="free-solo-2-demo"
                 // disableClearable
                 options={allUsers}
                 getOptionLabel={(option) => option.name}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label={worker.name ? worker.name : 'שם העובד'}
+                    label={worker.name ? worker.name : "שם העובד"}
                   />
                 )}
                 label={worker.name}
@@ -281,81 +274,81 @@ const CustomToolbar = ({
         )}
 
         <div>
-          <InputAdornment position='start'>
+          <InputAdornment position="start">
             <GridToolbarQuickFilter
               InputProps={{ disableUnderline: true }}
-              placeholder='חיפוש'
+              placeholder="חיפוש"
               style={{
-                paddingRight: '10px',
-                width: '250px',
-                position: 'relative',
-                borderRadius: '8px',
-                paddingBottom: '2px',
-                marginTop: '2px',
-                background: 'white',
+                paddingRight: "10px",
+                width: "250px",
+                position: "relative",
+                borderRadius: "8px",
+                paddingBottom: "2px",
+                marginTop: "2px",
+                background: "white",
               }}
               sx={{
-                '& .MuiInputBase-root': {
+                "& .MuiInputBase-root": {
                   // background: "blue",
-                  width: '87%',
-                  height: '28px',
+                  width: "87%",
+                  height: "28px",
                 },
               }}
             />
             <SearchIcon
               style={{
-                marginRight: '-30px',
-                zIndex: '5',
+                marginRight: "-30px",
+                zIndex: "5",
               }}
             />
           </InputAdornment>
         </div>
       </GridToolbarContainer>
 
-      {tableType === 'TaskabilityHE' && selectedRows.length >= 2 ? (
+      {tableType === "TaskabilityHE" && selectedRows.length >= 2 ? (
         <>
           <div
-            className='buttonaNavbarForms'
-            style={{ display: 'flex', right: 0, paddingBottom: '10px' }}
+            className="buttonaNavbarForms"
+            style={{ display: "flex", right: 0, paddingBottom: "10px" }}
           >
-            <div style={{ marginLeft: '10px' }}>
+            <div style={{ marginLeft: "10px" }}>
               <MultipleEdit
-                textButton={'עריכה קבוצתית'}
+                textButton={"עריכה קבוצתית"}
                 selectedRows={selectedRows}
                 fieldsCount={columns.length}
                 columns={columns}
-              />{' '}
+              />{" "}
             </div>
             <AddColumn columns={columns} setColumns={setColumns}></AddColumn>
             {/* {selectedRows.map((item) => item.tasks)} */}
           </div>
         </>
-      ) : tableType === 'TaskabilityHE' ? (
+      ) : tableType === "TaskabilityHE" ? (
         <>
           <div
-            className='buttonaNavbarForms'
+            className="buttonaNavbarForms"
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              paddingBottom: '10px',
+              display: "flex",
+              justifyContent: "space-between",
+              paddingBottom: "10px",
             }}
           >
-            {' '}
-            <div style={{ display: 'flex', alignItems: 'center' }}>
+            {" "}
+            <div style={{ display: "flex", alignItems: "center" }}>
               <Button
-                variant='outlined'
+                variant="outlined"
                 disabled
-                style={{ marginLeft: '10px' }}
+                style={{ marginLeft: "10px" }}
               >
                 עריכה קבוצתית
               </Button>
               <AddColumn columns={columns} setColumns={setColumns}></AddColumn>
             </div>
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: "flex" }}>
               <SaveIcon
-                fontSize='large'
-                color='primary'
-                style={{ zIndex: '5' }}
+                fontSize="large"
+                color="primary"
+                style={{ zIndex: "5" }}
                 onClick={saveProfileChanges}
               />
             </div>
@@ -364,19 +357,19 @@ const CustomToolbar = ({
       ) : (
         <>
           <div
-            className='buttonaNavbarForms'
+            className="buttonaNavbarForms"
             style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              paddingBottom: '10px',
+              display: "flex",
+              justifyContent: "space-between",
+              paddingBottom: "10px",
             }}
           >
             <AddColumn columns={columns} setColumns={setColumns}></AddColumn>
-            <div style={{ display: 'flex', right: 0 }}>
+            <div style={{ display: "flex", right: 0 }}>
               <SaveIcon
-                fontSize='large'
-                color='primary'
-                style={{ zIndex: '5' }}
+                fontSize="large"
+                color="primary"
+                style={{ zIndex: "5" }}
                 onClick={saveProfileChanges}
               />
             </div>

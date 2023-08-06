@@ -170,7 +170,11 @@ const CognitiveAbillities = () => {
     console.log("id:", id);
   };
   const columns = ([
-    {field:"id", headerName: 'ID' ,flex: 1},
+    // {field:"id", headerName: 'ID' ,flex: 1},
+    {field: 'id' , 
+        headerName: 'number', 
+        filterable: false,
+        renderCell: (index) => index.api.getRowIndex(index.row.id) + 1},
     {field:"index", headerName: 'NO'},
     {field:"trait", headerName: 'Trait',flex: 1},
     {field:"requiredField", headerName: 'Required Field',flex: 1},
@@ -270,6 +274,7 @@ return (
             autoWidth: true,
           },
         }}
+        
         sortModel={[
           {
             field: "id",

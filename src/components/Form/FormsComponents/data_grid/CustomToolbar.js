@@ -80,6 +80,8 @@ const CustomToolbar = ({
   const handleChangeRoute = (event) => {
     const selectedValue = JSON.parse(event.target.value);
 
+    console.log("++ allRoutes ++"+allRoutes);
+
     console.log("route", selectedValue);
     setRouteForTasksAbility(selectedValue);
     setChangeRoute(true);

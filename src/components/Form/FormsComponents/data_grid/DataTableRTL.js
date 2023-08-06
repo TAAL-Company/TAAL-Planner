@@ -1,9 +1,9 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import './DataTableRTL.css';
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
-import { useEffect, useState } from 'react';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import "./DataTableRTL.css";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
+import { useEffect, useState } from "react";
 
 import {
   GridToolbarContainer,
@@ -12,31 +12,31 @@ import {
   GridToolbarFilterButton,
   GridToolbarDensitySelector,
   GridToolbarQuickFilter,
-} from '@mui/x-data-grid';
+} from "@mui/x-data-grid";
 // import MultipleSelectChip from "./MultipleSelectChip";
 // import AccessibleTabs1 from "./AccessibleTabs1";
-import { heIL } from '@mui/x-data-grid';
+import { heIL } from "@mui/x-data-grid";
 import {
   Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
-} from '@mui/material';
-import MultipleEdit from '../multiple_edit/MultipleEdit';
-import AddColumn from '../add_column/AddColumn';
-import { DataGridPro } from '@mui/x-data-grid-pro';
-import SaveIcon from '@mui/icons-material/Save';
-import CustomToolbar from './CustomToolbar';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
+} from "@mui/material";
+import MultipleEdit from "../multiple_edit/MultipleEdit";
+import AddColumn from "../add_column/AddColumn";
+import { DataGridPro } from "@mui/x-data-grid-pro";
+import SaveIcon from "@mui/icons-material/Save";
+import CustomToolbar from "./CustomToolbar";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction='up' ref={ref} {...props} />;
+  return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const DataTableRTL = ({
@@ -79,23 +79,23 @@ const DataTableRTL = ({
     React.useState([]);
 
   useEffect(() => {
-    console.log('rows:', rows);
-    console.log('columns:', columns);
+    console.log("rows:", rows);
+    console.log("columns:", columns);
   }, [columns]);
 
   const [openDialogTrueFalse, setOpenDialogTrueFalse] = React.useState(false);
-  const [groupName, setGroupName] = React.useState('');
+  const [groupName, setGroupName] = React.useState("");
 
   const handleClose = () => {
     setOpenDialogTrueFalse(false);
   };
 
   const handleCellEdit = (params) => {
-    console.log('params', params);
-    console.log('params', params.field);
-    console.log('params', params.value);
+    console.log("params", params);
+    console.log("params", params.field);
+    console.log("params", params.value);
 
-    if (tableType === 'TaskabilityHE') {
+    if (tableType === "TaskabilityHE") {
       let [letter, number] = [
         params.value.charAt(0),
         params.value.substring(1),
@@ -103,9 +103,9 @@ const DataTableRTL = ({
       const position = letter.charCodeAt(0) - 64;
       const result = position.toString(10);
 
-      console.log('diff', rows[params.id].uuid);
+      console.log("diff", rows[params.id].uuid);
       let uuid = rows.find((temp) => temp.id === params.id).uuid;
-      console.log('diff uuid', uuid);
+      console.log("diff uuid", uuid);
 
       let temp = newTaskCognitiveRequirements.find(
         (temp) => temp.taskId === uuid
@@ -127,15 +127,15 @@ const DataTableRTL = ({
         };
         setNewTaskCognitiveRequirements((prev) => [...prev, post]);
 
-        console.log('post', post);
+        console.log("post", post);
       }
       console.log(letter);
       console.log(number);
-      console.log('diff', newTaskCognitiveRequirements);
+      console.log("diff", newTaskCognitiveRequirements);
     } else {
-      console.log('params', params);
-      console.log('params', params.field);
-      console.log('params', params.value);
+      console.log("params", params);
+      console.log("params", params.field);
+      console.log("params", params.value);
 
       // if (params.value >= 0 && params.value < 6) {
       const updatedRows = rows.map((row) => {
@@ -184,10 +184,10 @@ const DataTableRTL = ({
   };
 
   const handleChange = (event) => {
-    fillFalse({ groupingColumn: 'Languages', show: event.target.value });
-    console.log('PrivateInfoHE');
+    fillFalse({ groupingColumn: "Languages", show: event.target.value });
+    console.log("PrivateInfoHE");
     fillFalse({
-      groupingColumn: 'PrivateInfoHE',
+      groupingColumn: "PrivateInfoHE",
       show: !columnFillRows.PrivateInfoHE,
     });
     setColumnFillRows((prev) => ({
@@ -198,14 +198,14 @@ const DataTableRTL = ({
 
   const columnGroupingModel = [
     {
-      groupId: 'PrivateInfoHE',
-      description: '',
+      groupId: "PrivateInfoHE",
+      description: "",
       renderHeaderGroup: (params) => (
         <div
-          className='groupingHeaderNameForms'
-          style={{ cursor: 'pointer', color: 'white' }}
+          className="groupingHeaderNameForms"
+          style={{ cursor: "pointer", color: "white" }}
           onClick={() => {
-            console.log('PrivateInfoHE');
+            console.log("PrivateInfoHE");
             // fillFalse({
             //   groupingColumn: "PrivateInfoHE",
             //   show: !columnFillRows.PrivateInfoHE,
@@ -215,28 +215,28 @@ const DataTableRTL = ({
             //   PrivateInfoHE: !prev.PrivateInfoHE,
             // }));
             setOpenDialogTrueFalse(true);
-            setGroupName('פרטים אישיים');
+            setGroupName("פרטים אישיים");
           }}
         >
           פרטים אישיים
         </div>
       ),
       children: [
-        { field: 'fieldHEPrivateCard' },
-        { field: 'xPrivateCard' },
-        { field: 'yPrivateCard' },
-        { field: 'fieldENPrivateCard' },
-        { field: 'classificationHEPrivateCard' },
+        { field: "fieldHEPrivateCard" },
+        { field: "xPrivateCard" },
+        { field: "yPrivateCard" },
+        { field: "fieldENPrivateCard" },
+        { field: "classificationHEPrivateCard" },
       ],
     },
     {
-      groupId: 'HistoryHE',
+      groupId: "HistoryHE",
       renderHeaderGroup: (params) => (
         <div
-          className='groupingHeaderNameForms'
-          style={{ cursor: 'pointer', color: 'white' }}
+          className="groupingHeaderNameForms"
+          style={{ cursor: "pointer", color: "white" }}
           onClick={() => {
-            console.log('HistoryHE');
+            console.log("HistoryHE");
             // fillFalse({
             //   groupingColumn: "HistoryHE",
             //   show: !columnFillRows.HistoryHE,
@@ -246,28 +246,28 @@ const DataTableRTL = ({
             //   HistoryHE: !prev.HistoryHE,
             // }));
             setOpenDialogTrueFalse(true);
-            setGroupName('היסטוריה');
+            setGroupName("היסטוריה");
           }}
         >
           היסטוריה
         </div>
       ),
       children: [
-        { field: 'beginningOfWorkPrivateCard' },
-        { field: 'employersPrivateCard' },
-        { field: 'reportsPrivateCard' },
-        { field: 'improvementPrivateCard' },
-        { field: 'interventionHEPrivateCard' },
+        { field: "beginningOfWorkPrivateCard" },
+        { field: "employersPrivateCard" },
+        { field: "reportsPrivateCard" },
+        { field: "improvementPrivateCard" },
+        { field: "interventionHEPrivateCard" },
       ],
     },
     {
-      groupId: 'LanguageComprehensionHE',
+      groupId: "LanguageComprehensionHE",
       renderHeaderGroup: (params) => (
         <div
-          className='groupingHeaderNameForms'
-          style={{ cursor: 'pointer', color: 'white' }}
+          className="groupingHeaderNameForms"
+          style={{ cursor: "pointer", color: "white" }}
           onClick={() => {
-            console.log('LanguageComprehensionHE');
+            console.log("LanguageComprehensionHE");
             // fillFalse({
             //   groupingColumn: "LanguageComprehensionHE",
             //   show: !columnFillRows.LanguageComprehensionHE,
@@ -277,26 +277,26 @@ const DataTableRTL = ({
             //   LanguageComprehensionHE: !prev.LanguageComprehensionHE,
             // }));
             setOpenDialogTrueFalse(true);
-            setGroupName('הבנת שפה');
+            setGroupName("הבנת שפה");
           }}
         >
           הבנת שפה
         </div>
       ),
       children: [
-        { field: 'understandSpokenLanguageComprehension' },
-        { field: 'understandWrittenLanguageComprehension' },
+        { field: "understandSpokenLanguageComprehension" },
+        { field: "understandWrittenLanguageComprehension" },
       ],
     },
 
     {
-      groupId: 'LanguagesHE',
+      groupId: "LanguagesHE",
       renderHeaderGroup: (params) => (
         <div
-          className='groupingHeaderNameForms'
-          style={{ cursor: 'pointer', color: 'white' }}
+          className="groupingHeaderNameForms"
+          style={{ cursor: "pointer", color: "white" }}
           onClick={() => {
-            console.log('LanguagesHE');
+            console.log("LanguagesHE");
             // fillFalse({
             //   groupingColumn: "LanguagesHE",
             //   show: !columnFillRows.LanguagesHE,
@@ -306,52 +306,52 @@ const DataTableRTL = ({
             //   LanguagesHE: !prev.LanguagesHE,
             // }));
             setOpenDialogTrueFalse(true);
-            setGroupName('שפות');
+            setGroupName("שפות");
           }}
         >
           שפות
         </div>
       ),
-      children: [{ field: 'hebrew' }, { field: 'english' }],
+      children: [{ field: "hebrew" }, { field: "english" }],
     },
   ];
 
   return (
-    <div className='allForms'>
+    <div className="allForms">
       <Box
         sx={{
           // height: "80vh",
-          width: '100%',
-          direction: 'ltr',
+          width: "100%",
+          direction: "ltr",
           // backgroundColor: "#256FA133",
-          background: '#F5F5F5',
+          background: "#F5F5F5",
           mb: 2,
-          display: 'flex',
-          flexDirection: 'column',
+          display: "flex",
+          flexDirection: "column",
 
-          '& .MuiDataGrid-root': {
-            marginRight: '25px',
-            marginLeft: '25px',
+          "& .MuiDataGrid-root": {
+            marginRight: "25px",
+            marginLeft: "25px",
             border: 0,
           },
-          '& .MuiDataGrid-columnHeaderTitle': {
-            fontSize: 'Medium',
-            fontWeight: 'bold',
+          "& .MuiDataGrid-columnHeaderTitle": {
+            fontSize: "Medium",
+            fontWeight: "bold",
           },
-          '& .MuiDataGrid-row': {
-            backgroundColor: 'white',
-            marginTop: '5px',
-            marginBottom: '0px',
-            borderRadius: '6px',
-          },
-
-          '& .MuiDataGrid-cellContent': {
-            fontFamily: 'Gotham Black, sans-serif',
-            fontSize: 'medium',
+          "& .MuiDataGrid-row": {
+            backgroundColor: "white",
+            marginTop: "5px",
+            marginBottom: "0px",
+            borderRadius: "6px",
           },
 
-          '& .MuiButton-startIcon': {
-            marginLeft: '5px',
+          "& .MuiDataGrid-cellContent": {
+            fontFamily: "Gotham Black, sans-serif",
+            fontSize: "medium",
+          },
+
+          "& .MuiButton-startIcon": {
+            marginLeft: "5px",
           },
 
           // css-1e2bxag-MuiDataGrid-root .MuiDataGrid-iconSeparator
@@ -361,10 +361,10 @@ const DataTableRTL = ({
           // },
           //           "& .css-1e2bxag-MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer":
 
-          '& .MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer':
+          "& .MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer":
             {
-              borderBottom: 'solid white 3px',
-              justifyContent: 'center',
+              borderBottom: "solid white 3px",
+              justifyContent: "center",
             },
 
           // .css-1e2bxag-MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer
@@ -380,55 +380,55 @@ const DataTableRTL = ({
           }}
           sortModel={[
             {
-              field: 'id',
-              sort: 'asc',
+              field: "id",
+              sort: "asc",
             },
           ]}
           onCellEditCommit={handleCellEdit}
           sx={{
-            direction: 'rtl',
-            '& .MuiDataGrid-virtualScroller': {
-              overflow: 'unset !important',
-              mt: '0 !important',
+            direction: "rtl",
+            "& .MuiDataGrid-virtualScroller": {
+              overflow: "unset !important",
+              mt: "0 !important",
             },
 
-            '& .MuiDataGrid-columnHeaders': {
-              overflow: 'unset',
-              position: 'sticky',
+            "& .MuiDataGrid-columnHeaders": {
+              overflow: "unset",
+              position: "sticky",
               left: 1,
               zIndex: 1,
-              bgcolor: '#0070A6',
+              bgcolor: "#0070A6",
             },
-            '& .MuiDataGrid-columnHeadersInner > div': {
-              direction: 'rtl !important',
+            "& .MuiDataGrid-columnHeadersInner > div": {
+              direction: "rtl !important",
             },
-            '& .MuiDataGrid-main': {
-              overflow: 'auto',
+            "& .MuiDataGrid-main": {
+              overflow: "auto",
             },
-            '& .MuiTablePagination-actions': {
-              direction: 'ltr',
+            "& .MuiTablePagination-actions": {
+              direction: "ltr",
             },
-            '& .MuiDataGrid-row:hover': {
-              backgroundColor: '#EDF3F8',
+            "& .MuiDataGrid-row:hover": {
+              backgroundColor: "#EDF3F8",
             },
-            '& .MuiButton-textSizeSmall': {
-              color: 'rgb(8,8,137)',
+            "& .MuiButton-textSizeSmall": {
+              color: "rgb(8,8,137)",
             },
-            '& .MuiDataGrid-columnHeadersInner': {
-              borderBottom: '1px solid rgba(224, 224, 224, 1)',
-              bgcolor: '#0070A6',
-            },
-
-            '& .MuiDataGrid-columnHeaderTitle': {
-              color: 'white',
+            "& .MuiDataGrid-columnHeadersInner": {
+              borderBottom: "1px solid rgba(224, 224, 224, 1)",
+              bgcolor: "#0070A6",
             },
 
-            '& .MuiDataGrid-iconSeparator': {
-              color: 'white',
+            "& .MuiDataGrid-columnHeaderTitle": {
+              color: "white",
             },
-            '& .MuiDataGrid-menuIconButton > .MuiSvgIcon-root , .MuiDataGrid-sortIcon':
+
+            "& .MuiDataGrid-iconSeparator": {
+              color: "white",
+            },
+            "& .MuiDataGrid-menuIconButton > .MuiSvgIcon-root , .MuiDataGrid-sortIcon":
               {
-                color: 'white !important',
+                color: "white !important",
                 opacity: 1,
               },
           }}
@@ -436,11 +436,10 @@ const DataTableRTL = ({
             ({ newEditingApi: true }, { columnGrouping: true })
           }
           rows={rows}
-          getRowId={(row) => row?.id}
           columns={columns}
           pageSize={100}
           // rowHeight={52}
-          getRowHeight={() => 'auto'}
+          getRowHeight={() => "auto"}
           // getEstimatedRowHeight={() => 150}
           rowsPerPageOptions={[10]}
           pagination
@@ -500,16 +499,16 @@ const DataTableRTL = ({
 
         <div>
           <Dialog
-            style={{ direction: 'rtl' }}
+            style={{ direction: "rtl" }}
             open={openDialogTrueFalse}
             TransitionComponent={Transition}
             keepMounted
             onClose={handleClose}
-            aria-describedby='alert-dialog-slide-description'
+            aria-describedby="alert-dialog-slide-description"
           >
             <DialogTitle> ?רלוונטי {groupName} האם</DialogTitle>
             <DialogContent>
-              <DialogContentText id='alert-dialog-slide-description'>
+              <DialogContentText id="alert-dialog-slide-description">
                 בחירה של אופציה לא רלוונטי ימלא את את כל העמודות תחת הקטגוריה "
                 {groupName}" כלא רלוונטיות, ובחירה של רלוונטי יאפס את כל המשבצות
                 לריקות.
@@ -519,18 +518,18 @@ const DataTableRTL = ({
                   m: 1,
                   minWidth: 220,
                   maxWidth: 220,
-                  '& 	.MuiInputLabel-formControl': {
-                    background: '#d3e2ec',
+                  "& 	.MuiInputLabel-formControl": {
+                    background: "#d3e2ec",
                   },
                 }}
-                size='small'
+                size="small"
               >
                 {/* <InputLabel id="example1">{headers}</InputLabel> */}
-                <InputLabel id='example1'>{groupName}</InputLabel>
+                <InputLabel id="example1">{groupName}</InputLabel>
 
                 <Select
-                  labelId='example1'
-                  id='example1'
+                  labelId="example1"
+                  id="example1"
                   // defaultValue={true}
                   value={columnFillRows.PrivateInfoHE}
                   onChange={handleChange}

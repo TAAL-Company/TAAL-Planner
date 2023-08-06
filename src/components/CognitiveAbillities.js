@@ -170,12 +170,12 @@ const CognitiveAbillities = () => {
     console.log("id:", id);
   };
   const columns = ([
-    {field:"id", headerName: 'ID'},
+    {field:"id", headerName: 'ID' ,flex: 1},
     {field:"index", headerName: 'NO'},
-    {field:"trait", headerName: 'Trait'},
-    {field:"requiredField", headerName: 'Required Field'},
-    {field:"category", headerName: 'Category'},
-    {field:"score", headerName: 'Score'},
+    {field:"trait", headerName: 'Trait',flex: 1},
+    {field:"requiredField", headerName: 'Required Field',flex: 1},
+    {field:"category", headerName: 'Category',flex: 1},
+    {field:"score", headerName: 'Score',flex: 1},
     {field:"ML", headerName: 'ML'}
   ])
 

@@ -130,10 +130,11 @@ const CognitiveAbillities = () => {
   // });
 
   const taskAbilityPost = () => {
+    // console.log("khalid --------- "+JSON.stringify(taskAbility));
     taskAbility.map((item) => {
       const value = [];
       const weights = [];
-
+      
       item.weights.map((weight) => {
         if (weight === "A") {
           weights.push(0);
@@ -150,12 +151,21 @@ const CognitiveAbillities = () => {
         }
       });
 
+      console.log("khalid --------- "+JSON.stringify({
+        taskId: item.taskId,
+        value: item.value,
+        weights: weights,
+      })
+      //JSON.stringify(taskAbility)
+      );
+
       postTaskCognitiveRequirements({
         taskId: item.taskId,
         value: item.value,
         weights: weights,
       });
     });
+
   };
   const handleChange = (event) => {
 
@@ -170,7 +180,11 @@ const CognitiveAbillities = () => {
     console.log("id:", id);
   };
   const columns = ([
-    {field:"id", headerName: 'ID' ,flex: 1},
+    // {field:"id", headerName: 'ID' ,flex: 1},
+    {field: 'id' , 
+        headerName: 'ID', 
+        filterable: false,
+        renderCell: (index) => index.api.getRowIndex(index.row.id) + 1},
     {field:"index", headerName: 'NO'},
     {field:"trait", headerName: 'Trait',flex: 1},
     {field:"requiredField", headerName: 'Required Field',flex: 1},

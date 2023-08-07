@@ -86,6 +86,7 @@ const Tasks = (props) => {
       setModalOpen(true);
     } else if (requestForEditing === 'duplication') {
       console.log('openThreeDotsVertical', openThreeDotsVertical);
+      setModalOpen(true);
     } else if (requestForEditing === 'delete') {
       setTaskForDelete(openThreeDotsVertical);
       setOpenRemove(true);

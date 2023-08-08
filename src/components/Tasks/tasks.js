@@ -6,7 +6,7 @@ import textArea from '../../Pictures/textArea.svg';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useDrag } from 'react-dnd';
 import ModalTasks from '../Modal/Modal_Tasks.js';
-import { deleteTask } from '../../api/api.js';
+import { deleteTask, insertTask } from '../../api/api.js';
 import Modal_Delete from '../Modal/Modal_Delete.js';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -85,14 +85,70 @@ const Tasks = (props) => {
       setTaskUuidForEdit(openThreeDotsVertical);
       setModalOpen(true);
     } else if (requestForEditing === 'duplication') {
-      console.log('openThreeDotsVertical', openThreeDotsVertical);
-      setModalOpen(true);
+      setTaskUuidForEdit(openThreeDotsVertical);
+      const newTask = filteredDataTasks.find(
+        (t) => t.id === openThreeDotsVertical
+      );
+      let newObject = Object.assign({}, newTask);
+      delete newObject.id;
+      duplicateTask(
+        newObject.title,
+        newObject.subtitle,
+        props.stationArray?.map((s) => s.id) || [],
+        newObject.picture_url,
+        newObject.audio_url,
+        props.mySite.id
+      );
     } else if (requestForEditing === 'delete') {
       setTaskForDelete(openThreeDotsVertical);
       setOpenRemove(true);
       //Modal_Delete
     }
-  }, [requestForEditing]);
+  }, [
+    requestForEditing,
+    openThreeDotsVertical,
+    filteredDataTasks,
+    props.mySite.id,
+    props.stationArray,
+  ]);
+
+  const duplicateTask = async (
+    get_title,
+    getDescription,
+    myPlacesChoice,
+    imageData,
+    audioData,
+    mySiteId
+  ) => {
+    try {
+      const post = await insertTask(
+        get_title,
+        getDescription,
+        myPlacesChoice,
+        imageData,
+        audioData,
+        (props.mySite.id = mySiteId)
+      );
+
+      // let color = props.onlyAllStation.find(
+      //   (item) => item.id === myPlacesChoice[0]
+      // ).color;
+
+      // post.color = color;
+      props.setAllTasksOfTheSite((prev) => [...prev, post]);
+
+      // setDone(true);
+      console.log('post Modale Tasks:', post);
+
+      // setFlagClickOK(false);
+      setModalOpen(false);
+
+      console.log('insertTask: ', post);
+      handleCloseRemove();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const clickOnhreeDotsVerticaIcont = (value) => {
     if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);

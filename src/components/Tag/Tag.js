@@ -212,9 +212,9 @@ function Tag({
                   <button
                     className='threeDotsVerticalEng'
                     onClick={() => {
-                      if (dragFromCover === 'TasksNew') {
-                        clickOnhreeDotsVerticaIcont(id);
-                      } else clickOnhreeDotsVerticaIcontBoard(id);
+                      dragFromCover === 'TasksNew'
+                        ? clickOnhreeDotsVerticaIcont(id)
+                        : clickOnhreeDotsVerticaIcontBoard(id);
                     }}
                   >
                     <BsThreeDotsVertical />

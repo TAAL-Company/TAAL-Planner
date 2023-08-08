@@ -523,7 +523,7 @@ const Places = (props) => {
       setReplaceSite(newValue);
       Display_The_Stations(newValue);
       setSiteSelected(true);
-      setReplaceSiteFlag(true); 
+      setReplaceSiteFlag(true);
       setOpenModalSiteChosen(false);
       // setRouteFlags(false);
       // setReplaceRouteFlag(false);
@@ -533,7 +533,7 @@ const Places = (props) => {
       setOpenModalSiteChosen(true);
     }
 
-    setSelectedValue(newValue); 
+    setSelectedValue(newValue);
   };
 
   useEffect(() => {
@@ -946,6 +946,7 @@ const Places = (props) => {
             setTasksOfChosenStation={setTasksOfChosenStation}
             tasksOfChosenStation={tasksOfChosenStation}
             myTasks={props.myTasks}
+            onlyAllStation={onlyAllStation}
             language={props.language}
             tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
             chosenStation={chosenStation}

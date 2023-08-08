@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import "./Modal.css";
+import React, { useState, useEffect, useRef } from 'react';
+import './Modal.css';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 //--------------------------
 
@@ -7,63 +8,53 @@ import "./Modal.css";
 function Modal_dropdown(props) {
   const menuRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const myDiv = document.getElementById('dropdown');
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (menuRef.current && !menuRef.current.contains(event.target) && !open) {
-        props.setOpenThreeDotsVertical(-1);
-      }
+    if (props.setOpenThreeDotsVertical !== -1 && open) {
+      props.setOpenThreeDotsVertical(-1);
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    document.addEventListener('click', function (event) {
+      const targetElement = event.target;
+
+      if (menuRef.current && !menuRef.current.contains(targetElement)) {
+        props.setOpenThreeDotsVertical(-1);
+      }
+    });
   });
 
   function Requestedit() {
-    setOpen(true)
-    props.setRequestForEditing("edit")
+    setOpen(true);
+    props.setRequestForEditing('edit');
   }
 
   function Requestduplication() {
-    setOpen(true)
-    props.setRequestForEditing("duplication")
+    setOpen(true);
+    props.setRequestForEditing('duplication');
   }
 
   function Requestdetails() {
-    setOpen(true)
-    props.setRequestForEditing("details")
+    setOpen(true);
+    props.setRequestForEditing('details');
   }
 
   function Requestdelete() {
-    setOpen(true)
-    props.setRequestForEditing("delete")
+    setOpen(true);
+    props.setRequestForEditing('delete');
   }
 
   return (
     <div ref={menuRef}>
-      <div id="dropdown" className="button-dropdown-content">
-        {props.editable ? (
-          <a onClick={Requestedit}>עריכה</a>
-        ) : (
-          <></>
-        )}
+      <div id='dropdown' className='button-dropdown-content'>
+        {props.editable ? <Link onClick={Requestedit}>עריכה</Link> : <></>}
         {props.Reproducible ? (
-          <a onClick={Requestduplication}>שכפול</a>
+          <Link onClick={Requestduplication}>שכפול</Link>
         ) : (
           <></>
         )}
-        {props.details ? (
-          <a onClick={Requestdetails}>פרטים</a>
-        ) : (
-          <></>
-        )}
-        {props.erasable ? (
-          <a onClick={Requestdelete}>מחיקה</a>
-        ) : (
-          <></>
-        )}
+        {props.details ? <Link onClick={Requestdetails}>פרטים</Link> : <></>}
+        {props.erasable ? <Link onClick={Requestdelete}>מחיקה</Link> : <></>}
       </div>
     </div>
   );

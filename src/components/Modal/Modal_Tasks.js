@@ -82,6 +82,8 @@ function Modal_Tasks(props) {
           title: get_title,
           subtitle: getDescription,
           stationIds: myPlacesChoice,
+          picture_url: imageData,
+          audio_url: audioData,
         };
         update_task(props.uuid, newTask);
       } else {

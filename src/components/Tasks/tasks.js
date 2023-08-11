@@ -94,7 +94,7 @@ const Tasks = (props) => {
         myPlacesChoice,
         imageData,
         audioData,
-        (props.mySite.id = mySiteId)
+        mySiteId
       );
 
       let color = props.stationArray.find(
@@ -122,20 +122,20 @@ const Tasks = (props) => {
         setTaskUuidForEdit(openThreeDotsVertical);
         setModalOpen(true);
       } else if (requestForEditing === 'duplication') {
-        // setTaskUuidForEdit(openThreeDotsVertical);
-        // const newTask = filteredDataTasks.find(
-        //   (t) => t.id === openThreeDotsVertical
-        // );
-        // let newObject = Object.assign({}, newTask);
-        // delete newObject.id;
-        // duplicateTask(
-        //   newObject.title,
-        //   newObject.subtitle,
-        //   props.stationArray?.map((s) => s.id) || [],
-        //   newObject.picture_url,
-        //   newObject.audio_url,
-        //   props.mySite.id
-        // );
+        setTaskUuidForEdit(openThreeDotsVertical);
+        const newTask = filteredDataTasks.find(
+          (t) => t.id === openThreeDotsVertical
+        );
+        let newObject = Object.assign({}, newTask);
+        delete newObject.id;
+        duplicateTask(
+          newObject.title,
+          newObject.subtitle,
+          props.stationArray?.map((s) => s.id) || [],
+          newObject.picture_url,
+          newObject.audio_url,
+          props.mySite.id
+        );
       } else if (requestForEditing === 'delete') {
         setTaskForDelete(openThreeDotsVertical);
         setOpenRemove(true);
@@ -240,7 +240,7 @@ const Tasks = (props) => {
                             title={tag.title}
                             id={ID}
                             key={ID}
-                            dataImg={tag.dataImg}
+                            dataImg={tag.picture_url}
                             flagBoard={false}
                             myLastStation={
                               props.chosenStation

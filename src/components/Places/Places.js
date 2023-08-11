@@ -585,13 +585,12 @@ const Places = (props) => {
     let colorTemp = 0;
 
     setStationArray(
-      onlyAllStation.filter((item) => {
-        if (item.parentSiteId === selectedValue.id) {
-          item.color = pastelColors[colorTemp];
-          colorTemp++;
-          return item;
-        }
-      })
+      onlyAllStation
+        .filter((item) => item.parentSiteId === selectedValue.id)
+        .map((item, index) => ({
+          ...item,
+          color: pastelColors[index % pastelColors.length],
+        }))
     );
 
     console.log('setStationArray: ', stationArray);
@@ -631,7 +630,7 @@ const Places = (props) => {
         generalStation.tasks = tasksWithoutStation;
       }
 
-      if (tasksLength < allTasksOfTheSite.length) {
+      if (tasksLength > allTasksOfTheSite.length) {
         console.log(
           'tasksLength yardeb',
           allTasksOfTheSite[allTasksOfTheSite.length - 1]
@@ -645,7 +644,7 @@ const Places = (props) => {
             );
 
             console.log('yardeb', station);
-            station.tasks.push({
+            return station.tasks.push({
               audio_url: newTask.audio_url,
               estimatedTimeSeconds: newTask.estimatedTimeSeconds,
               id: newTask.id,
@@ -658,7 +657,8 @@ const Places = (props) => {
         );
       }
     }
-  }, [allTasksOfTheSite]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allTasksOfTheSite, tasksLength]);
 
   const clickOnhreeDotsVerticaIcont = (value) => {
     if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);

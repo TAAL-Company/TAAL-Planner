@@ -657,7 +657,6 @@ const Places = (props) => {
         );
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allTasksOfTheSite, tasksLength]);
 
   const clickOnhreeDotsVerticaIcont = (value) => {

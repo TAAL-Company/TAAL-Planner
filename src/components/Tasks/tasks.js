@@ -40,9 +40,9 @@ const Tasks = (props) => {
   ]);
 
   const handleCloseRemove = () => {
-    setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
     setRequestForEditing('');
+    setOpenRemove(false);
   };
 
   const handleCloseRemoveConfirm = async () => {
@@ -103,6 +103,7 @@ const Tasks = (props) => {
 
       post.color = color;
       props.setAllTasksOfTheSite((prev) => [...prev, post]);
+      setFilteredDataTasks((prev) => [...prev, post]);
 
       console.log('insertTask: ', post);
       setRequestForEditing('');
@@ -142,7 +143,6 @@ const Tasks = (props) => {
         //Modal_Delete
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     filteredDataTasks,
     openThreeDotsVertical,
@@ -219,7 +219,7 @@ const Tasks = (props) => {
                 className='TasksCover'
                 style={{
                   backgroundColor: snapshot.isDraggingOver
-                    ? '#BBBBBB'
+                    ? '#eeeee4'
                     : '#F5F5F5',
                 }}
               >
@@ -288,6 +288,7 @@ const Tasks = (props) => {
           handleClose={handleCloseRemove}
           language={props.language}
           setModalOpen={setModalOpen}
+          setOpenThreeDotsVertical={setOpenThreeDotsVertical}
           setAllTasksOfTheSite={props.setAllTasksOfTheSite}
           setMyStation={props.setMyStation}
           myStation={props.chosenStation}

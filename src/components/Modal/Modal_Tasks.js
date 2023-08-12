@@ -31,7 +31,7 @@ function Modal_Tasks(props) {
         setMyPlacesChoice((prev) => [...prev, station.id]);
       });
     }
-  }, []);
+  }, [props.requestForEditing, props.stationOfTask]);
 
   console.log('allStations: ', props.allStations);
   console.log('myStation: ', props.myStation);
@@ -89,6 +89,7 @@ function Modal_Tasks(props) {
       } else {
         Post_Task(imageData, audioData);
       }
+      props.setOpenThreeDotsVertical(-1);
     }
   };
   const update_task = async (uuid, newTask) => {

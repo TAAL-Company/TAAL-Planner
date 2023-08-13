@@ -104,6 +104,7 @@ const Tasks = (props) => {
       post.color = color;
       props.setAllTasksOfTheSite((prev) => [...prev, post]);
       setFilteredDataTasks((prev) => [...prev, post]);
+      setTaskForEdit(post);
 
       console.log('insertTask: ', post);
       setRequestForEditing('');

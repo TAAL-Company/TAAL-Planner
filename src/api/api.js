@@ -603,8 +603,8 @@ export const insertTask = async (
   get_title,
   subtitle,
   myPlacesChoice,
-  imageData,
-  audioData,
+  picture_url,
+  audio_url,
   siteIds
 ) => {
   try {
@@ -620,6 +620,8 @@ export const insertTask = async (
         stationIds: myPlacesChoice,
         estimatedTimeSeconds: 0,
         subtitle: subtitle,
+        picture_url,
+        audio_url,
       }),
     });
 

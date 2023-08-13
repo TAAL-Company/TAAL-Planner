@@ -630,7 +630,7 @@ const Places = (props) => {
         generalStation.tasks = tasksWithoutStation;
       }
 
-      if (tasksLength > allTasksOfTheSite.length) {
+      if (tasksLength < allTasksOfTheSite.length) {
         console.log(
           'tasksLength yardeb',
           allTasksOfTheSite[allTasksOfTheSite.length - 1]
@@ -643,21 +643,29 @@ const Places = (props) => {
               (stationTemp) => stationTemp.id === newTaskStation.id
             );
 
-            console.log('yardeb', station);
-            return station.tasks.push({
-              audio_url: newTask.audio_url,
-              estimatedTimeSeconds: newTask.estimatedTimeSeconds,
-              id: newTask.id,
-              multi_language_description: newTask.multi_language_description,
-              picture_url: newTask.picture_url,
-              subtitle: newTask.subtitle,
-              title: newTask.title,
-            });
+            if (station) {
+              let existingTask = station.tasks.find(
+                (task) => task.id === newTask.id
+              );
+
+              if (!existingTask) {
+                station.tasks.push({
+                  audio_url: newTask.audio_url,
+                  estimatedTimeSeconds: newTask.estimatedTimeSeconds,
+                  id: newTask.id,
+                  multi_language_description:
+                    newTask.multi_language_description,
+                  picture_url: newTask.picture_url,
+                  subtitle: newTask.subtitle,
+                  title: newTask.title,
+                });
+              }
+            }
           }
         );
       }
     }
-  }, [allTasksOfTheSite, tasksLength]);
+  }, [allTasksOfTheSite]);
 
   const clickOnhreeDotsVerticaIcont = (value) => {
     if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);

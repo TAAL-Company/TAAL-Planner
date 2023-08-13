@@ -57,7 +57,7 @@ const Stations = (props) => {
       setOpenRemove(true);
       //Modal_Delete
     }
-  }, [requestForEditing]);
+  }, [requestForEditing, openThreeDotsVertical]);
 
   const handleCloseRemove = () => {
     setOpenRemove(false);
@@ -307,7 +307,7 @@ const Stations = (props) => {
                                             clickOnhreeDotsVerticaIcont(index)
                                           }
                                         >
-                                          {id != 0 ? (
+                                          {id !== 0 ? (
                                             <BsThreeDotsVertical />
                                           ) : (
                                             <></>

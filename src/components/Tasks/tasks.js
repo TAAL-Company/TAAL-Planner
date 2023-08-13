@@ -103,8 +103,6 @@ const Tasks = (props) => {
 
       post.color = color;
       props.setAllTasksOfTheSite((prev) => [...prev, post]);
-      setFilteredDataTasks((prev) => [...prev, post]);
-      setTaskForEdit(post);
 
       console.log('insertTask: ', post);
       setRequestForEditing('');
@@ -121,6 +119,7 @@ const Tasks = (props) => {
     if (openThreeDotsVertical !== -1) {
       if (requestForEditing === 'edit' || requestForEditing === 'details') {
         console.log('openThreeDotsVertical', openThreeDotsVertical);
+        setOpenThreeDotsVertical(openThreeDotsVertical);
         setTaskUuidForEdit(openThreeDotsVertical);
         setModalOpen(true);
       } else if (requestForEditing === 'duplication') {

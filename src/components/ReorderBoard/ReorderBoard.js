@@ -8,7 +8,7 @@ const ReorderBoard = (props) => {
 
   useEffect(() => {
     for (let i = 0; i < tasks.length; i++) {
-      if (tasks[i].nameStation == "") {
+      if (tasks[i].nameStation === "") {
         if (i === 0) {
           tasks[i].nameStation = tasks[i].myStation;
           tasks[i].borderLeft = "0x solid #c2bfbf";

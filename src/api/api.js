@@ -8,7 +8,7 @@ const connectionString =
   'https://taalmedia.blob.core.windows.net/images?sp=racwd&st=2023-08-10T08:40:14Z&se=2024-10-08T16:40:14Z&spr=https&sv=2022-11-02&sr=c&sig=uIxq4iCGXN%2FwOy3vcLS38S8tE8YF60kMgbLX5QY1dPM%3D';
 const blobServiceClient = new BlobServiceClient(connectionString);
 
-export const uploadImage = async (selectedFile, folder) => {
+export const uploadFiles = async (selectedFile, folder) => {
   console.log('enter', selectedFile);
   console.log('enter folder', folder);
 

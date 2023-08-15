@@ -87,28 +87,33 @@ const Tasks = (props) => {
     audioData,
     mySiteId
   ) => {
-    try {
-      const post = await insertTask(
-        get_title,
-        getDescription,
-        myPlacesChoice,
-        imageData,
-        audioData,
-        mySiteId
-      );
+    let station = props.onlyAllStation.find(
+      (t) => t.id === props.chosenStation.id
+    );
+    if (station) {
+      try {
+        const post = await insertTask(
+          get_title,
+          getDescription,
+          myPlacesChoice,
+          imageData,
+          audioData,
+          mySiteId
+        );
 
-      let color = props.stationArray.find(
-        (item) => item.id === myPlacesChoice[0]
-      ).color;
+        let color = props.stationArray.find(
+          (item) => item.id === myPlacesChoice[0]
+        ).color;
 
-      post.color = color;
-      props.setAllTasksOfTheSite((prev) => [...prev, post]);
+        post.color = color;
+        props.setAllTasksOfTheSite((prev) => [...prev, post]);
 
-      console.log('insertTask: ', post);
-      setRequestForEditing('');
-      setOpenThreeDotsVertical(-1);
-    } catch (error) {
-      console.error(error);
+        console.log('insertTask: ', post);
+        setRequestForEditing('');
+        setOpenThreeDotsVertical(-1);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -123,20 +128,20 @@ const Tasks = (props) => {
         setTaskUuidForEdit(openThreeDotsVertical);
         setModalOpen(true);
       } else if (requestForEditing === 'duplication') {
-        setTaskUuidForEdit(openThreeDotsVertical);
-        const newTask = filteredDataTasks.find(
-          (t) => t.id === openThreeDotsVertical
-        );
-        let newObject = Object.assign({}, newTask);
-        delete newObject.id;
-        duplicateTask(
-          newObject.title,
-          newObject.subtitle,
-          props.stationArray?.map((s) => s.id) || [],
-          newObject.picture_url,
-          newObject.audio_url,
-          props.mySite.id
-        );
+        // setTaskUuidForEdit(openThreeDotsVertical);
+        // const newTask = filteredDataTasks.find(
+        //   (t) => t.id === openThreeDotsVertical
+        // );
+        // let newObject = Object.assign({}, newTask);
+        // delete newObject.id;
+        // duplicateTask(
+        //   newObject.title,
+        //   newObject.subtitle,
+        //   props.stationArray?.map((s) => s.id) || [],
+        //   newObject.picture_url,
+        //   newObject.audio_url,
+        //   props.mySite.id
+        // );
       } else if (requestForEditing === 'delete') {
         setTaskForDelete(openThreeDotsVertical);
         setOpenRemove(true);

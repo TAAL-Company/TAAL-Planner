@@ -6,7 +6,8 @@ import { IoMdCheckbox } from 'react-icons/io';
 import Modal_Loading from './Modal_Loading';
 import { baseUrl } from '../../config';
 import Modal_no_site_selected from './Modal_no_site_selected';
-import { uploadImage, uploadFile, insertTask, updateTask } from '../../api/api';
+import { uploadFiles, uploadFile, insertTask, updateTask } from '../../api/api';
+import uploadFileToBlob from '../azureBlob';
 
 //--------------------------
 let ichour = 'אישור';
@@ -65,11 +66,11 @@ function Modal_Tasks(props) {
       try {
         if (picture) {
           console.log('enter site: ', props.mySite.name);
-          picture_url = await uploadImage(picture, props.mySite.name);
+          picture_url = await uploadFiles(picture, props.mySite.name);
           console.log(`Image uploaded successfully:`, picture_url);
         }
         if (audio) {
-          audio_url = await uploadFile(audio, 'Audio');
+          audio_url = await uploadFiles(audio, props.mySite.name);
           console.log(`Audio uploaded successfully:`, audio_url);
         }
       } catch (error) {

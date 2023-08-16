@@ -6,11 +6,10 @@ import "./Modal.css";
 //--------------------------
 function Modal_dropdown(props) {
   const menuRef = useRef(null);
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (menuRef.current && !menuRef.current.contains(event.target) && !open) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
         props.setOpenThreeDotsVertical(-1);
       }
     }
@@ -19,48 +18,28 @@ function Modal_dropdown(props) {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  });
-
-  function Requestedit() {
-    setOpen(true)
-    props.setRequestForEditing("edit")
-  }
-
-  function Requestduplication() {
-    setOpen(true)
-    props.setRequestForEditing("duplication")
-  }
-
-  function Requestdetails() {
-    setOpen(true)
-    props.setRequestForEditing("details")
-  }
-
-  function Requestdelete() {
-    setOpen(true)
-    props.setRequestForEditing("delete")
-  }
+  }, []);
 
   return (
     <div ref={menuRef}>
       <div id="dropdown" className="button-dropdown-content">
         {props.editable ? (
-          <a onClick={Requestedit}>עריכה</a>
+          <a onClick={() => props.setRequestForEditing("edit")}>עריכה</a>
         ) : (
           <></>
         )}
         {props.Reproducible ? (
-          <a onClick={Requestduplication}>שכפול</a>
+          <a onClick={() => props.setRequestForEditing("duplication")}>שכפול</a>
         ) : (
           <></>
         )}
         {props.details ? (
-          <a onClick={Requestdetails}>פרטים</a>
+          <a onClick={() => props.setRequestForEditing("details")}>פרטים</a>
         ) : (
           <></>
         )}
         {props.erasable ? (
-          <a onClick={Requestdelete}>מחיקה</a>
+          <a onClick={() => props.setRequestForEditing("delete")}>מחיקה</a>
         ) : (
           <></>
         )}

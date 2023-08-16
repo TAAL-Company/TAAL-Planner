@@ -31,7 +31,7 @@ function Modal_Tasks(props) {
         setMyPlacesChoice((prev) => [...prev, station.id]);
       });
     }
-  }, []);
+  }, [props.requestForEditing, props.stationOfTask]);
 
   console.log('allStations: ', props.allStations);
   console.log('myStation: ', props.myStation);
@@ -60,18 +60,17 @@ function Modal_Tasks(props) {
     if (get_title === '' || getDescription === '') {
       alert('עליך למלא שדות חובה המסומנים בכוכבית');
     } else {
-      let imageData;
-      let audioData;
-
+      let picture_url;
+      let audio_url;
       try {
         if (picture) {
           console.log('enter site: ', props.mySite.name);
-          imageData = await uploadImage(picture, props.mySite.name);
-          console.log(`Image uploaded successfully:`, imageData);
+          picture_url = await uploadImage(picture, props.mySite.name);
+          console.log(`Image uploaded successfully:`, picture_url);
         }
         if (audio) {
-          audioData = await uploadFile(audio, 'Audio');
-          console.log(`Audio uploaded successfully:`, audioData);
+          audio_url = await uploadFile(audio, 'Audio');
+          console.log(`Audio uploaded successfully:`, audio_url);
         }
       } catch (error) {
         console.error(error);
@@ -82,11 +81,14 @@ function Modal_Tasks(props) {
           title: get_title,
           subtitle: getDescription,
           stationIds: myPlacesChoice,
+          picture_url,
+          audio_url,
         };
         update_task(props.uuid, newTask);
       } else {
-        Post_Task(imageData, audioData);
+        Post_Task(picture_url, audio_url);
       }
+      props.setOpenThreeDotsVertical(-1);
     }
   };
   const update_task = async (uuid, newTask) => {
@@ -112,7 +114,7 @@ function Modal_Tasks(props) {
       console.error(error);
     }
   };
-  const Post_Task = async (imageData, audioData) => {
+  const Post_Task = async (picture_url, audio_url) => {
     // resultMyPlacesChoice();
 
     try {
@@ -120,8 +122,8 @@ function Modal_Tasks(props) {
         get_title,
         getDescription,
         myPlacesChoice,
-        imageData,
-        audioData,
+        picture_url,
+        audio_url,
         props.mySite.id
       );
 

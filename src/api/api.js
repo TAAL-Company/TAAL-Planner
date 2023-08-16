@@ -1,18 +1,18 @@
-import axios from "axios";
-import { baseUrl } from "../config";
-import { Buffer } from "buffer";
-import { BlobServiceClient } from "@azure/storage-blob";
-import React, { useState } from "react";
+import axios from 'axios';
+import { baseUrl } from '../config';
+import { Buffer } from 'buffer';
+import { BlobServiceClient } from '@azure/storage-blob';
+import React, { useState } from 'react';
 
 const connectionString =
-  "https://taalmedia.blob.core.windows.net/?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-07-13T20:36:30Z&st=2023-07-13T12:36:30Z&spr=https,http&sig=KYpOne6cQ3JiOruEykY0a%2BxiEDcDYAb%2BdV%2F%2BypnOMxs%3D";
+  'https://taalmedia.blob.core.windows.net/images?sp=racwd&st=2023-08-10T08:40:14Z&se=2024-10-08T16:40:14Z&spr=https&sv=2022-11-02&sr=c&sig=uIxq4iCGXN%2FwOy3vcLS38S8tE8YF60kMgbLX5QY1dPM%3D';
 const blobServiceClient = new BlobServiceClient(connectionString);
 
 export const uploadImage = async (selectedFile, folder) => {
-  console.log("enter", selectedFile);
-  console.log("enter folder", folder);
+  console.log('enter', selectedFile);
+  console.log('enter folder', folder);
 
-  const containerName = "images/" + folder; // The name of the container in Azure Blob Storage
+  const containerName = 'images/' + folder; // The name of the container in Azure Blob Storage
   const containerClient = blobServiceClient.getContainerClient(containerName);
 
   const blobName = selectedFile.name;
@@ -21,7 +21,7 @@ export const uploadImage = async (selectedFile, folder) => {
   const options = { blobHTTPHeaders: { blobContentType: selectedFile.type } };
 
   await blockBlobClient.uploadData(selectedFile, options);
-  console.log("Image uploaded successfully.");
+  console.log('Image uploaded successfully.');
 
   const imageUrl = blockBlobClient.url;
   return imageUrl;
@@ -53,7 +53,7 @@ export const patch = async (url, body, headers) => {
   try {
     const res = await axios.patch(url, body, { headers });
     if (res) {
-      console.log("success");
+      console.log('success');
       return res;
     }
   } catch (e) {
@@ -67,36 +67,36 @@ export const patch = async (url, body, headers) => {
 export const getingData_Users = async () => {
   let all_Users;
 
-  await get(baseUrl + "/students").then((res) => {
+  await get(baseUrl + '/students').then((res) => {
     all_Users = res.data;
 
     const sortedArray = all_Users.sort(
       (a, b) =>
-        a.name.localeCompare(b.name, "he", { sensitivity: "base" }) ||
-        a.name.localeCompare(b.name, "en", { sensitivity: "base" })
+        a.name.localeCompare(b.name, 'he', { sensitivity: 'base' }) ||
+        a.name.localeCompare(b.name, 'en', { sensitivity: 'base' })
     );
 
     console.log(sortedArray);
   });
-  console.log("res all_Users: ", all_Users);
+  console.log('res all_Users: ', all_Users);
 
   return all_Users;
 };
 export const getingData_coaches = async () => {
   let all_Users;
 
-  await get(baseUrl + "/coaches").then((res) => {
+  await get(baseUrl + '/coaches').then((res) => {
     all_Users = res.data;
 
     const sortedArray = all_Users.sort(
       (a, b) =>
-        a.name.localeCompare(b.name, "he", { sensitivity: "base" }) ||
-        a.name.localeCompare(b.name, "en", { sensitivity: "base" })
+        a.name.localeCompare(b.name, 'he', { sensitivity: 'base' }) ||
+        a.name.localeCompare(b.name, 'en', { sensitivity: 'base' })
     );
 
     console.log(sortedArray);
   });
-  console.log("res all_Users: ", all_Users);
+  console.log('res all_Users: ', all_Users);
 
   return all_Users;
 };
@@ -106,7 +106,7 @@ export const getingData_Routes = async () => {
   await get(`${baseUrl}/routes`).then((res) => {
     allRoutes = res.data;
   });
-  console.log("res allRoutes: ", allRoutes);
+  console.log('res allRoutes: ', allRoutes);
 
   return allRoutes;
 };
@@ -116,11 +116,11 @@ export const getingDataRoutes = async () => {
   await get(`https://taal.tech/wp-json/wp/v2/routes/`, {
     params: {
       per_page: 100,
-      "Content-Type": "application/json",
-      "Cache-Control": "no-cache",
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
     },
   }).then((res) => {
-    let max_pages = res.headers["x-wp-totalpages"];
+    let max_pages = res.headers['x-wp-totalpages'];
 
     allRoutes = res.data;
     if (max_pages > 1) {
@@ -129,7 +129,7 @@ export const getingDataRoutes = async () => {
           params: {
             per_page: 100,
             page: i,
-            "Cache-Control": "no-cache",
+            'Cache-Control': 'no-cache',
           },
         }).then((res) => {
           Array.prototype.push.apply(allRoutes, res.data);
@@ -146,14 +146,14 @@ export const getingData_Places = async () => {
 
   await get(`${baseUrl}/sites`, {
     params: {
-      "Content-Type": "application/json",
-      "Cache-Control": "no-cache",
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
     },
   }).then((res) => {
     allPlaces = res.data;
   });
 
-  console.log("res places: ", allPlaces);
+  console.log('res places: ', allPlaces);
 
   return allPlaces;
 };
@@ -164,11 +164,11 @@ export const getingDataPlaces = async () => {
   await get(`https://taal.tech/wp-json/wp/v2/places/`, {
     params: {
       per_page: 100,
-      "Content-Type": "application/json",
-      "Cache-Control": "no-cache",
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
     },
   }).then((res) => {
-    let max_pages = res.headers["x-wp-totalpages"];
+    let max_pages = res.headers['x-wp-totalpages'];
 
     allPlaces = res.data;
     if (max_pages > 1) {
@@ -177,7 +177,7 @@ export const getingDataPlaces = async () => {
           params: {
             per_page: 100,
             page: i,
-            "Cache-Control": "no-cache",
+            'Cache-Control': 'no-cache',
           },
         }).then((res) => {
           Array.prototype.push.apply(allPlaces, res.data);
@@ -189,23 +189,23 @@ export const getingDataPlaces = async () => {
   return allPlaces;
 };
 export const getingDataUsers = async () => {
-  const userNameApi = "admin";
-  const passwordApi = "BnDN q25U yKnr exYX xcCS qWeK";
+  const userNameApi = 'admin';
+  const passwordApi = 'BnDN q25U yKnr exYX xcCS qWeK';
   const base64encodedData = Buffer.from(
     `${userNameApi}:${passwordApi}`
-  ).toString("base64");
+  ).toString('base64');
 
   let allUsers;
 
   await get(`https://taal.tech/wp-json/wp/v2/Users/`, {
     params: {
       per_page: 100,
-      "Content-Type": "application/json",
-      "Cache-Control": "no-cache",
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
       Authorization: `basic ${base64encodedData}`,
     },
   }).then((res) => {
-    let max_pages = res.headers["x-wp-totalpages"];
+    let max_pages = res.headers['x-wp-totalpages'];
 
     allUsers = res.data;
     if (max_pages > 1) {
@@ -214,7 +214,7 @@ export const getingDataUsers = async () => {
           params: {
             per_page: 100,
             page: i,
-            "Cache-Control": "no-cache",
+            'Cache-Control': 'no-cache',
             Authorization: `basic ${base64encodedData}`,
           },
         }).then((res) => {
@@ -224,15 +224,15 @@ export const getingDataUsers = async () => {
     }
   });
 
-  console.log("allUsers", allUsers);
+  console.log('allUsers', allUsers);
 
   return allUsers;
 };
 
 export const insertRoute = async (routeData, callback) => {
   const headers = {
-    "Content-Type": "application/json",
-    accept: "application/json",
+    'Content-Type': 'application/json',
+    accept: 'application/json',
     // Authorization: "Bearer" + sessionStorage.jwt,
   };
 
@@ -240,7 +240,7 @@ export const insertRoute = async (routeData, callback) => {
     headers: headers,
   })
     .then(async (response) => {
-      console.log("response route: ", response.data);
+      console.log('response route: ', response.data);
 
       return response.data;
     })
@@ -251,8 +251,8 @@ export const insertRoute = async (routeData, callback) => {
 
 export const updateRoute = async (routeUUID, routeData, callback) => {
   const headers = {
-    "Content-Type": "application/json",
-    accept: "application/json",
+    'Content-Type': 'application/json',
+    accept: 'application/json',
     // Authorization: "Bearer" + sessionStorage.jwt,
   };
 
@@ -273,15 +273,15 @@ export const updateRoute = async (routeUUID, routeData, callback) => {
 
 export const uploadFile = async (file, type) => {
   const formData = new FormData();
-  formData.append("file", file);
-  formData.append("title", file.name);
-  formData.append("description", `${type} uploaded from React`);
+  formData.append('file', file);
+  formData.append('title', file.name);
+  formData.append('description', `${type} uploaded from React`);
 
   try {
-    const response = await fetch("https://taal.tech/wp-json/wp/v2/media", {
-      method: "POST",
+    const response = await fetch('https://taal.tech/wp-json/wp/v2/media', {
+      method: 'POST',
       headers: {
-        Authorization: "Bearer" + sessionStorage.jwt,
+        Authorization: 'Bearer' + sessionStorage.jwt,
       },
       body: formData,
     });
@@ -300,10 +300,10 @@ export const uploadFile = async (file, type) => {
 
 export const insertUser = async (user) => {
   try {
-    const response = await fetch(baseUrl + "/students", {
-      method: "POST",
+    const response = await fetch(baseUrl + '/students', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
       },
       body: JSON.stringify({
@@ -328,10 +328,10 @@ export const insertUser = async (user) => {
 };
 export const insertCoach = async (user) => {
   try {
-    const response = await fetch(baseUrl + "/coaches", {
-      method: "POST",
+    const response = await fetch(baseUrl + '/coaches', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
       },
       body: JSON.stringify({
@@ -355,10 +355,10 @@ export const insertCoach = async (user) => {
 };
 export const insertSite = async (site) => {
   try {
-    const response = await fetch(baseUrl + "/sites", {
-      method: "POST",
+    const response = await fetch(baseUrl + '/sites', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
       },
       body: JSON.stringify({
@@ -396,14 +396,14 @@ export const postDataCognitiveProfile = async (
   //   await patch(url, body, headers);
   // } catch (e) {
   //   if (e.response && e.response.status === 400) {
-  const postUrl = baseUrl + "/cognitive-profiles";
+  const postUrl = baseUrl + '/cognitive-profiles';
   const postData = {
     studentId: workerId,
     value: cognitiveProfileValues,
   };
   try {
     const res = await axios.post(postUrl, postData);
-    console.log("success");
+    console.log('success');
     return res;
   } catch (e) {
     console.log(e);
@@ -416,39 +416,39 @@ export const postDataCognitiveProfile = async (
 export const getCognitiveProfile = async (user_id) => {
   let CognitiveProfile;
 
-  await get(baseUrl + "/cognitive-profiles/" + user_id).then((res) => {
+  await get(baseUrl + '/cognitive-profiles/' + user_id).then((res) => {
     CognitiveProfile = res.data.value;
   });
-  console.log("res CognitiveProfile: ", CognitiveProfile);
+  console.log('res CognitiveProfile: ', CognitiveProfile);
 
   return CognitiveProfile;
 };
 export const deleteCoach = async (user_id) => {
   let confirm;
 
-  await fetch(baseUrl + "/coaches/" + user_id, { method: "DELETE" }).then(
+  await fetch(baseUrl + '/coaches/' + user_id, { method: 'DELETE' }).then(
     (res) => {
       confirm = res;
     }
   );
-  console.log("res deletecoaches: ", confirm);
+  console.log('res deletecoaches: ', confirm);
 
   return confirm;
 };
 export const deleteUser = async (user_id) => {
   let confirm;
 
-  await fetch(baseUrl + "/students/" + user_id, { method: "DELETE" }).then(
+  await fetch(baseUrl + '/students/' + user_id, { method: 'DELETE' }).then(
     (res) => {
       confirm = res;
     }
   );
-  console.log("res deleteUser: ", confirm);
+  console.log('res deleteUser: ', confirm);
 
   return confirm;
 };
 export const patchForUser = async (userId, user) => {
-  const url = baseUrl + "/students/" + userId;
+  const url = baseUrl + '/students/' + userId;
   const body = {
     email: user.email,
     name: user.name,
@@ -457,14 +457,14 @@ export const patchForUser = async (userId, user) => {
     pictureId: user.picture_url ? user.picture_url : null,
   };
   const headers = {
-    "Content-Type": "application/json",
-    Accept: "*/*",
+    'Content-Type': 'application/json',
+    Accept: '*/*',
   };
 
   return await patch(url, body, headers);
 };
 export const patchForCoach = async (userId, user) => {
-  const url = baseUrl + "/coaches/" + userId;
+  const url = baseUrl + '/coaches/' + userId;
   const body = {
     email: user.email,
     name: user.name,
@@ -472,101 +472,101 @@ export const patchForCoach = async (userId, user) => {
     phone: user.phone ? user.phone : null,
   };
   const headers = {
-    "Content-Type": "application/json",
-    Accept: "*/*",
+    'Content-Type': 'application/json',
+    Accept: '*/*',
   };
 
   return await patch(url, body, headers);
 };
 
 export const post_cognitive_abillities = async (cognitive) => {
-  const url = baseUrl + "/cognitive-abillities";
+  const url = baseUrl + '/cognitive-abillities';
 
   const headers = {
-    "Content-Type": "application/json",
-    Accept: "*/*",
+    'Content-Type': 'application/json',
+    Accept: '*/*',
   };
 
   await post(url, cognitive, headers);
 };
 export const delete_cognitive_abillities = async (id) => {
-  const url = baseUrl + "/cognitive-abillities" + id;
+  const url = baseUrl + '/cognitive-abillities' + id;
 
   const options = {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      Accept: "*/*",
+      Accept: '*/*',
     },
   };
 
   try {
     const response = await fetch(url, options); // add return statement here
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      throw new Error('Network response was not ok');
     }
     const data = await response.json();
     console.log(data);
     return data;
   } catch (error) {
-    console.error("There was a problem with the DELETE request:", error);
+    console.error('There was a problem with the DELETE request:', error);
   }
 };
 export const deleteRoute = async (route_id) => {
   let confirm;
 
-  await fetch(baseUrl + "/routes/" + route_id, { method: "DELETE" }).then(
+  await fetch(baseUrl + '/routes/' + route_id, { method: 'DELETE' }).then(
     (res) => {
       confirm = res;
     }
   );
-  console.log("res deleteUser: ", confirm);
+  console.log('res deleteUser: ', confirm);
 
   return confirm;
 };
 export const getCognitiveAbillities = async () => {
   let CognitiveAbillities;
 
-  await get(baseUrl + "/cognitive-abillities").then((res) => {
+  await get(baseUrl + '/cognitive-abillities').then((res) => {
     CognitiveAbillities = res.data;
   });
-  console.log("res CognitiveAbillities: ", CognitiveAbillities);
+  console.log('res CognitiveAbillities: ', CognitiveAbillities);
 
   return CognitiveAbillities;
 };
 export const gettaskCognitiveRequirements = async (task_id) => {
   let cognitiveRequirements;
 
-  await get(baseUrl + "/task-cognitive-requirements/" + task_id).then((res) => {
+  await get(baseUrl + '/task-cognitive-requirements/' + task_id).then((res) => {
     cognitiveRequirements = res.data;
   });
-  console.log("res task-cognitive-requirements: ", cognitiveRequirements);
+  console.log('res task-cognitive-requirements: ', cognitiveRequirements);
 
   return cognitiveRequirements;
 };
 export function postTaskCognitiveRequirements(data) {
-  const url = baseUrl + "/task-cognitive-requirements/";
+  const url = baseUrl + '/task-cognitive-requirements/';
   const body = JSON.stringify(data);
   const headers = {
-    "Content-Type": "application/json",
-    accept: "application/json",
+    'Content-Type': 'application/json',
+    accept: 'application/json',
   };
 
   // Make a PATCH request to the server
   fetch(url + data.taskId, {
-    method: "PATCH",
+    method: 'PATCH',
     body: body,
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
   })
     .then((response) => {
       if (response.status === 404) {
         // If the resource is not found, make a POST request instead
         return fetch(url, {
-          method: "POST",
+          method: 'POST',
           body: body,
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         });
       } else {
@@ -587,11 +587,11 @@ export function postTaskCognitiveRequirements(data) {
 export const getingData_Tasks = async () => {
   let allTasks;
   const headers = {
-    "Content-Type": "application/json",
-    accept: "application/json",
+    'Content-Type': 'application/json',
+    accept: 'application/json',
   };
 
-  await get(baseUrl + "/tasks", {
+  await get(baseUrl + '/tasks', {
     headers: headers,
   }).then((res) => {
     allTasks = res.data;
@@ -603,15 +603,15 @@ export const insertTask = async (
   get_title,
   subtitle,
   myPlacesChoice,
-  imageData,
-  audioData,
+  picture_url,
+  audio_url,
   siteIds
 ) => {
   try {
-    const response = await fetch(baseUrl + "/tasks", {
-      method: "POST",
+    const response = await fetch(baseUrl + '/tasks', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
       },
       body: JSON.stringify({
@@ -620,6 +620,8 @@ export const insertTask = async (
         stationIds: myPlacesChoice,
         estimatedTimeSeconds: 0,
         subtitle: subtitle,
+        picture_url,
+        audio_url,
       }),
     });
 
@@ -635,7 +637,7 @@ export const insertTask = async (
   }
 };
 export const updateTask = async (id, newTask) => {
-  const url = baseUrl + "/tasks/" + id;
+  const url = baseUrl + '/tasks/' + id;
   // const body = {
   //   title: get_title,
   //   siteIds: [siteIds],
@@ -644,8 +646,8 @@ export const updateTask = async (id, newTask) => {
   //   subtitle: subtitle,
   // };
   const headers = {
-    "Content-Type": "application/json",
-    Accept: "*/*",
+    'Content-Type': 'application/json',
+    Accept: '*/*',
   };
 
   return await patch(url, newTask, headers);
@@ -656,10 +658,10 @@ export const getingDataTasks = async () => {
   await get(`https://taal.tech/wp-json/wp/v2/tasks/`, {
     params: {
       per_page: 100,
-      "Cache-Control": "no-cache",
+      'Cache-Control': 'no-cache',
     },
   }).then((res) => {
-    let max_pages = res.headers["x-wp-totalpages"];
+    let max_pages = res.headers['x-wp-totalpages'];
 
     allTasks = res.data;
     if (max_pages > 1) {
@@ -668,7 +670,7 @@ export const getingDataTasks = async () => {
           params: {
             per_page: 100,
             page: i,
-            "Cache-Control": "no-cache",
+            'Cache-Control': 'no-cache',
           },
         }).then((res) => {
           Array.prototype.push.apply(allTasks, res.data);
@@ -681,24 +683,24 @@ export const getingDataTasks = async () => {
   return allTasks;
 };
 export const deleteTask = async (taskUUID) => {
-  const url = baseUrl + "/tasks/" + taskUUID;
+  const url = baseUrl + '/tasks/' + taskUUID;
   const options = {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      Accept: "*/*",
+      Accept: '*/*',
     },
   };
 
   try {
     const response = await fetch(url, options); // add return statement here
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      throw new Error('Network response was not ok');
     }
     const data = await response.json();
     console.log(data);
     return data;
   } catch (error) {
-    console.error("There was a problem with the DELETE request:", error);
+    console.error('There was a problem with the DELETE request:', error);
   }
 };
 
@@ -714,11 +716,11 @@ export const insertStation = async (
   audioData
 ) => {
   try {
-    const response = await fetch(baseUrl + "/stations", {
-      method: "POST",
+    const response = await fetch(baseUrl + '/stations', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
-        accept: "application/json",
+        'Content-Type': 'application/json',
+        accept: 'application/json',
         // Authorization: "Bearer" + sessionStorage.jwt,
       },
       body: JSON.stringify({
@@ -733,7 +735,7 @@ export const insertStation = async (
     });
 
     if (!response.ok) {
-      console.log("res: " + JSON.stringify(response));
+      console.log('res: ' + JSON.stringify(response));
       throw new Error(`Error inserting statin: ${response.status}`);
     }
 
@@ -748,34 +750,34 @@ export const insertStation = async (
 };
 
 export async function deleteStation(stationUUID) {
-  const url = baseUrl + "/stations/" + stationUUID;
+  const url = baseUrl + '/stations/' + stationUUID;
   const options = {
-    method: "DELETE",
+    method: 'DELETE',
     headers: {
-      Accept: "*/*",
+      Accept: '*/*',
     },
   };
 
   try {
     const response = await fetch(url, options); // add return statement here
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      throw new Error('Network response was not ok');
     }
     const data = response;
-    console.log("data", data);
+    console.log('data', data);
     return data;
   } catch (error) {
-    console.error("There was a problem with the DELETE request:", error);
+    console.error('There was a problem with the DELETE request:', error);
   }
 }
 
 export const getingDataStation = async () => {
   let allStations;
 
-  await get(baseUrl + "/stations", {
+  await get(baseUrl + '/stations', {
     params: {
-      "Content-Type": "application/json",
-      "Cache-Control": "no-cache",
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
     },
   }).then((res) => {
     allStations = res.data;
@@ -785,15 +787,15 @@ export const getingDataStation = async () => {
 };
 
 export const updateStation = async (id, title, subtitle, parentSiteId) => {
-  const url = baseUrl + "/stations/" + id;
+  const url = baseUrl + '/stations/' + id;
   const body = {
     title: title,
     subtitle: subtitle,
     parentSiteId: parentSiteId,
   };
   const headers = {
-    "Content-Type": "application/json",
-    Accept: "*/*",
+    'Content-Type': 'application/json',
+    Accept: '*/*',
   };
 
   return await patch(url, body, headers);
@@ -806,10 +808,10 @@ export const updateStation = async (id, title, subtitle, parentSiteId) => {
 export const getingDataFlags = async () => {
   let allEvaluation;
 
-  await get(baseUrl + "/evaluation-events", {
+  await get(baseUrl + '/evaluation-events', {
     params: {
-      "Content-Type": "application/json",
-      "Cache-Control": "no-cache",
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
     },
   }).then((res) => {
     allEvaluation = res.data;
@@ -822,14 +824,14 @@ export const postEvaluationEvents = async (
   taskId,
   flag,
   alternativeTaskId = null,
-  intervention = "",
-  explanation = ""
+  intervention = '',
+  explanation = ''
 ) => {
   try {
-    const response = await fetch(baseUrl + "/evaluation-events", {
-      method: "POST",
+    const response = await fetch(baseUrl + '/evaluation-events', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
       },
       body: JSON.stringify({
@@ -855,10 +857,10 @@ export const postEvaluationEvents = async (
 
 export const postEvaluation = async (studentIds, taskIds) => {
   try {
-    const response = await fetch(baseUrl + "/evaluation", {
-      method: "POST",
+    const response = await fetch(baseUrl + '/evaluation', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
       },
       body: JSON.stringify({
@@ -870,10 +872,10 @@ export const postEvaluation = async (studentIds, taskIds) => {
     if (!response.ok) {
       throw new Error(`Error inserting task: ${response.statusText}`);
     }
-    console.log("response b:", response);
+    console.log('response b:', response);
 
     const data = await response.json();
-    console.log("data b:", data);
+    console.log('data b:', data);
 
     const objectArray = data.map((jsonString) => JSON.parse(jsonString));
 

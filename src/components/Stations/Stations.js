@@ -57,7 +57,7 @@ const Stations = (props) => {
       setOpenRemove(true);
       //Modal_Delete
     }
-  }, [requestForEditing]);
+  }, [requestForEditing, openThreeDotsVertical]);
 
   const handleCloseRemove = () => {
     setOpenRemove(false);
@@ -154,19 +154,19 @@ const Stations = (props) => {
     // } else {
     //   setMyStation((myStation.flag = true));
     // }
-    if (tasksOfChosenStation.length === 0 || e === 0) {
+    if (tasksOfChosenStation.length === 0 || typeof e !== 'string') {
       setTasksOfChosenStation([]);
       setMyStation((myStation.data = []));
       setStateTask({ data: [] });
       props.setTasksOfChosenStation([]);
     }
 
-    if (e !== 0) setMyStation((myStation.data = props.stationArray));
+    if (typeof e === 'string')
+      setMyStation((myStation.data = props.stationArray));
     setMyStation((myStation.name = n));
     setMyStation((myStation.id = e));
     props.setChosenStation(myStation);
 
-    console.log('console myStat myStation:', myStation);
     console.log('console myStat myStation:', myStation);
 
     let stationTemp = props.stationArray.find((station) => station.id === e);
@@ -307,7 +307,7 @@ const Stations = (props) => {
                                             clickOnhreeDotsVerticaIcont(index)
                                           }
                                         >
-                                          {id != 0 ? (
+                                          {id !== 0 ? (
                                             <BsThreeDotsVertical />
                                           ) : (
                                             <></>

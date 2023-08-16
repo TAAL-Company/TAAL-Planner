@@ -1,5 +1,7 @@
+import { useHistory } from 'react-router-dom';
 import { AiOutlinePlus } from 'react-icons/ai';
 import './style.css';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 const CardDash = (props) => {
   console.log(props.cards);
@@ -7,14 +9,16 @@ const CardDash = (props) => {
   const addLabel = props.cards.addLabel;
   const image = props.cards.image;
 
+  const history = useHistory();
+
   const handleAddLink = (id) => {
     console.log('done add link');
     if (id === 1) {
-      window.location.replace('/places');
+      history.replace('/places');
     } else if (id === 2) {
-      window.location.replace('/student');
+      history.replace('/student');
     } else if (id === 3) {
-      window.location.replace('/planner');
+      history.replace('/planner');
     } else if (id === 4) {
       window.location('www.google.com');
     } else console.log('fail');
@@ -23,23 +27,23 @@ const CardDash = (props) => {
   const handleHeadlineLink = (id) => {
     console.log('done headline link');
     if (id === 1) {
-      window.location.replace('/places');
+      history.replace('/places');
     } else if (id === 2) {
-      window.location.replace('/student');
+      history.replace('/student');
     } else if (id === 3) {
-      window.location.replace('/routes_cards');
+      history.replace('/routes_cards');
     } else if (id === 4) {
-      window.location.replace('/subjects');
+      history.replace('/subjects');
     } else if (id === 5) {
-      window.location.replace('/gallery');
+      history.replace('/gallery');
     } else if (id === 6) {
-      window.location.replace('/coaches');
+      history.replace('/coaches');
     } else console.log('fail');
   };
 
   return (
     <div className='CardDash'>
-      <a
+      <Link
         className='headlineClick'
         onClick={() => handleHeadlineLink(props.cards.id)}
       >
@@ -47,8 +51,8 @@ const CardDash = (props) => {
         <div className='image_background'>
           <img className='cardPhoto' src={image} alt='Card Logo'></img>
         </div>
-      </a>
-      <a className='add' onClick={() => handleAddLink(props.cards.id)}>
+      </Link>
+      <Link className='add' onClick={() => handleAddLink(props.cards.id)}>
         {addLabel}
         <AiOutlinePlus
           style={{
@@ -57,7 +61,7 @@ const CardDash = (props) => {
             fill: 'rgb(116, 172, 255)',
           }}
         />
-      </a>
+      </Link>
     </div>
   );
 };

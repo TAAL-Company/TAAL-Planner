@@ -6,7 +6,7 @@ import textArea from '../../Pictures/textArea.svg';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { useDrag } from 'react-dnd';
 import ModalTasks from '../Modal/Modal_Tasks.js';
-import { deleteTask } from '../../api/api.js';
+import { deleteTask, insertTask } from '../../api/api.js';
 import Modal_Delete from '../Modal/Modal_Delete.js';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -21,19 +21,30 @@ const Tasks = (props) => {
   const [filteredDataTasks, setFilteredDataTasks] = useState([]);
   const [taskForDelete, setTaskForDelete] = useState('');
   const [siteSelected, setSiteSelected] = useState(false);
-  // useEffect(() => {
-  //   setFilteredDataTasks(props.tasksOfChosenStation);
-  // }, []);
+
   useEffect(() => {
+    console.log('tasks: ', props.tasksOfChosenStation);
+    console.log('tasks: chosenStation ', props.chosenStation);
+    console.log('tasks: filteredDataTasks ', filteredDataTasks);
+
+    setFilteredDataTasks(props.tasksOfChosenStation);
+
     if (props.mySite.id !== '') {
       setSiteSelected(true);
     }
-  }, [props.mySite.id]);
+  }, [
+    props.mySite.id,
+    filteredDataTasks,
+    props.chosenStation,
+    props.tasksOfChosenStation,
+  ]);
+
   const handleCloseRemove = () => {
-    setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
     setRequestForEditing('');
+    setOpenRemove(false);
   };
+
   const handleCloseRemoveConfirm = async () => {
     console.log('DELETE:'); //, stationArray[openThreeDotsVertical].id);
 
@@ -67,34 +78,81 @@ const Tasks = (props) => {
     setOpenThreeDotsVertical(-1);
     setRequestForEditing('');
   };
-  useEffect(() => {
-    console.log('tasks: ', props.tasksOfChosenStation);
-    console.log('tasks: chosenStation ', props.chosenStation);
-    setFilteredDataTasks(props.tasksOfChosenStation);
-  }, [props.tasksOfChosenStation]);
-  useEffect(() => {
-    console.log('tasks: filteredDataTasks ', filteredDataTasks);
-  }, [filteredDataTasks]);
 
-  useEffect(() => {
-    console.log('tasks b requestForEditing: ', requestForEditing);
-    console.log('tasks b openThreeDotsVertical: ', openThreeDotsVertical);
+  const duplicateTask = async (
+    get_title,
+    getDescription,
+    myPlacesChoice,
+    imageData,
+    audioData,
+    mySiteId
+  ) => {
+    try {
+      const post = await insertTask(
+        get_title,
+        getDescription,
+        myPlacesChoice,
+        imageData,
+        audioData,
+        mySiteId
+      );
 
-    if (requestForEditing === 'edit' || requestForEditing === 'details') {
-      console.log('openThreeDotsVertical', openThreeDotsVertical);
-      setTaskUuidForEdit(openThreeDotsVertical);
-      setModalOpen(true);
-    } else if (requestForEditing === 'duplication') {
-      console.log('openThreeDotsVertical', openThreeDotsVertical);
-    } else if (requestForEditing === 'delete') {
-      setTaskForDelete(openThreeDotsVertical);
-      setOpenRemove(true);
-      //Modal_Delete
+      let color = props.stationArray.find(
+        (item) => item.id === myPlacesChoice[0]
+      ).color;
+
+      post.color = color;
+      props.setAllTasksOfTheSite((prev) => [...prev, post]);
+
+      console.log('insertTask: ', post);
+      setRequestForEditing('');
+      setOpenThreeDotsVertical(-1);
+    } catch (error) {
+      console.error(error);
     }
-  }, [requestForEditing]);
+  };
+
+  console.log('tasks b requestForEditing: ', requestForEditing);
+  console.log('tasks b openThreeDotsVertical: ', openThreeDotsVertical);
+
+  useEffect(() => {
+    if (openThreeDotsVertical !== -1) {
+      if (requestForEditing === 'edit' || requestForEditing === 'details') {
+        console.log('openThreeDotsVertical', openThreeDotsVertical);
+        setOpenThreeDotsVertical(openThreeDotsVertical);
+        setTaskUuidForEdit(openThreeDotsVertical);
+        setModalOpen(true);
+      } else if (requestForEditing === 'duplication') {
+        setTaskUuidForEdit(openThreeDotsVertical);
+        const newTask = filteredDataTasks.find(
+          (t) => t.id === openThreeDotsVertical
+        );
+        let newObject = Object.assign({}, newTask);
+        delete newObject.id;
+        duplicateTask(
+          newObject.title,
+          newObject.subtitle,
+          props.stationArray?.map((s) => s.id) || [],
+          newObject.picture_url,
+          newObject.audio_url,
+          props.mySite.id
+        );
+      } else if (requestForEditing === 'delete') {
+        setTaskForDelete(openThreeDotsVertical);
+        setOpenRemove(true);
+        //Modal_Delete
+      }
+    }
+  }, [
+    filteredDataTasks,
+    openThreeDotsVertical,
+    props.mySite.id,
+    props.stationArray,
+    requestForEditing,
+  ]);
 
   const clickOnhreeDotsVerticaIcont = (value) => {
-    if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
+    if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);
   };
 
@@ -161,7 +219,7 @@ const Tasks = (props) => {
                 className='TasksCover'
                 style={{
                   backgroundColor: snapshot.isDraggingOver
-                    ? '#BBBBBB'
+                    ? '#eeeee4'
                     : '#F5F5F5',
                 }}
               >
@@ -182,7 +240,7 @@ const Tasks = (props) => {
                             title={tag.title}
                             id={ID}
                             key={ID}
-                            dataImg={tag.dataImg}
+                            dataImg={tag.picture_url}
                             flagBoard={false}
                             myLastStation={
                               props.chosenStation
@@ -230,6 +288,7 @@ const Tasks = (props) => {
           handleClose={handleCloseRemove}
           language={props.language}
           setModalOpen={setModalOpen}
+          setOpenThreeDotsVertical={setOpenThreeDotsVertical}
           setAllTasksOfTheSite={props.setAllTasksOfTheSite}
           setMyStation={props.setMyStation}
           myStation={props.chosenStation}

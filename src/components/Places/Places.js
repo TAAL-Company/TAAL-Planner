@@ -523,7 +523,7 @@ const Places = (props) => {
       setReplaceSite(newValue);
       Display_The_Stations(newValue);
       setSiteSelected(true);
-      setReplaceSiteFlag(true); 
+      setReplaceSiteFlag(true);
       setOpenModalSiteChosen(false);
       // setRouteFlags(false);
       // setReplaceRouteFlag(false);
@@ -533,7 +533,7 @@ const Places = (props) => {
       setOpenModalSiteChosen(true);
     }
 
-    setSelectedValue(newValue); 
+    setSelectedValue(newValue);
   };
 
   useEffect(() => {
@@ -585,13 +585,12 @@ const Places = (props) => {
     let colorTemp = 0;
 
     setStationArray(
-      onlyAllStation.filter((item) => {
-        if (item.parentSiteId === selectedValue.id) {
-          item.color = pastelColors[colorTemp];
-          colorTemp++;
-          return item;
-        }
-      })
+      onlyAllStation
+        .filter((item) => item.parentSiteId === selectedValue.id)
+        .map((item, index) => ({
+          ...item,
+          color: pastelColors[index % pastelColors.length],
+        }))
     );
 
     console.log('setStationArray: ', stationArray);
@@ -644,16 +643,24 @@ const Places = (props) => {
               (stationTemp) => stationTemp.id === newTaskStation.id
             );
 
-            console.log('yardeb', station);
-            station.tasks.push({
-              audio_url: newTask.audio_url,
-              estimatedTimeSeconds: newTask.estimatedTimeSeconds,
-              id: newTask.id,
-              multi_language_description: newTask.multi_language_description,
-              picture_url: newTask.picture_url,
-              subtitle: newTask.subtitle,
-              title: newTask.title,
-            });
+            if (station) {
+              let existingTask = station.tasks.find(
+                (task) => task.id === newTask.id
+              );
+
+              if (!existingTask) {
+                station.tasks.push({
+                  audio_url: newTask.audio_url,
+                  estimatedTimeSeconds: newTask.estimatedTimeSeconds,
+                  id: newTask.id,
+                  multi_language_description:
+                    newTask.multi_language_description,
+                  picture_url: newTask.picture_url,
+                  subtitle: newTask.subtitle,
+                  title: newTask.title,
+                });
+              }
+            }
           }
         );
       }
@@ -946,6 +953,7 @@ const Places = (props) => {
             setTasksOfChosenStation={setTasksOfChosenStation}
             tasksOfChosenStation={tasksOfChosenStation}
             myTasks={props.myTasks}
+            onlyAllStation={onlyAllStation}
             language={props.language}
             tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
             chosenStation={chosenStation}

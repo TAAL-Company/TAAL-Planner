@@ -364,7 +364,6 @@ export const insertSite = async (site) => {
       body: JSON.stringify({
         name: site.name,
         description: site.description,
-        // pictureId: site.pictureId || null,
         picture_url: site.picture_url || null,
       }),
     });

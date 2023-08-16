@@ -39,7 +39,6 @@ const PlacesCards = () => {
         const place = {
           name: name,
           description: description,
-          // pictureId: picture_url,
           picture_url: picture_url,
         };
         console.log(place);

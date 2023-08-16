@@ -107,8 +107,7 @@ function Modal_Tasks(props) {
 
         if (indexStation !== -1 && existingTaskIndex !== -1) {
           const newTasks = [...props.tasksOfChosenStation];
-          newTasks[existingTaskIndex] = newTask;
-          console.log(`update task: `, newTasks[existingTaskIndex]);
+          newTasks[existingTaskIndex] = update.data;
           props.setTasksOfChosenStation(newTasks);
           props.allStations[indexStation].tasks = newTasks;
         }
@@ -116,7 +115,6 @@ function Modal_Tasks(props) {
         props.setTaskForEdit(update.data);
         setFlagClickOK(false);
         props.setModalOpen(false);
-        setDone(true);
         console.log('insertTask: ', update.data);
       }
     } catch (error) {

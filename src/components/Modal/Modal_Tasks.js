@@ -98,15 +98,25 @@ function Modal_Tasks(props) {
       console.log('update Modale Tasks:', update);
 
       if (update.status === 200) {
-        setFlagClickOK(false);
-        props.setModalOpen(false);
-        let color = props.allStations.find(
-          (item) => item.id === myPlacesChoice[0]
-        ).color;
+        let indexStation = props.allStations.findIndex(
+          (station) => station.id === props.myStation.id
+        );
+        let existingTaskIndex = props.allStations[indexStation].tasks.findIndex(
+          (task) => task.id === uuid
+        );
 
-        update.data.color = color;
+        if (indexStation !== -1 && existingTaskIndex !== -1) {
+          const newTasks = [...props.tasksOfChosenStation];
+          newTasks[existingTaskIndex] = newTask;
+          console.log(`update task: `, newTasks[existingTaskIndex]);
+          props.setTasksOfChosenStation(newTasks);
+          props.allStations[indexStation].tasks = newTasks;
+        }
 
         props.setTaskForEdit(update.data);
+        setFlagClickOK(false);
+        props.setModalOpen(false);
+        setDone(true);
         console.log('insertTask: ', update.data);
       }
     } catch (error) {

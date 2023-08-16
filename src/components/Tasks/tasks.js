@@ -298,6 +298,8 @@ const Tasks = (props) => {
         <ModalTasks
           setTaskForEdit={setTaskForEdit}
           uuid={taskUuidForEdit}
+          tasksOfChosenStation={props.tasksOfChosenStation}
+          setTasksOfChosenStation={props.setTasksOfChosenStation}
           requestForEditing={requestForEditing}
           handleClose={handleCloseRemove}
           language={props.language}

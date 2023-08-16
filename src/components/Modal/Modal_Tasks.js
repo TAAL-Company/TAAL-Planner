@@ -65,12 +65,12 @@ function Modal_Tasks(props) {
       let audio_url;
       try {
         if (picture) {
-          console.log('enter site: ', props.mySite.name);
-          picture_url = await uploadFiles(picture, props.mySite.name);
+          console.log('enter site: ', 'Task media');
+          picture_url = await uploadFiles(picture, 'Task media');
           console.log(`Image uploaded successfully:`, picture_url);
         }
         if (audio) {
-          audio_url = await uploadFiles(audio, props.mySite.name);
+          audio_url = await uploadFiles(audio, 'Task media');
           console.log(`Audio uploaded successfully:`, audio_url);
         }
       } catch (error) {
@@ -107,8 +107,6 @@ function Modal_Tasks(props) {
         update.data.color = color;
 
         props.setTaskForEdit(update.data);
-        // props.setAllTasksOfTheSite((prev) => [...prev, update.data]);
-
         console.log('insertTask: ', update.data);
       }
     } catch (error) {

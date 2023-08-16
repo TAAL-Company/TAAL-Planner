@@ -636,19 +636,22 @@ const Places = (props) => {
           allTasksOfTheSite[allTasksOfTheSite.length - 1]
         );
         let newTask = allTasksOfTheSite[allTasksOfTheSite.length - 1];
+        let indexStation = stationArray.findIndex(
+          (station) => station.id === chosenStation.id
+        );
 
-        allTasksOfTheSite[allTasksOfTheSite.length - 1].stations.map(
+        allTasksOfTheSite[allTasksOfTheSite.length - 1].stations.forEach(
           (newTaskStation) => {
             let station = stationArray.find(
               (stationTemp) => stationTemp.id === newTaskStation.id
             );
 
-            if (station) {
-              let existingTask = station.tasks.find(
+            if (station && indexStation !== -1) {
+              let existingTaskIndex = station.tasks.findIndex(
                 (task) => task.id === newTask.id
               );
 
-              if (!existingTask) {
+              if (existingTaskIndex === -1) {
                 station.tasks.push({
                   audio_url: newTask.audio_url,
                   estimatedTimeSeconds: newTask.estimatedTimeSeconds,
@@ -659,7 +662,18 @@ const Places = (props) => {
                   subtitle: newTask.subtitle,
                   title: newTask.title,
                 });
+              } else {
+                station.tasks[existingTaskIndex] = {
+                  audio_url: newTask.audio_url,
+                  estimatedTimeSeconds: newTask.estimatedTimeSeconds,
+                  multi_language_description:
+                    newTask.multi_language_description,
+                  picture_url: newTask.picture_url,
+                  subtitle: newTask.subtitle,
+                  title: newTask.title,
+                };
               }
+              stationArray[indexStation].tasks = station.tasks;
             }
           }
         );
@@ -945,6 +959,7 @@ const Places = (props) => {
             Hebrew={props.Hebrew}
             setTasksOfChosenStation={setTasksOfChosenStation}
             setChosenStation={setChosenStation}
+            chosenStation={chosenStation}
           />
           <Tasks
             setDropToBoard={setDropToBoard}

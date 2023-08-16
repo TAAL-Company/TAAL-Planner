@@ -87,10 +87,13 @@ const Tasks = (props) => {
     audioData,
     mySiteId
   ) => {
-    let station = props.onlyAllStation.find(
-      (t) => t.id === props.chosenStation.id
+    let station = props.stationArray.find(
+      (s) => s.id === props.chosenStation.id
     );
-    if (station) {
+    let indexStation = props.stationArray.findIndex(
+      (station) => station.id === props.chosenStation.id
+    );
+    if (station && indexStation !== -1) {
       try {
         const post = await insertTask(
           get_title,
@@ -101,12 +104,11 @@ const Tasks = (props) => {
           mySiteId
         );
 
-        let color = props.stationArray.find(
-          (item) => item.id === myPlacesChoice[0]
-        ).color;
-
-        post.color = color;
-        props.setAllTasksOfTheSite((prev) => [...prev, post]);
+        // props.setAllTasksOfTheSite((prev) => [...prev, post]);
+        const newTasks = [...props.tasksOfChosenStation];
+        newTasks.push(post);
+        props.setTasksOfChosenStation(newTasks);
+        props.stationArray[indexStation].tasks = newTasks;
 
         console.log('insertTask: ', post);
         setRequestForEditing('');
@@ -128,27 +130,34 @@ const Tasks = (props) => {
         setTaskUuidForEdit(openThreeDotsVertical);
         setModalOpen(true);
       } else if (requestForEditing === 'duplication') {
-        // setTaskUuidForEdit(openThreeDotsVertical);
-        // const newTask = filteredDataTasks.find(
-        //   (t) => t.id === openThreeDotsVertical
-        // );
-        // let newObject = Object.assign({}, newTask);
-        // delete newObject.id;
-        // duplicateTask(
-        //   newObject.title,
-        //   newObject.subtitle,
-        //   props.stationArray?.map((s) => s.id) || [],
-        //   newObject.picture_url,
-        //   newObject.audio_url,
-        //   props.mySite.id
-        // );
+        setOpenThreeDotsVertical(openThreeDotsVertical);
+        setTaskUuidForEdit(openThreeDotsVertical);
+
+        let newTask = props.tasksOfChosenStation.find(
+          (task) => task.id === openThreeDotsVertical
+        );
+        let newObject = Object.assign({}, newTask);
+        delete newObject.id;
+
+        duplicateTask(
+          newObject.title,
+          newObject.subtitle,
+          props.stationArray
+            ?.filter((s) => s.id === props.chosenStation.id)
+            .map((s) => s.id) || [],
+          newObject.picture_url,
+          newObject.audio_url,
+          props.mySite.id
+        );
       } else if (requestForEditing === 'delete') {
         setTaskForDelete(openThreeDotsVertical);
         setOpenRemove(true);
         //Modal_Delete
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
+    props.tasksOfChosenStation,
     filteredDataTasks,
     openThreeDotsVertical,
     props.mySite.id,

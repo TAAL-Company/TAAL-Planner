@@ -171,9 +171,12 @@ const Stations = (props) => {
 
     let stationTemp = props.stationArray.find((station) => station.id === e);
 
+    if (stationTemp) {
+      props.setTasksOfChosenStation(stationTemp.tasks);
+      setTasksOfChosenStation(stationTemp.tasks);
+    }
+
     // stationTemp.tasks.map((task) => tasksOfChosenStation.push(task));
-    props.setTasksOfChosenStation(stationTemp.tasks);
-    setTasksOfChosenStation(stationTemp.tasks);
     console.log('props.allTasks yyy', tasksOfChosenStation);
     setFilteredData(
       (filteredData = props.stationArray.filter((el) => {

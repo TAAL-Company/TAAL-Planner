@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getingData_Places, insertSite, uploadFiles } from '../../api/api';
+import {
+  getingData_Places,
+  insertSite,
+  updateSite,
+  uploadFiles,
+} from '../../api/api';
 import './placesCards.css';
 import defualtSiteImg from '../../Pictures/defualtSiteImg.svg';
 import Button from '@mui/material/Button';
@@ -32,18 +37,18 @@ const PlacesCards = () => {
       let picture_url;
       try {
         if (picture) {
-          console.log('enter site: ');
           picture_url = await uploadFiles(picture, 'Site media');
-          console.log(`Image uploaded successfully:`, picture_url);
         }
         const place = {
-          name: name,
-          description: description,
-          picture_url: picture_url,
+          name,
+          description,
+          picture_url,
         };
-        console.log(place);
         insertSite(place).then((data) => {
-          setPlaces((prev) => [data, ...prev]);
+          data.picture_url = place.picture_url;
+          updateSite(data.id, data).then((updatedSite) => {
+            setPlaces((prev) => [updatedSite.data, ...prev]);
+          });
         });
       } catch (error) {
         console.error(error);
@@ -117,8 +122,8 @@ const PlacesCards = () => {
         </DialogActions>
       </Dialog>
       <div className='place_cards_warpper'>
-        {places.map((place) => (
-          <div key={place.id} className='place_card'>
+        {places.map((place, index) => (
+          <div key={index} className='place_card'>
             <img
               src={place.picture_url || defualtSiteImg}
               alt='Avatar'

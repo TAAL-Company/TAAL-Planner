@@ -379,6 +379,15 @@ export const insertSite = async (site) => {
     throw error;
   }
 };
+export const updateSite = async (id, siteObj) => {
+  const url = baseUrl + '/sites/' + id;
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: '*/*',
+  };
+
+  return await patch(url, siteObj, headers);
+};
 export const postDataCognitiveProfile = async (
   workerId,
   cognitiveProfileValues

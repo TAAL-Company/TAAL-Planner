@@ -74,7 +74,7 @@ const Stations = (props) => {
     if (deleteStationTemp.status === 200) {
       alert('המחיקה בוצעה בהצלחה!');
       const newStations = [...props.stationArray];
-      newStations.splice(stationForDelete, 1); // remove one element at index x
+      newStations.splice(stationForDelete, 1); 
       props.setStationArray(newStations);
     }
 

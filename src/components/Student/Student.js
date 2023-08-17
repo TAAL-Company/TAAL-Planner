@@ -138,6 +138,7 @@ const Cards = () => {
             users[openThreeDotsVertical].email = data.data.email;
             users[openThreeDotsVertical].user_name = data.data.user_name;
             users[openThreeDotsVertical].coach = data.data.coach;
+            users[openThreeDotsVertical].picture_url = data.data.picture_url;
 
             const newUsers = [...users];
             setUsers(newUsers);

@@ -310,8 +310,8 @@ export const insertUser = async (user) => {
         email: user.email,
         name: user.name,
         user_name: user.user_name,
-        coachId: user.coachId ? user.coachId : null,
-        pictureId: user.picture_url ? user.picture_url : null,
+        coachId: user.coachId || null,
+        picture_url: user.picture_url || null,
       }),
     });
 
@@ -456,14 +456,14 @@ export const deleteUser = async (user_id) => {
 
   return confirm;
 };
-export const patchForUser = async (userId, user) => {
+export const updateUser = async (userId, user) => {
   const url = baseUrl + '/students/' + userId;
   const body = {
     email: user.email,
     name: user.name,
     user_name: user.user_name,
-    coachId: user.coachId ? user.coachId : null,
-    pictureId: user.picture_url ? user.picture_url : null,
+    coachId: user.coachId || null,
+    picture_url: user.picture_url || null,
   };
   const headers = {
     'Content-Type': 'application/json',

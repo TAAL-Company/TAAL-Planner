@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
-import "./Modal.css";
+import React, { useState, useEffect, useRef } from 'react';
+import './Modal.css';
+import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 //--------------------------
 
@@ -14,32 +15,38 @@ function Modal_dropdown(props) {
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
   return (
     <div ref={menuRef}>
-      <div id="dropdown" className="button-dropdown-content">
+      <div id='dropdown' className='button-dropdown-content'>
         {props.editable ? (
-          <a onClick={() => props.setRequestForEditing("edit")}>עריכה</a>
+          <Link onClick={() => props.setRequestForEditing('edit')}>עריכה</Link>
         ) : (
           <></>
         )}
         {props.Reproducible ? (
-          <a onClick={() => props.setRequestForEditing("duplication")}>שכפול</a>
+          <Link onClick={() => props.setRequestForEditing('duplication')}>
+            שכפול
+          </Link>
         ) : (
           <></>
         )}
         {props.details ? (
-          <a onClick={() => props.setRequestForEditing("details")}>פרטים</a>
+          <Link onClick={() => props.setRequestForEditing('details')}>
+            פרטים
+          </Link>
         ) : (
           <></>
         )}
         {props.erasable ? (
-          <a onClick={() => props.setRequestForEditing("delete")}>מחיקה</a>
+          <Link onClick={() => props.setRequestForEditing('delete')}>
+            מחיקה
+          </Link>
         ) : (
           <></>
         )}

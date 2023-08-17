@@ -4,9 +4,10 @@ import defualtSiteImg from '../../Pictures/defualtSiteImg.svg';
 import {
   getingData_Users,
   deleteUser,
-  patchForUser,
+  updateUser,
   post_cognitive_abillities,
   getingData_coaches,
+  uploadFiles,
 } from '../../api/api';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -29,13 +30,9 @@ const Cards = () => {
   const [coach, setCoach] = useState([]);
   const [updateAdd, setupdateAdd] = useState(false);
   const [manager, setmanager] = useState(null);
-
+  const [picture, setPicture] = useState(null);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState('');
-
-  useEffect(() => {
-    console.log('student openThreeDotsVertical: ', openThreeDotsVertical);
-  }, [openThreeDotsVertical]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,17 +41,14 @@ const Cards = () => {
     };
 
     fetchData();
-    // console.log("usersData", usersData);
   }, []);
 
   useEffect(() => {
-    console.log('student requestForEditing: ', requestForEditing);
-
-    if (requestForEditing == 'edit' || requestForEditing == 'details') {
+    if (requestForEditing === 'edit' || requestForEditing === 'details') {
       setOpen(true);
-    } else if (requestForEditing == 'duplication') {
+    } else if (requestForEditing === 'duplication') {
       console.log('openThreeDotsVertical', openThreeDotsVertical);
-    } else if (requestForEditing == 'delete') {
+    } else if (requestForEditing === 'delete') {
       console.log('openThreeDotsVertical', openThreeDotsVertical);
       setOpenRemove(true);
     }
@@ -116,47 +110,55 @@ const Cards = () => {
     });
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const email = document.getElementById('email').value;
     const fullName = document.getElementById('name').value;
     const user_name = document.getElementById('userName').value;
     // const coach = document.getElementById("coach").value;
-
     // const coachId = document.getElementById("coach").value;
-    const image = document.getElementById('image-input').files[0];
 
-    const user = {
-      email: email,
-      name: fullName,
-      user_name: user_name,
-      coachId: coach.id,
-      pictureId: image,
-    };
-    console.log('khalid - user - ' + user);
-    console.log('khalid - openThreeDotsVertical - ' + openThreeDotsVertical);
-    if (openThreeDotsVertical !== -1) {
-      console.log('khalid - test - edite');
-      patchForUser(users[openThreeDotsVertical].id, user).then((data) => {
-        users[openThreeDotsVertical].name = data.data.name;
-        users[openThreeDotsVertical].email = data.data.email;
-        users[openThreeDotsVertical].user_name = data.data.user_name;
-        users[openThreeDotsVertical].coach = data.data.coach;
-
-        console.log('data', data);
-        //
-        const newUsers = [...users];
-        setUsers(newUsers);
-        // setUsers([data, ...users]);
-      });
+    if (email === '' || fullName === '') {
+      alert('עליך למלא שדות חובה המסומנים בכוכבית');
     } else {
-      console.log('khalid - test - add');
-      insertUser(user).then((data) => {
-        setUsers([data, ...users]);
-      });
-      setupdateAdd(true);
-    }
+      let picture_url;
+      try {
+        if (picture) picture_url = await uploadFiles(picture, 'Worker media');
 
-    handleClose(); // Close the dialog after the form is submitted
+        const user = {
+          email,
+          name: fullName,
+          user_name,
+          coachId: coach.id,
+          picture_url,
+        };
+
+        if (openThreeDotsVertical !== -1) {
+          updateUser(users[openThreeDotsVertical].id, user).then((data) => {
+            users[openThreeDotsVertical].name = data.data.name;
+            users[openThreeDotsVertical].email = data.data.email;
+            users[openThreeDotsVertical].user_name = data.data.user_name;
+            users[openThreeDotsVertical].coach = data.data.coach;
+
+            const newUsers = [...users];
+            setUsers(newUsers);
+            // setUsers([data, ...users]);
+          });
+        } else {
+          insertUser(user).then((data) => {
+            data.picture_url = user.picture_url;
+            updateUser(users[openThreeDotsVertical].id, data).then(
+              (updatedUser) => {
+                setUsers((prev) => [updatedUser.data, ...prev]);
+              }
+            );
+          });
+          setupdateAdd(true);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+      handleClose(); // Close the dialog after the form is submitted}
+    }
   };
 
   useEffect(() => {
@@ -180,10 +182,10 @@ const Cards = () => {
         הכנסת יכולות קוגנטיביות
       </Button> */}
       <Button variant='outlined' onClick={handleClickOpen}>
-        הוספת משתמש חדש
+        הוסף עובד חדש
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>משתמש חדש</DialogTitle>
+        <DialogTitle>עובד חדש</DialogTitle>
         <DialogContent>
           <DialogContentText>
             {/* To subscribe to this website, please enter your email address here.
@@ -231,7 +233,6 @@ const Cards = () => {
                 : ''
             }
           />
-
           <Autocomplete
             disablePortal
             id='coach'
@@ -268,9 +269,15 @@ const Cards = () => {
               (manager !== null ? manager : null)
             }
           />
-
           <div>תמונה:</div>
-          <input label='שם מלא' accept='image/*' id='image-input' type='file' />
+
+          <input
+            label='שם מלא'
+            accept='image/*'
+            id='image-input'
+            type='file'
+            onChange={(e) => setPicture(e.target.files[0])}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>ביטול</Button>

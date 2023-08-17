@@ -8,7 +8,7 @@ const connectionString =
   'https://taalmedia.blob.core.windows.net/images?sp=racwd&st=2023-08-10T08:40:14Z&se=2024-10-08T16:40:14Z&spr=https&sv=2022-11-02&sr=c&sig=uIxq4iCGXN%2FwOy3vcLS38S8tE8YF60kMgbLX5QY1dPM%3D';
 const blobServiceClient = new BlobServiceClient(connectionString);
 
-export const uploadImage = async (selectedFile, folder) => {
+export const uploadFiles = async (selectedFile, folder) => {
   console.log('enter', selectedFile);
   console.log('enter folder', folder);
 
@@ -310,8 +310,8 @@ export const insertUser = async (user) => {
         email: user.email,
         name: user.name,
         user_name: user.user_name,
-        coachId: user.coachId ? user.coachId : null,
-        pictureId: user.picture_url ? user.picture_url : null,
+        coachId: user.coachId || null,
+        picture_url: user.picture_url || null,
       }),
     });
 
@@ -364,7 +364,7 @@ export const insertSite = async (site) => {
       body: JSON.stringify({
         name: site.name,
         description: site.description,
-        // pictureId: site.picture_url ? site.picture_url : null,
+        picture_url: site.picture_url || null,
       }),
     });
 
@@ -378,6 +378,15 @@ export const insertSite = async (site) => {
   } catch (error) {
     throw error;
   }
+};
+export const updateSite = async (id, siteObj) => {
+  const url = baseUrl + '/sites/' + id;
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: '*/*',
+  };
+
+  return await patch(url, siteObj, headers);
 };
 export const postDataCognitiveProfile = async (
   workerId,
@@ -447,14 +456,14 @@ export const deleteUser = async (user_id) => {
 
   return confirm;
 };
-export const patchForUser = async (userId, user) => {
+export const updateUser = async (userId, user) => {
   const url = baseUrl + '/students/' + userId;
   const body = {
     email: user.email,
     name: user.name,
     user_name: user.user_name,
-    coachId: user.coachId ? user.coachId : null,
-    pictureId: user.picture_url ? user.picture_url : null,
+    coachId: user.coachId || null,
+    picture_url: user.picture_url || null,
   };
   const headers = {
     'Content-Type': 'application/json',

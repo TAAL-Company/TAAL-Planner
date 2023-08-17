@@ -6,7 +6,8 @@ import { IoMdCheckbox } from 'react-icons/io';
 import Modal_Loading from './Modal_Loading';
 import { baseUrl } from '../../config';
 import Modal_no_site_selected from './Modal_no_site_selected';
-import { uploadImage, uploadFile, insertTask, updateTask } from '../../api/api';
+import { uploadFiles, uploadFile, insertTask, updateTask } from '../../api/api';
+import uploadFileToBlob from '../azureBlob';
 
 //--------------------------
 let ichour = 'אישור';
@@ -64,12 +65,12 @@ function Modal_Tasks(props) {
       let audio_url;
       try {
         if (picture) {
-          console.log('enter site: ', props.mySite.name);
-          picture_url = await uploadImage(picture, props.mySite.name);
+          console.log('enter site: ', 'Task media');
+          picture_url = await uploadFiles(picture, 'Task media');
           console.log(`Image uploaded successfully:`, picture_url);
         }
         if (audio) {
-          audio_url = await uploadFile(audio, 'Audio');
+          audio_url = await uploadFiles(audio, 'Task media');
           console.log(`Audio uploaded successfully:`, audio_url);
         }
       } catch (error) {
@@ -97,17 +98,23 @@ function Modal_Tasks(props) {
       console.log('update Modale Tasks:', update);
 
       if (update.status === 200) {
-        setFlagClickOK(false);
-        props.setModalOpen(false);
-        let color = props.allStations.find(
-          (item) => item.id === myPlacesChoice[0]
-        ).color;
+        let indexStation = props.allStations.findIndex(
+          (station) => station.id === props.myStation.id
+        );
+        let existingTaskIndex = props.allStations[indexStation].tasks.findIndex(
+          (task) => task.id === uuid
+        );
 
-        update.data.color = color;
+        if (indexStation !== -1 && existingTaskIndex !== -1) {
+          const newTasks = [...props.tasksOfChosenStation];
+          newTasks[existingTaskIndex] = update.data;
+          props.setTasksOfChosenStation(newTasks);
+          props.allStations[indexStation].tasks = newTasks;
+        }
 
         props.setTaskForEdit(update.data);
-        // props.setAllTasksOfTheSite((prev) => [...prev, update.data]);
-
+        setFlagClickOK(false);
+        props.setModalOpen(false);
         console.log('insertTask: ', update.data);
       }
     } catch (error) {

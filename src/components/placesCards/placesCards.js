@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getingData_Places, insertSite } from '../../api/api';
+import {
+  getingData_Places,
+  insertSite,
+  updateSite,
+  uploadFiles,
+} from '../../api/api';
 import './placesCards.css';
 import defualtSiteImg from '../../Pictures/defualtSiteImg.svg';
 import Button from '@mui/material/Button';
@@ -13,6 +18,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 const PlacesCards = () => {
   const [places, setPlaces] = useState([]);
   const [open, setOpen] = React.useState(false);
+  const [picture, setPicture] = useState(null);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -21,21 +27,32 @@ const PlacesCards = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const name = document.getElementById('name').value;
     const description = document.getElementById('description').value;
-    // const image = document.getElementById("image-input").files[0];
 
-    const place = {
-      name: name,
-      description: description,
-      // pictureId: image,
-    };
+    if (name === '' || description === '') {
+      alert('עליך למלא שדות חובה המסומנים בכוכבית');
+    } else {
+      let picture_url;
+      try {
+        if (picture) picture_url = await uploadFiles(picture, 'Site media');
 
-    insertSite(place).then((data) => {
-      setPlaces([data, ...places]);
-    });
-
+        const place = {
+          name,
+          description,
+          picture_url,
+        };
+        insertSite(place).then((data) => {
+          data.picture_url = place.picture_url;
+          updateSite(data.id, data).then((updatedSite) => {
+            setPlaces((prev) => [updatedSite.data, ...prev]);
+          });
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
     handleClose(); // Close the dialog after the form is submitted
     console.log('places', places);
   };
@@ -44,6 +61,7 @@ const PlacesCards = () => {
     const fetchData = async () => {
       const placesData = await getingData_Places();
       setPlaces(placesData);
+      console.log('places', placesData);
     };
 
     fetchData();
@@ -89,7 +107,13 @@ const PlacesCards = () => {
             variant="standard"
           /> */}
           <div>תמונה:</div>
-          <input label='שם מלא' accept='image/*' id='image-input' type='file' />
+          <input
+            label='שם מלא'
+            accept='image/*'
+            id='image-input'
+            type='file'
+            onChange={(e) => setPicture(e.target.files[0])}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>ביטול</Button>
@@ -97,10 +121,10 @@ const PlacesCards = () => {
         </DialogActions>
       </Dialog>
       <div className='place_cards_warpper'>
-        {places.map((place) => (
-          <div key={place.id} className='place_card'>
+        {places.map((place, index) => (
+          <div key={index} className='place_card'>
             <img
-              src={place.picture_url ? place.picture_url : defualtSiteImg}
+              src={place.picture_url || defualtSiteImg}
               alt='Avatar'
               style={{ width: '100%' }}
             />

@@ -8,6 +8,7 @@ import StatusLTR from './FormsComponents/classification_component/StatusLTR';
 import cognitiveList from './cognitive.json';
 import taskpic from './FormsComponents/PicturesForms/taskpic.png';
 import CognitiveAbillities from '../CognitiveAbillities';
+import Autocomplete from '@mui/material/Autocomplete';
 import {
   getingData_Users,
   getingData_Tasks,
@@ -42,6 +43,7 @@ import {
 } from '@mui/material';
 import { useEffect } from 'react';
 import { id } from 'date-fns/locale';
+import predictions from './predictions.json';
 
 function Forms() {
   const [explainationError, setExplainationError] = useState('');
@@ -65,6 +67,8 @@ function Forms() {
   const [workerNameHE, setWorkerNameHE] = useState('אייל אנגל');
   const [routeNameHE, setRouteNameHE] = useState('עזריאלי תל אביב - בוקר');
   const [siteNameHE, setSiteNameHE] = useState('');
+
+  const [IndexesNameList, setIndexesNameList] = useState('');
   let loadingCog = false;
   let loadingTaskAb = false;
 
@@ -387,6 +391,21 @@ function Forms() {
         console.log('evaluation xx', evaluation);
         console.log('taskInfo xx', taskInfo);
 
+        //TaskAbilitylist //---------------------------------THIS SHOUD BE CHANGE
+        let TaskAbilitylist =  predictions.find((prediction) => (prediction.taskid === task.taskId && prediction.studentid === "TW3" ));// && prediction.studentid === evaluation.studentId
+        console.log("TaskAbilitylist - "+JSON.stringify(TaskAbilitylist));
+        let indexesnamelist = TaskAbilitylist.indexes.map((indexe)=>{
+          let indexesname =  cognitiveAbillities.find((cognitiveAbillitie)=>  cognitiveAbillitie.index ==indexe)
+          if(indexesname !== undefined){
+            console.log(indexesname.trait);
+            return indexesname.trait
+          }
+        })
+
+        indexesnamelist = indexesnamelist.filter( Boolean );
+        console.log(indexesnamelist);
+        //--------------------------------------------------THIS SHOUD BE CHANGE
+
         if (evaluation === undefined) return;
 
         setRowsFlagsHE((prev) => [
@@ -399,6 +418,7 @@ function Forms() {
             intervention: evaluation.intervention,
             Alternatives: evaluation.alternativeTaskId,
             explaination: evaluation.explanation,
+            TaskAbilitylist:indexesnamelist,
             // Actions
           },
         ]);
@@ -627,7 +647,6 @@ function Forms() {
         </div>
       ),
     },
-
     {
       field: 'classification',
       headerName: 'סיווג',
@@ -710,7 +729,6 @@ function Forms() {
         }
       },
     },
-
     {
       field: 'explaination',
       headerName: 'הסבר',
@@ -724,7 +742,25 @@ function Forms() {
         </div>
       ),
     },
-
+    {
+      field: 'TaskAbility',
+      headerName: 'TaskAbility',
+      width: 300,
+      editable: false,
+      headerAlign: 'center',
+      align: 'center',
+      renderCell: (params) => (
+        <div style={{ textAlign: 'right', fontSize: '1rem' }}>
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={params.row.TaskAbilitylist}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Task Ability list" />}
+          />
+        </div>
+      ),
+    },
     {
       field: 'actions',
       headerName: 'אפשרויות',
@@ -762,6 +798,7 @@ function Forms() {
         return actions;
       },
     },
+
   ]);
 
   const [columnsFlagsEN, setColumnsFlagsEN] = useState([
@@ -1757,9 +1794,8 @@ function Forms() {
       <div>
         <div>
           <button
-            className={`switch-button-forms ${
-              language === 'hebrew' ? 'hebrew' : 'english'
-            }`}
+            className={`switch-button-forms ${language === 'hebrew' ? 'hebrew' : 'english'
+              }`}
             onClick={() =>
               setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
             }
@@ -1830,8 +1866,8 @@ function Forms() {
                       // keepMounted={slide}
                       // transitionDuration={300}
                       disableEscapeKeyDown
-                      // style={{ direction: "rtl" }}
-                      // style={{ position: "absolute", top: "0", right: "0" }}
+                    // style={{ direction: "rtl" }}
+                    // style={{ position: "absolute", top: "0", right: "0" }}
                     >
                       <div
                         style={{

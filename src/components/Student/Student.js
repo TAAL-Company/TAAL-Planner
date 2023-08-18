@@ -24,8 +24,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 const Cards = () => {
   const [users, setUsers] = useState([]);
-  const [open, setOpen] = React.useState(false);
-  const [openRemove, setOpenRemove] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [openRemove, setOpenRemove] = useState(false);
   const [coaches, setCoaches] = useState([]);
   const [coach, setCoach] = useState([]);
   const [updateAdd, setupdateAdd] = useState(false);
@@ -33,6 +33,7 @@ const Cards = () => {
   const [picture, setPicture] = useState(null);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState('');
+  const [studentForAction, setStudentForAction] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,11 +46,12 @@ const Cards = () => {
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
+      setStudentForAction(openThreeDotsVertical);
       setOpen(true);
     } else if (requestForEditing === 'duplication') {
       console.log('openThreeDotsVertical', openThreeDotsVertical);
     } else if (requestForEditing === 'delete') {
-      console.log('openThreeDotsVertical', openThreeDotsVertical);
+      setStudentForAction(openThreeDotsVertical);
       setOpenRemove(true);
     }
   }, [requestForEditing]);
@@ -75,14 +77,13 @@ const Cards = () => {
     setRequestForEditing('');
   };
   const handleCloseRemoveConfirm = async () => {
-    console.log('DELETE:', users[openThreeDotsVertical].id);
-    let deletedUser = await deleteUser(users[openThreeDotsVertical].id);
+    let deletedUser = await deleteUser(users[studentForAction].id);
 
     console.log('deletedUser:', deletedUser);
     if (deletedUser.status === 200) {
       alert('המחיקה בוצעה בהצלחה!');
       const newUsers = [...users];
-      newUsers.splice(openThreeDotsVertical, 1); // remove one element at index x
+      newUsers.splice(studentForAction, 1); // remove one element at index x
       setUsers(newUsers);
     }
 
@@ -124,6 +125,7 @@ const Cards = () => {
       try {
         if (picture) picture_url = await uploadFiles(picture, 'Worker media');
 
+        const userToUpdate = users[studentForAction];
         const user = {
           email,
           name: fullName,
@@ -132,13 +134,13 @@ const Cards = () => {
           picture_url,
         };
 
-        if (openThreeDotsVertical !== -1) {
-          updateUser(users[openThreeDotsVertical].id, user).then((data) => {
-            users[openThreeDotsVertical].name = data.data.name;
-            users[openThreeDotsVertical].email = data.data.email;
-            users[openThreeDotsVertical].user_name = data.data.user_name;
-            users[openThreeDotsVertical].coach = data.data.coach;
-            users[openThreeDotsVertical].picture_url = data.data.picture_url;
+        if (requestForEditing === 'edit' || requestForEditing === 'details') {
+          updateUser(userToUpdate.id, user).then((updatedUser) => {
+            userToUpdate.name = updatedUser.data.name;
+            userToUpdate.email = updatedUser.data.email;
+            userToUpdate.user_name = updatedUser.data.user_name;
+            userToUpdate.coach = updatedUser.data.coach;
+            userToUpdate.picture_url = updatedUser.data.picture_url;
 
             const newUsers = [...users];
             setUsers(newUsers);
@@ -147,11 +149,9 @@ const Cards = () => {
         } else {
           insertUser(user).then((data) => {
             data.picture_url = user.picture_url;
-            updateUser(users[openThreeDotsVertical].id, data).then(
-              (updatedUser) => {
-                setUsers((prev) => [updatedUser.data, ...prev]);
-              }
-            );
+            updateUser(data.id, data).then((updatedUser) => {
+              setUsers((prev) => [updatedUser.data, ...prev]);
+            });
           });
           setupdateAdd(true);
         }

@@ -57,7 +57,7 @@ const Stations = (props) => {
       setOpenRemove(true);
       //Modal_Delete
     }
-  }, [requestForEditing, openThreeDotsVertical]);
+  }, [requestForEditing]);
 
   const handleCloseRemove = () => {
     setOpenRemove(false);
@@ -74,7 +74,7 @@ const Stations = (props) => {
     if (deleteStationTemp.status === 200) {
       alert('המחיקה בוצעה בהצלחה!');
       const newStations = [...props.stationArray];
-      newStations.splice(stationForDelete, 1); 
+      newStations.splice(stationForDelete, 1);
       props.setStationArray(newStations);
     }
 

@@ -65,6 +65,8 @@ const DataTableRTL = ({
   prevSelectedWorker,
   handleChangeUserFlags,
   handleChangeRouteFlags,
+  RroutenewName,
+  setRroutenewName,
 }) => {
   const [selectedRows, setSelectedRows] = React.useState([]);
   const [columnFillRows, setColumnFillRows] = React.useState({
@@ -81,7 +83,7 @@ const DataTableRTL = ({
   useEffect(() => {
     console.log('rows:', rows);//----------khalid
     console.log('columns:', columns);
-    
+
   }, [columns, rows]);
 
   const [openDialogTrueFalse, setOpenDialogTrueFalse] = React.useState(false);
@@ -363,10 +365,10 @@ const DataTableRTL = ({
           //           "& .css-1e2bxag-MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer":
 
           "& .MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer":
-            {
-              borderBottom: "solid white 3px",
-              justifyContent: "center",
-            },
+          {
+            borderBottom: "solid white 3px",
+            justifyContent: "center",
+          },
 
           // .css-1e2bxag-MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer
           // border-bottom: solid #1976d2 1px;
@@ -428,10 +430,10 @@ const DataTableRTL = ({
               color: "white",
             },
             "& .MuiDataGrid-menuIconButton > .MuiSvgIcon-root , .MuiDataGrid-sortIcon":
-              {
-                color: "white !important",
-                opacity: 1,
-              },
+            {
+              color: "white !important",
+              opacity: 1,
+            },
           }}
           experimentalFeatures={
             ({ newEditingApi: true }, { columnGrouping: true })
@@ -483,6 +485,8 @@ const DataTableRTL = ({
                 setRouteForTasksAbility={setRouteForTasksAbility}
                 prevSelectedWorker={prevSelectedWorker}
                 newTaskCognitiveRequirements={newTaskCognitiveRequirements}
+                RroutenewName={RroutenewName}
+                setRroutenewName={setRroutenewName}
               />
             ),
           }}

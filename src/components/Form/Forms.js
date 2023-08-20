@@ -72,6 +72,8 @@ function Forms() {
   let loadingCog = false;
   let loadingTaskAb = false;
 
+  const [RroutenewName, setRroutenewName] = useState('בחר מסלול');
+
   const [rowsCognitiveHE, setRowsCognitiveHE] = useState([]);
   const [changeUser, setChangeUser] = useState(false);
   const [changeRoute, setChangeRoute] = useState(false);
@@ -345,11 +347,14 @@ function Forms() {
   const handleChangeUserFlags = (event, values) => {
     console.log('worker', event);
     console.log('worker', values);
-
+    setRroutenewName('בחר מסלול')
     setWorker(values);
   };
 
   const handleChangeRouteFlags = async (event, value) => {
+    console.log("khalid ++ vvvv"+JSON.stringify(value));
+    setRroutenewName(value.name)
+
     const route = allRoutes.find((route) => route.id === value.id);
 
     // Fetch new flags data and update the state
@@ -2222,6 +2227,8 @@ function Forms() {
                     setRouteForTasksAbility={setRouteForTasksAbility}
                     routeName={routeNameHE}
                     siteName={siteNameHE}
+                    RroutenewName={RroutenewName}
+                    setRroutenewName={setRroutenewName}
                   />
                 </div>
               </div>

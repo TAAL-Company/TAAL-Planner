@@ -156,14 +156,7 @@ const Tasks = (props) => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    props.tasksOfChosenStation,
-    filteredDataTasks,
-    openThreeDotsVertical,
-    props.mySite.id,
-    props.stationArray,
-    requestForEditing,
-  ]);
+  }, [requestForEditing]);
 
   const clickOnhreeDotsVerticaIcont = (value) => {
     if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);

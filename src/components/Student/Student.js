@@ -125,7 +125,6 @@ const Cards = () => {
       try {
         if (picture) picture_url = await uploadFiles(picture, 'Worker media');
 
-        const userToUpdate = users[studentForAction];
         const user = {
           email,
           name: fullName,
@@ -135,6 +134,7 @@ const Cards = () => {
         };
 
         if (requestForEditing === 'edit' || requestForEditing === 'details') {
+          const userToUpdate = users[studentForAction];
           updateUser(userToUpdate.id, user).then((updatedUser) => {
             userToUpdate.name = updatedUser.data.name;
             userToUpdate.email = updatedUser.data.email;
@@ -144,7 +144,6 @@ const Cards = () => {
 
             const newUsers = [...users];
             setUsers(newUsers);
-            // setUsers([data, ...users]);
           });
         } else {
           insertUser(user).then((data) => {
@@ -331,7 +330,7 @@ const Cards = () => {
               )}
             </div>
             <img
-              src={user.picture_url ? user.picture_url : defualtSiteImg}
+              src={user.picture_url || defualtSiteImg}
               alt='Avatar'
               style={{ width: '100%' }}
             />

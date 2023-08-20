@@ -339,6 +339,7 @@ export const insertCoach = async (user) => {
         name: user.name,
         user_name: user.user_name,
         phone: user.phone,
+        picture_url: user.picture_url,
       }),
     });
 
@@ -472,13 +473,14 @@ export const updateUser = async (userId, user) => {
 
   return await patch(url, body, headers);
 };
-export const patchForCoach = async (userId, user) => {
+export const updateCoach = async (userId, user) => {
   const url = baseUrl + '/coaches/' + userId;
   const body = {
     email: user.email,
     name: user.name,
     user_name: user.user_name,
-    phone: user.phone ? user.phone : null,
+    phone: user.phone || null,
+    picture_url: user.picture_url,
   };
   const headers = {
     'Content-Type': 'application/json',

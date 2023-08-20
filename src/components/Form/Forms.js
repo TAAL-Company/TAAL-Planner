@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import DataTableLTR from './FormsComponents/data_grid/DataTableLTR';
 import DataTableRTL from './FormsComponents/data_grid/DataTableRTL';
 import TaskAbility from './FormsComponents/data_grid/TaskAbility';
@@ -225,7 +225,7 @@ function Forms() {
       loadingTaskAb = true;
       cognitiveAbillities.map((cognitive, index) => {
         if (cognitive.ML) {
-          console.log('cognitive.ML', cognitive.ML);
+          // console.log('cognitive.ML', cognitive.ML);
           setColumnsTaskabilityHE((prev) => [
             ...prev,
             {
@@ -286,7 +286,7 @@ function Forms() {
 
       cognitiveAbillities.map((cognitive, index) => {
         let cogValue = 1;
-        if (cognitiveProfileValues != undefined)
+        if (cognitiveProfileValues !== undefined)
           cogValue = cognitiveProfileValues[index];
 
         // const valueMap = {
@@ -383,30 +383,26 @@ function Forms() {
   };
 
   useEffect(() => {
-    console.log('allFlags: ', allFlags);
-    console.log('route: ', routesOfFlags);
     if (Object.keys(routesOfFlags).length > 0) {
       routesOfFlags.tasks.map((task) => {
         let evaluation = allFlags.find((flag) => flag.taskId === task.taskId);
         let taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
 
-        console.log('task xx', task);
-        console.log('evaluation xx', evaluation);
-        console.log('taskInfo xx', taskInfo);
-
         //TaskAbilitylist //---------------------------------THIS SHOUD BE CHANGE
-        let TaskAbilitylist =  predictions.find((prediction) => (prediction.taskid === task.taskId && prediction.studentid === "TW3" ));// && prediction.studentid === evaluation.studentId
-        console.log("TaskAbilitylist - "+JSON.stringify(TaskAbilitylist));
-        let indexesnamelist = TaskAbilitylist.indexes.map((indexe)=>{
-          let indexesname =  cognitiveAbillities.find((cognitiveAbillitie)=>  cognitiveAbillitie.index ==indexe)
-          if(indexesname !== undefined){
-            console.log(indexesname.trait);
-            return indexesname.trait
-          }
-        })
+        const TaskAbilitylist = predictions.find(
+          (prediction) =>
+            prediction.taskid === task.taskId && prediction.studentid === 'TW3'
+        ); // && prediction.studentid === evaluation.studentId
+        console.log('TaskAbilitylist - ' + JSON.stringify(TaskAbilitylist));
+        console.log('evaluation:', evaluation);
+        const indexesToTraits = TaskAbilitylist?.indexes
+          ?.map((index) => cognitiveAbillities.find((ca) => ca.index === index))
+          .filter((entry) => entry !== undefined)
+          .map((entry) => {
+            return entry.trait;
+          });
 
-        indexesnamelist = indexesnamelist.filter( Boolean );
-        console.log(indexesnamelist);
+        // indexesToTraits = indexesToTraits.filter(Boolean);
         //--------------------------------------------------THIS SHOUD BE CHANGE
 
         if (evaluation === undefined) return;
@@ -416,20 +412,71 @@ function Forms() {
           {
             id: task.position,
             image: taskInfo.picture_url || taskpic,
-            classification: evaluation.flag,
+            classification: TaskAbilitylist.flag,
             task: taskInfo.title,
             intervention: evaluation.intervention,
             Alternatives: evaluation.alternativeTaskId,
             explaination: evaluation.explanation,
-            TaskAbilitylist:indexesnamelist,
+            TaskAbilitylist: indexesToTraits,
             // Actions
           },
         ]);
       });
     }
-  }, [allFlags, allTasks, routesOfFlags]);
+  }, [allFlags, allTasks, cognitiveAbillities, routesOfFlags]);
 
   //end flags functions
+
+  // useEffect(() => {
+  //   if (Object.keys(routesOfFlags).length === 0) return;
+
+  //   // Convert arrays to objects for faster lookup
+  //   const flagsById = allFlags.reduce((obj, flag) => {
+  //     obj[flag.taskId] = flag;
+  //     return obj;
+  //   }, {});
+
+  //   const tasksById = allTasks.reduce((obj, task) => {
+  //     obj[task.id] = task;
+  //     return obj;
+  //   }, {});
+
+  //   routesOfFlags.tasks.forEach((task) => {
+  //     const evaluation = flagsById[task.taskId];
+  //     const taskInfo = tasksById[task.taskId];
+
+  //     if (!evaluation) return;
+
+  //     const TaskAbilitylist = predictionsMemo[task.taskId];
+  //     const indexesToTraits = TaskAbilitylist?.indexes
+  //       ?.map(
+  //         (index) => cognitiveAbillities.find((ca) => ca.index === index)?.trait
+  //       )
+  //       .filter(Boolean);
+
+  //     setRowsFlagsHE((prev) => [
+  //       ...prev,
+  //       {
+  //         id: task.position,
+  //         image: taskInfo.picture_url || taskpic,
+  //         classification: evaluation.flag,
+  //         task: taskInfo.title,
+  //         intervention: evaluation.intervention,
+  //         Alternatives: evaluation.alternativeTaskId,
+  //         explaination: evaluation.explanation,
+  //         TaskAbilitylist: indexesToTraits,
+  //       },
+  //     ]);
+  //   });
+  // }, [allFlags, allTasks, cognitiveAbillities, routesOfFlags]);
+
+  // // Memoize predictions for better performance
+  // const predictionsMemo = useMemo(() => {
+  //   return predictions.reduce((obj, prediction) => {
+  //     obj[prediction.taskid] = prediction;
+  //     return obj;
+  //   }, {});
+  // }, []);
 
   const validateExplaination = (value) => {
     if (value.length > 100) {
@@ -706,6 +753,27 @@ function Forms() {
       },
     },
     {
+      field: 'TaskAbility',
+      headerName: 'TaskAbility',
+      width: 300,
+      editable: false,
+      headerAlign: 'center',
+      align: 'center',
+      renderCell: (params) => (
+        <div style={{ textAlign: 'right', fontSize: '1rem' }}>
+          <Autocomplete
+            disablePortal
+            id='combo-box-demo'
+            options={params.row.TaskAbilitylist}
+            sx={{ width: 300 }}
+            renderInput={(params) => (
+              <TextField {...params} label='Task Ability list' />
+            )}
+          />
+        </div>
+      ),
+    },
+    {
       field: 'Alternatives',
       headerName: 'חלופה',
       width: 250,
@@ -746,25 +814,6 @@ function Forms() {
       ),
     },
     {
-      field: 'TaskAbility',
-      headerName: 'TaskAbility',
-      width: 300,
-      editable: false,
-      headerAlign: 'center',
-      align: 'center',
-      renderCell: (params) => (
-        <div style={{ textAlign: 'right', fontSize: '1rem' }}>
-          <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={params.row.TaskAbilitylist}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label="Task Ability list" />}
-          />
-        </div>
-      ),
-    },
-    {
       field: 'actions',
       headerName: 'אפשרויות',
       headerAlign: 'left',
@@ -797,11 +846,9 @@ function Forms() {
             showInMenu
           />
         );
-
         return actions;
       },
     },
-
   ]);
 
   const [columnsFlagsEN, setColumnsFlagsEN] = useState([
@@ -1797,8 +1844,9 @@ function Forms() {
       <div>
         <div>
           <button
-            className={`switch-button-forms ${language === 'hebrew' ? 'hebrew' : 'english'
-              }`}
+            className={`switch-button-forms ${
+              language === 'hebrew' ? 'hebrew' : 'english'
+            }`}
             onClick={() =>
               setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
             }
@@ -1869,8 +1917,8 @@ function Forms() {
                       // keepMounted={slide}
                       // transitionDuration={300}
                       disableEscapeKeyDown
-                    // style={{ direction: "rtl" }}
-                    // style={{ position: "absolute", top: "0", right: "0" }}
+                      // style={{ direction: "rtl" }}
+                      // style={{ position: "absolute", top: "0", right: "0" }}
                     >
                       <div
                         style={{

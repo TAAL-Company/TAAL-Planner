@@ -7,7 +7,12 @@ import Modal_Loading from './Modal_Loading';
 import CircularProgressWithLabel from './progressbar';
 import { baseUrl } from '../../config';
 import stopIcon from '../../Pictures/stopIcon.svg';
-import { uploadFile, insertStation, updateStation } from '../../api/api';
+import {
+  uploadFile,
+  insertStation,
+  updateStation,
+  uploadFiles,
+} from '../../api/api';
 
 //--------------------------
 // let getPicture, getSound;
@@ -93,21 +98,19 @@ const Modal_Stations = (props) => {
         props.setRequestForEditing('');
       }
     } else {
-      let imageData;
-      let audioData;
+      // let imageData;
+      // let audioData;
 
-      try {
-        if (picture) {
-          imageData = await uploadFile(picture, 'Image');
-          console.log(`Image uploaded successfully:`, imageData);
-        }
-        if (audio) {
-          audioData = await uploadFile(audio, 'Audio');
-          console.log(`Audio uploaded successfully:`, audioData);
-        }
-      } catch (error) {
-        console.error(error);
-      }
+      // try {
+      //   if (picture) {
+      //     imageData = await uploadFiles(picture, 'Station media');
+      //   }
+      //   if (audio) {
+      //     audioData = await uploadFiles(audio, 'Station media');
+      //   }
+      // } catch (error) {
+      //   console.error(error);
+      // }
 
       try {
         const post = await insertStation(
@@ -230,11 +233,11 @@ const Modal_Stations = (props) => {
                 </h6>
                 <div className='input-group mb-3'>
                   <input
-                    required={true}
+                    // required={true}
                     accept='.png, .jpg, .jpeg'
                     className='form-control'
                     type='file'
-                    onChange={(e) => setPicture(e.target.files[0])}
+                    // onChange={(e) => setPicture(e.target.files[0])}
                     style={{
                       width: '100%',
                       height: '38px',
@@ -262,11 +265,11 @@ const Modal_Stations = (props) => {
                 </h6>
                 <p>
                   <input
-                    required={true}
+                    // required={true}
                     accept='.mp3'
                     type='file'
                     className='form-control'
-                    onChange={(e) => setAudio(e.target.files[0])}
+                    // onChange={(e) => setAudio(e.target.files[0])}
                     style={{
                       width: '100%',
                       height: '38px',

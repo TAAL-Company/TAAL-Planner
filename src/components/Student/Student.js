@@ -123,7 +123,7 @@ const Cards = () => {
     } else {
       let picture_url;
       try {
-        if (picture) picture_url = await uploadFiles(picture, 'Worker media');
+        if (picture) picture_url = await uploadFiles(picture, 'Worker media');//await uploadImageGD(picture)
 
         const user = {
           email,

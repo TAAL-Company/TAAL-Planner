@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import "./Modal.css";
+import React, { useState, useEffect } from 'react';
+import './Modal.css';
 import {
   get,
   insertRoute,
   updateRoute,
   getingDataUsers,
   getingData_Users,
-} from "../../api/api";
-import { FcLink } from "react-icons/fc";
-import { BsExclamationLg } from "react-icons/bs";
-import Modal_Loading from "./Modal_Loading";
-import { baseUrl } from "../../config";
-import { RiAsterisk } from "react-icons/ri";
-import stopIcon from "../../Pictures/stopIcon.svg";
-import Modal_no_site_selected from "./Modal_no_site_selected";
+} from '../../api/api';
+import { FcLink } from 'react-icons/fc';
+import { BsExclamationLg } from 'react-icons/bs';
+import Modal_Loading from './Modal_Loading';
+import { baseUrl } from '../../config';
+import { RiAsterisk } from 'react-icons/ri';
+import stopIcon from '../../Pictures/stopIcon.svg';
+import Modal_no_site_selected from './Modal_no_site_selected';
 
 //--------------------------
 let obj = { tasks: [], users: [], mySite: [] };
@@ -36,14 +36,14 @@ function Modal({
   requestForEditing,
   newRoute,
 }) {
-  console.log("flagTest:", flagTest);
+  console.log('flagTest:', flagTest);
   const [obj, set_obj] = useState({
-    name: "",
+    name: '',
     studentIds: [],
     taskIds: [],
     siteIds: [],
   }); // for TextView
-  const [site, setSite] = useState(localStorage.getItem("MySite"));
+  const [site, setSite] = useState(localStorage.getItem('MySite'));
 
   const [, setDone] = useState(false);
   const [, setLoading] = useState(false);
@@ -70,7 +70,7 @@ function Modal({
     };
     fetchData();
 
-    console.log("Student", student);
+    console.log('Student', student);
   }, []);
 
   function Post_Route() {
@@ -81,12 +81,12 @@ function Modal({
     //     return
     // }
 
-    if (JSON.parse(localStorage.getItem("New_Routes")) === null) {
-      alert("Route is empty ! ");
+    if (JSON.parse(localStorage.getItem('New_Routes')) === null) {
+      alert('Route is empty ! ');
       return;
     } else {
       let taskIdList = [];
-      setSite(JSON.parse(localStorage.getItem("New_Routes")))
+      setSite(JSON.parse(localStorage.getItem('New_Routes')));
       tasksForNewRoute.map((task) => taskIdList.push(task.id));
       let studentIdList = [];
       myStudents.map((student) => studentIdList.push(student.id));
@@ -94,26 +94,27 @@ function Modal({
         name: routeTitle,
         studentIds: studentIdList,
         taskIds: taskIdList,
-        siteIds: [JSON.parse(localStorage.getItem("MySite")).id],
+        siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
       };
-      console.log("obj:", newRouteObj);
+      console.log('obj:', newRouteObj);
       // set_obj((obj.mySite = JSON.parse(localStorage.getItem("MySite"))));
       // console.log("obj.mySite:", obj.mySite.id);
 
-      console.log("tasksForNewRoute : ", tasksForNewRoute);
+      console.log('tasksForNewRoute : ', tasksForNewRoute);
 
       updateRoute(routeUUID, newRouteObj).then((data) => {
-        console.log("obj", data);
+        console.log('obj', data);
         setDone(true);
         setFlagClickOK((flagClickOK = false));
         // window.location.replace("/forms");
       });
+      setOpenModal(false);
     }
   }
   const saveCheckbox = (val) => {
     setMyStudents(myStudents.push(val));
     if (myStudents.length > 1) sortById();
-    console.log("myStudents", myStudents);
+    console.log('myStudents', myStudents);
     // console.log("myStudents:", myStudents);
   };
   const sortById = () => {
@@ -130,7 +131,7 @@ function Modal({
     }
   };
   const resultMyArrayStudent = () => {
-    console.log("myStudents:", myStudents);
+    console.log('myStudents:', myStudents);
     if (myStudents.length > 1)
       for (let i = 0; i < myStudents.length; i++) {
         let index = i;
@@ -159,30 +160,30 @@ function Modal({
   const handleSubmitRouteTitle = (event) => {
     event.preventDefault();
 
-    console.log("routeTitle", [JSON.parse(localStorage.getItem("MySite")).id]);
+    console.log('routeTitle', [JSON.parse(localStorage.getItem('MySite')).id]);
     setNewTitleForRoute(routeTitle);
 
     const routeData = {
       name: routeTitle,
-      siteIds: [JSON.parse(localStorage.getItem("MySite")).id],
+      siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
     };
 
-    console.log("routeData", routeData);
-    if (requestForEditing == "edit" || requestForEditing == "details") {
+    console.log('routeData', routeData);
+    if (requestForEditing == 'edit' || requestForEditing == 'details') {
       updateRoute(routeUUID, routeData).then((data) => {
-        console.log("data: ", data);
+        console.log('data: ', data);
         setNewRoute(data);
         // setNewTitleForRoute(data);
-        setRouteTitle("");
+        setRouteTitle('');
         // setFlagStudent(false);
         setOpenModal(false);
       });
     } else {
       insertRoute(routeData).then((data) => {
-        console.log("data: ", data);
+        console.log('data: ', data);
         setNewRoute(data);
         setNewTitleForRoute(data);
-        setRouteTitle("");
+        setRouteTitle('');
         setFlagStudent(false);
         setOpenModal(false);
       });
@@ -201,9 +202,9 @@ function Modal({
           {false ? (
             // setText === null || setText === ""
             <>
-              <div className="Background">
-                <div className="modalContainer">
-                  <div className="titleCloseBtn">
+              <div className='Background'>
+                <div className='modalContainer'>
+                  <div className='titleCloseBtn'>
                     <button
                       onClick={() => {
                         setOpenModal(false);
@@ -212,16 +213,16 @@ function Modal({
                       X
                     </button>
                   </div>
-                  <div className="title">
+                  <div className='title'>
                     <h3> Please type in the route name</h3>
                     <BsExclamationLg
-                      style={{ color: "red", fontSize: "80px" }}
+                      style={{ color: 'red', fontSize: '80px' }}
                     />
                   </div>
-                  <div className="body"></div>
-                  <div className="footer">
+                  <div className='body'></div>
+                  <div className='footer'>
                     <button
-                      className="cancelBtn"
+                      className='cancelBtn'
                       onClick={() => {
                         setOpenModal(false);
                       }}
@@ -233,66 +234,66 @@ function Modal({
               </div>
             </>
           ) : (
-            <div className="Background">
-              <div className="modalContainer">
+            <div className='Background'>
+              <div className='modalContainer'>
                 {setFlagStudent ? (
                   <>
-                    <div className="headerNewRoute">
-                      <div className="newRoutTitle"> שייך מסלול לעובד </div>
+                    <div className='headerNewRoute'>
+                      <div className='newRoutTitle'> שייך מסלול לעובד </div>
                     </div>
 
-                    <div className="AddStudentTitle">
+                    <div className='AddStudentTitle'>
                       &nbsp;&nbsp;
-                      <FcLink className="icon" />
+                      <FcLink className='icon' />
                     </div>
-                    <div className="allStudent">
+                    <div className='allStudent'>
                       {student.map((value, index) => {
                         return (
-                          <label key={index} className="list-group-item">
+                          <label key={index} className='list-group-item'>
                             <input
-                              style={{ marginLeft: "10px" }}
-                              dir="ltr"
+                              style={{ marginLeft: '10px' }}
+                              dir='ltr'
                               onChange={() => saveCheckbox(value)}
-                              className="form-check-input me-1"
-                              type="checkbox"
+                              className='form-check-input me-1'
+                              type='checkbox'
                               id={value.name}
                               name={value.name}
-                              value=""
+                              value=''
                             ></input>
                             {value.name}
                           </label>
                         );
                       })}
                     </div>
-                    <button className="saveAs" onClick={() => saveData()}>
-                      <div style={{ color: "white" }}>שייך</div>
+                    <button className='saveAs' onClick={() => saveData()}>
+                      <div style={{ color: 'white' }}>שייך</div>
                     </button>
 
-                    <button className="cancelSaveAs" onClick={() => saveData()}>
-                      {language !== "English" ? "Cancel" : "ביטול"}
+                    <button className='cancelSaveAs' onClick={() => saveData()}>
+                      {language !== 'English' ? 'Cancel' : 'ביטול'}
                     </button>
                   </>
                 ) : (
                   <>
-                    {" "}
-                    <div className="body">
+                    {' '}
+                    <div className='body'>
                       <h5>
-                        {language !== "English" ? "Save route" : "שמירת מסלול"}
+                        {language !== 'English' ? 'Save route' : 'שמירת מסלול'}
                       </h5>
                     </div>
-                    <div className="footer">
-                      <button className="continueBtn" onClick={Post_Route}>
-                        {language !== "English" ? "Save route" : "שמירת מסלול"}
+                    <div className='footer'>
+                      <button className='continueBtn' onClick={Post_Route}>
+                        {language !== 'English' ? 'Save route' : 'שמירת מסלול'}
                       </button>
                       &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
                       &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
                       <button
-                        className="cancelBtn"
+                        className='cancelBtn'
                         onClick={() => {
                           setOpenModal(false);
                         }}
                       >
-                        {language !== "English" ? "Cancel" : "ביטול"}
+                        {language !== 'English' ? 'Cancel' : 'ביטול'}
                       </button>
                       {flagClickOK ? (
                         <>
@@ -313,9 +314,9 @@ function Modal({
           {false ? (
             // setText === null || setText === ""
             <>
-              <div className="Background">
-                <div className="modalContainer">
-                  <div className="titleCloseBtn">
+              <div className='Background'>
+                <div className='modalContainer'>
+                  <div className='titleCloseBtn'>
                     <button
                       onClick={() => {
                         setOpenModal(false);
@@ -324,16 +325,16 @@ function Modal({
                       X
                     </button>
                   </div>
-                  <div className="title">
+                  <div className='title'>
                     <h3> Please type in the route name</h3>
                     <BsExclamationLg
-                      style={{ color: "red", fontSize: "80px" }}
+                      style={{ color: 'red', fontSize: '80px' }}
                     />
                   </div>
-                  <div className="body"></div>
-                  <div className="footer">
+                  <div className='body'></div>
+                  <div className='footer'>
                     <button
-                      className="cancelBtn"
+                      className='cancelBtn'
                       onClick={() => {
                         setOpenModal(false);
                       }}
@@ -345,11 +346,11 @@ function Modal({
               </div>
             </>
           ) : (
-            <div className="modalContainerNewRoute">
+            <div className='modalContainerNewRoute'>
               {!siteSelected ? (
                 <>
                   <Modal_no_site_selected
-                    styleTransform={{ transform: "translate(150%, 50%)" }}
+                    styleTransform={{ transform: 'translate(150%, 50%)' }}
                     setOpenModal={setOpenModal}
                   ></Modal_no_site_selected>
                 </>
@@ -357,97 +358,97 @@ function Modal({
                 <>
                   {setFlagStudent ? (
                     <>
-                      <div className="headerNewRoute">
+                      <div className='headerNewRoute'>
                         <div
-                          className="newRoutTitle"
+                          className='newRoutTitle'
                           style={{
                             textAlign:
-                              language === "English" ? "right" : "left",
+                              language === 'English' ? 'right' : 'left',
                           }}
                         >
-                          {language !== "English" ? "New route" : "מסלול חדש"}
+                          {language !== 'English' ? 'New route' : 'מסלול חדש'}
                         </div>
                       </div>
-                      <div className="newRouteBody">
+                      <div className='newRouteBody'>
                         <form
-                          id="IPU"
-                          className="w3-container"
+                          id='IPU'
+                          className='w3-container'
                           onSubmit={handleSubmitRouteTitle}
                         >
                           <div
-                            className="nameRoutTitle"
+                            className='nameRoutTitle'
                             style={{
                               textAlign:
-                                language === "English" ? "right" : "left",
+                                language === 'English' ? 'right' : 'left',
                             }}
                           >
-                            {language !== "English"
-                              ? "route name:"
-                              : ":שם המסלול"}
+                            {language !== 'English'
+                              ? 'route name:'
+                              : ':שם המסלול'}
                           </div>
                           <p>
                             <input
-                              dir="rtl"
-                              className="inputRouteName"
+                              dir='rtl'
+                              className='inputRouteName'
                               required={true}
-                              type="text"
+                              type='text'
                               // onChange={getName}
                               value={routeTitle}
                               onChange={(e) => setRouteTitle(e.target.value)}
                             ></input>
                           </p>
 
-                          <button type="submit" className="saveAs">
+                          <button type='submit' className='saveAs'>
                             {/* onClick={() => saveData()}> */}
-                            <div style={{ color: "white" }}>
-                              {language !== "English" ? "Save as" : "שמירה בשם"}
+                            <div style={{ color: 'white' }}>
+                              {language !== 'English' ? 'Save as' : 'שמירה בשם'}
                             </div>
                           </button>
 
                           <button
-                            className="cancelSaveAs"
+                            className='cancelSaveAs'
                             onClick={() => saveData()}
                           >
-                            {language !== "English" ? "Cancel" : "ביטול"}
+                            {language !== 'English' ? 'Cancel' : 'ביטול'}
                           </button>
                         </form>
                       </div>
                     </>
                   ) : (
                     <>
-                      {" "}
-                      <div className="headerNewRoute">
-                        <div className="newRoutTitle">
-                          {language !== "English"
-                            ? "save route"
-                            : "שמירת מסלול"}
+                      {' '}
+                      <div className='headerNewRoute'>
+                        <div className='newRoutTitle'>
+                          {language !== 'English'
+                            ? 'save route'
+                            : 'שמירת מסלול'}
                         </div>
                       </div>
-                      <div className="bodySaveRoute">
+                      <div className='bodySaveRoute'>
                         <div>:שם המסלול</div>
                         <input
-                          dir="rtl"
-                          className="inputRouteName"
+                          dir='rtl'
+                          className='inputRouteName'
                           required={true}
-                          type="text"
+                          type='text'
                           // onChange={getName}
                           value={routeTitle}
                           onChange={(e) => setRouteTitle(e.target.value)}
                         ></input>
                         <div>:שיוך חניך</div>
-                        <div className="allStudent">
+                        <div className='allStudent'>
                           {student.map((value, index) => {
                             return (
-                              <label key={index} className="list-group-item">
+                              <label key={index} className='list-group-item'>
                                 <input
-                                  dir="ltr"
-                                  style={{ marginLeft: "10px" }}
+                                  dir='ltr'
+                                  style={{ marginLeft: '10px' }}
                                   onChange={() => saveCheckbox(value)}
-                                  className="form-check-input me-1"
-                                  type="checkbox"
+                                  className='form-check-input me-1'
+                                  type='checkbox'
                                   id={value.name}
                                   name={value.name}
-                                  value=""
+                                  value=''
                                 ></input>
                                 {value.name}
                               </label>
@@ -455,18 +456,18 @@ function Modal({
                           })}
                         </div>
                       </div>
-                      <div className="footer">
-                        <button className="continueBtn" onClick={Post_Route}>
-                          {language !== "English" ? "Save route" : "שמור מסלול"}
+                      <div className='footer'>
+                        <button className='continueBtn' onClick={Post_Route}>
+                          {language !== 'English' ? 'Save route' : 'שמור מסלול'}
                         </button>
 
                         <button
-                          className="cancelBtn"
+                          className='cancelBtn'
                           onClick={() => {
                             setOpenModal(false);
                           }}
                         >
-                          {language !== "English" ? "Cancel" : "ביטול"}
+                          {language !== 'English' ? 'Cancel' : 'ביטול'}
                         </button>
                         {flagClickOK ? (
                           <>

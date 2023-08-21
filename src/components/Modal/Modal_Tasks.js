@@ -124,32 +124,39 @@ function Modal_Tasks(props) {
   const Post_Task = async (picture_url, audio_url) => {
     // resultMyPlacesChoice();
 
-    try {
-      const post = await insertTask(
-        get_title,
-        getDescription,
-        myPlacesChoice,
-        picture_url,
-        audio_url,
-        props.mySite.id
-      );
+    if (myPlacesChoice.length > 0) {
+      try {
+        const post = await insertTask(
+          get_title,
+          getDescription,
+          myPlacesChoice,
+          picture_url,
+          audio_url,
+          props.mySite.id
+        );
 
-      let color = props.allStations.find(
-        (item) => item.id === myPlacesChoice[0]
-      ).color;
+        // let color = props.allStations.find(
+        //   (item) => item.id === myPlacesChoice[0]
+        // ).color;
 
-      post.color = color;
-      props.setAllTasksOfTheSite((prev) => [...prev, post]);
+        // post.color = color;
+        props.setAllTasksOfTheSite((prev) => [...prev, post]);
 
-      setDone(true);
-      console.log('post Modale Tasks:', post);
+        setDone(true);
+        console.log('post Modale Tasks:', post);
 
+        setFlagClickOK(false);
+        props.setModalOpen(false);
+
+        console.log('insertTask: ', post);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      setDone(false);
       setFlagClickOK(false);
-      props.setModalOpen(false);
-
-      console.log('insertTask: ', post);
-    } catch (error) {
-      console.error(error);
+      alert('You must choose a station !');
+      props.setModalOpen(true);
     }
   };
   const saveCheckbox = (val) => {

@@ -330,7 +330,7 @@ const Places = (props) => {
       }
 
       let firstStationId;
-      let stationName = '';
+      let stationName;
       if (firstStation !== undefined) {
         firstStation.stations.map((station) => {
           console.log('!! station.parentSiteId: ', station.parentSiteId);
@@ -345,21 +345,21 @@ const Places = (props) => {
         setFirstStationName(stationName);
 
         //
-      }
+      } else setFirstStationName(undefined);
 
       console.log('!! firstStationName:', firstStationName);
 
       let prevStation = '';
 
-      let percentTemp = 50 / tasksOfRoutes.tasks.length;
+      let percentTemp = 50 / tasksOfRoutes?.tasks?.length;
 
       setBoardArrayDND(
-        tasksOfRoutes.tasks.map((element) => {
+        tasksOfRoutes?.tasks?.map((element) => {
           setPercentProgressBar(
             (percentProgressBar) => percentProgressBar + percentTemp
           );
           //allTasksOfTheSite
-          let taskTemp = allTasksOfTheSite.find(
+          let taskTemp = allTasksOfTheSite?.find(
             (item) => item.id === element.taskId
           );
           console.log('taskTemp: yyyyy', taskTemp);
@@ -696,7 +696,7 @@ const Places = (props) => {
     let route = filteredDataRoutes.find((route) => route.id === newRoute.id);
     console.log('route ', route);
 
-    if (Object.keys(newRoute).length > 0) {
+    if (Object.keys(newRoute)?.length > 0) {
       // filteredDataRoutes.push(newRoute);
       if (route !== undefined) {
         route.name = newRoute.name;

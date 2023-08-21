@@ -60,6 +60,9 @@ function Modal_Tasks(props) {
 
     if (get_title === '' || getDescription === '') {
       alert('עליך למלא שדות חובה המסומנים בכוכבית');
+      setDone(false);
+      setFlagClickOK(false);
+      props.setModalOpen(true);
     } else {
       let picture_url;
       let audio_url;
@@ -135,11 +138,11 @@ function Modal_Tasks(props) {
           props.mySite.id
         );
 
-        // let color = props.allStations.find(
-        //   (item) => item.id === myPlacesChoice[0]
-        // ).color;
+        let color = props.allStations.find(
+          (item) => item.id === myPlacesChoice[0]
+        ).color;
 
-        // post.color = color;
+        post.color = color;
         props.setAllTasksOfTheSite((prev) => [...prev, post]);
 
         setDone(true);

@@ -150,9 +150,10 @@ const Cards = () => {
             data.picture_url = user.picture_url;
             updateUser(data.id, data).then((updatedUser) => {
               setUsers((prev) => [updatedUser.data, ...prev]);
+              setupdateAdd(true);
             });
           });
-          setupdateAdd(true);
+          setupdateAdd(false);
         }
       } catch (error) {
         console.error(error);
@@ -168,7 +169,7 @@ const Cards = () => {
     };
 
     fetchData();
-    // console.log("usersData", usersData);
+    // console.log("khalid -- usersData", users);
   }, [updateAdd]);
 
   const clickOnhreeDotsVerticaIcont = (value) => {

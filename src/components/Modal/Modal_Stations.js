@@ -72,6 +72,8 @@ const Modal_Stations = (props) => {
     console.log('props.stationUUId', stationUUId);
 
     if (get_title === '' || getDescription === '') {
+      setFlagClickOK((flagClickOK = false));
+      setDone(false);
       alert('עליך למלא שדות חובה המסומנים בכוכבית');
     } else if (
       props.requestForEditing === 'edit' ||

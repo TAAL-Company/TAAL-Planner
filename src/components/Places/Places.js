@@ -745,6 +745,13 @@ const Places = (props) => {
       })
     );
   };
+  const [taskcolor, settaskcolor] = useState('');
+  const handleColor = color => {
+    // 👇️ take the parameter passed from the Child component
+    settaskcolor(color);
+
+    console.log('khalid - argument from Child: ', taskcolor);
+  };
 
   useEffect(() => {
     searchRoute();
@@ -960,6 +967,7 @@ const Places = (props) => {
             setTasksOfChosenStation={setTasksOfChosenStation}
             setChosenStation={setChosenStation}
             chosenStation={chosenStation}
+            settaskcolor={handleColor} //khalid color משימות
           />
           <Tasks
             setDropToBoard={setDropToBoard}
@@ -974,6 +982,7 @@ const Places = (props) => {
             chosenStation={chosenStation}
             stationArray={stationArray}
             mySite={mySite}
+            color={taskcolor} //khalid color משימות
           />
         </DragDropContext>
       </div>

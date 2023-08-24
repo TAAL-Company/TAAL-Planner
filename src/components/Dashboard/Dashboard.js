@@ -2,7 +2,12 @@ import React from 'react';
 import './style.css';
 // import Navbar from "../Navbar/Navbar";
 import CardDash from '../CardDash/CardDash';
-import pic from '../../Pictures/picture_logo.png';
+import location from '../../Pictures/location.svg';
+import route from '../../Pictures/route.svg';
+import group from '../../Pictures/Group.svg';
+import kashrut from '../../Pictures/הכשרות.svg';
+import Professions from '../../Pictures/Professions.svg';
+import pic from '../../Pictures/defualtSiteImg.svg';
 
 const Dashboard = () => {
   const cards = [
@@ -10,25 +15,31 @@ const Dashboard = () => {
       id: 1,
       headline: 'אתרים',
       addLabel: 'הוספת אתר',
-      image: pic,
+      image: location,
     },
     {
       id: 2,
       headline: 'עובדים',
       addLabel: 'הוספת חניך',
-      image: pic,
+      image: group,
+    },
+    {
+      id: 7,
+      headline: 'הכשרות',
+      addLabel: 'הוספת חניך',
+      image: kashrut,
     },
     {
       id: 3,
       headline: 'מסלולים',
       addLabel: 'הוספת מסלול',
-      image: pic,
+      image: route,
     },
     {
       id: 4,
       headline: 'מקצועות',
       addLabel: 'הוספת מקצוע',
-      image: pic,
+      image: Professions,
     },
     {
       id: 5,
@@ -51,16 +62,22 @@ const Dashboard = () => {
         <div className='left'>Dashboards</div>
         <div className='right'>
           <div className='cardsLine'>
-            <CardDash cards={cards[0]} />
+            <CardDash cards={cards[2]} />
             <CardDash cards={cards[1]} />
           </div>
           <div className='cardsLine'>
-            <CardDash cards={cards[2]} />
             <CardDash cards={cards[3]} />
+            <CardDash cards={cards[0]} />
           </div>
           <div className='cardsLine'>
-            <CardDash cards={cards[4]} />
             <CardDash cards={cards[5]} />
+            <CardDash cards={cards[4]} />
+          </div>
+          <div
+            className='cardsLine'
+            style={{ position: 'absolute', top: '780px', right: '122px' }}
+          >
+            <CardDash cards={cards[6]} />
           </div>
         </div>
       </div>

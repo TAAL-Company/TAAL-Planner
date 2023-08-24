@@ -45,12 +45,11 @@
 }
 
 .TitleStation {
-  background: #CC0127;
+  background: #cc0127;
   color: white;
   height: 48px;
   border-radius: 4px 4px 0px 0px;
 }
-
 
 .force-overflow {
   min-height: 450px;

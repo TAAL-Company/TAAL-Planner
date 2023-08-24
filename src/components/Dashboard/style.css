@@ -1,9 +1,10 @@
 .content {
   margin-top: -1px;
-  height: 90.9vh;
+  /* height: 90.9vh; */
   display: flex;
   flex-direction: row;
-  background-color: white;
+  background: #f0f2f4 0% 0% no-repeat padding-box;
+  opacity: 1;
 }
 
 .navbar {
@@ -66,17 +67,22 @@
   justify-content: center;
   flex-direction: column;
   width: 45vw;
-  background-color: rgb(239, 246, 255);
+  /* background-color: rgb(239, 246, 255); */
+  background: #ffffff 0% 0% no-repeat padding-box;
+  opacity: 1;
 }
 
 .content .right {
   display: flex;
+  height: 82.6vh;
   align-items: center;
   flex-direction: column;
   margin-top: 100px;
   width: 55vw;
   gap: 80px;
-  background-color: white;
+  /* background-color: white; */
+  background: #f0f2f4 0% 0% no-repeat padding-box;
+  opacity: 1;
 }
 
 .cardsLine {

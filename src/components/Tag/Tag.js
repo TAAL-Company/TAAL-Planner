@@ -253,7 +253,7 @@ function Tag({
                     <></>
                   )}
                 </div>
-                <div className='nameOfTask'> {title}</div>
+                <div  style={{marginRight:'15px'}} className='nameOfTask'> {title}</div>
               </div>
             </>
           ) : (

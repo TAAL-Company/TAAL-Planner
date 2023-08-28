@@ -352,7 +352,7 @@ function Forms() {
   };
 
   const handleChangeRouteFlags = async (event, value) => {
-    console.log("khalid ++ vvvv"+JSON.stringify(value));
+    console.log("khalid ++ vvvv" + JSON.stringify(value));
     setRroutenewName(value.name)
 
     const route = allRoutes.find((route) => route.id === value.id);
@@ -396,8 +396,8 @@ function Forms() {
         //TaskAbilitylist //---------------------------------THIS SHOUD BE CHANGE
         const TaskAbilitylist = predictions.find(
           (prediction) =>
-            prediction.taskid === task.taskId && prediction.studentid === 'TW3'
-        ); // && prediction.studentid === evaluation.studentId
+            prediction.taskid === task.taskId && prediction.studentid === evaluation.studentId
+        ); //&& prediction.studentid === 'TW3'
         console.log('TaskAbilitylist - ' + JSON.stringify(TaskAbilitylist));
         console.log('evaluation:', evaluation);
         const indexesToTraits = TaskAbilitylist?.indexes
@@ -1849,9 +1849,8 @@ function Forms() {
       <div>
         <div>
           <button
-            className={`switch-button-forms ${
-              language === 'hebrew' ? 'hebrew' : 'english'
-            }`}
+            className={`switch-button-forms ${language === 'hebrew' ? 'hebrew' : 'english'
+              }`}
             onClick={() =>
               setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
             }
@@ -1922,8 +1921,8 @@ function Forms() {
                       // keepMounted={slide}
                       // transitionDuration={300}
                       disableEscapeKeyDown
-                      // style={{ direction: "rtl" }}
-                      // style={{ position: "absolute", top: "0", right: "0" }}
+                    // style={{ direction: "rtl" }}
+                    // style={{ position: "absolute", top: "0", right: "0" }}
                     >
                       <div
                         style={{

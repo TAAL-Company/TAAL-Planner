@@ -393,14 +393,14 @@ function Forms() {
         let evaluation = allFlags.find((flag) => flag.taskId === task.taskId);
         let taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
 
-        //TaskAbilitylist //---------------------------------THIS SHOUD BE CHANGE
-        const TaskAbilitylist = predictions.find( (prediction) =>
+        //TaskAbilityList //---------------------------------THIS SHOUD BE CHANGE
+        const TaskAbilityList = predictions.find( (prediction) =>
             prediction.taskid === task.taskId && prediction.studentid === evaluation.studentId
         ); //&& prediction.studentid === 'TW3'
-        console.log('kh - TaskAbilitylist - ' + JSON.stringify(TaskAbilitylist));
+        console.log('kh - TaskAbilityList - ' + JSON.stringify(TaskAbilityList));
         console.log('kh - evaluation:', evaluation);
-        const indexesToTraits = TaskAbilitylist?.indexes?.map((index) => cognitiveAbillities.find((ca) => ca.index === index)).filter((entry) => entry !== undefined).map((entry) => {return entry.trait;});
-        indexesToTraits = indexesToTraits.filter(Boolean);
+        const IndexesToTraits = TaskAbilityList?.indexes?.map((index) => cognitiveAbillities.find((ca) => ca.index === index)).filter((entry) => entry !== undefined).map((entry) => {return entry.trait;});
+        IndexesToTraits = IndexesToTraits.filter(Boolean);
         //--------------------------------------------------THIS SHOUD BE CHANGE
 
         if (evaluation === undefined) return;
@@ -410,12 +410,12 @@ function Forms() {
           {
             id: task.position,
             image: taskInfo.picture_url || taskpic,
-            classification: TaskAbilitylist.flag,
+            classification: TaskAbilityList.flag,
             task: taskInfo.title,
             intervention: evaluation.intervention,
             Alternatives: evaluation.alternativeTaskId,
             explaination: evaluation.explanation,
-            TaskAbilitylist: indexesToTraits,
+            TaskAbilitylist: IndexesToTraits,
             // Actions
           },
         ]);

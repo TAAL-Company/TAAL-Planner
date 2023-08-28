@@ -2,18 +2,24 @@
   width: 300px;
   height: 125px;
   border-bottom: 1px solid #fafafa;
-  box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 1px 3px 5px rgba(0, 0, 0, 0.1); */
   position: relative;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  box-shadow: 0px 1px 4px #15223233;
+  opacity: 1;
 }
 
 .CardDash .headline {
   position: absolute;
   top: 35%;
   width: 100%;
-  text-align: center;
   font-size: 20px;
   font-weight: bolder;
-  color: black;
+  text-align: center;
+  font: normal normal bold 20px/12px Arial;
+  letter-spacing: 0px;
+  color: #707070;
+  opacity: 1;
 }
 
 .CardDash .add {
@@ -24,24 +30,37 @@
   left: 16px;
   font-size: 18px;
   text-decoration: none;
+  text-align: center;
+  font: normal normal bold 18px/12px Arial;
+  letter-spacing: 0px;
+  color: #a3a3a3;
+  opacity: 1;
+}
+
+.CardDash .plus {
+  width: 30px;
+  height: 15px;
+  /* UI Properties */
+  color: #0d4264;
+  opacity: 1;
 }
 
 .CardDash .image_background {
-  width: 70px;
-  height: 70px;
+  /* width: 65px; */
+  /* height: 65px; */
   border-radius: 50%;
   position: absolute;
-  background-color: rgb(216, 216, 216);
+  background-color: #0d4264;
   top: 15%;
   left: 70%;
 }
 
 .CardDash .cardPhoto {
-  width: 45px;
-  height: 45px;
+  width: 65px;
+  height: 65px;
   position: absolute;
-  top: 18%;
-  left: 18%;
+  top: 5%;
+  left: 5%;
 }
 
 .add {

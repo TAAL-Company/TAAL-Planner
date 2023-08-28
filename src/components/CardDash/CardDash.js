@@ -12,7 +12,6 @@ const CardDash = (props) => {
   const history = useHistory();
 
   const handleAddLink = (id) => {
-    console.log('done add link');
     if (id === 1) {
       history.replace('/places');
     } else if (id === 2) {
@@ -54,13 +53,7 @@ const CardDash = (props) => {
       </Link>
       <Link className='add' onClick={() => handleAddLink(props.cards.id)}>
         {addLabel}
-        <AiOutlinePlus
-          style={{
-            marginTop: '6px',
-            marginLeft: '5px',
-            fill: 'rgb(116, 172, 255)',
-          }}
-        />
+        <AiOutlinePlus className='plus' />
       </Link>
     </div>
   );

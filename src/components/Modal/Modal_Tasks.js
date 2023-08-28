@@ -60,6 +60,9 @@ function Modal_Tasks(props) {
 
     if (get_title === '' || getDescription === '') {
       alert('עליך למלא שדות חובה המסומנים בכוכבית');
+      setDone(false);
+      setFlagClickOK(false);
+      props.setModalOpen(true);
     } else {
       let picture_url;
       let audio_url;
@@ -159,12 +162,25 @@ function Modal_Tasks(props) {
       props.setModalOpen(true);
     }
   };
+  // const saveCheckbox = (val) => {
+  //   // console.log(val)
+  //   setMyPlacesChoice((prev) => [...prev, val.id]);
+  //   // setMyStudents(myStudents.push(val))
+  //   // sortById();
+  // };
+
   const saveCheckbox = (val) => {
-    // console.log(val)
-    setMyPlacesChoice((prev) => [...prev, val.id]);
-    // setMyStudents(myStudents.push(val))
-    // sortById();
+    setMyPlacesChoice((prev) => {
+      if (prev.includes(val.id)) {
+        // If ID is already in the array, remove it
+        return prev.filter((id) => id !== val.id);
+      } else {
+        // If ID is not in the array, add it
+        return [...prev, val.id];
+      }
+    });
   };
+
   useEffect(() => {
     console.log('myPlacesChoice:', myPlacesChoice);
   }, [myPlacesChoice]);

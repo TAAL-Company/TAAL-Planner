@@ -1,71 +1,72 @@
 .nav {
-
-    color: white;
-    background-color: #256FA1;
-    height: 74px;
-    /* background-color: rgba(37,47,57,.9); */
+  color: white;
+  background-color: #0d4264;
+  height: 74px;
+  /* background-color: rgba(37,47,57,.9); */
 }
 
 .logo {
-    height: 10vh;
-    width: 20vh;
+  height: 10vh;
+  width: 20vh;
 }
 
 .nav-links {
-    /* width: 80%; */
-    flex-basis: 80%;
-    display: flex;
-    /* justify-content: space-around; */
-    align-items: center;
-    /* list-style: none; */
-    /* margin: 48px; */
-    /* margin-top: -71px; */
-    margin: 0;
-    height: 100%;
+  /* width: 80%; */
+  flex-basis: 80%;
+  display: flex;
+  /* justify-content: space-around; */
+  align-items: center;
+  /* list-style: none; */
+  /* margin: 48px; */
+  /* margin-top: -71px; */
+  margin: 0;
+  height: 100%;
 }
 
 .home {
-    width: 51px;
-    height: 35px;
-    background: transparent url('../../Pictures/ic_home.svg') 0% 0% no-repeat padding-box;
-    /* border: 0px solid white; */
-    /* position: relative; */
-    /* top: 12px;
+  width: 51px;
+  height: 35px;
+  background: transparent url('../../Pictures/ic_home.svg') 0% 0% no-repeat
+    padding-box;
+  /* border: 0px solid white; */
+  /* position: relative; */
+  /* top: 12px;
     margin-left: -583px; */
 }
 
 .link {
-    color: rgb(255, 255, 255);
-    text-decoration: none;
+  color: rgb(255, 255, 255);
+  text-decoration: none;
 }
 
 .link :hover {
-    color: #7ec287;
-    text-decoration: none;
+  color: #7ec287;
+  text-decoration: none;
 }
 
 .UserIcon {
-    font-size: 40px;
+  font-size: 40px;
 }
 
 .myUser {
-    /* width: 67px; */
-    height: 100%;
-    background: transparent url('../../Pictures/logo_Taal.svg') 0% 0% no-repeat padding-box;
-    opacity: 1;
-    /* position: relative; */
-    /* bottom: 18px; */
-    /* left: 79px; */
-    flex-basis: 10%;
-    /* align-self: center; */
-    background-position: center;
+  /* width: 67px; */
+  height: 100%;
+  background: transparent url('../../Pictures/logo_Taal.svg') 0% 0% no-repeat
+    padding-box;
+  opacity: 1;
+  /* position: relative; */
+  /* bottom: 18px; */
+  /* left: 79px; */
+  flex-basis: 10%;
+  /* align-self: center; */
+  background-position: center;
 }
 
 .userName {
-    position: relative;
-    /* top: 14px; */
-    /* left: 67px; */
-    flex-basis: 10%;
-    align-self: center;
-    text-align: right;
+  position: relative;
+  /* top: 14px; */
+  /* left: 67px; */
+  flex-basis: 10%;
+  align-self: center;
+  text-align: right;
 }

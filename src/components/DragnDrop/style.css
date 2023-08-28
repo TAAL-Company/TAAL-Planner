@@ -2,7 +2,7 @@
   left: 0px;
   width: 400px;
   height: 100vw;
-  background: #F5F5F5 0% 0% no-repeat padding-box;
+  background: #f5f5f5 0% 0% no-repeat padding-box;
   opacity: 1;
   top: 0;
   position: absolute;
@@ -19,7 +19,7 @@
   justify-content: start;
 }
 .TitleTasks {
-  background: #E8B221;
+  background: #e8b221;
   height: 48px;
   border-radius: 4px 4px 0px 0px;
   color: white;
@@ -43,7 +43,7 @@
 
 .icon {
   font-size: 20px;
-  color: #256FA1;
+  color: #256fa1;
   top: 166px;
   left: 1572px;
   width: 24px;
@@ -54,7 +54,8 @@
 .tree {
   width: 63px;
   height: 54px;
-  background: transparent url('../../Pictures/ic_tree.svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/ic_tree.svg') 0% 0% no-repeat
+    padding-box;
   border: 0px solid white;
   align-self: center;
   background-position: center;
@@ -64,7 +65,8 @@
 .watch {
   width: 62px;
   height: 54px;
-  background: transparent url('../../Pictures/ic_watch.svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/ic_watch.svg') 0% 0% no-repeat
+    padding-box;
   border: none;
   align-self: center;
   align-self: center;
@@ -75,7 +77,8 @@
 .phone {
   width: 63px;
   height: 54px;
-  background: transparent url('../../Pictures/Ic_phone.svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/Ic_phone.svg') 0% 0% no-repeat
+    padding-box;
   border: 0px solid white;
   align-self: center;
   align-self: center;
@@ -119,17 +122,18 @@
 
 .hederPhone {
   height: 98px;
-  background: transparent url('../../Pictures/headerPhone.svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/headerPhone.svg') 0% 0% no-repeat
+    padding-box;
   top: -23.5px;
   margin-left: -26px;
   position: relative;
   width: 252px;
 }
 
-
 .cellInfo {
   height: 20px;
-  background: transparent url('../../Pictures/Cell_info.svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/Cell_info.svg') 0% 0% no-repeat
+    padding-box;
   position: relative;
   left: -17px;
   width: 260px;
@@ -140,7 +144,8 @@
   border: none;
   height: 45px;
   width: 40px;
-  background: transparent url('../../Pictures/ic_stress.svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/ic_stress.svg') 0% 0% no-repeat
+    padding-box;
   position: relative;
   top: 52px;
   left: 12px;
@@ -150,7 +155,8 @@
   border: none;
   height: 51px;
   width: 40px;
-  background: transparent url('../../Pictures/gray\ stress.svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/gray\ stress.svg') 0% 0% no-repeat
+    padding-box;
   position: relative;
   top: 52px;
   left: 12px;
@@ -159,7 +165,8 @@
 .tablet {
   width: 63px;
   height: 54px;
-  background: transparent url('../../Pictures/Ic_tablet.svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/Ic_tablet.svg') 0% 0% no-repeat
+    padding-box;
   border: 0px solid white;
   opacity: 1;
   align-self: center;
@@ -170,7 +177,8 @@
 .reorder {
   width: 63px;
   height: 54px;
-  background: transparent url('../../Pictures/ic_reorder.svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/ic_reorder.svg') 0% 0% no-repeat
+    padding-box;
   border: 0px solid white;
   align-self: center;
   background-position: center;
@@ -179,13 +187,14 @@
 .computer {
   width: 63px;
   height: 54px;
-  background: transparent url('../../Pictures/ic_computer.svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/ic_computer.svg') 0% 0% no-repeat
+    padding-box;
   border: 0px solid white;
   align-self: center;
   background-position: center;
 }
 .active {
-  border-bottom: 4px solid #256FA1;
+  border-bottom: 4px solid #256fa1;
 }
 .kavIconsTree {
   border-left: 2px solid #c2bfbf;
@@ -265,7 +274,7 @@
   margin: 20px;
   padding: 20px;
   justify-content: right;
-  justify-Content: 'space-between';
+  justify-content: 'space-between';
   margin-right: 50px;
   border-radius: 1.5ch;
   color: rgb(90, 107, 122);
@@ -279,13 +288,13 @@
   position: relative;
   left: 40px; */
 
-  background: #256FA1;
+  background: #256fa1;
   margin-top: 20px;
   border-radius: 4px;
   color: white;
   font-size: 18px;
   box-shadow: 0px 3px 6px #0000004d;
-  border: 2px solid #256FA1;
+  border: 2px solid #256fa1;
 }
 
 .AddTasks:hover {
@@ -295,8 +304,8 @@
 .MyTasks {
   width: 313px;
   height: 535px;
-  background: #FFFFFF 0% 0% no-repeat padding-box;
-  border: 1px solid #6A6865;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #6a6865;
   border-radius: 0px 0px 6px 6px;
   opacity: 1;
   /* margin-left: 43px; */
@@ -334,19 +343,19 @@
 }
 
 .my_Buttons_icons {
-    width: 313px;
-    height: 54px;
-    background: #FFFFFF 0% 0% no-repeat padding-box;
-    border: 1px solid #6A6865;
-    opacity: 1;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    flex-direction: row-reverse;
+  width: 313px;
+  height: 54px;
+  background: #ffffff 0% 0% no-repeat padding-box;
+  border: 1px solid #6a6865;
+  opacity: 1;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-direction: row-reverse;
 }
 
 .my_Buttons_icons.english {
-    flex-direction: row;
+  flex-direction: row;
 }
 /* span {
 
@@ -362,7 +371,7 @@
   }
 
   100% {
-    opacity: .999;
+    opacity: 0.999;
   }
 }
 
@@ -375,11 +384,11 @@
   right: 36px; */
   font-size: large;
   border-radius: 4px 4px 0px 0px;
-  background: #256FA1;
+  background: #256fa1;
   width: 313px;
   margin-top: 20px;
 }
-.txt.english{
+.txt.english {
   text-align: left;
   padding-left: 12px;
 }
@@ -419,7 +428,7 @@
 }
 
 .textStress {
-  color: #9B9B9B;
+  color: #9b9b9b;
   text-align: right;
   font-size: 13px;
 }
@@ -444,7 +453,7 @@
 }
 
 .redCoverPhoneStress {
-  background-color: #D81F35;
+  background-color: #d81f35;
   width: 115px;
   height: 81px;
   margin-left: 11.5px;
@@ -453,7 +462,7 @@
 }
 
 .greenCoverPhoneStress {
-  background-color: #11B911;
+  background-color: #11b911;
   width: 115px;
   height: 81px;
   margin-left: 136.5px;
@@ -462,7 +471,7 @@
 }
 
 .currentLocation {
-  color: #9B9B9B;
+  color: #9b9b9b;
   font-size: 17px;
   margin-left: 87px;
   position: relative;
@@ -520,7 +529,8 @@
   border: none;
   height: 57.2px;
   width: 56px;
-  background: transparent url('../../Pictures/Ic_need\ help.svg') 0% 0% no-repeat padding-box;
+  background: transparent url('../../Pictures/Ic_need\ help.svg') 0% 0%
+    no-repeat padding-box;
   position: relative;
   top: 1px;
   left: 36px;
@@ -535,7 +545,6 @@
 
 .MyTasks::-webkit-scrollbar {
   width: 10px;
-
 }
 
 .MyTasks::-webkit-scrollbar-thumb {

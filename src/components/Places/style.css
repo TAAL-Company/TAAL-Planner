@@ -66,7 +66,7 @@
 .eyeIcon {
   width: 66px;
   height: 24px;
-  background: transparent url("../../Pictures/ic_duplicate.svg") 0% 0% no-repeat
+  background: transparent url('../../Pictures/ic_duplicate.svg') 0% 0% no-repeat
     padding-box;
   opacity: 1;
   position: relative;
@@ -115,8 +115,9 @@
 
 .mainRectangles {
   display: flex;
-  justify-content: end;
-  padding-right: 40px;
+  /* justify-content: end; */
+  /* padding-right: 40px; */
+  margin-right: 20px;
   padding-left: 40px;
   flex-direction: row-reverse;
   gap: 1%;
@@ -267,7 +268,7 @@ h3 {
   border-radius: 21px;
   border: #dde2fa;
   /* margin-right: 19px; */
-  background-image: url("../../Pictures/Search.svg");
+  background-image: url('../../Pictures/Search.svg');
   background-position: 202px 5px;
   padding: 12px 50px 12px 40px;
   font-size: 12px;

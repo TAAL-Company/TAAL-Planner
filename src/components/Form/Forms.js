@@ -394,20 +394,13 @@ function Forms() {
         let taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
 
         //TaskAbilitylist //---------------------------------THIS SHOUD BE CHANGE
-        const TaskAbilitylist = predictions.find(
-          (prediction) =>
+        const TaskAbilitylist = predictions.find( (prediction) =>
             prediction.taskid === task.taskId && prediction.studentid === evaluation.studentId
         ); //&& prediction.studentid === 'TW3'
-        console.log('TaskAbilitylist - ' + JSON.stringify(TaskAbilitylist));
-        console.log('evaluation:', evaluation);
-        const indexesToTraits = TaskAbilitylist?.indexes
-          ?.map((index) => cognitiveAbillities.find((ca) => ca.index === index))
-          .filter((entry) => entry !== undefined)
-          .map((entry) => {
-            return entry.trait;
-          });
-
-        // indexesToTraits = indexesToTraits.filter(Boolean);
+        console.log('kh - TaskAbilitylist - ' + JSON.stringify(TaskAbilitylist));
+        console.log('kh - evaluation:', evaluation);
+        const indexesToTraits = TaskAbilitylist?.indexes?.map((index) => cognitiveAbillities.find((ca) => ca.index === index)).filter((entry) => entry !== undefined).map((entry) => {return entry.trait;});
+        indexesToTraits = indexesToTraits.filter(Boolean);
         //--------------------------------------------------THIS SHOUD BE CHANGE
 
         if (evaluation === undefined) return;

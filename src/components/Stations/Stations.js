@@ -43,6 +43,7 @@ const Stations = (props) => {
   const [tasksOfChosenStation, setTasksOfChosenStation] = useState([]);
   const [stationForDelete, setStationForDelete] = useState('');
   const [stationForEdit, setStationForEdit] = useState('');
+  const [dpcolor, setdpcolor] = useState('');
 
   useEffect(() => {
     console.log('stations requestForEditing: ', requestForEditing);
@@ -223,9 +224,8 @@ const Stations = (props) => {
             <>
               <div className='TitleStation'>
                 <div
-                  className={`MyTitle text ${
-                    props.language !== 'English' ? 'english' : ''
-                  }`}
+                  className={`MyTitle text ${props.language !== 'English' ? 'english' : ''
+                    }`}
                 >
                   {' '}
                   {props.stationsName}
@@ -264,7 +264,10 @@ const Stations = (props) => {
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                         >
-                          {filteredData.map(({ id, title, color }, index) => {
+                          {filteredData.map(({ id, title, color }, index) => {//khalid idies color
+                            console.log("khalid - title : " + title + " - color :" + color);
+                            // props.settaskcolor(color)//khalid idies color
+                            // setdpcolor(color)
                             let ID = '' + id;
                             console.log('id: ', typeof ID);
 
@@ -336,8 +339,12 @@ const Stations = (props) => {
                                       </div>
                                       <button
                                         className='nameOfButton'
-                                        onClick={() =>
+                                        onClick={() => {
                                           Display_The_Tasks(id, title)
+                                          props.settaskcolor(color)//khalid idies color
+                                          setdpcolor(color)
+                                        }
+
                                         }
                                       >
                                         {title}
@@ -410,6 +417,7 @@ const Stations = (props) => {
             hebrew={props.hebrew}
             english={props.english}
             Hebrew={props.Hebrew}
+            stationColor={dpcolor}
           />
           {/* </DndProvider> */}
         </>

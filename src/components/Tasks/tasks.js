@@ -182,9 +182,8 @@ const Tasks = (props) => {
     <div className='Cover_Tasks'>
       <div className='TitleTasks'>
         <div
-          className={`MyTitle text ${
-            props.language !== 'English' ? 'english' : ''
-          }`}
+          className={`MyTitle text ${props.language !== 'English' ? 'english' : ''
+            }`}
         >
           {props.myTasks}
         </div>
@@ -209,7 +208,7 @@ const Tasks = (props) => {
       {/* המשימות */}
       <div className='TasksCover'>
         {props.tasksOfChosenStation.length === 0 ||
-        props.chosenStation.length === 0 ? (
+          props.chosenStation.length === 0 ? (
           <div
             className='textBeforeStation'
             style={{ backgroundImage: `url(${textArea})` }}
@@ -257,12 +256,13 @@ const Tasks = (props) => {
                             data={tag.data}
                             dragFromCover={'TasksNew'}
                             language={props.language}
+                            stationColor={props.color} //khalid color
                             openThreeDotsVertical={openThreeDotsVertical}
                             setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                             requestForEditing={requestForEditing}
                             setRequestForEditing={setRequestForEditing}
                             requestForEditingBoard={requestForEditing}
-                            // setRequestForEditingBoard={setRequestForEditingBoard}
+                          // setRequestForEditingBoard={setRequestForEditingBoard}
                           />
                         </div>
                       )}
@@ -309,22 +309,22 @@ const Tasks = (props) => {
           title={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVertical
-                ).title
+                (task) => task.id === openThreeDotsVertical
+              ).title
               : ''
           }
           subtitle={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVertical
-                ).subtitle
+                (task) => task.id === openThreeDotsVertical
+              ).subtitle
               : ''
           }
           stationOfTask={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVertical
-                ).stations
+                (task) => task.id === openThreeDotsVertical
+              ).stations
               : ''
           }
         />

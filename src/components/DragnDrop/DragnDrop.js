@@ -278,7 +278,7 @@ function DragnDrop(props) {
       kavTopWidth: kavTopWidth,
       newKavTaskTop: newkavTaskTop,
       dataImg: element.picture_url,
-      color: element.color,
+      color: props.stationColor,
     };
   };
 
@@ -501,7 +501,7 @@ function DragnDrop(props) {
         <>
           <div
             className={`Board ${props.language !== 'English' ? 'english' : ''}`}
-            // ref={drop}
+          // ref={drop}
           >
             <div className='topButtons'>
               <button
@@ -545,9 +545,8 @@ function DragnDrop(props) {
                                 <button className='computer'></button>
                             </div> */}
             <div
-              className={`my_Buttons_icons ${
-                props.language !== 'English' ? 'english' : ''
-              }`}
+              className={`my_Buttons_icons ${props.language !== 'English' ? 'english' : ''
+                }`}
             >
               <button
                 className={
@@ -605,14 +604,12 @@ function DragnDrop(props) {
                       {board !== undefined && board.length !== 0 ? (
                         <>
                           <div
-                            className={`kavT ${
-                              props.language !== 'English' ? 'english' : ''
-                            }`}
+                            className={`kavT ${props.language !== 'English' ? 'english' : ''
+                              }`}
                           ></div>
                           <div
-                            className={`mySiteChois ${
-                              props.language !== 'English' ? 'english' : ''
-                            }`}
+                            className={`mySiteChois ${props.language !== 'English' ? 'english' : ''
+                              }`}
                           >
                             {props.tasksOfRoutes && props.tasksOfRoutes.name ? (
                               props.tasksOfRoutes.name
@@ -631,6 +628,7 @@ function DragnDrop(props) {
                           console.log('tag.id: ', tag.id);
                           return (saveTag = (
                             <Tag
+                              stationColor={tag.color}//{props.stationColor} //"#ff00d4" //תצוגת המסלול
                               modalFlagTablet={modalFlagTablet}
                               title={tag.title}
                               id={tag.id}
@@ -770,15 +768,15 @@ function DragnDrop(props) {
           subtitle={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVertical
-                ).subtitle
+                (task) => task.id === openThreeDotsVertical
+              ).subtitle
               : ''
           }
           stationOfTask={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVertical
-                ).stations
+                (task) => task.id === openThreeDotsVertical
+              ).stations
               : ''
           }
         />

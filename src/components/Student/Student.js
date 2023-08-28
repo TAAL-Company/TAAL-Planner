@@ -123,7 +123,7 @@ const Cards = () => {
     } else {
       let picture_url;
       try {
-        if (picture) picture_url = await uploadFiles(picture, 'Worker media');
+        if (picture) picture_url = await uploadFiles(picture, 'Worker media');//await uploadImageGD(picture)
 
         const user = {
           email,
@@ -150,9 +150,10 @@ const Cards = () => {
             data.picture_url = user.picture_url;
             updateUser(data.id, data).then((updatedUser) => {
               setUsers((prev) => [updatedUser.data, ...prev]);
+              setupdateAdd(true);
             });
           });
-          setupdateAdd(true);
+          setupdateAdd(false);
         }
       } catch (error) {
         console.error(error);
@@ -168,7 +169,7 @@ const Cards = () => {
     };
 
     fetchData();
-    // console.log("usersData", usersData);
+    // console.log("khalid -- usersData", users);
   }, [updateAdd]);
 
   const clickOnhreeDotsVerticaIcont = (value) => {

@@ -137,12 +137,13 @@
 .nameStationBoard {
   width: 177px;
   position: relative;
+  display: inline;
   font: normal normal bold 15px/20px Assistant;
   letter-spacing: 0px;
   color: #505050;
   opacity: 1;
-  bottom: 42px;
-  right: 185px;
+  bottom: 46.65px;
+  right: 40px;
   text-align-last: end;
 }
 .nameStationBoard.english {
@@ -209,6 +210,7 @@
 .kavT {
   width: 15px;
   position: relative;
+  display: inline-block;
   left: 268px;
   bottom: -40px;
   border-radius: 50%;
@@ -222,6 +224,18 @@
   left: 1px;
 }
 
+.stationDot {
+  /* width: 15px; */
+  position: relative;
+  right: 20px;
+  bottom: 9px;
+  border-radius: 50%;
+  /* background: black; */
+  height: 14px;
+  width: 14px;
+  z-index: 1;
+}
+
 .kavTask {
   border-left: 2px solid #c2bfbf;
   height: 57px;
@@ -229,7 +243,7 @@
   margin-top: -0.5px;
   left: -68px;
   margin-left: 91px;
-  top: 24px;
+  top: 10px;
 }
 
 .kavTask.english {
@@ -251,7 +265,7 @@
   border-left: 2px solid #c2bfbf;
   height: 70px;
   position: relative;
-  margin-top: -108.5px;
+  margin-top: -122.5px;
   left: 9px;
   float: inherit;
   bottom: -27px;

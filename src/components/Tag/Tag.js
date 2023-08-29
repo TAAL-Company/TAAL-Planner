@@ -47,8 +47,8 @@ function Tag({
   requestForEditingBoard,
   setRequestForEditingBoard,
 }) {
-  console.log("khalid - tag - stationColor : " + stationColor);
-  console.log("khalid - title in Tag:", title);
+  console.log('khalid - tag - stationColor : ' + stationColor);
+  console.log('khalid - title in Tag:', title);
   localStorage.setItem('myLastStation', JSON.stringify(myLastStation));
   // console.log("title in Tag:", title);
   // console.log("myLastStation:", myLastStation);
@@ -124,6 +124,12 @@ function Tag({
             style={{ width: kavTopWidth }}
           >
             <div
+              className={`stationDot ${
+                language !== 'English' ? 'english' : ''
+              }`}
+              style={{ background: stationColor }}
+            ></div>
+            <div
               className={`titleStat ${language !== 'English' ? 'english' : ''}`}
             >
               {nameStation}
@@ -139,13 +145,15 @@ function Tag({
               style={{ height: height, bottom: bottom }}
             ></div>
             <div
-              className={`kavTaskTop ${language !== 'English' ? 'english' : ''
-                }`}
+              className={`kavTaskTop ${
+                language !== 'English' ? 'english' : ''
+              }`}
               style={{ marginTop: width }}
             ></div>
             <div
-              className={`nameStationBoard ${language !== 'English' ? 'english' : ''
-                }`}
+              className={`nameStationBoard ${
+                language !== 'English' ? 'english' : ''
+              }`}
             >
               {nameStation}
             </div>
@@ -196,7 +204,7 @@ function Tag({
                     // dragFromCover === 'reorderBoard'
                     //   ? `linear-gradient(270deg, #000dff 7%, #ffffff 1%)`
                     //   : 'linear-gradient(270deg, #000dff 7%, #ffffff 1%)',
-                      language === 'English'
+                    language === 'English'
                       ? `linear-gradient(270deg,${stationColor} 7%, #ffffff 1%)`
                       : `linear-gradient(90deg, ${stationColor} 7%, #ffffff 1%)`,
                   marginTop: myMarginTop,
@@ -253,7 +261,10 @@ function Tag({
                     <></>
                   )}
                 </div>
-                <div  style={{marginRight:'15px'}} className='nameOfTask'> {title}</div>
+                <div style={{ marginRight: '15px' }} className='nameOfTask'>
+                  {' '}
+                  {title}
+                </div>
               </div>
             </>
           ) : (

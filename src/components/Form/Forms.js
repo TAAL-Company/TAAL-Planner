@@ -393,14 +393,21 @@ function Forms() {
         let evaluation = allFlags.find((flag) => flag.taskId === task.taskId);
         let taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
 
+        let userss=allUsers.find((user)=> user.id === evaluation.studentId); //
+        
         //TaskAbilityList //---------------------------------THIS SHOUD BE CHANGE
-        const TaskAbilityList = predictions.find( (prediction) =>
-            prediction.taskid === task.taskId && prediction.studentid === evaluation.studentId
-        ); //&& prediction.studentid === 'TW3'
+        const TaskAbilityList = predictions.find((prediction) =>
+          prediction.taskid === task.taskId
+          // && prediction.studentid === evaluation.studentId
+          // 'TW121' === "adbd938d-8f79-4068-8ef7-ff9cc1a7b86e"
+          // && prediction.studentid === 'TW1'
+        );
         console.log('kh - TaskAbilityList - ' + JSON.stringify(TaskAbilityList));
         console.log('kh - evaluation:', evaluation);
-        const IndexesToTraits = TaskAbilityList?.indexes?.map((index) => cognitiveAbillities.find((ca) => ca.index === index)).filter((entry) => entry !== undefined).map((entry) => {return entry.trait;});
-        IndexesToTraits = IndexesToTraits.filter(Boolean);
+        const IndexesToTraits = TaskAbilityList?.indexes?.map((index) => cognitiveAbillities.find((ca) => ca.index === index))
+          .filter((entry) => entry !== undefined)
+          .map((entry) => { return entry.trait; });
+        //IndexesToTraits = IndexesToTraits.filter(Boolean);
         //--------------------------------------------------THIS SHOUD BE CHANGE
 
         if (evaluation === undefined) return;
@@ -410,7 +417,7 @@ function Forms() {
           {
             id: task.position,
             image: taskInfo.picture_url || taskpic,
-            classification: TaskAbilityList.flag,
+            classification: TaskAbilityList?.flag,
             task: taskInfo.title,
             intervention: evaluation.intervention,
             Alternatives: evaluation.alternativeTaskId,

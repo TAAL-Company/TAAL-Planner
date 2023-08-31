@@ -393,15 +393,23 @@ function Forms() {
         let evaluation = allFlags.find((flag) => flag.taskId === task.taskId);
         let taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
 
-        let userss=allUsers.find((user)=> user.id === evaluation.studentId); //
-        
+        //let userss=allUsers.find((user)=> user.id === evaluation.studentId);
+        // worker.user_name
+        // worker.id
+
         //TaskAbilityList //---------------------------------THIS SHOUD BE CHANGE
-        const TaskAbilityList = predictions.find((prediction) =>
-          prediction.taskid === task.taskId
-          // && prediction.studentid === evaluation.studentId
-          // 'TW121' === "adbd938d-8f79-4068-8ef7-ff9cc1a7b86e"
-          // && prediction.studentid === 'TW1'
-        );
+        let TaskAbilityList = predictionsMemo[task.taskId];
+
+        // const TaskAbilityList = predictions.find((prediction) =>
+        //   prediction.taskid === task.taskId
+
+        //   // && prediction.studentid === worker.user_name
+        //   // && evaluation.studentId === worker.id
+
+        //   //&& prediction.studentid === evaluation.studentId
+        //   // 'TW121' === "adbd938d-8f79-4068-8ef7-ff9cc1a7b86e"
+        //   // && prediction.studentid === 'TW1'
+        // );
         console.log('kh - TaskAbilityList - ' + JSON.stringify(TaskAbilityList));
         console.log('kh - evaluation:', evaluation);
         const IndexesToTraits = TaskAbilityList?.indexes?.map((index) => cognitiveAbillities.find((ca) => ca.index === index))
@@ -475,13 +483,13 @@ function Forms() {
   //   });
   // }, [allFlags, allTasks, cognitiveAbillities, routesOfFlags]);
 
-  // // Memoize predictions for better performance
-  // const predictionsMemo = useMemo(() => {
-  //   return predictions.reduce((obj, prediction) => {
-  //     obj[prediction.taskid] = prediction;
-  //     return obj;
-  //   }, {});
-  // }, []);
+  // Memoize predictions for better performance
+  const predictionsMemo = useMemo(() => {
+    return predictions.reduce((obj, prediction) => {
+      obj[prediction.taskid] = prediction;
+      return obj;
+    }, {});
+  }, []);
 
   const validateExplaination = (value) => {
     if (value.length > 100) {
@@ -766,15 +774,19 @@ function Forms() {
       align: 'center',
       renderCell: (params) => (
         <div style={{ textAlign: 'right', fontSize: '1rem' }}>
-          <Autocomplete
-            disablePortal
-            id='combo-box-demo'
-            options={params.row.TaskAbilitylist}
-            sx={{ width: 300 }}
-            renderInput={(params) => (
-              <TextField {...params} label='Task Ability list' />
-            )}
-          />
+          {
+            params.row.classification === "green" ? (<></>) : (
+            <Autocomplete
+              disablePortal
+              id='combo-box-demo'
+              options={params.row.TaskAbilitylist}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label='Task Ability list' />
+              )}
+            />
+            )
+          }
         </div>
       ),
     },

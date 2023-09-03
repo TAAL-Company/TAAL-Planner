@@ -73,10 +73,7 @@ const Dashboard = () => {
             <CardDash cards={cards[5]} />
             <CardDash cards={cards[4]} />
           </div>
-          <div
-            className='cardsLine'
-            style={{ position: 'absolute', top: '780px', right: '122px' }}
-          >
+          <div className='cardsLine'>
             <CardDash cards={cards[6]} />
           </div>
         </div>

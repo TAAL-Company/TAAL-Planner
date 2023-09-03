@@ -81,7 +81,7 @@ const DataTableRTL = ({
     React.useState([]);
 
   useEffect(() => {
-    console.log('rows:', rows);//----------khalid
+    console.log('rows:', rows);
     console.log('columns:', columns);
 
   }, [columns, rows]);

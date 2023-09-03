@@ -74,10 +74,11 @@
 
 .content .right {
   display: flex;
-  height: 82.6vh;
+  height: max-content;
   align-items: center;
   flex-direction: column;
   margin-top: 100px;
+  margin-bottom: 77px;
   width: 55vw;
   gap: 80px;
   /* background-color: white; */

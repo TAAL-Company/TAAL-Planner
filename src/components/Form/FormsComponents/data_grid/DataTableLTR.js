@@ -60,7 +60,7 @@ function CustomToolbar({
           />
         </div>
 
-        {isInfoUserRoute && ( // ---------- khalid idies
+        {isInfoUserRoute && ( 
           <div className="infoForms">
             <div className="workerNameForms">Worker: {workerName}</div>
             <div className="workerRouteForms" style={{ paddingLeft: "25px" }}>
@@ -68,7 +68,7 @@ function CustomToolbar({
             </div>
           </div>
         )}
-        {isInfoUserSite && ( // ---------- khalid idies
+        {isInfoUserSite && ( 
           <div className="infoForms">
             <div className="workerNameForms">Worker: {workerName}</div>
             <div className="workerRouteForms" style={{ paddingLeft: "25px" }}>

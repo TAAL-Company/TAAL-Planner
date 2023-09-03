@@ -263,9 +263,11 @@ function DragnDrop(props) {
   let nameStation = props.myStation.name;
 
   const mapTask = (element) => {
+    console.log(`mnmn: ${element.subtitle}`);
     return {
       id: element.id,
       title: element.title.replace('&#8211;', '-').replace('&#8217;', "' "),
+      desc: element.subtitle,
       mySite: props.mySite,
       myStation: props.myStation.name,
       data: props.myStation.data,
@@ -469,7 +471,7 @@ function DragnDrop(props) {
   //         }
   //       } else {
   //         if (i !== 0 && board[i].myStation === board[i - 1].myStation) {
-  //           board[i].nameStation = '';
+    //           board[i].nameStation = '';
   //           board[i].width = '-84px';
   //           board[i].borderLeft = '2x solid #c2bfbf';
   //           board[i].height = '86px';
@@ -501,7 +503,7 @@ function DragnDrop(props) {
         <>
           <div
             className={`Board ${props.language !== 'English' ? 'english' : ''}`}
-          // ref={drop}
+            // ref={drop}
           >
             <div className='topButtons'>
               <button
@@ -545,8 +547,9 @@ function DragnDrop(props) {
                                 <button className='computer'></button>
                             </div> */}
             <div
-              className={`my_Buttons_icons ${props.language !== 'English' ? 'english' : ''
-                }`}
+              className={`my_Buttons_icons ${
+                props.language !== 'English' ? 'english' : ''
+              }`}
             >
               <button
                 className={
@@ -604,12 +607,14 @@ function DragnDrop(props) {
                       {board !== undefined && board.length !== 0 ? (
                         <>
                           <div
-                            className={`kavT ${props.language !== 'English' ? 'english' : ''
-                              }`}
+                            className={`kavT ${
+                              props.language !== 'English' ? 'english' : ''
+                            }`}
                           ></div>
                           <div
-                            className={`mySiteChois ${props.language !== 'English' ? 'english' : ''
-                              }`}
+                            className={`mySiteChois ${
+                              props.language !== 'English' ? 'english' : ''
+                            }`}
                           >
                             {props.tasksOfRoutes && props.tasksOfRoutes.name ? (
                               props.tasksOfRoutes.name
@@ -625,12 +630,13 @@ function DragnDrop(props) {
                         <div></div>
                       ) : (
                         board.map((tag, keyCount) => {
-                          console.log('tag.id: ', tag.id);
+                          console.log('tag.id: ', tag);
                           return (saveTag = (
                             <Tag
-                              stationColor={tag.color}//{props.stationColor} //"#ff00d4" //תצוגת המסלול
+                              taskButtonColor={tag.color}
                               modalFlagTablet={modalFlagTablet}
                               title={tag.title}
+                              desc={tag.desc}
                               id={tag.id}
                               data={tag.data}
                               // idImg={tag.id}
@@ -768,15 +774,15 @@ function DragnDrop(props) {
           subtitle={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                (task) => task.id === openThreeDotsVertical
-              ).subtitle
+                  (task) => task.id === openThreeDotsVertical
+                ).subtitle
               : ''
           }
           stationOfTask={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                (task) => task.id === openThreeDotsVertical
-              ).stations
+                  (task) => task.id === openThreeDotsVertical
+                ).stations
               : ''
           }
         />

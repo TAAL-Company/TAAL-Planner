@@ -352,7 +352,6 @@ function Forms() {
   };
 
   const handleChangeRouteFlags = async (event, value) => {
-    console.log("khalid ++ vvvv"+JSON.stringify(value));
     setRroutenewName(value.name)
 
     const route = allRoutes.find((route) => route.id === value.id);

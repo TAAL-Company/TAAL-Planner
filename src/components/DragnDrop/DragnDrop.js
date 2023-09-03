@@ -446,44 +446,44 @@ function DragnDrop(props) {
     setReorderBoardFlag(true);
     setActiveButton(e.currentTarget.className);
   };
-  // useEffect(() => {
-  //   if (flagTree && board) {
-  //     for (let i = 0; i < board.length; i++) {
-  //       if (board[i].nameStation === '') {
-  //         if (i === 0) {
-  //           board[i].nameStation = board[i].myStation;
-  //           board[i].borderLeft = '0x solid #c2bfbf';
-  //           board[i].width = '-13px';
-  //           board[i].height = '70px';
-  //           board[i].bottom = '-27px';
-  //           board[i].kavTopWidth = '25px';
-  //           board[i].newkavTaskTop = '0px';
-  //           board[i].kavTaskTopMarginTop = '-7px';
-  //         } else if (board[i].myStation !== board[i - 1].myStation) {
-  //           board[i].nameStation = board[i].myStation;
-  //           board[i].borderLeft = '0x solid #c2bfbf';
-  //           board[i].width = '-13px';
-  //           board[i].height = '70px';
-  //           board[i].bottom = '-27px';
-  //           board[i].kavTopWidth = '25px';
-  //           board[i].newkavTaskTop = '0px';
-  //           board[i].kavTaskTopMarginTop = '-7px';
-  //         }
-  //       } else {
-  //         if (i !== 0 && board[i].myStation === board[i - 1].myStation) {
-    //           board[i].nameStation = '';
-  //           board[i].width = '-84px';
-  //           board[i].borderLeft = '2x solid #c2bfbf';
-  //           board[i].height = '86px';
-  //           board[i].bottom = '45px';
-  //           board[i].kavTopWidth = '0px';
-  //           board[i].newkavTaskTop = '100px';
-  //           board[i].kavTaskTopMarginTop = '-27px';
-  //         }
-  //       }
-  //     }
-  //   }
-  // }, [board, flagTree]);
+  useEffect(() => {
+    if (flagTree && board) {
+      for (let i = 0; i < board.length; i++) {
+        if (board[i].nameStation === '') {
+          if (i === 0) {
+            board[i].nameStation = board[i].myStation;
+            board[i].borderLeft = '0x solid #c2bfbf';
+            board[i].width = '-13px';
+            board[i].height = '70px';
+            board[i].bottom = '-27px';
+            board[i].kavTopWidth = '25px';
+            board[i].newkavTaskTop = '0px';
+            board[i].kavTaskTopMarginTop = '-7px';
+          } else if (board[i].myStation !== board[i - 1].myStation) {
+            board[i].nameStation = board[i].myStation;
+            board[i].borderLeft = '0x solid #c2bfbf';
+            board[i].width = '-13px';
+            board[i].height = '70px';
+            board[i].bottom = '-27px';
+            board[i].kavTopWidth = '25px';
+            board[i].newkavTaskTop = '0px';
+            board[i].kavTaskTopMarginTop = '-7px';
+          }
+        } else {
+          if (i !== 0 && board[i].myStation === board[i - 1].myStation) {
+            board[i].nameStation = '';
+            board[i].width = '-84px';
+            board[i].borderLeft = '2x solid #c2bfbf';
+            board[i].height = '86px';
+            board[i].bottom = '45px';
+            board[i].kavTopWidth = '0px';
+            board[i].newkavTaskTop = '100px';
+            board[i].kavTaskTopMarginTop = '-27px';
+          }
+        }
+      }
+    }
+  }, [board, flagTree]);
   //---------------------------------------------------------
   return (
     <>

@@ -654,7 +654,7 @@ export const updateTask = async (id, newTask) => {
   //   title: get_title,
   //   siteIds: [siteIds],
   //   stationIds: stationIds,
-  //   estimatedTimeSeconds: 0,
+  //   estimatedTimeSeconds: 20,
   //   subtitle: subtitle,
   // };
   const headers = {

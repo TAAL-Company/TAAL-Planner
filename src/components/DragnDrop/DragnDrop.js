@@ -14,7 +14,7 @@ import Dot from '../Dot/Dot';
 import Clock from '../Clock/Clock';
 import textArea from '../../Pictures/textArea.svg';
 import ProgressBar from '../ProgressBar/ProgressBar';
-import Modal_Delete from '../Modal/Modal_Delete';
+import ModalDelete from '../Modal/Modal_Delete';
 import { deleteTask } from '../../api/api.js';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -263,7 +263,6 @@ function DragnDrop(props) {
   let nameStation = props.myStation.name;
 
   const mapTask = (element) => {
-    console.log(`mnmn: ${element.subtitle}`);
     return {
       id: element.id,
       title: element.title.replace('&#8211;', '-').replace('&#8217;', "' "),
@@ -498,205 +497,198 @@ function DragnDrop(props) {
           tasksForNewRoute={board}
         />
       )}
-
       <>
-        <>
+        <div
+          className={`Board ${props.language !== 'English' ? 'english' : ''}`}
+          // ref={drop}
+        >
+          <div className='topButtons'>
+            <button
+              className='AddRoute'
+              type='submit'
+              onClick={() => {
+                setModalOpenAddRoute(true);
+              }}
+            >
+              {props.saveButton}
+            </button>
+            {/* כפתור שפות */}
+            <button
+              className='language'
+              // style={{ marginLeft: marginHebrew, marginTop: "22px" }}
+              onClick={() => {
+                if (props.Hebrew !== false) props.hebrew();
+                else props.english();
+              }}
+            >
+              {props.language}
+            </button>
+          </div>
           <div
-            className={`Board ${props.language !== 'English' ? 'english' : ''}`}
-            // ref={drop}
+            className={`txt ${props.language !== 'English' ? 'english' : ''}`}
           >
-            <div className='topButtons'>
-              <button
-                className='AddRoute'
-                type='submit'
-                onClick={() => {
-                  setModalOpenAddRoute(true);
-                }}
-              >
-                {props.saveButton}
-              </button>
-              {/* כפתור שפות */}
-              <button
-                className='language'
-                // style={{ marginLeft: marginHebrew, marginTop: "22px" }}
-                onClick={() => {
-                  if (props.Hebrew !== false) props.hebrew();
-                  else props.english();
-                }}
-              >
-                {props.language}
-              </button>
-            </div>
-            <div
-              className={`txt ${props.language !== 'English' ? 'english' : ''}`}
-            >
-              {' '}
-              {props.drag}&nbsp;&nbsp;
-              <div style={{ fontSize: '20px', left: '185px' }}></div>
-            </div>
+            {' '}
+            {props.drag}&nbsp;&nbsp;
+            <div style={{ fontSize: '20px', left: '185px' }}></div>
+          </div>
+          <div
+            className={`my_Buttons_icons ${
+              props.language !== 'English' ? 'english' : ''
+            }`}
+          >
+            <button
+              className={
+                'reorder' + (activeButton === 'reorder' ? ' active' : '')
+              }
+              onClick={reorderFunction}
+            ></button>
+            <button
+              className={'tree' + (activeButton === 'tree' ? ' active' : '')}
+              onClick={treeFunction}
+            ></button>
 
-            {/* <div className='my_Buttons_icons'>
-                                <button className='tree'></button>
-                                <div className='kavIconsTree'></div>
-                                <button className='watch'></button>
-                                <div className='kavIconsWatch'></div>
-                                <button className='phone'></button>
-                                <div className='kavIconsPhone'></div>
-                                <button className='tablet'></button>
-                                <div className='kavIconsTablet'></div>
-                                <button className='computer'></button>
-                            </div> */}
-            <div
-              className={`my_Buttons_icons ${
-                props.language !== 'English' ? 'english' : ''
-              }`}
-            >
-              <button
-                className={
-                  'reorder' + (activeButton === 'reorder' ? ' active' : '')
-                }
-                onClick={reorderFunction}
-              ></button>
-              <button
-                className={'tree' + (activeButton === 'tree' ? ' active' : '')}
-                onClick={treeFunction}
-              ></button>
-
-              <button
-                className={
-                  'phone' + (activeButton === 'phone' ? ' active' : '')
-                }
-                onClick={phoneFunction}
-              ></button>
-              <button
-                className={
-                  'tablet' + (activeButton === 'tablet' ? ' active' : '')
-                }
-                onClick={tabletFunction}
-              ></button>
-              <button
-                className={
-                  'watch' + (activeButton === 'watch' ? ' active' : '')
-                }
-                onClick={watchFunction}
-              ></button>
-              {/* <button
+            <button
+              className={'phone' + (activeButton === 'phone' ? ' active' : '')}
+              onClick={phoneFunction}
+            ></button>
+            <button
+              className={
+                'tablet' + (activeButton === 'tablet' ? ' active' : '')
+              }
+              onClick={tabletFunction}
+            ></button>
+            <button
+              className={'watch' + (activeButton === 'watch' ? ' active' : '')}
+              onClick={watchFunction}
+            ></button>
+            {/* <button
                   className={'computer' + (activeButton === 'computer' ? ' active' : '')}
                   onClick={
                     computerFunction}>
                 </button> */}
-            </div>
-            <Droppable droppableId='board-droppable'>
-              {(provided) => (
-                <div
-                  className='MyTasks'
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                >
-                  {props.progressBarFlag ? (
-                    <ProgressBar
-                      setProgressBarFlag={props.setProgressBarFlag}
-                      percent={Math.ceil(props.percentProgressBar)}
-                    ></ProgressBar>
-                  ) : (
-                    <></>
-                  )}
-                  {/* flagTree   */}
-                  {flagTree ? (
-                    <>
-                      {board !== undefined && board.length !== 0 ? (
-                        <>
-                          <div
-                            className={`kavT ${
-                              props.language !== 'English' ? 'english' : ''
-                            }`}
-                          ></div>
-                          <div
-                            className={`mySiteChois ${
-                              props.language !== 'English' ? 'english' : ''
-                            }`}
-                          >
-                            {props.tasksOfRoutes && props.tasksOfRoutes.name ? (
-                              props.tasksOfRoutes.name
-                            ) : (
-                              <></>
-                            )}
-                          </div>
-                        </>
-                      ) : (
-                        <></>
-                      )}
-                      {board === undefined && board.length === 0 ? (
-                        <div></div>
-                      ) : (
-                        board.map((tag, keyCount) => {
-                          console.log('tag.id: ', tag);
-                          return (saveTag = (
-                            <Tag
-                              taskButtonColor={tag.color}
-                              modalFlagTablet={modalFlagTablet}
-                              title={tag.title}
-                              desc={tag.desc}
-                              id={tag.id}
-                              data={tag.data}
-                              // idImg={tag.id}
-                              dataImg={tag.dataImg}
-                              key={keyCount}
-                              flagBoard={true}
-                              myLastStation={props.myStation.name}
-                              myStation={tag.myStation}
-                              myMarginTop={'-68px'}
-                              count={count}
-                              flag={tag.flag}
-                              width={tag.width}
-                              borderLeft={tag.borderLeft}
-                              height={tag.height}
-                              setKavTaskTopMarginTop={
-                                tag.setKavTaskTopMarginTop
-                              }
-                              bottom={tag.bottom}
-                              kavTopWidth={tag.kavTopWidth}
-                              newkavTaskTop={tag.newkavTaskTop}
-                              nameStation={tag.nameStation}
-                              flagPhone={flagPhone}
-                              flagTree={flagTree}
-                              dragFromCover={'border'}
-                              language={props.language}
-                              openThreeDotsVertical={openThreeDotsVertical}
-                              setOpenThreeDotsVertical={
-                                setOpenThreeDotsVertical
-                              }
-                              openThreeDotsVerticalBoard={
-                                openThreeDotsVerticalBoard
-                              }
-                              setOpenThreeDotsVerticalBoard={
-                                setOpenThreeDotsVerticalBoard
-                              }
-                              requestForEditing={requestForEditing}
-                              setRequestForEditing={setRequestForEditing}
-                              requestForEditingBoard={requestForEditing}
-                              setRequestForEditingBoard={
-                                setRequestForEditingBoard
-                              }
-                            />
-                          ));
-                        })
-                      )}
-                      {flagPhoneOne ? (
-                        <>
-                          <div className='kavB'></div>
-                        </>
-                      ) : (
-                        <>{/* <div className="kavBOne"></div> */}</>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      {/* flagPhone */}
-                      {flagPhone ? (
-                        <>
+          </div>
+          <Droppable droppableId='board-droppable'>
+            {(provided) => (
+              <div
+                className='MyTasks'
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+              >
+                {props.progressBarFlag ? (
+                  <ProgressBar
+                    setProgressBarFlag={props.setProgressBarFlag}
+                    percent={Math.ceil(props.percentProgressBar)}
+                  ></ProgressBar>
+                ) : (
+                  <></>
+                )}
+                {/* flagTree   */}
+                {flagTree ? (
+                  <>
+                    {board !== undefined && board.length !== 0 ? (
+                      <>
+                        <div
+                          className={`kavT ${
+                            props.language !== 'English' ? 'english' : ''
+                          }`}
+                        ></div>
+                        <div
+                          className={`mySiteChois ${
+                            props.language !== 'English' ? 'english' : ''
+                          }`}
+                        >
+                          {props.tasksOfRoutes && props.tasksOfRoutes.name ? (
+                            props.tasksOfRoutes.name
+                          ) : (
+                            <></>
+                          )}
+                        </div>
+                      </>
+                    ) : (
+                      <></>
+                    )}
+                    {board === undefined && board.length === 0 ? (
+                      <div></div>
+                    ) : (
+                      board.map((tag, keyCount) => {
+                        console.log('tag.id: ', tag);
+                        return (saveTag = (
+                          <Tag
+                            taskButtonColor={tag.color}
+                            modalFlagTablet={modalFlagTablet}
+                            title={tag.title}
+                            desc={tag.desc}
+                            id={tag.id}
+                            data={tag.data}
+                            // idImg={tag.id}
+                            dataImg={tag.dataImg}
+                            key={keyCount}
+                            flagBoard={true}
+                            myLastStation={props.myStation.name}
+                            myStation={tag.myStation}
+                            myMarginTop={'-68px'}
+                            count={count}
+                            flag={tag.flag}
+                            width={tag.width}
+                            borderLeft={tag.borderLeft}
+                            height={tag.height}
+                            setKavTaskTopMarginTop={tag.setKavTaskTopMarginTop}
+                            bottom={tag.bottom}
+                            kavTopWidth={tag.kavTopWidth}
+                            newkavTaskTop={tag.newkavTaskTop}
+                            nameStation={tag.nameStation}
+                            flagPhone={flagPhone}
+                            flagTree={flagTree}
+                            dragFromCover={'border'}
+                            language={props.language}
+                            openThreeDotsVertical={openThreeDotsVertical}
+                            setOpenThreeDotsVertical={setOpenThreeDotsVertical}
+                            openThreeDotsVerticalBoard={
+                              openThreeDotsVerticalBoard
+                            }
+                            setOpenThreeDotsVerticalBoard={
+                              setOpenThreeDotsVerticalBoard
+                            }
+                            requestForEditing={requestForEditing}
+                            setRequestForEditing={setRequestForEditing}
+                            requestForEditingBoard={requestForEditing}
+                            setRequestForEditingBoard={
+                              setRequestForEditingBoard
+                            }
+                          />
+                        ));
+                      })
+                    )}
+                    {flagPhoneOne ? (
+                      <>
+                        <div className='kavB'></div>
+                      </>
+                    ) : (
+                      <>{/* <div className="kavBOne"></div> */}</>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {/* flagPhone */}
+                    {flagPhone ? (
+                      <>
+                        <Phone
+                          modalFlagTablet={modalFlagTablet}
+                          flagPhone={flagPhone}
+                          board={board}
+                          saveTag={saveTag}
+                          count={count}
+                          myStation={props.myStation}
+                          flagTree={flagTree}
+                          flagStress={flagStress}
+                          mySite={props.mySite}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        {modalFlagTablet ? (
                           <>
-                            <Phone
+                            <Tablet
                               modalFlagTablet={modalFlagTablet}
                               flagPhone={flagPhone}
                               board={board}
@@ -708,46 +700,23 @@ function DragnDrop(props) {
                               mySite={props.mySite}
                             />
                           </>
-
-                          {/* --------------------------------------------------- */}
-
-                          {/* --------------------------------------------------- */}
-                        </>
-                      ) : (
-                        <>
-                          {modalFlagTablet ? (
-                            <>
-                              <Tablet
-                                modalFlagTablet={modalFlagTablet}
-                                flagPhone={flagPhone}
-                                board={board}
-                                saveTag={saveTag}
-                                count={count}
-                                myStation={props.myStation}
-                                flagTree={flagTree}
-                                flagStress={flagStress}
-                                mySite={props.mySite}
-                              />
-                            </>
-                          ) : (
-                            <>
-                              <ReorderBoard
-                                board={board}
-                                setBoard={setBoard}
-                                language={props.language}
-                              />
-                            </>
-                          )}
-                        </>
-                      )}
-                    </>
-                  )}
-                </div>
-              )}
-            </Droppable>
-          </div>
-        </>
-        {/* // )} */}
+                        ) : (
+                          <>
+                            <ReorderBoard
+                              board={board}
+                              setBoard={setBoard}
+                              language={props.language}
+                            />
+                          </>
+                        )}
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+          </Droppable>
+        </div>
       </>
 
       {modalOpen ? (
@@ -790,7 +759,7 @@ function DragnDrop(props) {
         <></>
       )}
 
-      <Modal_Delete
+      <ModalDelete
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
         DialogTitle={'מחיקת משימה'}

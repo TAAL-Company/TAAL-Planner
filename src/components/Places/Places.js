@@ -1,9 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  get,
-  getingDataRoutes,
-  getingDataTasks,
-  getingDataPlaces,
   getingData_Routes,
   getingData_Tasks,
   getingData_Places,
@@ -13,37 +9,26 @@ import {
   updateRoute,
 } from '../../api/api';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import './style.css';
-// import { MdOutlineAdsClick } from "react-icons/md";
-// import { FcAddDatabase, FcSearch } from "react-icons/fc";
 import Stations from '../Stations/Stations';
 import Tasks from '../Tasks/tasks';
-import ModalPlaces from '../Modal/Model_Places';
-// import ModalLoading from '../Modal/Modal_Loading';
 import Modal from '../Modal/Modal';
-import Modal_dropdown from '../Modal/Modal_dropdown';
-// import TextField from "@mui/material/TextField";
-import { baseUrl } from '../../config';
+import ModalDropdown from '../Modal/Modal_Dropdown';
 import { AiOutlinePlus } from 'react-icons/ai';
-// import Dot from "../Dot/Dot";
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { CgSearch } from 'react-icons/cg';
 import textArea from '../../Pictures/textArea.svg';
-import Modal_route_chosen from '../Modal/Modal_route_chosen';
-import { MdNoStroller } from 'react-icons/md';
-import Modal_site_chosen from '../Modal/Modal_site_chosen';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import '../Modal/Modal.css';
+import ModalRouteChosen from '../Modal/Modal_Route_Chosen';
+import ModalSiteChosen from '../Modal/Modal_Site_Chosen';
+import { DragDropContext } from 'react-beautiful-dnd';
 import stopIcon from '../../Pictures/stopIcon.svg';
+import '../Modal/Modal.css';
+import './style.css';
 
-// const { baseUrl } = require
-//-----------------------
 let tasksOfRoutes = {};
 // let allRoutes = [];
 let allPlaces = [];
@@ -746,9 +731,8 @@ const Places = (props) => {
     );
   };
   const [taskcolor, settaskcolor] = useState('');
-  const handleColor = color => {
+  const handleColor = (color) => {
     settaskcolor(color);
-
   };
 
   useEffect(() => {
@@ -882,7 +866,7 @@ const Places = (props) => {
 
                       {openThreeDotsVertical === index ? (
                         // <div ref={menuRef}>
-                        <Modal_dropdown
+                        <ModalDropdown
                           setRequestForEditing={setRequestForEditing}
                           setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                           editable={true}
@@ -986,20 +970,20 @@ const Places = (props) => {
       </div>
       {openModalRouteChosen ? (
         <>
-          {/* <Modal_route_chosen
+          <ModalRouteChosen
             setReplaceRouteFlag={setReplaceRouteFlag}
             setOpenModalRouteChosen={setOpenModalRouteChosen}
-          ></Modal_route_chosen> */}
+          ></ModalRouteChosen>
         </>
       ) : (
         <></>
       )}
       {openModalSiteChosen ? (
         <>
-          {/* <Modal_site_chosen
+          <ModalSiteChosen
             setReplaceSiteFlag={setReplaceSiteFlag}
             setOpenModalSiteChosen={setOpenModalSiteChosen}
-          ></Modal_site_chosen> */}
+          ></ModalSiteChosen>
           <div className='modal_route_chosen'>
             <div className='stopIconContainer'>
               <img src={stopIcon} alt='logo'></img>

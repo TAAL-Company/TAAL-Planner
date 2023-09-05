@@ -1,35 +1,23 @@
 import React, { useState, useEffect } from 'react';
-// import { useDrag } from "react-dnd";
-// import { RiDragMove2Line } from "react-icons/ri";
 import './style.css';
 import TaskImage from '../../Pictures/TaskImage.png';
-// import Dot from "../Dot/Dot"
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Images from '../Images/Images';
 import Audios from '../Audios/Audios';
-import Modal_dropdown from '../Modal/Modal_dropdown';
-import { CgOpenCollective } from 'react-icons/cg';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import Modal_dropdown from '../Modal/Modal_Dropdown';
 
-let idListen = 0;
-let dataListen = {};
-
-// import { useState, } from 'react';
 function Tag({
   title,
   desc,
   id,
   flagBoard,
-  myStation,
   myMarginTop,
-  count,
   myLastStation,
   width,
   height,
   kavTopWidth,
   bottom,
   nameStation,
-  kavTaskTopMarginTop,
   borderLeft,
   flagPhone,
   // idImg,
@@ -41,12 +29,9 @@ function Tag({
   language,
   openThreeDotsVertical,
   setOpenThreeDotsVertical,
-  requestForEditing,
   setRequestForEditing,
   openThreeDotsVerticalBoard,
   setOpenThreeDotsVerticalBoard,
-  requestForEditingBoard,
-  setRequestForEditingBoard,
 }) {
   localStorage.setItem('myLastStation', JSON.stringify(myLastStation));
   // console.log("title in Tag:", title);

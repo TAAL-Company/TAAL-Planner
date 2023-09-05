@@ -85,7 +85,8 @@ const Tasks = (props) => {
     myPlacesChoice,
     imageData,
     audioData,
-    mySiteId
+    mySiteId,
+    estimatedTimeSeconds = 20
   ) => {
     let station = props.stationArray.find(
       (s) => s.id === props.chosenStation.id
@@ -101,7 +102,8 @@ const Tasks = (props) => {
           myPlacesChoice,
           imageData,
           audioData,
-          mySiteId
+          mySiteId,
+          estimatedTimeSeconds
         );
 
         // props.setAllTasksOfTheSite((prev) => [...prev, post]);
@@ -147,7 +149,8 @@ const Tasks = (props) => {
             .map((s) => s.id) || [],
           newObject.picture_url,
           newObject.audio_url,
-          props.mySite.id
+          props.mySite.id,
+          newObject.estimatedTimeSeconds
         );
       } else if (requestForEditing === 'delete') {
         setTaskForDelete(openThreeDotsVertical);

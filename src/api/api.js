@@ -616,7 +616,8 @@ export const insertTask = async (
   myPlacesChoice,
   picture_url,
   audio_url,
-  siteIds
+  siteIds,
+  estimatedTimeSeconds = 20
 ) => {
   try {
     const response = await fetch(baseUrl + '/tasks', {
@@ -629,7 +630,7 @@ export const insertTask = async (
         title: get_title,
         siteIds: [siteIds],
         stationIds: myPlacesChoice,
-        estimatedTimeSeconds: 0,
+        estimatedTimeSeconds,
         subtitle: subtitle,
         picture_url,
         audio_url,

@@ -1,9 +1,9 @@
-export const uploadImage = async (e) => {//khalid image
+export const uploadImage = async (e) => {
     const GOOGLE_DRIVE_IMG_URL = "http://drive.google.com/uc?export=view&id=";
     let GOOGLE_DRIVE_IMG_ID = "";
     let imageUrl = ""
 
-    var file = e.target.files[0] //the file
+    var file = e.target.files[0] 
 
     return await getBase64(file).then(
         async (dataSend) => {

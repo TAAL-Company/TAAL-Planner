@@ -17,6 +17,7 @@ let dataListen = {};
 // import { useState, } from 'react';
 function Tag({
   title,
+  desc,
   id,
   flagBoard,
   myStation,
@@ -36,7 +37,7 @@ function Tag({
   data,
   modalFlagTablet,
   dragFromCover,
-  stationColor,
+  taskButtonColor,
   language,
   openThreeDotsVertical,
   setOpenThreeDotsVertical,
@@ -47,8 +48,6 @@ function Tag({
   requestForEditingBoard,
   setRequestForEditingBoard,
 }) {
-  console.log("khalid - tag - stationColor : " + stationColor);
-  console.log("khalid - title in Tag:", title);
   localStorage.setItem('myLastStation', JSON.stringify(myLastStation));
   // console.log("title in Tag:", title);
   // console.log("myLastStation:", myLastStation);
@@ -139,13 +138,15 @@ function Tag({
               style={{ height: height, bottom: bottom }}
             ></div>
             <div
-              className={`kavTaskTop ${language !== 'English' ? 'english' : ''
-                }`}
+              className={`kavTaskTop ${
+                language !== 'English' ? 'english' : ''
+              }`}
               style={{ marginTop: width }}
             ></div>
             <div
-              className={`nameStationBoard ${language !== 'English' ? 'english' : ''
-                }`}
+              className={`nameStationBoard ${
+                language !== 'English' ? 'english' : ''
+              }`}
             >
               {nameStation}
             </div>
@@ -178,6 +179,7 @@ function Tag({
             <div className='nameOfTaskPhone'>
               <Images id={id} url={dataImg || TaskImage} />
               {title}
+              <div className='phoneTagDesc'>{desc}</div>
             </div>
           </div>
           <button className='listenIcon' onClick={() => listen()}></button>
@@ -196,9 +198,9 @@ function Tag({
                     // dragFromCover === 'reorderBoard'
                     //   ? `linear-gradient(270deg, #000dff 7%, #ffffff 1%)`
                     //   : 'linear-gradient(270deg, #000dff 7%, #ffffff 1%)',
-                      language === 'English'
-                      ? `linear-gradient(270deg,${stationColor} 7%, #ffffff 1%)`
-                      : `linear-gradient(90deg, ${stationColor} 7%, #ffffff 1%)`,
+                    language === 'English'
+                      ? `linear-gradient(270deg,${taskButtonColor} 7%, #ffffff 1%)`
+                      : `linear-gradient(90deg, ${taskButtonColor} 7%, #ffffff 1%)`,
                   marginTop: myMarginTop,
                   flexDirection: language === 'English' ? 'row' : 'row-reverse',
                   textAlignLast: language === 'English' ? 'end' : 'left',
@@ -253,7 +255,10 @@ function Tag({
                     <></>
                   )}
                 </div>
-                <div  style={{marginRight:'15px'}} className='nameOfTask'> {title}</div>
+                <div style={{ marginRight: '15px' }} className='nameOfTask'>
+                  {' '}
+                  {title}
+                </div>
               </div>
             </>
           ) : (

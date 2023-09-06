@@ -7,6 +7,8 @@ import route from '../../Pictures/route.svg';
 import group from '../../Pictures/Group.svg';
 import kashrut from '../../Pictures/הכשרות.svg';
 import Professions from '../../Pictures/Professions.svg';
+import coachImage from '../../Pictures/coach.png';
+import galleryImage from '../../Pictures/gallery.png';
 import pic from '../../Pictures/defualtSiteImg.svg';
 
 const Dashboard = () => {
@@ -45,13 +47,13 @@ const Dashboard = () => {
       id: 5,
       headline: 'גלריה',
       addLabel: 'הוספת תמונה',
-      image: pic,
+      image: galleryImage,
     },
     {
       id: 6,
       headline: 'מדריכים',
       addLabel: 'הוספת מדריך',
-      image: pic,
+      image: coachImage,
     },
   ];
 
@@ -73,10 +75,7 @@ const Dashboard = () => {
             <CardDash cards={cards[5]} />
             <CardDash cards={cards[4]} />
           </div>
-          <div
-            className='cardsLine'
-            style={{ position: 'absolute', top: '780px', right: '122px' }}
-          >
+          <div className='cardsLine'>
             <CardDash cards={cards[6]} />
           </div>
         </div>

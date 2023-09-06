@@ -84,7 +84,7 @@
   background: transparent url('../../Pictures/ic_listen\ .svg') 0% 0% no-repeat
     padding-box;
   position: relative;
-  top: -115px;
+  top: -105px;
   left: 56px;
   margin-top: 51px;
 }
@@ -350,4 +350,8 @@
   position: relative;
   top: -23px;
   left: 4px;
+}
+
+.phoneTagDesc {
+  margin: 0 8px 8px 8px;
 }

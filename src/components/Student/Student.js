@@ -123,7 +123,7 @@ const Cards = () => {
     } else {
       let picture_url;
       try {
-        if (picture) picture_url = await uploadFiles(picture, 'Worker media');//await uploadImageGD(picture)
+        if (picture) picture_url = await uploadFiles(picture, 'Worker media'); //await uploadImageGD(picture)
 
         const user = {
           email,
@@ -169,11 +169,10 @@ const Cards = () => {
     };
 
     fetchData();
-    // console.log("khalid -- usersData", users);
   }, [updateAdd]);
 
   const clickOnhreeDotsVerticaIcont = (value) => {
-    if (openThreeDotsVertical == value) setOpenThreeDotsVertical(-1);
+    if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);
   };
 

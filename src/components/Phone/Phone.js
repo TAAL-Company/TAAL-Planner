@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import "./style.css";
-import Dot from "../Dot/Dot";
-import Clock from "../Clock/Clock";
-import Tag from "../Tag/Tag.js";
-import { MdOutlineSettingsBackupRestore } from "react-icons/md";
-import ModalHelp from "../Modal/Modal_help";
+import React, { useState } from 'react';
+import './style.css';
+import Dot from '../Dot/Dot';
+import Clock from '../Clock/Clock';
+import Tag from '../Tag/Tag.js';
+import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
+import ModalHelp from '../Modal/Modal_help';
 let flagStress = false;
 const Phone = (props) => {
   const [, setFlagStress] = useState(false);
@@ -23,26 +23,27 @@ const Phone = (props) => {
         <>
           {!flagStress ? (
             <>
-              <div className="phoneCover">
-                <div className="phoneHeaderCover">
-                  <div className="hederPhone">
+              <div className='phoneCover'>
+                <div className='phoneHeaderCover'>
+                  <div className='hederPhone'>
                     <button
-                      className="stress"
+                      className='stress'
                       onClick={() => stressFun()}
                     ></button>
-                    <div className="cellInfo"></div>
-                    <Dot className="Dotcamera" color="#2f2f2f" />
-                    <div className="clock">
+                    <div className='cellInfo'></div>
+                    <Dot className='Dotcamera' color='#2f2f2f' />
+                    <div className='clock'>
                       <Clock />
                     </div>
                   </div>
                 </div>
-                <div className="stap2">
+                <div className='stap2'>
                   {props.board.map((tag, keyCount) => {
                     return (
                       <Tag
                         modalFlagTablet={props.modalFlagTablet}
                         title={tag.title}
+                        desc={tag.desc}
                         id={tag.id}
                         // idImg={tag.idImg}
                         dataImg={tag.dataImg}
@@ -52,7 +53,7 @@ const Phone = (props) => {
                         flagBoard={true}
                         myLastStation={props.myStation.name}
                         myStation={tag.myStation}
-                        myMarginTop={"-68px"}
+                        myMarginTop={'-68px'}
                         count={props.count}
                         data={props.myStation.data}
                         flag={tag.flag}
@@ -69,55 +70,55 @@ const Phone = (props) => {
                     );
                   })}
                 </div>
-                <div className="stap3"></div>
+                <div className='stap3'></div>
               </div>
             </>
           ) : (
             <>
               {/* stress */}
-              <div className="phoneCoverStress">
-                <div className="phoneHeaderCover">
-                  <div className="hederPhone">
-                    <div className="grayStress"></div>
-                    <div className="cellInfo"></div>
-                    <Dot className="Dotcamera" color="#2f2f2f" />
-                    <div className="clock">
+              <div className='phoneCoverStress'>
+                <div className='phoneHeaderCover'>
+                  <div className='hederPhone'>
+                    <div className='grayStress'></div>
+                    <div className='cellInfo'></div>
+                    <Dot className='Dotcamera' color='#2f2f2f' />
+                    <div className='clock'>
                       <Clock />
                     </div>
                   </div>
                   {modalOpen ? (
                     <>
-                      <div className="pleaseName" style={{ color: "#45350a" }}>
+                      <div className='pleaseName' style={{ color: '#45350a' }}>
                         ,בבקשה
                       </div>
-                      <div className="pleaseListenIconCover"></div>
+                      <div className='pleaseListenIconCover'></div>
                     </>
                   ) : (
                     <>
-                      <div className="pleaseName">,בבקשה</div>
-                      <button className="pleaseListenIcon"></button>
+                      <div className='pleaseName'>,בבקשה</div>
+                      <button className='pleaseListenIcon'></button>
                     </>
                   )}
                 </div>
-                <div className="positionTextStress">
-                  <div className="textStress">.התקשתי במילוי המשימות שלי</div>
-                  <div className="textStress">
+                <div className='positionTextStress'>
+                  <div className='textStress'>.התקשתי במילוי המשימות שלי</div>
+                  <div className='textStress'>
                     אשמח לסיוע, ותודה על הרצון לעזור
                   </div>
                 </div>
-                <div className="whiteCoverPhoneStress">
-                  <div className="currentLocation">:המיקום הנוכחי שלי</div>
+                <div className='whiteCoverPhoneStress'>
+                  <div className='currentLocation'>:המיקום הנוכחי שלי</div>
                   {props.mySite.name ? (
                     <>
-                      {" "}
-                      <div className="currentLocationName">
-                        {" "}
+                      {' '}
+                      <div className='currentLocationName'>
+                        {' '}
                         {props.mySite.name}
                       </div>
                     </>
                   ) : (
                     <>
-                      <div className="currentLocationName">אין מיקום</div>
+                      <div className='currentLocationName'>אין מיקום</div>
                     </>
                   )}
                 </div>
@@ -125,55 +126,55 @@ const Phone = (props) => {
                   {modalOpen ? (
                     <>
                       <div
-                        className="redCoverPhoneStress"
-                        style={{ backgroundColor: "#400910" }}
+                        className='redCoverPhoneStress'
+                        style={{ backgroundColor: '#400910' }}
                       >
-                        <div className="needHelp"></div>
+                        <div className='needHelp'></div>
                         <div
-                          className="helpContinue"
-                          style={{ color: "#3d453e" }}
+                          className='helpContinue'
+                          style={{ color: '#3d453e' }}
                         >
                           ממשיך לבקש עזרה
                         </div>
                       </div>
                       <div
-                        className="greenCoverPhoneStress"
-                        style={{ backgroundColor: "#053705" }}
+                        className='greenCoverPhoneStress'
+                        style={{ backgroundColor: '#053705' }}
                       >
-                        <div style={{ border: "none", background: "#11B911" }}>
+                        <div style={{ border: 'none', background: '#11B911' }}>
                           {/* <MdOutlineSettingsBackupRestore className='TempBackup' /> */}
                         </div>
 
-                        <div className="backup" style={{ color: "#3d453e" }}>
+                        <div className='backup' style={{ color: '#3d453e' }}>
                           חזור למשימות שלי
                         </div>
                       </div>
                     </>
                   ) : (
                     <>
-                      <div className="redCoverPhoneStress">
+                      <div className='redCoverPhoneStress'>
                         <button
-                          className="needHelp"
+                          className='needHelp'
                           onClick={() => {
                             setModalOpen(true);
                           }}
                         ></button>
-                        <div className="helpContinue">ממשיך לבקש עזרה</div>
+                        <div className='helpContinue'>ממשיך לבקש עזרה</div>
                       </div>
-                      <div className="greenCoverPhoneStress">
+                      <div className='greenCoverPhoneStress'>
                         <button
-                          style={{ border: "none", background: "#11B911" }}
+                          style={{ border: 'none', background: '#11B911' }}
                           onClick={() => backup()}
                         >
-                          <MdOutlineSettingsBackupRestore className="TempBackup" />
+                          <MdOutlineSettingsBackupRestore className='TempBackup' />
                         </button>
 
-                        <div className="backup">חזור למשימות שלי</div>
+                        <div className='backup'>חזור למשימות שלי</div>
                       </div>
                     </>
                   )}
                 </div>
-                <div className="stap31"></div>
+                <div className='stap31'></div>
                 {modalOpen && <ModalHelp setModalOpen={setModalOpen} />}
               </div>
             </>

@@ -264,9 +264,8 @@ const Stations = (props) => {
                           {...provided.droppableProps}
                           ref={provided.innerRef}
                         >
-                          {filteredData.map(({ id, title, color }, index) => {//khalid idies color
-                            console.log("khalid - title : " + title + " - color :" + color);
-                            // props.settaskcolor(color)//khalid idies color
+                          {filteredData.map(({ id, title, color }, index) => {
+                            // props.settaskcolor(color)
                             // setdpcolor(color)
                             let ID = '' + id;
                             console.log('id: ', typeof ID);
@@ -341,7 +340,7 @@ const Stations = (props) => {
                                         className='nameOfButton'
                                         onClick={() => {
                                           Display_The_Tasks(id, title)
-                                          props.settaskcolor(color)//khalid idies color
+                                          props.settaskcolor(color)
                                           setdpcolor(color)
                                         }
 

@@ -18,6 +18,7 @@ let myPlacesChoiceTemp = [];
 function Modal_Tasks(props) {
   const [, setDone] = useState(false);
   const [get_title, setTitle] = useState(props.title);
+  const [estimatedTimeSeconds, setEstimatedTimeSeconds] = useState(20);
   const [picture, setPicture] = useState(null);
   const [audio, setAudio] = useState(null);
   const [getDescription, setDescription] = useState(props.subtitle);
@@ -87,6 +88,7 @@ function Modal_Tasks(props) {
           stationIds: myPlacesChoice,
           picture_url,
           audio_url,
+          estimatedTimeSeconds,
         };
         update_task(props.uuid, newTask);
       } else {
@@ -135,7 +137,8 @@ function Modal_Tasks(props) {
           myPlacesChoice,
           picture_url,
           audio_url,
-          props.mySite.id
+          props.mySite.id,
+          estimatedTimeSeconds || 20
         );
 
         let color = props.allStations.find(
@@ -295,6 +298,19 @@ function Modal_Tasks(props) {
                     ></input>
                   </p>
                 </form>
+                <div style={{ marginBottom: '1rem' }}>
+                  <input
+                    type='number'
+                    name='estimatedTimeSeconds'
+                    id='estimatedTimeSeconds'
+                    min={20}
+                    defaultValue={20}
+                    onChange={(e) =>
+                      setEstimatedTimeSeconds(parseInt(e.target.value))
+                    }
+                  />
+                  הזן את הזמן המשוער בשניות עבור המשימה
+                </div>
                 <form id='IPU' className='w3-container'>
                   <h6>
                     {props.language !== 'English'

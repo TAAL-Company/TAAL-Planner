@@ -1,43 +1,54 @@
 import React from 'react';
 import Chart from 'chart.js/auto';
 import { Bar } from "react-chartjs-2";
-const state = {
-    labels: ['January', 'February', 'March', 'April', 'May'],
+const data = {
+    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
     datasets: [
         {
-            label: 'Rainfall',
-            backgroundColor: [
-                '#57C47D',
-                '#F29D38',
-                '#B1CDF9'
-              ],
-              hoverBackgroundColor: [
-              '#57C47D',
-              '#F29D38',
-              '#B1CDF9'
-              ],
-            borderWidth: 2,
-            data: [65, 59, 80, 81, 56]
+            type: 'bar',
+            label: 'Dataset 1',
+            backgroundColor: "#B1CDF9",
+            data: [50, 25, 12, 48, 90, 76, 42]
+        },
+        {
+            type: 'bar',
+            label: 'Dataset 2',
+            backgroundColor: "#F29D38",
+            data: [21, 84, 24, 75, 37, 65, 34]
+        },
+        {
+            type: 'bar',
+            label: 'Dataset 3',
+            backgroundColor:"#57C47D",
+            data: [41, 52, 24, 74, 23, 21, 32]
         }
     ]
-}
+};
+const options = {
+    maintainAspectRatio: false,
+    aspectRatio: 0.8,
+    plugins: {
+        tooltips: {
+            mode: 'index',
+            intersect: false
+        },
+    },
+    scales: {
+        x: {
+            stacked: true,
+        },
+        y: {
+            stacked: true,
+        }
+    }
+};
 
 function Barchart() {
     return (
         <div>
             <Bar
-                data={state}
-                options={{
-                    title: {
-                        display: true,
-                        text: 'Average Rainfall per month',
-                        fontSize: 20
-                    },
-                    legend: {
-                        display: true,
-                        position: 'right'
-                    }
-                }}
+                data={data}
+                options={options}
             />
         </div>
     );

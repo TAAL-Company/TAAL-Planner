@@ -51,6 +51,7 @@ function DragnDrop(props) {
   console.log(' props.allTasks 1: ', props.allTasksOfTheSite);
 
   const [board, setBoard] = useState([]);
+  const [newboard, setnewBoard] = useState([]);
   const [reorderBoardFlag, setReorderBoardFlag] = useState(true);
   const [openRemove, setOpenRemove] = React.useState(false);
 
@@ -174,10 +175,12 @@ function DragnDrop(props) {
     setOpenThreeDotsVertical(-1);
     setRequestForEditing('');
   };
+
   let prevStation = '';
   useEffect(() => {
     console.log('percent: ', props.percentProgressBar);
   }, [props.percentProgressBar]);
+
   useEffect(() => {
     if (props.replaceRouteFlag) {
       setBoard([]);
@@ -212,6 +215,8 @@ function DragnDrop(props) {
   saveProps = props;
 
   useEffect(() => {
+    console.log('props.tasksOfRoutes ', props.tasksOfRoutes);
+    setBoard([]);
     if (props.tasksOfRoutes && props.tasksOfRoutes.tasks) {
       console.log('props.tasksOfRoutes ', props.tasksOfRoutes);
       countTemp = 50 / props.tasksOfRoutes.tasks.length;
@@ -303,9 +308,18 @@ function DragnDrop(props) {
   useEffect(() => {
     console.log('board111: ', board);
   }, [board]);
+  
+  // useEffect(() => {
+  //   setnewBoard(board)
+  //   console.log('k- Route: ', Route);
+  //   console.log('k- newboard: ', newboard);
+  //   //  setBoard(props.boardArrayDND);
+  //   // thisIdArray=[];
+  // }, [Route]);
   //---------------------------------------------------------
   const addImageToBoard = (id, boardName) => {
     console.log('id alltasks: ', id);
+    console.log('boardName alltasks: ', boardName);
 
     if (boardName !== 'border') {
       if (saveTag.props !== undefined) {
@@ -347,36 +361,57 @@ function DragnDrop(props) {
       // alert(count)
       // setFlagFirst(flagFirst = false)
       if (boardName === 'routes') {
-        console.log('id boardArrayDND: ', id);
+        console.log('khalid id boardArrayDND: ', id);
 
         Route = props.boardArrayDND.find((tag) => id === tag.id);
 
-        console.log('Route boardArrayDND: ', Route);
+        console.log('khalid Route boardArrayDND: ', Route);
 
-        newBoard = board.slice();
+        // newBoard = board.slice();
         newBoard.unshift(Route);
 
         setBoard(newBoard);
+        //setBoard(board => [...board, newBoard]);
+
+        // setBoard(props.boardArrayDND)
         setFlagTree(true);
       } else {
         Route = dndArray.find((tag) => id === tag.id);
-        newBoard = board.slice();
+        // newBoard = board.slice();
         newBoard.unshift(Route);
+
         setBoard(newBoard);
+        // setBoard(board => [...board, newBoard]);
+
+        // setBoard(props.boardArrayDND)
         setFlagTree(true);
       }
-      console.log('dnd Route: ', Route);
+      // if (props.boardArrayDND.length > 0) {
+      //   console.log("id boardArrayDND: ", id);
+
+      //   Route = await props.boardArrayDND.filter((tag) => id === tag.id);
+
+      //   console.log("Route boardArrayDND: ", Route);
+
+      //   await setBoard((board) => [...board, Route[0]]);
+      // } else {
+      //   Route = await dndArray.filter((tag) => id === tag.id);
+      //   await setBoard((board) => [...board, Route[0]]);
+      // }
+
+      console.log('khalid dnd Route: ', Route);
 
       // setBoard((board) => [...board, Route[0]]);
 
-      console.log('dnd setBoard: ', board);
+      console.log('khalid dnd setBoard: ', board);
       // thisIdArray.push(thisId);
-      // myTask = saveProps.tasksOfChosenStation.find((item) => item.id === id);
+      //myTask = saveProps.tasksOfChosenStation.find((item) => item.id === id);
       // console.log("myTAsk:", myTask[0])
+      //thisIdArray.push(myTask[0]);
       thisIdArray.push(Route.id);
 
       prevStation = myStation;
-      // console.log("thisIdArray:", thisIdArray)
+      console.log("thisIdArray:", thisIdArray)
       // console.log("dndArray:", dndArray)
       localStorage.setItem('New_Routes', JSON.stringify(thisIdArray));
       // localStorage.setItem("MySite", JSON.stringify(props.mySite));
@@ -624,8 +659,10 @@ function DragnDrop(props) {
                       {board === undefined && board.length === 0 ? (
                         <div></div>
                       ) : (
+
                         board.map((tag, keyCount) => {
-                          console.log('tag.id: ', tag.id);
+                          console.log("khalid board : " + board);
+                          console.log('khalid tag.id: ', tag.id);
                           return (saveTag = (
                             <Tag
                               stationColor={tag.color}//{props.stationColor} //"#ff00d4" //תצוגת המסלול

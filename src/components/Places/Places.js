@@ -22,7 +22,7 @@ import { AiOutlinePlus } from 'react-icons/ai';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { CgSearch } from 'react-icons/cg';
 import textArea from '../../Pictures/textArea.svg';
-import ModalRouteChosen from '../Modal/Modal_Route_Chosen';
+import ModalRouteChosen from '../Modal/Modal_route_chosen';
 import ModalSiteChosen from '../Modal/Modal_Site_Chosen';
 import { DragDropContext } from 'react-beautiful-dnd';
 import stopIcon from '../../Pictures/stopIcon.svg';
@@ -275,7 +275,8 @@ const Places = (props) => {
   }, [replaceRouteFlag]);
 
   const DisplayTasks = (e) => {
-    console.log('flagRoute e ENTER', e);
+    console.log('khalid flagRoute e ENTER', e);
+    console.log('khalid flagRoute ' + flagRoute);
 
     // Check if another route is already selected
     if (!flagRoute) {
@@ -288,12 +289,17 @@ const Places = (props) => {
       tasksOfRoutes.name = tasksOfRoutes.name
         .replace('&#8211;', '-')
         .replace('&#8217;', "'"); //replace gebrish for - or '
+
       let firstStation;
 
+      console.log(
+        'khalid k tasksOfRoutes ' + JSON.stringify(tasksOfRoutes?.tasks)
+      );
       if (tasksOfRoutes.tasks && tasksOfRoutes.tasks.length > 0) {
-        firstStation = allTasks.find(
-          (obj) => obj.id === tasksOfRoutes.tasks[0].taskId
-        );
+        firstStation = allTasks.find((obj) => {
+          return obj.id === tasksOfRoutes.tasks[0].taskId;
+        });
+        console.log('khalid firstStation ' + JSON.stringify(firstStation));
       } else {
         setProgressBarFlag(false);
       }
@@ -331,8 +337,8 @@ const Places = (props) => {
           let taskTemp = allTasksOfTheSite?.find(
             (item) => item.id === element.taskId
           );
-          console.log('taskTemp: yyyyy', taskTemp);
-          console.log('element.ID: yyyyy', element.taskId);
+          console.log('khalid taskTemp: yyyyy', taskTemp);
+          console.log('khalid element.ID: yyyyy', element.taskId);
 
           if (taskTemp === undefined) {
             return {
@@ -439,6 +445,8 @@ const Places = (props) => {
           };
         })
       );
+
+      console.log('khalid setBoardArrayDND ' + boardArrayDND);
     } else {
       setReplaceRoute(e);
       setOpenModalRouteChosen(true);
@@ -487,6 +495,7 @@ const Places = (props) => {
 
   const handleSelectChange = (event) => {
     const newValue = JSON.parse(event.target.value);
+    console.log('khalid event.target.value ' + event.target.value);
 
     if (!siteSelected && !replaceSiteFlag) {
       setReplaceSite(newValue);
@@ -864,7 +873,11 @@ const Places = (props) => {
 
                     <button
                       className='nameOfButton'
-                      onClick={() => DisplayTasks(value)} //הצגת המסלול
+                      onClick={
+                        () => {
+                          DisplayTasks(value);
+                        } //הצגת המסלול
+                      }
                     >
                       {value.name
                         .replace('&#8211;', '-')

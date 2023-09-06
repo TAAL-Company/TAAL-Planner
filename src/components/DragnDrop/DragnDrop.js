@@ -47,6 +47,7 @@ let countTemp = 0;
 //-------------------------
 function DragnDrop(props) {
   const [board, setBoard] = useState([]);
+  const [newboard, setnewBoard] = useState([]);
   const [reorderBoardFlag, setReorderBoardFlag] = useState(true);
   const [openRemove, setOpenRemove] = React.useState(false);
 
@@ -165,10 +166,12 @@ function DragnDrop(props) {
     setOpenThreeDotsVertical(-1);
     setRequestForEditing('');
   };
+
   let prevStation = '';
   useEffect(() => {
     console.log('percent: ', props.percentProgressBar);
   }, [props.percentProgressBar]);
+
   useEffect(() => {
     if (props.replaceRouteFlag) {
       setBoard([]);
@@ -203,6 +206,8 @@ function DragnDrop(props) {
   saveProps = props;
 
   useEffect(() => {
+    console.log('props.tasksOfRoutes ', props.tasksOfRoutes);
+    setBoard([]);
     if (props.tasksOfRoutes && props.tasksOfRoutes.tasks) {
       console.log('props.tasksOfRoutes ', props.tasksOfRoutes);
       countTemp = 50 / props.tasksOfRoutes.tasks.length;

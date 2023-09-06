@@ -10,6 +10,8 @@ import Professions from '../../Pictures/Professions.svg';
 import coachImage from '../../Pictures/coach.png';
 import galleryImage from '../../Pictures/gallery.png';
 import pic from '../../Pictures/defualtSiteImg.svg';
+import Barchart from '../charts/Barchart'
+import Piechart from '../charts/Piechart'
 
 const Dashboard = () => {
   const cards = [
@@ -61,7 +63,10 @@ const Dashboard = () => {
     <div className='Dashboard'>
       {/* <Navbar /> */}
       <div className='content'>
-        <div className='left'>Dashboards</div>
+        <div className='left'>
+        <Barchart />
+        <Piechart />
+        </div>
         <div className='right'>
           <div className='cardsLine'>
             <CardDash cards={cards[2]} />

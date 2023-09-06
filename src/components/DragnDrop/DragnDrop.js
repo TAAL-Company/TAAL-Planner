@@ -19,7 +19,6 @@ import { deleteTask } from '../../api/api.js';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 let Route = [];
-let newBoard = [];
 let dndArray = [];
 let saveProps = [];
 let thisId = '';
@@ -47,16 +46,9 @@ let currentIndex = 0;
 let countTemp = 0;
 //-------------------------
 function DragnDrop(props) {
-  console.log(' props.allTasksOfTheSiteeee drag ', props.allTasksOfTheSite);
-  console.log(' props.allTasks 1: ', props.allTasksOfTheSite);
-
   const [board, setBoard] = useState([]);
   const [reorderBoardFlag, setReorderBoardFlag] = useState(true);
   const [openRemove, setOpenRemove] = React.useState(false);
-
-  console.log('props mySite:', props.mySite);
-  console.log('props dragFrom:', props.dragFrom);
-  console.log('props.myStation:', props.myStation);
 
   // console.log("JSON.parse(localStorage.getItem('New_Routes')):", JSON.parse(localStorage.getItem('New_Routes')))
   console.log('propsDataTask:', props.tasksOfChosenStation);
@@ -88,7 +80,6 @@ function DragnDrop(props) {
   const [activeButton, setActiveButton] = useState('tree');
   const [siteSelected, setSiteSelected] = useState(false);
   // const [prevStation,setPrevStation] = useState("test");
-  console.log(' props.boardArrayDND1 ', props.boardArrayDND);
   const [boardArrayDND, setboardArrayDND] = useState(props.boardArrayDND);
 
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
@@ -301,21 +292,10 @@ function DragnDrop(props) {
   //   }),
   // }));
 
-  useEffect(() => {
-    console.log('board111: ', board);
-  }, [board]);
   //---------------------------------------------------------
   const addImageToBoard = (id, boardName) => {
-    console.log('id alltasks: ', id);
-
     if (boardName !== 'border') {
       if (saveTag.props !== undefined) {
-        console.log('saveTag.props.myStation DND', saveTag);
-        console.log(
-          'saveTag.props.myLastStation dnd',
-          saveTag.props.myLastStation
-        );
-
         if (saveTag.props.myLastStation === saveTag.props.myStation) {
           //same station
           setFlagPhoneOne((flagPhoneOne = true));
@@ -339,46 +319,27 @@ function DragnDrop(props) {
           setKavTaskTopMarginTop((kavTaskTopMarginTop = '-7px'));
         }
       }
-      // console.log(
-      //   " props.allTasks ",
-      //   props.allTasksOfTheSite.find((task) => task.id === id)
-      // );
 
       setCount(count++);
-      // alert(count)
       // setFlagFirst(flagFirst = false)
-      if (boardName === 'routes') {
-        console.log('id boardArrayDND: ', id);
+      if (boardName === 'routes' && props.boardArrayDND.length > 0) {
+        Route = props.boardArrayDND?.find((tag) => id === tag.id);
 
-        Route = props.boardArrayDND.find((tag) => id === tag.id);
-
-        console.log('Route boardArrayDND: ', Route);
-
-        newBoard = board.slice();
-        newBoard.unshift(Route);
-
-        setBoard(newBoard);
+        setBoard((board) => [...board, Route]);
         setFlagTree(true);
       } else {
-        Route = dndArray.find((tag) => id === tag.id);
-        newBoard = board.slice();
-        newBoard.unshift(Route);
-        setBoard(newBoard);
+        Route = dndArray?.find((tag) => id === tag.id);
+
+        setBoard((board) => [Route, ...board]);
         setFlagTree(true);
       }
-      console.log('dnd Route: ', Route);
-
       // setBoard((board) => [...board, Route[0]]);
 
-      console.log('dnd setBoard: ', board);
       // thisIdArray.push(thisId);
       // myTask = saveProps.tasksOfChosenStation.find((item) => item.id === id);
-      // console.log("myTAsk:", myTask[0])
       thisIdArray.push(Route.id);
 
       prevStation = myStation;
-      // console.log("thisIdArray:", thisIdArray)
-      // console.log("dndArray:", dndArray)
       localStorage.setItem('New_Routes', JSON.stringify(thisIdArray));
       // localStorage.setItem("MySite", JSON.stringify(props.mySite));
     }

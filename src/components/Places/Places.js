@@ -260,32 +260,19 @@ const Places = (props) => {
     setDone(true);
   };
 
-  // useEffect(() => {
-  //   console.log('replaceRouteFlag flagRoute', replaceRouteFlag);
-  //   if (replaceRouteFlag) {
-  //     setRouteFlags(false);
-  //     Display_The_Stations(
-  //       allRoutes.filter((route) =>
-  //         route.sites.some((site) => site.id === mySite.id)
-  //       )
-  //     );
-  //     DisplayTasks(tasksOfRoutes);
-  //     setReplaceRouteFlag(false);
-  //     console.log('flagRoute flagRoute', flagRoute);
-  //   }
-  // }, [replaceRouteFlag]);
+  useEffect(() => {
+    if (flagRoute && replaceRouteFlag) {
+      setRouteFlags(false);
+      setReplaceRouteFlag(false);
+      setOpenModalRouteChosen(false);
+    }
+  }, [flagRoute, openModalSiteChosen, replaceRouteFlag]);
 
-  // useEffect(() => {
-  //   if (
-  //     flagRoute === true &&
-  //     replaceRouteFlag === true &&
-  //     openModalSiteChosen === true
-  //   ) {
-  //     setReplaceRouteFlag(false);
-  //     setOpenModalRouteChosen(false);
-  //     setRouteFlags(false);
-  //   }
-  // }, [flagRoute]);
+  useEffect(() => {
+    if (!replaceRouteFlag && Object.keys(replaceRoute).length > 0) {
+      DisplayTasks(replaceRoute);
+    }
+  }, [replaceRouteFlag]);
 
   const DisplayTasks = (e) => {
     console.log('flagRoute e ENTER', e);
@@ -294,10 +281,7 @@ const Places = (props) => {
     if (!flagRoute) {
       setProgressBarFlag(true);
       setPercentProgressBar(6);
-      console.log('flagRoute e', e);
-
       setRouteFlags(true);
-      setRouteFlags(false);
 
       tasksOfRoutes = e;
 
@@ -457,7 +441,7 @@ const Places = (props) => {
       );
     } else {
       setReplaceRoute(e);
-      setRouteFlags(false);
+      setOpenModalRouteChosen(true);
     }
   };
 
@@ -510,12 +494,11 @@ const Places = (props) => {
       setSiteSelected(true);
       setReplaceSiteFlag(true);
       setOpenModalSiteChosen(false);
-      // setRouteFlags(false);
-      // setReplaceRouteFlag(false);
     } else {
       setSelectedValue(null);
       setReplaceSiteFlag(false);
       setOpenModalSiteChosen(true);
+      setRouteFlags(false);
     }
 
     setSelectedValue(newValue);
@@ -744,7 +727,6 @@ const Places = (props) => {
     console.log('result: ', result);
     setDropToBoard(result);
   }
-
   //----------------------------------------------------------------------
   return (
     <>

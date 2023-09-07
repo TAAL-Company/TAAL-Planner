@@ -383,7 +383,7 @@ function DragnDrop(props) {
         newBoard.unshift(Route);
 
         setBoard(newBoard);
-        // setBoard(board => [...board, newBoard]);
+        //setBoard(board => [...board, newBoard]);
 
         // setBoard(props.boardArrayDND)
         setFlagTree(true);
@@ -664,7 +664,6 @@ function DragnDrop(props) {
                       {board === undefined && board.length === 0 ? (
                         <div></div>
                       ) : (
-
                         board.map((tag, keyCount) => {
                           console.log("khalid board : " + board);
                           console.log('khalid tag.id: ', tag.id);

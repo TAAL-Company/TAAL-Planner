@@ -2,7 +2,6 @@ import './Modal.css';
 import stopIcon from '../../Pictures/stopIcon.svg';
 
 const Modal_route_chosen = (props) => {
-  console.log('Modal_route_chosen');
   return (
     <>
       <div className='modal_route_chosen'>

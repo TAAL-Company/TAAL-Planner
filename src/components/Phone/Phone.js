@@ -4,7 +4,7 @@ import Dot from '../Dot/Dot';
 import Clock from '../Clock/Clock';
 import Tag from '../Tag/Tag.js';
 import { MdOutlineSettingsBackupRestore } from 'react-icons/md';
-import ModalHelp from '../Modal/Modal_help';
+import ModalHelp from '../Modal/Modal_Help';
 let flagStress = false;
 const Phone = (props) => {
   const [, setFlagStress] = useState(false);

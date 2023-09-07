@@ -1,14 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Tag from '../Tag/Tag.js';
 import { CgSearch } from 'react-icons/cg';
 import textArea from '../../Pictures/textArea.svg';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { useDrag } from 'react-dnd';
 import ModalTasks from '../Modal/Modal_Tasks.js';
 import { deleteTask, insertTask } from '../../api/api.js';
-import Modal_Delete from '../Modal/Modal_Delete.js';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import ModalDelete from '../Modal/Modal_Delete.js';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 
 const Tasks = (props) => {
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
@@ -335,7 +333,7 @@ const Tasks = (props) => {
       ) : (
         <></>
       )}
-      <Modal_Delete
+      <ModalDelete
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
         DialogTitle={'מחיקת משימה'}

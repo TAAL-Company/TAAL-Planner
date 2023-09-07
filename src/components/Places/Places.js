@@ -1,9 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  get,
-  getingDataRoutes,
-  getingDataTasks,
-  getingDataPlaces,
   getingData_Routes,
   getingData_Tasks,
   getingData_Places,
@@ -13,37 +9,26 @@ import {
   updateRoute,
 } from '../../api/api';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import './style.css';
-// import { MdOutlineAdsClick } from "react-icons/md";
-// import { FcAddDatabase, FcSearch } from "react-icons/fc";
 import Stations from '../Stations/Stations';
 import Tasks from '../Tasks/tasks';
-import ModalPlaces from '../Modal/Model_Places';
-// import ModalLoading from '../Modal/Modal_Loading';
 import Modal from '../Modal/Modal';
-import Modal_dropdown from '../Modal/Modal_dropdown';
-// import TextField from "@mui/material/TextField";
-import { baseUrl } from '../../config';
+import ModalDropdown from '../Modal/Modal_Dropdown';
 import { AiOutlinePlus } from 'react-icons/ai';
-// import Dot from "../Dot/Dot";
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { CgSearch } from 'react-icons/cg';
 import textArea from '../../Pictures/textArea.svg';
-import Modal_route_chosen from '../Modal/Modal_route_chosen';
-import { MdNoStroller } from 'react-icons/md';
-import Modal_site_chosen from '../Modal/Modal_site_chosen';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import '../Modal/Modal.css';
+import ModalRouteChosen from '../Modal/Modal_route_chosen';
+import ModalSiteChosen from '../Modal/Modal_Site_Chosen';
+import { DragDropContext } from 'react-beautiful-dnd';
 import stopIcon from '../../Pictures/stopIcon.svg';
+import '../Modal/Modal.css';
+import './style.css';
 
-// const { baseUrl } = require
-//-----------------------
 let tasksOfRoutes = {};
 // let allRoutes = [];
 let allPlaces = [];
@@ -275,58 +260,46 @@ const Places = (props) => {
     setDone(true);
   };
 
-  // useEffect(() => {
-  //   console.log('replaceRouteFlag flagRoute', replaceRouteFlag);
-  //   if (replaceRouteFlag) {
-  //     setRouteFlags(false);
-  //     Display_The_Stations(
-  //       allRoutes.filter((route) =>
-  //         route.sites.some((site) => site.id === mySite.id)
-  //       )
-  //     );
-  //     DisplayTasks(tasksOfRoutes);
-  //     setReplaceRouteFlag(false);
-  //     console.log('flagRoute flagRoute', flagRoute);
-  //   }
-  // }, [replaceRouteFlag]);
+  useEffect(() => {
+    if (flagRoute && replaceRouteFlag) {
+      setRouteFlags(false);
+      setReplaceRouteFlag(false);
+      setOpenModalRouteChosen(false);
+    }
+  }, [flagRoute, openModalSiteChosen, replaceRouteFlag]);
 
-  // useEffect(() => {
-  //   if (
-  //     flagRoute === true &&
-  //     replaceRouteFlag === true &&
-  //     openModalSiteChosen === true
-  //   ) {
-  //     setReplaceRouteFlag(false);
-  //     setOpenModalRouteChosen(false);
-  //     setRouteFlags(false);
-  //   }
-  // }, [flagRoute]);
+  useEffect(() => {
+    if (!replaceRouteFlag && Object.keys(replaceRoute).length > 0) {
+      DisplayTasks(replaceRoute);
+    }
+  }, [replaceRouteFlag]);
 
   const DisplayTasks = (e) => {
     console.log('khalid flagRoute e ENTER', e);
-    console.log("khalid flagRoute "+flagRoute);
+    console.log('khalid flagRoute ' + flagRoute);
 
     // Check if another route is already selected
     if (!flagRoute) {
       setProgressBarFlag(true);
       setPercentProgressBar(6);
-      console.log('khalid flagRoute e', e);
-
       setRouteFlags(true);
-      setRouteFlags(false);
 
       tasksOfRoutes = e;
 
-      tasksOfRoutes.name = tasksOfRoutes.name.replace('&#8211;', '-').replace('&#8217;', "'"); //replace gebrish for - or '
+      tasksOfRoutes.name = tasksOfRoutes.name
+        .replace('&#8211;', '-')
+        .replace('&#8217;', "'"); //replace gebrish for - or '
 
       let firstStation;
 
-      console.log("khalid k tasksOfRoutes "+JSON.stringify(tasksOfRoutes?.tasks));
+      console.log(
+        'khalid k tasksOfRoutes ' + JSON.stringify(tasksOfRoutes?.tasks)
+      );
       if (tasksOfRoutes.tasks && tasksOfRoutes.tasks.length > 0) {
         firstStation = allTasks.find((obj) => {
-          return obj.id === tasksOfRoutes.tasks[0].taskId
+          return obj.id === tasksOfRoutes.tasks[0].taskId;
         });
-        console.log("khalid firstStation "+JSON.stringify(firstStation));
+        console.log('khalid firstStation ' + JSON.stringify(firstStation));
       } else {
         setProgressBarFlag(false);
       }
@@ -473,10 +446,10 @@ const Places = (props) => {
         })
       );
 
-      console.log("khalid setBoardArrayDND "+ boardArrayDND);
+      console.log('khalid setBoardArrayDND ' + boardArrayDND);
     } else {
       setReplaceRoute(e);
-      setRouteFlags(false);
+      setOpenModalRouteChosen(true);
     }
   };
 
@@ -522,7 +495,7 @@ const Places = (props) => {
 
   const handleSelectChange = (event) => {
     const newValue = JSON.parse(event.target.value);
-    console.log("khalid event.target.value "+event.target.value);
+    console.log('khalid event.target.value ' + event.target.value);
 
     if (!siteSelected && !replaceSiteFlag) {
       setReplaceSite(newValue);
@@ -530,12 +503,11 @@ const Places = (props) => {
       setSiteSelected(true);
       setReplaceSiteFlag(true);
       setOpenModalSiteChosen(false);
-      // setRouteFlags(false);
-      // setReplaceRouteFlag(false);
     } else {
       setSelectedValue(null);
       setReplaceSiteFlag(false);
       setOpenModalSiteChosen(true);
+      setRouteFlags(false);
     }
 
     setSelectedValue(newValue);
@@ -751,9 +723,8 @@ const Places = (props) => {
     );
   };
   const [taskcolor, settaskcolor] = useState('');
-  const handleColor = color => {
+  const handleColor = (color) => {
     settaskcolor(color);
-
   };
 
   useEffect(() => {
@@ -765,7 +736,6 @@ const Places = (props) => {
     console.log('result: ', result);
     setDropToBoard(result);
   }
-
   //----------------------------------------------------------------------
   return (
     <>
@@ -887,7 +857,7 @@ const Places = (props) => {
 
                       {openThreeDotsVertical === index ? (
                         // <div ref={menuRef}>
-                        <Modal_dropdown
+                        <ModalDropdown
                           setRequestForEditing={setRequestForEditing}
                           setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                           editable={true}
@@ -903,10 +873,11 @@ const Places = (props) => {
 
                     <button
                       className='nameOfButton'
-                      onClick={() => {
-                        DisplayTasks(value)} //הצגת המסלול
+                      onClick={
+                        () => {
+                          DisplayTasks(value);
+                        } //הצגת המסלול
                       }
-                        
                     >
                       {value.name
                         .replace('&#8211;', '-')
@@ -994,20 +965,20 @@ const Places = (props) => {
       </div>
       {openModalRouteChosen ? (
         <>
-          {/* <Modal_route_chosen
+          <ModalRouteChosen
             setReplaceRouteFlag={setReplaceRouteFlag}
             setOpenModalRouteChosen={setOpenModalRouteChosen}
-          ></Modal_route_chosen> */}
+          ></ModalRouteChosen>
         </>
       ) : (
         <></>
       )}
       {openModalSiteChosen ? (
         <>
-          {/* <Modal_site_chosen
+          <ModalSiteChosen
             setReplaceSiteFlag={setReplaceSiteFlag}
             setOpenModalSiteChosen={setOpenModalSiteChosen}
-          ></Modal_site_chosen> */}
+          ></ModalSiteChosen>
           <div className='modal_route_chosen'>
             <div className='stopIconContainer'>
               <img src={stopIcon} alt='logo'></img>

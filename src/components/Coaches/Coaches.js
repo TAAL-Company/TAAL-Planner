@@ -17,7 +17,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { insertCoach } from '../../api/api';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import Modal_dropdown from '../Modal/Modal_dropdown';
+import Modal_Dropdown from '../Modal/Modal_Dropdown';
 import cognitiveList from '../Form/cognitive.json';
 const Coaches = () => {
   const [users, setUsers] = useState([]); // State to store the users
@@ -260,7 +260,7 @@ const Coaches = () => {
               </button>
 
               {openThreeDotsVertical === index ? (
-                <Modal_dropdown
+                <Modal_Dropdown
                   setRequestForEditing={setRequestForEditing}
                   setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                   editable={true}

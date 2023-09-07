@@ -18,7 +18,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { insertUser } from '../../api/api';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import Modal_dropdown from '../Modal/Modal_dropdown';
+import ModalDropdown from '../Modal/Modal_Dropdown';
 import cognitiveList from '../Form/cognitive.json';
 import Autocomplete from '@mui/material/Autocomplete';
 
@@ -206,7 +206,6 @@ const Cards = () => {
             }
           />
           <TextField
-            autoFocus
             margin='dense'
             id='name'
             label='שם מלא'
@@ -220,7 +219,6 @@ const Cards = () => {
             }
           />
           <TextField
-            autoFocus
             margin='dense'
             id='userName'
             label='שם משתמש'
@@ -317,7 +315,7 @@ const Cards = () => {
               </button>
 
               {openThreeDotsVertical === index ? (
-                <Modal_dropdown
+                <ModalDropdown
                   setRequestForEditing={setRequestForEditing}
                   setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                   editable={true}

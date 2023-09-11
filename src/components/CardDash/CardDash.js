@@ -37,6 +37,8 @@ const CardDash = (props) => {
       history.replace('/gallery');
     } else if (id === 6) {
       history.replace('/coaches');
+    } else if (id === 8) {
+      history.replace('/community');
     } else console.log('fail');
   };
 

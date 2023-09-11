@@ -15,6 +15,7 @@ import { Switch, Route } from 'react-router-loading';
 import PlacesCards from './components/placesCards/placesCards';
 import Forms from './components/Form/Forms';
 import Coaches from './components/Coaches/Coaches';
+import Community from './components/Community/community';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -43,6 +44,7 @@ function App() {
                   <Route path='/places' component={PlacesCards}></Route>
                   <Route path='/Forms' component={Forms}></Route>
                   <Route path='/coaches' component={Coaches}></Route>
+                  <Route path='/community' component={Community}></Route>
                 </Switch>
               </div>
             </Router>

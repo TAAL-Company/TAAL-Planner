@@ -9,9 +9,10 @@ import kashrut from '../../Pictures/הכשרות.svg';
 import Professions from '../../Pictures/Professions.svg';
 import coachImage from '../../Pictures/coach.png';
 import galleryImage from '../../Pictures/gallery.png';
+import communityImage from '../../Pictures/community.png';
 import pic from '../../Pictures/defualtSiteImg.svg';
-import Barchart from '../charts/Barchart'
-import Piechart from '../charts/Piechart'
+import Barchart from '../charts/Barchart';
+import Piechart from '../charts/Piechart';
 
 const Dashboard = () => {
   const cards = [
@@ -24,14 +25,8 @@ const Dashboard = () => {
     {
       id: 2,
       headline: 'עובדים',
-      addLabel: 'הוספת חניך',
+      addLabel: 'הוספת עובד',
       image: group,
-    },
-    {
-      id: 7,
-      headline: 'הכשרות',
-      addLabel: 'הוספת חניך',
-      image: kashrut,
     },
     {
       id: 3,
@@ -57,6 +52,18 @@ const Dashboard = () => {
       addLabel: 'הוספת מדריך',
       image: coachImage,
     },
+    {
+      id: 7,
+      headline: 'הכשרות',
+      addLabel: 'הוספת הכשרה',
+      image: kashrut,
+    },
+    {
+      id: 8,
+      headline: 'קהילה',
+      addLabel: 'הוספת הודעה',
+      image: communityImage,
+    },
   ];
 
   return (
@@ -64,24 +71,25 @@ const Dashboard = () => {
       {/* <Navbar /> */}
       <div className='content'>
         <div className='left'>
-        <Barchart />
-        <Piechart />
+          <Barchart />
+          <Piechart />
         </div>
         <div className='right'>
           <div className='cardsLine'>
-            <CardDash cards={cards[2]} />
+            <CardDash cards={cards[6]} />
             <CardDash cards={cards[1]} />
           </div>
           <div className='cardsLine'>
-            <CardDash cards={cards[3]} />
+            <CardDash cards={cards[2]} />
             <CardDash cards={cards[0]} />
           </div>
           <div className='cardsLine'>
             <CardDash cards={cards[5]} />
-            <CardDash cards={cards[4]} />
+            <CardDash cards={cards[3]} />
           </div>
           <div className='cardsLine'>
-            <CardDash cards={cards[6]} />
+            <CardDash cards={cards[4]} />
+            <CardDash cards={cards[7]} />
           </div>
         </div>
       </div>

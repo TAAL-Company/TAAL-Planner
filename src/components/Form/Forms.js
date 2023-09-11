@@ -671,7 +671,8 @@ function Forms() {
     },
     {
       field: 'image',
-      headerName: '',
+      headerName: 'תמונה',
+      headerAlign: 'center',
       width: 100,
       editable: false,
       sortable: false,
@@ -722,6 +723,31 @@ function Forms() {
       align: 'center',
     },
     {
+      field: 'יכולת משימה',
+      headerName: 'יכולת משימה',
+      width: 300,
+      editable: false,
+      headerAlign: 'center',
+      align: 'center',
+      renderCell: (params) => (
+        <div style={{ textAlign: 'right', fontSize: '1rem' }}>
+          {params.row.classification === 'green' ? (
+            <></>
+          ) : (
+            <Autocomplete
+              disablePortal
+              id='combo-box-demo'
+              options={params.row.TaskAbilitylist}
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label='רשימת יכולות משימות' />
+              )}
+            />
+          )}
+        </div>
+      ),
+    },
+    {
       field: 'intervention',
       headerName: 'התאמה',
       width: 180,
@@ -764,31 +790,6 @@ function Forms() {
           );
         }
       },
-    },
-    {
-      field: 'TaskAbility',
-      headerName: 'TaskAbility',
-      width: 300,
-      editable: false,
-      headerAlign: 'center',
-      align: 'center',
-      renderCell: (params) => (
-        <div style={{ textAlign: 'right', fontSize: '1rem' }}>
-          {params.row.classification === 'green' ? (
-            <></>
-          ) : (
-            <Autocomplete
-              disablePortal
-              id='combo-box-demo'
-              options={params.row.TaskAbilitylist}
-              sx={{ width: 300 }}
-              renderInput={(params) => (
-                <TextField {...params} label='Task Ability list' />
-              )}
-            />
-          )}
-        </div>
-      ),
     },
     {
       field: 'Alternatives',

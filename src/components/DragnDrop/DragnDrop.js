@@ -451,6 +451,23 @@ function DragnDrop(props) {
       }
     }
   }, [board, flagTree]);
+
+  const myTasksContainer = document.querySelector('.MyTasks');
+
+  function scrollToBottom() {
+    myTasksContainer.scrollTop = myTasksContainer.scrollHeight;
+  }
+
+  useEffect(() => {
+    if (myTasksContainer) {
+      const observer = new MutationObserver(scrollToBottom);
+      observer.observe(myTasksContainer, { childList: true });
+
+      return () => {
+        observer.disconnect(); // Cleanup the observer when the component unmounts
+      };
+    }
+  }, [myTasksContainer]);
   //---------------------------------------------------------
   return (
     <>

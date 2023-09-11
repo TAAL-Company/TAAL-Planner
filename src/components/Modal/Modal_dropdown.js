@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 //--------------------------
 
 //--------------------------
-function Modal_dropdown(props) {
+function Modal_Dropdown(props) {
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -54,4 +54,4 @@ function Modal_dropdown(props) {
     </div>
   );
 }
-export default Modal_dropdown;
+export default Modal_Dropdown;

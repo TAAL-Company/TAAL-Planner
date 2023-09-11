@@ -1,7 +1,7 @@
 import "./Modal.css"
 import stopIcon from '../../Pictures/stopIcon.svg'
 
-const Modal_no_site_selected = (props) => {
+const Modal_No_Site_Selected = (props) => {
 
 
     return (
@@ -38,4 +38,4 @@ const Modal_no_site_selected = (props) => {
 
     );
 }
-export default Modal_no_site_selected;
+export default Modal_No_Site_Selected;

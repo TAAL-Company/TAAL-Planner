@@ -347,13 +347,12 @@ function Forms() {
   const handleChangeUserFlags = (event, values) => {
     console.log('worker', event);
     console.log('worker', values);
-    setRroutenewName('בחר מסלול')
+    setRroutenewName('בחר מסלול');
     setWorker(values);
   };
 
   const handleChangeRouteFlags = async (event, value) => {
-    console.log("khalid ++ vvvv" + JSON.stringify(value));
-    setRroutenewName(value.name)
+    setRroutenewName(value.name);
 
     const route = allRoutes.find((route) => route.id === value.id);
 
@@ -410,11 +409,12 @@ function Forms() {
         //   // 'TW121' === "adbd938d-8f79-4068-8ef7-ff9cc1a7b86e"
         //   // && prediction.studentid === 'TW1'
         // );
-        console.log('kh - TaskAbilityList - ' + JSON.stringify(TaskAbilityList));
-        console.log('kh - evaluation:', evaluation);
-        const IndexesToTraits = TaskAbilityList?.indexes?.map((index) => cognitiveAbillities.find((ca) => ca.index === index))
+        const IndexesToTraits = TaskAbilityList?.indexes
+          ?.map((index) => cognitiveAbillities.find((ca) => ca.index === index))
           .filter((entry) => entry !== undefined)
-          .map((entry) => { return entry.trait; });
+          .map((entry) => {
+            return entry.trait;
+          });
         //IndexesToTraits = IndexesToTraits.filter(Boolean);
         //--------------------------------------------------THIS SHOUD BE CHANGE
 
@@ -774,8 +774,9 @@ function Forms() {
       align: 'center',
       renderCell: (params) => (
         <div style={{ textAlign: 'right', fontSize: '1rem' }}>
-          {
-            params.row.classification === "green" ? (<></>) : (
+          {params.row.classification === 'green' ? (
+            <></>
+          ) : (
             <Autocomplete
               disablePortal
               id='combo-box-demo'
@@ -785,8 +786,7 @@ function Forms() {
                 <TextField {...params} label='Task Ability list' />
               )}
             />
-            )
-          }
+          )}
         </div>
       ),
     },
@@ -1861,8 +1861,9 @@ function Forms() {
       <div>
         <div>
           <button
-            className={`switch-button-forms ${language === 'hebrew' ? 'hebrew' : 'english'
-              }`}
+            className={`switch-button-forms ${
+              language === 'hebrew' ? 'hebrew' : 'english'
+            }`}
             onClick={() =>
               setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
             }
@@ -1933,8 +1934,8 @@ function Forms() {
                       // keepMounted={slide}
                       // transitionDuration={300}
                       disableEscapeKeyDown
-                    // style={{ direction: "rtl" }}
-                    // style={{ position: "absolute", top: "0", right: "0" }}
+                      // style={{ direction: "rtl" }}
+                      // style={{ position: "absolute", top: "0", right: "0" }}
                     >
                       <div
                         style={{

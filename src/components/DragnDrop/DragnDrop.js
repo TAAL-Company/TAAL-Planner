@@ -47,7 +47,6 @@ let countTemp = 0;
 //-------------------------
 function DragnDrop(props) {
   const [board, setBoard] = useState([]);
-  const [newBoard, setnewBoard] = useState([]);
   const [reorderBoardFlag, setReorderBoardFlag] = useState(true);
   const [openRemove, setOpenRemove] = React.useState(false);
 
@@ -212,8 +211,11 @@ function DragnDrop(props) {
       console.log('props.tasksOfRoutes ', props.tasksOfRoutes);
       countTemp = 50 / props.tasksOfRoutes.tasks.length;
       // props.setProgressBarFlag(true)
-      if (props.tasksOfRoutes.tasks) {
-        props.tasksOfRoutes.tasks.forEach( async (element, index) => {
+      if (
+        props.tasksOfRoutes.tasks.length > 0 &&
+        props.boardArrayDND.length > 0
+      ) {
+        props.tasksOfRoutes.tasks.forEach(async (element) => {
           await addImageToBoard(element.taskId, 'routes');
           props.setPercentProgressBar(
             (percentProgressBar) => percentProgressBar + countTemp
@@ -299,7 +301,6 @@ function DragnDrop(props) {
 
   //---------------------------------------------------------
   const addImageToBoard = async (id, boardName) => {
-    console.log("khalid "+boardName+" ---------------------------------------------------- "+id);
     if (boardName !== 'border') {
       if (saveTag.props !== undefined) {
         if (saveTag.props.myLastStation === saveTag.props.myStation) {
@@ -332,26 +333,18 @@ function DragnDrop(props) {
         Route = await props.boardArrayDND?.find((tag) => id === tag.id);
 
         setBoard((board) => [...board, Route]);
-        console.log("khalid "+boardName+" ---------------------------------------------------- "+board);
-        // newBoard.unshift(Route);
-        // setBoard(newBoard);
-
         setFlagTree(true);
       } else {
         Route = await dndArray?.find((tag) => id === tag.id);
 
-        setBoard((board) => [, ...board,Route]);
-        console.log("khalid "+boardName+" ---------------------------------------------------- "+board);
-        // newBoard.unshift(Route);
-        // setBoard(newBoard);
-
+        setBoard((board) => [...board, Route]);
         setFlagTree(true);
       }
       // setBoard((board) => [...board, Route[0]]);
 
       // thisIdArray.push(thisId);
       // myTask = saveProps.tasksOfChosenStation.find((item) => item.id === id);
-      thisIdArray.push(Route?.id);
+      thisIdArray.push(Route.id);
 
       prevStation = myStation;
       localStorage.setItem('New_Routes', JSON.stringify(thisIdArray));
@@ -422,43 +415,40 @@ function DragnDrop(props) {
   };
   useEffect(() => {
     if (flagTree && board) {
-       if (board[0] !== undefined) {
-        console.log("kkkk "+JSON.stringify(board));
-        for (let i = 0; i < board.length; i++) {
-          if (board[i].nameStation === '') {
-            if (i === 0) {
-              board[i].nameStation = board[i].myStation;
-              board[i].borderLeft = '0x solid #c2bfbf';
-              board[i].width = '-13px';
-              board[i].height = '70px';
-              board[i].bottom = '-27px';
-              board[i].kavTopWidth = '25px';
-              board[i].newkavTaskTop = '0px';
-              board[i].kavTaskTopMarginTop = '-7px';
-            } else if (board[i].myStation !== board[i - 1].myStation) {
-              board[i].nameStation = board[i].myStation;
-              board[i].borderLeft = '0x solid #c2bfbf';
-              board[i].width = '-13px';
-              board[i].height = '70px';
-              board[i].bottom = '-27px';
-              board[i].kavTopWidth = '25px';
-              board[i].newkavTaskTop = '0px';
-              board[i].kavTaskTopMarginTop = '-7px';
-            }
-          } else {
-            if (i !== 0 && board[i].myStation === board[i - 1].myStation) {
-              board[i].nameStation = '';
-              board[i].width = '-84px';
-              board[i].borderLeft = '2x solid #c2bfbf';
-              board[i].height = '86px';
-              board[i].bottom = '45px';
-              board[i].kavTopWidth = '0px';
-              board[i].newkavTaskTop = '100px';
-              board[i].kavTaskTopMarginTop = '-27px';
-            }
+      for (let i = 0; i < board.length; i++) {
+        if (board[i].nameStation === '') {
+          if (i === 0) {
+            board[i].nameStation = board[i].myStation;
+            board[i].borderLeft = '0x solid #c2bfbf';
+            board[i].width = '-13px';
+            board[i].height = '70px';
+            board[i].bottom = '-27px';
+            board[i].kavTopWidth = '25px';
+            board[i].newkavTaskTop = '0px';
+            board[i].kavTaskTopMarginTop = '-7px';
+          } else if (board[i].myStation !== board[i - 1].myStation) {
+            board[i].nameStation = board[i].myStation;
+            board[i].borderLeft = '0x solid #c2bfbf';
+            board[i].width = '-13px';
+            board[i].height = '70px';
+            board[i].bottom = '-27px';
+            board[i].kavTopWidth = '25px';
+            board[i].newkavTaskTop = '0px';
+            board[i].kavTaskTopMarginTop = '-7px';
+          }
+        } else {
+          if (i !== 0 && board[i].myStation === board[i - 1].myStation) {
+            board[i].nameStation = '';
+            board[i].width = '-84px';
+            board[i].borderLeft = '2x solid #c2bfbf';
+            board[i].height = '86px';
+            board[i].bottom = '45px';
+            board[i].kavTopWidth = '0px';
+            board[i].newkavTaskTop = '100px';
+            board[i].kavTaskTopMarginTop = '-27px';
           }
         }
-       }
+      }
     }
   }, [board, flagTree]);
   //---------------------------------------------------------
@@ -478,7 +468,7 @@ function DragnDrop(props) {
       <>
         <div
           className={`Board ${props.language !== 'English' ? 'english' : ''}`}
-        // ref={drop}
+          // ref={drop}
         >
           <div className='topButtons'>
             <button
@@ -510,8 +500,9 @@ function DragnDrop(props) {
             <div style={{ fontSize: '20px', left: '185px' }}></div>
           </div>
           <div
-            className={`my_Buttons_icons ${props.language !== 'English' ? 'english' : ''
-              }`}
+            className={`my_Buttons_icons ${
+              props.language !== 'English' ? 'english' : ''
+            }`}
           >
             <button
               className={
@@ -565,14 +556,20 @@ function DragnDrop(props) {
                     {board[0] !== undefined && board.length !== 0 ? (
                       <>
                         <div
-                          className={`kavT ${props.language !== 'English' ? 'english' : ''
-                            }`}
+                          className={`kavT ${
+                            props.language !== 'English' ? 'english' : ''
+                          }`}
                         ></div>
                         <div
-                          className={`mySiteChois ${props.language !== 'English' ? 'english' : ''
-                            }`}
+                          className={`mySiteChois ${
+                            props.language !== 'English' ? 'english' : ''
+                          }`}
                         >
-                          {props.tasksOfRoutes && props.tasksOfRoutes.name ? (props.tasksOfRoutes.name) : (<></>)}
+                          {props.tasksOfRoutes && props.tasksOfRoutes.name ? (
+                            props.tasksOfRoutes.name
+                          ) : (
+                            <></>
+                          )}
                         </div>
                       </>
                     ) : (
@@ -604,7 +601,9 @@ function DragnDrop(props) {
                               width={tag.width}
                               borderLeft={tag.borderLeft}
                               height={tag.height}
-                              setKavTaskTopMarginTop={tag.setKavTaskTopMarginTop}
+                              setKavTaskTopMarginTop={
+                                tag.setKavTaskTopMarginTop
+                              }
                               bottom={tag.bottom}
                               kavTopWidth={tag.kavTopWidth}
                               newkavTaskTop={tag.newkavTaskTop}
@@ -614,7 +613,9 @@ function DragnDrop(props) {
                               dragFromCover={'border'}
                               language={props.language}
                               openThreeDotsVertical={openThreeDotsVertical}
-                              setOpenThreeDotsVertical={setOpenThreeDotsVertical}
+                              setOpenThreeDotsVertical={
+                                setOpenThreeDotsVertical
+                              }
                               openThreeDotsVerticalBoard={
                                 openThreeDotsVerticalBoard
                               }
@@ -675,12 +676,12 @@ function DragnDrop(props) {
                           </>
                         ) : (
                           // (board[0] !== undefined) ? (<>
-                          
-                            <ReorderBoard
-                              board={board}
-                              setBoard={setBoard}
-                              language={props.language}
-                            />
+
+                          <ReorderBoard
+                            board={board}
+                            setBoard={setBoard}
+                            language={props.language}
+                          />
                           // </>) : <>error</>
                         )}
                       </>
@@ -717,15 +718,15 @@ function DragnDrop(props) {
           subtitle={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                (task) => task.id === openThreeDotsVertical
-              ).subtitle
+                  (task) => task.id === openThreeDotsVertical
+                ).subtitle
               : ''
           }
           stationOfTask={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                (task) => task.id === openThreeDotsVertical
-              ).stations
+                  (task) => task.id === openThreeDotsVertical
+                ).stations
               : ''
           }
         />

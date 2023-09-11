@@ -17,7 +17,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Stations from '../Stations/Stations';
 import Tasks from '../Tasks/tasks';
 import Modal from '../Modal/Modal';
-import ModalDropdown from '../Modal/Modal_Dropdown';
+import ModalDropdown from '../Modal/Modal_dropdown';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { CgSearch } from 'react-icons/cg';
@@ -275,9 +275,6 @@ const Places = (props) => {
   }, [replaceRouteFlag]);
 
   const DisplayTasks = (e) => {
-    console.log('khalid flagRoute e ENTER', e);
-    console.log('khalid flagRoute ' + flagRoute);
-
     // Check if another route is already selected
     if (!flagRoute) {
       setProgressBarFlag(true);
@@ -292,14 +289,10 @@ const Places = (props) => {
 
       let firstStation;
 
-      console.log(
-        'khalid k tasksOfRoutes ' + JSON.stringify(tasksOfRoutes?.tasks)
-      );
       if (tasksOfRoutes.tasks && tasksOfRoutes.tasks.length > 0) {
         firstStation = allTasks.find((obj) => {
           return obj.id === tasksOfRoutes.tasks[0].taskId;
         });
-        console.log('khalid firstStation ' + JSON.stringify(firstStation));
       } else {
         setProgressBarFlag(false);
       }
@@ -337,8 +330,6 @@ const Places = (props) => {
           let taskTemp = allTasksOfTheSite?.find(
             (item) => item.id === element.taskId
           );
-          console.log('khalid taskTemp: yyyyy', taskTemp);
-          console.log('khalid element.ID: yyyyy', element.taskId);
 
           if (taskTemp === undefined) {
             return {
@@ -445,8 +436,6 @@ const Places = (props) => {
           };
         })
       );
-
-      console.log('khalid setBoardArrayDND ' + boardArrayDND);
     } else {
       setReplaceRoute(e);
       setOpenModalRouteChosen(true);
@@ -495,7 +484,6 @@ const Places = (props) => {
 
   const handleSelectChange = (event) => {
     const newValue = JSON.parse(event.target.value);
-    console.log('khalid event.target.value ' + event.target.value);
 
     if (!siteSelected && !replaceSiteFlag) {
       setReplaceSite(newValue);

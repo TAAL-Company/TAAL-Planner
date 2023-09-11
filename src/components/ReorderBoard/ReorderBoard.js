@@ -4,11 +4,7 @@ import Tag from '../Tag/Tag.js';
 import './reorderBoard.css';
 
 const ReorderBoard = (props) => {
-  console.log("khalid ---------------------------------------------------- "+JSON.stringify(props.board));
-  let filtered = props.board.filter(function (el) {
-    return el != null;
-  });
-  const [tasks, setTasks] = useState(filtered);
+  const [tasks, setTasks] = useState(props.board);
 
   useEffect(() => {
     for (let i = 0; i < tasks.length; i++) {

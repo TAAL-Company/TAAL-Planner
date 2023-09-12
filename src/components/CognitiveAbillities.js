@@ -361,7 +361,7 @@ const CognitiveAbillities = () => {
               // allUsers={allUsers}
               // setWorker={setWorker}
               // worker={worker}
-              // tableType={tableType}
+              tableType={"CognitiveAbillities"}
               // isInfoUserRoute={isInfoUserRoute}
               // isInfoUserSite={isInfoUserSite}
               // selectedRows={selectedRows}

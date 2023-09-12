@@ -85,12 +85,13 @@ const CustomToolbar = ({
   };
   const handleChangeRoute = (event) => {
     const selectedValue = JSON.parse(event.target.value);
+    console.log("k selectedValue "+JSON.stringify(selectedValue));
 
     console.log('++ allRoutes ++' + allRoutes);
 
     console.log('route', selectedValue);
     setRouteForTasksAbility(selectedValue);
-    setRoutesOfFlags(selectedValue);
+    // setRoutesOfFlags(selectedValue);
     setChangeRoute(true);
   };
 
@@ -217,6 +218,16 @@ const CustomToolbar = ({
                 })}
               </select>
             </div>
+          </div>
+        ) : (
+          <></>
+        )}
+        {tableType === 'CognitiveAbillities' ? (
+          <div className='infoForms'>
+           <div className="infoForms">
+            <div className="workerNameForms">שם העובד : אביב גלבץ</div>
+
+          </div>
           </div>
         ) : (
           <></>

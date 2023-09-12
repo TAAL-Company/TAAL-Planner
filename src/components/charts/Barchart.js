@@ -7,19 +7,19 @@ const data = {
         {
             type: 'bar',
             label: 'Dataset 1',
-            backgroundColor: "#B1CDF9",
+            backgroundColor: "#5A607F",
             data: [50, 25, 12, 48, 90, 76, 42]
         },
         {
             type: 'bar',
             label: 'Dataset 2',
-            backgroundColor: "#F29D38",
+            backgroundColor: "#BCE0FD",
             data: [21, 84, 24, 75, 37, 65, 34]
         },
         {
             type: 'bar',
             label: 'Dataset 3',
-            backgroundColor:"#57C47D",
+            backgroundColor:"#2699FB",
             data: [41, 52, 24, 74, 23, 21, 32]
         }
     ]

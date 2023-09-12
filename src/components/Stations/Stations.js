@@ -7,7 +7,7 @@ import { CgSearch } from 'react-icons/cg';
 import '@fontsource/assistant';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import textArea from '../../Pictures/textArea.svg';
-import Modal_dropdown from '../Modal/Modal_dropdown';
+import Modal_dropdown from '../Modal/Modal_Dropdown';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Modal_Delete from '../Modal/Modal_Delete';
 import { HTML5Backend } from 'react-dnd-html5-backend';

@@ -205,8 +205,6 @@ function DragnDrop(props) {
   saveProps = props;
 
   useEffect(() => {
-    // console.log('props.tasksOfRoutes ', props.tasksOfRoutes);
-    // setBoard([]);
     if (props.tasksOfRoutes && props.tasksOfRoutes.tasks) {
       console.log('props.tasksOfRoutes ', props.tasksOfRoutes);
       countTemp = 50 / props.tasksOfRoutes.tasks.length;

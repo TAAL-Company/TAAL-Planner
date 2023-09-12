@@ -486,6 +486,7 @@ const Places = (props) => {
     const newValue = JSON.parse(event.target.value);
 
     if (!siteSelected && !replaceSiteFlag) {
+      tasksOfRoutes = {};
       setReplaceSite(newValue);
       Display_The_Stations(newValue);
       setSiteSelected(true);

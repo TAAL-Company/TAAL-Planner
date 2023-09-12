@@ -1926,7 +1926,7 @@ function Forms() {
                   className='btn_nav_forms'
                   onClick={() => handleSelectTable('cognitiveProfile')}
                 >
-                  פרופיל קוגנטיבי
+                  יכולות ביצוע למשימות
                 </button>
                 <button
                   className='btn_nav_forms'
@@ -1938,7 +1938,7 @@ function Forms() {
                   className='btn_nav_forms'
                   onClick={() => handleSelectTable('abillities')}
                 >
-                  יכולות קוגנטיביות כלליות
+                 יכולות ביצוע כלליות
                 </button>
               </nav>
             </div>
@@ -2271,7 +2271,7 @@ function Forms() {
 
             {selectedTable === 'cognitiveProfile' && (
               <div>
-                <div className='headlineForms'>פרופיל קוגנטיבי</div>
+                <div className='headlineForms'>יכולות ביצוע למשימות</div>
                 <div className='tableForms'>
                   <DataTableRTL // DataTableLTR
                     setChangeUser={setChangeUser}
@@ -2362,7 +2362,7 @@ function Forms() {
 
             {selectedTable === 'abillities' && (
               <div>
-                <div className='headlineForms'>Abillities</div>
+                <div className='headlineForms'>יכולות ביצוע כלליות</div>
                 <div className='tableForms'>
                   <CognitiveAbillities></CognitiveAbillities>
                 </div>
@@ -2384,13 +2384,13 @@ function Forms() {
                   className='btn_nav_forms'
                   onClick={() => handleSelectTable('privateCard')}
                 >
-                  Priavte Card
+                  Personal Info
                 </button>
                 <button
                   className='btn_nav_forms'
                   onClick={() => handleSelectTable('cognitiveProfile')}
                 >
-                  Cogntive Profile
+                  Task Performance Info
                 </button>
                 <button
                   className='btn_nav_forms'
@@ -2402,7 +2402,7 @@ function Forms() {
                   className='btn_nav_forms'
                   onClick={() => handleSelectTable('abillities')}
                 >
-                  Abillities
+                  General Performance Info
                 </button>
               </nav>
             </div>
@@ -2750,7 +2750,7 @@ function Forms() {
 
             {selectedTable === 'cognitiveProfile' && (
               <div>
-                <div className='headlineForms'>Cogntive Profile</div>
+                <div className='headlineForms'>Task Performance Info</div>
                 <div className='tableForms'>
                   <DataTableLTR // DataTableRTL
                     setChangeUser={setChangeUser}
@@ -2778,7 +2778,7 @@ function Forms() {
 
             {selectedTable === 'privateCard' && (
               <div>
-                <div className='headlineForms'>Private Card</div>
+                <div className='headlineForms'>Personal Info</div>
                 <div className='tableForms'>
                   <DataTableLTR //---DataTableRTL
                     setChangeUser={setChangeUser}
@@ -2832,7 +2832,7 @@ function Forms() {
 
             {selectedTable === 'abillities' && (
               <div>
-                <div className='headlineForms'>Abillities</div>
+                <div className='headlineForms'>General Performance Info</div>
                 <div className='tableForms'>
                   <CognitiveAbillities></CognitiveAbillities>
                 </div>

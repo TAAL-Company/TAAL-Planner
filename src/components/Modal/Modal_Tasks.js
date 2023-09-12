@@ -303,7 +303,7 @@ function Modal_Tasks(props) {
                     type='number'
                     name='estimatedTimeSeconds'
                     id='estimatedTimeSeconds'
-                    min={20}
+                    min={1}
                     defaultValue={20}
                     onChange={(e) =>
                       setEstimatedTimeSeconds(parseInt(e.target.value))

@@ -27,7 +27,6 @@ import MultipleEdit from '../multiple_edit/MultipleEdit';
 import AddColumn from '../add_column/AddColumn';
 import SaveIcon from '@mui/icons-material/Save';
 
-
 const CustomToolbar = ({
   isInfoUserRoute,
   isInfoUserSite,
@@ -51,9 +50,8 @@ const CustomToolbar = ({
   handleChangeUserFlags,
   handleChangeRouteFlags,
   RroutenewName,
-  setRroutenewName
+  setRroutenewName,
 }) => {
-
   // const [prevSelected, setPrevSelected] = useState([]);
   useEffect(() => {
     console.log('prevSelectedWorker', prevSelectedWorker);
@@ -69,7 +67,7 @@ const CustomToolbar = ({
       newTaskCognitiveRequirements.forEach((element) => {
         try {
           let post = postTaskCognitiveRequirements(element);
-        } catch (error) { }
+        } catch (error) {}
 
         alert('המידע נשמר !');
       });
@@ -85,7 +83,6 @@ const CustomToolbar = ({
   };
   const handleChangeRoute = (event) => {
     const selectedValue = JSON.parse(event.target.value);
-    console.log("k selectedValue "+JSON.stringify(selectedValue));
 
     console.log('++ allRoutes ++' + allRoutes);
 
@@ -111,14 +108,15 @@ const CustomToolbar = ({
           <GridToolbarDensitySelector style={{ color: 'black' }} />
           <GridToolbarExport
             csvOptions={{
-              fileName: `${tableType === 'TaskabilityHE'
-                ? 'Taskability'
-                : tableType === 'CognitiveProfileHE'
+              fileName: `${
+                tableType === 'TaskabilityHE'
+                  ? 'Taskability'
+                  : tableType === 'CognitiveProfileHE'
                   ? 'CognitiveProfile'
                   : "TA'AL EDITOR"
-                }_${new Date()
-                  .toLocaleDateString('en-GB')
-                  .replace(/\//g, '-')}.csv`,
+              }_${new Date()
+                .toLocaleDateString('en-GB')
+                .replace(/\//g, '-')}.csv`,
             }}
             style={{ color: 'black' }}
           />
@@ -140,8 +138,7 @@ const CustomToolbar = ({
                   <div
                     className='workerName-autoComplete'
                     key={option.id}
-                    onClick={() => handleChangeUserFlags(null, option)
-                    }
+                    onClick={() => handleChangeUserFlags(null, option)}
                   >
                     {option.name}
                   </div>
@@ -164,8 +161,8 @@ const CustomToolbar = ({
                 freeSolo
                 style={{ width: '250px' }}
                 value={routesOfFlags || ''}
-                onChange={(event, value) => { 
-                  setRroutenewName(value.name)
+                onChange={(event, value) => {
+                  setRroutenewName(value.name);
                   handleChangeRouteFlags(null, value);
                 }}
                 id='free-solo-2-demo'
@@ -176,11 +173,16 @@ const CustomToolbar = ({
                   <TextField
                     {...params}
                     label={
-                        Object.keys(worker).length !== 0 && worker.routes.length !== 0 ? RroutenewName
-                        : Object.keys(worker).length !== 0 && worker.routes.length === 0 ? 'אין מסלולים עבור העובד'
-                          : Object.keys(worker).length === 0 ? 'בחר מסלול' : 'X'
+                      Object.keys(worker).length !== 0 &&
+                      worker.routes.length !== 0
+                        ? RroutenewName
+                        : Object.keys(worker).length !== 0 &&
+                          worker.routes.length === 0
+                        ? 'אין מסלולים עבור העובד'
+                        : Object.keys(worker).length === 0
+                        ? 'בחר מסלול'
+                        : 'X'
                     }
-                    
                     InputProps={{
                       ...params.InputProps,
                       type: 'search',
@@ -224,10 +226,9 @@ const CustomToolbar = ({
         )}
         {tableType === 'CognitiveAbillities' ? (
           <div className='infoForms'>
-           <div className="infoForms">
-            <div className="workerNameForms">שם העובד : אביב גלבץ</div>
-
-          </div>
+            <div className='infoForms'>
+              <div className='workerNameForms'>שם העובד : אביב גלבץ</div>
+            </div>
           </div>
         ) : (
           <></>

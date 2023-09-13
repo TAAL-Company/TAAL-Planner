@@ -20,16 +20,7 @@ import {
   postEvaluation,
   postEvaluationEvents,
 } from '../../api/api';
-
-import taskpic from './FormsComponents/PicturesForms/p1.jpg';
-import taskpic1 from './FormsComponents/PicturesForms/p2.jpg';
-import taskpic2 from './FormsComponents/PicturesForms/p3.jpg';
-import taskpic3 from './FormsComponents/PicturesForms/p4.jpg';
-import taskpic4 from './FormsComponents/PicturesForms/p5.jpg';
-import taskpic5 from './FormsComponents/PicturesForms/taskpic5.jpeg';
-import taskpic6 from './FormsComponents/PicturesForms/taskpic6.jpeg';
-import taskpic7 from './FormsComponents/PicturesForms/taskpic7.jpg';
-
+import taskpic from './FormsComponents/PicturesForms/taskpic.png';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -93,11 +84,11 @@ function Forms() {
       editable: false,
       headerAlign: 'center',
       align: 'center',
-      renderCell: (params,index) => (
+      renderCell: (params, index) => (
         <div style={{ textAlign: 'right', fontSize: '1rem' }}>
-          {params.row.id+1}
+          {params.row.id + 1}
         </div>
-      )
+      ),
     },
     {
       field: 'taskTaskabilityHE',
@@ -426,12 +417,11 @@ function Forms() {
         //--------------------------------------------------THIS SHOUD BE CHANGE
 
         if (evaluation === undefined) return;
-        let arrayimages=[taskpic,taskpic1,taskpic2,taskpic3,taskpic4,taskpic5,taskpic6,taskpic7]
         setRowsFlagsHE((prev) => [
           ...prev,
           {
             id: task.position,
-            image: taskInfo.picture_url || arrayimages[task.position],
+            image: taskInfo.picture_url || taskpic,
             classification: TaskAbilityList?.flag,
             task: taskInfo.title,
             intervention: evaluation.intervention,
@@ -675,11 +665,11 @@ function Forms() {
       editable: false,
       headerAlign: 'center',
       align: 'center',
-      renderCell: (params,index) => (
+      renderCell: (params, index) => (
         <div style={{ textAlign: 'right', fontSize: '1rem' }}>
-          {params.row.id+1}
+          {params.row.id + 1}
         </div>
-      )
+      ),
     },
     {
       field: 'image',
@@ -889,11 +879,11 @@ function Forms() {
       editable: false,
       headerAlign: 'center',
       align: 'center',
-      renderCell: (params,index) => (
+      renderCell: (params, index) => (
         <div style={{ textAlign: 'right', fontSize: '1rem' }}>
-          {params.row.id+1}
+          {params.row.id + 1}
         </div>
-      )
+      ),
     },
     {
       field: 'image',
@@ -1400,11 +1390,11 @@ function Forms() {
       editable: false,
       headerAlign: 'center',
       align: 'center',
-      renderCell: (params,index) => (
+      renderCell: (params, index) => (
         <div style={{ textAlign: 'right', fontSize: '1rem' }}>
-          {params.row.id+1}
+          {params.row.id + 1}
         </div>
-      )
+      ),
     },
     {
       field: 'fieldHE',
@@ -1938,7 +1928,7 @@ function Forms() {
                   className='btn_nav_forms'
                   onClick={() => handleSelectTable('abillities')}
                 >
-                 יכולות ביצוע כלליות
+                  יכולות ביצוע כלליות
                 </button>
               </nav>
             </div>

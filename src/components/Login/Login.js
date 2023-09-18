@@ -5,9 +5,7 @@ import userLogo from "../../Pictures/user-logo.png";
 import lockLogo from "../../Pictures/lock-logo.png";
 import "./styleLogin.css";
 import background from "../../Pictures/backgroundLogin.png";
-import {
-  getingData_Users, updateUser
-} from '../../api/api';
+import {} from '../../api/api';
 
 let flagLoading = false;
 
@@ -32,24 +30,42 @@ function Login(props) {
     setFlagLoading((flagLoading = true));
   }
 
-  // async function getall() {
-  //   const usersData = await getingData_Users();
-  //   // console.log(usersData);
-  //   let usersDatawithTW = usersData.filter(item => item.email.includes('taalworker+') && item.cognitiveProfile != null);
-  //   console.log("usersDatawithTW : " + JSON.stringify(usersDatawithTW));
+  async function getall() {
+    //const IdToDelete = await getingDataRoutes();
+    
+    //let IdToDelete = []
 
-  //   usersDatawithTW.map(async (user) => {
-  //     const number = user.email.split('+').pop().split('@')[0];
-  //     user.user_name = "TW" + number
-  //     console.log("user " + JSON.stringify(user));
-  //     //await updateUser(user.id,user)
-  //   })
+    //console.log(IdToDelete);
 
-  //   var count = Object.keys(usersDatawithTW).length;
-  //   console.log(count);
-  // }
+    //IdToDelete.map(async (user) => {
+      // console.log(user.id);
+      // let response = await deleteSites(user.id)
+      // console.log("done - " + response);
+    //})
 
-  //  getall()
+    // IdToDelete.map(async (id) => {
+    //   console.log(id.id);
+    //   //let response = await deleteSites(id.id)
+    //   //console.log(response);
+    //   console.log("done");
+    // })
+    //   const usersData = await getingData_Users();
+    //   // console.log(usersData);
+    //   let usersDatawithTW = usersData.filter(item => item.email.includes('taalworker+') && item.cognitiveProfile != null);
+    //   console.log("usersDatawithTW : " + JSON.stringify(usersDatawithTW));
+
+    //   usersDatawithTW.map(async (user) => {
+    //     const number = user.email.split('+').pop().split('@')[0];
+    //     user.user_name = "TW" + number
+    //     console.log("user " + JSON.stringify(user));
+    //     //await updateUser(user.id,user)
+    //   })
+
+    //   var count = Object.keys(usersDatawithTW).length;
+    //   console.log(count);
+  }
+
+  getall()
 
   return (
     <>

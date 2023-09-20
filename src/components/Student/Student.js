@@ -177,7 +177,7 @@ const Cards = () => {
   };
 
   return (
-    <div style={{ marginTop: '14px', textAlign: '-webkit-center' }}>
+    <div style={{ direction: "rtl", marginTop: '14px', textAlign: '-webkit-center' }}>
       {/* <Button variant="outlined" onClick={handleJson}>
         הכנסת יכולות קוגנטיביות
       </Button> */}
@@ -241,8 +241,8 @@ const Cards = () => {
               </li>
             )}
             getOptionLabel={(option) => option.name || ''}
-            sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label='בחירת מדריך'/>}
+            // sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label='בחירת מדריך' />}
             onChange={(event, value) => {
               console.log('value', value);
               setCoach(value);
@@ -250,13 +250,13 @@ const Cards = () => {
             }}
             defaultValue={
               openThreeDotsVertical !== -1 &&
-              coaches.find(
-                (coach) => coach.id === users[openThreeDotsVertical]?.coach?.id
-              )
+                coaches.find(
+                  (coach) => coach.id === users[openThreeDotsVertical]?.coach?.id
+                )
                 ? users[openThreeDotsVertical]?.coach
                 : manager !== null
-                ? manager
-                : null
+                  ? manager
+                  : null
             }
             value={
               (openThreeDotsVertical !== -1 &&
@@ -267,7 +267,7 @@ const Cards = () => {
               (manager !== null ? manager : null)
             }
           />
-          <div>תמונה:</div>
+          <div style={{ direction: "rtl", marginTop: "10px" }} >תמונה:</div>
 
           <input
             label='שם מלא'

@@ -242,7 +242,7 @@ const Cards = () => {
             )}
             getOptionLabel={(option) => option.name || ''}
             sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label='מדריך' />}
+            renderInput={(params) => <TextField {...params} label='בחירת מדריך'/>}
             onChange={(event, value) => {
               console.log('value', value);
               setCoach(value);

@@ -30,8 +30,8 @@ const Dashboard = () => {
     },
     {
       id: 3,
-      headline: 'מסלולים',
-      addLabel: 'הוספת מסלול',
+      headline: 'מְתַכנֵן',
+      addLabel: 'הוספת תכנֵון',
       image: route,
     },
     {

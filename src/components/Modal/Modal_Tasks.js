@@ -334,7 +334,7 @@ function Modal_Tasks(props) {
                     ></input>
                     {picture ? (
                       <>
-                        <div style={{ marginLeft: '11px' }}>
+                        <div style={{ marginLeft: '3px' }}>
                           Selected image:{' '}
                           {typeof picture === 'string'
                             ? extractFilenameFromURL(picture)

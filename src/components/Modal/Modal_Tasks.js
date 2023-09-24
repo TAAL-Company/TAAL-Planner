@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Modal.css';
 import { FcMultipleInputs, FcAbout } from 'react-icons/fc';
 import { RiAsterisk } from 'react-icons/ri';
@@ -26,6 +26,7 @@ function Modal_Tasks(props) {
   const [audio, setAudio] = useState(props.audio);
   const [flagClickOK, setFlagClickOK] = useState(false);
   const [myPlacesChoice, setMyPlacesChoice] = useState([]);
+  const audioRef = useRef(null);
 
   useEffect(() => {
     if (props.requestForEditing === 'edit' && props.stationOfTask) {
@@ -216,6 +217,10 @@ function Modal_Tasks(props) {
     return filename;
   }
 
+  const handlePlayClick = () => {
+    audioRef.current.play();
+  };
+
   return (
     <>
       {!props.help && !props.siteSelected ? (
@@ -327,15 +332,17 @@ function Modal_Tasks(props) {
                         direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     ></input>
-                    {typeof picture === 'string' ? (
+                    {typeof picture === 'string' && picture !== null ? (
                       <>
-                        <div>
+                        <div style={{ marginLeft: '11px' }}>
                           Selected image: {extractFilenameFromURL(picture)}
                         </div>
                         <div className='thumbnail'>
                           <img src={picture} className='thumbnailImg' alt='' />
                         </div>
                       </>
+                    ) : typeof picture === 'object' && picture !== null ? (
+                      <div>Selected image: {picture?.name}</div>
                     ) : (
                       <div>Selected image: No image file found</div>
                     )}
@@ -348,7 +355,7 @@ function Modal_Tasks(props) {
                       : ':הוסף קטע קול המתאר את המשימה '}
                     <FcMultipleInputs />
                   </h6>
-                  <div className='input-group mb-3'>
+                  <div>
                     <input
                       required={true}
                       accept='.mp3'
@@ -362,39 +369,61 @@ function Modal_Tasks(props) {
                         direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     ></input>
-                    <div>
-                      Selected audio:{' '}
-                      {typeof picture === 'string'
-                        ? extractFilenameFromURL(audio) || 'No audio file found'
-                        : 'No audio file found'}
-                    </div>
-                  </div>
-
-                  <div className='list-group'>
-                    <h6>
-                      {props.language !== 'English'
-                        ? 'Select the stations you want to associate the task with'
-                        : ':בחר את התחנות שברצונך לשייך את המשימה'}
-                      <IoMdCheckbox style={{ color: 'blue' }} />
-                    </h6>
-                    <div className='allTasks'>
-                      {props.allStations.map((value, index) => {
-                        return (
-                          <label key={index} className='list-group-item'>
-                            <input
-                              className='form-check-input me-1'
-                              type='checkbox'
-                              onChange={() => saveCheckbox(value)}
-                              style={{ marginLeft: '5px' }}
-                              checked={myPlacesChoice.includes(value.id)}
-                            ></input>
-                            {value.title}
-                          </label>
-                        );
-                      })}
-                    </div>
                   </div>
                 </form>
+                {typeof audio === 'string' && audio !== null ? (
+                  <div>
+                    <div className='audioDisplay'>
+                      <div>
+                        Selected audio: {extractFilenameFromURL(audio)}
+                        <audio ref={audioRef} controls>
+                          <source src={audio} type='audio/mpeg' />
+                          Your browser does not support the audio element.
+                        </audio>
+                      </div>
+                      <div>
+                        <button
+                          className='play-button'
+                          onClick={handlePlayClick}
+                        >
+                          Play
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : typeof audio === 'object' && audio !== null ? (
+                  <div className='input-group mb-3'>
+                    Selected audio: {audio?.name}
+                  </div>
+                ) : (
+                  <div className='input-group mb-3'>
+                    Selected audio: No audio file found
+                  </div>
+                )}
+                <div className='list-group'>
+                  <h6>
+                    {props.language !== 'English'
+                      ? 'Select the stations you want to associate the task with'
+                      : ':בחר את התחנות שברצונך לשייך את המשימה'}
+                    <IoMdCheckbox style={{ color: 'blue' }} />
+                  </h6>
+                  <div className='allTasks'>
+                    {props.allStations.map((value, index) => {
+                      return (
+                        <label key={index} className='list-group-item'>
+                          <input
+                            className='form-check-input me-1'
+                            type='checkbox'
+                            onChange={() => saveCheckbox(value)}
+                            style={{ marginLeft: '5px' }}
+                            checked={myPlacesChoice.includes(value.id)}
+                          ></input>
+                          {value.title}
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
               <div
                 style={{

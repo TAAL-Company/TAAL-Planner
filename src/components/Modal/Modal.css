@@ -26,6 +26,29 @@
   transform: scale(1.5);
 }
 
+.audioDisplay {
+  display: flex;
+  align-items: center;
+  margin-right: 290px;
+  margin-top: 5px;
+}
+
+/* Circular Play Button */
+.play-button {
+  width: 30px;
+  height: 30px;
+  background-color: #3498db;
+  border-radius: 50%;
+  color: white;
+  font-size: 11px;
+  margin-left: 10px;
+  margin-bottom: 15px;
+}
+
+.play-button:hover {
+  background-color: #2980b9;
+}
+
 ​.footerNewTasks {
   display: flex;
   justify-content: flex-start;

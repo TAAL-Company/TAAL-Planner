@@ -345,10 +345,10 @@ const Tasks = (props) => {
           }
           stationOfTask={
             openThreeDotsVertical !== -1
-              ? props.tasksOfChosenStation.find(
+              ? props.allTasks?.find(
                   (task) => task.id === openThreeDotsVertical
                 ).stations
-              : ''
+              : []
           }
         />
       ) : (

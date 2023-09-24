@@ -29,7 +29,7 @@ function Modal_Tasks(props) {
   const audioRef = useRef(null);
 
   useEffect(() => {
-    if (props.requestForEditing === 'edit' && props.stationOfTask) {
+    if (props.requestForEditing === 'edit' && props.stationOfTask.length > 0) {
       props.stationOfTask.forEach((station) => {
         setMyPlacesChoice((prev) => [...prev, station.id]);
       });

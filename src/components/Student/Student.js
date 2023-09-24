@@ -22,6 +22,11 @@ import ModalDropdown from '../Modal/Modal_Dropdown';
 import cognitiveList from '../Form/cognitive.json';
 import Autocomplete from '@mui/material/Autocomplete';
 
+import rtlPlugin from "stylis-plugin-rtl";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
+import { prefixer } from 'stylis'
+
 const Cards = () => {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
@@ -176,167 +181,174 @@ const Cards = () => {
     else setOpenThreeDotsVertical(value);
   };
 
+  const cacheRtl = createCache({
+    key: "muirtl",
+    stylisPlugins: [prefixer, rtlPlugin]
+  });
+
   return (
-    <div style={{ direction: "rtl", marginTop: '14px', textAlign: '-webkit-center' }}>
-      {/* <Button variant="outlined" onClick={handleJson}>
+    <CacheProvider value={cacheRtl}>
+      <div style={{ direction: "rtl", marginTop: '14px', textAlign: '-webkit-center' }}>
+        {/* <Button variant="outlined" onClick={handleJson}>
         הכנסת יכולות קוגנטיביות
       </Button> */}
-      <Button variant='outlined' onClick={handleClickOpen}>
-        הוסף עובד חדש
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>עובד חדש</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {/* To subscribe to this website, please enter your email address here.
+        <Button variant='outlined' onClick={handleClickOpen}>
+          הוסף עובד חדש
+        </Button>
+        <Dialog open={open} onClose={handleClose}>
+          {requestForEditing === 'edit' ? <DialogTitle style={{ direction: "rtl", marginTop: "10px" }} >עריכה עובד</DialogTitle> : <DialogTitle style={{ direction: "rtl", marginTop: "10px" }}  >עובד חדש</DialogTitle>}
+
+          <DialogContent>
+            <DialogContentText>
+              {/* To subscribe to this website, please enter your email address here.
             We will send updates occasionally. */}
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin='dense'
-            id='email'
-            label='אימייל'
-            type='email'
-            fullWidth
-            variant='standard'
-            defaultValue={
-              openThreeDotsVertical !== -1
-                ? users[openThreeDotsVertical].email
-                : ''
-            }
-          />
-          <TextField
-            margin='dense'
-            id='name'
-            label='שם מלא'
-            type='name'
-            fullWidth
-            variant='standard'
-            defaultValue={
-              openThreeDotsVertical !== -1
-                ? users[openThreeDotsVertical].name
-                : ''
-            }
-          />
-          <TextField
-            margin='dense'
-            id='userName'
-            label='שם משתמש'
-            type='name'
-            fullWidth
-            variant='standard'
-            defaultValue={
-              openThreeDotsVertical !== -1
-                ? users[openThreeDotsVertical].user_name
-                : ''
-            }
-          />
-          <Autocomplete
-            disablePortal
-            id='coach'
-            options={coaches}
-            renderOption={(props, option) => (
-              <li {...props} key={option.id}>
-                {option.name}
-              </li>
-            )}
-            getOptionLabel={(option) => option.name || ''}
-            // sx={{ width: 300 }}
-            renderInput={(params) => <TextField {...params} label='בחירת מדריך' />}
-            onChange={(event, value) => {
-              console.log('value', value);
-              setCoach(value);
-              setmanager(value);
-            }}
-            defaultValue={
-              openThreeDotsVertical !== -1 &&
-                coaches.find(
-                  (coach) => coach.id === users[openThreeDotsVertical]?.coach?.id
-                )
-                ? users[openThreeDotsVertical]?.coach
-                : manager !== null
-                  ? manager
-                  : null
-            }
-            value={
-              (openThreeDotsVertical !== -1 &&
-                coaches.find(
-                  (coach) =>
-                    coach.id === users[openThreeDotsVertical]?.coach?.id
-                )) ||
-              (manager !== null ? manager : null)
-            }
-          />
-          <div style={{ direction: "rtl", marginTop: "10px" }} >תמונה:</div>
-
-          <input
-            label='שם מלא'
-            accept='image/*'
-            id='image-input'
-            type='file'
-            onChange={(e) => setPicture(e.target.files[0])}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>ביטול</Button>
-          <Button onClick={handleConfirm}>שמירה</Button>
-        </DialogActions>
-      </Dialog>
-      {/* sure for Remove */}
-      <Dialog
-        open={openRemove}
-        onClose={handleCloseRemove}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <DialogTitle id='alert-dialog-title'>{'מחיקת משתמש'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id='alert-dialog-description'>
-            האם אתה בטוח במחיקת המשתמש?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseRemove}>cancel</Button>
-          <Button onClick={handleCloseRemoveConfirm} autoFocus>
-            מחיקה
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* end cencel */}
-      <div className='user_cards_warpper'>
-        {users.map((user, index) => (
-          <div key={user.id} className='user_card'>
-            <div className='dropdownThreeDotsUsers'>
-              <button
-                className='threeDotsVerticalEng'
-                onClick={() => clickOnhreeDotsVerticaIcont(index)}
-              >
-                <BsThreeDotsVertical />
-              </button>
-
-              {openThreeDotsVertical === index ? (
-                <ModalDropdown
-                  setRequestForEditing={setRequestForEditing}
-                  setOpenThreeDotsVertical={setOpenThreeDotsVertical}
-                  editable={true}
-                  Reproducible={true}
-                  details={true}
-                  erasable={true}
-                />
-              ) : (
-                <></>
-              )}
-            </div>
-            <img
-              src={user.picture_url || defualtSiteImg}
-              alt='Avatar'
-              style={{ width: '100%' }}
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin='dense'
+              id='email'
+              label='אימייל'
+              type='email'
+              fullWidth
+              variant='standard'
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? users[openThreeDotsVertical].email
+                  : ''
+              }
             />
-            <div className='users_cards_container' key={user.name}>
-              <h5>{user.name}</h5>
-              {/* <p>{user.description}</p> */}
-              <p>{user.email}</p>
-              {/* <button
+            <TextField
+              margin='dense'
+              id='name'
+              label='שם מלא'
+              type='name'
+              fullWidth
+              variant='standard'
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? users[openThreeDotsVertical].name
+                  : ''
+              }
+            />
+            <TextField
+              margin='dense'
+              id='userName'
+              label='שם משתמש'
+              type='name'
+              fullWidth
+              variant='standard'
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? users[openThreeDotsVertical].user_name
+                  : ''
+              }
+            />
+            <Autocomplete
+              disablePortal
+              id='coach'
+              options={coaches}
+              renderOption={(props, option) => (
+                <li {...props} key={option.id}>
+                  {option.name}
+                </li>
+              )}
+              getOptionLabel={(option) => option.name || ''}
+              // sx={{ width: 300 }}
+              renderInput={(params) => <TextField {...params} label='בחירת מדריך' />}
+              onChange={(event, value) => {
+                console.log('value', value);
+                setCoach(value);
+                setmanager(value);
+              }}
+              defaultValue={
+                openThreeDotsVertical !== -1 &&
+                  coaches.find(
+                    (coach) => coach.id === users[openThreeDotsVertical]?.coach?.id
+                  )
+                  ? users[openThreeDotsVertical]?.coach
+                  : manager !== null
+                    ? manager
+                    : null
+              }
+              value={
+                (openThreeDotsVertical !== -1 &&
+                  coaches.find(
+                    (coach) =>
+                      coach.id === users[openThreeDotsVertical]?.coach?.id
+                  )) ||
+                (manager !== null ? manager : null)
+              }
+            />
+            <div style={{ direction: "rtl", marginTop: "10px" }} >תמונה:</div>
+
+            <input
+              label='שם מלא'
+              accept='image/*'
+              id='image-input'
+              type='file'
+              onChange={(e) => setPicture(e.target.files[0])}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>ביטול</Button>
+            <Button onClick={handleConfirm}>שמירה</Button>
+          </DialogActions>
+        </Dialog>
+        {/* sure for Remove */}
+        <Dialog
+          open={openRemove}
+          onClose={handleCloseRemove}
+          aria-labelledby='alert-dialog-title'
+          aria-describedby='alert-dialog-description'
+        >
+          <DialogTitle id='alert-dialog-title'>{'מחיקת משתמש'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id='alert-dialog-description'>
+              האם אתה בטוח במחיקת המשתמש?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseRemove}>cancel</Button>
+            <Button onClick={handleCloseRemoveConfirm} autoFocus>
+              מחיקה
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {/* end cencel */}
+        <div className='user_cards_warpper'>
+          {users.map((user, index) => (
+            <div key={user.id} className='user_card'>
+              <div className='dropdownThreeDotsUsers'>
+                <button
+                  className='threeDotsVerticalEng'
+                  onClick={() => clickOnhreeDotsVerticaIcont(index)}
+                >
+                  <BsThreeDotsVertical />
+                </button>
+
+                {openThreeDotsVertical === index ? (
+                  <ModalDropdown
+                    setRequestForEditing={setRequestForEditing}
+                    setOpenThreeDotsVertical={setOpenThreeDotsVertical}
+                    editable={true}
+                    Reproducible={true}
+                    details={true}
+                    erasable={true}
+                  />
+                ) : (
+                  <></>
+                )}
+              </div>
+              <img
+                src={user.picture_url || defualtSiteImg}
+                alt='Avatar'
+                style={{ width: '100%' }}
+              />
+              <div className='users_cards_container' key={user.name}>
+                <h5>{user.name}</h5>
+                {/* <p>{user.description}</p> */}
+                <p>{user.email}</p>
+                {/* <button
                 className="btn btn-primary"
                 id="dropdown-basic-button"
 
@@ -344,11 +356,12 @@ const Cards = () => {
               >
                 מידע נוסף
               </button> */}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </CacheProvider>
   );
 };
 

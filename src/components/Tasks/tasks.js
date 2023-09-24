@@ -322,6 +322,27 @@ const Tasks = (props) => {
                 ).subtitle
               : ''
           }
+          estimatedTimeSeconds={
+            openThreeDotsVertical !== -1
+              ? props.tasksOfChosenStation.find(
+                  (task) => task.id === openThreeDotsVertical
+                ).estimatedTimeSeconds
+              : 20
+          }
+          picture={
+            openThreeDotsVertical !== -1
+              ? props.tasksOfChosenStation.find(
+                  (task) => task.id === openThreeDotsVertical
+                ).picture_url
+              : null
+          }
+          audio={
+            openThreeDotsVertical !== -1
+              ? props.tasksOfChosenStation.find(
+                  (task) => task.id === openThreeDotsVertical
+                ).audio_url
+              : null
+          }
           stationOfTask={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(

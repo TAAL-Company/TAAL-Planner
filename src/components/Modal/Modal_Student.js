@@ -30,7 +30,7 @@ const Modal_Student = ({ thisGetMyUsers, setOpenModal }) => {
             {thisGetMyUsers.description === '' ? (
               <>
                 <h6 style={{ marginLeft: '220px', color: 'red' }}>
-                  !אין מידע המתאר את חניך זה
+                  !אין מידע המתאר את העובד הזה
                 </h6>
               </>
             ) : (
@@ -184,7 +184,7 @@ const Modal_Student = ({ thisGetMyUsers, setOpenModal }) => {
             {thisGetMyUsers.description === '' ? (
               <>
                 <h6 style={{ marginLeft: '220px', color: 'red' }}>
-                  !אין מידע המתאר את חניך זה
+                  !אין מידע המתאר את העובד הזה
                 </h6>
               </>
             ) : (

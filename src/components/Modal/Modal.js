@@ -435,7 +435,7 @@ function Modal({
                           value={routeTitle}
                           onChange={(e) => setRouteTitle(e.target.value)}
                         ></input>
-                        <div>:שיוך חניך</div>
+                        <div>:שיוך עובד</div>
                         <div className='allStudent'>
                           {student.map((value, index) => {
                             return (

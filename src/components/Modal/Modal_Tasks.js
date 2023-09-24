@@ -18,25 +18,22 @@ let myPlacesChoiceTemp = [];
 function Modal_Tasks(props) {
   const [, setDone] = useState(false);
   const [get_title, setTitle] = useState(props.title);
-  const [estimatedTimeSeconds, setEstimatedTimeSeconds] = useState(20);
-  const [picture, setPicture] = useState(null);
-  const [audio, setAudio] = useState(null);
   const [getDescription, setDescription] = useState(props.subtitle);
-  const [, setFile] = useState('');
+  const [estimatedTimeSeconds, setEstimatedTimeSeconds] = useState(
+    props.estimatedTimeSeconds
+  );
+  const [picture, setPicture] = useState(props.picture);
+  const [audio, setAudio] = useState(props.audio);
   const [flagClickOK, setFlagClickOK] = useState(false);
   const [myPlacesChoice, setMyPlacesChoice] = useState([]);
 
   useEffect(() => {
-    console.log('stationOfTask', props.stationOfTask);
     if (props.requestForEditing === 'edit' && props.stationOfTask) {
-      props.stationOfTask.map((station) => {
+      props.stationOfTask.forEach((station) => {
         setMyPlacesChoice((prev) => [...prev, station.id]);
       });
     }
   }, [props.requestForEditing, props.stationOfTask]);
-
-  console.log('allStations: ', props.allStations);
-  console.log('myStation: ', props.myStation);
 
   const handleTitleInput = (e) => {
     setTitle(e.target.value);
@@ -44,18 +41,7 @@ function Modal_Tasks(props) {
   const handleDescriptionInput = (e) => {
     setDescription(e.target.value);
   };
-  // const handleFileInput = (e) => {
-  //   setFile((file = e.target.files[0]));
-  //   // console.log("file", file)
-  //   if (file.type.includes("image")) {
-  //     setPicture((getPicture = file));
-  //     // console.log(file)
-  //   }
-  //   if (file.type.includes("audio")) {
-  //     setAudio((file));
-  //     // console.log(file)
-  //   }
-  // };
+
   const saveTask = async () => {
     setFlagClickOK(true);
 
@@ -138,7 +124,7 @@ function Modal_Tasks(props) {
           picture_url,
           audio_url,
           props.mySite.id,
-          estimatedTimeSeconds || 20
+          estimatedTimeSeconds
         );
 
         let color = props.allStations.find(
@@ -222,6 +208,14 @@ function Modal_Tasks(props) {
       }
   };
 
+  function extractFilenameFromURL(url) {
+    const parts = url.split('?');
+    const path = parts[0]; // Get the part before the question mark
+    const pathParts = path.split('/');
+    const filename = decodeURIComponent(pathParts[pathParts.length - 1]);
+    return filename;
+  }
+
   return (
     <>
       {!props.help && !props.siteSelected ? (
@@ -286,7 +280,6 @@ function Modal_Tasks(props) {
                   </h6>
                   <p>
                     <input
-                      value={getDescription}
                       type='text'
                       onChange={handleDescriptionInput}
                       style={{
@@ -295,6 +288,7 @@ function Modal_Tasks(props) {
                         paddingRight: '20px',
                         direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
+                      value={getDescription}
                     ></input>
                   </p>
                 </form>
@@ -304,10 +298,10 @@ function Modal_Tasks(props) {
                     name='estimatedTimeSeconds'
                     id='estimatedTimeSeconds'
                     min={1}
-                    defaultValue={20}
                     onChange={(e) =>
                       setEstimatedTimeSeconds(parseInt(e.target.value))
                     }
+                    value={estimatedTimeSeconds}
                   />
                   הזן את הזמן המשוער בשניות עבור המשימה
                 </div>
@@ -333,6 +327,18 @@ function Modal_Tasks(props) {
                         direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     ></input>
+                    {typeof picture === 'string' ? (
+                      <>
+                        <div>
+                          Selected image: {extractFilenameFromURL(picture)}
+                        </div>
+                        <div className='thumbnail'>
+                          <img src={picture} className='thumbnailImg' alt='' />
+                        </div>
+                      </>
+                    ) : (
+                      <div>Selected image: No image file found</div>
+                    )}
                   </div>
                 </form>
                 <form id='IPU' className='w3-container'>
@@ -342,7 +348,7 @@ function Modal_Tasks(props) {
                       : ':הוסף קטע קול המתאר את המשימה '}
                     <FcMultipleInputs />
                   </h6>
-                  <p>
+                  <div className='input-group mb-3'>
                     <input
                       required={true}
                       accept='.mp3'
@@ -356,7 +362,13 @@ function Modal_Tasks(props) {
                         direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     ></input>
-                  </p>
+                    <div>
+                      Selected audio:{' '}
+                      {typeof picture === 'string'
+                        ? extractFilenameFromURL(audio) || 'No audio file found'
+                        : 'No audio file found'}
+                    </div>
+                  </div>
 
                   <div className='list-group'>
                     <h6>
@@ -370,11 +382,10 @@ function Modal_Tasks(props) {
                         return (
                           <label key={index} className='list-group-item'>
                             <input
-                              onChange={() => saveCheckbox(value)}
                               className='form-check-input me-1'
-                              style={{ marginLeft: '5px' }}
                               type='checkbox'
-                              value=''
+                              onChange={() => saveCheckbox(value)}
+                              style={{ marginLeft: '5px' }}
                               checked={myPlacesChoice.includes(value.id)}
                             ></input>
                             {value.title}

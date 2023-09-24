@@ -19,6 +19,12 @@ import { insertCoach } from '../../api/api';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import Modal_Dropdown from '../Modal/Modal_Dropdown';
 import cognitiveList from '../Form/cognitive.json';
+
+import rtlPlugin from "stylis-plugin-rtl";
+import { CacheProvider } from "@emotion/react";
+import createCache from "@emotion/cache";
+import { prefixer } from 'stylis'
+
 const Coaches = () => {
   const [users, setUsers] = useState([]); // State to store the users
   const [userForRemove, setUserForRemove] = useState([]); // State to store the user to be removed
@@ -161,13 +167,19 @@ const Coaches = () => {
     else setOpenThreeDotsVertical(value);
   };
 
+  const cacheRtl = createCache({
+    key: "muirtl",
+    stylisPlugins: [prefixer, rtlPlugin]
+  });
+
   return (
-    <div style={{ marginTop: '14px', textAlign: '-webkit-center' }}>
+    <CacheProvider value={cacheRtl}>
+    <div style={{direction: "rtl", marginTop: '14px', textAlign: '-webkit-center' }}>
       <Button variant='outlined' onClick={handleClickOpen}>
         הוסף משתמש חדש
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>משתמש חדש</DialogTitle>
+      {requestForEditing === 'edit' ? <DialogTitle style={{ direction: "rtl", marginTop: "10px" }}>משתמש עריכה</DialogTitle> : <DialogTitle style={{ direction: "rtl", marginTop: "10px" }}>משתמש חדש</DialogTitle>}
         <DialogContent>
           <DialogContentText></DialogContentText>
           <TextField
@@ -212,7 +224,7 @@ const Coaches = () => {
                 : ''
             }
           />
-          <div>תמונה:</div>
+          <div style={{ direction: "rtl", marginTop: "10px" }} >תמונה:</div>
 
           <input
             label='שם מלא'
@@ -285,6 +297,7 @@ const Coaches = () => {
         ))}
       </div>
     </div>
+    </CacheProvider>
   );
 };
 

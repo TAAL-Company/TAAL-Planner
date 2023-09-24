@@ -332,17 +332,24 @@ function Modal_Tasks(props) {
                         direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     ></input>
-                    {typeof picture === 'string' && picture !== null ? (
+                    {picture ? (
                       <>
                         <div style={{ marginLeft: '11px' }}>
-                          Selected image: {extractFilenameFromURL(picture)}
+                          Selected image:{' '}
+                          {typeof picture === 'string'
+                            ? extractFilenameFromURL(picture)
+                            : picture?.name}
                         </div>
-                        <div className='thumbnail'>
-                          <img src={picture} className='thumbnailImg' alt='' />
-                        </div>
+                        {typeof picture === 'string' && (
+                          <div className='thumbnail'>
+                            <img
+                              src={picture}
+                              className='thumbnailImg'
+                              alt=''
+                            />
+                          </div>
+                        )}
                       </>
-                    ) : typeof picture === 'object' && picture !== null ? (
-                      <div>Selected image: {picture?.name}</div>
                     ) : (
                       <div>Selected image: No image file found</div>
                     )}
@@ -371,29 +378,31 @@ function Modal_Tasks(props) {
                     ></input>
                   </div>
                 </form>
-                {typeof audio === 'string' && audio !== null ? (
-                  <div>
-                    <div className='audioDisplay'>
-                      <div>
-                        Selected audio: {extractFilenameFromURL(audio)}
-                        <audio ref={audioRef} controls>
-                          <source src={audio} type='audio/mpeg' />
-                          Your browser does not support the audio element.
-                        </audio>
-                      </div>
-                      <div>
+                {audio ? (
+                  <div className='audioDisplay'>
+                    <div className='input-group mb-3'>
+                      Selected audio:{' '}
+                      {typeof audio === 'string'
+                        ? extractFilenameFromURL(audio)
+                        : audio?.name}
+                      <audio ref={audioRef} controls>
+                        <source
+                          src={typeof audio === 'string' ? audio : ''}
+                          type='audio/mpeg'
+                        />
+                        Your browser does not support the audio element.
+                      </audio>
+                    </div>
+                    <div>
+                      {typeof audio === 'string' && (
                         <button
                           className='play-button'
                           onClick={handlePlayClick}
                         >
                           Play
                         </button>
-                      </div>
+                      )}
                     </div>
-                  </div>
-                ) : typeof audio === 'object' && audio !== null ? (
-                  <div className='input-group mb-3'>
-                    Selected audio: {audio?.name}
                   </div>
                 ) : (
                   <div className='input-group mb-3'>

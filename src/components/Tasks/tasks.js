@@ -347,7 +347,7 @@ const Tasks = (props) => {
             openThreeDotsVertical !== -1
               ? props.allTasks?.find(
                   (task) => task.id === openThreeDotsVertical
-                ).stations
+                )?.stations
               : []
           }
         />

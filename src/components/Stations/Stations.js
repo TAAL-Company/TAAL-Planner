@@ -266,8 +266,6 @@ const Stations = (props) => {
                           ref={provided.innerRef}
                         >
                           {filteredData.map(({ id, title, color }, index) => {
-                            // props.settaskcolor(color)
-                            // setdpcolor(color)
                             let ID = '' + id;
                             console.log('id: ', typeof ID);
 

@@ -84,7 +84,7 @@ function Modal_Tasks(props) {
       } else {
         Post_Task(picture_url, audio_url);
       }
-      props.setOpenThreeDotsVertical(-1);
+      props.handleClose();
     }
   };
   const update_task = async (uuid, newTask) => {

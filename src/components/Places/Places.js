@@ -199,11 +199,9 @@ const Places = (props) => {
       } catch (error) {
         console.error(error.message);
       }
-
       setLoading(false);
     };
     fetchData();
-
     console.log('allRoutes', allRoutes);
   }, []);
   useEffect(() => {

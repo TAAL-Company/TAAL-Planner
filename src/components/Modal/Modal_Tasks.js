@@ -321,7 +321,7 @@ function Modal_Tasks(props) {
 
                     <FcMultipleInputs />
                   </h6>
-                  <div className='input-group mb-3'>
+                  <div>
                     <input
                       required={true}
                       accept='.png, .jpg, .jpeg'
@@ -336,25 +336,27 @@ function Modal_Tasks(props) {
                       }}
                     ></input>
                     {picture ? (
-                      <>
-                        <div style={{ marginLeft: '3px' }}>
-                          Selected image:{' '}
+                      <div className='selectedImageContainer'>
+                        <div className='selectedImageTitle'>:תמונה שנבחרה</div>
+                        <div>
                           {typeof picture === 'string'
                             ? extractFilenameFromURL(picture)
                             : picture?.name}
                         </div>
-                        {typeof picture === 'string' && (
-                          <div className='thumbnail'>
+                        <div className='thumbnail'>
+                          {typeof picture === 'string' && (
                             <img
                               src={picture}
                               className='thumbnailImg'
                               alt=''
                             />
-                          </div>
-                        )}
-                      </>
+                          )}
+                        </div>
+                      </div>
                     ) : (
-                      <div>Selected image: No image file found</div>
+                      <div style={{ marginBottom: '1rem' }}>
+                        תמונה שנבחרה: לא נמצא קובץ תמונה
+                      </div>
                     )}
                   </div>
                 </form>

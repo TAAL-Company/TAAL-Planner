@@ -300,7 +300,8 @@ function Modal_Tasks(props) {
                     ></input>
                   </p>
                 </form>
-                <div style={{ marginBottom: '1rem' }}>
+                <div className='estimatedTimeContainer'>
+                  <h6>הזן את הזמן המשוער בשניות עבור המשימה</h6>
                   <input
                     type='number'
                     name='estimatedTimeSeconds'
@@ -311,7 +312,6 @@ function Modal_Tasks(props) {
                     }
                     value={estimatedTimeSeconds}
                   />
-                  הזן את הזמן המשוער בשניות עבור המשימה
                 </div>
                 <form id='IPU' className='w3-container'>
                   <h6>
@@ -336,9 +336,9 @@ function Modal_Tasks(props) {
                       }}
                     ></input>
                     {picture ? (
-                      <div className='selectedImageContainer'>
-                        <div className='selectedImageTitle'>:תמונה שנבחרה</div>
-                        <div>
+                      <div className='selectedFileContainer'>
+                        <div className='selectedFileTitle'>:תמונה שנבחרה</div>
+                        <div style={{ marginBottom: '1rem' }}>
                           {typeof picture === 'string'
                             ? extractFilenameFromURL(picture)
                             : picture?.name}
@@ -384,12 +384,27 @@ function Modal_Tasks(props) {
                   </div>
                 </form>
                 {audio ? (
-                  <div className='audioDisplay'>
-                    <div className='input-group mb-3'>
-                      Selected audio:{' '}
-                      {typeof audio === 'string'
-                        ? extractFilenameFromURL(audio)
-                        : audio?.name}
+                  <div className='selectedFileContainer'>
+                    <div className='selectedFileTitle'>
+                      <span>:</span>
+                      אודיו שנבח
+                    </div>
+                    <div className='audioNameContainer'>
+                      <div style={{ marginBottom: '1rem' }}>
+                        {typeof audio === 'string'
+                          ? extractFilenameFromURL(audio)
+                          : audio?.name}
+                      </div>
+                      <div>
+                        {typeof audio === 'string' && (
+                          <button
+                            className='play-button'
+                            onClick={handlePlayClick}
+                          >
+                            Play
+                          </button>
+                        )}
+                      </div>
                       <audio ref={audioRef} controls>
                         <source
                           src={typeof audio === 'string' ? audio : ''}
@@ -398,20 +413,10 @@ function Modal_Tasks(props) {
                         Your browser does not support the audio element.
                       </audio>
                     </div>
-                    <div>
-                      {typeof audio === 'string' && (
-                        <button
-                          className='play-button'
-                          onClick={handlePlayClick}
-                        >
-                          Play
-                        </button>
-                      )}
-                    </div>
                   </div>
                 ) : (
-                  <div className='input-group mb-3'>
-                    Selected audio: No audio file found
+                  <div style={{ marginBottom: '1rem' }}>
+                    אודיו שנבחר: לא נמצא קובץ אודיו
                   </div>
                 )}
                 <div className='list-group'>

@@ -8,12 +8,18 @@
   align-items: center;
 }
 
-.selectedImageContainer {
+.estimatedTimeContainer {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-bottom: 1rem;
+}
+
+.selectedFileContainer {
   display: flex;
   flex-direction: row-reverse;
 }
 
-.selectedImageTitle {
+.selectedFileTitle {
   margin-left: 5px;
 }
 
@@ -36,11 +42,9 @@
   margin-right: 1rem;
 }
 
-.audioDisplay {
+.audioNameContainer {
   display: flex;
-  align-items: center;
-  margin-right: 290px;
-  margin-top: 5px;
+  flex-direction: row-reverse;
 }
 
 /* Circular Play Button */
@@ -51,7 +55,9 @@
   border-radius: 50%;
   color: white;
   font-size: 11px;
+  margin-top: 3px;
   margin-bottom: 15px;
+  margin-right: 5px;
 }
 
 .play-button:hover {

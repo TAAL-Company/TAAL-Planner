@@ -387,28 +387,64 @@ function Forms() {
   useEffect(() => {
     if (Object.keys(routesOfFlags).length > 0) {
       routesOfFlags.tasks.map((task) => {
-        let evaluation = allFlags.find((flag) => flag.taskId === task.taskId);
+        console.log(task);
+        // let evaluation = allFlags.find((flag) => flag.taskId === task.taskId);
+        // export const FlagValue: {
+        //   RED: 'RED',
+        //   GREEN: 'GREEN',
+        //   ORANGE: 'ORANGE'
+        // };
+        let evaluation = {
+          studentId: worker.id,
+          taskId: task.taskId,
+          flag: {
+            GREEN: 'GREEN'
+          }
+        }
         let taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
+        console.log(evaluation, taskInfo);
 
         //let userss=allUsers.find((user)=> user.id === evaluation.studentId);
         // worker.user_name
         // worker.id
 
         //TaskAbilityList //---------------------------------THIS SHOUD BE CHANGE
-        let TaskAbilityList = predictionsMemo[task.taskId];
+        // let TaskAbilityList = predictionsMemo[task.taskId];
+        let TaskAbilityList1 =[{
+          taskid: task.taskId,
+          studentid: worker.id,
+          flag: "orange",
+          indexes: [
+            44,
+            0,
+            101
+          ],
+          grade_addends: [
+            3.488372093023256,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }];
 
-        // const TaskAbilityList = predictions.find((prediction) =>
-        //   prediction.taskid === task.taskId
+        const TaskAbilityList = TaskAbilityList1.find((prediction) =>
+          prediction.taskid === task.taskId
 
-        //   // && prediction.studentid === worker.user_name
-        //   // && evaluation.studentId === worker.id
+           && prediction.studentid === worker.id
+          // && evaluation.studentId === worker.id
 
-        //   //&& prediction.studentid === evaluation.studentId
-        //   // 'TW121' === "adbd938d-8f79-4068-8ef7-ff9cc1a7b86e"
-        //   // && prediction.studentid === 'TW1'
-        // );
+          //&& prediction.studentid === evaluation.studentId
+          // 'TW121' === "adbd938d-8f79-4068-8ef7-ff9cc1a7b86e"
+          // && prediction.studentid === 'TW1'
+        );
         const IndexesToTraits = TaskAbilityList?.indexes
-          ?.map((index) => cognitiveAbillities.find((ca) => ca.index === index))
+          ?.map((index) => cognitiveList.find((ca) => ca.index === index)) // cognitiveAbillities
           .filter((entry) => entry !== undefined)
           .map((entry) => {
             return entry.trait;
@@ -1874,9 +1910,8 @@ function Forms() {
       <div>
         <div>
           <button
-            className={`switch-button-forms ${
-              language === 'hebrew' ? 'hebrew' : 'english'
-            }`}
+            className={`switch-button-forms ${language === 'hebrew' ? 'hebrew' : 'english'
+              }`}
             onClick={() =>
               setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
             }
@@ -1947,8 +1982,8 @@ function Forms() {
                       // keepMounted={slide}
                       // transitionDuration={300}
                       disableEscapeKeyDown
-                      // style={{ direction: "rtl" }}
-                      // style={{ position: "absolute", top: "0", right: "0" }}
+                    // style={{ direction: "rtl" }}
+                    // style={{ position: "absolute", top: "0", right: "0" }}
                     >
                       <div
                         style={{

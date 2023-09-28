@@ -386,76 +386,56 @@ function Forms() {
 
   useEffect(() => {
     if (Object.keys(routesOfFlags).length > 0) {
-      routesOfFlags.tasks.map((task) => {
-        console.log(task);
-        // let evaluation = allFlags.find((flag) => flag.taskId === task.taskId);
-        // export const FlagValue: {
-        //   RED: 'RED',
-        //   GREEN: 'GREEN',
-        //   ORANGE: 'ORANGE'
-        // };
-        let evaluation = {
+      const processedTaskIds = new Set();
+      const updatedRowsFlagsHE = [];
+
+      routesOfFlags.tasks.forEach((task) => {
+        // const evaluation = allFlags.find(
+        //   (flag) => flag.taskId === task.taskId && flag.studentId === worker.id
+        // );
+        const evaluation = {
           studentId: worker.id,
           taskId: task.taskId,
           flag: {
-            GREEN: 'GREEN'
-          }
-        }
-        let taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
-        console.log(evaluation, taskInfo);
+            GREEN: 'GREEN',
+          },
+          intervention: null,
+          alternativeTaskId: [],
+          explanation: '',
+        };
 
-        //let userss=allUsers.find((user)=> user.id === evaluation.studentId);
-        // worker.user_name
-        // worker.id
-
-        //TaskAbilityList //---------------------------------THIS SHOUD BE CHANGE
-        // let TaskAbilityList = predictionsMemo[task.taskId];
-        let TaskAbilityList1 =[{
-          taskid: task.taskId,
-          studentid: worker.id,
-          flag: "orange",
-          indexes: [
-            44,
-            0,
-            101
-          ],
-          grade_addends: [
-            3.488372093023256,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0
-          ]
-        }];
-
-        const TaskAbilityList = TaskAbilityList1.find((prediction) =>
-          prediction.taskid === task.taskId
-
-           && prediction.studentid === worker.id
-          // && evaluation.studentId === worker.id
-
-          //&& prediction.studentid === evaluation.studentId
-          // 'TW121' === "adbd938d-8f79-4068-8ef7-ff9cc1a7b86e"
-          // && prediction.studentid === 'TW1'
-        );
-        const IndexesToTraits = TaskAbilityList?.indexes
-          ?.map((index) => cognitiveList.find((ca) => ca.index === index)) // cognitiveAbillities
-          .filter((entry) => entry !== undefined)
-          .map((entry) => {
-            return entry.trait;
-          });
-        //IndexesToTraits = IndexesToTraits.filter(Boolean);
-        //--------------------------------------------------THIS SHOUD BE CHANGE
-
-        if (evaluation === undefined) return;
-        setRowsFlagsHE((prev) => [
-          ...prev,
+        const algorithm_result_data = [
           {
+            taskid: task.taskId,
+            studentid: worker.id,
+            flag: 'orange',
+            indexes: [44, 0, 101],
+            grade_addends: [
+              3.488372093023256, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+            ],
+          },
+        ];
+
+        if (!evaluation) return; // Skip if evaluation is undefined
+
+        if (!processedTaskIds.has(task.taskId)) {
+          processedTaskIds.add(task.taskId);
+
+          const taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
+
+          const TaskAbilityList = algorithm_result_data.find(
+            (prediction) =>
+              prediction.taskid === evaluation.taskId &&
+              prediction.studentid === evaluation.studentId
+          );
+
+          const IndexesToTraits = TaskAbilityList?.indexes
+            // cognitiveAbillities instead of cognitiveList
+            ?.map((index) => cognitiveList.find((ca) => ca.index === index))
+            .filter((entry) => entry !== undefined)
+            .map((entry) => entry.trait);
+
+          updatedRowsFlagsHE.push({
             id: task.position,
             image: taskInfo.picture_url || taskpic,
             classification: TaskAbilityList?.flag,
@@ -465,64 +445,14 @@ function Forms() {
             explaination: evaluation.explanation,
             TaskAbilitylist: IndexesToTraits,
             // Actions
-          },
-        ]);
+          });
+        }
       });
+
+      if (updatedRowsFlagsHE.length > 0)
+        setRowsFlagsHE((prev) => [...prev, ...updatedRowsFlagsHE]);
     }
-  }, [allFlags, allTasks, cognitiveAbillities, routesOfFlags]);
-
-  //end flags functions
-
-  // useEffect(() => {
-  //   if (Object.keys(routesOfFlags).length === 0) return;
-
-  //   // Convert arrays to objects for faster lookup
-  //   const flagsById = allFlags.reduce((obj, flag) => {
-  //     obj[flag.taskId] = flag;
-  //     return obj;
-  //   }, {});
-
-  //   const tasksById = allTasks.reduce((obj, task) => {
-  //     obj[task.id] = task;
-  //     return obj;
-  //   }, {});
-
-  //   routesOfFlags.tasks.forEach((task) => {
-  //     const evaluation = flagsById[task.taskId];
-  //     const taskInfo = tasksById[task.taskId];
-
-  //     if (!evaluation) return;
-
-  //     const TaskAbilitylist = predictionsMemo[task.taskId];
-  //     const indexesToTraits = TaskAbilitylist?.indexes
-  //       ?.map(
-  //         (index) => cognitiveAbillities.find((ca) => ca.index === index)?.trait
-  //       )
-  //       .filter(Boolean);
-
-  //     setRowsFlagsHE((prev) => [
-  //       ...prev,
-  //       {
-  //         id: task.position,
-  //         image: taskInfo.picture_url || taskpic,
-  //         classification: evaluation.flag,
-  //         task: taskInfo.title,
-  //         intervention: evaluation.intervention,
-  //         Alternatives: evaluation.alternativeTaskId,
-  //         explaination: evaluation.explanation,
-  //         TaskAbilitylist: indexesToTraits,
-  //       },
-  //     ]);
-  //   });
-  // }, [allFlags, allTasks, cognitiveAbillities, routesOfFlags]);
-
-  // Memoize predictions for better performance
-  const predictionsMemo = useMemo(() => {
-    return predictions.reduce((obj, prediction) => {
-      obj[prediction.taskid] = prediction;
-      return obj;
-    }, {});
-  }, []);
+  }, [allFlags, allTasks, cognitiveAbillities, routesOfFlags, worker.id]);
 
   const validateExplaination = (value) => {
     if (value.length > 100) {
@@ -1910,8 +1840,9 @@ function Forms() {
       <div>
         <div>
           <button
-            className={`switch-button-forms ${language === 'hebrew' ? 'hebrew' : 'english'
-              }`}
+            className={`switch-button-forms ${
+              language === 'hebrew' ? 'hebrew' : 'english'
+            }`}
             onClick={() =>
               setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
             }
@@ -1982,8 +1913,8 @@ function Forms() {
                       // keepMounted={slide}
                       // transitionDuration={300}
                       disableEscapeKeyDown
-                    // style={{ direction: "rtl" }}
-                    // style={{ position: "absolute", top: "0", right: "0" }}
+                      // style={{ direction: "rtl" }}
+                      // style={{ position: "absolute", top: "0", right: "0" }}
                     >
                       <div
                         style={{

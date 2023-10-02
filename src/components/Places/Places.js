@@ -641,7 +641,9 @@ const Places = (props) => {
     setStationArray(
       matchedStation.map((station, index) => ({
         ...station,
-        tasks: tasksOfTheWorker,
+        tasks: station.tasks.filter((task) =>
+          tasksOfTheWorker.some((t) => task.id === t.id)
+        ),
         color: pastelColors[index % pastelColors.length],
       }))
     );

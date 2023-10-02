@@ -51,6 +51,7 @@ let flagTest = false;
 //-----------------------
 const Places = (props) => {
   // console.log("setFloatLan:", props.setFloatLang)
+  const [selectedWorker, setSelectedWorker] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
   const [allWorkersForSite, setAllWorkersForSite] = useState([]);
   const [done, setDone] = useState(false);
@@ -516,15 +517,24 @@ const Places = (props) => {
   };
 
   const handleWorkerSelectChange = (event) => {
-    const selectedWorker = event.target.value;
-    setAllTasksOfTheSite([]);
-    setTasksOfChosenStation([]);
-    setTasksLength(0);
-    // setRouteFlags(false);
-    // setReplaceSiteFlag(false);
+    const answer = window.confirm('האם את/ה רוצה להחליף?');
+    let selectedWorkerValue = allWorkersForSite[event.target.selectedIndex - 1];
 
-    if (selectedWorker === 'כללי') Display_The_Stations(selectedSite);
-    else displayStationsFromSelectedWorker(JSON.parse(selectedWorker));
+    if (answer === true) {
+      setAllTasksOfTheSite([]);
+      setTasksOfChosenStation([]);
+      setTasksLength(0);
+      // setRouteFlags(false);
+      // setReplaceSiteFlag(false);
+
+      if (event.target.value === 'כללי') {
+        Display_The_Stations(selectedSite);
+        setSelectedWorker(null);
+      } else {
+        displayStationsFromSelectedWorker(selectedWorkerValue);
+        setSelectedWorker(selectedWorkerValue);
+      }
+    }
   };
 
   useEffect(() => {
@@ -835,15 +845,12 @@ const Places = (props) => {
           </div>
           <select
             className='selectPlace'
-            defaultValue={'DEFAULT'}
             onChange={handleWorkerSelectChange}
+            value={selectedWorker ? selectedWorker.name : 'DEFAULT'}
           >
-            <option value='DEFAULT' disabled>
-              {props.workerLanguage}
-            </option>
-            <option>כללי</option>
+            <option defaultValue='DEFAULT'>כללי</option>
             {allWorkersForSite.map((user, index) => (
-              <option key={index} value={JSON.stringify(user)}>
+              <option key={index} value={user.name}>
                 {user.name}
               </option>
             ))}

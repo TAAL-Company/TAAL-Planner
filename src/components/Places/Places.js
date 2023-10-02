@@ -51,7 +51,8 @@ let flagTest = false;
 //-----------------------
 const Places = (props) => {
   // console.log("setFloatLan:", props.setFloatLang)
-  const [selectedValue, setSelectedValue] = useState(null);
+  const [selectedSite, setSelectedSite] = useState(null);
+  const [allWorkersForSite, setAllWorkersForSite] = useState([]);
   const [done, setDone] = useState(false);
   const [, setLoading] = useState(false);
   const [, setStateStation] = useState([]);
@@ -480,36 +481,62 @@ const Places = (props) => {
     setOpenModalSiteChosen(false);
   };
 
-  const handleSelectChange = (event) => {
-    const newValue = JSON.parse(event.target.value);
+  const handleSiteSelectChange = (event) => {
+    const selectedSiteValue = JSON.parse(event.target.value);
+
+    let workers = allRoutes
+      .map((route) => {
+        const matchingSite = route.sites.find(
+          (site) => site.id === selectedSiteValue.id
+        );
+
+        if (matchingSite && route.students.length > 0) {
+          return route.students.map((student) => ({ ...student }));
+        }
+
+        return [];
+      })
+      .flat();
+
+    setAllWorkersForSite(workers);
 
     if (!siteSelected && !replaceSiteFlag) {
       tasksOfRoutes = {};
-      setReplaceSite(newValue);
-      Display_The_Stations(newValue);
+      setReplaceSite(selectedSiteValue);
+      Display_The_Stations(selectedSiteValue);
       setSiteSelected(true);
       setReplaceSiteFlag(true);
       setOpenModalSiteChosen(false);
     } else {
-      setSelectedValue(null);
       setReplaceSiteFlag(false);
       setOpenModalSiteChosen(true);
       setRouteFlags(false);
     }
+    setSelectedSite(selectedSiteValue);
+  };
 
-    setSelectedValue(newValue);
+  const handleWorkerSelectChange = (event) => {
+    const selectedWorker = event.target.value;
+    setAllTasksOfTheSite([]);
+    setTasksOfChosenStation([]);
+    setTasksLength(0);
+    // setRouteFlags(false);
+    // setReplaceSiteFlag(false);
+
+    if (selectedWorker === 'כללי') Display_The_Stations(selectedSite);
+    else displayStationsFromSelectedWorker(JSON.parse(selectedWorker));
   };
 
   useEffect(() => {
     if (!openModalSiteChosen && replaceSiteFlag) {
-      setReplaceSite(selectedValue);
-      Display_The_Stations(selectedValue);
+      setReplaceSite(selectedSite);
+      Display_The_Stations(selectedSite);
       setTasksLength(0);
       setTasksOfChosenStation([]);
       // setOpenModalRouteChosen(true);
       // setReplaceRouteFlag(true);
     }
-  }, [openModalSiteChosen, replaceSiteFlag, selectedValue]);
+  }, [openModalSiteChosen, replaceSiteFlag, selectedSite]);
 
   const Display_The_Stations = async (selectedValue) => {
     console.log('Display_The_Stations ***');
@@ -568,6 +595,50 @@ const Places = (props) => {
     );
     console.log('routes ', myRoutes);
   };
+
+  const displayStationsFromSelectedWorker = async (selectedWorker) => {
+    // Filter routes that include the selected worker
+    const routes = allRoutes.filter((route) =>
+      route.students.some((student) => student.id === selectedWorker.id)
+    );
+
+    // Find the first matched site
+    const matchedSite = routes
+      .map((route) => route.sites.find((site) => site.id === selectedSite.id))
+      .find((site) => site !== undefined);
+
+    // Filter stations that belong to the matched site
+    const stationsArray = onlyAllStation.filter(
+      (station) => station.parentSiteId === matchedSite.id
+    );
+
+    // Find tasks associated with the selected worker's routes
+    const tasksOfTheWorker = allTasks.filter((task) =>
+      routes.some((route) =>
+        route.tasks.some((routeTask) => routeTask.taskId === task.id)
+      )
+    );
+
+    // Filter stations that are associated with the tasks of the worker
+    const matchedStation = stationsArray.filter((station) =>
+      tasksOfTheWorker.some((task) =>
+        task.stations.some((taskStation) => taskStation.id === station.id)
+      )
+    );
+
+    setTasksLength(tasksOfTheWorker.length);
+    setAllTasksOfTheSite(tasksOfTheWorker);
+    setStationArray(
+      matchedStation.map((station, index) => ({
+        ...station,
+        tasks: tasksOfTheWorker,
+        color: pastelColors[index % pastelColors.length],
+      }))
+    );
+    if (myRoutes.length > 0) setRoutes([]);
+    setRoutes(routes);
+  };
+
   useEffect(() => {
     console.log('stationArray dnd: yardeb', stationArray);
 
@@ -726,28 +797,58 @@ const Places = (props) => {
   //----------------------------------------------------------------------
   return (
     <>
-      {' '}
       <div
         className={`Places ${props.language !== 'English' ? 'english' : ''}`}
       >
-        <div className='placesTitle'>{props.siteQuestionLanguage}</div>
-        <select
-          className='selectPlace'
-          defaultValue={'DEFAULT'}
-          onChange={handleSelectChange}
-        >
-          <option value='DEFAULT' disabled>
-            {props.siteLanguage}
-          </option>
+        <div>
+          <div className='placesTitle'>{props.siteQuestionLanguage}</div>
+          <select
+            className='selectPlace'
+            defaultValue={'DEFAULT'}
+            onChange={handleSiteSelectChange}
+          >
+            <option value='DEFAULT' disabled>
+              {props.siteLanguage}
+            </option>
 
-          {allPlaces.map((value, index) => {
-            return (
-              <option key={index} value={JSON.stringify(value)}>
-                {value.name}
+            {allPlaces.map((place, index) => {
+              return (
+                <option key={index} value={JSON.stringify(place)}>
+                  {place.name}
+                </option>
+              );
+            })}
+          </select>
+        </div>
+        <div
+          style={{ marginRight: '17px' }}
+          className={
+            siteSelected === true && allWorkersForSite.length > 0
+              ? ''
+              : 'disabledWorker'
+          }
+        >
+          <div className='placesTitle'>
+            {props.language !== 'english'
+              ? 'לאיזו סטודנט ברצונך לבנות מסלול?'
+              : 'For which student do you want to build a track?'}
+          </div>
+          <select
+            className='selectPlace'
+            defaultValue={'DEFAULT'}
+            onChange={handleWorkerSelectChange}
+          >
+            <option value='DEFAULT' disabled>
+              {props.workerLanguage}
+            </option>
+            <option>כללי</option>
+            {allWorkersForSite.map((user, index) => (
+              <option key={index} value={JSON.stringify(user)}>
+                {user.name}
               </option>
-            );
-          })}
-        </select>
+            ))}
+          </select>
+        </div>
       </div>
       <div
         className={`mainRectangles ${

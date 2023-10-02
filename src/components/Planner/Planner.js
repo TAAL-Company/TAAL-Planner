@@ -27,6 +27,7 @@ const Planner = () => {
   const [addMyTask, setAddTask] = useState('Add tasks');
   const [saveButton, setSaveButton] = useState('Save route');
   const [siteLanguage, setSiteLanguage] = useState('Site');
+  const [workerLanguage, setWorkerLanguage] = useState('Worker');
   const [siteQuestionLanguage, setSiteQuestionLanguage] = useState(
     'Which site do you want to build a route on?'
   );
@@ -99,6 +100,7 @@ const Planner = () => {
     setAddTask('Add tasks');
     setSiteQuestionLanguage('Which site do you want to build a route on?');
     setSiteLanguage('Site');
+    setWorkerLanguage('Worker');
     setRoutesBeforeChoosingSite(
       'After selecting the site, this column will show routes that exist on the site.'
     );
@@ -122,6 +124,7 @@ const Planner = () => {
     setFloatLan('right');
     setSiteQuestionLanguage('באיזה אתר ברצונך לבנות מסלול?');
     setSiteLanguage('אתר');
+    setWorkerLanguage('סטודנט');
     setSites('אתרים');
     setStations('תחנות');
     setTasks(' משימות');
@@ -188,6 +191,7 @@ const Planner = () => {
                     sites={sites}
                     stations={stations}
                     siteLanguage={siteLanguage}
+                    workerLanguage={workerLanguage}
                     siteQuestionLanguage={siteQuestionLanguage}
                     saveButton={saveButton}
                     myTasks={myTasks}

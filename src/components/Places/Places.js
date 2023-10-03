@@ -940,13 +940,13 @@ const Places = (props) => {
                 {props.routesBeforeChoosingSite}
               </div>
             ) : (
-              filteredDataRoutes.map((value, index) => {
+              filteredDataRoutes.map((route, index) => {
                 return (
                   <div
                     className='buttons'
                     style={{
                       border:
-                        value.id === tasksOfRoutes.id
+                        route.id === tasksOfRoutes.id
                           ? '1px solid #256fa1'
                           : '',
                       flexDirection:
@@ -984,11 +984,11 @@ const Places = (props) => {
                       className='nameOfButton'
                       onClick={
                         () => {
-                          DisplayTasks(value);
+                          DisplayTasks(route);
                         } //הצגת המסלול
                       }
                     >
-                      {value.name
+                      {route.name
                         .replace('&#8211;', '-')
                         .replace('&#8217;', "'")}
                     </button>

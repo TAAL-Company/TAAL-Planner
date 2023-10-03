@@ -151,7 +151,7 @@ function Modal_Tasks(props) {
     } else {
       setDone(false);
       setFlagClickOK(false);
-      alert('You must choose a station !');
+      alert('את/ה חייב/ת לבחור תחנה!');
       props.setModalOpen(true);
     }
   };

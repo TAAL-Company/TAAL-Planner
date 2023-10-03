@@ -36,7 +36,12 @@ import {
 } from '@mui/material';
 import { useEffect } from 'react';
 import { id } from 'date-fns/locale';
+
 import predictions from './predictions.json';
+
+import staticTasks from './staticTasks.json';
+import evaluationevents from './evaluation-events.json';
+import staticstudent from './staticstudent.json';
 
 function Forms() {
   const [explainationError, setExplainationError] = useState('');
@@ -390,31 +395,10 @@ function Forms() {
       const updatedRowsFlagsHE = [];
 
       routesOfFlags.tasks.forEach((task) => {
-        // const evaluation = allFlags.find(
-        //   (flag) => flag.taskId === task.taskId && flag.studentId === worker.id
-        // );
-        const evaluation = {
-          studentId: worker.id,
-          taskId: task.taskId,
-          flag: {
-            GREEN: 'GREEN',
-          },
-          intervention: null,
-          alternativeTaskId: [],
-          explanation: '',
-        };
 
-        const algorithm_result_data = [
-          {
-            taskid: task.taskId,
-            studentid: worker.id,
-            flag: 'orange',
-            indexes: [44, 0, 101],
-            grade_addends: [
-              3.488372093023256, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-            ],
-          },
-        ];
+        const evaluation = allFlags.find(
+          (flag) => flag.taskId === task.taskId && flag.studentId === worker.id
+        );
 
         if (!evaluation) return; // Skip if evaluation is undefined
 
@@ -423,14 +407,12 @@ function Forms() {
 
           const taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
 
-          const TaskAbilityList = algorithm_result_data.find(
-            (prediction) =>
-              prediction.taskid === evaluation.taskId &&
-              prediction.studentid === evaluation.studentId
+          const TaskAbilityList = predictions.find((prediction) =>
+            prediction.taskid === evaluation.taskId &&
+            prediction.studentid === worker.user_name
           );
 
           const IndexesToTraits = TaskAbilityList?.indexes
-            // cognitiveAbillities instead of cognitiveList
             ?.map((index) => cognitiveList.find((ca) => ca.index === index))
             .filter((entry) => entry !== undefined)
             .map((entry) => entry.trait);
@@ -438,7 +420,7 @@ function Forms() {
           updatedRowsFlagsHE.push({
             id: task.position,
             image: taskInfo.picture_url || taskpic,
-            classification: TaskAbilityList?.flag,
+            classification: TaskAbilityList.flag,
             task: taskInfo.title,
             intervention: evaluation.intervention,
             Alternatives: evaluation.alternativeTaskId,
@@ -1840,9 +1822,8 @@ function Forms() {
       <div>
         <div>
           <button
-            className={`switch-button-forms ${
-              language === 'hebrew' ? 'hebrew' : 'english'
-            }`}
+            className={`switch-button-forms ${language === 'hebrew' ? 'hebrew' : 'english'
+              }`}
             onClick={() =>
               setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
             }
@@ -1913,8 +1894,8 @@ function Forms() {
                       // keepMounted={slide}
                       // transitionDuration={300}
                       disableEscapeKeyDown
-                      // style={{ direction: "rtl" }}
-                      // style={{ position: "absolute", top: "0", right: "0" }}
+                    // style={{ direction: "rtl" }}
+                    // style={{ position: "absolute", top: "0", right: "0" }}
                     >
                       <div
                         style={{

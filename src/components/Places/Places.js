@@ -485,29 +485,29 @@ const Places = (props) => {
     setTempSelectedSite(null);
   }, []);
 
-  const getWorkersForSite = (selectedSiteValue) => {
-    return allRoutes
-      .map((route) => {
-        const matchingSite = route.sites.find(
-          (site) => site.id === selectedSiteValue.id
-        );
+  useEffect(() => {
+    if (selectedSite && Object.keys(selectedSite).length > 0) {
+      const workers = allRoutes
+        .map((route) => {
+          const matchingSite = route.sites.find(
+            (site) => site.id === selectedSite.id
+          );
 
-        if (matchingSite && route.students.length > 0) {
-          return route.students.map((student) => ({ ...student }));
-        }
+          if (matchingSite && route.students.length > 0) {
+            return route.students.map((student) => ({ ...student }));
+          }
 
-        return [];
-      })
-      .flat();
-  };
+          return [];
+        })
+        .flat();
+      setAllWorkersForSite(workers);
+    }
+  }, [allRoutes, selectedSite]);
 
   const handleSiteSelectChange = useCallback(
     (event) => {
       const selectedSiteValue = JSON.parse(event.target.value);
       setTempSelectedSite(selectedSiteValue);
-
-      let workers = getWorkersForSite(selectedSiteValue);
-      setAllWorkersForSite(workers);
 
       if (!siteSelected && !replaceSiteFlag) {
         tasksOfRoutes = {};
@@ -528,7 +528,8 @@ const Places = (props) => {
 
   const handleWorkerSelectChange = (event) => {
     const answer = window.confirm('האם את/ה רוצה להחליף?');
-    let selectedWorkerValue = allWorkersForSite[event.target.selectedIndex - 1];
+    const selectedWorkerValue =
+      allWorkersForSite[event.target.selectedIndex - 1];
 
     if (answer === true) {
       setAllTasksOfTheSite([]);

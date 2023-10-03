@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   getingData_Routes,
   getingData_Tasks,
@@ -53,6 +53,7 @@ const Places = (props) => {
   // console.log("setFloatLan:", props.setFloatLang)
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
+  const [tempSelectedSite, setTempSelectedSite] = useState(null);
   const [allWorkersForSite, setAllWorkersForSite] = useState([]);
   const [done, setDone] = useState(false);
   const [, setLoading] = useState(false);
@@ -473,19 +474,19 @@ const Places = (props) => {
     });
   };
 
-  const handleReplaceSiteFlag = () => {
+  const handleSiteReplacement = useCallback(() => {
+    setSelectedSite(tempSelectedSite);
     setReplaceSiteFlag(true);
     setOpenModalSiteChosen(false);
-  };
+  }, [tempSelectedSite]);
 
-  const handleOpenModalSiteChosen = () => {
+  const closeSiteSelectionModal = useCallback(() => {
     setOpenModalSiteChosen(false);
-  };
+    setTempSelectedSite(null);
+  }, []);
 
-  const handleSiteSelectChange = (event) => {
-    const selectedSiteValue = JSON.parse(event.target.value);
-
-    let workers = allRoutes
+  const getWorkersForSite = (selectedSiteValue) => {
+    return allRoutes
       .map((route) => {
         const matchingSite = route.sites.find(
           (site) => site.id === selectedSiteValue.id
@@ -498,23 +499,32 @@ const Places = (props) => {
         return [];
       })
       .flat();
-
-    setAllWorkersForSite(workers);
-
-    if (!siteSelected && !replaceSiteFlag) {
-      tasksOfRoutes = {};
-      setReplaceSite(selectedSiteValue);
-      Display_The_Stations(selectedSiteValue);
-      setSiteSelected(true);
-      setReplaceSiteFlag(true);
-      setOpenModalSiteChosen(false);
-    } else {
-      setReplaceSiteFlag(false);
-      setOpenModalSiteChosen(true);
-      setRouteFlags(false);
-    }
-    setSelectedSite(selectedSiteValue);
   };
+
+  const handleSiteSelectChange = useCallback(
+    (event) => {
+      const selectedSiteValue = JSON.parse(event.target.value);
+      setTempSelectedSite(selectedSiteValue);
+
+      let workers = getWorkersForSite(selectedSiteValue);
+      setAllWorkersForSite(workers);
+
+      if (!siteSelected && !replaceSiteFlag) {
+        tasksOfRoutes = {};
+        setReplaceSite(selectedSiteValue);
+        Display_The_Stations(selectedSiteValue);
+        setSiteSelected(true);
+        setReplaceSiteFlag(true);
+        setOpenModalSiteChosen(false);
+        setSelectedSite(selectedSiteValue);
+      } else {
+        setReplaceSiteFlag(false);
+        setOpenModalSiteChosen(true);
+        setRouteFlags(false);
+      }
+    },
+    [allRoutes, siteSelected, replaceSiteFlag]
+  );
 
   const handleWorkerSelectChange = (event) => {
     const answer = window.confirm('האם את/ה רוצה להחליף?');
@@ -543,10 +553,11 @@ const Places = (props) => {
       Display_The_Stations(selectedSite);
       setTasksLength(0);
       setTasksOfChosenStation([]);
+      setSelectedSite(tempSelectedSite);
       // setOpenModalRouteChosen(true);
       // setReplaceRouteFlag(true);
     }
-  }, [openModalSiteChosen, replaceSiteFlag, selectedSite]);
+  }, [openModalSiteChosen, replaceSiteFlag, selectedSite, tempSelectedSite]);
 
   const Display_The_Stations = async (selectedValue) => {
     console.log('Display_The_Stations ***');
@@ -816,8 +827,8 @@ const Places = (props) => {
           <div className='placesTitle'>{props.siteQuestionLanguage}</div>
           <select
             className='selectPlace'
-            defaultValue={'DEFAULT'}
             onChange={handleSiteSelectChange}
+            value={selectedSite ? JSON.stringify(selectedSite) : 'DEFAULT'}
           >
             <option value='DEFAULT' disabled>
               {props.siteLanguage}
@@ -1089,10 +1100,10 @@ const Places = (props) => {
               <div>החלפת אתר תמחק את השינויים שביצעת באתר הנוכחי</div>
             </div>
             <div className='footer' style={{ display: 'flex' }}>
-              <button className='cancelBtn' onClick={handleOpenModalSiteChosen}>
+              <button className='cancelBtn' onClick={closeSiteSelectionModal}>
                 ביטול
               </button>
-              <button className='cancelBtn' onClick={handleReplaceSiteFlag}>
+              <button className='cancelBtn' onClick={handleSiteReplacement}>
                 החלף אתר
               </button>
             </div>

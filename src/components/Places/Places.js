@@ -555,6 +555,7 @@ const Places = (props) => {
       setTasksLength(0);
       setTasksOfChosenStation([]);
       setSelectedSite(tempSelectedSite);
+      setSelectedWorker(null);
       // setOpenModalRouteChosen(true);
       // setReplaceRouteFlag(true);
     }

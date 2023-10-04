@@ -25,15 +25,15 @@ function Modal_Tasks(props) {
   const [picture, setPicture] = useState(props.picture);
   const [audio, setAudio] = useState(props.audio);
   const [flagClickOK, setFlagClickOK] = useState(false);
-  const [myPlacesChoice, setMyPlacesChoice] = useState([]);
+  const [myPlacesChoice, setMyPlacesChoice] = useState([props.myStation.id]);
   const audioRef = useRef(null);
 
   useEffect(() => {
     if (
       props.requestForEditing === 'edit' ||
-      (props.requestForEditing === 'details' && props.stationOfTask.length > 0)
+      (props.requestForEditing === 'details' && props.stationOfTask?.length > 0)
     ) {
-      props.stationOfTask.forEach((station) => {
+      props.stationOfTask?.forEach((station) => {
         setMyPlacesChoice((prev) => [...prev, station.id]);
       });
     }

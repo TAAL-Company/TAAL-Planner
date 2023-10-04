@@ -281,8 +281,10 @@ const Tasks = (props) => {
         <button
           className='AddButton'
           onClick={() => {
-            setModalOpen(true);
-            setModalOpenNoSiteSelected(true);
+            if (Object.keys(props.chosenStation).length > 0) {
+              setModalOpen(true);
+              setModalOpenNoSiteSelected(true);
+            } else alert('את/ה חייב/ת לבחור תחנה!');
           }}
         >
           <AiOutlinePlus className='plus' />

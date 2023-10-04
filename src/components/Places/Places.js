@@ -542,7 +542,7 @@ const Places = (props) => {
         Display_The_Stations(selectedSite);
         setSelectedWorker(null);
       } else {
-        displayStationsFromSelectedWorker(selectedWorkerValue);
+        displayRoutesFromSelectedWorker(selectedWorkerValue);
         setSelectedWorker(selectedWorkerValue);
       }
     }
@@ -619,7 +619,7 @@ const Places = (props) => {
     console.log('routes ', myRoutes);
   };
 
-  const displayStationsFromSelectedWorker = async (selectedWorker) => {
+  const displayRoutesFromSelectedWorker = async (selectedWorker) => {
     // Filter routes that include the selected worker
     const routes = allRoutes.filter((route) =>
       route.students.some((student) => student.id === selectedWorker.id)

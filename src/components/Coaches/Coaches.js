@@ -110,6 +110,13 @@ const Coaches = () => {
     });
   };
 
+  function extractFilenameFromURL(url) {
+    const parts = url.split('?');
+    const path = parts[0]; // Get the part before the question mark
+    const pathParts = path.split('/');
+    const filename = decodeURIComponent(pathParts[pathParts.length - 1]);
+    return filename;
+  }
   const handleConfirm = async () => {
     const email = document.getElementById('email').value;
     const fullName = document.getElementById('name').value;
@@ -225,14 +232,38 @@ const Coaches = () => {
             }
           />
           <div style={{ direction: "rtl", marginTop: "10px" }} >תמונה:</div>
-
-          <input
-            label='שם מלא'
-            accept='image/*'
-            id='image-input'
-            type='file'
-            onChange={(e) => setPicture(e.target.files[0])}
-          />
+          <div>
+              <input
+                label='שם מלא'
+                accept='image/*'
+                id='image-input'
+                type='file'
+                onChange={(e) => setPicture(e.target.files[0])}
+              />
+              {users[openThreeDotsVertical]?.picture_url ? (
+                <div className='selectedFileContainer'>
+                  <div className='selectedFileTitle'>:תמונה שנבחרה</div>
+                  <div style={{ marginBottom: '1rem' }}>
+                    {typeof users[openThreeDotsVertical]?.picture_url === 'string'
+                      ? extractFilenameFromURL(users[openThreeDotsVertical]?.picture_url)
+                      : users[openThreeDotsVertical]?.name}
+                  </div>
+                  <div className='thumbnail'>
+                    {typeof users[openThreeDotsVertical]?.picture_url === 'string' && (
+                      <img
+                        src={users[openThreeDotsVertical]?.picture_url}
+                        className='thumbnailImg'
+                        alt=''
+                      />
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div style={{ marginBottom: '1rem' }}>
+                  תמונה שנבחרה: לא נמצא קובץ תמונה
+                </div>
+              )}
+            </div>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>ביטול</Button>

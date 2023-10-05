@@ -54,7 +54,8 @@ const Cards = () => {
       setStudentForAction(openThreeDotsVertical);
       setOpen(true);
     } else if (requestForEditing === 'duplication') {
-      console.log('openThreeDotsVertical', openThreeDotsVertical);
+      setStudentForAction(openThreeDotsVertical);
+      duplicateUser();
     } else if (requestForEditing === 'delete') {
       setStudentForAction(openThreeDotsVertical);
       setOpenRemove(true);
@@ -114,6 +115,39 @@ const Cards = () => {
       let post_cognitive = await post_cognitive_abillities(cognitiveTemp);
       console.log('post_cognitive', post_cognitive);
     });
+  };
+
+  const duplicateUser = async () => {
+    console.log("" + JSON.stringify(users[openThreeDotsVertical]));
+    const userToDuplicate = {
+      email: users[openThreeDotsVertical].email,
+      user_name: users[openThreeDotsVertical].user_name,
+      name: users[openThreeDotsVertical].name,
+      cognitiveProfileId: users[openThreeDotsVertical].cognitiveProfile?.id || "",
+      siteIds: users[openThreeDotsVertical].sites.map(siteId => ({ id: siteId?.id, })) || [],
+      routeIds: users[openThreeDotsVertical].routes.map(routeId => ({ id: routeId?.id, })) || [],
+      coachId: users[openThreeDotsVertical].coach?.id || "",
+      taskIds: users[openThreeDotsVertical].tasks.map(taskId => ({ id: taskId?.id, })) || [],
+      picture_url: users[openThreeDotsVertical].picture_url || ""
+    }
+    try {
+      if (requestForEditing === 'duplication') {
+        console.log("userToDuplicate : " + JSON.stringify(userToDuplicate));
+        insertUser(userToDuplicate).then((data) => {
+          data.picture_url = userToDuplicate.picture_url;
+          updateUser(data.id, data).then((updatedUser) => {
+            setUsers((prev) => [updatedUser.data, ...prev]);
+            setupdateAdd(true);
+          });
+        });
+        setupdateAdd(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing('');
   };
 
   const handleConfirm = async () => {

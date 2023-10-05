@@ -67,13 +67,13 @@ function Tag({
   //   console.log("isDragging: ", isDragging);
   // }, [isDragging]);
 
-  const clickOnhreeDotsVerticaIcontBoard = (value) => {
+  const clickOnThreeDotsVerticaIcontBoard = (value) => {
     console.log('value', value);
     if (openThreeDotsVerticalBoard === value) setOpenThreeDotsVerticalBoard(-1);
     else setOpenThreeDotsVerticalBoard(value);
   };
 
-  const clickOnhreeDotsVerticaIcont = (value) => {
+  const clickOnThreeDotsVerticaIcont = (value) => {
     if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);
   };
@@ -203,8 +203,8 @@ function Tag({
                     className='threeDotsVerticalEng'
                     onClick={() => {
                       dragFromCover === 'TasksNew'
-                        ? clickOnhreeDotsVerticaIcont(id)
-                        : clickOnhreeDotsVerticaIcontBoard(id);
+                        ? clickOnThreeDotsVerticaIcont(id)
+                        : clickOnThreeDotsVerticaIcontBoard(id);
                     }}
                   >
                     <BsThreeDotsVertical />

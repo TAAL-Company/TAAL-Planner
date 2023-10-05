@@ -92,20 +92,15 @@ function DragnDrop(props) {
   const [taskForEdit, setTaskForEdit] = useState('');
 
   useEffect(() => {
-    console.log('stations requestForEditing: ', requestForEditing);
-    console.log('stations openThreeDotsVertical: ', openThreeDotsVertical);
-
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
-      console.log('openThreeDotsVertical', openThreeDotsVertical);
-      setTaskUuidForEdit(openThreeDotsVertical);
+      setTaskUuidForEdit(openThreeDotsVerticalBoard);
       setModalOpen(true);
     } else if (requestForEditing === 'duplication') {
-      console.log('openThreeDotsVertical', openThreeDotsVertical);
     } else if (requestForEditing === 'delete') {
       setOpenRemove(true);
       //Modal_Delete
     }
-  }, [requestForEditing]);
+  }, [openThreeDotsVerticalBoard, requestForEditing]);
 
   useEffect(() => {
     if (taskForEdit !== '') {
@@ -131,6 +126,7 @@ function DragnDrop(props) {
   const handleCloseRemove = () => {
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
+    setOpenThreeDotsVerticalBoard(-1);
     setRequestForEditing('');
   };
   const handleCloseRemoveConfirm = async () => {
@@ -726,23 +722,45 @@ function DragnDrop(props) {
           mySite={props.mySite}
           help={helpFlag}
           title={
-            openThreeDotsVertical !== -1
-              ? dndArray.find((task) => task.id === openThreeDotsVertical).title
+            openThreeDotsVerticalBoard !== -1
+              ? dndArray.find((task) => task.id === openThreeDotsVerticalBoard)
+                  .title
               : ''
           }
           subtitle={
-            openThreeDotsVertical !== -1
+            openThreeDotsVerticalBoard !== -1
               ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVertical
+                  (task) => task.id === openThreeDotsVerticalBoard
                 ).subtitle
               : ''
           }
           stationOfTask={
-            openThreeDotsVertical !== -1
-              ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVertical
+            openThreeDotsVerticalBoard !== -1
+              ? props.allTasks.find(
+                  (task) => task.id === openThreeDotsVerticalBoard
                 ).stations
-              : ''
+              : []
+          }
+          estimatedTimeSeconds={
+            openThreeDotsVerticalBoard !== -1
+              ? props.tasksOfChosenStation.find(
+                  (task) => task.id === openThreeDotsVerticalBoard
+                ).estimatedTimeSeconds
+              : 20
+          }
+          picture={
+            openThreeDotsVerticalBoard !== -1
+              ? props.tasksOfChosenStation.find(
+                  (task) => task.id === openThreeDotsVerticalBoard
+                ).picture_url
+              : null
+          }
+          audio={
+            openThreeDotsVerticalBoard !== -1
+              ? props.tasksOfChosenStation.find(
+                  (task) => task.id === openThreeDotsVerticalBoard
+                ).audio_url
+              : null
           }
         />
       ) : (

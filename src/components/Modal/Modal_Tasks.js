@@ -30,10 +30,11 @@ function Modal_Tasks(props) {
 
   useEffect(() => {
     if (
-      props.requestForEditing === 'edit' ||
-      (props.requestForEditing === 'details' && props.stationOfTask?.length > 0)
+      (props.requestForEditing === 'edit' ||
+        props.requestForEditing === 'details') &&
+      props.stationOfTask.length > 0
     ) {
-      props.stationOfTask?.forEach((station) => {
+      props.stationOfTask.forEach((station) => {
         setMyPlacesChoice((prev) => [...prev, station.id]);
       });
     }

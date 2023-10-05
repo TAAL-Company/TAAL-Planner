@@ -34,6 +34,7 @@ const Coaches = () => {
   const [picture, setPicture] = useState(null);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1); // State to manage the open state of the vertical three dots
   const [requestForEditing, setRequestForEditing] = useState(''); // State to store the request for editing
+  const [updateAdd, setupdateAdd] = useState(false);
 
   useEffect(() => {
     console.log('student openThreeDotsVertical: ', openThreeDotsVertical);
@@ -46,7 +47,8 @@ const Coaches = () => {
       setUserForUpdate(openThreeDotsVertical);
       setOpen(true);
     } else if (requestForEditing === 'duplication') {
-      console.log('openThreeDotsVertical', openThreeDotsVertical);
+      duplicateCoache()
+      // console.log('openThreeDotsVertical', openThreeDotsVertical);
     } else if (requestForEditing === 'delete') {
       setUserForRemove(openThreeDotsVertical);
       setOpenRemove(true);
@@ -117,6 +119,32 @@ const Coaches = () => {
     const filename = decodeURIComponent(pathParts[pathParts.length - 1]);
     return filename;
   }
+
+  const duplicateCoache = async () => {
+    console.log("" + JSON.stringify(users[openThreeDotsVertical]));
+    const CoacheToDuplicate = {
+      email: users[openThreeDotsVertical].email,
+      name: users[openThreeDotsVertical].name,
+      phone: users[openThreeDotsVertical].phone,
+      picture_url: users[openThreeDotsVertical].picture_url || ""
+    }
+    try {
+      if (requestForEditing === 'duplication') {
+        console.log("userToDuplicate : " + JSON.stringify(CoacheToDuplicate));
+        insertCoach(CoacheToDuplicate).then((data) => {
+          setUsers([data, ...users]);
+          setupdateAdd(true);
+        });
+        setupdateAdd(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing('');
+  };
+
   const handleConfirm = async () => {
     const email = document.getElementById('email').value;
     const fullName = document.getElementById('name').value;
@@ -167,6 +195,15 @@ const Coaches = () => {
     };
 
     fetchData();
+  }, [updateAdd]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const usersData = await getingData_coaches();
+      setUsers(usersData);
+    };
+
+    fetchData();
   }, []);
 
   const clickOnhreeDotsVerticaIcont = (value) => {
@@ -181,58 +218,58 @@ const Coaches = () => {
 
   return (
     <CacheProvider value={cacheRtl}>
-    <div style={{direction: "rtl", marginTop: '14px', textAlign: '-webkit-center' }}>
-      <Button variant='outlined' onClick={handleClickOpen}>
-        הוסף משתמש חדש
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
-      {requestForEditing === 'edit' ? <DialogTitle style={{ direction: "rtl", marginTop: "10px" }}>משתמש עריכה</DialogTitle> : <DialogTitle style={{ direction: "rtl", marginTop: "10px" }}>משתמש חדש</DialogTitle>}
-        <DialogContent>
-          <DialogContentText></DialogContentText>
-          <TextField
-            autoFocus
-            margin='dense'
-            id='email'
-            label='אימייל'
-            type='email'
-            fullWidth
-            variant='standard'
-            defaultValue={
-              openThreeDotsVertical !== -1
-                ? users[openThreeDotsVertical].email
-                : ''
-            }
-          />
-          <TextField
-            autoFocus
-            margin='dense'
-            id='name'
-            label='שם מלא'
-            type='name'
-            fullWidth
-            variant='standard'
-            defaultValue={
-              openThreeDotsVertical !== -1
-                ? users[openThreeDotsVertical].name
-                : ''
-            }
-          />
-          <TextField
-            autoFocus
-            margin='dense'
-            id='phone'
-            label='מספר פלאפון'
-            type='phone'
-            fullWidth
-            variant='standard'
-            defaultValue={
-              openThreeDotsVertical !== -1
-                ? users[openThreeDotsVertical].phone
-                : ''
-            }
-          />
-          <div style={{ direction: "rtl", marginTop: "10px" }} >תמונה:</div>
-          <div>
+      <div style={{ direction: "rtl", marginTop: '14px', textAlign: '-webkit-center' }}>
+        <Button variant='outlined' onClick={handleClickOpen}>
+          הוסף משתמש חדש
+        </Button>
+        <Dialog open={open} onClose={handleClose}>
+          {requestForEditing === 'edit' ? <DialogTitle style={{ direction: "rtl", marginTop: "10px" }}>משתמש עריכה</DialogTitle> : <DialogTitle style={{ direction: "rtl", marginTop: "10px" }}>משתמש חדש</DialogTitle>}
+          <DialogContent>
+            <DialogContentText></DialogContentText>
+            <TextField
+              autoFocus
+              margin='dense'
+              id='email'
+              label='אימייל'
+              type='email'
+              fullWidth
+              variant='standard'
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? users[openThreeDotsVertical].email
+                  : ''
+              }
+            />
+            <TextField
+              autoFocus
+              margin='dense'
+              id='name'
+              label='שם מלא'
+              type='name'
+              fullWidth
+              variant='standard'
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? users[openThreeDotsVertical].name
+                  : ''
+              }
+            />
+            <TextField
+              autoFocus
+              margin='dense'
+              id='phone'
+              label='מספר פלאפון'
+              type='phone'
+              fullWidth
+              variant='standard'
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? users[openThreeDotsVertical].phone
+                  : ''
+              }
+            />
+            <div style={{ direction: "rtl", marginTop: "10px" }} >תמונה:</div>
+            <div>
               <input
                 label='שם מלא'
                 accept='image/*'
@@ -264,70 +301,70 @@ const Coaches = () => {
                 </div>
               )}
             </div>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>ביטול</Button>
-          <Button onClick={handleConfirm}>שמירה</Button>
-        </DialogActions>
-      </Dialog>
-      {/* sure for Remove */}
-      <Dialog
-        open={openRemove}
-        onClose={handleCloseRemove}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <DialogTitle id='alert-dialog-title'>{'מחיקת משתמש'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id='alert-dialog-description'>
-            האם אתה בטוח במחיקת המשתמש?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseRemove}>ביטול</Button>
-          <Button onClick={handleCloseRemoveConfirm} autoFocus>
-            מחיקה
-          </Button>
-        </DialogActions>
-      </Dialog>
-      {/* end cencel */}
-      <div className='user_cards_warpper'>
-        {users.map((user, index) => (
-          <div key={user.id} className='user_card'>
-            <div className='dropdownThreeDotsUsers'>
-              <button
-                className='threeDotsVerticalEng'
-                onClick={() => clickOnhreeDotsVerticaIcont(index)}
-              >
-                <BsThreeDotsVertical />
-              </button>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>ביטול</Button>
+            <Button onClick={handleConfirm}>שמירה</Button>
+          </DialogActions>
+        </Dialog>
+        {/* sure for Remove */}
+        <Dialog
+          open={openRemove}
+          onClose={handleCloseRemove}
+          aria-labelledby='alert-dialog-title'
+          aria-describedby='alert-dialog-description'
+        >
+          <DialogTitle id='alert-dialog-title'>{'מחיקת משתמש'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id='alert-dialog-description'>
+              האם אתה בטוח במחיקת המשתמש?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseRemove}>ביטול</Button>
+            <Button onClick={handleCloseRemoveConfirm} autoFocus>
+              מחיקה
+            </Button>
+          </DialogActions>
+        </Dialog>
+        {/* end cencel */}
+        <div className='user_cards_warpper'>
+          {users.map((user, index) => (
+            <div key={user.id} className='user_card'>
+              <div className='dropdownThreeDotsUsers'>
+                <button
+                  className='threeDotsVerticalEng'
+                  onClick={() => clickOnhreeDotsVerticaIcont(index)}
+                >
+                  <BsThreeDotsVertical />
+                </button>
 
-              {openThreeDotsVertical === index ? (
-                <Modal_Dropdown
-                  setRequestForEditing={setRequestForEditing}
-                  setOpenThreeDotsVertical={setOpenThreeDotsVertical}
-                  editable={true}
-                  Reproducible={true}
-                  details={true}
-                  erasable={true}
-                />
-              ) : (
-                <></>
-              )}
+                {openThreeDotsVertical === index ? (
+                  <Modal_Dropdown
+                    setRequestForEditing={setRequestForEditing}
+                    setOpenThreeDotsVertical={setOpenThreeDotsVertical}
+                    editable={true}
+                    Reproducible={true}
+                    details={true}
+                    erasable={true}
+                  />
+                ) : (
+                  <></>
+                )}
+              </div>
+              <img
+                src={user.picture_url || defualtSiteImg}
+                alt='Avatar'
+                style={{ width: '100%' }}
+              />
+              <div className='users_cards_container' key={user.id}>
+                <h5>{user.name}</h5>
+                <p>{user.email}</p>
+              </div>
             </div>
-            <img
-              src={user.picture_url || defualtSiteImg}
-              alt='Avatar'
-              style={{ width: '100%' }}
-            />
-            <div className='users_cards_container' key={user.id}>
-              <h5>{user.name}</h5>
-              <p>{user.email}</p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
     </CacheProvider>
   );
 };

@@ -255,7 +255,11 @@ function Modal_Tasks(props) {
                   {props.language !== 'English' ? 'New task' : ':משימה חדשה'}
                 </div>
               </div>
-              <div className='bodyNewTask'>
+              <div
+                className={`bodyNewTask ${
+                  props.requestForEditing === 'details' ? 'disabledModal' : ''
+                }`}
+              >
                 {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
                 <form id='IPU' className='w3-container'>
                   <h6>
@@ -448,7 +452,7 @@ function Modal_Tasks(props) {
               <div
                 style={{
                   display: 'flex',
-                  justifyContent: 'flex-start',
+                  justifyContent: 'center',
                   gap: '16px',
                   height: '100px',
                   alignItems: 'center',
@@ -457,14 +461,18 @@ function Modal_Tasks(props) {
                 }}
                 className='footerNewTasks'
               >
-                <input
-                  type='submit'
-                  className='saveTaskButton'
-                  value={
-                    props.language !== 'English' ? 'Save Task' : 'שמור משימה'
-                  }
-                  onClick={saveTask}
-                />
+                {props.requestForEditing === 'details' ? (
+                  <></>
+                ) : (
+                  <input
+                    type='submit'
+                    className='saveTaskButton'
+                    value={
+                      props.language !== 'English' ? 'Save Task' : 'שמור משימה'
+                    }
+                    onClick={saveTask}
+                  />
+                )}
                 <input
                   type='submit'
                   className='cancelTaskButton'

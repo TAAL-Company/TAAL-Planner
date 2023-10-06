@@ -298,7 +298,7 @@ const Places = (props) => {
         setProgressBarFlag(false);
       }
 
-      let firstStationId;
+      let theStation;
       let stationName;
       if (firstStation !== undefined) {
         firstStation.stations.map((station) => {
@@ -307,7 +307,7 @@ const Places = (props) => {
 
           if (station.parentSiteId === mySite.id) {
             console.log('!! station.title: ', station.title);
-            firstStationId = station.id;
+            theStation = station;
             stationName = station.title;
           }
         });
@@ -421,8 +421,9 @@ const Places = (props) => {
             title: taskTemp.title
               .replace('&#8211;', '-')
               .replace('&#8217;', "' "),
+            subtitle: taskTemp.subtitle,
             mySite: mySite,
-            myStation: stationName,
+            myStation: theStation,
             data: stationArray,
             nameStation: nameStation,
             width: width,
@@ -432,7 +433,11 @@ const Places = (props) => {
             bottom: bottom,
             kavTopWidth: kavTopWidth,
             newkavTaskTop: newkavTaskTop,
-            dataImg: taskTemp.picture_url,
+            dataMedia: {
+              picture_url: taskTemp.picture_url,
+              audio_url: taskTemp.audio_url,
+            },
+            estimatedTimeSeconds: taskTemp.estimatedTimeSeconds,
             color: color,
           };
         })

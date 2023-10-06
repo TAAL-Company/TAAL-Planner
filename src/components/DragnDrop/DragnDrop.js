@@ -715,7 +715,15 @@ function DragnDrop(props) {
           setModalOpen={setModalOpen}
           setAllTasksOfTheSite={props.setAllTasksOfTheSite}
           setMyStation={props.setMyStation}
-          myStation={props.myStation}
+          myStation={
+            props.myStation.data.length > 0 && openThreeDotsVerticalBoard !== -1
+              ? props.myStation
+              : props.boardArrayDND.length > 0
+              ? props.boardArrayDND.find(
+                  (dnd) => dnd.id === openThreeDotsVerticalBoard
+                ).myStation
+              : ''
+          }
           // setModalOpenNoSiteSelected={setModalOpenNoSiteSelected}
           allStations={props.stationArray}
           siteSelected={siteSelected}
@@ -723,15 +731,28 @@ function DragnDrop(props) {
           help={helpFlag}
           title={
             openThreeDotsVerticalBoard !== -1
-              ? dndArray.find((task) => task.id === openThreeDotsVerticalBoard)
-                  .title
+              ? dndArray.length > 0
+                ? dndArray.find(
+                    (task) => task.id === openThreeDotsVerticalBoard
+                  ).title
+                : props.boardArrayDND.length > 0
+                ? props.boardArrayDND.find(
+                    (dnd) => dnd.id === openThreeDotsVerticalBoard
+                  ).title
+                : ''
               : ''
           }
           subtitle={
             openThreeDotsVerticalBoard !== -1
-              ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVerticalBoard
-                ).subtitle
+              ? props.tasksOfChosenStation.length > 0
+                ? props.tasksOfChosenStation.find(
+                    (task) => task.id === openThreeDotsVerticalBoard
+                  ).subtitle
+                : props.boardArrayDND.length > 0
+                ? props.boardArrayDND.find(
+                    (dnd) => dnd.id === openThreeDotsVerticalBoard
+                  ).subtitle
+                : ''
               : ''
           }
           stationOfTask={
@@ -743,23 +764,41 @@ function DragnDrop(props) {
           }
           estimatedTimeSeconds={
             openThreeDotsVerticalBoard !== -1
-              ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVerticalBoard
-                ).estimatedTimeSeconds
+              ? props.tasksOfChosenStation.length > 0
+                ? props.tasksOfChosenStation.find(
+                    (task) => task.id === openThreeDotsVerticalBoard
+                  ).estimatedTimeSeconds
+                : props.boardArrayDND.length > 0
+                ? props.boardArrayDND.find(
+                    (dnd) => dnd.id === openThreeDotsVerticalBoard
+                  ).estimatedTimeSeconds
+                : 20
               : 20
           }
           picture={
             openThreeDotsVerticalBoard !== -1
-              ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVerticalBoard
-                ).picture_url
+              ? props.tasksOfChosenStation.length > 0
+                ? props.tasksOfChosenStation.find(
+                    (task) => task.id === openThreeDotsVerticalBoard
+                  ).picture_url
+                : props.boardArrayDND.length > 0
+                ? props.boardArrayDND.find(
+                    (dnd) => dnd.id === openThreeDotsVerticalBoard
+                  ).dataMedia.picture_url
+                : null
               : null
           }
           audio={
             openThreeDotsVerticalBoard !== -1
-              ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVerticalBoard
-                ).audio_url
+              ? props.tasksOfChosenStation.length > 0
+                ? props.tasksOfChosenStation.find(
+                    (task) => task.id === openThreeDotsVerticalBoard
+                  ).audio_url
+                : props.boardArrayDND.length > 0
+                ? props.boardArrayDND.find(
+                    (dnd) => dnd.id === openThreeDotsVerticalBoard
+                  ).dataMedia.audio_url
+                : null
               : null
           }
         />

@@ -25,7 +25,11 @@ function Modal_Tasks(props) {
   const [picture, setPicture] = useState(props.picture);
   const [audio, setAudio] = useState(props.audio);
   const [flagClickOK, setFlagClickOK] = useState(false);
-  const [myPlacesChoice, setMyPlacesChoice] = useState([props.myStation.id]);
+  const [myPlacesChoice, setMyPlacesChoice] = useState(
+    props.requestForEditing === 'edit' || props.requestForEditing === 'details'
+      ? []
+      : [props.myStation.id]
+  );
   const audioRef = useRef(null);
 
   useEffect(() => {

@@ -721,7 +721,7 @@ function DragnDrop(props) {
               : props.boardArrayDND.length > 0
               ? props.boardArrayDND.find(
                   (dnd) => dnd.id === openThreeDotsVerticalBoard
-                ).myStation
+                ).theStation
               : ''
           }
           // setModalOpenNoSiteSelected={setModalOpenNoSiteSelected}

@@ -369,7 +369,7 @@ const Places = (props) => {
               '!! : ',
               stationArray.find((item) => item.id === stationID.id)
             );
-
+            theStation = stationID;
             color = stationArray.find((item) => item.id === stationID.id).color;
           } else {
             // stationName = "כללי";

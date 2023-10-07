@@ -48,7 +48,7 @@ let countTemp = 0;
 function DragnDrop(props) {
   const [board, setBoard] = useState([]);
   const [reorderBoardFlag, setReorderBoardFlag] = useState(true);
-  const [openRemove, setOpenRemove] = React.useState(false);
+  const [openRemove, setOpenRemove] = useState(false);
 
   // console.log("JSON.parse(localStorage.getItem('New_Routes')):", JSON.parse(localStorage.getItem('New_Routes')))
   console.log('propsDataTask:', props.tasksOfChosenStation);
@@ -80,7 +80,7 @@ function DragnDrop(props) {
   const [activeButton, setActiveButton] = useState('tree');
   const [siteSelected, setSiteSelected] = useState(false);
   // const [prevStation,setPrevStation] = useState("test");
-  const [boardArrayDND, setboardArrayDND] = useState(props.boardArrayDND);
+  const [boardArrayDND, setBoardArrayDND] = useState([]);
 
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState('');
@@ -96,18 +96,33 @@ function DragnDrop(props) {
       setTaskUuidForEdit(openThreeDotsVerticalBoard);
       setModalOpen(true);
     } else if (requestForEditing === 'duplication') {
-    } else if (requestForEditing === 'delete') {
-      setOpenRemove(true);
-      //Modal_Delete
-    }
+    } else if (requestForEditing === 'delete') setOpenRemove(true);
   }, [openThreeDotsVerticalBoard, requestForEditing]);
 
   useEffect(() => {
+    if (props.boardArrayDND && props.boardArrayDND.length > 0) {
+      setBoardArrayDND(props.boardArrayDND);
+    }
+
     if (taskForEdit !== '') {
       console.log('task for edit', taskForEdit);
       editTask();
     }
-  }, [taskForEdit]);
+  }, [props.boardArrayDND, taskForEdit]);
+
+  const getTheStation = () => {
+    if (props.myStation.data.length > 0 && openThreeDotsVerticalBoard !== -1) {
+      return props.myStation;
+    } else if (boardArrayDND.length > 0 && openThreeDotsVerticalBoard !== -1) {
+      const foundDND = boardArrayDND.find(
+        (dnd) => dnd.id === openThreeDotsVerticalBoard
+      );
+      if (foundDND) {
+        return foundDND.theStation;
+      }
+    }
+    return ''; // Return a default value if no match is found.
+  };
 
   const editTask = () => {
     const updatedTasks = props.allTasksOfTheSite.map((task) => {
@@ -124,25 +139,19 @@ function DragnDrop(props) {
   };
 
   const handleCloseRemove = () => {
-    setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
     setOpenThreeDotsVerticalBoard(-1);
     setRequestForEditing('');
+    setOpenRemove(false);
   };
   const handleCloseRemoveConfirm = async () => {
-    console.log('DELETE:'); //, stationArray[openThreeDotsVertical].id);
-
-    let deleteTaskTemp = await deleteTask(openThreeDotsVertical);
-
-    console.log('deleteTaskTemp:', deleteTaskTemp);
-    console.log(' props.tasksOfChosenStation:', props.tasksOfChosenStation);
-    console.log(' props.tasksOfChosenStation:', props.tasksOfChosenStation);
+    let deleteTaskTemp = await deleteTask(openThreeDotsVerticalBoard);
 
     if (deleteTaskTemp !== undefined) {
       alert('המחיקה בוצעה בהצלחה!');
       const newTasks = [...props.tasksOfChosenStation];
       let indexaTask = props.tasksOfChosenStation.findIndex(
-        (task) => task.id === openThreeDotsVertical
+        (task) => task.id === openThreeDotsVerticalBoard
       );
       newTasks.splice(indexaTask, 1); // remove one element at index x
       props.setTasksOfChosenStation(newTasks);
@@ -150,16 +159,10 @@ function DragnDrop(props) {
       let indexStation = props.stationArray.findIndex(
         (station) => station.id === props.myStation.id
       );
-      console.log('indexStation 123', indexStation);
 
       props.stationArray[indexStation].tasks = newTasks;
-      console.log('newTasks 123', newTasks);
-      console.log('dndArray 123', dndArray);
     }
-
-    setOpenRemove(false);
-    setOpenThreeDotsVertical(-1);
-    setRequestForEditing('');
+    handleCloseRemove();
   };
 
   let prevStation = '';
@@ -274,8 +277,7 @@ function DragnDrop(props) {
       color: props.stationColor,
     };
   };
-
-  let dndArray = props.tasksOfChosenStation.map(mapTask);
+  dndArray = props.tasksOfChosenStation.map(mapTask);
 
   console.log('dndArray check:', dndArray);
   //---------------------------------------------------------
@@ -715,28 +717,22 @@ function DragnDrop(props) {
           setModalOpen={setModalOpen}
           setAllTasksOfTheSite={props.setAllTasksOfTheSite}
           setMyStation={props.setMyStation}
-          myStation={
-            props.myStation.data.length > 0 && openThreeDotsVerticalBoard !== -1
-              ? props.myStation
-              : props.boardArrayDND.length > 0
-              ? props.boardArrayDND.find(
-                  (dnd) => dnd.id === openThreeDotsVerticalBoard
-                ).theStation
-              : ''
-          }
+          myStation={getTheStation()}
           // setModalOpenNoSiteSelected={setModalOpenNoSiteSelected}
           allStations={props.stationArray}
           siteSelected={siteSelected}
           mySite={props.mySite}
           help={helpFlag}
+          tasksOfChosenStation={props.tasksOfChosenStation}
+          setTasksOfChosenStation={props.setTasksOfChosenStation}
           title={
             openThreeDotsVerticalBoard !== -1
               ? dndArray.length > 0
                 ? dndArray.find(
                     (task) => task.id === openThreeDotsVerticalBoard
                   ).title
-                : props.boardArrayDND.length > 0
-                ? props.boardArrayDND.find(
+                : boardArrayDND.length > 0
+                ? boardArrayDND.find(
                     (dnd) => dnd.id === openThreeDotsVerticalBoard
                   ).title
                 : ''
@@ -748,8 +744,8 @@ function DragnDrop(props) {
                 ? props.tasksOfChosenStation.find(
                     (task) => task.id === openThreeDotsVerticalBoard
                   ).subtitle
-                : props.boardArrayDND.length > 0
-                ? props.boardArrayDND.find(
+                : boardArrayDND.length > 0
+                ? boardArrayDND.find(
                     (dnd) => dnd.id === openThreeDotsVerticalBoard
                   ).subtitle
                 : ''
@@ -768,8 +764,8 @@ function DragnDrop(props) {
                 ? props.tasksOfChosenStation.find(
                     (task) => task.id === openThreeDotsVerticalBoard
                   ).estimatedTimeSeconds
-                : props.boardArrayDND.length > 0
-                ? props.boardArrayDND.find(
+                : boardArrayDND.length > 0
+                ? boardArrayDND.find(
                     (dnd) => dnd.id === openThreeDotsVerticalBoard
                   ).estimatedTimeSeconds
                 : 20
@@ -781,8 +777,8 @@ function DragnDrop(props) {
                 ? props.tasksOfChosenStation.find(
                     (task) => task.id === openThreeDotsVerticalBoard
                   ).picture_url
-                : props.boardArrayDND.length > 0
-                ? props.boardArrayDND.find(
+                : boardArrayDND.length > 0
+                ? boardArrayDND.find(
                     (dnd) => dnd.id === openThreeDotsVerticalBoard
                   ).dataMedia.picture_url
                 : null
@@ -794,8 +790,8 @@ function DragnDrop(props) {
                 ? props.tasksOfChosenStation.find(
                     (task) => task.id === openThreeDotsVerticalBoard
                   ).audio_url
-                : props.boardArrayDND.length > 0
-                ? props.boardArrayDND.find(
+                : boardArrayDND.length > 0
+                ? boardArrayDND.find(
                     (dnd) => dnd.id === openThreeDotsVerticalBoard
                   ).dataMedia.audio_url
                 : null

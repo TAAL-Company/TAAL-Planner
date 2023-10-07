@@ -60,15 +60,16 @@ function Modal_Tasks(props) {
       setFlagClickOK(false);
       props.setModalOpen(true);
     } else {
+      const urlAlreadyExist = 'https://taalmedia.blob.core.windows.net';
       let picture_url;
       let audio_url;
       try {
-        if (picture) {
+        if (picture && !picture.includes(urlAlreadyExist)) {
           console.log('enter site: ', 'Task media');
           picture_url = await uploadFiles(picture, 'Task media');
           console.log(`Image uploaded successfully:`, picture_url);
         }
-        if (audio) {
+        if (audio && !audio.includes(urlAlreadyExist)) {
           audio_url = await uploadFiles(audio, 'Task media');
           console.log(`Audio uploaded successfully:`, audio_url);
         }

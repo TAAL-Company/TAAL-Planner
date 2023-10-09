@@ -541,11 +541,11 @@ export const getCognitiveProfile = async (user_id) => {
 export const deletetaskcognitiveRequirements = async (id) => {
   let confirm;
 
-  await fetch(baseUrl + '/task-cognitive-requirements/' + id, { method: 'DELETE' }).then(
-    (res) => {
-      confirm = res;
-    }
-  );
+  await fetch(baseUrl + '/task-cognitive-requirements/' + id, {
+    method: 'DELETE',
+  }).then((res) => {
+    confirm = res;
+  });
   console.log('res deletesites: ', confirm);
 
   return confirm;
@@ -565,34 +565,18 @@ export function postTaskCognitiveRequirements(data) {
   const body = JSON.stringify(data);
   const headers = {
     'Content-Type': 'application/json',
-    accept: 'application/json',
+    Accept: '*/*',
   };
 
-  // Make a PATCH request to the server
-  fetch(url + data.taskId, {
-    method: 'PATCH',
+  // Make a POST request to the server
+  fetch(url, {
+    method: 'POST',
     body: body,
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
   })
     .then((response) => {
-      if (response.status === 404) {
-        // If the resource is not found, make a POST request instead
-        return fetch(url, {
-          method: 'POST',
-          body: body,
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-      } else {
-        return response;
-      }
-    })
-    .then((response) => {
-      return response;
       // Handle the response
+      return response;
     })
     .catch((error) => {
       // Handle errors

@@ -5,7 +5,8 @@ import userLogo from "../../Pictures/user-logo.png";
 import lockLogo from "../../Pictures/lock-logo.png";
 import "./styleLogin.css";
 import background from "../../Pictures/backgroundLogin.png";
-import {} from '../../api/api';
+import { getingDataTasks, getingData_Tasks } from '../../api/api';
+import taskAbility from '../../components/Form/taskAbility.json'
 
 let flagLoading = false;
 
@@ -31,16 +32,46 @@ function Login(props) {
   }
 
   async function getall() {
+    const tasks = await getingData_Tasks();
+
+    var props = ['id', 'title'];
+
+    var tasksWithAMatchingName = tasks.filter(function (task) {
+      return taskAbility.some(function (taskA) {
+        return task.title === taskA.task;
+      });
+    }).map(function (o) {
+      return props.reduce(function (newo, name) {
+        newo[name] = o[name];
+        return newo;
+      }, {});
+    });
+
+    var tasksWithOutAMatchingName = tasks.filter(function (task) {
+       return !taskAbility.some(function (taskA) {
+        return task.title === taskA.task;
+      });
+    }).map(function (o) {
+      return props.reduce(function (newo, name) {
+        newo[name] = o[name];
+        return newo;
+      }, {});
+    });
+
+    console.log("tasks With A Matching Name ",tasksWithAMatchingName);
+    console.log("tasks Without A Matching Name ",tasksWithOutAMatchingName);
+
+
     //const IdToDelete = await getingDataRoutes();
-    
+
     //let IdToDelete = []
 
     //console.log(IdToDelete);
 
     //IdToDelete.map(async (user) => {
-      // console.log(user.id);
-      // let response = await deleteSites(user.id)
-      // console.log("done - " + response);
+    // console.log(user.id);
+    // let response = await deleteSites(user.id)
+    // console.log("done - " + response);
     //})
 
     // IdToDelete.map(async (id) => {

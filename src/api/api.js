@@ -880,6 +880,7 @@ export const postEvaluationEvents = async (
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Accept: '*/*',
         // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
       },
       body: JSON.stringify({

@@ -358,35 +358,31 @@ function Forms() {
     setRroutenewName(value.name);
 
     const route = allRoutes.find((route) => route.id === value.id);
-
-    // Fetch new flags data and update the state
-    const flagsData = await getingDataFlags();
-    setAllFlags(flagsData);
     setRoutesOfFlags(route);
 
-    const studentIds = [worker.id];
+    // const studentIds = [worker.id];
     const taskIds = route.tasks?.map((task) => task.taskId);
 
-    // route.students.map(()=>{
+    taskIds.map(async (task) => {
+      try {
+        // const data = await postEvaluation(studentIds, taskIds);
 
-    // })
-    console.log('studentIds', studentIds);
-    try {
-      const data = await postEvaluation(studentIds, taskIds);
-
-      for (const flag of data) {
-        try {
-          await postEvaluationEvents(worker.id, flag.taskId, flag.evaluation);
-        } catch (error) {
-          console.error(
-            `Error posting evaluation event for task ID ${flag.taskId}:`,
-            error
-          );
-        }
+        // for (const flag of data) {
+        // try {
+        await postEvaluationEvents(worker.id, task, 'RED');
+        // } catch (error) {
+        // console.error(
+        // `Error posting evaluation event for task ID ${flag.taskId}:`,
+        // error
+        // );
+        // }
+        // }
+      } catch (error) {
+        console.error('Error handling route flags change:', error);
       }
-    } catch (error) {
-      console.error('Error handling route flags change:', error);
-    }
+    });
+    const flagsData = await getingDataFlags();
+    setAllFlags(flagsData);
   };
 
   useEffect(() => {
@@ -395,7 +391,6 @@ function Forms() {
       const updatedRowsFlagsHE = [];
 
       routesOfFlags.tasks.forEach((task) => {
-
         const evaluation = allFlags.find(
           (flag) => flag.taskId === task.taskId && flag.studentId === worker.id
         );
@@ -407,9 +402,10 @@ function Forms() {
 
           const taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
 
-          const TaskAbilityList = predictions.find((prediction) =>
-            prediction.taskid === evaluation.taskId &&
-            prediction.studentid === worker.user_name
+          const TaskAbilityList = predictions.find(
+            (prediction) =>
+              // prediction.taskid === evaluation.taskId &&
+              prediction.studentid === worker.user_name
           );
 
           const IndexesToTraits = TaskAbilityList?.indexes
@@ -1822,8 +1818,9 @@ function Forms() {
       <div>
         <div>
           <button
-            className={`switch-button-forms ${language === 'hebrew' ? 'hebrew' : 'english'
-              }`}
+            className={`switch-button-forms ${
+              language === 'hebrew' ? 'hebrew' : 'english'
+            }`}
             onClick={() =>
               setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
             }
@@ -1894,8 +1891,8 @@ function Forms() {
                       // keepMounted={slide}
                       // transitionDuration={300}
                       disableEscapeKeyDown
-                    // style={{ direction: "rtl" }}
-                    // style={{ position: "absolute", top: "0", right: "0" }}
+                      // style={{ direction: "rtl" }}
+                      // style={{ position: "absolute", top: "0", right: "0" }}
                     >
                       <div
                         style={{

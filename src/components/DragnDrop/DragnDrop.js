@@ -348,6 +348,30 @@ function DragnDrop(props) {
     }
   };
 
+  const getValueForProperty = (property, fallbackValue) => {
+    if (openThreeDotsVerticalBoard !== -1) {
+      if (props.tasksOfChosenStation.length > 0) {
+        const task = props.tasksOfChosenStation.find(
+          (task) => task.id === openThreeDotsVerticalBoard
+        );
+        if (task && task[property] !== undefined) {
+          return task[property];
+        }
+      }
+
+      if (boardArrayDND.length > 0) {
+        const dnd = boardArrayDND.find(
+          (dnd) => dnd.id === openThreeDotsVerticalBoard
+        );
+        if (dnd && dnd[property] !== undefined) {
+          return dnd[property];
+        }
+      }
+    }
+
+    return fallbackValue;
+  };
+
   useEffect(() => {
     if (Object.keys(props.dropToBoard).length > 0) {
       console.log('result: ', props.dropToBoard);
@@ -725,32 +749,8 @@ function DragnDrop(props) {
           help={helpFlag}
           tasksOfChosenStation={props.tasksOfChosenStation}
           setTasksOfChosenStation={props.setTasksOfChosenStation}
-          title={
-            openThreeDotsVerticalBoard !== -1
-              ? dndArray.length > 0
-                ? dndArray.find(
-                    (task) => task.id === openThreeDotsVerticalBoard
-                  ).title
-                : boardArrayDND.length > 0
-                ? boardArrayDND.find(
-                    (dnd) => dnd.id === openThreeDotsVerticalBoard
-                  ).title
-                : ''
-              : ''
-          }
-          subtitle={
-            openThreeDotsVerticalBoard !== -1
-              ? props.tasksOfChosenStation.length > 0
-                ? props.tasksOfChosenStation.find(
-                    (task) => task.id === openThreeDotsVerticalBoard
-                  ).subtitle
-                : boardArrayDND.length > 0
-                ? boardArrayDND.find(
-                    (dnd) => dnd.id === openThreeDotsVerticalBoard
-                  ).subtitle
-                : ''
-              : ''
-          }
+          title={getValueForProperty('title', '')}
+          subtitle={getValueForProperty('subtitle', '')}
           stationOfTask={
             openThreeDotsVerticalBoard !== -1
               ? props.allTasks.find(
@@ -758,45 +758,9 @@ function DragnDrop(props) {
                 ).stations
               : []
           }
-          estimatedTimeSeconds={
-            openThreeDotsVerticalBoard !== -1
-              ? props.tasksOfChosenStation.length > 0
-                ? props.tasksOfChosenStation.find(
-                    (task) => task.id === openThreeDotsVerticalBoard
-                  ).estimatedTimeSeconds
-                : boardArrayDND.length > 0
-                ? boardArrayDND.find(
-                    (dnd) => dnd.id === openThreeDotsVerticalBoard
-                  ).estimatedTimeSeconds
-                : 20
-              : 20
-          }
-          picture={
-            openThreeDotsVerticalBoard !== -1
-              ? props.tasksOfChosenStation.length > 0
-                ? props.tasksOfChosenStation.find(
-                    (task) => task.id === openThreeDotsVerticalBoard
-                  ).picture_url
-                : boardArrayDND.length > 0
-                ? boardArrayDND.find(
-                    (dnd) => dnd.id === openThreeDotsVerticalBoard
-                  ).dataMedia.picture_url
-                : null
-              : null
-          }
-          audio={
-            openThreeDotsVerticalBoard !== -1
-              ? props.tasksOfChosenStation.length > 0
-                ? props.tasksOfChosenStation.find(
-                    (task) => task.id === openThreeDotsVerticalBoard
-                  ).audio_url
-                : boardArrayDND.length > 0
-                ? boardArrayDND.find(
-                    (dnd) => dnd.id === openThreeDotsVerticalBoard
-                  ).dataMedia.audio_url
-                : null
-              : null
-          }
+          estimatedTimeSeconds={getValueForProperty('estimatedTimeSeconds', 20)}
+          picture={getValueForProperty('picture_url', null)}
+          audio={getValueForProperty('audio_url', null)}
         />
       ) : (
         <></>

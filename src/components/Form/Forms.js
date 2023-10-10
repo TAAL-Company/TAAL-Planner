@@ -360,28 +360,28 @@ function Forms() {
     const route = allRoutes.find((route) => route.id === value.id);
     setRoutesOfFlags(route);
 
-    // const studentIds = [worker.id];
     const taskIds = route.tasks?.map((task) => task.taskId);
 
-    taskIds.map(async (task) => {
-      try {
-        // const data = await postEvaluation(studentIds, taskIds);
-
-        // for (const flag of data) {
-        // try {
-        await postEvaluationEvents(worker.id, task, 'RED');
-        // } catch (error) {
-        // console.error(
-        // `Error posting evaluation event for task ID ${flag.taskId}:`,
-        // error
-        // );
-        // }
-        // }
-      } catch (error) {
-        console.error('Error handling route flags change:', error);
-      }
-    });
     const flagsData = await getingDataFlags();
+
+    // Check if there are any matching task IDs in flagsData
+    const hasMatchingTask = taskIds.some((taskId) => {
+      return flagsData.some(
+        (flag) => flag.taskId === taskId && flag.studentId === worker.id
+      );
+    });
+
+    if (!hasMatchingTask) {
+      // If there are no matching task IDs, run the function
+      taskIds.map(async (task) => {
+        try {
+          await postEvaluationEvents(worker.id, task, 'RED');
+        } catch (error) {
+          console.error('Error posting evaluation event:', error);
+        }
+      });
+    }
+
     setAllFlags(flagsData);
   };
 

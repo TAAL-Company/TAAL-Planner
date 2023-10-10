@@ -62,6 +62,9 @@ const Nav = () => {
         <Link to="/Dashboard">
           <div className="home"></div>
         </Link>
+        <Link to="/Forms">
+          <div className="forms"></div>
+        </Link>
       </ul>
       <div className="userName">{complete_name}</div>
       <div className="myUser"></div>

@@ -43,11 +43,10 @@ const Phone = (props) => {
                       <Tag
                         modalFlagTablet={props.modalFlagTablet}
                         title={tag.title}
-                        desc={tag.desc}
+                        subtitle={tag.subtitle}
                         id={tag.id}
-                        // idImg={tag.idImg}
-                        dataImg={tag.dataImg}
-                        idAudio={tag.idAudio}
+                        picture_url={tag.picture_url}
+                        audio_url={tag.audio_url}
                         dataAudio={tag.dataAudio}
                         key={keyCount}
                         flagBoard={true}

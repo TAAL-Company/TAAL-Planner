@@ -248,7 +248,7 @@ const Tasks = (props) => {
                             title={tag.title}
                             id={ID}
                             key={ID}
-                            dataImg={tag.picture_url}
+                            picture_url={tag.picture_url}
                             flagBoard={false}
                             myLastStation={
                               props.chosenStation

@@ -386,13 +386,8 @@ const Places = (props) => {
           let kavTaskTopMarginTop = '-7px';
           let borderLeft = '2px solid #c2bfbf';
 
-          console.log('stationName dnd new:', stationName);
-          console.log('prevStation dnd new:', prevStation);
-
           if (prevStation === stationName) {
             // sameStation
-
-            console.log('same stationnnn', prevStation);
             width = '-84px';
             borderLeft = '2x solid #c2bfbf';
             height = '86px';
@@ -413,8 +408,6 @@ const Places = (props) => {
           }
 
           prevStation = stationName;
-
-          console.log('routeClicked nameStation: ', nameStation);
 
           return {
             id: taskTemp.id,
@@ -446,25 +439,6 @@ const Places = (props) => {
       setOpenModalRouteChosen(true);
     }
   };
-
-  // useEffect(() => {
-  //   console.log('replaceSiteFlag ***', replaceSiteFlag);
-  //   console.log('siteSelected ***', siteSelected);
-
-  //   if (
-  //     siteSelected === false &&
-  //     replaceSiteFlag === false &&
-  //     openModalSiteChosen === false
-  //   ) {
-  //     console.log('DONE ***');
-  //     setReplaceSiteFlag(false);
-  //     // setReplaceRoute([]);
-  //     setOpenModalSiteChosen(false);
-  //     setSiteSelected(false);
-  //     // setTasksOfRoutes([]);
-  //     // setRouteFlags(false);
-  //   }
-  // }, [siteSelected]);
 
   const isStationOfMySite = (stationId) => {
     console.log('isStationOfMySite yyyyy', stationId);
@@ -566,28 +540,12 @@ const Places = (props) => {
   }, [openModalSiteChosen, replaceSiteFlag, selectedSite, tempSelectedSite]);
 
   const Display_The_Stations = async (selectedValue) => {
-    console.log('Display_The_Stations ***');
-
-    // const selectedValue = JSON.parse(event.target.value);
-
-    // setRouteFlags(true)
-    // setFlagRoute((flagRoute = true));
     setThisIdTask((thisIdTask = selectedValue.id));
     if (stationArray.length > 0) {
       setStationArray([]);
     }
     mySite.name = selectedValue.name;
     mySite.id = selectedValue.id;
-    // setMySite({ name: selectedValue.name, id: selectedValue.id });
-    // let length = 0;
-    // allTasks.map((task) => {
-    //   if (task.sites.find((site) => site.id === mySite.id)) {
-    //     console.log('yarden task', task);
-    //     length++;
-    //     setAllTasksOfTheSite((prev) => [...prev, task]);
-    //   }
-    // });
-    // setTasksLength(length);
 
     const tasksOfTheSite = allTasks.filter((task) =>
       task.sites.find((site) => site.id === mySite.id)
@@ -598,10 +556,6 @@ const Places = (props) => {
 
     localStorage.setItem('MySite', JSON.stringify(mySite));
 
-    console.log('onlyAllStation:', onlyAllStation);
-
-    let colorTemp = 0;
-
     setStationArray(
       onlyAllStation
         .filter((item) => item.parentSiteId === selectedValue.id)
@@ -610,8 +564,6 @@ const Places = (props) => {
           color: pastelColors[index % pastelColors.length],
         }))
     );
-
-    console.log('setStationArray: ', stationArray);
 
     //myRoutes saves only the routes that belong to the site that choosen
     if (myRoutes.length > 0) setRoutes([]);
@@ -669,8 +621,6 @@ const Places = (props) => {
   };
 
   useEffect(() => {
-    console.log('stationArray dnd: yardeb', stationArray);
-
     if (allTasksOfTheSite.length > 0) {
       console.log('allTasksOfTheSite yarden', allTasksOfTheSite);
       let tasksWithoutStation = allTasksOfTheSite.filter((task) => {
@@ -752,14 +702,7 @@ const Places = (props) => {
 
   useEffect(() => {
     //after adding new routes
-    console.log('newTitleForRoute: ', newTitleForRoute);
-
-    console.log('filteredDataRoutes: ', filteredDataRoutes);
-    console.log('newRoute: ', newRoute);
-
     let route = filteredDataRoutes.find((route) => route.id === newRoute.id);
-    console.log('route ', route);
-
     if (Object.keys(newRoute)?.length > 0) {
       // filteredDataRoutes.push(newRoute);
       if (route !== undefined) {
@@ -767,33 +710,14 @@ const Places = (props) => {
       } else {
         setFilteredDataRoutes((temp) => [...temp, newRoute]);
         let uuidRoute = newRoute.id;
-        console.log('Setting timeout for route with ID:', uuidRoute);
 
         setTimeout(() => {
-          console.log('Timeout complete for route with ID:', uuidRoute);
           updateRoute(uuidRoute, { siteIds: mySite.id });
         }, 60000);
       }
-      console.log('HHII');
       setNewRoute([]);
     }
   }, [newRoute]);
-  useEffect(() => {
-    console.log('@@ filteredDataRoutes: ', filteredDataRoutes);
-  }, [filteredDataRoutes]);
-
-  // useEffect(() => {
-  //   function handleClickOutside(event) {
-  //     if (menuRef.current && !menuRef.current.contains(event.target)) {
-  //       setOpenThreeDotsVertical(null);
-  //     }
-  //   }
-
-  //   document.addEventListener("mousedown", handleClickOutside);
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   };
-  // }, []);
 
   // handle search word in "searce route"
   const searchRoute = () => {
@@ -819,8 +743,6 @@ const Places = (props) => {
   }, [myRoutes]);
 
   function handleDragEnd(result) {
-    // Your logic for handling drag and drop result
-    console.log('result: ', result);
     setDropToBoard(result);
   }
   //----------------------------------------------------------------------
@@ -1056,6 +978,7 @@ const Places = (props) => {
             english={props.english}
             Hebrew={props.Hebrew}
             setTasksOfChosenStation={setTasksOfChosenStation}
+            tasksOfChosenStation={tasksOfChosenStation}
             setChosenStation={setChosenStation}
             chosenStation={chosenStation}
             settaskcolor={handleColor}

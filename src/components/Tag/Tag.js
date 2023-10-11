@@ -8,7 +8,7 @@ import Modal_dropdown from '../Modal/Modal_Dropdown';
 
 function Tag({
   title,
-  desc,
+  subtitle,
   id,
   flagBoard,
   myMarginTop,
@@ -20,8 +20,8 @@ function Tag({
   nameStation,
   borderLeft,
   flagPhone,
-  // idImg,
-  dataMedia,
+  picture_url,
+  audio_url,
   data,
   modalFlagTablet,
   dragFromCover,
@@ -34,41 +34,10 @@ function Tag({
   setOpenThreeDotsVerticalBoard,
 }) {
   localStorage.setItem('myLastStation', JSON.stringify(myLastStation));
-  // console.log("title in Tag:", title);
-  // console.log("myLastStation:", myLastStation);
-  // console.log("width width width widthwidthwidth:", kavTaskTopMarginTop);
-  // console.log("myStation:", myStation);
-  // console.log("countcountcountcount:", count);
-  // console.log("id:", id);
-  // console.log("image data tag: ", dataImg);
-
-  // console.log("flagBoard:", flagBoard);
-  // console.log("nameStation:", nameStation);
-  // console.log("borderLeft:", borderLeft);
-  // console.log("data:", data);
-  // // console.log("idImg: ", idImg)
-
   const [idListen, setIdListen] = useState(0);
   const [dataListen, setDataListen] = useState({});
-  // const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
-  // const [requestForEditing, setRequestForEditing] = useState("");
-
-  // console.log("flag Tag", flag)
-
-  // const [{ isDragging }, drag] = useDrag(() => ({
-  //   type: "image",
-  //   item: { id: id, boardName: dragFromCover },
-  //   collect: (monitor) => ({
-  //     isDragging: !!monitor.isDragging(),
-  //   }),
-  // }));
-  console.log('dragFromCover: ', dragFromCover);
-  // useEffect(() => {
-  //   console.log("isDragging: ", isDragging);
-  // }, [isDragging]);
 
   const clickOnThreeDotsVerticaIcontBoard = (value) => {
-    console.log('value', value);
     if (openThreeDotsVerticalBoard === value) setOpenThreeDotsVerticalBoard(-1);
     else setOpenThreeDotsVerticalBoard(value);
   };
@@ -77,22 +46,16 @@ function Tag({
     if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);
   };
-  useEffect(() => {
-    console.log('openThree' + openThreeDotsVertical);
-  }, [openThreeDotsVertical]);
 
   const listen = () => {
     setIdListen(id);
-    setDataListen(dataMedia);
-    console.log('dataListen:', dataListen);
+    setDataListen(picture_url);
   };
   const listenMyStation = () => {
     data.forEach((val) => {
       if (nameStation === val.name) setIdListen(val.id);
     });
     setDataListen(data);
-    console.log('idListen:', idListen);
-    console.log('dataListen', dataListen);
   };
   return (
     <>
@@ -162,13 +125,13 @@ function Tag({
           <BsThreeDotsVertical className='threeDotsVerticalTasks' />
           <div className='borderTask'>
             <div className='nameOfTaskPhone'>
-              <Images id={id} url={dataMedia.picture_url || TaskImage} />
+              <Images id={id} url={picture_url || TaskImage} />
               {title}
-              <div className='phoneTagDesc'>{desc}</div>
+              <div className='phoneTagDesc'>{subtitle}</div>
             </div>
           </div>
           <button className='listenIcon' onClick={() => listen()}></button>
-          <Audios id={idListen} data={dataMedia.audio_url} />
+          {/* <Audios id={idListen} data={audio_url} /> */}
           <div className='kavPhone'></div>
         </>
       ) : (
@@ -257,7 +220,7 @@ function Tag({
       {flagBoard && modalFlagTablet && !flagPhone ? (
         <>
           <div className='ItemStyle'>
-            <Images id={id} url={dataMedia.picture_url} flag={true} />
+            <Images id={id} url={picture_url} flag={true} />
           </div>
         </>
       ) : (

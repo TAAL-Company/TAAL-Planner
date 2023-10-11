@@ -49,24 +49,16 @@ function DragnDrop(props) {
   const [board, setBoard] = useState([]);
   const [reorderBoardFlag, setReorderBoardFlag] = useState(true);
   const [openRemove, setOpenRemove] = useState(false);
-
-  // console.log("JSON.parse(localStorage.getItem('New_Routes')):", JSON.parse(localStorage.getItem('New_Routes')))
-  console.log('propsDataTask:', props.tasksOfChosenStation);
-  // nameStation = props.myStation.name
-  // const [, setFlagFirst] = useState(true)
   const [, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpenNoSiteSelected, setModalOpenNoSiteSelected] = useState(false);
   const [modalOpenAddRoute, setModalOpenAddRoute] = useState(false);
   const [, setModalFlagTablet] = useState(false);
-
-  // const [, setHelpFlag] = useState(false);
   const [boardName, setBoardName] = useState('');
   const [, setCount] = useState(0);
   const [get_Name] = useState(null); // for TextView
   const [flagTree, setFlagTree] = useState(false);
   const [, setFlagPhone] = useState(false);
-  // const [, setFlagTablet] = useState(false);
   const [, setFlagPhoneOne] = useState(false);
   const [, setWidth] = useState('-13px');
   const [, setHeight] = useState('70px');
@@ -79,17 +71,18 @@ function DragnDrop(props) {
   const [, setFlagStress] = useState(false);
   const [activeButton, setActiveButton] = useState('tree');
   const [siteSelected, setSiteSelected] = useState(false);
-  // const [prevStation,setPrevStation] = useState("test");
   const [boardArrayDND, setBoardArrayDND] = useState([]);
-
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState('');
-
   const [openThreeDotsVerticalBoard, setOpenThreeDotsVerticalBoard] =
     useState(-1);
   const [requestForEditingBoard, setRequestForEditingBoard] = useState('');
   const [taskUuidForEdit, setTaskUuidForEdit] = useState('');
   const [taskForEdit, setTaskForEdit] = useState('');
+
+  useEffect(() => {
+    console.log('propsDataTask:', props.tasksOfChosenStation);
+  }, [props.tasksOfChosenStation]);
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -131,21 +124,21 @@ function DragnDrop(props) {
 
   const updateTaskDetails = (updatedTasks, board) => {
     return board
-      .filter((value) =>
-        updatedTasks.some((updatedTask) => updatedTask.id === value.id)
+      .filter((t) =>
+        updatedTasks.some((updatedTask) => updatedTask.id === t.id)
       )
-      .map((value) => {
+      .map((task) => {
         const matchingUpdatedTask = updatedTasks.find(
-          (updatedTask) => updatedTask.id === value.id
+          (updatedTask) => updatedTask.id === task.id
         );
         if (matchingUpdatedTask) {
-          value.title = matchingUpdatedTask.title;
-          value.subtitle = matchingUpdatedTask.subtitle;
-          value.estimatedTimeSeconds = matchingUpdatedTask.estimatedTimeSeconds;
-          value.picture_url = matchingUpdatedTask.picture_url;
-          value.audio_url = matchingUpdatedTask.audio_url;
+          task.title = matchingUpdatedTask.title;
+          task.subtitle = matchingUpdatedTask.subtitle;
+          task.estimatedTimeSeconds = matchingUpdatedTask.estimatedTimeSeconds;
+          task.picture_url = matchingUpdatedTask.picture_url;
+          task.audio_url = matchingUpdatedTask.audio_url;
         }
-        return value;
+        return task;
       });
   };
 
@@ -280,34 +273,6 @@ function DragnDrop(props) {
     console.log('props.progressBarFlag: ', props.progressBarFlag);
   }, [props.progressBarFlag]);
 
-  // dndArray = props.tasksOfChosenStation.map((element) => {
-  //   // let color = stationArray.find(item => item.id === stationID).color
-
-  //   if (count1 === 0) {
-  //     nameStation = props.myStation.name;
-  //     count1++;
-  //   }
-  //   return {
-  //     id: element.id,
-  //     title: element.title.replace('&#8211;', '-').replace('&#8217;', "' "),
-  //     mySite: props.mySite,
-  //     myStation: props.myStation.name,
-  //     data: props.myStation.data,
-  //     nameStation: nameStation,
-  //     width: width,
-  //     borderLeft: borderLeft,
-  //     height: height,
-  //     kavTaskTopMarginTop: kavTaskTopMarginTop,
-  //     bottom: bottom,
-  //     kavTopWidth: kavTopWidth,
-  //     newkavTaskTop: newkavTaskTop,
-  //     // idImg: thisId,
-  //     dataImg: element.picture_url,
-  //     color: element.color,
-  //   };
-  // });
-
-  // Set the nameStation value outside the map function
   let nameStation = props.myStation.name;
 
   const mapTask = (task) => {
@@ -332,9 +297,12 @@ function DragnDrop(props) {
       kavTopWidth,
     };
   };
-  dndArray = props.tasksOfChosenStation.map(mapTask);
+  useEffect(() => {
+    dndArray = props.tasksOfChosenStation.map(mapTask);
 
-  console.log('dndArray check:', dndArray);
+    console.log('dndArray check:', dndArray);
+  }, [props.tasksOfChosenStation]);
+
   //---------------------------------------------------------
   // const [{ isOver }, drop] = useDrop(() => ({
   //   accept: "image",
@@ -391,15 +359,10 @@ function DragnDrop(props) {
         setBoard((board) => [...board, Route]);
         setFlagTree(true);
       }
-      // setBoard((board) => [...board, Route[0]]);
-
-      // thisIdArray.push(thisId);
-      // myTask = saveProps.tasksOfChosenStation.find((item) => item.id === id);
       thisIdArray.push(Route.id);
 
       prevStation = myStation;
       localStorage.setItem('New_Routes', JSON.stringify(thisIdArray));
-      // localStorage.setItem("MySite", JSON.stringify(props.mySite));
     }
   };
 
@@ -444,12 +407,9 @@ function DragnDrop(props) {
 
   const treeFunction = (e) => {
     setFlagPhone((flagPhone = false));
-    // setFlagTablet(flagTablet = false)
     setModalFlagTablet((modalFlagTablet = false));
     setFlagTree(true);
     setReorderBoardFlag(false);
-    // alert("tree")
-    // alert(flagPhone)
     setActiveButton(e.currentTarget.className);
   };
   const stressFun = () => {
@@ -680,14 +640,11 @@ function DragnDrop(props) {
                               taskButtonColor={tag.color}
                               modalFlagTablet={modalFlagTablet}
                               title={tag.title}
-                              desc={tag.subtitle}
+                              subtitle={tag.subtitle}
                               id={tag.id}
                               data={tag.data}
-                              // idImg={tag.id}
-                              dataMedia={{
-                                picture_url: tag.picture_url,
-                                audio_url: tag.audio_url,
-                              }}
+                              picture_url={tag.picture_url}
+                              audio_url={tag.audio_url}
                               key={keyCount}
                               flagBoard={true}
                               myLastStation={props.myStation.name}

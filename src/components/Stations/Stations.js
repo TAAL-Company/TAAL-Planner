@@ -40,7 +40,7 @@ const Stations = (props) => {
   const [requestForEditing, setRequestForEditing] = useState('');
   const [openModalDelete, setOpenModalDelete] = useState(false);
   const [openRemove, setOpenRemove] = React.useState(false);
-  const [tasksOfChosenStation, setTasksOfChosenStation] = useState([]);
+  // const [tasksOfChosenStation, setTasksOfChosenStation] = useState([]);
   const [stationForDelete, setStationForDelete] = useState('');
   const [stationForEdit, setStationForEdit] = useState('');
   const [dpcolor, setdpcolor] = useState('');
@@ -155,8 +155,8 @@ const Stations = (props) => {
     // } else {
     //   setMyStation((myStation.flag = true));
     // }
-    if (tasksOfChosenStation.length === 0 || typeof e !== 'string') {
-      setTasksOfChosenStation([]);
+    if (props.tasksOfChosenStation.length === 0 || typeof e !== 'string') {
+      props.setTasksOfChosenStation([]);
       setMyStation((myStation.data = []));
       setStateTask({ data: [] });
       props.setTasksOfChosenStation([]);
@@ -168,17 +168,14 @@ const Stations = (props) => {
     setMyStation((myStation.id = e));
     props.setChosenStation(myStation);
 
-    console.log('console myStat myStation:', myStation);
-
     let stationTemp = props.stationArray.find((station) => station.id === e);
 
     if (stationTemp) {
       props.setTasksOfChosenStation(stationTemp.tasks);
-      setTasksOfChosenStation(stationTemp.tasks);
+      // setTasksOfChosenStation(stationTemp.tasks);
     }
 
     // stationTemp.tasks.map((task) => tasksOfChosenStation.push(task));
-    console.log('props.allTasks yyy', tasksOfChosenStation);
     setFilteredData(
       (filteredData = props.stationArray.filter((el) => {
         if (inputText === '') {
@@ -190,8 +187,7 @@ const Stations = (props) => {
         }
       }))
     );
-    // console.log("filteredData from st:", filteredData)
-    setStateTask({ data: tasksOfChosenStation }); //Updating the state
+    setStateTask({ data: props.tasksOfChosenStation }); //Updating the state
   };
 
   useEffect(() => {
@@ -390,8 +386,8 @@ const Stations = (props) => {
             replaceSiteFlag={props.replaceSiteFlag}
             firstStationName={props.firstStationName}
             boardArrayDND={props.boardArrayDND}
-            tasksOfChosenStation={tasksOfChosenStation}
-            setTasksOfChosenStation={setTasksOfChosenStation}
+            tasksOfChosenStation={props.tasksOfChosenStation}
+            setTasksOfChosenStation={props.setTasksOfChosenStation}
             allStations={props.allStations}
             allTasks={props.allTasks}
             language={props.language}

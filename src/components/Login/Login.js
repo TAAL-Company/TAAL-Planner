@@ -5,7 +5,7 @@ import userLogo from "../../Pictures/user-logo.png";
 import lockLogo from "../../Pictures/lock-logo.png";
 import "./styleLogin.css";
 import background from "../../Pictures/backgroundLogin.png";
-import { getingDataTasks, getingData_Tasks } from '../../api/api';
+import { getingDataTasks, getingData_Tasks, postTask_Performance } from '../../api/api';
 import taskAbility from '../../components/Form/taskAbility.json'
 
 let flagLoading = false;
@@ -32,34 +32,59 @@ function Login(props) {
   }
 
   async function getall() {
-    const tasks = await getingData_Tasks();
+    // let Task_Performance = [
+    //   {
+    //     taskId: "string",
+    //     studentId: "string",
+    //     routeId: "string",
+    //     siteId: "string",
+    //     startTime: "2023-10-11T09:21:20.393Z",
+    //     endTime: "2023-10-11T09:21:20.393Z",
+    //     whenAssisted: "2023-10-11T09:21:20.393Z"
+    //   }
+    // ]
+    // Task_Performance.map(async (TaskPerformance) => {
+    //   const tasks = await postTask_Performance(
+    //     TaskPerformance.taskId,
+    //     TaskPerformance.studentId,
+    //     TaskPerformance.routeId,
+    //     TaskPerformance.siteId,
+    //     TaskPerformance.startTime,
+    //     TaskPerformance.endTime,
+    //     TaskPerformance.whenAssisted);
+    //     console.log("Task Performance",tasks);
+    // })
 
-    var props = ['id', 'title'];
 
-    var tasksWithAMatchingName = tasks.filter(function (task) {
-      return taskAbility.some(function (taskA) {
-        return task.title === taskA.task;
-      });
-    }).map(function (o) {
-      return props.reduce(function (newo, name) {
-        newo[name] = o[name];
-        return newo;
-      }, {});
-    });
 
-    var tasksWithOutAMatchingName = tasks.filter(function (task) {
-       return !taskAbility.some(function (taskA) {
-        return task.title === taskA.task;
-      });
-    }).map(function (o) {
-      return props.reduce(function (newo, name) {
-        newo[name] = o[name];
-        return newo;
-      }, {});
-    });
+    // const tasks = await getingData_Tasks();
 
-    console.log("tasks With A Matching Name ",tasksWithAMatchingName);
-    console.log("tasks Without A Matching Name ",tasksWithOutAMatchingName);
+    // var props = ['id', 'title'];
+
+    // var tasksWithAMatchingName = tasks.filter(function (task) {
+    //   return taskAbility.some(function (taskA) {
+    //     return task.title === taskA.task;
+    //   });
+    // }).map(function (o) {
+    //   return props.reduce(function (newo, name) {
+    //     newo[name] = o[name];
+    //     return newo;
+    //   }, {});
+    // });
+
+    // var tasksWithOutAMatchingName = tasks.filter(function (task) {
+    //    return !taskAbility.some(function (taskA) {
+    //     return task.title === taskA.task;
+    //   });
+    // }).map(function (o) {
+    //   return props.reduce(function (newo, name) {
+    //     newo[name] = o[name];
+    //     return newo;
+    //   }, {});
+    // });
+
+    // console.log("tasks With A Matching Name ",tasksWithAMatchingName);
+    // console.log("tasks Without A Matching Name ",tasksWithOutAMatchingName);
 
 
     //const IdToDelete = await getingDataRoutes();

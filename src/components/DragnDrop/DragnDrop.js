@@ -193,9 +193,7 @@ function DragnDrop(props) {
   };
 
   let prevStation = '';
-  useEffect(() => {
-    console.log('percent: ', props.percentProgressBar);
-  }, [props.percentProgressBar]);
+  useEffect(() => {}, [props.percentProgressBar]);
 
   useEffect(() => {
     if (props.replaceRouteFlag) {
@@ -204,7 +202,6 @@ function DragnDrop(props) {
   }, [props.replaceRouteFlag]);
 
   useEffect(() => {
-    console.log('Replace ***', props.replaceSiteFlag);
     if (props.replaceSiteFlag) {
       setBoard([]);
       dndArray = [];
@@ -232,7 +229,6 @@ function DragnDrop(props) {
 
   useEffect(() => {
     if (props.tasksOfRoutes && props.tasksOfRoutes.tasks) {
-      console.log('props.tasksOfRoutes ', props.tasksOfRoutes);
       countTemp = 50 / props.tasksOfRoutes.tasks.length;
       // props.setProgressBarFlag(true)
       if (
@@ -251,9 +247,7 @@ function DragnDrop(props) {
     }
   }, [props.tasksOfRoutes]);
 
-  useEffect(() => {
-    console.log('props.progressBarFlag: ', props.progressBarFlag);
-  }, [props.progressBarFlag]);
+  useEffect(() => {}, [props.progressBarFlag]);
 
   let nameStation = props.myStation.name;
 
@@ -281,8 +275,6 @@ function DragnDrop(props) {
   };
   useEffect(() => {
     dndArray = props.tasksOfChosenStation.map(mapTask);
-
-    console.log('dndArray check:', dndArray);
   }, [props.tasksOfChosenStation]);
 
   //---------------------------------------------------------
@@ -292,7 +284,6 @@ function DragnDrop(props) {
   //     const itemData = monitor.getItem();
   //     // const board = itemData.boardName
   //     // const id = itemData.id
-  //     console.log("item.board: ", itemData.boardName);
   //     addImageToBoard(itemData.id, itemData.boardName);
   //   },
   //   collect: (monitor) => ({
@@ -374,7 +365,6 @@ function DragnDrop(props) {
 
   useEffect(() => {
     if (Object.keys(props.dropToBoard).length > 0) {
-      console.log('result: ', props.dropToBoard);
       if (
         props.dropToBoard.destination !== undefined &&
         props.dropToBoard.destination !== null &&
@@ -616,7 +606,6 @@ function DragnDrop(props) {
                     ) : (
                       board.map((tag, keyCount) => {
                         if (tag !== undefined) {
-                          console.log('tag.id: ', tag);
                           return (saveTag = (
                             <Tag
                               taskButtonColor={tag.color}

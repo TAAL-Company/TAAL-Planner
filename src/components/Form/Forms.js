@@ -139,7 +139,6 @@ function Forms() {
   }, []);
 
   useEffect(() => {
-    console.log('tasksOfChosenRoute', tasksOfChosenRoute);
     let cognitiveRequirements;
     let accept = false;
     tasksOfChosenRoute.map(async (task, index) => {
@@ -150,7 +149,6 @@ function Forms() {
         accept = false;
       }
       let cognitiveRequirementsValues = [];
-      console.log('task-cognitive-requirements', cognitiveRequirements);
 
       if (cognitiveRequirements != undefined) {
         for (
@@ -158,7 +156,6 @@ function Forms() {
           index < cognitiveRequirements.value.length;
           index++
         ) {
-          console.log('ENTER');
           const value = cognitiveRequirements.value[index];
           const weight = cognitiveRequirements.weights[index];
 
@@ -170,7 +167,6 @@ function Forms() {
         }
       }
 
-      console.log('cognitiveRequirementsValues', cognitiveRequirementsValues);
       if (accept) {
         setRowsTaskabilityHE((prev) => [
           ...prev,
@@ -202,7 +198,6 @@ function Forms() {
   }, [tasksOfChosenRoute, routeForTasksAbility.name]);
 
   useEffect(() => {
-    console.log('changeRoute', changeRoute);
     if (changeRoute) {
       routeForTasksAbility.tasks.map(async (task) => {
         // let cogniitiveRequirements = await gettaskCognitiveRequirements(
@@ -225,12 +220,9 @@ function Forms() {
       columnsTaskabilityHE.length > 0 &&
       !loadingTaskAb
     ) {
-      console.log('cognitiveAbillities', cognitiveAbillities);
-
       loadingTaskAb = true;
       cognitiveAbillities.map((cognitive, index) => {
         if (cognitive.ML) {
-          // console.log('cognitive.ML', cognitive.ML);
           setColumnsTaskabilityHE((prev) => [
             ...prev,
             {
@@ -253,8 +245,6 @@ function Forms() {
       setSaveProfileChanges(false);
       if (worker.length != 0) {
         postDataCognitiveProfile(worker.id, cognitiveProfileValues);
-        console.log('66 cognitiveProfileValues', cognitiveProfileValues);
-
         alert('המידע נשמר !');
       }
     }
@@ -271,8 +261,6 @@ function Forms() {
     if (worker.length !== 0) {
       fetchData();
     }
-
-    console.log('cognitiveProfileValues', cognitiveProfileValues);
   }, [worker.id]);
 
   useEffect(() => {
@@ -282,8 +270,6 @@ function Forms() {
         !loadingCog) ||
       changeUser
     ) {
-      console.log('cognitiveAbillities2', cognitiveAbillities);
-
       if (changeUser) setRowsCognitiveHE([]);
       loadingCog = true;
 
@@ -331,13 +317,10 @@ function Forms() {
     if (changeUser) {
       setChangeUser(false);
     }
-
-    console.log('rowsCognitiveHE', rowsCognitiveHE);
   }, [cognitiveProfileValues]);
 
   const [selectedTable, setSelectedTable] = useState('flags');
   const handleSelectTable = (table) => {
-    console.log('table: ', table);
     setSelectedTable(table);
   };
 
@@ -348,8 +331,6 @@ function Forms() {
 
   //flags functions
   const handleChangeUserFlags = (event, values) => {
-    console.log('worker', event);
-    console.log('worker', values);
     setRroutenewName('בחר מסלול');
     setWorker(values);
   };
@@ -456,13 +437,11 @@ function Forms() {
   };
 
   const handleDelete = (id) => {
-    console.log(id);
     setRowsFlagsHE((prev) => prev.filter((row) => row.id !== id));
     setRowsFlagsEN((prev) => prev.filter((row) => row.id !== id));
   };
 
   const handleEdit = (row) => {
-    // console.log(row);
     setIsDialogOpen(true);
     setCurrRow(row);
     setInitialValuesRow(row);
@@ -483,7 +462,6 @@ function Forms() {
 
     for (let i = 0; i < rowsFlagsHE.length && eyh; i++) {
       if (rowsFlagsHE[i].id === data.id) {
-        // console.log("true");
         updatedRows[i] = data;
         setRowsFlagsHE(updatedRows);
         eyh = false;
@@ -502,7 +480,6 @@ function Forms() {
 
     for (let i = 0; i < rowsFlagsEN.length && eyh; i++) {
       if (rowsFlagsEN[i].id === data.id) {
-        // console.log("true");
         updatedRowsEN[i] = data;
         setRowsFlagsEN(updatedRowsEN);
         eyh = false;
@@ -518,9 +495,6 @@ function Forms() {
   };
 
   const fillFalse = (props) => {
-    console.log(`Setting ${props.groupingColumn}`);
-    console.log(`show:  ${props.show} `);
-
     if (props.groupingColumn === 'PrivateInfoEN') {
       setRowsPrivateCardHE(
         rowsPrivateCardHE.map((row) => ({

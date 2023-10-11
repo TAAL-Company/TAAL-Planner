@@ -41,17 +41,13 @@ const ReorderBoard = (props) => {
         }
       }
     }
-    console.log('boarddd', tasks);
     props.setBoard(tasks);
   }, [tasks]);
 
   function handleOnDragEnd(result) {
-    console.log('result: ', result);
     const items = Array.from(tasks);
-    console.log('items: ', items);
 
     const [reorderedItem] = items.splice(result.source.index, 1);
-    console.log('result.source.index', result.source.index);
     items.splice(result.destination.index, 0, reorderedItem);
     setTasks(items);
   }

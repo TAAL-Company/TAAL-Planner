@@ -80,10 +80,7 @@ const DataTableRTL = ({
   const [updateTaskCognitiveRequirements, setUpdateTaskCognitiveRequirements] =
     React.useState([]);
 
-  useEffect(() => {
-    console.log('rows:', rows);
-    console.log('columns:', columns);
-  }, [columns, rows]);
+  useEffect(() => {}, [columns, rows]);
 
   const [openDialogTrueFalse, setOpenDialogTrueFalse] = React.useState(false);
   const [groupName, setGroupName] = React.useState('');
@@ -93,10 +90,6 @@ const DataTableRTL = ({
   };
 
   const handleCellEdit = (params) => {
-    console.log('params', params);
-    console.log('params', params.field);
-    console.log('params', params.value);
-
     if (tableType === 'TaskabilityHE') {
       let [letter, number] = [
         params.value.charAt(0),
@@ -105,9 +98,7 @@ const DataTableRTL = ({
       const position = letter.charCodeAt(0) - 64;
       const result = position.toString(10);
 
-      console.log('diff', rows[params.id].uuid);
       let uuid = rows.find((temp) => temp.id === params.id).uuid;
-      console.log('diff uuid', uuid);
 
       let temp = newTaskCognitiveRequirements.find(
         (temp) => temp.taskId === uuid
@@ -128,17 +119,8 @@ const DataTableRTL = ({
           weights: weightsArry,
         };
         setNewTaskCognitiveRequirements((prev) => [...prev, post]);
-
-        console.log('post', post);
       }
-      console.log(letter);
-      console.log(number);
-      console.log('diff', newTaskCognitiveRequirements);
     } else {
-      console.log('params', params);
-      console.log('params', params.field);
-      console.log('params', params.value);
-
       // if (params.value >= 0 && params.value < 6) {
       const updatedRows = rows.map((row) => {
         if (row.id === params.id) {
@@ -187,7 +169,6 @@ const DataTableRTL = ({
 
   const handleChange = (event) => {
     fillFalse({ groupingColumn: 'Languages', show: event.target.value });
-    console.log('PrivateInfoHE');
     fillFalse({
       groupingColumn: 'PrivateInfoHE',
       show: !columnFillRows.PrivateInfoHE,
@@ -207,7 +188,6 @@ const DataTableRTL = ({
           className='groupingHeaderNameForms'
           style={{ cursor: 'pointer', color: 'white' }}
           onClick={() => {
-            console.log('PrivateInfoHE');
             // fillFalse({
             //   groupingColumn: "PrivateInfoHE",
             //   show: !columnFillRows.PrivateInfoHE,
@@ -238,7 +218,6 @@ const DataTableRTL = ({
           className='groupingHeaderNameForms'
           style={{ cursor: 'pointer', color: 'white' }}
           onClick={() => {
-            console.log('HistoryHE');
             // fillFalse({
             //   groupingColumn: "HistoryHE",
             //   show: !columnFillRows.HistoryHE,
@@ -269,7 +248,6 @@ const DataTableRTL = ({
           className='groupingHeaderNameForms'
           style={{ cursor: 'pointer', color: 'white' }}
           onClick={() => {
-            console.log('LanguageComprehensionHE');
             // fillFalse({
             //   groupingColumn: "LanguageComprehensionHE",
             //   show: !columnFillRows.LanguageComprehensionHE,
@@ -298,7 +276,6 @@ const DataTableRTL = ({
           className='groupingHeaderNameForms'
           style={{ cursor: 'pointer', color: 'white' }}
           onClick={() => {
-            console.log('LanguagesHE');
             // fillFalse({
             //   groupingColumn: "LanguagesHE",
             //   show: !columnFillRows.LanguagesHE,

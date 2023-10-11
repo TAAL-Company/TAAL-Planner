@@ -36,17 +36,14 @@ const Coaches = () => {
   const [requestForEditing, setRequestForEditing] = useState(''); // State to store the request for editing
 
   useEffect(() => {
-    console.log('student openThreeDotsVertical: ', openThreeDotsVertical);
   }, [openThreeDotsVertical]);
 
   useEffect(() => {
-    console.log('student requestForEditing: ', requestForEditing);
 
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
       setUserForUpdate(openThreeDotsVertical);
       setOpen(true);
     } else if (requestForEditing === 'duplication') {
-      console.log('openThreeDotsVertical', openThreeDotsVertical);
     } else if (requestForEditing === 'delete') {
       setUserForRemove(openThreeDotsVertical);
       setOpenRemove(true);
@@ -74,10 +71,8 @@ const Coaches = () => {
   };
 
   const handleCloseRemoveConfirm = async () => {
-    console.log('DELETE:', userForRemove);
     let deletedUser = await deleteCoach(users[userForRemove].id);
 
-    console.log('deletedUser:', deletedUser);
     if (deletedUser.status === 200) {
       alert('המחיקה בוצעה בהצלחה!');
       const newUsers = [...users];
@@ -106,7 +101,6 @@ const Coaches = () => {
       };
 
       let post_cognitive = await post_cognitive_abillities(cognitiveTemp);
-      console.log('post_cognitive', post_cognitive);
     });
   };
 

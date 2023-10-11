@@ -4,7 +4,6 @@ import './style.css';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
 const CardDash = (props) => {
-  console.log(props.cards);
   const headline = props.cards.headline;
   const addLabel = props.cards.addLabel;
   const image = props.cards.image;
@@ -24,7 +23,6 @@ const CardDash = (props) => {
   };
 
   const handleHeadlineLink = (id) => {
-    console.log('done headline link');
     if (id === 1) {
       history.replace('/places');
     } else if (id === 2) {

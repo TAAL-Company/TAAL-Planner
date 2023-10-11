@@ -53,17 +53,12 @@ const CustomToolbar = ({
   setRroutenewName,
 }) => {
   // const [prevSelected, setPrevSelected] = useState([]);
-  useEffect(() => {
-    console.log('prevSelectedWorker', prevSelectedWorker);
-  }, [prevSelectedWorker]);
+  useEffect(() => {}, [prevSelectedWorker]);
 
   const saveProfileChanges = (e) => {
-    console.log('HII');
     if (tableType === 'CognitiveProfileHE') {
-      console.log('true');
       setSaveProfileChanges(true);
     } else if (tableType === 'TaskabilityHE') {
-      console.log('HII');
       newTaskCognitiveRequirements.forEach((element) => {
         try {
           let post = postTaskCognitiveRequirements(element);
@@ -77,16 +72,12 @@ const CustomToolbar = ({
     // const selectedValue = JSON.parse(value);
     // setPrevSelected((prevSelected) => [...prevSelected, selectedValue]);
 
-    console.log('worker', value);
     setWorker(value);
     setChangeUser(true);
   };
   const handleChangeRoute = (event) => {
     const selectedValue = JSON.parse(event.target.value);
 
-    console.log('++ allRoutes ++' + allRoutes);
-
-    console.log('route', selectedValue);
     setRouteForTasksAbility(selectedValue);
     // setRoutesOfFlags(selectedValue);
     setChangeRoute(true);

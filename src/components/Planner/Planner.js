@@ -87,7 +87,6 @@ const Planner = () => {
   const hebrew = () => {
     setHebrew(false);
     setLanguage('עברית');
-    console.log(Hebrew);
     setFloatLan('left');
     setSites('Sites');
     setStations('Stations');
@@ -120,7 +119,6 @@ const Planner = () => {
   const english = () => {
     setHebrew(true);
     setLanguage('English');
-    console.log(Hebrew);
     setFloatLan('right');
     setSiteQuestionLanguage('באיזה אתר ברצונך לבנות מסלול?');
     setSiteLanguage('אתר');

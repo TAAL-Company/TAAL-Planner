@@ -108,8 +108,6 @@ function Tag({
           <div className='margin'></div>
           {nameStation !== '' ? (
             <>
-              {console.log('flagPhone:', flagPhone)}
-
               <div className='stap1'>
                 <div className='nameStationBoardPhone'>{nameStation}</div>
                 <button

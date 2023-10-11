@@ -43,7 +43,6 @@ const CognitiveAbillities = () => {
     };
 
     fetchData();
-    // console.log("usersData", usersData);
 
     taskAbilityPost();
   }, []);
@@ -52,7 +51,6 @@ const CognitiveAbillities = () => {
   // const transformedData = cognitiveList.map((item) => {
   //   const value = [];
   //   for (let i = 0; i <= 340; i++) {
-  //     console.log("item: ", item[i.toString()]);
   //     if (item[i.toString()] != undefined) {
   //       value.push(item[i.toString()]);
   //     }
@@ -68,11 +66,9 @@ const CognitiveAbillities = () => {
   const cognitiveProfiles = () => {
     cognitiveProfilesFile.map(async (item) => {
       const name = users.find((student) => student.name === item.name);
-      console.log('name: ', name);
 
       if (name !== undefined) {
         //   insertUser({ email: item.mail, name: item.name, user_name: item.name });
-        //   console.log("name1: ", name);
 
         await postDataCognitiveProfile(name.id, item.value);
       }
@@ -109,7 +105,6 @@ const CognitiveAbillities = () => {
   //   const weights = [];
 
   //   for (let i = 0; i <= 340; i++) {
-  //     console.log("item: ", item[i.toString()]);
   //     if (item[i.toString()] != undefined) {
   //       const [letter, number] = item[i.toString()]
   //         .match(/([A-Z]+)(\d+)/)
@@ -161,10 +156,8 @@ const CognitiveAbillities = () => {
   // const transformedJson = JSON.stringify(transformedData, null, 2);
 
   // // Print the transformed JSON data
-  // console.log(transformedJson);
 
   const handleDelete = (id) => {
-    console.log('id:', id);
   };
   const columns = [
     // {field:"id", headerName: 'ID' ,flex: 1},
@@ -352,30 +345,30 @@ const CognitiveAbillities = () => {
           components={{
             Toolbar: () => (
               <CustomToolbar
-              // handleChangeUserFlags={handleChangeUserFlags}
-              // handleChangeRouteFlags={handleChangeRouteFlags}
-              // allRoutes={allRoutes}
-              // setSaveProfileChanges={setSaveProfileChanges}
-              // setChangeUser={setChangeUser}
-              // setChangeRoute={setChangeRoute}
-              // allUsers={allUsers}
-              // setWorker={setWorker}
-              // worker={worker}
-              tableType={"CognitiveAbillities"}
-              // isInfoUserRoute={isInfoUserRoute}
-              // isInfoUserSite={isInfoUserSite}
-              // selectedRows={selectedRows}
-              // columns={columns}
-              // setColumns={setColumns}
-              // workerName={workerName}
-              // routeName={routeName}
-              // siteName={siteName}
-              // openDialogTrueFalse={openDialogTrueFalse}
-              // setOpenDialogTrueFalse={setOpenDialogTrueFalse}
-              // routeForTasksAbility={routeForTasksAbility}
-              // setRouteForTasksAbility={setRouteForTasksAbility}
-              // prevSelectedWorker={prevSelectedWorker}
-              // newTaskCognitiveRequirements={newTaskCognitiveRequirements}
+                // handleChangeUserFlags={handleChangeUserFlags}
+                // handleChangeRouteFlags={handleChangeRouteFlags}
+                // allRoutes={allRoutes}
+                // setSaveProfileChanges={setSaveProfileChanges}
+                // setChangeUser={setChangeUser}
+                // setChangeRoute={setChangeRoute}
+                // allUsers={allUsers}
+                // setWorker={setWorker}
+                // worker={worker}
+                tableType={'CognitiveAbillities'}
+                // isInfoUserRoute={isInfoUserRoute}
+                // isInfoUserSite={isInfoUserSite}
+                // selectedRows={selectedRows}
+                // columns={columns}
+                // setColumns={setColumns}
+                // workerName={workerName}
+                // routeName={routeName}
+                // siteName={siteName}
+                // openDialogTrueFalse={openDialogTrueFalse}
+                // setOpenDialogTrueFalse={setOpenDialogTrueFalse}
+                // routeForTasksAbility={routeForTasksAbility}
+                // setRouteForTasksAbility={setRouteForTasksAbility}
+                // prevSelectedWorker={prevSelectedWorker}
+                // newTaskCognitiveRequirements={newTaskCognitiveRequirements}
               />
             ),
           }}

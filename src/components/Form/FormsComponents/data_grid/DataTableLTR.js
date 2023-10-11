@@ -1,9 +1,9 @@
-import * as React from "react";
+import * as React from 'react';
 
-import Box from "@mui/material/Box";
-import "./DataTableLTR.css";
-import InputAdornment from "@mui/material/InputAdornment";
-import SearchIcon from "@mui/icons-material/Search";
+import Box from '@mui/material/Box';
+import './DataTableLTR.css';
+import InputAdornment from '@mui/material/InputAdornment';
+import SearchIcon from '@mui/icons-material/Search';
 import {
   GridToolbarContainer,
   GridToolbarExport,
@@ -11,13 +11,13 @@ import {
   GridToolbarFilterButton,
   GridToolbarDensitySelector,
   GridToolbarQuickFilter,
-} from "@mui/x-data-grid";
-import { Button } from "@mui/material";
-import MultipleEdit from "../multiple_edit/MultipleEdit";
-import AddColumn from "../add_column/AddColumn";
-import SaveIcon from "@mui/icons-material/Save";
+} from '@mui/x-data-grid';
+import { Button } from '@mui/material';
+import MultipleEdit from '../multiple_edit/MultipleEdit';
+import AddColumn from '../add_column/AddColumn';
+import SaveIcon from '@mui/icons-material/Save';
 
-import { DataGridPro } from "@mui/x-data-grid-pro";
+import { DataGridPro } from '@mui/x-data-grid-pro';
 
 function CustomToolbar({
   isInfoUserRoute,
@@ -34,88 +34,86 @@ function CustomToolbar({
     <div>
       <GridToolbarContainer
         style={{
-          paddingTop: "20px",
-          paddingBottom: "15px",
-          justifyContent: "space-between",
+          paddingTop: '20px',
+          paddingBottom: '15px',
+          justifyContent: 'space-between',
         }}
       >
         <div>
-          <GridToolbarColumnsButton style={{ color: "black" }} />
-          <GridToolbarFilterButton style={{ color: "black" }} />
-          <GridToolbarDensitySelector style={{ color: "black" }} />
+          <GridToolbarColumnsButton style={{ color: 'black' }} />
+          <GridToolbarFilterButton style={{ color: 'black' }} />
+          <GridToolbarDensitySelector style={{ color: 'black' }} />
           <GridToolbarExport
             csvOptions={{
               fileName: `${
-                tableType === "TaskabilityHE"
-                  ? "Taskability"
-                  : tableType === "CognitiveProfileHE"
-                  ? "CognitiveProfile"
+                tableType === 'TaskabilityHE'
+                  ? 'Taskability'
+                  : tableType === 'CognitiveProfileHE'
+                  ? 'CognitiveProfile'
                   : "TA'AL EDITOR"
-              }_${new Date()
-                .toLocaleDateString("en-GB")
-                .replace(/\//g, "-")}`,
-                utf8WithBom: true,
+              }_${new Date().toLocaleDateString('en-GB').replace(/\//g, '-')}`,
+              utf8WithBom: true,
             }}
-            style={{ color: "black" }}
+            style={{ color: 'black' }}
           />
         </div>
 
-        {isInfoUserRoute && ( 
-          <div className="infoForms">
-            <div className="workerNameForms">Worker: {workerName}</div>
-            <div className="workerRouteForms" style={{ paddingLeft: "25px" }}>
+        {isInfoUserRoute && (
+          <div className='infoForms'>
+            <div className='workerNameForms'>Worker: {workerName}</div>
+            <div className='workerRouteForms' style={{ paddingLeft: '25px' }}>
               Route: {routeName}
             </div>
           </div>
         )}
-        {isInfoUserSite && ( 
-          <div className="infoForms">
-            <div className="workerNameForms">Worker: {workerName}</div>
-            <div className="workerRouteForms" style={{ paddingLeft: "25px" }}>
+        {isInfoUserSite && (
+          <div className='infoForms'>
+            <div className='workerNameForms'>Worker: {workerName}</div>
+            <div className='workerRouteForms' style={{ paddingLeft: '25px' }}>
               Site: {siteName}
             </div>
           </div>
         )}
         <div>
-          <InputAdornment position="start">
+          <InputAdornment position='start'>
             <GridToolbarQuickFilter
               InputProps={{ disableUnderline: true }}
-              placeholder=" Search"
+              placeholder=' Search'
               style={{
-                paddingRight: "10px",
-                width: "250px",
-                position: "relative",
-                borderRadius: "8px",
-                paddingBottom: "2px",
-                marginTop: "2px",
-                background: "white",
+                paddingRight: '10px',
+                width: '250px',
+                position: 'relative',
+                borderRadius: '8px',
+                paddingBottom: '2px',
+                marginTop: '2px',
+                background: 'white',
               }}
               sx={{
-                "& .MuiInputBase-root": {
+                '& .MuiInputBase-root': {
                   // background: "blue",
-                  width: "87%",
-                  height: "28px",
+                  width: '87%',
+                  height: '28px',
                 },
               }}
             />
             <SearchIcon
               style={{
-                marginLeft: "-30px",
-                zIndex: "5",
+                marginLeft: '-30px',
+                zIndex: '5',
               }}
             />
           </InputAdornment>
         </div>
       </GridToolbarContainer>
-      {tableType === "TaskabilityEN" && selectedRows.length >= 2 ? (
+      {tableType === 'TaskabilityEN' && selectedRows.length >= 2 ? (
         <>
           <div
-            className="buttonaNavbarForms"
-            style={{ display: "flex", right: 0, paddingBottom: "10px" }}
+            className='buttonaNavbarForms'
+            style={{ display: 'flex', right: 0, paddingBottom: '10px' }}
           >
-            <div style={{ marginRight: "10px" }}>
+            <div style={{ marginRight: '10px' }}>
               <MultipleEdit
-                textButton={"Multiple Edit"}
+                textButton={'Multiple Edit'}
                 selectedRows={selectedRows}
                 fieldsCount={columns.length}
                 columns={columns}
@@ -125,31 +123,31 @@ function CustomToolbar({
             {/* {selectedRows.map((item) => item.tasks)} */}
           </div>
         </>
-      ) : tableType === "TaskabilityEN" ? (
+      ) : tableType === 'TaskabilityEN' ? (
         <>
           <div
-            className="buttonaNavbarForms"
+            className='buttonaNavbarForms'
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              paddingBottom: "10px",
+              display: 'flex',
+              justifyContent: 'space-between',
+              paddingBottom: '10px',
             }}
           >
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
               <Button
-                variant="outlined"
+                variant='outlined'
                 disabled
-                style={{ marginRight: "10px" }}
+                style={{ marginRight: '10px' }}
               >
                 Multiple Edit
               </Button>
               <AddColumn columns={columns} setColumns={setColumns} />
             </div>
-            <div style={{ display: "flex" }}>
+            <div style={{ display: 'flex' }}>
               <SaveIcon
-                fontSize="large"
-                color="primary"
-                style={{ zIndex: "5" }}
+                fontSize='large'
+                color='primary'
+                style={{ zIndex: '5' }}
               />
             </div>
           </div>
@@ -157,19 +155,19 @@ function CustomToolbar({
       ) : (
         <>
           <div
-            className="buttonaNavbarForms"
+            className='buttonaNavbarForms'
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              paddingBottom: "10px",
+              display: 'flex',
+              justifyContent: 'space-between',
+              paddingBottom: '10px',
             }}
           >
             <AddColumn columns={columns} setColumns={setColumns} />
-            <div style={{ display: "flex", right: 0 }}>
+            <div style={{ display: 'flex', right: 0 }}>
               <SaveIcon
-                fontSize="large"
-                color="primary"
-                style={{ zIndex: "5" }}
+                fontSize='large'
+                color='primary'
+                style={{ zIndex: '5' }}
               />
             </div>
           </div>
@@ -203,16 +201,15 @@ const DataTableLTR = ({
 
   const columnGroupingModel = [
     {
-      groupId: "PrivateInfoEN",
-      description: "",
+      groupId: 'PrivateInfoEN',
+      description: '',
       renderHeaderGroup: (params) => (
         <div
-          className="groupingHeaderNameForms"
-          style={{ cursor: "pointer", color: "white" }}
+          className='groupingHeaderNameForms'
+          style={{ cursor: 'pointer', color: 'white' }}
           onClick={() => {
-            console.log("PrivateInfoEN");
             fillFalse({
-              groupingColumn: "PrivateInfoEN",
+              groupingColumn: 'PrivateInfoEN',
               show: !columnFillRows.PrivateInfoEN,
             });
             setColumnFillRows((prev) => ({
@@ -225,23 +222,22 @@ const DataTableLTR = ({
         </div>
       ),
       children: [
-        { field: "fieldHEPrivateCard" },
-        { field: "xPrivateCard" },
-        { field: "yPrivateCard" },
-        { field: "fieldENPrivateCard" },
-        { field: "classificationHEPrivateCard" },
+        { field: 'fieldHEPrivateCard' },
+        { field: 'xPrivateCard' },
+        { field: 'yPrivateCard' },
+        { field: 'fieldENPrivateCard' },
+        { field: 'classificationHEPrivateCard' },
       ],
     },
     {
-      groupId: "HistoryEN",
+      groupId: 'HistoryEN',
       renderHeaderGroup: (params) => (
         <div
-          className="groupingHeaderNameForms"
-          style={{ cursor: "pointer", color: "white" }}
+          className='groupingHeaderNameForms'
+          style={{ cursor: 'pointer', color: 'white' }}
           onClick={() => {
-            console.log("HistoryEN");
             fillFalse({
-              groupingColumn: "HistoryEN",
+              groupingColumn: 'HistoryEN',
               show: !columnFillRows.HistoryEN,
             });
             setColumnFillRows((prev) => ({
@@ -254,23 +250,22 @@ const DataTableLTR = ({
         </div>
       ),
       children: [
-        { field: "beginningOfWorkPrivateCard" },
-        { field: "employersPrivateCard" },
-        { field: "reportsPrivateCard" },
-        { field: "improvementPrivateCard" },
-        { field: "interventionHEPrivateCard" },
+        { field: 'beginningOfWorkPrivateCard' },
+        { field: 'employersPrivateCard' },
+        { field: 'reportsPrivateCard' },
+        { field: 'improvementPrivateCard' },
+        { field: 'interventionHEPrivateCard' },
       ],
     },
     {
-      groupId: "LanguageComprehensionEN",
+      groupId: 'LanguageComprehensionEN',
       renderHeaderGroup: (params) => (
         <div
-          className="groupingHeaderNameForms"
-          style={{ cursor: "pointer", color: "white" }}
+          className='groupingHeaderNameForms'
+          style={{ cursor: 'pointer', color: 'white' }}
           onClick={() => {
-            console.log("LanguageComprehensionEN");
             fillFalse({
-              groupingColumn: "LanguageComprehensionEN",
+              groupingColumn: 'LanguageComprehensionEN',
               show: !columnFillRows.LanguageComprehensionEN,
             });
             setColumnFillRows((prev) => ({
@@ -283,21 +278,20 @@ const DataTableLTR = ({
         </div>
       ),
       children: [
-        { field: "understandSpokenLanguageComprehension" },
-        { field: "understandWrittenLanguageComprehension" },
+        { field: 'understandSpokenLanguageComprehension' },
+        { field: 'understandWrittenLanguageComprehension' },
       ],
     },
 
     {
-      groupId: "LanguagesEN",
+      groupId: 'LanguagesEN',
       renderHeaderGroup: (params) => (
         <div
-          className="groupingHeaderNameForms"
-          style={{ cursor: "pointer", color: "white" }}
+          className='groupingHeaderNameForms'
+          style={{ cursor: 'pointer', color: 'white' }}
           onClick={() => {
-            console.log("LanguagesEN");
             fillFalse({
-              groupingColumn: "LanguagesEN",
+              groupingColumn: 'LanguagesEN',
               show: !columnFillRows.LanguagesEN,
             });
             setColumnFillRows((prev) => ({
@@ -309,46 +303,46 @@ const DataTableLTR = ({
           Languages
         </div>
       ),
-      children: [{ field: "hebrew" }, { field: "english" }],
+      children: [{ field: 'hebrew' }, { field: 'english' }],
     },
   ];
 
   return (
-    <div className="allForms">
+    <div className='allForms'>
       <Box
         sx={{
           height: 750,
-          width: "100%",
-          direction: "ltr",
+          width: '100%',
+          direction: 'ltr',
           // backgroundColor: "#256FA133",
-          background: "#F5F5F5",
+          background: '#F5F5F5',
           mb: 2,
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column',
 
-          "& .MuiDataGrid-root": {
-            marginRight: "25px",
-            marginLeft: "25px",
+          '& .MuiDataGrid-root': {
+            marginRight: '25px',
+            marginLeft: '25px',
             border: 0,
           },
-          "& .MuiDataGrid-columnHeaderTitle": {
-            fontSize: "Medium",
-            fontWeight: "bold",
+          '& .MuiDataGrid-columnHeaderTitle': {
+            fontSize: 'Medium',
+            fontWeight: 'bold',
           },
-          "& .MuiDataGrid-row": {
-            backgroundColor: "white",
-            marginTop: "5px",
-            marginBottom: "0px",
-            borderRadius: "6px",
-          },
-
-          "& .MuiDataGrid-cellContent": {
-            fontFamily: "Gotham Black, sans-serif",
-            fontSize: "medium",
+          '& .MuiDataGrid-row': {
+            backgroundColor: 'white',
+            marginTop: '5px',
+            marginBottom: '0px',
+            borderRadius: '6px',
           },
 
-          "& .MuiButton-startIcon": {
-            marginLeft: "5px",
+          '& .MuiDataGrid-cellContent': {
+            fontFamily: 'Gotham Black, sans-serif',
+            fontSize: 'medium',
+          },
+
+          '& .MuiButton-startIcon': {
+            marginLeft: '5px',
           },
 
           // css-1e2bxag-MuiDataGrid-root .MuiDataGrid-iconSeparator
@@ -358,10 +352,10 @@ const DataTableLTR = ({
           // },
           //           "& .css-1e2bxag-MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer":
 
-          "& .MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer":
+          '& .MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer':
             {
-              borderBottom: "solid white 3px",
-              justifyContent: "center",
+              borderBottom: 'solid white 3px',
+              justifyContent: 'center',
             },
 
           // .css-1e2bxag-MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer
@@ -373,39 +367,39 @@ const DataTableLTR = ({
         <div></div>
         <DataGridPro
           sx={{
-            "& .MuiDataGrid-row:hover": {
-              backgroundColor: "#EDF3F8",
+            '& .MuiDataGrid-row:hover': {
+              backgroundColor: '#EDF3F8',
             },
-            "& .MuiButton-textSizeSmall": {
-              color: "rgb(8,8,137)",
+            '& .MuiButton-textSizeSmall': {
+              color: 'rgb(8,8,137)',
             },
-            "& .MuiDataGrid-columnHeadersInner": {
-              borderBottom: "1px solid rgba(224, 224, 224, 1)",
-              bgcolor: "#0070A6",
+            '& .MuiDataGrid-columnHeadersInner': {
+              borderBottom: '1px solid rgba(224, 224, 224, 1)',
+              bgcolor: '#0070A6',
             },
-            "& .MuiDataGrid-pinnedColumnHeaders": {
-              bgcolor: "#d3e2ec",
+            '& .MuiDataGrid-pinnedColumnHeaders': {
+              bgcolor: '#d3e2ec',
             },
-            "& .MuiDataGrid-pinnedColumns--left": {
-              bgcolor: "#d3e2ec",
+            '& .MuiDataGrid-pinnedColumns--left': {
+              bgcolor: '#d3e2ec',
             },
 
-            "& .MuiDataGrid-columnHeaders": {
-              bgcolor: "#0070A6",
+            '& .MuiDataGrid-columnHeaders': {
+              bgcolor: '#0070A6',
             },
-            "& .MuiDataGrid-columnHeaderTitle": {
-              color: "white",
+            '& .MuiDataGrid-columnHeaderTitle': {
+              color: 'white',
             },
 
             // "& .MuiSvgIcon-root": {
             //   color: "white",
             // },
-            "& .MuiDataGrid-iconSeparator": {
-              color: "white",
+            '& .MuiDataGrid-iconSeparator': {
+              color: 'white',
             },
-            "& .MuiDataGrid-menuIconButton > .MuiSvgIcon-root , .MuiDataGrid-sortIcon":
+            '& .MuiDataGrid-menuIconButton > .MuiSvgIcon-root , .MuiDataGrid-sortIcon':
               {
-                color: "white !important",
+                color: 'white !important',
               },
 
             // "& .MuiDataGrid-pinnedColumns--right": {
@@ -419,7 +413,7 @@ const DataTableLTR = ({
           columns={columns}
           pageSize={100}
           // rowHeight={52}
-          getRowHeight={() => "auto"}
+          getRowHeight={() => 'auto'}
           // getEstimatedRowHeight={() => 150}
           rowsPerPageOptions={[10]}
           pagination

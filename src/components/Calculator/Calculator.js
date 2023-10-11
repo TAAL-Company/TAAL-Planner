@@ -134,7 +134,6 @@ const Calculator = () => {
         },
       }).then((res) => {
         setDone(true);
-        // console.log("resCAlc:", res)
         size = res.data.length / number;
 
         setDataCards(
@@ -230,8 +229,6 @@ const Calculator = () => {
           return objTasks.push(value);
         })
       );
-      console.log("objTasks1:", objTasks);
-      // console.log("value.post_title:", arrayNameTasks)
       setActionFlag((actionFlag = false));
     }
     if (actionMode === "∪") {
@@ -302,8 +299,6 @@ const Calculator = () => {
     }
     setTextview((textview.value += "(" + val.myTitle + ")"));
     Has_already_been_typed = true;
-    // console.log("arrayIdTasks:", arrayIdTasks)
-    // console.log("arrayNameTasks:", objTasks)
   };
   //--------------------------------------------------------------
   const Action = (val) => {

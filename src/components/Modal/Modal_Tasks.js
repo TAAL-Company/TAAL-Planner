@@ -65,13 +65,10 @@ function Modal_Tasks(props) {
       let audio_url;
       try {
         if (picture && !picture.includes(urlAlreadyExist)) {
-          console.log('enter site: ', 'Task media');
           picture_url = await uploadFiles(picture, 'Task media');
-          console.log(`Image uploaded successfully:`, picture_url);
         }
         if (audio && !audio.includes(urlAlreadyExist)) {
           audio_url = await uploadFiles(audio, 'Task media');
-          console.log(`Audio uploaded successfully:`, audio_url);
         }
       } catch (error) {
         console.error(error);
@@ -96,7 +93,6 @@ function Modal_Tasks(props) {
   const update_task = async (uuid, newTask) => {
     try {
       const update = await updateTask(uuid, newTask);
-      console.log('update Modale Tasks:', update);
 
       if (update.status === 200) {
         let indexStation = props.allStations.findIndex(
@@ -116,7 +112,6 @@ function Modal_Tasks(props) {
         props.setTaskForEdit(update.data);
         setFlagClickOK(false);
         props.setModalOpen(false);
-        console.log('insertTask: ', update.data);
       }
     } catch (error) {
       console.error(error);
@@ -160,7 +155,6 @@ function Modal_Tasks(props) {
     }
   };
   // const saveCheckbox = (val) => {
-  //   // console.log(val)
   //   setMyPlacesChoice((prev) => [...prev, val.id]);
   //   // setMyStudents(myStudents.push(val))
   //   // sortById();
@@ -178,16 +172,11 @@ function Modal_Tasks(props) {
     });
   };
 
-  useEffect(() => {
-    console.log('myPlacesChoice:', myPlacesChoice);
-  }, [myPlacesChoice]);
-
   // const sortById = () => {
   //   if (myPlacesChoiceTemp.length > 1)
   //     for (let i = 0; i < myPlacesChoiceTemp.length; i++) {
   //       let min = myPlacesChoiceTemp[i];
   //       for (let j = i; j < myPlacesChoiceTemp.length; j++) {
-  //         // console.log(j, ",", myStudents[j].id)
   //         if (myPlacesChoiceTemp[j].id < min.id) {
   //           setMyPlacesChoice((myPlacesChoiceTemp[i] = myPlacesChoiceTemp[j]));
   //           setMyPlacesChoice((myPlacesChoiceTemp[j] = min));
@@ -195,7 +184,6 @@ function Modal_Tasks(props) {
   //         }
   //       }
   //     }
-  //   // console.log("myPlacesChoiceSort:", myPlacesChoiceTemp);
   // };
 
   const resultMyPlacesChoice = () => {
@@ -212,7 +200,6 @@ function Modal_Tasks(props) {
         if (count % 2 !== 0) {
           setMyPlacesChoice(myPlacesChoice.push(myPlacesChoiceTemp[index].id));
         }
-        // console.log("myPlacesChoice:", myPlacesChoice)
       }
   };
 

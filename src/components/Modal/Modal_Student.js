@@ -7,7 +7,6 @@ import logo from '../../Pictures/logo.jpeg';
 import { FcPrint } from 'react-icons/fc';
 
 const Modal_Student = ({ thisGetMyUsers, setOpenModal }) => {
-  // console.log("thisGetMyUsers:", thisGetMyUsers)
   const ComponentToPrint = forwardRef((props, ref) => {
     return (
       <div ref={ref}>
@@ -162,7 +161,6 @@ const Modal_Student = ({ thisGetMyUsers, setOpenModal }) => {
       </div>
     );
   });
-  // console.log("thisGetMyUsers:", thisGetMyUsers.acf);
   const ref = useRef();
   return (
     <>

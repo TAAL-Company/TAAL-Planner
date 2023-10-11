@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { get } from "../../api/api";
-import "./style.css";
-import "../../../node_modules/bootstrap/dist/css/bootstrap.css";
-import { Card } from "react-bootstrap";
-import img1 from "../../Pictures/img1.png";
-import img2 from "../../Pictures/img2.png";
-import img3 from "../../Pictures/img3.png";
-import img4 from "../../Pictures/img6.png";
-import logo from "../../Pictures/logo.jpeg";
-import Modal_Cards from "../Modal/Model_Cards";
-import { GrDuplicate } from "react-icons/gr";
-import { FcSearch } from "react-icons/fc";
-import Modal_Loading from "../Modal/Modal_Loading";
-import TextField from "@mui/material/TextField";
-import { baseUrl } from "../../config";
+import React, { useState, useEffect } from 'react';
+import { get } from '../../api/api';
+import './style.css';
+import '../../../node_modules/bootstrap/dist/css/bootstrap.css';
+import { Card } from 'react-bootstrap';
+import img1 from '../../Pictures/img1.png';
+import img2 from '../../Pictures/img2.png';
+import img3 from '../../Pictures/img3.png';
+import img4 from '../../Pictures/img6.png';
+import logo from '../../Pictures/logo.jpeg';
+import Modal_Cards from '../Modal/Model_Cards';
+import { GrDuplicate } from 'react-icons/gr';
+import { FcSearch } from 'react-icons/fc';
+import Modal_Loading from '../Modal/Modal_Loading';
+import TextField from '@mui/material/TextField';
+import { baseUrl } from '../../config';
 
 // import { Form } from "react-bootstrap";
 //----------------------------------------------------|
@@ -33,7 +33,7 @@ let flagTasks = false; //                              |
 let getMyUsers = []; //                                |
 let flagUsers = false; //                              |
 let filteredData = [];
-let inputText = "";
+let inputText = '';
 //                                                    |
 //----------------------------------------------------|
 const Cards = () => {
@@ -53,14 +53,14 @@ const Cards = () => {
   const [, setMyUsers] = useState([]);
   const [, setFlagUsers] = useState(false);
   const [, setFilteredData] = useState([]);
-  const [, setInputText] = useState("");
+  const [, setInputText] = useState('');
 
   let inputHandler = (e) => {
     setInputText((inputText = e.target.value.toLowerCase()));
     setFilteredData(
       (filteredData = dataCards.filter((el) => {
         // setInputText(lowerCase);
-        if (inputText === "") {
+        if (inputText === '') {
           return el;
         }
         //return the item which contains the user input
@@ -113,7 +113,7 @@ const Cards = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        setLogged_in(sessionStorage.getItem("logged_in"));
+        setLogged_in(sessionStorage.getItem('logged_in'));
         getData();
       } catch (error) {
         alert(error.message);
@@ -127,26 +127,24 @@ const Cards = () => {
     if (flag_show_page === false)
       get(`https://taal.tech/wp-json/wp/v2/routes/`, {
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
         },
         params: {
           per_page: 99,
-          "Cache-Control": "no-cache",
+          'Cache-Control': 'no-cache',
         },
       }).then((res) => {
-        console.log("res:", res.data);
         setDone(true);
         size = res.data.length / number;
 
         setDataCards(
           (dataCards = res.data.map((value) => {
-            // console.log("value :", value)
             return {
               myUsers: value.acf.users,
               myTitle: value.title.rendered
-                .replace("&#8211;", "-")
-                .replace("&#8217;", "'"),
+                .replace('&#8211;', '-')
+                .replace('&#8217;', "'"),
               myTasks: value.acf.tasks,
               myId: value.id,
             };
@@ -198,17 +196,13 @@ const Cards = () => {
     setFlagUsers((flagUsers = false));
   };
   const myTasks = (val) => {
-    // console.log("getMyTasks:", val)
     setMyTasks((getMyTasks = val));
     setModalOpen(true);
     setFlagTasks((flagTasks = true));
-    // console.log("myval:", getMyTasks)
     setFlagUsers((flagUsers = false));
   };
   const myUsersfunc = (val) => {
     setMyTasks((getMyTasks = val.myTasks));
-    // console.log("getMyUsers:", val.myUsers)
-    // console.log("getMyTasks:", val.myTasks)
     setMyUsers((getMyUsers = val.myUsers));
     setModalOpen(true);
     setFlagUsers((flagUsers = true));
@@ -218,32 +212,32 @@ const Cards = () => {
   return (
     <>
       {!get_logged_in ? (
-        <div style={{ color: "white" }}>Please connect properly !</div>
+        <div style={{ color: 'white' }}>Please connect properly !</div>
       ) : (
         <>
           {!done ? (
             <>{<Modal_Loading />}</>
           ) : (
             <>
-              <div className="inputCover">
+              <div className='inputCover'>
                 <TextField
                   style={{
-                    borderRadius: "10px",
-                    textAlign: "right",
-                    width: "200px",
-                    backgroundColor: "#fff",
+                    borderRadius: '10px',
+                    textAlign: 'right',
+                    width: '200px',
+                    backgroundColor: '#fff',
                   }}
-                  id="outlined-basic"
-                  variant="outlined"
-                  placeholder="Search route"
-                  label={<FcSearch style={{ fontSize: "xx-large" }} />}
+                  id='outlined-basic'
+                  variant='outlined'
+                  placeholder='Search route'
+                  label={<FcSearch style={{ fontSize: 'xx-large' }} />}
                   onChange={inputHandler}
                 />
               </div>
               <div
                 style={{
-                  backgroundColor: "rgb(213, 221, 228)",
-                  overflow: "hidden",
+                  backgroundColor: 'rgb(213, 221, 228)',
+                  overflow: 'hidden',
                 }}
               >
                 {modalOpen && (
@@ -257,35 +251,35 @@ const Cards = () => {
                   />
                 )}
                 <br></br>
-                <div className="container">
-                  <div className="row">
-                    <div className="col-3">
+                <div className='container'>
+                  <div className='row'>
+                    <div className='col-3'>
                       {dataCards1.map((value, index) => {
                         return (
-                          <div key={index} className="App">
+                          <div key={index} className='App'>
                             <header key={index}>
                               <Card
                                 style={{
-                                  color: "#000",
+                                  color: '#000',
                                   marginBottom: 15,
-                                  boxShadow: "1px 2px #888888",
-                                  borderRadius: "30px",
+                                  boxShadow: '1px 2px #888888',
+                                  borderRadius: '30px',
                                 }}
                               >
                                 {/* display_name */}
                                 {/* <Card.Img src={img1} style={{ height: 237, borderRadius: "30px" }} /> */}
                                 <Card.Body src={logo}>
                                   <Card.Title>
-                                    <div className="text-center ">
-                                      <div className="row align-items-center">
+                                    <div className='text-center '>
+                                      <div className='row align-items-center'>
                                         <div
-                                          className="col-md-11"
+                                          className='col-md-11'
                                           style={{
                                             backgroundColor:
-                                              "rgb(225, 241, 251)",
-                                            width: "300px",
-                                            height: "50px",
-                                            padding: "10px",
+                                              'rgb(225, 241, 251)',
+                                            width: '300px',
+                                            height: '50px',
+                                            padding: '10px',
                                           }}
                                         >
                                           <h5>{value.myTitle}</h5>
@@ -295,12 +289,12 @@ const Cards = () => {
                                     </div>
                                   </Card.Title>
                                   <button
-                                    className="btn btn-Light"
-                                    id="dropdown-basic-button"
+                                    className='btn btn-Light'
+                                    id='dropdown-basic-button'
                                     style={{
-                                      borderRadius: "100px",
-                                      borderColor: "black",
-                                      width: "130px",
+                                      borderRadius: '100px',
+                                      borderColor: 'black',
+                                      width: '130px',
                                     }}
                                     onClick={() => myTasks(value.myTasks)}
                                   >
@@ -308,12 +302,12 @@ const Cards = () => {
                                   </button>
                                   &nbsp;&nbsp;
                                   <button
-                                    className="btn btn-primary"
-                                    id="dropdown-basic-button"
+                                    className='btn btn-primary'
+                                    id='dropdown-basic-button'
                                     style={{
-                                      color: "#fff",
-                                      borderRadius: "100px",
-                                      width: "130px",
+                                      color: '#fff',
+                                      borderRadius: '100px',
+                                      width: '130px',
                                     }}
                                     onClick={() => myUsersfunc(value)}
                                   >
@@ -322,15 +316,15 @@ const Cards = () => {
                                   <br></br>
                                   <br></br>
                                   <button
-                                    type="button"
-                                    className="btn btn-outline-primary"
+                                    type='button'
+                                    className='btn btn-outline-primary'
                                     style={{
-                                      width: "270px",
-                                      borderRadius: "100px",
+                                      width: '270px',
+                                      borderRadius: '100px',
                                     }}
                                     onClick={() => Replication(value)}
                                   >
-                                    <GrDuplicate className="icon" />
+                                    <GrDuplicate className='icon' />
                                     &nbsp;&nbsp; שכפל מסלול זה
                                   </button>
                                 </Card.Body>
@@ -340,32 +334,32 @@ const Cards = () => {
                         );
                       })}
                     </div>
-                    <div className="col-3">
+                    <div className='col-3'>
                       {dataCards2.map((value, index) => {
                         return (
-                          <div key={index} className="App">
+                          <div key={index} className='App'>
                             <header key={index}>
                               <Card
                                 style={{
-                                  color: "#000",
+                                  color: '#000',
                                   marginBottom: 15,
-                                  boxShadow: "1px 2px #888888",
-                                  borderRadius: "30px",
+                                  boxShadow: '1px 2px #888888',
+                                  borderRadius: '30px',
                                 }}
                               >
                                 {/* <Card.Img src={img2} style={{ height: 237, borderRadius: "30px" }} /> */}
                                 <Card.Body>
                                   <Card.Title>
-                                    <div className="text-center ">
-                                      <div className="row align-items-center">
+                                    <div className='text-center '>
+                                      <div className='row align-items-center'>
                                         <div
-                                          className="col-md-11"
+                                          className='col-md-11'
                                           style={{
                                             backgroundColor:
-                                              "rgb(225, 241, 251)",
-                                            width: "300px",
-                                            height: "50px",
-                                            padding: "10px",
+                                              'rgb(225, 241, 251)',
+                                            width: '300px',
+                                            height: '50px',
+                                            padding: '10px',
                                           }}
                                         >
                                           <h5>{value.myTitle}</h5>
@@ -375,12 +369,12 @@ const Cards = () => {
                                     <br></br>
                                   </Card.Title>
                                   <button
-                                    className="btn btn-Light"
-                                    id="dropdown-basic-button"
+                                    className='btn btn-Light'
+                                    id='dropdown-basic-button'
                                     style={{
-                                      borderRadius: "100px",
-                                      borderColor: "black",
-                                      width: "130px",
+                                      borderRadius: '100px',
+                                      borderColor: 'black',
+                                      width: '130px',
                                     }}
                                     onClick={() => myTasks(value.myTasks)}
                                   >
@@ -388,12 +382,12 @@ const Cards = () => {
                                   </button>
                                   &nbsp;&nbsp;
                                   <button
-                                    className="btn btn-primary"
-                                    id="dropdown-basic-button"
+                                    className='btn btn-primary'
+                                    id='dropdown-basic-button'
                                     style={{
-                                      color: "#fff",
-                                      borderRadius: "100px",
-                                      width: "130px",
+                                      color: '#fff',
+                                      borderRadius: '100px',
+                                      width: '130px',
                                     }}
                                     onClick={() => myUsersfunc(value)}
                                   >
@@ -402,15 +396,15 @@ const Cards = () => {
                                   <br></br>
                                   <br></br>
                                   <button
-                                    type="button"
-                                    className="btn btn-outline-primary"
+                                    type='button'
+                                    className='btn btn-outline-primary'
                                     style={{
-                                      width: "270px",
-                                      borderRadius: "100px",
+                                      width: '270px',
+                                      borderRadius: '100px',
                                     }}
                                     onClick={() => Replication(value)}
                                   >
-                                    <GrDuplicate className="icon" />
+                                    <GrDuplicate className='icon' />
                                     &nbsp;&nbsp; שכפל מסלול זה
                                   </button>
                                 </Card.Body>
@@ -420,33 +414,33 @@ const Cards = () => {
                         );
                       })}
                     </div>
-                    <div className="col-3">
+                    <div className='col-3'>
                       {dataCards3.map((value, index) => {
                         return (
-                          <div key={index} className="App">
+                          <div key={index} className='App'>
                             <header key={index}>
                               <Card
                                 style={{
-                                  color: "#000",
+                                  color: '#000',
                                   marginBottom: 15,
-                                  boxShadow: "1px 2px #888888",
-                                  borderRadius: "30px",
+                                  boxShadow: '1px 2px #888888',
+                                  borderRadius: '30px',
                                 }}
                               >
                                 {/* display_name */}
                                 {/* <Card.Img src={img3} style={{ height: 237, borderRadius: "30px" }} /> */}
                                 <Card.Body src={logo}>
                                   <Card.Title>
-                                    <div className="text-center ">
-                                      <div className="row align-items-center">
+                                    <div className='text-center '>
+                                      <div className='row align-items-center'>
                                         <div
-                                          className="col-md-11"
+                                          className='col-md-11'
                                           style={{
                                             backgroundColor:
-                                              "rgb(225, 241, 251)",
-                                            width: "300px",
-                                            height: "50px",
-                                            padding: "10px",
+                                              'rgb(225, 241, 251)',
+                                            width: '300px',
+                                            height: '50px',
+                                            padding: '10px',
                                           }}
                                         >
                                           <h5>{value.myTitle}</h5>
@@ -456,12 +450,12 @@ const Cards = () => {
                                     <br></br>
                                   </Card.Title>
                                   <button
-                                    className="btn btn-Light"
-                                    id="dropdown-basic-button"
+                                    className='btn btn-Light'
+                                    id='dropdown-basic-button'
                                     style={{
-                                      borderRadius: "100px",
-                                      borderColor: "black",
-                                      width: "130px",
+                                      borderRadius: '100px',
+                                      borderColor: 'black',
+                                      width: '130px',
                                     }}
                                     onClick={() => myTasks(value.myTasks)}
                                   >
@@ -469,12 +463,12 @@ const Cards = () => {
                                   </button>
                                   &nbsp;&nbsp;
                                   <button
-                                    className="btn btn-primary"
-                                    id="dropdown-basic-button"
+                                    className='btn btn-primary'
+                                    id='dropdown-basic-button'
                                     style={{
-                                      color: "#fff",
-                                      borderRadius: "100px",
-                                      width: "130px",
+                                      color: '#fff',
+                                      borderRadius: '100px',
+                                      width: '130px',
                                     }}
                                     onClick={() => myUsersfunc(value)}
                                   >
@@ -483,16 +477,16 @@ const Cards = () => {
                                   <br></br>
                                   <br></br>
                                   <button
-                                    type="button"
-                                    className="btn btn-outline-primary"
+                                    type='button'
+                                    className='btn btn-outline-primary'
                                     style={{
-                                      width: "270px",
-                                      borderRadius: "100px",
+                                      width: '270px',
+                                      borderRadius: '100px',
                                     }}
                                     onClick={() => Replication(value)}
                                   >
-                                    <GrDuplicate className="icon" />
-                                    &nbsp;&nbsp; שכפל מסלול זה{" "}
+                                    <GrDuplicate className='icon' />
+                                    &nbsp;&nbsp; שכפל מסלול זה{' '}
                                   </button>
                                 </Card.Body>
                               </Card>
@@ -502,32 +496,32 @@ const Cards = () => {
                       })}
                     </div>
 
-                    <div className="col-3">
+                    <div className='col-3'>
                       {dataCards4.map((value, index) => {
                         return (
-                          <div key={index} className="App">
+                          <div key={index} className='App'>
                             <header key={index}>
                               <Card
                                 style={{
-                                  color: "#000",
+                                  color: '#000',
                                   marginBottom: 15,
-                                  boxShadow: "1px 2px #888888",
-                                  borderRadius: "30px",
+                                  boxShadow: '1px 2px #888888',
+                                  borderRadius: '30px',
                                 }}
                               >
                                 {/* <Card.Img src={img4} style={{ height: 237, borderRadius: "30px" }} /> */}
                                 <Card.Body>
                                   <Card.Title>
-                                    <div className="text-center ">
-                                      <div className="row align-items-center">
+                                    <div className='text-center '>
+                                      <div className='row align-items-center'>
                                         <div
-                                          className="col-md-11"
+                                          className='col-md-11'
                                           style={{
                                             backgroundColor:
-                                              "rgb(225, 241, 251)",
-                                            width: "300px",
-                                            height: "50px",
-                                            padding: "10px",
+                                              'rgb(225, 241, 251)',
+                                            width: '300px',
+                                            height: '50px',
+                                            padding: '10px',
                                           }}
                                         >
                                           <h5>{value.myTitle}</h5>
@@ -537,12 +531,12 @@ const Cards = () => {
                                     <br></br>
                                   </Card.Title>
                                   <button
-                                    className="btn btn-Light"
-                                    id="dropdown-basic-button"
+                                    className='btn btn-Light'
+                                    id='dropdown-basic-button'
                                     style={{
-                                      borderRadius: "100px",
-                                      borderColor: "black",
-                                      width: "130px",
+                                      borderRadius: '100px',
+                                      borderColor: 'black',
+                                      width: '130px',
                                     }}
                                     onClick={() => myTasks(value.myTasks)}
                                   >
@@ -550,12 +544,12 @@ const Cards = () => {
                                   </button>
                                   &nbsp;&nbsp;
                                   <button
-                                    className="btn btn-primary"
-                                    id="dropdown-basic-button"
+                                    className='btn btn-primary'
+                                    id='dropdown-basic-button'
                                     style={{
-                                      color: "#fff",
-                                      borderRadius: "100px",
-                                      width: "130px",
+                                      color: '#fff',
+                                      borderRadius: '100px',
+                                      width: '130px',
                                     }}
                                     onClick={() => myUsersfunc(value)}
                                   >
@@ -564,15 +558,15 @@ const Cards = () => {
                                   <br></br>
                                   <br></br>
                                   <button
-                                    type="button"
-                                    className="btn btn-outline-primary"
+                                    type='button'
+                                    className='btn btn-outline-primary'
                                     style={{
-                                      width: "270px",
-                                      borderRadius: "100px",
+                                      width: '270px',
+                                      borderRadius: '100px',
                                     }}
                                     onClick={() => Replication(value)}
                                   >
-                                    <GrDuplicate className="icon" />
+                                    <GrDuplicate className='icon' />
                                     &nbsp;&nbsp; שכפל מסלול זה
                                   </button>
                                 </Card.Body>

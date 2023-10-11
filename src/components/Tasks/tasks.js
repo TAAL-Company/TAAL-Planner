@@ -90,7 +90,6 @@ const Tasks = (props) => {
         props.setTasksOfChosenStation(newTasks);
         props.stationArray[indexStation].tasks = newTasks;
 
-        console.log('insertTask: ', post);
         setRequestForEditing('');
         setOpenThreeDotsVertical(-1);
       } catch (error) {
@@ -99,13 +98,9 @@ const Tasks = (props) => {
     }
   };
 
-  console.log('tasks b requestForEditing: ', requestForEditing);
-  console.log('tasks b openThreeDotsVertical: ', openThreeDotsVertical);
-
   useEffect(() => {
     if (openThreeDotsVertical !== -1) {
       if (requestForEditing === 'edit' || requestForEditing === 'details') {
-        console.log('openThreeDotsVertical', openThreeDotsVertical);
         setOpenThreeDotsVertical(openThreeDotsVertical);
         setTaskUuidForEdit(openThreeDotsVertical);
         setModalOpen(true);
@@ -213,9 +208,6 @@ const Tasks = (props) => {
               >
                 {filteredDataTasks.map((tag, index) => {
                   let ID = '' + tag.id;
-                  console.log('id: ', typeof ID);
-                  console.log('tag: ', tag);
-
                   return (
                     <Draggable key={ID} draggableId={ID} index={index}>
                       {(provided) => (

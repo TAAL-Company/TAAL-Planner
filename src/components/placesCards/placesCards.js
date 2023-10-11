@@ -36,7 +36,7 @@ const PlacesCards = () => {
     } else {
       let picture_url;
       try {
-        if (picture) picture_url = await uploadFiles(picture, 'Site media');//await uploadImageGD(picture);
+        if (picture) picture_url = await uploadFiles(picture, 'Site media'); //await uploadImageGD(picture);
 
         const place = {
           name,
@@ -54,18 +54,15 @@ const PlacesCards = () => {
       }
     }
     handleClose(); // Close the dialog after the form is submitted
-    console.log('places', places);
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const placesData = await getingData_Places();
       setPlaces(placesData);
-      console.log('places', placesData);
     };
 
     fetchData();
-    console.log('places', places);
   }, []);
 
   return (

@@ -46,11 +46,9 @@ let mySite = { name: '', id: '' };
 let clickAddRoute = false;
 let myCategory = false;
 let flagTest = false;
-// let selectedValue = {};
 
 //-----------------------
 const Places = (props) => {
-  // console.log("setFloatLan:", props.setFloatLang)
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
   const [tempSelectedSite, setTempSelectedSite] = useState(null);
@@ -66,20 +64,13 @@ const Places = (props) => {
   const [, setFlagStudent] = useState(false);
   const [, setThisIdTask] = useState(0);
   const [onlyAllStation, setOnlyAllStation] = useState([]);
-  // const [, setPlaces] = useState([]);
   const [allRoutes, setAllRoutes] = useState([]);
   const [myRoutes, setRoutes] = useState([]);
-  // const [, setFilteredData] = useState([]);
   const [filteredDataRoutes, setFilteredDataRoutes] = useState([]);
   const [, setInputText] = useState('');
   const [, setInputTextRouts] = useState('');
-  // const [, setMySite] = useState(null);
-  // const [get_logged_in, setLogged_in] = useState(false);// for TextView
-  const [, setFlagButtonRoute] = useState(false);
-  // const [, setTasksOfRoutes] = useState([]);
   const [, setFlagTest] = useState(false);
   const [siteSelected, setSiteSelected] = useState(false);
-  const [isFirstSelection, setIsFirstSelection] = useState(false);
   const [newTitleForRoute, setNewTitleForRoute] = useState({});
   const [flagRoute, setRouteFlags] = useState(false);
   const [openModalRouteChosen, setOpenModalRouteChosen] = useState(false);
@@ -108,18 +99,12 @@ const Places = (props) => {
   const [tasksLength, setTasksLength] = useState(0);
 
   useEffect(() => {
-    console.log('requestForEditing: ', requestForEditing);
-    console.log('openThreeDotsVertical', openThreeDotsVertical);
-
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
       setModalOpen(true);
       setRouteName(filteredDataRoutes[openThreeDotsVertical].name);
       setRouteUUID(filteredDataRoutes[openThreeDotsVertical].id);
     } else if (requestForEditing === 'duplication') {
-      console.log('duplication openThreeDotsVertical', openThreeDotsVertical);
     } else if (requestForEditing === 'delete') {
-      console.log('delete openThreeDotsVertical', openThreeDotsVertical);
-
       setOpenRemove(true);
       setRouteForDelete(openThreeDotsVertical);
     }
@@ -131,10 +116,8 @@ const Places = (props) => {
     setRequestForEditing('');
   };
   const handleCloseRemoveConfirm = async () => {
-    console.log('DELETE:', filteredDataRoutes[routrForDelete].id);
     let deleteRoutes = await deleteRoute(filteredDataRoutes[routrForDelete].id);
 
-    console.log('deleteRoute:', deleteRoutes);
     if (deleteRoutes.status === 200) {
       alert('המחיקה בוצעה בהצלחה!');
       const newRoutes = [...filteredDataRoutes];
@@ -205,11 +188,7 @@ const Places = (props) => {
       setLoading(false);
     };
     fetchData();
-    console.log('allRoutes', allRoutes);
   }, []);
-  useEffect(() => {
-    console.log('@@ allTasks', allTasks);
-  }, [allTasks]);
   useEffect(() => {
     let user;
     if (allUsers !== undefined) {
@@ -218,7 +197,6 @@ const Places = (props) => {
           user.name.toLowerCase() === sessionStorage.userName.toLowerCase()
       );
     }
-    console.log('user:', user);
   }, [allUsers]);
   useEffect(() => {
     const fetchData = async () => {
@@ -241,15 +219,11 @@ const Places = (props) => {
       console.error(error.message);
     }
 
-    console.log('res places: ', allPlaces);
-
     // setPlaces(allPlaces); //(places = allPlaces.filter((item) => item.parent === 0))); //parent === 0 means site and not station
 
     // setOnlyAllStation(
     //   (onlyAllStation = allPlaces.filter((item) => item.parent > 0)) //parent > 0 means station
     // );
-
-    console.log('onlyAllStation: ', onlyAllStation);
 
     Places_and_their_stations = allPlaces.map((element) => {
       return {
@@ -302,11 +276,7 @@ const Places = (props) => {
       let stationName;
       if (firstStation !== undefined) {
         firstStation.stations.map((station) => {
-          console.log('!! station.parentSiteId: ', station.parentSiteId);
-          console.log('!! mySite.id: ', mySite.id);
-
           if (station.parentSiteId === mySite.id) {
-            console.log('!! station.title: ', station.title);
             theStation = station;
             stationName = station.title;
           }
@@ -315,8 +285,6 @@ const Places = (props) => {
 
         //
       } else setFirstStationName(undefined);
-
-      console.log('!! firstStationName:', firstStationName);
 
       let prevStation = '';
 
@@ -362,13 +330,8 @@ const Places = (props) => {
             // isStationOfMySite(item).includes(true)
           );
 
-          console.log('stationID: ', stationID);
           if (stationID !== undefined) {
             stationName = stationID.title;
-            console.log(
-              '!! : ',
-              stationArray.find((item) => item.id === stationID.id)
-            );
             theStation = stationID;
             color = stationArray.find((item) => item.id === stationID.id).color;
           } else {
@@ -441,10 +404,8 @@ const Places = (props) => {
   };
 
   const isStationOfMySite = (stationId) => {
-    console.log('isStationOfMySite yyyyy', stationId);
     return stationArray.map((item) => {
       if (item.id === stationId) {
-        console.log('true yyyyy', true);
         return true;
       } else {
         return false;
@@ -572,7 +533,6 @@ const Places = (props) => {
         route.sites.some((site) => site.id === mySite.id)
       )
     );
-    console.log('routes ', myRoutes);
   };
 
   const displayRoutesFromSelectedWorker = async (selectedWorker) => {

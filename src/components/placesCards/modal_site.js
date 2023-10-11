@@ -1,30 +1,24 @@
-import React, { useState, useEffect } from "react";
-import "./Modal.css";
-import { FcMultipleInputs } from "react-icons/fc";
-import { RiAsterisk } from "react-icons/ri";
-import { BsExclamationLg } from "react-icons/bs";
-import Modal_Loading from "./Modal_Loading";
-import { baseUrl } from "../../config";
-import stopIcon from "../../Pictures/stopIcon.svg";
-import { uploadFile, insertStation } from "../../api/api";
+import React, { useState, useEffect } from 'react';
+import { FcMultipleInputs } from 'react-icons/fc';
+import { RiAsterisk } from 'react-icons/ri';
+import Modal_Loading from './Modal_Loading';
+import stopIcon from '../../Pictures/stopIcon.svg';
+import { uploadFile, insertStation } from '../../api/api';
+import './Modal.css';
 
 //--------------------------
-// let getPicture, getSound;
-let ichour = "אישור";
 let flagClickOK = false;
 //--------------------------
 const Modal_Stations = (props) => {
   const [, setDone] = useState(false);
-  const [get_title, settitle] = useState("");
+  const [get_title, settitle] = useState('');
   const [picture, setPicture] = useState([]);
   const [audio, setAudio] = useState(null);
-  const [getDescription, setDescription] = useState("");
+  const [getDescription, setDescription] = useState('');
   const [, setFlagClickOK] = useState(false);
   const [picturePreview, setPicturePreview] = useState(false);
-  const [srcImage, setSrcImage] = useState("");
+  const [srcImage, setSrcImage] = useState('');
 
-  console.log("stationIndex: ", props.stationIndex);
-  console.log("stationArray: ", props.stationArray);
   useEffect(() => {
     if (props.stationIndex != -1) {
       settitle(props.stationArray[props.stationIndex].title);
@@ -48,30 +42,24 @@ const Modal_Stations = (props) => {
       setPicturePreview(true);
       setSrcImage(URL.createObjectURL(picture));
     }
-    console.log("picture", picture);
   }, [picture]);
 
   async function Post_Station() {
     setFlagClickOK((flagClickOK = true));
 
-    let imageData;
-    let audioData;
-
     try {
       if (picture) {
-        imageData = await uploadFile(picture, "Image");
-        console.log(`Image uploaded successfully:`, imageData);
+        await uploadFile(picture, 'Image');
       }
       if (audio) {
-        audioData = await uploadFile(audio, "Audio");
-        console.log(`Audio uploaded successfully:`, audioData);
+        await uploadFile(audio, 'Audio');
       }
     } catch (error) {
       console.error(error);
     }
 
-    if (get_title === "" || getDescription === "") {
-      alert("עליך למלא שדות חובה המסומנים בכוכבית");
+    if (get_title === '' || getDescription === '') {
+      alert('עליך למלא שדות חובה המסומנים בכוכבית');
     } else {
       try {
         const post = await insertStation(
@@ -89,31 +77,29 @@ const Modal_Stations = (props) => {
 
         await props.stationArray.push(post);
       } catch (error) {
-        alert("שם התחנה כבר קיים - בחר שם אחר");
+        alert('שם התחנה כבר קיים - בחר שם אחר');
         console.error(error);
       }
     }
   }
 
-  useEffect(() => {
-    console.log("m props.stationArray:", props.stationArray);
-  }, [props.stationArray]);
+  useEffect(() => {}, [props.stationArray]);
 
   return (
     <>
       {props.idTasks === 0 ? (
         <>
           {/* <div className="BackgroundPlasesNoClick"> */}
-          <div className="modalContainerPlases">
-            <div className="stopIconContainer">
-              <img src={stopIcon} alt="logo"></img>
+          <div className='modalContainerPlases'>
+            <div className='stopIconContainer'>
+              <img src={stopIcon} alt='logo'></img>
             </div>
-            <div className="body" style={{ textAlign: "center" }}>
+            <div className='body' style={{ textAlign: 'center' }}>
               <h4> עליך לבחור ראשית אתר, ואז לשייך אליו תחנה</h4>
             </div>
-            <div className="footer">
+            <div className='footer'>
               <button
-                className="cancelBtn"
+                className='cancelBtn'
                 onClick={() => {
                   props.setOpenModalPlaces(false);
                 }}
@@ -126,137 +112,137 @@ const Modal_Stations = (props) => {
         </>
       ) : (
         <>
-          <div className="modalContainerNewStation">
-            <div className="headerNewTask">
+          <div className='modalContainerNewStation'>
+            <div className='headerNewTask'>
               <div
-                className="NewTaskTitle"
+                className='NewTaskTitle'
                 style={{
-                  textAlign: props.language === "English" ? "right" : "left",
+                  textAlign: props.language === 'English' ? 'right' : 'left',
                 }}
               >
-                {props.language !== "English" ? "New staition" : "תחנה חדשה"}
+                {props.language !== 'English' ? 'New staition' : 'תחנה חדשה'}
               </div>
             </div>
             <div
-              className="bodyNewStation"
+              className='bodyNewStation'
               style={{
-                textAlign: props.language === "English" ? "right" : "left",
+                textAlign: props.language === 'English' ? 'right' : 'left',
               }}
             >
-              <form id="IPU" className="w3-container">
+              <form id='IPU' className='w3-container'>
                 <h6>
-                  {props.language !== "English"
-                    ? "Write the station name:"
-                    : ":רשום את שם התחנה"}
-                  <RiAsterisk style={{ color: "red" }} />
+                  {props.language !== 'English'
+                    ? 'Write the station name:'
+                    : ':רשום את שם התחנה'}
+                  <RiAsterisk style={{ color: 'red' }} />
                 </h6>
                 <p>
                   <input
                     value={get_title}
                     required={true}
-                    type="text"
+                    type='text'
                     onChange={handleTitleInput}
                     style={{
-                      height: "38px",
-                      width: "100%",
-                      paddingRight: "20px",
-                      direction: props.language === "English" ? "rtl" : "ltr",
+                      height: '38px',
+                      width: '100%',
+                      paddingRight: '20px',
+                      direction: props.language === 'English' ? 'rtl' : 'ltr',
                     }}
                   ></input>
                 </p>
               </form>
-              <form id="IPU" className="w3-container">
+              <form id='IPU' className='w3-container'>
                 <h6>
-                  {props.language !== "English"
-                    ? "Describe the station:"
-                    : ":תאר במשפט את תחנה"}
-                  <RiAsterisk style={{ color: "red" }} />
+                  {props.language !== 'English'
+                    ? 'Describe the station:'
+                    : ':תאר במשפט את תחנה'}
+                  <RiAsterisk style={{ color: 'red' }} />
                 </h6>
                 <p>
                   <input
                     value={getDescription}
-                    type="text"
+                    type='text'
                     onChange={handleDescriptionInput}
                     style={{
-                      height: "38px",
-                      width: "100%",
-                      paddingRight: "20px",
-                      direction: props.language === "English" ? "rtl" : "ltr",
+                      height: '38px',
+                      width: '100%',
+                      paddingRight: '20px',
+                      direction: props.language === 'English' ? 'rtl' : 'ltr',
                     }}
                   ></input>
                 </p>
               </form>
-              <form id="IPU" className="w3-container">
+              <form id='IPU' className='w3-container'>
                 <h6>
-                  {props.language !== "English"
-                    ? "add picture of the station:"
-                    : "הוסף תמונה של התחנה"}
+                  {props.language !== 'English'
+                    ? 'add picture of the station:'
+                    : 'הוסף תמונה של התחנה'}
                   <FcMultipleInputs />
                 </h6>
-                <div className="input-group mb-3">
+                <div className='input-group mb-3'>
                   <input
                     required={true}
-                    accept=".png, .jpg, .jpeg"
-                    className="form-control"
-                    type="file"
+                    accept='.png, .jpg, .jpeg'
+                    className='form-control'
+                    type='file'
                     onChange={(e) => setPicture(e.target.files[0])}
                     style={{
-                      width: "100%",
-                      height: "38px",
-                      direction: props.language === "English" ? "rtl" : "ltr",
+                      width: '100%',
+                      height: '38px',
+                      direction: props.language === 'English' ? 'rtl' : 'ltr',
                     }}
                   ></input>
                   {picturePreview ? (
                     <img
-                      className="picturePreview"
+                      className='picturePreview'
                       src={srcImage}
-                      alt="picturePreview"
+                      alt='picturePreview'
                     ></img>
                   ) : (
                     <></>
                   )}
                 </div>
               </form>
-              <form id="IPU" className="w3-container">
+              <form id='IPU' className='w3-container'>
                 <h6>
-                  {props.language !== "English"
-                    ? "Add a voice clip:"
-                    : "הוסף קטע קול"}
+                  {props.language !== 'English'
+                    ? 'Add a voice clip:'
+                    : 'הוסף קטע קול'}
 
                   <FcMultipleInputs />
                 </h6>
                 <p>
                   <input
                     required={true}
-                    accept=".mp3"
-                    type="file"
-                    className="form-control"
+                    accept='.mp3'
+                    type='file'
+                    className='form-control'
                     onChange={(e) => setAudio(e.target.files[0])}
                     style={{
-                      width: "100%",
-                      height: "38px",
-                      direction: props.language === "English" ? "rtl" : "ltr",
+                      width: '100%',
+                      height: '38px',
+                      direction: props.language === 'English' ? 'rtl' : 'ltr',
                     }}
                   ></input>
                 </p>
               </form>
             </div>
-            <div className="footerNewStation">
+            <div className='footerNewStation'>
               <input
-                type="submit"
-                className="newStationButton"
+                type='submit'
+                className='newStationButton'
                 value={
-                  props.language !== "English" ? "Save station" : "שמור תחנה"
+                  props.language !== 'English' ? 'Save station' : 'שמור תחנה'
                 }
                 onClick={Post_Station}
               />
               <input
-                type="submit"
-                className="newStationButton"
-                value={props.language !== "English" ? "Cancel" : "ביטול"}
+                type='submit'
+                className='newStationButton'
+                value={props.language !== 'English' ? 'Cancel' : 'ביטול'}
                 onClick={() => {
                   props.setOpenModalPlaces(false);
-                  props.setRequestForEditing("");
+                  props.setRequestForEditing('');
                 }}
               />
             </div>

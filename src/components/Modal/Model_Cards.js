@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { get } from "../../api/api";
-import "./Modal.css";
-import img1 from "../../Pictures/img1.png";
-import img2 from "../../Pictures/img2.png";
-import { BsFillFlagFill } from "react-icons/bs";
-import Modal_Loading from "./Modal_Loading";
-import { baseUrl } from "../../config";
+import React, { useState, useEffect } from 'react';
+import { get } from '../../api/api';
+import './Modal.css';
+import img1 from '../../Pictures/img1.png';
+import img2 from '../../Pictures/img2.png';
+import { BsFillFlagFill } from 'react-icons/bs';
+import Modal_Loading from './Modal_Loading';
+import { baseUrl } from '../../config';
 
 //--------------------------
 
 let profileStudent = 0;
 let myOriginalTasks = [];
-let red_flag = "red";
-let orange_flag = "orange";
-let green_flag = "green";
+let red_flag = 'red';
+let orange_flag = 'orange';
+let green_flag = 'green';
 let dataTasks = [];
 let dataUsers = [];
 let epsilon = 10;
@@ -56,7 +56,7 @@ function Modal_Cards({
     get(`https://taal.tech/wp-json/wp/v2/tasks/`, {
       params: {
         per_page: 99,
-        "Cache-Control": "no-cache",
+        'Cache-Control': 'no-cache',
       },
     }).then((res) => {
       setDataTasks((dataTasks = res.data));
@@ -64,12 +64,12 @@ function Modal_Cards({
 
     get(`https://taal.tech/wp-json/wp/v2/users/`, {
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
       },
       params: {
         per_page: 99,
-        "Cache-Control": "no-cache",
+        'Cache-Control': 'no-cache',
       },
     }).then((res) => {
       setDataUsers((dataUsers = res.data));
@@ -77,27 +77,26 @@ function Modal_Cards({
   };
   function Post_Route() {
     setFlagClickOK((flagClickOK = true));
-    if (setText === null || setText === "") {
-      alert("Please give the Route a title !");
+    if (setText === null || setText === '') {
+      alert('Please give the Route a title !');
       return;
     }
-    if (JSON.parse(localStorage.getItem("New_Routes")) === null) {
-      alert("Route is empty ! ");
+    if (JSON.parse(localStorage.getItem('New_Routes')) === null) {
+      alert('Route is empty ! ');
       return;
     } else {
       let url_post = `https://taal.tech/wp-json/wp/v2/routes/`;
       fetch(url_post, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${sessionStorage.getItem('jwt')}`,
         },
         body: JSON.stringify({
-          status: "draft",
-          title: thisMyRoute.myTitle + "-duplicate-1",
+          status: 'draft',
+          title: thisMyRoute.myTitle + '-duplicate-1',
           fields: {
             tasks: thisMyRoute.myTasks.map((e) => {
-              // console.log("e.id:", e.ID)
               return e.ID;
             }),
             // users: obj.tasks,
@@ -109,27 +108,24 @@ function Modal_Cards({
         })
         .then(function (post) {
           setDone(true);
-          window.location.replace("/routes_cards");
+          window.location.replace('/routes_cards');
         });
     }
   }
   const studentChois = (val) => {
     // setThisFlagTasks(thisFlagTasks = true);
     setMyOriginalTasks((myOriginalTasks = []));
-    // console.log("val:", val.ID);
     setOpenModal(false);
     setMyOriginalTasksFlag((myOriginalTasksFlag = true));
     thisGetMyTasks.map((val) => {
       return dataTasks.map((item) => {
         if (val.ID === item.id) {
-          // console.log("my Original Tasks:", myOriginalTasks);
           return setMyOriginalTasks(myOriginalTasks.push(item));
         }
         return null;
       });
     });
     let myStudent = dataUsers.filter((item) => item.id === val.ID);
-    // console.log("myStudent:", myStudent)
     setProfileStudent((profileStudent = myStudent[0].acf.risk_profile));
     // alert(profileStudent)
     // setMyOriginalTasks(myOriginalTasks = thisGetMyTasks.map((val) => dataTasks.filter((item) => item.id === val.ID)));
@@ -138,9 +134,9 @@ function Modal_Cards({
     <>
       {thisFlagTasks === true ? (
         <>
-          <div className="Background">
-            <div className="modalMyTasksContainer">
-              <div className="titleCloseBtn">
+          <div className='Background'>
+            <div className='modalMyTasksContainer'>
+              <div className='titleCloseBtn'>
                 <button
                   onClick={() => {
                     setOpenModal(false);
@@ -150,15 +146,15 @@ function Modal_Cards({
                   X
                 </button>
               </div>
-              <div className="title"></div>
+              <div className='title'></div>
               <img
                 src={img1}
-                alt="Logo"
-                style={{ width: "220px", height: "180px", marginLeft: "110px" }}
+                alt='Logo'
+                style={{ width: '220px', height: '180px', marginLeft: '110px' }}
               />
-              ;<h3 style={{ color: "red" }}>:רשימת המשימות</h3>
+              ;<h3 style={{ color: 'red' }}>:רשימת המשימות</h3>
               <br></br>
-              <h5 className="bodyTasks">
+              <h5 className='bodyTasks'>
                 {thisGetMyTasks && !myOriginalTasksFlag ? (
                   <>
                     {thisGetMyTasks.map((val, index) => {
@@ -203,7 +199,6 @@ function Modal_Cards({
                                     style={{ color: green_flag }}
                                   />
                                 )}
-                                {/* {console.log("val.acf.minimum_profile:", typeof (parseInt(val.acf.minimum_profile)))} */}
                               </div>
                               <br></br>
                             </div>
@@ -212,7 +207,7 @@ function Modal_Cards({
                       </>
                     ) : (
                       <>
-                        <h3 style={{ color: "red" }}>לא קיימים משימות</h3>
+                        <h3 style={{ color: 'red' }}>לא קיימים משימות</h3>
                       </>
                     )}
                   </>
@@ -223,9 +218,9 @@ function Modal_Cards({
         </>
       ) : thisFlagUsers ? (
         <>
-          <div className="Background">
-            <div className="modalMyTasksContainer">
-              <div className="titleCloseBtn">
+          <div className='Background'>
+            <div className='modalMyTasksContainer'>
+              <div className='titleCloseBtn'>
                 <button
                   onClick={() => {
                     setOpenModal(false);
@@ -234,15 +229,15 @@ function Modal_Cards({
                   X
                 </button>
               </div>
-              <div className="title"></div>
+              <div className='title'></div>
               <img
                 src={img2}
-                alt="Logo"
-                style={{ width: "220px", height: "180px", marginLeft: "110px" }}
+                alt='Logo'
+                style={{ width: '220px', height: '180px', marginLeft: '110px' }}
               />
-              ;<h3 style={{ color: "red" }}>:החניכים</h3>
+              ;<h3 style={{ color: 'red' }}>:החניכים</h3>
               <br></br>
-              <h5 className="bodyTasks">
+              <h5 className='bodyTasks'>
                 {thisGetMyUsers ? (
                   <>
                     {thisGetMyUsers.map((val, index) => {
@@ -253,10 +248,10 @@ function Modal_Cards({
                               onClick={() => {
                                 studentChois(val);
                               }}
-                              className="btn btn-primary"
+                              className='btn btn-primary'
                             >
                               {val.display_name}
-                            </button>{" "}
+                            </button>{' '}
                             -
                           </div>
                           <br></br>
@@ -266,7 +261,7 @@ function Modal_Cards({
                   </>
                 ) : (
                   <>
-                    <h6 style={{ color: "red" }}>
+                    <h6 style={{ color: 'red' }}>
                       אין חניכים המשוייכים למסלול זה
                     </h6>
                   </>
@@ -276,9 +271,9 @@ function Modal_Cards({
           </div>
         </>
       ) : (
-        <div className="Background">
-          <div className="modalContainer">
-            <div className="titleCloseBtn">
+        <div className='Background'>
+          <div className='modalContainer'>
+            <div className='titleCloseBtn'>
               <button
                 onClick={() => {
                   setOpenModal(false);
@@ -288,16 +283,16 @@ function Modal_Cards({
               </button>
             </div>
             <h1>שכפול מסלול</h1>
-            <div className="body">
+            <div className='body'>
               <h5>
-                {" "}
-                :האם את/ה מעוניין בשכפול המסלול{" "}
-                <div style={{ color: "red" }}>?{thisMyRoute.myTitle}</div>
+                {' '}
+                :האם את/ה מעוניין בשכפול המסלול{' '}
+                <div style={{ color: 'red' }}>?{thisMyRoute.myTitle}</div>
               </h5>
             </div>
-            <div className="footer">
+            <div className='footer'>
               <button
-                className="cancelBtn"
+                className='cancelBtn'
                 onClick={() => {
                   setOpenModal(false);
                 }}
@@ -306,8 +301,8 @@ function Modal_Cards({
               </button>
               &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
               &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
-              <button className="continueBtn" onClick={Post_Route}>
-                {" "}
+              <button className='continueBtn' onClick={Post_Route}>
+                {' '}
                 אישור
               </button>
               {flagClickOK ? (

@@ -7,7 +7,6 @@ export const uploadImage = async (e) => {
 
     return await getBase64(file).then(
         async (dataSend) => {
-            console.log(dataSend)
             const response = await fetch('https://script.google.com/macros/s/AKfycbwepXPfgrR2zfYLXk0GTWW07l7p4jikD24xX3Wzj2nW6BA2w_NXi4DGqJghc6Uh-grv/exec', { method: "POST", body: JSON.stringify(dataSend) })
             const data = await response.json();
             GOOGLE_DRIVE_IMG_ID = data.id;

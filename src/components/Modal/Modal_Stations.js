@@ -30,8 +30,6 @@ const Modal_Stations = (props) => {
   const [srcImage, setSrcImage] = useState('');
   const [stationUUId, setStationUUId] = useState('');
 
-  console.log('stationIndex: ', props.stationIndex);
-  console.log('stationArray: ', props.stationArray);
   useEffect(() => {
     if (
       props.stationArray.length > 0 &&
@@ -60,16 +58,11 @@ const Modal_Stations = (props) => {
     if (picture.length > 0) {
       setPicturePreview(true);
       setSrcImage(URL.createObjectURL(picture));
-      console.log('srcImage', srcImage);
     }
-    console.log('srcImage picture', picture);
   }, [picture, srcImage]);
 
   async function Post_Station() {
     setFlagClickOK((flagClickOK = true));
-
-    console.log('props.stationArray', props.stationArray);
-    console.log('props.stationUUId', stationUUId);
 
     if (get_title === '' || getDescription === '') {
       setFlagClickOK((flagClickOK = false));
@@ -134,10 +127,6 @@ const Modal_Stations = (props) => {
       }
     }
   }
-
-  useEffect(() => {
-    console.log('m props.stationArray:', props.stationArray);
-  }, [props.stationArray]);
 
   return (
     <>

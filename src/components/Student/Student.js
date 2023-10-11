@@ -22,10 +22,10 @@ import ModalDropdown from '../Modal/Modal_Dropdown';
 import cognitiveList from '../Form/cognitive.json';
 import Autocomplete from '@mui/material/Autocomplete';
 
-import rtlPlugin from "stylis-plugin-rtl";
-import { CacheProvider } from "@emotion/react";
-import createCache from "@emotion/cache";
-import { prefixer } from 'stylis'
+import rtlPlugin from 'stylis-plugin-rtl';
+import { CacheProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
+import { prefixer } from 'stylis';
 
 const Cards = () => {
   const [users, setUsers] = useState([]);
@@ -54,7 +54,6 @@ const Cards = () => {
       setStudentForAction(openThreeDotsVertical);
       setOpen(true);
     } else if (requestForEditing === 'duplication') {
-      console.log('openThreeDotsVertical', openThreeDotsVertical);
     } else if (requestForEditing === 'delete') {
       setStudentForAction(openThreeDotsVertical);
       setOpenRemove(true);
@@ -84,7 +83,6 @@ const Cards = () => {
   const handleCloseRemoveConfirm = async () => {
     let deletedUser = await deleteUser(users[studentForAction].id);
 
-    console.log('deletedUser:', deletedUser);
     if (deletedUser.status === 200) {
       alert('המחיקה בוצעה בהצלחה!');
       const newUsers = [...users];
@@ -112,7 +110,6 @@ const Cards = () => {
       };
 
       let post_cognitive = await post_cognitive_abillities(cognitiveTemp);
-      console.log('post_cognitive', post_cognitive);
     });
   };
 
@@ -182,13 +179,19 @@ const Cards = () => {
   };
 
   const cacheRtl = createCache({
-    key: "muirtl",
-    stylisPlugins: [prefixer, rtlPlugin]
+    key: 'muirtl',
+    stylisPlugins: [prefixer, rtlPlugin],
   });
 
   return (
     <CacheProvider value={cacheRtl}>
-      <div style={{ direction: "rtl", marginTop: '14px', textAlign: '-webkit-center' }}>
+      <div
+        style={{
+          direction: 'rtl',
+          marginTop: '14px',
+          textAlign: '-webkit-center',
+        }}
+      >
         {/* <Button variant="outlined" onClick={handleJson}>
         הכנסת יכולות קוגנטיביות
       </Button> */}
@@ -196,7 +199,15 @@ const Cards = () => {
           הוסף עובד חדש
         </Button>
         <Dialog open={open} onClose={handleClose}>
-          {requestForEditing === 'edit' ? <DialogTitle style={{ direction: "rtl", marginTop: "10px" }} >עריכה עובד</DialogTitle> : <DialogTitle style={{ direction: "rtl", marginTop: "10px" }}  >עובד חדש</DialogTitle>}
+          {requestForEditing === 'edit' ? (
+            <DialogTitle style={{ direction: 'rtl', marginTop: '10px' }}>
+              עריכה עובד
+            </DialogTitle>
+          ) : (
+            <DialogTitle style={{ direction: 'rtl', marginTop: '10px' }}>
+              עובד חדש
+            </DialogTitle>
+          )}
 
           <DialogContent>
             <DialogContentText>
@@ -254,21 +265,23 @@ const Cards = () => {
               )}
               getOptionLabel={(option) => option.name || ''}
               // sx={{ width: 300 }}
-              renderInput={(params) => <TextField {...params} label='בחירת מדריך' />}
+              renderInput={(params) => (
+                <TextField {...params} label='בחירת מדריך' />
+              )}
               onChange={(event, value) => {
-                console.log('value', value);
                 setCoach(value);
                 setmanager(value);
               }}
               defaultValue={
                 openThreeDotsVertical !== -1 &&
-                  coaches.find(
-                    (coach) => coach.id === users[openThreeDotsVertical]?.coach?.id
-                  )
+                coaches.find(
+                  (coach) =>
+                    coach.id === users[openThreeDotsVertical]?.coach?.id
+                )
                   ? users[openThreeDotsVertical]?.coach
                   : manager !== null
-                    ? manager
-                    : null
+                  ? manager
+                  : null
               }
               value={
                 (openThreeDotsVertical !== -1 &&
@@ -279,7 +292,7 @@ const Cards = () => {
                 (manager !== null ? manager : null)
               }
             />
-            <div style={{ direction: "rtl", marginTop: "10px" }} >תמונה:</div>
+            <div style={{ direction: 'rtl', marginTop: '10px' }}>תמונה:</div>
 
             <input
               label='שם מלא'

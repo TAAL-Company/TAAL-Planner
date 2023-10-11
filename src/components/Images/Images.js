@@ -2,11 +2,6 @@ import './style.css';
 import Image from 'react-bootstrap/Image';
 // let image = "";
 const Images = ({ id, url, flag }) => {
-  console.log('IMAGES');
-  console.log('id image: ', id);
-  console.log('url image: ', url);
-  console.log('flag image: ', flag);
-
   return (
     <>
       {flag && id ? (

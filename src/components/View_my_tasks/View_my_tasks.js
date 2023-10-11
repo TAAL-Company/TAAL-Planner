@@ -20,9 +20,7 @@ function View_my_tasks({ prop }) {
         "Cache-Control": "no-cache",
       },
     }).then((res) => {
-      console.log("res: ", res.data);
       setDataTask((MyTasks = res.data.filter((item) => item.id === e.ID)));
-      console.log("MyTasks: ", MyTasks);
     });
   };
   return (

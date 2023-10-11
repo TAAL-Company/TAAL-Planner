@@ -20,9 +20,6 @@ function Modal({
   const handleTitleInput = (e) => {
     settitle((get_title = e.target.value));
   };
-  // console.log("usersArray:", usersArray)
-  // console.log("idsTasks:", idsTasks)
-  // console.log("helpProps:", helpProps)
 
   function Post_Route() {
     if (get_title === '') {
@@ -53,7 +50,6 @@ function Modal({
           return response.data.json();
         })
         .then(function (post) {
-          // console.log(post)
           window.location.replace('/planner');
         });
     }

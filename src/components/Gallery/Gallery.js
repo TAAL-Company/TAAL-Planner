@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from "react";
-import "../Gallery/Gallery.css";
-import { BlobServiceClient } from "@azure/storage-blob";
-import { getBlobsInContainer } from "../azureBlob";
-import uploadFileToBlob from "../azureBlob";
-import { isStorageConfigured } from "../azureBlob";
-import { FileIcon, defaultStyles } from "react-file-icon";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import ReactPlayer from "react-player";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
+import React, { useState, useEffect } from 'react';
+import '../Gallery/Gallery.css';
+import { BlobServiceClient } from '@azure/storage-blob';
+import { getBlobsInContainer } from '../azureBlob';
+import uploadFileToBlob from '../azureBlob';
+import { isStorageConfigured } from '../azureBlob';
+import { FileIcon, defaultStyles } from 'react-file-icon';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import ReactPlayer from 'react-player';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 
 const storageConfigured = isStorageConfigured();
 
 function Gallery(props) {
   const [images, setImages] = useState([]);
   const [offset, setOffset] = useState(0);
-  const [uploadMessage, setUploadMessage] = useState("");
+  const [uploadMessage, setUploadMessage] = useState('');
   const [sortedUrls, setSortedUrls] = useState([]);
-  const [selectedFolder, setSelectedFolder] = useState("general");
+  const [selectedFolder, setSelectedFolder] = useState('general');
   const [open, setOpen] = React.useState(false);
 
-  const [urlAudio, setUrlAudio] = useState("");
+  const [urlAudio, setUrlAudio] = useState('');
   // all blobs in container
   const [blobList, setBlobList] = useState([]);
 
@@ -36,7 +36,6 @@ function Gallery(props) {
   const [folderNames, setFolderNames] = useState([]);
 
   const handleOpen = (url) => {
-    console.log("url", url);
     setOpen(true);
     setUrlAudio(url);
   };
@@ -45,25 +44,19 @@ function Gallery(props) {
   };
 
   useEffect(async () => {
-    console.log("blobList", blobList);
-
     // prepare UI for results
     setBlobList(await getBlobsInContainer());
   }, []);
   useEffect(() => {
-    console.log("blobList", blobList);
-
-    // console.log("folderNames", folderNames);
-
     // const sortedUrls = {};
 
     for (const key in blobList) {
       const url = blobList[key];
-      const parts = url.split("/");
-      let folderName = "general";
+      const parts = url.split('/');
+      let folderName = 'general';
 
       for (let i = 0; i < parts.length; i++) {
-        if (parts[i] === "images") {
+        if (parts[i] === 'images') {
           if (i + 2 < parts.length) {
             folderName = parts[i + 1];
           }
@@ -78,7 +71,6 @@ function Gallery(props) {
       sortedUrls[folderName][key] = url;
     }
 
-    console.log("sortedUrls", sortedUrls);
     setFolderNames(Object.keys(sortedUrls));
   }, [blobList]);
 
@@ -106,20 +98,17 @@ function Gallery(props) {
   // display form
   const DisplayForm = () => (
     <div>
-      <input type="file" onChange={onFileChange} key={inputKey || ""} />
-      <button type="submit" onClick={onFileUpload}>
+      <input type='file' onChange={onFileChange} key={inputKey || ''} />
+      <button type='submit' onClick={onFileUpload}>
         Upload!
       </button>
     </div>
   );
 
   const getFileType = (url) => {
-    const parts = url.split(".");
+    const parts = url.split('.');
     const extension = parts[parts.length - 1];
     const fileType = extension.toLowerCase();
-
-    console.log("url: ", url);
-    console.log("fileType: ", fileType);
 
     return fileType;
   };
@@ -128,14 +117,14 @@ function Gallery(props) {
     // sortedUrls.length === 0 ? (
     //   <div></div>
     // ) : (
-    <div className="galleryImages">
+    <div className='galleryImages'>
       {sortedUrls[selectedFolder] ? (
         Object.keys(sortedUrls[selectedFolder]).map((key) => {
           return (
             <div key={key}>
               {/* {Path.basename(item)} */}
               <br />
-              {["aac", "mp3", "wav"].includes(
+              {['aac', 'mp3', 'wav'].includes(
                 getFileType(sortedUrls[selectedFolder][key])
               ) ? (
                 <a onClick={() => handleOpen(sortedUrls[selectedFolder][key])}>
@@ -149,7 +138,7 @@ function Gallery(props) {
                   key={key}
                   src={sortedUrls[selectedFolder][key]}
                   alt={`Image ${key}`}
-                  height="200"
+                  height='200'
                 />
               )}
             </div>
@@ -214,12 +203,9 @@ function Gallery(props) {
   //     });
   // const data = await response.json();
   // if (response.ok) {
-  //   console.log("yyy data", data);
-  //   console.log("yyy images", images);
   //   setImages((prevImages) => [data, ...prevImages]);
   //   setUploadMessage("Image uploaded successfully!");
   // } else {
-  //   console.log(data);
   // }
 
   // const containerName = "files"; // The name of your container in Azure Blob Storage
@@ -230,19 +216,18 @@ function Gallery(props) {
   // const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
   //     await blockBlobClient.uploadData(file);
-  //     console.log("Image uploaded successfully.");
   //   };
   function handleFolderClick(folderName) {
     setSelectedFolder(folderName);
   }
   const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
     width: 400,
-    bgcolor: "background.paper",
-    border: "2px solid #000",
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
     boxShadow: 24,
     p: 4,
   };
@@ -254,7 +239,7 @@ function Gallery(props) {
           <button
             key={folderName}
             onClick={() => handleFolderClick(folderName)}
-            style={{ marginRight: "10px" }}
+            style={{ marginRight: '10px' }}
           >
             {folderName}
           </button>
@@ -291,15 +276,15 @@ function Gallery(props) {
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        aria-labelledby='modal-modal-title'
+        aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
           <div>
             <ReactPlayer
               url={urlAudio}
-              width="95%"
-              height="50px"
+              width='95%'
+              height='50px'
               playing={false}
               controls={true}
             />

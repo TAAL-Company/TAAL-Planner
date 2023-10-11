@@ -24,9 +24,6 @@ let myStation = { name: '', id: '', flag: true, data: [] };
 let myCategory = 'stationCategory';
 //-----------------------
 const Stations = (props) => {
-  console.log('yyy props.allStations ', props.allStations);
-  console.log('props.stationArray: ', props.stationArray);
-
   const [, setStateTask] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -46,17 +43,13 @@ const Stations = (props) => {
   const [dpcolor, setdpcolor] = useState('');
 
   useEffect(() => {
-    console.log('stations requestForEditing: ', requestForEditing);
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
       setStationForEdit(openThreeDotsVertical);
-      console.log('openThreeDotsVertical', openThreeDotsVertical);
       setModalOpen(true);
     } else if (requestForEditing === 'duplication') {
-      console.log('openThreeDotsVertical', openThreeDotsVertical);
     } else if (requestForEditing === 'delete') {
       setStationForDelete(openThreeDotsVertical);
       setOpenRemove(true);
-      //Modal_Delete
     }
   }, [requestForEditing]);
 
@@ -66,12 +59,10 @@ const Stations = (props) => {
     setRequestForEditing('');
   };
   const handleCloseRemoveConfirm = async () => {
-    console.log('DELETE:', props.stationArray[stationForDelete].id);
     let deleteStationTemp = await deleteStation(
       props.stationArray[stationForDelete].id
     );
 
-    console.log('deleteStation:', deleteStationTemp);
     if (deleteStationTemp.status === 200) {
       alert('המחיקה בוצעה בהצלחה!');
       const newStations = [...props.stationArray];
@@ -110,7 +101,6 @@ const Stations = (props) => {
     setFlagFirstTime((flagFirstTime = false));
     //convert input text to lower case
     // setFilteredData(filteredData = [])
-    // console.log("filtered Data 2:", filteredData)
     setFilteredData(
       (filteredData = props.stationArray.filter((el) => {
         if (inputText === '') {
@@ -125,9 +115,6 @@ const Stations = (props) => {
   };
 
   const Display_The_Tasks = (e, n) => {
-    console.log('eeeeeeeeeeeeeeeeeee: ', e);
-    console.log('eeeeeeeeeeeeeeeeeee myStation.id: ', myStation.id);
-
     // if (myStation.id === e) {
     //   setMyStation((myStation.flag = false));
     // } else {
@@ -167,10 +154,6 @@ const Stations = (props) => {
     );
     setStateTask({ data: props.tasksOfChosenStation }); //Updating the state
   };
-
-  useEffect(() => {
-    console.log('onlyAllStation stations: ', props.onlyAllStation);
-  }, [props.onlyAllStation]);
 
   //----------------------------------------------------------
   return (
@@ -241,8 +224,6 @@ const Stations = (props) => {
                         >
                           {filteredData.map(({ id, title, color }, index) => {
                             let ID = '' + id;
-                            console.log('id: ', typeof ID);
-
                             return (
                               <Draggable
                                 key={ID}

@@ -36,7 +36,6 @@ function Modal({
   requestForEditing,
   newRoute,
 }) {
-  console.log('flagTest:', flagTest);
   const [obj, set_obj] = useState({
     name: '',
     studentIds: [],
@@ -69,8 +68,6 @@ function Modal({
       setLoading(false);
     };
     fetchData();
-
-    console.log('Student', student);
   }, []);
 
   function Post_Route() {
@@ -96,14 +93,9 @@ function Modal({
         taskIds: taskIdList,
         siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
       };
-      console.log('obj:', newRouteObj);
       // set_obj((obj.mySite = JSON.parse(localStorage.getItem("MySite"))));
-      // console.log("obj.mySite:", obj.mySite.id);
-
-      console.log('tasksForNewRoute : ', tasksForNewRoute);
 
       updateRoute(routeUUID, newRouteObj).then((data) => {
-        console.log('obj', data);
         setDone(true);
         setFlagClickOK((flagClickOK = false));
         // window.location.replace("/forms");
@@ -114,14 +106,11 @@ function Modal({
   const saveCheckbox = (val) => {
     setMyStudents(myStudents.push(val));
     if (myStudents.length > 1) sortById();
-    console.log('myStudents', myStudents);
-    // console.log("myStudents:", myStudents);
   };
   const sortById = () => {
     for (let i = 0; i < myStudents.length; i++) {
       let min = myStudents[i];
       for (let j = i; j < myStudents.length; j++) {
-        // console.log(j, ",", myStudents[j].id)
         if (myStudents[j].id < min.id) {
           setMyStudents((myStudents[i] = myStudents[j]));
           setMyStudents((myStudents[j] = min));
@@ -131,7 +120,6 @@ function Modal({
     }
   };
   const resultMyArrayStudent = () => {
-    console.log('myStudents:', myStudents);
     if (myStudents.length > 1)
       for (let i = 0; i < myStudents.length; i++) {
         let index = i;
@@ -145,8 +133,6 @@ function Modal({
         if (count % 2 !== 0) {
           setMyStudentsChoice(myStudentsChoice.push(myStudents[index]));
         }
-
-        // console.log("myStudentsChoice:", myStudentsChoice)
       }
     setMyStudentsChoice(myStudentsChoice.push(myStudents[0]));
   };
@@ -160,7 +146,6 @@ function Modal({
   const handleSubmitRouteTitle = (event) => {
     event.preventDefault();
 
-    console.log('routeTitle', [JSON.parse(localStorage.getItem('MySite')).id]);
     setNewTitleForRoute(routeTitle);
 
     const routeData = {
@@ -168,10 +153,8 @@ function Modal({
       siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
     };
 
-    console.log('routeData', routeData);
     if (requestForEditing == 'edit' || requestForEditing == 'details') {
       updateRoute(routeUUID, routeData).then((data) => {
-        console.log('data: ', data);
         setNewRoute(data);
         // setNewTitleForRoute(data);
         setRouteTitle('');
@@ -180,7 +163,6 @@ function Modal({
       });
     } else {
       insertRoute(routeData).then((data) => {
-        console.log('data: ', data);
         setNewRoute(data);
         setNewTitleForRoute(data);
         setRouteTitle('');
@@ -191,8 +173,6 @@ function Modal({
   };
 
   // useEffect(() => {
-  //   console.log("newRoute: ", newRoute);
-  //   console.log("!! id", JSON.parse(localStorage.getItem("MySite")).id);
   // }, [newRoute]);
 
   return (

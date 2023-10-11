@@ -21,7 +21,7 @@ function Tag({
   borderLeft,
   flagPhone,
   // idImg,
-  dataImg,
+  dataMedia,
   data,
   modalFlagTablet,
   dragFromCover,
@@ -83,7 +83,7 @@ function Tag({
 
   const listen = () => {
     setIdListen(id);
-    setDataListen(dataImg);
+    setDataListen(dataMedia);
     console.log('dataListen:', dataListen);
   };
   const listenMyStation = () => {
@@ -162,13 +162,13 @@ function Tag({
           <BsThreeDotsVertical className='threeDotsVerticalTasks' />
           <div className='borderTask'>
             <div className='nameOfTaskPhone'>
-              <Images id={id} url={dataImg || TaskImage} />
+              <Images id={id} url={dataMedia.picture_url || TaskImage} />
               {title}
               <div className='phoneTagDesc'>{desc}</div>
             </div>
           </div>
           <button className='listenIcon' onClick={() => listen()}></button>
-          <Audios id={idListen} data={dataListen} />
+          <Audios id={idListen} data={dataMedia.audio_url} />
           <div className='kavPhone'></div>
         </>
       ) : (
@@ -257,7 +257,7 @@ function Tag({
       {flagBoard && modalFlagTablet && !flagPhone ? (
         <>
           <div className='ItemStyle'>
-            <Images id={id} url={dataImg} flag={true} />
+            <Images id={id} url={dataMedia.picture_url} flag={true} />
           </div>
         </>
       ) : (

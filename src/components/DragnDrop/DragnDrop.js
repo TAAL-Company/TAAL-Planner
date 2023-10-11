@@ -61,7 +61,7 @@ function DragnDrop(props) {
   const [, setModalFlagTablet] = useState(false);
 
   // const [, setHelpFlag] = useState(false);
-
+  const [boardName, setBoardName] = useState('');
   const [, setCount] = useState(0);
   const [get_Name] = useState(null); // for TextView
   const [flagTree, setFlagTree] = useState(false);
@@ -105,7 +105,6 @@ function DragnDrop(props) {
     }
 
     if (taskForEdit !== '') {
-      console.log('task for edit', taskForEdit);
       editTask();
     }
   }, [props.boardArrayDND, taskForEdit]);
@@ -124,18 +123,71 @@ function DragnDrop(props) {
     return ''; // Return a default value if no match is found.
   };
 
+  const updateTask = (taskForEdit, tasks) => {
+    return tasks.map((task) =>
+      task.id === taskForEdit.id ? taskForEdit : task
+    );
+  };
+
+  const updateTaskDetails = (updatedTasks, board) => {
+    return board
+      .filter((value) =>
+        updatedTasks.some((updatedTask) => updatedTask.id === value.id)
+      )
+      .map((value) => {
+        const matchingUpdatedTask = updatedTasks.find(
+          (updatedTask) => updatedTask.id === value.id
+        );
+        if (matchingUpdatedTask) {
+          value.title = matchingUpdatedTask.title;
+          value.subtitle = matchingUpdatedTask.subtitle;
+          value.estimatedTimeSeconds = matchingUpdatedTask.estimatedTimeSeconds;
+          value.picture_url = matchingUpdatedTask.picture_url;
+          value.audio_url = matchingUpdatedTask.audio_url;
+        }
+        return value;
+      });
+  };
+
   const editTask = () => {
-    const updatedTasks = props.allTasksOfTheSite.map((task) => {
-      if (task.id === taskForEdit.id) {
-        return taskForEdit;
-      }
-      return task;
-    });
-
-    console.log('task: ', updatedTasks);
-
+    const updatedTasks = updateTask(taskForEdit, props.allTasksOfTheSite);
     props.setAllTasksOfTheSite(updatedTasks);
-    // setTaskForEdit("");
+
+    const updatedTasksBoardArrayDND = updateTask(taskForEdit, boardArrayDND);
+    const newTasksBoardArrayDND = updateTaskDetails(
+      updatedTasksBoardArrayDND,
+      board
+    );
+    setBoardArrayDND(updatedTasksBoardArrayDND);
+
+    const updatedTasksOfChosenStation = updateTask(
+      taskForEdit,
+      props.tasksOfChosenStation
+    );
+    const newBoard = updateTaskDetails(updatedTasksOfChosenStation, board);
+    props.setTasksOfChosenStation(updatedTasksOfChosenStation);
+
+    if (taskForEdit !== '') {
+      let updatedTask;
+      let existingTaskIndex;
+
+      if (boardName === 'routes') {
+        updatedTask = newTasksBoardArrayDND.find(
+          (task) => task.id === taskForEdit.id
+        );
+      } else if (boardName === 'tasks') {
+        updatedTask = newBoard.find((task) => task.id === taskForEdit.id);
+      }
+
+      if (updatedTask) {
+        existingTaskIndex = board.findIndex(
+          (task) => task.id === updatedTask?.id
+        );
+        if (existingTaskIndex !== -1) {
+          board[existingTaskIndex] = updatedTask;
+        }
+      }
+    }
   };
 
   const handleCloseRemove = () => {
@@ -214,6 +266,7 @@ function DragnDrop(props) {
       ) {
         props.tasksOfRoutes.tasks.forEach(async (element) => {
           await addImageToBoard(element.taskId, 'routes');
+          setBoardName('routes');
           props.setPercentProgressBar(
             (percentProgressBar) => percentProgressBar + countTemp
           );
@@ -257,24 +310,26 @@ function DragnDrop(props) {
   // Set the nameStation value outside the map function
   let nameStation = props.myStation.name;
 
-  const mapTask = (element) => {
+  const mapTask = (task) => {
     return {
-      id: element.id,
-      title: element.title.replace('&#8211;', '-').replace('&#8217;', "' "),
-      desc: element.subtitle,
+      id: task.id,
+      title: task.title.replace('&#8211;', '-').replace('&#8217;', "' "),
+      subtitle: task.subtitle,
+      picture_url: task.picture_url,
+      audio_url: task.audio_url,
       mySite: props.mySite,
       myStation: props.myStation.name,
+      theStation: props.myStation,
       data: props.myStation.data,
       nameStation: nameStation,
-      width: width,
-      borderLeft: borderLeft,
-      height: height,
-      kavTaskTopMarginTop: kavTaskTopMarginTop,
-      bottom: bottom,
-      kavTopWidth: kavTopWidth,
-      newKavTaskTop: newkavTaskTop,
-      dataImg: element.picture_url,
       color: props.stationColor,
+      newKavTaskTop: newkavTaskTop,
+      width,
+      height,
+      bottom,
+      borderLeft,
+      kavTaskTopMarginTop,
+      kavTopWidth,
     };
   };
   dndArray = props.tasksOfChosenStation.map(mapTask);
@@ -379,8 +434,10 @@ function DragnDrop(props) {
         props.dropToBoard.destination !== undefined &&
         props.dropToBoard.destination !== null &&
         props.dropToBoard.destination.droppableId === 'board-droppable'
-      )
+      ) {
         addImageToBoard(props.dropToBoard.draggableId, 'tasks');
+        setBoardName('tasks');
+      }
       // props.setDropToBoard({});
     }
   }, [props.dropToBoard]);
@@ -623,11 +680,14 @@ function DragnDrop(props) {
                               taskButtonColor={tag.color}
                               modalFlagTablet={modalFlagTablet}
                               title={tag.title}
-                              desc={tag.desc}
+                              desc={tag.subtitle}
                               id={tag.id}
                               data={tag.data}
                               // idImg={tag.id}
-                              dataImg={tag.dataImg}
+                              dataMedia={{
+                                picture_url: tag.picture_url,
+                                audio_url: tag.audio_url,
+                              }}
                               key={keyCount}
                               flagBoard={true}
                               myLastStation={props.myStation.name}

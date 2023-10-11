@@ -54,6 +54,8 @@ const Cards = () => {
       setStudentForAction(openThreeDotsVertical);
       setOpen(true);
     } else if (requestForEditing === 'duplication') {
+      setStudentForAction(openThreeDotsVertical);
+      duplicateUser();
     } else if (requestForEditing === 'delete') {
       setStudentForAction(openThreeDotsVertical);
       setOpenRemove(true);
@@ -113,6 +115,49 @@ const Cards = () => {
     });
   };
 
+  const duplicateUser = async () => {
+    console.log('' + JSON.stringify(users[openThreeDotsVertical]));
+    const userToDuplicate = {
+      email: users[openThreeDotsVertical].email,
+      user_name: users[openThreeDotsVertical].user_name,
+      name: users[openThreeDotsVertical].name,
+      cognitiveProfileId:
+        users[openThreeDotsVertical].cognitiveProfile?.id || '',
+      siteIds:
+        users[openThreeDotsVertical].sites.map((siteId) => ({
+          id: siteId?.id,
+        })) || [],
+      routeIds:
+        users[openThreeDotsVertical].routes.map((routeId) => ({
+          id: routeId?.id,
+        })) || [],
+      coachId: users[openThreeDotsVertical].coach?.id || '',
+      taskIds:
+        users[openThreeDotsVertical].tasks.map((taskId) => ({
+          id: taskId?.id,
+        })) || [],
+      picture_url: users[openThreeDotsVertical].picture_url || '',
+    };
+    try {
+      if (requestForEditing === 'duplication') {
+        console.log('userToDuplicate : ' + JSON.stringify(userToDuplicate));
+        insertUser(userToDuplicate).then((data) => {
+          data.picture_url = userToDuplicate.picture_url;
+          updateUser(data.id, data).then((updatedUser) => {
+            setUsers((prev) => [updatedUser.data, ...prev]);
+            setupdateAdd(true);
+          });
+        });
+        setupdateAdd(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing('');
+  };
+
   const handleConfirm = async () => {
     const email = document.getElementById('email').value;
     const fullName = document.getElementById('name').value;
@@ -163,6 +208,14 @@ const Cards = () => {
       handleClose(); // Close the dialog after the form is submitted}
     }
   };
+
+  function extractFilenameFromURL(url) {
+    const parts = url.split('?');
+    const path = parts[0]; // Get the part before the question mark
+    const pathParts = path.split('/');
+    const filename = decodeURIComponent(pathParts[pathParts.length - 1]);
+    return filename;
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -293,14 +346,42 @@ const Cards = () => {
               }
             />
             <div style={{ direction: 'rtl', marginTop: '10px' }}>תמונה:</div>
-
-            <input
-              label='שם מלא'
-              accept='image/*'
-              id='image-input'
-              type='file'
-              onChange={(e) => setPicture(e.target.files[0])}
-            />
+            <div>
+              <input
+                label='שם מלא'
+                accept='image/*'
+                id='image-input'
+                type='file'
+                onChange={(e) => setPicture(e.target.files[0])}
+              />
+              {users[openThreeDotsVertical]?.picture_url ? (
+                <div className='selectedFileContainer'>
+                  <div className='selectedFileTitle'>:תמונה שנבחרה</div>
+                  <div style={{ marginBottom: '1rem' }}>
+                    {typeof users[openThreeDotsVertical]?.picture_url ===
+                    'string'
+                      ? extractFilenameFromURL(
+                          users[openThreeDotsVertical]?.picture_url
+                        )
+                      : users[openThreeDotsVertical]?.name}
+                  </div>
+                  <div className='thumbnail'>
+                    {typeof users[openThreeDotsVertical]?.picture_url ===
+                      'string' && (
+                      <img
+                        src={users[openThreeDotsVertical]?.picture_url}
+                        className='thumbnailImg'
+                        alt=''
+                      />
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div style={{ marginBottom: '1rem' }}>
+                  תמונה שנבחרה: לא נמצא קובץ תמונה
+                </div>
+              )}
+            </div>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>ביטול</Button>

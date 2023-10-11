@@ -4,8 +4,8 @@ import logo from '../../Pictures/loginLogoTaal.svg';
 import userLogo from '../../Pictures/user-logo.png';
 import lockLogo from '../../Pictures/lock-logo.png';
 import './styleLogin.css';
-import background from '../../Pictures/backgroundLogin.png';
-import {} from '../../api/api';
+import { getingData_Tasks } from '../../api/api';
+import taskAbility from '../../components/Form/taskAbility.json';
 
 let flagLoading = false;
 
@@ -29,27 +29,6 @@ function Login(props) {
     setAPIDetailsLogin({ ...loginDetails });
     setFlagLoading((flagLoading = true));
   }
-
-  async function getall() {
-    //const IdToDelete = await getingDataRoutes();
-    //let IdToDelete = []
-    //IdToDelete.map(async (user) => {
-    // let response = await deleteSites(user.id)
-    //})
-    // IdToDelete.map(async (id) => {
-    //   //let response = await deleteSites(id.id)
-    // })
-    //   const usersData = await getingData_Users();
-    //   let usersDatawithTW = usersData.filter(item => item.email.includes('taalworker+') && item.cognitiveProfile != null);
-    //   usersDatawithTW.map(async (user) => {
-    //     const number = user.email.split('+').pop().split('@')[0];
-    //     user.user_name = "TW" + number
-    //     //await updateUser(user.id,user)
-    //   })
-    //   var count = Object.keys(usersDatawithTW).length;
-  }
-
-  getall();
 
   return (
     <>

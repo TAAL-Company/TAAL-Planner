@@ -439,7 +439,7 @@ export const insertCoach = async (user) => {
       body: JSON.stringify({
         email: user.email,
         name: user.name,
-        user_name: user.user_name,
+        // user_name: user.user_name,
         phone: user.phone,
         picture_url: user.picture_url,
       }),

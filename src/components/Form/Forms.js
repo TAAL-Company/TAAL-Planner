@@ -372,9 +372,11 @@ function Forms() {
       const updatedRowsFlagsHE = [];
 
       routesOfFlags.tasks.forEach((task) => {
-        const evaluation = allFlags.find(
-          (flag) => flag.taskId === task.taskId && flag.studentId === worker.id
-        );
+        const evaluation = //allFlags
+          evaluationevents.find(
+            (flag) =>
+              flag.taskId === task.taskId && flag.studentId === worker.id
+          );
 
         if (!evaluation) return; // Skip if evaluation is undefined
 

@@ -26,12 +26,7 @@ const Tasks = (props) => {
     if (props.mySite.id !== '') {
       setSiteSelected(true);
     }
-  }, [
-    props.mySite.id,
-    filteredDataTasks,
-    props.chosenStation,
-    props.tasksOfChosenStation,
-  ]);
+  }, [props.mySite.id, props.tasksOfChosenStation]);
 
   const handleCloseRemove = () => {
     setOpenThreeDotsVertical(-1);

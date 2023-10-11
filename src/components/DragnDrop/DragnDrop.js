@@ -1,57 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import Tag from '../Tag/Tag.js';
-// import { useDrop } from "react-dnd";
-import './style.css';
 import ModalTasks from '../Modal/Modal_Tasks';
 import Modal from '../Modal/Modal';
-import { AiOutlinePlus } from 'react-icons/ai';
-import { CgSearch } from 'react-icons/cg';
-import { AiFillCheckCircle } from 'react-icons/ai';
 import Phone from '../Phone/Phone';
 import Tablet from '../Tablet/Tablet';
 import ReorderBoard from '../ReorderBoard/ReorderBoard';
-import Dot from '../Dot/Dot';
-import Clock from '../Clock/Clock';
-import textArea from '../../Pictures/textArea.svg';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import ModalDelete from '../Modal/Modal_Delete';
 import { deleteTask } from '../../api/api.js';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { Droppable } from 'react-beautiful-dnd';
+import './style.css';
 
 let Route = [];
 let dndArray = [];
 let saveProps = [];
-let thisId = '';
 let thisIdArray = [];
-let myTask = {};
 let helpFlag = false;
 let count = 0;
 let width = '-13px';
 let height = '70px';
-let nameStation = '14px';
 let bottom = '-27px';
 let kavTopWidth = '25px';
-// let newkavTaskTop = '100px';
 let saveTag = {};
-let count1 = 0;
 let kavTaskTopMarginTop = '-7px';
 let borderLeft = '2px solid #c2bfbf';
 let flagPhone = false;
-// let flagTablet = false;
 let flagPhoneOne = false;
 let flagStress = false;
 let modalFlagTablet = false;
 let myStation = '';
-let currentIndex = 0;
 let countTemp = 0;
 //-------------------------
 function DragnDrop(props) {
   const [board, setBoard] = useState([]);
-  const [reorderBoardFlag, setReorderBoardFlag] = useState(true);
+  const [, setReorderBoardFlag] = useState(true);
   const [openRemove, setOpenRemove] = useState(false);
   const [, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [modalOpenNoSiteSelected, setModalOpenNoSiteSelected] = useState(false);
   const [modalOpenAddRoute, setModalOpenAddRoute] = useState(false);
   const [, setModalFlagTablet] = useState(false);
   const [boardName, setBoardName] = useState('');
@@ -76,13 +61,9 @@ function DragnDrop(props) {
   const [requestForEditing, setRequestForEditing] = useState('');
   const [openThreeDotsVerticalBoard, setOpenThreeDotsVerticalBoard] =
     useState(-1);
-  const [requestForEditingBoard, setRequestForEditingBoard] = useState('');
+  const [, setRequestForEditingBoard] = useState('');
   const [taskUuidForEdit, setTaskUuidForEdit] = useState('');
   const [taskForEdit, setTaskForEdit] = useState('');
-
-  useEffect(() => {
-    console.log('propsDataTask:', props.tasksOfChosenStation);
-  }, [props.tasksOfChosenStation]);
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -100,6 +81,7 @@ function DragnDrop(props) {
     if (taskForEdit !== '') {
       editTask();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.boardArrayDND, taskForEdit]);
 
   const getTheStation = () => {
@@ -368,8 +350,8 @@ function DragnDrop(props) {
 
   const getValueForProperty = (property, fallbackValue) => {
     if (openThreeDotsVerticalBoard !== -1) {
-      if (props.tasksOfChosenStation.length > 0) {
-        const task = props.tasksOfChosenStation.find(
+      if (board.length > 0) {
+        const task = board.find(
           (task) => task.id === openThreeDotsVerticalBoard
         );
         if (task && task[property] !== undefined) {

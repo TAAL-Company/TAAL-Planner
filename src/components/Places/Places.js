@@ -541,9 +541,9 @@ const Places = (props) => {
 
   const Display_The_Stations = async (selectedValue) => {
     setThisIdTask((thisIdTask = selectedValue.id));
-    if (stationArray.length > 0) {
-      setStationArray([]);
-    }
+
+    if (stationArray.length > 0) setStationArray([]);
+
     mySite.name = selectedValue.name;
     mySite.id = selectedValue.id;
 
@@ -622,7 +622,6 @@ const Places = (props) => {
 
   useEffect(() => {
     if (allTasksOfTheSite.length > 0) {
-      console.log('allTasksOfTheSite yarden', allTasksOfTheSite);
       let tasksWithoutStation = allTasksOfTheSite.filter((task) => {
         if (task.stations.length === 0) return task;
       });
@@ -645,10 +644,6 @@ const Places = (props) => {
       }
 
       if (tasksLength < allTasksOfTheSite.length) {
-        console.log(
-          'tasksLength yardeb',
-          allTasksOfTheSite[allTasksOfTheSite.length - 1]
-        );
         let newTask = allTasksOfTheSite[allTasksOfTheSite.length - 1];
         let indexStation = stationArray.findIndex(
           (station) => station.id === chosenStation.id
@@ -667,24 +662,25 @@ const Places = (props) => {
 
               if (existingTaskIndex === -1) {
                 station.tasks.push({
-                  audio_url: newTask.audio_url,
-                  estimatedTimeSeconds: newTask.estimatedTimeSeconds,
                   id: newTask.id,
+                  title: newTask.title,
+                  subtitle: newTask.subtitle,
+                  estimatedTimeSeconds: newTask.estimatedTimeSeconds,
+                  picture_url: newTask.picture_url,
+                  audio_url: newTask.audio_url,
                   multi_language_description:
                     newTask.multi_language_description,
-                  picture_url: newTask.picture_url,
-                  subtitle: newTask.subtitle,
-                  title: newTask.title,
                 });
               } else {
                 station.tasks[existingTaskIndex] = {
-                  audio_url: newTask.audio_url,
+                  id: newTask.id,
+                  title: newTask.title,
+                  subtitle: newTask.subtitle,
                   estimatedTimeSeconds: newTask.estimatedTimeSeconds,
+                  picture_url: newTask.picture_url,
+                  audio_url: newTask.audio_url,
                   multi_language_description:
                     newTask.multi_language_description,
-                  picture_url: newTask.picture_url,
-                  subtitle: newTask.subtitle,
-                  title: newTask.title,
                 };
               }
               stationArray[indexStation].tasks = station.tasks;
@@ -987,6 +983,7 @@ const Places = (props) => {
             allTasks={allTasks}
             setDropToBoard={setDropToBoard}
             dropToBoard={dropToBoard}
+            allTasksOfTheSite={allTasksOfTheSite}
             setAllTasksOfTheSite={setAllTasksOfTheSite}
             setTasksOfChosenStation={setTasksOfChosenStation}
             tasksOfChosenStation={tasksOfChosenStation}

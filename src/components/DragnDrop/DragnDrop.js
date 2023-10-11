@@ -770,7 +770,7 @@ function DragnDrop(props) {
           subtitle={getValueForProperty('subtitle', '')}
           stationOfTask={
             openThreeDotsVerticalBoard !== -1
-              ? props.allTasks.find(
+              ? props.allTasksOfTheSite.find(
                   (task) => task.id === openThreeDotsVerticalBoard
                 ).stations
               : []

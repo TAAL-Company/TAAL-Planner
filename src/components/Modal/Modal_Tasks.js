@@ -142,15 +142,13 @@ function Modal_Tasks(props) {
         ).color;
 
         post.color = color;
+        props.setTasksOfChosenStation((tasks) => [...tasks, post]);
         props.setAllTasksOfTheSite((prev) => [...prev, post]);
 
         setDone(true);
-        console.log('post Modale Tasks:', post);
 
         setFlagClickOK(false);
         props.setModalOpen(false);
-
-        console.log('insertTask: ', post);
       } catch (error) {
         console.error(error);
       }

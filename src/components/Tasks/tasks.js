@@ -21,10 +21,6 @@ const Tasks = (props) => {
   const [siteSelected, setSiteSelected] = useState(false);
 
   useEffect(() => {
-    console.log('tasks: ', props.tasksOfChosenStation);
-    console.log('tasks: chosenStation ', props.chosenStation);
-    console.log('tasks: filteredDataTasks ', filteredDataTasks);
-
     setFilteredDataTasks(props.tasksOfChosenStation);
 
     if (props.mySite.id !== '') {
@@ -44,13 +40,7 @@ const Tasks = (props) => {
   };
 
   const handleCloseRemoveConfirm = async () => {
-    console.log('DELETE:'); //, stationArray[openThreeDotsVertical].id);
-
     let deleteTaskTemp = await deleteTask(taskForDelete);
-
-    console.log('deleteTaskTemp:', deleteTaskTemp);
-    console.log(' props.tasksOfChosenStation:', props.tasksOfChosenStation);
-    console.log(' props.tasksOfChosenStation:', props.tasksOfChosenStation);
 
     if (deleteTaskTemp !== undefined) {
       alert('המחיקה בוצעה בהצלחה!');
@@ -61,15 +51,10 @@ const Tasks = (props) => {
       newTasks.splice(indexaTask, 1); // remove one element at index x
       props.setTasksOfChosenStation(newTasks);
 
-      console.log('props.stationArray 123', props.stationArray);
-
       let indexStation = props.stationArray.findIndex(
         (station) => station.id === props.chosenStation.id
       );
-      console.log('indexStation 123', indexStation);
-
       props.stationArray[indexStation].tasks = newTasks;
-      console.log('newTasks 123', newTasks);
     }
 
     setOpenRemove(false);
@@ -347,9 +332,9 @@ const Tasks = (props) => {
           }
           stationOfTask={
             openThreeDotsVertical !== -1
-              ? props.allTasks?.find(
+              ? props.allTasksOfTheSite.find(
                   (task) => task.id === openThreeDotsVertical
-                )?.stations
+                ).stations
               : []
           }
         />

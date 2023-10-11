@@ -84,11 +84,6 @@ const Stations = (props) => {
     setRequestForEditing('');
   };
 
-  useEffect(() => {
-    console.log('props.stationArray', props.stationArray);
-    // updateStationArray(props.stationArray);
-  }, [props.stationArray]);
-
   //changing the order of the stations
   function handleOnDragEnd(result) {
     if (!result.destination) return;
@@ -127,24 +122,7 @@ const Stations = (props) => {
         }
       }))
     );
-    // console.log("filtered Data 3:", filteredData)
   };
-  useEffect(() => {
-    console.log('inputText: ', inputText);
-  }, [inputText]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     setLoading(true);
-  //     try {
-  //       allTasks = await getingDataTasks();
-  //     } catch (error) {
-  //       console.error(error.message);
-  //     }
-  //     setLoading(false);
-  //   };
-  //   fetchData();
-  // }, []);
 
   const Display_The_Tasks = (e, n) => {
     console.log('eeeeeeeeeeeeeeeeeee: ', e);

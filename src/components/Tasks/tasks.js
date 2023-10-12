@@ -15,7 +15,7 @@ const Tasks = (props) => {
   const [taskForEdit, setTaskForEdit] = useState('');
   const [modalOpen, setModalOpen] = useState(false);
   const [openRemove, setOpenRemove] = useState(false);
-  const [modalOpenNoSiteSelected, setModalOpenNoSiteSelected] = useState(false);
+  const [, setModalOpenNoSiteSelected] = useState(false);
   const [filteredDataTasks, setFilteredDataTasks] = useState([]);
   const [taskForDelete, setTaskForDelete] = useState('');
   const [siteSelected, setSiteSelected] = useState(false);
@@ -26,7 +26,16 @@ const Tasks = (props) => {
     if (props.mySite.id !== '') {
       setSiteSelected(true);
     }
-  }, [props.mySite.id, props.tasksOfChosenStation]);
+
+    if (taskForEdit !== '') {
+      const newTasks = [...props.boardArrayDND];
+      const taskIndex = newTasks.findIndex((t) => t.id === taskForEdit.id);
+      newTasks[taskIndex] = taskForEdit;
+      (() => {
+        props.setBoardArrayDND(newTasks);
+      })();
+    }
+  }, [taskForEdit, props.mySite.id, props.tasksOfChosenStation]);
 
   const handleCloseRemove = () => {
     setOpenThreeDotsVertical(-1);
@@ -133,11 +142,6 @@ const Tasks = (props) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [requestForEditing]);
-
-  const clickOnhreeDotsVerticaIcont = (value) => {
-    if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
-    else setOpenThreeDotsVertical(value);
-  };
 
   // handle search word in "searce Task"
   const searchTask = (e) => {

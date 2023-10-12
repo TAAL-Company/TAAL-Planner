@@ -109,9 +109,11 @@ function Modal_Tasks(props) {
           props.allStations[indexStation].tasks = newTasks;
         }
 
-        props.setTaskForEdit(update.data);
+        (() => {
+          props.setTaskForEdit(update.data);
+          props.setModalOpen(false);
+        })();
         setFlagClickOK(false);
-        props.setModalOpen(false);
       }
     } catch (error) {
       console.error(error);

@@ -942,6 +942,7 @@ const Places = (props) => {
           <Tasks
             allTasks={allTasks}
             setDropToBoard={setDropToBoard}
+            setBoardArrayDND={setBoardArrayDND}
             dropToBoard={dropToBoard}
             allTasksOfTheSite={allTasksOfTheSite}
             setAllTasksOfTheSite={setAllTasksOfTheSite}

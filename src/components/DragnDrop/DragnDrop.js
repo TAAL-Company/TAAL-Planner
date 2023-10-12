@@ -59,11 +59,11 @@ function DragnDrop(props) {
   const [boardArrayDND, setBoardArrayDND] = useState([]);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState('');
-  const [openThreeDotsVerticalBoard, setOpenThreeDotsVerticalBoard] =
-    useState(-1);
   const [, setRequestForEditingBoard] = useState('');
   const [taskUuidForEdit, setTaskUuidForEdit] = useState('');
   const [taskForEdit, setTaskForEdit] = useState('');
+  const [openThreeDotsVerticalBoard, setOpenThreeDotsVerticalBoard] =
+    useState(-1);
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -261,6 +261,7 @@ function DragnDrop(props) {
       id: task.id,
       title: task.title.replace('&#8211;', '-').replace('&#8217;', "' "),
       subtitle: task.subtitle,
+      estimatedTimeSeconds: task.estimatedTimeSeconds,
       picture_url: task.picture_url,
       audio_url: task.audio_url,
       mySite: props.mySite,
@@ -354,17 +355,7 @@ function DragnDrop(props) {
           return task[property];
         }
       }
-
-      if (boardArrayDND.length > 0) {
-        const dnd = boardArrayDND.find(
-          (dnd) => dnd.id === openThreeDotsVerticalBoard
-        );
-        if (dnd && dnd[property] !== undefined) {
-          return dnd[property];
-        }
-      }
     }
-
     return fallbackValue;
   };
 

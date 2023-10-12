@@ -23,7 +23,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { CgSearch } from 'react-icons/cg';
 import textArea from '../../Pictures/textArea.svg';
 import ModalRouteChosen from '../Modal/Modal_route_chosen';
-import ModalSiteChosen from '../Modal/Modal_Site_Chosen';
+import ModalSiteChosen from '../Modal/Modal_site_chosen';
 import { DragDropContext } from 'react-beautiful-dnd';
 import stopIcon from '../../Pictures/stopIcon.svg';
 import '../Modal/Modal.css';

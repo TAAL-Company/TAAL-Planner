@@ -39,7 +39,9 @@ const CardDash = (props) => {
       history.replace('/coaches');
     } else if (id === 8) {
       history.replace('/community');
-    } else console.log('fail');
+    } else if (id === 9){
+      history.replace('/planner');
+    }else console.log('fail');
   };
 
   return (
@@ -53,10 +55,13 @@ const CardDash = (props) => {
           <img className='cardPhoto' src={image} alt='Card Logo'></img>
         </div>
       </Link>
-      <Link className='add' onClick={() => handleAddLink(props.cards.id)}>
+      {addLabel == ''?null:
+        <Link className='add' onClick={() => handleAddLink(props.cards.id)}>
         {addLabel}
         <AiOutlinePlus className='plus' />
       </Link>
+      }
+      
     </div>
   );
 };

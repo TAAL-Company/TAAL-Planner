@@ -79,7 +79,7 @@ function DragnDrop(props) {
     }
 
     if (taskForEdit !== '') {
-      editTask();
+      // editTask();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.boardArrayDND, taskForEdit]);
@@ -183,10 +183,10 @@ function DragnDrop(props) {
       newTasks.splice(indexaTask, 1); // remove one element at index x
       props.setTasksOfChosenStation(newTasks);
 
-      const indexBoardTask = board.findIndex(
-        (task) => task.id === openThreeDotsVerticalBoard
-      );
-      board.splice(indexBoardTask, 1); // remove one element at index x
+      // const indexBoardTask = board.findIndex(
+      //   (task) => task.id === openThreeDotsVerticalBoard
+      // );
+      // board.splice(indexBoardTask, 1); // remove one element at index x
 
       let indexStation = props.stationArray.findIndex(
         (station) => station.id === props.myStation.id

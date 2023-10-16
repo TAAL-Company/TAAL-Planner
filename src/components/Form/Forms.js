@@ -346,7 +346,7 @@ function Forms() {
     const flagsData = await getingDataFlags();
 
     // Check if there are any matching task IDs in flagsData
-    const hasMatchingTask = taskIds.some((taskId) => {
+    const hasMatchingTask = taskIds.every((taskId) => {
       return flagsData.some(
         (flag) => flag.taskId === taskId && flag.studentId === worker.id
       );
@@ -357,13 +357,12 @@ function Forms() {
       taskIds.map(async (task) => {
         try {
           await postEvaluationEvents(worker.id, task, 'RED');
+          setAllFlags(await getingDataFlags());
         } catch (error) {
           console.error('Error posting evaluation event:', error);
         }
       });
-    }
-
-    setAllFlags(flagsData);
+    } else setAllFlags(flagsData);
   };
 
   useEffect(() => {
@@ -372,11 +371,9 @@ function Forms() {
       const updatedRowsFlagsHE = [];
 
       routesOfFlags.tasks.forEach((task) => {
-        const evaluation = //allFlags
-          evaluationevents.find(
-            (flag) =>
-              flag.taskId === task.taskId && flag.studentId === worker.id
-          );
+        const evaluation = allFlags.find(
+          (flag) => flag.taskId === task.taskId && flag.studentId === worker.id
+        );
 
         if (!evaluation) return; // Skip if evaluation is undefined
 

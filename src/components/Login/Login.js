@@ -4,8 +4,6 @@ import logo from '../../Pictures/loginLogoTaal.svg';
 import userLogo from '../../Pictures/user-logo.png';
 import lockLogo from '../../Pictures/lock-logo.png';
 import './styleLogin.css';
-import { getingData_Tasks } from '../../api/api';
-import taskAbility from '../../components/Form/taskAbility.json';
 
 let flagLoading = false;
 

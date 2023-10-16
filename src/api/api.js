@@ -936,3 +936,69 @@ export const postEvaluation = async (studentIds, taskIds) => {
     throw error;
   }
 };
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  task-performance  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+export const postTask_Performance = async (
+  taskId,
+  studentId,
+  routeId,
+  siteId,
+  startTime,
+  endTime,
+  whenAssisted
+) => {
+  try {
+    const response = await fetch(baseUrl + '/tasks-performance', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({
+        taskId,
+        studentId,
+        routeId,
+        siteId,
+        startTime,
+        endTime,
+        whenAssisted,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error inserting task: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getingTask_Performance = async (
+  dateFilter,
+  studentId,
+  taskId,
+  routeId,
+  siteId
+) => {
+  let taskssperformance;
+
+  await get(
+    baseUrl +
+      '/tasks-performance/' +
+      dateFilter +
+      studentId +
+      taskId +
+      routeId +
+      siteId
+  ).then((res) => {
+    taskssperformance = res.data;
+  });
+  return taskssperformance;
+};

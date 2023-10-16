@@ -31,7 +31,7 @@ const Dashboard = () => {
     {
       id: 3,
       headline: 'מְתַכנֵן',
-      addLabel: 'הוספת תכנֵון',
+      addLabel: '',
       image: route,
     },
     {
@@ -64,6 +64,12 @@ const Dashboard = () => {
       addLabel: 'הוספת הודעה',
       image: communityImage,
     },
+    {
+      id: 9,
+      headline: 'הוספת תכנֵון',
+      addLabel: '',
+      image: route,
+    },
   ];
 
   return (
@@ -81,16 +87,23 @@ const Dashboard = () => {
           </div>
           <div className='cardsLine'>
             <CardDash cards={cards[2]} />
+            <CardDash cards={cards[8]} />
+
+          </div>
+          <div className='cardsLine'>
             <CardDash cards={cards[0]} />
-          </div>
-          <div className='cardsLine'>
             <CardDash cards={cards[5]} />
-            <CardDash cards={cards[3]} />
+
           </div>
           <div className='cardsLine'>
+            <CardDash cards={cards[3]} />
             <CardDash cards={cards[4]} />
+
+          </div>
+          <div className='cardsLine'>
             <CardDash cards={cards[7]} />
           </div>
+
         </div>
       </div>
     </div>

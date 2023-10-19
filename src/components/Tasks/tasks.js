@@ -26,15 +26,15 @@ const Tasks = (props) => {
     if (props.mySite.id !== '') {
       setSiteSelected(true);
     }
-
-    if (taskForEdit !== '') {
-      const newTasks = [...props.boardArrayDND];
-      const taskIndex = newTasks.findIndex((t) => t.id === taskForEdit.id);
-      newTasks[taskIndex] = taskForEdit;
-      (() => {
-        props.setBoardArrayDND(newTasks);
-      })();
-    }
+  
+    // if (taskForEdit !== '') {
+    //   const newTasks = [...props.boardArrayDND];
+    //   const taskIndex = newTasks.findIndex((t) => t.id === taskForEdit.id);
+    //   newTasks[taskIndex] = taskForEdit;
+    //   (() => {
+    //     props.setBoardArrayDND(newTasks);
+    //   })();
+    // }
   }, [taskForEdit, props.mySite.id, props.tasksOfChosenStation]);
 
   const handleCloseRemove = () => {
@@ -323,9 +323,8 @@ const Tasks = (props) => {
           }
           stationOfTask={
             openThreeDotsVertical !== -1
-              ? props.allTasksOfTheSite.find(
-                  (task) => task.id === openThreeDotsVertical
-                ).stations
+              ? props.allTasks.find((task) => task.id === openThreeDotsVertical)
+                  .stations
               : []
           }
         />

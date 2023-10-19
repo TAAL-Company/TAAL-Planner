@@ -275,7 +275,7 @@ const Places = (props) => {
       let theStation;
       let stationName;
       if (firstStation !== undefined) {
-        firstStation.stations.map((station) => {
+        firstStation.stations.forEach((station) => {
           if (station.parentSiteId === mySite.id) {
             theStation = station;
             stationName = station.title;
@@ -289,7 +289,6 @@ const Places = (props) => {
       let prevStation = '';
 
       let percentTemp = 50 / tasksOfRoutes?.tasks?.length;
-
       setBoardArrayDND(
         tasksOfRoutes?.tasks?.map((element) => {
           setPercentProgressBar(
@@ -397,6 +396,9 @@ const Places = (props) => {
           };
         })
       );
+      setTasksOfChosenStation(
+        onlyAllStation.find((station) => station.id === theStation.id).tasks
+      );
     } else {
       setReplaceRoute(e);
       setOpenModalRouteChosen(true);
@@ -450,6 +452,7 @@ const Places = (props) => {
 
       if (!siteSelected && !replaceSiteFlag) {
         tasksOfRoutes = {};
+        setTasksOfChosenStation([]);
         setReplaceSite(selectedSiteValue);
         Display_The_Stations(selectedSiteValue);
         setSiteSelected(true);
@@ -942,7 +945,6 @@ const Places = (props) => {
           <Tasks
             allTasks={allTasks}
             setDropToBoard={setDropToBoard}
-            setBoardArrayDND={setBoardArrayDND}
             dropToBoard={dropToBoard}
             allTasksOfTheSite={allTasksOfTheSite}
             setAllTasksOfTheSite={setAllTasksOfTheSite}

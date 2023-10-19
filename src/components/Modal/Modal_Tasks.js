@@ -105,8 +105,10 @@ function Modal_Tasks(props) {
         if (indexStation !== -1 && existingTaskIndex !== -1) {
           const newTasks = [...props.tasksOfChosenStation];
           newTasks[existingTaskIndex] = update.data;
-          props.setTasksOfChosenStation(newTasks);
-          props.allStations[indexStation].tasks = newTasks;
+          (() => {
+            props.setTasksOfChosenStation(newTasks);
+            props.allStations[indexStation].tasks = newTasks;
+          })();
         }
 
         (() => {

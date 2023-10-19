@@ -78,6 +78,27 @@ function DragnDrop(props) {
       setBoardArrayDND(props.boardArrayDND);
     }
 
+    if (board.length > 0) {
+      // Create a map for faster lookup
+      const taskMap = new Map(
+        props.boardArrayDND.map((task) => [task.id, task])
+      );
+
+      for (let index = 0; index < board.length; index++) {
+        const updatedTask = taskMap.get(board[index].id);
+
+        if (updatedTask) {
+          Object.assign(board[index], {
+            title: updatedTask.title,
+            subtitle: updatedTask.subtitle,
+            estimatedTimeSeconds: updatedTask.estimatedTimeSeconds,
+            picture_url: updatedTask.picture_url,
+            audio_url: updatedTask.audio_url,
+          });
+        }
+      }
+    }
+
     if (taskForEdit !== '') {
       editTask();
     }

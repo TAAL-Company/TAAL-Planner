@@ -18,7 +18,7 @@ const CardDash = (props) => {
     } else if (id === 3) {
       history.replace('/planner');
     } else if (id === 4) {
-      window.location('www.google.com');
+      window.location('/subjects');
     } else console.log('fail');
   };
 
@@ -53,9 +53,7 @@ const CardDash = (props) => {
           <img className='cardPhoto' src={image} alt='Card Logo'></img>
         </div>
       </Link>
-      {addLabel === '' ? (
-        <></>
-      ) : (
+      {addLabel === '' ? (<></>) : (
         <Link className='add' onClick={() => handleAddLink(props.cards.id)}>
           {addLabel}
           <AiOutlinePlus className='plus' />

@@ -307,26 +307,30 @@ const DataTableRTL = ({
           mb: 2,
           display: 'flex',
           flexDirection: 'column',
-
           '& .MuiDataGrid-root': {
-            marginRight: '25px',
-            marginLeft: '25px',
+            marginRight: '50px',
+            marginLeft: '50px',
             border: 0,
           },
           '& .MuiDataGrid-columnHeaderTitle': {
             fontSize: 'Medium',
             fontWeight: 'bold',
           },
-          '& .MuiDataGrid-row': {
+          '& .MuiDataGrid-row': {//////////////////////////////////////////////////////////////////// ctrl + f = .MuiDataGrid-row
             backgroundColor: 'white',
-            marginTop: '5px',
+            marginTop: '8px',
             marginBottom: '0px',
             borderRadius: '6px',
+            border: "1px solid gray"
           },
-
+          "& .MuiDataGrid-cell": {
+             border:'solid grey 1px',
+            },
           '& .MuiDataGrid-cellContent': {
             fontFamily: 'Gotham Black, sans-serif',
             fontSize: 'medium',
+            marginRight:'10px',
+            margin:'10px',
           },
 
           '& .MuiButton-startIcon': {
@@ -344,7 +348,11 @@ const DataTableRTL = ({
             {
               borderBottom: 'solid white 3px',
               justifyContent: 'center',
+              
             },
+            '& .css-lm239v-MuiDataGrid-root .MuiDataGrid-columnHeader, .css-lm239v-MuiDataGrid-root .MuiDataGrid-cell': {
+              padding: '5px',
+            }
 
           // .css-1e2bxag-MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer
           // border-bottom: solid #1976d2 1px;
@@ -376,7 +384,7 @@ const DataTableRTL = ({
               position: 'sticky',
               left: 1,
               zIndex: 1,
-              bgcolor: '#0070A6',
+              bgcolor: '#114260',
             },
             '& .MuiDataGrid-columnHeadersInner > div': {
               direction: 'rtl !important',
@@ -396,7 +404,7 @@ const DataTableRTL = ({
             },
             '& .MuiDataGrid-columnHeadersInner': {
               borderBottom: '1px solid rgba(224, 224, 224, 1)',
-              bgcolor: '#0070A6',
+              bgcolor: '#114260',
             },
 
             '& .MuiDataGrid-columnHeaderTitle': {

@@ -285,7 +285,7 @@ const CognitiveAbillities = () => {
               position: 'sticky',
               left: 1,
               zIndex: 1,
-              bgcolor: '#0070A6',
+              bgcolor: '#114260',
             },
             '& .MuiDataGrid-columnHeadersInner > div': {
               direction: 'rtl !important',
@@ -304,7 +304,7 @@ const CognitiveAbillities = () => {
             },
             '& .MuiDataGrid-columnHeadersInner': {
               borderBottom: '1px solid rgba(224, 224, 224, 1)',
-              bgcolor: '#0070A6',
+              bgcolor: '#114260',
             },
 
             '& .MuiDataGrid-columnHeaderTitle': {

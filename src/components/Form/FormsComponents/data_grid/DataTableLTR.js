@@ -375,7 +375,7 @@ const DataTableLTR = ({
             },
             '& .MuiDataGrid-columnHeadersInner': {
               borderBottom: '1px solid rgba(224, 224, 224, 1)',
-              bgcolor: '#0070A6',
+              bgcolor: '#114260',
             },
             '& .MuiDataGrid-pinnedColumnHeaders': {
               bgcolor: '#d3e2ec',
@@ -385,7 +385,7 @@ const DataTableLTR = ({
             },
 
             '& .MuiDataGrid-columnHeaders': {
-              bgcolor: '#0070A6',
+              bgcolor: '#114260',
             },
             '& .MuiDataGrid-columnHeaderTitle': {
               color: 'white',

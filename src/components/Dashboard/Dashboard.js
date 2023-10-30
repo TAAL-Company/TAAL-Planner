@@ -21,54 +21,63 @@ const Dashboard = () => {
       headline: 'אתרים',
       addLabel: 'הוספת אתר',
       image: location,
+      color: '#f29d38'
     },
     {
       id: 2,
       headline: 'עובדים',
       addLabel: 'הוספת עובד',
       image: group,
+      color: '#b1cdf9'
     },
     {
       id: 3,
       headline: 'מְתַכנֵן',
       addLabel: '',
       image: route,
+      color: '#5bcfd0'
     },
     {
       id: 4,
       headline: 'מקצועות',
       addLabel: 'הוספת מקצוע',
       image: Professions,
+      color: '#f191c2'
     },
     {
       id: 5,
       headline: 'גלריה',
       addLabel: 'הוספת תמונה',
       image: galleryImage,
+      color: '#c5d1da'
     },
     {
       id: 6,
       headline: 'מדריכים',
       addLabel: 'הוספת מדריך',
       image: coachImage,
+      color: '#3eacec'
     },
     {
       id: 7,
       headline: 'הכשרות',
       addLabel: 'הוספת הכשרה',
       image: kashrut,
+      color: '#57c47d'
     },
     {
       id: 8,
       headline: 'קהילה',
       addLabel: 'הוספת הודעה',
       image: communityImage,
+      color: '#65befc'
     },
     {
       id: 9,
       headline: 'הוספת תכנֵון',
       addLabel: '',
       image: route,
+      color: '#57c8ca'
     },
   ];
 

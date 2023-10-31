@@ -381,7 +381,7 @@ function Modal({
                           <button type='submit' className='saveAs'>
                             {/* onClick={() => saveData()}> */}
                             <div style={{ color: 'white' }}>
-                              {language !== 'English' ? 'Save as' : 'שמירה בשם'}
+                              {language !== 'English' ? 'Save' : 'שמור'}
                             </div>
                           </button>
 

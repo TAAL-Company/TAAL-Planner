@@ -103,6 +103,40 @@ function Modal({
       setOpenModal(false);
     }
   }
+
+  function Post_new_Route() {
+    let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    let today  = new Date();
+    
+    setFlagClickOK((flagClickOK = true));
+    resultMyArrayStudent();
+
+    if (JSON.parse(localStorage.getItem('New_Routes')) === null) {
+      alert('Route is empty ! ');
+      return;
+    } else {
+      let taskIdList = [];
+      setSite(JSON.parse(localStorage.getItem('New_Routes')));
+      tasksForNewRoute.map((task) => taskIdList.push(task.id));
+      let studentIdList = [];
+      myStudents.map((student) => studentIdList.push(student.id));
+      let newRouteObj = {
+        name: routeTitle+"-"+today.getTime()+"-"+today.toLocaleDateString("en-US"),
+        studentIds: studentIdList,
+        taskIds: taskIdList,
+        siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
+      };
+      // set_obj((obj.mySite = JSON.parse(localStorage.getItem("MySite"))));
+      console.log(newRouteObj);
+      insertRoute(newRouteObj).then((data) => {
+        setDone(true);
+        setFlagClickOK((flagClickOK = false));
+        // window.location.replace("/forms");
+      });
+       setOpenModal(false);
+    }
+  }
+
   const saveCheckbox = (val) => {
     setMyStudents(myStudents.push(val));
     if (myStudents.length > 1) sortById();
@@ -152,6 +186,7 @@ function Modal({
       name: routeTitle,
       siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
     };
+    console.log(routeData);
 
     if (requestForEditing == 'edit' || requestForEditing == 'details') {
       updateRoute(routeUUID, routeData).then((data) => {
@@ -440,7 +475,9 @@ function Modal({
                         <button className='continueBtn' onClick={Post_Route}>
                           {language !== 'English' ? 'Save route' : 'שמור מסלול'}
                         </button>
-
+                        <button className='continueBtn' onClick={Post_new_Route}>
+                          {language !== 'English' ? 'Save route' : 'שמור בשם'}
+                        </button>
                         <button
                           className='cancelBtn'
                           onClick={() => {

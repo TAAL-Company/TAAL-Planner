@@ -124,14 +124,16 @@ const Stations = (props) => {
       props.setTasksOfChosenStation([]);
       setMyStation((myStation.data = []));
       setStateTask({ data: [] });
-      props.setTasksOfChosenStation([]);
     }
 
     if (typeof e === 'string')
       setMyStation((myStation.data = props.stationArray));
+
     setMyStation((myStation.name = n));
     setMyStation((myStation.id = e));
-    props.setChosenStation(myStation);
+    (() => {
+      props.setChosenStation(myStation);
+    })();
 
     let stationTemp = props.stationArray.find((station) => station.id === e);
 
@@ -345,6 +347,7 @@ const Stations = (props) => {
             replaceSiteFlag={props.replaceSiteFlag}
             firstStationName={props.firstStationName}
             boardArrayDND={props.boardArrayDND}
+            chosenStation={props.chosenStation}
             tasksOfChosenStation={props.tasksOfChosenStation}
             setTasksOfChosenStation={props.setTasksOfChosenStation}
             allStations={props.allStations}

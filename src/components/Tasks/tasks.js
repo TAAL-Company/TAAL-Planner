@@ -323,9 +323,8 @@ const Tasks = (props) => {
           }
           stationOfTask={
             openThreeDotsVertical !== -1
-              ? props.allTasksOfTheSite.find(
-                  (task) => task.id === openThreeDotsVertical
-                ).stations
+              ? props.allTasks.find((task) => task.id === openThreeDotsVertical)
+                  .stations
               : []
           }
         />

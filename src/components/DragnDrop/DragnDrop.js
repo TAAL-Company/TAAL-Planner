@@ -78,11 +78,43 @@ function DragnDrop(props) {
       setBoardArrayDND(props.boardArrayDND);
     }
 
+    if (board.length > 0 && boardName !== '') {
+      let taskMap;
+      // Create a map for faster lookup
+      if (boardName === 'routes') {
+        taskMap = new Map(props.boardArrayDND.map((task) => [task.id, task]));
+      } else if (boardName === 'tasks') {
+        taskMap = new Map(
+          props.tasksOfChosenStation.map((task) => [task.id, task])
+        );
+      }
+
+      for (let index = 0; index < board.length; index++) {
+        const updatedTask = taskMap.get(board[index].id);
+
+        if (updatedTask) {
+          Object.assign(board[index], {
+            title: updatedTask.title,
+            subtitle: updatedTask.subtitle,
+            estimatedTimeSeconds: updatedTask.estimatedTimeSeconds,
+            picture_url: updatedTask.picture_url,
+            audio_url: updatedTask.audio_url,
+          });
+        }
+      }
+    }
+
     if (taskForEdit !== '') {
-      // editTask();
+      editTask();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.boardArrayDND, taskForEdit]);
+  }, [
+    board,
+    boardName,
+    props.boardArrayDND,
+    props.tasksOfChosenStation,
+    taskForEdit,
+  ]);
 
   const getTheStation = () => {
     if (props.myStation.data.length > 0 && openThreeDotsVerticalBoard !== -1) {
@@ -125,44 +157,72 @@ function DragnDrop(props) {
   };
 
   const editTask = () => {
+    let updatedTask;
+
     const updatedTasks = updateTask(taskForEdit, props.allTasksOfTheSite);
     props.setAllTasksOfTheSite(updatedTasks);
 
-    const updatedTasksBoardArrayDND = updateTask(taskForEdit, boardArrayDND);
-    const newTasksBoardArrayDND = updateTaskDetails(
-      updatedTasksBoardArrayDND,
-      board
-    );
-    setBoardArrayDND(updatedTasksBoardArrayDND);
+    if (boardName === 'routes') {
+      let indexStation = props.allStations.findIndex(
+        (station) =>
+          station.id ===
+          board.find((b) => b.id === taskForEdit.id).theStation.id
+      );
+      const updatedTasksBoardArrayDND = updateTask(taskForEdit, boardArrayDND);
+      const newTasksBoardArrayDND = updateTaskDetails(
+        updatedTasksBoardArrayDND,
+        board
+      );
+      setBoardArrayDND(updatedTasksBoardArrayDND);
 
-    const updatedTasksOfChosenStation = updateTask(
-      taskForEdit,
-      props.tasksOfChosenStation
-    );
-    const newBoard = updateTaskDetails(updatedTasksOfChosenStation, board);
-    props.setTasksOfChosenStation(updatedTasksOfChosenStation);
-
-    if (taskForEdit !== '') {
-      let updatedTask;
-      let existingTaskIndex;
-
-      if (boardName === 'routes') {
-        updatedTask = newTasksBoardArrayDND.find(
-          (task) => task.id === taskForEdit.id
+      const taskToUpdate = updatedTasksBoardArrayDND.find(
+        (t) => t.id === taskForEdit.id
+      );
+      if (taskToUpdate) {
+        const index = props.allStations[indexStation].tasks.findIndex(
+          (task) => task.id === taskToUpdate.id
         );
-      } else if (boardName === 'tasks') {
-        updatedTask = newBoard.find((task) => task.id === taskForEdit.id);
-      }
 
-      if (updatedTask) {
-        existingTaskIndex = board.findIndex(
-          (task) => task.id === updatedTask?.id
-        );
-        if (existingTaskIndex !== -1) {
-          board[existingTaskIndex] = updatedTask;
+        if (index !== -1) {
+          (() => {
+            props.allStations[indexStation].tasks[index] = taskToUpdate;
+            // props.setTasksOfChosenStation(props.allStations[indexStation].tasks);
+          })();
         }
       }
+
+      // props.setTasksOfChosenStation(updatedTasksOfChosenStation);
+      updatedTask = newTasksBoardArrayDND.find(
+        (task) => task.id === taskForEdit.id
+      );
+    } else if (boardName === 'tasks') {
+      let indexStation = props.allStations.findIndex(
+        (station) => station.id === props.chosenStation.id
+      );
+      const updatedTasksOfChosenStation = updateTask(
+        taskForEdit,
+        props.tasksOfChosenStation
+      );
+      const newBoard = updateTaskDetails(updatedTasksOfChosenStation, board);
+      (() => {
+        // props.setTasksOfChosenStation(updatedTasksOfChosenStation);
+        props.allStations[indexStation].tasks = updatedTasksOfChosenStation;
+      })();
+      updatedTask = newBoard.find((task) => task.id === taskForEdit.id);
     }
+
+    // updatedTask = updateTask(taskForEdit, board)
+    // updatedTask = updateTaskDetails(updatedTask, board)
+
+    if (updatedTask) {
+      let existingTaskIndex = board.findIndex(
+        (task) => task.id === updatedTask.id
+      );
+      if (existingTaskIndex !== -1) {
+        board[existingTaskIndex] = updatedTask;
+      }
+    }
+    setTaskForEdit('');
   };
 
   const handleCloseRemove = () => {
@@ -737,7 +797,7 @@ function DragnDrop(props) {
           subtitle={getValueForProperty('subtitle', '')}
           stationOfTask={
             openThreeDotsVerticalBoard !== -1
-              ? props.allTasksOfTheSite.find(
+              ? props.allTasks.find(
                   (task) => task.id === openThreeDotsVerticalBoard
                 ).stations
               : []

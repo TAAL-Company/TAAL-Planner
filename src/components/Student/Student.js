@@ -116,7 +116,6 @@ const Cards = () => {
   };
 
   const duplicateUser = async () => {
-    console.log('' + JSON.stringify(users[openThreeDotsVertical]));
     const userToDuplicate = {
       email: users[openThreeDotsVertical].email,
       user_name: users[openThreeDotsVertical].user_name,
@@ -140,7 +139,6 @@ const Cards = () => {
     };
     try {
       if (requestForEditing === 'duplication') {
-        console.log('userToDuplicate : ' + JSON.stringify(userToDuplicate));
         insertUser(userToDuplicate).then((data) => {
           data.picture_url = userToDuplicate.picture_url;
           updateUser(data.id, data).then((updatedUser) => {

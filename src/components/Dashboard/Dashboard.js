@@ -88,22 +88,18 @@ const Dashboard = () => {
           <div className='cardsLine'>
             <CardDash cards={cards[2]} />
             <CardDash cards={cards[8]} />
-
           </div>
           <div className='cardsLine'>
             <CardDash cards={cards[0]} />
             <CardDash cards={cards[5]} />
-
           </div>
           <div className='cardsLine'>
             <CardDash cards={cards[3]} />
             <CardDash cards={cards[4]} />
-
           </div>
           <div className='cardsLine'>
             <CardDash cards={cards[7]} />
           </div>
-
         </div>
       </div>
     </div>

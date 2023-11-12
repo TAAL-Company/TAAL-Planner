@@ -709,7 +709,7 @@ function Forms() {
       field: 'Alternatives',
       headerName: 'חלופה',
       width: 250,
-      editable: false,
+      editable: true,
       headerAlign: 'center',
       align: 'left',
       renderCell: (params) => {
@@ -752,7 +752,7 @@ function Forms() {
       align: 'left',
       type: 'actions',
       direction: 'rtl',
-      width: 470,
+      width: 470,//100%-100
       editable: false,
       sortable: false,
       disableExport: true,
@@ -1783,7 +1783,7 @@ function Forms() {
 
   return (
     <div className='Forms'>
-      <div>
+      <div style={{width : '100%' }}>
         <div>
           <button
             className={`switch-button-forms ${

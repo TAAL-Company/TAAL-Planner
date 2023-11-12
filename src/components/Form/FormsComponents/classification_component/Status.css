@@ -6,12 +6,9 @@
   align-items: center;
   justify-content: center;
   /* direction: rtl; */
-  /* justify-content: center; */
   /* height: 30px;
   width: 110px; */
-  /* align-items: center;
-  justify-content: center;
-  /* border-radius: 25px; */
+   border-radius: 15px; 
 }
 
 .textStatusForms {

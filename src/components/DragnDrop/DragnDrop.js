@@ -78,11 +78,16 @@ function DragnDrop(props) {
       setBoardArrayDND(props.boardArrayDND);
     }
 
-    if (board.length > 0) {
+    if (board.length > 0 && boardName !== '') {
+      let taskMap;
       // Create a map for faster lookup
-      const taskMap = new Map(
-        props.boardArrayDND.map((task) => [task.id, task])
-      );
+      if (boardName === 'routes') {
+        taskMap = new Map(props.boardArrayDND.map((task) => [task.id, task]));
+      } else if (boardName === 'tasks') {
+        taskMap = new Map(
+          props.tasksOfChosenStation.map((task) => [task.id, task])
+        );
+      }
 
       for (let index = 0; index < board.length; index++) {
         const updatedTask = taskMap.get(board[index].id);
@@ -103,7 +108,13 @@ function DragnDrop(props) {
       editTask();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.boardArrayDND, taskForEdit]);
+  }, [
+    board,
+    boardName,
+    props.boardArrayDND,
+    props.tasksOfChosenStation,
+    taskForEdit,
+  ]);
 
   const getTheStation = () => {
     if (props.myStation.data.length > 0 && openThreeDotsVerticalBoard !== -1) {
@@ -211,6 +222,7 @@ function DragnDrop(props) {
         board[existingTaskIndex] = updatedTask;
       }
     }
+    setTaskForEdit('');
   };
 
   const handleCloseRemove = () => {

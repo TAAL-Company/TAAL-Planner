@@ -10,7 +10,7 @@ function Tag({
   title,
   subtitle,
   id,
-  flagBoard,
+    flagBoard,
   myMarginTop,
   myLastStation,
   width,
@@ -191,7 +191,7 @@ function Tag({
                   ) : dragFromCover === 'border' ? (
                     <Modal_dropdown
                       setRequestForEditing={setRequestForEditing}
-                      setOpenThreeDotsVertical={setOpenThreeDotsVertical}
+                      setOpenThreeDotsVertical={openThreeDotsVerticalBoard}
                       editable={true}
                       Reproducible={true}
                       details={true}

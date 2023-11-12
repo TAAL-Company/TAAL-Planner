@@ -36,12 +36,7 @@ import {
 } from '@mui/material';
 import { useEffect } from 'react';
 import { id } from 'date-fns/locale';
-
 import predictions from './predictions.json';
-
-import staticTasks from './staticTasks.json';
-import evaluationevents from './evaluation-events.json';
-import staticstudent from './staticstudent.json';
 
 function Forms() {
   const [explainationError, setExplainationError] = useState('');

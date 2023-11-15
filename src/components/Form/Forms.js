@@ -46,6 +46,7 @@ function Forms() {
   const [allTasks, setAllTasks] = useState([]);
   const [allRoutes, setAllRoutes] = useState([]);
   const [allFlags, setAllFlags] = useState([]);
+  const [TaskAbilityLists, setTaskAbilityList] = useState([]);
 
   // this six variables will be get as props from editor window (editor will take this from DB)
   const [workerNameEN, setWorkerNameEN] = useState('Eyal Engel');
@@ -337,6 +338,9 @@ function Forms() {
     setRoutesOfFlags(route);
 
     const taskIds = route.tasks?.map((task) => task.taskId);
+    const studentIds = [worker.id];
+    
+    setTaskAbilityList(await postEvaluation(studentIds, taskIds))
 
     const flagsData = await getingDataFlags();
 
@@ -377,11 +381,12 @@ function Forms() {
 
           const taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
 
-          const TaskAbilityList = predictions.find(
-            (prediction) =>
-              // prediction.taskid === evaluation.taskId &&
-              prediction.studentid === worker.user_name
-          );
+          
+           const TaskAbilityList = TaskAbilityLists.find((prediction) =>
+               // prediction.taskId === evaluation.taskId &&
+               prediction.userId === worker.id
+           );
+          console.log("TaskAbilityList",TaskAbilityList);
 
           const IndexesToTraits = TaskAbilityList?.indexes
             ?.map((index) => cognitiveList.find((ca) => ca.index === index))
@@ -391,7 +396,7 @@ function Forms() {
           updatedRowsFlagsHE.push({
             id: task.position,
             image: taskInfo.picture_url || taskpic,
-            classification: TaskAbilityList.flag,
+            classification: TaskAbilityList.evaluation,
             task: taskInfo.title,
             intervention: evaluation.intervention,
             Alternatives: evaluation.alternativeTaskId,
@@ -1783,12 +1788,11 @@ function Forms() {
 
   return (
     <div className='Forms'>
-      <div style={{width : '100%' }}>
+      <div style={{ width: '100%' }}>
         <div>
           <button
-            className={`switch-button-forms ${
-              language === 'hebrew' ? 'hebrew' : 'english'
-            }`}
+            className={`switch-button-forms ${language === 'hebrew' ? 'hebrew' : 'english'
+              }`}
             onClick={() =>
               setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
             }
@@ -1859,8 +1863,8 @@ function Forms() {
                       // keepMounted={slide}
                       // transitionDuration={300}
                       disableEscapeKeyDown
-                      // style={{ direction: "rtl" }}
-                      // style={{ position: "absolute", top: "0", right: "0" }}
+                    // style={{ direction: "rtl" }}
+                    // style={{ position: "absolute", top: "0", right: "0" }}
                     >
                       <div
                         style={{

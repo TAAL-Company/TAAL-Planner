@@ -9,7 +9,7 @@ const connectionString =
 const blobServiceClient = new BlobServiceClient(connectionString);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-/*~~~~~~~~~~~~~~~~~  GENERAL  ~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  GENERAL  ~~~~~~~~~~~~~~~~~~~~~*/
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 export const uploadFiles = async (selectedFile, folder) => {
@@ -925,7 +925,7 @@ export const postEvaluation = async (studentIds, taskIds) => {
     const data = await response.json();
     console.log('data b:', data);
 
-    const objectArray = data.map((jsonString) => JSON.parse(jsonString));
+    const objectArray = data.response.map((jsonString) => JSON.parse(jsonString));
 
     objectArray.map(async (flag) => {
       await postEvaluationEvents(flag.userId, flag.taskId, flag.evaluation);

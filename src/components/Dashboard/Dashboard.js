@@ -86,8 +86,13 @@ const Dashboard = () => {
       {/* <Navbar /> */}
       <div className='content'>
         <div className='left'>
-          <Barchart />
-          <Piechart />
+          <iframe
+            width="100%"
+            height="100%"
+            src="https://dashboard-cqlntvbnc64rp8srvkpze7.streamlit.app/?embed=true"
+          ></iframe>;
+          {/* <Barchart />
+          <Piechart /> */}
         </div>
         <div className='right'>
           <div className='cardsLine'>

@@ -64,7 +64,7 @@ function Modal_Tasks(props) {
       let picture_url;
       let audio_url;
       try {
-        if (picture && !picture.includes(urlAlreadyExist)) {
+        if (picture && !picture.name.includes(urlAlreadyExist)) {
           picture_url = await uploadFiles(picture, 'Task media');
         }
         if (audio && !audio.includes(urlAlreadyExist)) {

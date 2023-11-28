@@ -7,7 +7,6 @@ import Status from './FormsComponents/classification_component/Status';
 import StatusLTR from './FormsComponents/classification_component/StatusLTR';
 import cognitiveList from './cognitive.json';
 import CognitiveAbillities from '../CognitiveAbillities';
-import Autocomplete from '@mui/material/Autocomplete';
 import {
   getingData_Users,
   getingData_Tasks,
@@ -46,7 +45,7 @@ function Forms() {
   const [allTasks, setAllTasks] = useState([]);
   const [allRoutes, setAllRoutes] = useState([]);
   const [allFlags, setAllFlags] = useState([]);
-  const [TaskAbilityLists, setTaskAbilityList] = useState([]);
+  const [taskAbilityLists, setTaskAbilityList] = useState([]);
 
   // this six variables will be get as props from editor window (editor will take this from DB)
   const [workerNameEN, setWorkerNameEN] = useState('Eyal Engel');
@@ -339,8 +338,10 @@ function Forms() {
 
     const taskIds = route.tasks?.map((task) => task.taskId);
     const studentIds = [worker.id];
-    
-    setTaskAbilityList(await postEvaluation(studentIds, taskIds))
+
+    const algoResult = setTaskAbilityList(
+      await postEvaluation(studentIds, taskIds)
+    );
 
     const flagsData = await getingDataFlags();
 
@@ -355,7 +356,7 @@ function Forms() {
       // If there are no matching task IDs, run the function
       taskIds.map(async (task) => {
         try {
-          await postEvaluationEvents(worker.id, task, 'RED');
+          await postEvaluationEvents(worker.id, task, algoResult.evaluation);
           setAllFlags(await getingDataFlags());
         } catch (error) {
           console.error('Error posting evaluation event:', error);
@@ -381,14 +382,13 @@ function Forms() {
 
           const taskInfo = allTasks.find((taskT) => taskT.id === task.taskId);
 
-          
-           const TaskAbilityList = TaskAbilityLists.find((prediction) =>
-               // prediction.taskId === evaluation.taskId &&
-               prediction.userId === worker.id
-           );
-          console.log("TaskAbilityList",TaskAbilityList);
+          const taskAbilityList = taskAbilityLists.find(
+            (prediction) =>
+              prediction.taskId === evaluation.taskId &&
+              prediction.userId === worker.id
+          );
 
-          const IndexesToTraits = TaskAbilityList?.indexes
+          const IndexesToTraits = taskAbilityList?.indexes
             ?.map((index) => cognitiveList.find((ca) => ca.index === index))
             .filter((entry) => entry !== undefined)
             .map((entry) => entry.trait);
@@ -396,7 +396,7 @@ function Forms() {
           updatedRowsFlagsHE.push({
             id: task.position,
             image: taskInfo.picture_url || taskpic,
-            classification: TaskAbilityList.evaluation,
+            classification: taskAbilityList.evaluation,
             task: taskInfo.title,
             intervention: evaluation.intervention,
             Alternatives: evaluation.alternativeTaskId,
@@ -653,15 +653,28 @@ function Forms() {
           {params.row.classification === 'green' ? (
             <></>
           ) : (
-            <Autocomplete
-              disablePortal
+            <select
               id='combo-box-demo'
-              options={params.row.TaskAbilitylist}
-              sx={{ width: 300 }}
-              renderInput={(params) => (
-                <TextField {...params} label='רשימת יכולות משימות' />
-              )}
-            />
+              style={{ width: 300, height: 50 }}
+              value='DEFAULT'
+            >
+              <option value='DEFAULT' disabled>
+                לחץ כדי לראות את רשימת יכולות המשימות
+              </option>
+
+              {params.row.TaskAbilitylist.map((option, index) => (
+                <option
+                  key={index}
+                  value={option}
+                  style={{
+                    textAlign: 'right',
+                    fontSize: '1rem',
+                  }}
+                >
+                  {option}
+                </option>
+              ))}
+            </select>
           )}
         </div>
       ),
@@ -757,7 +770,7 @@ function Forms() {
       align: 'left',
       type: 'actions',
       direction: 'rtl',
-      width: 470,//100%-100
+      width: 470, //100%-100
       editable: false,
       sortable: false,
       disableExport: true,
@@ -1791,8 +1804,9 @@ function Forms() {
       <div style={{ width: '100%' }}>
         <div>
           <button
-            className={`switch-button-forms ${language === 'hebrew' ? 'hebrew' : 'english'
-              }`}
+            className={`switch-button-forms ${
+              language === 'hebrew' ? 'hebrew' : 'english'
+            }`}
             onClick={() =>
               setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
             }
@@ -1863,8 +1877,8 @@ function Forms() {
                       // keepMounted={slide}
                       // transitionDuration={300}
                       disableEscapeKeyDown
-                    // style={{ direction: "rtl" }}
-                    // style={{ position: "absolute", top: "0", right: "0" }}
+                      // style={{ direction: "rtl" }}
+                      // style={{ position: "absolute", top: "0", right: "0" }}
                     >
                       <div
                         style={{

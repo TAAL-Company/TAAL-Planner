@@ -396,9 +396,8 @@ const Places = (props) => {
           };
         })
       );
-      setTasksOfChosenStation(
-        onlyAllStation.find((station) => station.id === theStation.id).tasks
-      );
+      let TasksOfChosenStationtemp = onlyAllStation.find((station) => station?.id === theStation?.id)?.tasks ? onlyAllStation.find((station) => station.id === theStation.id).tasks : []
+      setTasksOfChosenStation(TasksOfChosenStationtemp);
     } else {
       setReplaceRoute(e);
       setOpenModalRouteChosen(true);

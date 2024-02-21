@@ -649,6 +649,7 @@ export const getingData_Tasks = async () => {
     allTasks = res.data;
   });
 
+  console.log('res allTasks: ', allTasks);
   return allTasks;
 };
 export const insertTask = async (

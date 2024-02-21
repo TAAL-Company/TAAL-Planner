@@ -63,11 +63,18 @@ function Modal_Tasks(props) {
       const urlAlreadyExist = 'https://taalmedia.blob.core.windows.net';
       let picture_url;
       let audio_url;
+
       try {
-        if (picture && !picture.name.includes(urlAlreadyExist)) {
+        if (picture && !picture?.name?.includes(urlAlreadyExist)) {
           picture_url = await uploadFiles(picture, 'Task media');
         }
-        if (audio && !audio.includes(urlAlreadyExist)) {
+      } catch (error) {
+        console.error(error);
+        picture_url = picture
+      }
+      
+      try {
+        if (audio && !audio?.name?.includes(urlAlreadyExist)) {
           audio_url = await uploadFiles(audio, 'Task media');
         }
       } catch (error) {
@@ -250,9 +257,8 @@ function Modal_Tasks(props) {
                 </div>
               </div>
               <div
-                className={`bodyNewTask ${
-                  props.requestForEditing === 'details' ? 'disabledModal' : ''
-                }`}
+                className={`bodyNewTask ${props.requestForEditing === 'details' ? 'disabledModal' : ''
+                  }`}
               >
                 {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
                 <form id='IPU' className='w3-container'>

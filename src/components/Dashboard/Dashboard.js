@@ -11,8 +11,6 @@ import coachImage from '../../Pictures/coach.png';
 import galleryImage from '../../Pictures/gallery.png';
 import communityImage from '../../Pictures/community.png';
 import pic from '../../Pictures/defualtSiteImg.svg';
-import Barchart from '../Charts/Barchart';
-import Piechart from '../Charts/Piechart';
 
 const Dashboard = () => {
   const cards = [
@@ -90,9 +88,7 @@ const Dashboard = () => {
             width="100%"
             height="100%"
             src="https://dashboard-cqlntvbnc64rp8srvkpze7.streamlit.app/?embed=true"
-          ></iframe>;
-          {/* <Barchart />
-          <Piechart /> */}
+          ></iframe>
         </div>
         <div className='right'>
           <div className='cardsLine'>

@@ -62,8 +62,8 @@ function DragnDrop(props) {
   const [, setRequestForEditingBoard] = useState('');
   const [taskUuidForEdit, setTaskUuidForEdit] = useState('');
   const [taskForEdit, setTaskForEdit] = useState('');
-  const [openThreeDotsVerticalBoard, setOpenThreeDotsVerticalBoard] =
-    useState(-1);
+  const [openThreeDotsVerticalBoard, setOpenThreeDotsVerticalBoard] = useState(-1);
+  const [location, setLocation] = useState(-1);
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -258,7 +258,7 @@ function DragnDrop(props) {
   };
 
   let prevStation = '';
-  useEffect(() => {}, [props.percentProgressBar]);
+  useEffect(() => { }, [props.percentProgressBar]);
 
   useEffect(() => {
     if (props.replaceRouteFlag) {
@@ -312,7 +312,7 @@ function DragnDrop(props) {
     }
   }, [props.tasksOfRoutes]);
 
-  useEffect(() => {}, [props.progressBarFlag]);
+  useEffect(() => { }, [props.progressBarFlag]);
 
   let nameStation = props.myStation.name;
 
@@ -550,7 +550,7 @@ function DragnDrop(props) {
       <>
         <div
           className={`Board ${props.language !== 'English' ? 'english' : ''}`}
-          // ref={drop}
+        // ref={drop}
         >
           <div className='topButtons'>
             <button
@@ -582,9 +582,8 @@ function DragnDrop(props) {
             <div style={{ fontSize: '20px', left: '185px' }}></div>
           </div>
           <div
-            className={`my_Buttons_icons ${
-              props.language !== 'English' ? 'english' : ''
-            }`}
+            className={`my_Buttons_icons ${props.language !== 'English' ? 'english' : ''
+              }`}
           >
             <button
               className={
@@ -638,14 +637,12 @@ function DragnDrop(props) {
                     {board[0] !== undefined && board.length !== 0 ? (
                       <>
                         <div
-                          className={`kavT ${
-                            props.language !== 'English' ? 'english' : ''
-                          }`}
+                          className={`kavT ${props.language !== 'English' ? 'english' : ''
+                            }`}
                         ></div>
                         <div
-                          className={`mySiteChois ${
-                            props.language !== 'English' ? 'english' : ''
-                          }`}
+                          className={`mySiteChois ${props.language !== 'English' ? 'english' : ''
+                            }`}
                         >
                           {props.tasksOfRoutes && props.tasksOfRoutes.name ? (
                             props.tasksOfRoutes.name
@@ -662,8 +659,12 @@ function DragnDrop(props) {
                     ) : (
                       board.map((tag, keyCount) => {
                         if (tag !== undefined) {
+                          // console.log(keyCount, tag);
                           return (saveTag = (
                             <Tag
+                              keyCount={keyCount}
+                              setLocation={setLocation}
+                              location={location}
                               taskButtonColor={tag.color}
                               modalFlagTablet={modalFlagTablet}
                               title={tag.title}
@@ -798,8 +799,8 @@ function DragnDrop(props) {
           stationOfTask={
             openThreeDotsVerticalBoard !== -1
               ? props.allTasks.find(
-                  (task) => task.id === openThreeDotsVerticalBoard
-                ).stations
+                (task) => task.id === openThreeDotsVerticalBoard
+              ).stations
               : []
           }
           estimatedTimeSeconds={getValueForProperty('estimatedTimeSeconds', 20)}

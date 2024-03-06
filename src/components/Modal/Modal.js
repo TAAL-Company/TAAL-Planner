@@ -121,7 +121,7 @@ function Modal({
       let studentIdList = [];
       myStudents.map((student) => studentIdList.push(student.id));
       let newRouteObj = {
-        name: routeTitle+"-"+today.getTime()+"-"+today.toLocaleDateString("en-US"),
+        name: routeTitle+"-"+(Math.floor((Math.random() * 100000)))+"-"+today.toLocaleDateString("en-US"),
         studentIds: studentIdList,
         taskIds: taskIdList,
         siteIds: [JSON.parse(localStorage.getItem('MySite')).id],

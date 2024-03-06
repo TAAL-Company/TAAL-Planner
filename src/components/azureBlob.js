@@ -1,11 +1,12 @@
 // THIS IS SAMPLE CODE ONLY - NOT MEANT FOR PRODUCTION USE
 import { BlobServiceClient } from '@azure/storage-blob';
 
-const sasToken =
-  process.env.storagesastoken ||
-  '?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-12-31T14:50:42Z&st=2023-05-31T05:50:42Z&spr=https,http&sig=k%2F88nLfkD%2BFXBc%2FC5rdWNHE7gTNfPr2M5pm%2Fa0oSfIA%3D'; // Fill string with your SAS token
+const sasToken =process.env.REACT_APP_STORAGE_SAS_TOKEN ||
+'?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-02-12T20:01:37Z&st=2024-02-12T12:01:37Z&spr=https,http&sig=XjpFdJl6WweqY0j9MrQDiubPMqOdUtM16QhmPK7h3aI%3D'
+// '?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-12-31T14:50:42Z&st=2023-05-31T05:50:42Z&spr=https,http&sig=k%2F88nLfkD%2BFXBc%2FC5rdWNHE7gTNfPr2M5pm%2Fa0oSfIA%3D'; // Fill string with your SAS token
+     
 const containerName = `images`;
-const storageAccountName = process.env.storageresourcename || 'taalmedia'; // Fill string with your Storage resource name
+const storageAccountName = process.env.REACT_APP_STORAGE_RESOURCE_NAME || 'taalmedia'; // Fill string with your Storage resource name
 
 // Feature flag - disable storage feature to app if not configured
 export const isStorageConfigured = () => {

@@ -7,10 +7,13 @@ import Audios from '../Audios/Audios';
 import Modal_dropdown from '../Modal/Modal_Dropdown';
 
 function Tag({
+  keyCount,
+  setLocation,
+  location,
   title,
   subtitle,
   id,
-    flagBoard,
+  flagBoard,
   myMarginTop,
   myLastStation,
   width,
@@ -37,9 +40,14 @@ function Tag({
   const [idListen, setIdListen] = useState(0);
   const [dataListen, setDataListen] = useState({});
 
-  const clickOnThreeDotsVerticaIcontBoard = (value) => {
-    if (openThreeDotsVerticalBoard === value) setOpenThreeDotsVerticalBoard(-1);
-    else setOpenThreeDotsVerticalBoard(value);
+  const clickOnThreeDotsVerticaIcontBoard = (value, value2) => {
+    console.log("value2", value2);
+    setLocation(value2);
+    if (openThreeDotsVerticalBoard === value){
+      setOpenThreeDotsVerticalBoard(-1);
+    } else{
+      setOpenThreeDotsVerticalBoard(value);
+    } 
   };
 
   const clickOnThreeDotsVerticaIcont = (value) => {
@@ -86,15 +94,13 @@ function Tag({
               style={{ height: height, bottom: bottom }}
             ></div>
             <div
-              className={`kavTaskTop ${
-                language !== 'English' ? 'english' : ''
-              }`}
+              className={`kavTaskTop ${language !== 'English' ? 'english' : ''
+                }`}
               style={{ marginTop: width }}
             ></div>
             <div
-              className={`nameStationBoard ${
-                language !== 'English' ? 'english' : ''
-              }`}
+              className={`nameStationBoard ${language !== 'English' ? 'english' : ''
+                }`}
             >
               {nameStation}
             </div>
@@ -165,7 +171,7 @@ function Tag({
                     onClick={() => {
                       dragFromCover === 'TasksNew'
                         ? clickOnThreeDotsVerticaIcont(id)
-                        : clickOnThreeDotsVerticaIcontBoard(id);
+                        : clickOnThreeDotsVerticaIcontBoard(id, keyCount);
                     }}
                   >
                     <BsThreeDotsVertical />
@@ -186,12 +192,14 @@ function Tag({
                     <></>
                   )}
 
-                  {openThreeDotsVerticalBoard !== id ? (
+                  {location !== keyCount ? (
+                    <></>
+                  ) : openThreeDotsVerticalBoard !== id ? (
                     <></>
                   ) : dragFromCover === 'border' ? (
                     <Modal_dropdown
                       setRequestForEditing={setRequestForEditing}
-                      setOpenThreeDotsVertical={openThreeDotsVerticalBoard}
+                      setOpenThreeDotsVertical={setOpenThreeDotsVerticalBoard}
                       editable={true}
                       Reproducible={true}
                       details={true}

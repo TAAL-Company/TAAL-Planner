@@ -5,7 +5,9 @@ import { BlobServiceClient } from '@azure/storage-blob';
 import React, { useState } from 'react';
 
 const connectionString =
-  'https://taalmedia.blob.core.windows.net/images?sp=racwd&st=2023-08-10T08:40:14Z&se=2024-10-08T16:40:14Z&spr=https&sv=2022-11-02&sr=c&sig=uIxq4iCGXN%2FwOy3vcLS38S8tE8YF60kMgbLX5QY1dPM%3D';
+'https://taalmedia.blob.core.windows.net/images?sp=racwdl&st=2024-02-13T18:56:06Z&se=2025-02-14T02:56:06Z&sv=2022-11-02&sr=c&sig=dftkQiefHvDJ5EPyZzd9l%2B1i6TVPvT2JZif%2F3T5BFOs%3D'
+  //'https://taalmedia.blob.core.windows.net/images?sp=r&st=2024-02-08T14:16:23Z&se=2024-02-08T22:16:23Z&spr=https&sv=2022-11-02&sr=c&sig=m1QxYYWMfkEFGr7%2BRMDdNiMELCDQ7WBIJT0rt2aaXBw%3D';
+  //'https://taalmedia.blob.core.windows.net/images?sp=racwd&st=2023-08-10T08:40:14Z&se=2024-10-08T16:40:14Z&spr=https&sv=2022-11-02&sr=c&sig=uIxq4iCGXN%2FwOy3vcLS38S8tE8YF60kMgbLX5QY1dPM%3D';
 const blobServiceClient = new BlobServiceClient(connectionString);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -647,6 +649,7 @@ export const getingData_Tasks = async () => {
     allTasks = res.data;
   });
 
+  console.log('res allTasks: ', allTasks);
   return allTasks;
 };
 export const insertTask = async (

@@ -8,6 +8,25 @@ import { baseUrl } from '../../config';
 import Modal_no_site_selected from './Modal_No_Site_Selected';
 import { uploadFiles, uploadFile, insertTask, updateTask } from '../../api/api';
 import uploadFileToBlob from '../azureBlob';
+import Gallery2 from '../Gallery/Gallery2';
+
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: '1002px',
+  height: '400px',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  overflow: "hidden",
+  overflowY: "scroll",
+  p: 4,
+};
 
 //--------------------------
 let ichour = 'אישור';
@@ -72,7 +91,6 @@ function Modal_Tasks(props) {
         console.error(error);
         picture_url = picture
       }
-      
       try {
         if (audio && !audio?.name?.includes(urlAlreadyExist)) {
           audio_url = await uploadFiles(audio, 'Task media');
@@ -226,6 +244,9 @@ function Modal_Tasks(props) {
     audioRef.current.play();
   };
 
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   return (
     <>
       {!props.help && !props.siteSelected ? (
@@ -321,9 +342,8 @@ function Modal_Tasks(props) {
                 <form id='IPU' className='w3-container'>
                   <h6>
                     {props.language !== 'English'
-                      ? 'Add a picture of a task'
-                      : ':הוסף תמונה של משימה '}
-
+                      ? 'Add a picture of a task from desktop '
+                      : ' : הוסף תמונה של משימה משולחן העבודה '}
                     <FcMultipleInputs />
                   </h6>
                   <div>
@@ -340,6 +360,24 @@ function Modal_Tasks(props) {
                         direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     ></input>
+                    <h6>
+                    {props.language !== 'English'
+                      ? 'Add a picture of a task from Gallery'
+                      : ':הוסף תמונה של משימה מהגלריה '}
+
+                    <FcMultipleInputs />
+                  </h6>
+                    <Button variant="outlined" onClick={handleOpen}>Gallery</Button>
+                    <Modal
+                      open={open}
+                      onClose={handleClose}
+                      aria-labelledby="modal-modal-title"
+                      aria-describedby="modal-modal-description"
+                    >
+                      <Box sx={style}>
+                        <Gallery2 setPicture={setPicture}/>
+                      </Box>
+                    </Modal>
                     {picture ? (
                       <div className='selectedFileContainer'>
                         <div className='selectedFileTitle'>:תמונה שנבחרה</div>

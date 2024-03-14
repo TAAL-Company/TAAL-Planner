@@ -11,8 +11,8 @@ import coachImage from '../../Pictures/coach.png';
 import galleryImage from '../../Pictures/gallery.png';
 import communityImage from '../../Pictures/community.png';
 import pic from '../../Pictures/defualtSiteImg.svg';
-import Barchart from '../Charts/Barchart';
-import Piechart from '../Charts/Piechart';
+import Barchart from '../charts/Barchart';
+import Piechart from '../charts/Piechart';
 
 const Dashboard = () => {
   const cards = [

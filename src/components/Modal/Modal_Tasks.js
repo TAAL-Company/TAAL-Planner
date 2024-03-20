@@ -370,12 +370,15 @@ function Modal_Tasks(props) {
                     <Button variant="outlined" onClick={handleOpen}>Gallery</Button>
                     <Modal
                       open={open}
-                      onClose={handleClose}
+                      onClose={()=>{
+                        handleClose()
+                        console.log(open);
+                      }}
                       aria-labelledby="modal-modal-title"
                       aria-describedby="modal-modal-description"
                     >
                       <Box sx={style}>
-                        <Gallery2 setPicture={setPicture}/>
+                        <Gallery2 sethandleClose={handleClose} setPicture={setPicture}/>
                       </Box>
                     </Modal>
                     {picture ? (

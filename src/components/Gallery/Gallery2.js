@@ -8,7 +8,6 @@ import ReactPlayer from 'react-player';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 
-
 const storageConfigured = isStorageConfigured();
 
 function Gallery2(props) {
@@ -131,9 +130,10 @@ function Gallery2(props) {
                   height='200'
                   onClick={() => {
                     props.setPicture(sortedUrls[selectedFolder][key])
+                    props.sethandleClose(false)
                     // setGetImageUrl(sortedUrls[selectedFolder][key])
                   }}
-                /> 
+                />
               )}
             </div>
           );

@@ -7,6 +7,7 @@ import { FileIcon } from 'react-file-icon';
 import ReactPlayer from 'react-player';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import Button from '@mui/material/Button';
 
 const storageConfigured = isStorageConfigured();
 
@@ -176,6 +177,7 @@ function Gallery2(props) {
   };
   return (
     <div>
+      <Button onClick={() => props.sethandleClose(false)}>Close</Button>
       <h1>Gallery</h1>
       <div>
         {folderNames.map((folderName) => (

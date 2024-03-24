@@ -8,6 +8,12 @@ import ReactPlayer from 'react-player';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import AlertDialog from './AlertDialog';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const storageConfigured = isStorageConfigured();
 
@@ -17,6 +23,7 @@ function Gallery2(props) {
   const [sortedUrls, setSortedUrls] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState('general');
   const [open, setOpen] = React.useState(false);
+  const [popup, setpopup] = useState(false);
 
   const [urlAudio, setUrlAudio] = useState('');
   // all blobs in container
@@ -37,6 +44,7 @@ function Gallery2(props) {
   };
   const handleClose = () => {
     setOpen(false);
+    setpopup(false);
   };
 
   useEffect(async () => {
@@ -130,9 +138,12 @@ function Gallery2(props) {
                   alt={`Image ${key}`}
                   height='200'
                   onClick={() => {
-                    props.setPicture(sortedUrls[selectedFolder][key])
-                    props.sethandleClose(false)
-                    // setGetImageUrl(sortedUrls[selectedFolder][key])
+                    props.setPicture(sortedUrls[selectedFolder][key]);
+                    setpopup(true);
+                    console.log("setpopup", popup);
+                    // SelectOrDeleteImagepopup()
+                    // props.sethandleClose(false)
+                    setGetImageUrl(sortedUrls[selectedFolder][key])
                   }}
                 />
               )}
@@ -177,7 +188,10 @@ function Gallery2(props) {
   };
   return (
     <div>
-      <Button onClick={() => props.sethandleClose(false)}>Close</Button>
+      <Button onClick={() => {
+        props.sethandleClose(false)
+        setpopup(false)
+      }}>Close</Button>
       <h1>Gallery</h1>
       <div>
         {folderNames.map((folderName) => (
@@ -199,6 +213,10 @@ function Gallery2(props) {
           DisplayImagesFromContainer(selectedFolder)}
         {!storageConfigured && <div>Storage is not configured.</div>}
       </div>
+      {
+        popup ? <AlertDialog GetImageUrl={GetImageUrl} setpopup={setpopup} sethandleClose={props.sethandleClose} /> : <></>
+      }
+
       <Modal
         open={open}
         onClose={handleClose}

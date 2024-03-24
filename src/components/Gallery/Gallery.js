@@ -12,11 +12,13 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import {deleteFileByUrl} from '../../api/api';
 
 const storageConfigured = isStorageConfigured();
 
 function Gallery(props) {
   const [images, setImages] = useState([]);
+  const [imageToDelete, setImageToDelete] = useState('');
   const [offset, setOffset] = useState(0);
   const [uploadMessage, setUploadMessage] = useState('');
   const [sortedUrls, setSortedUrls] = useState([]);
@@ -139,6 +141,9 @@ function Gallery(props) {
                   src={sortedUrls[selectedFolder][key]}
                   alt={`Image ${key}`}
                   height='200'
+                  onClick={() => {
+                    setImageToDelete(sortedUrls[selectedFolder][key]);
+                  }}
                 />
               )}
             </div>
@@ -231,8 +236,13 @@ function Gallery(props) {
     boxShadow: 24,
     p: 4,
   };
+
   return (
     <div>
+      <Button onClick={() => {
+        console.log("clicked", imageToDelete)
+        deleteFileByUrl(imageToDelete)
+      }}>DELETE</Button>
       <h1>Gallery</h1>
       <div>
         {folderNames.map((folderName) => (

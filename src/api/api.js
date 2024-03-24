@@ -791,6 +791,7 @@ export const insertStation = async (
   get_title,
   getDescription,
   site,
+  tasksIds,
   imageData,
   audioData
 ) => {
@@ -806,6 +807,7 @@ export const insertStation = async (
         title: get_title,
         parentSiteId: site.id,
         subtitle: getDescription,
+        taskIds:tasksIds
         // fields: {
         //   image: imageData,
         //   audio: audioData.id,
@@ -859,7 +861,7 @@ export const getingDataStation = async () => {
   }).then((res) => {
     allStations = res.data;
   });
-
+  console.log("allStations", allStations);
   return allStations;
 };
 export const updateStation = async (id, title, subtitle, parentSiteId) => {

@@ -47,6 +47,8 @@ const Stations = (props) => {
       setStationForEdit(openThreeDotsVertical);
       setModalOpen(true);
     } else if (requestForEditing === 'duplication') {
+      setStationForEdit(openThreeDotsVertical);
+      setModalOpen(true);
     } else if (requestForEditing === 'delete') {
       setStationForDelete(openThreeDotsVertical);
       setOpenRemove(true);
@@ -284,7 +286,7 @@ const Stations = (props) => {
                                               setOpenThreeDotsVertical
                                             }
                                             editable={true}
-                                            Reproducible={false}
+                                            Reproducible={true}
                                             details={true}
                                             erasable={true}
                                           />

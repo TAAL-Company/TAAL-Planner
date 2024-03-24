@@ -68,10 +68,7 @@ const Modal_Stations = (props) => {
       setFlagClickOK((flagClickOK = false));
       setDone(false);
       alert('עליך למלא שדות חובה המסומנים בכוכבית');
-    } else if (
-      props.requestForEditing === 'edit' ||
-      props.requestForEditing === 'details'
-    ) {
+    } else if (props.requestForEditing === 'edit' || props.requestForEditing === 'details') {
       let response = await updateStation(
         stationUUId,
         get_title,
@@ -91,6 +88,38 @@ const Modal_Stations = (props) => {
         props.setOpenModalPlaces(false);
         props.setOpenThreeDotsVertical(-1);
         props.setRequestForEditing('');
+      }
+    } else if (props.requestForEditing === 'duplication') {
+      console.log("duplication", props.stationArray);
+      let station = props.stationArray.find(
+        (station) => station.id === stationUUId
+      );
+      console.log("station", station);
+
+      let stationtasksIds = [];
+      station.tasks.map((task) => {
+        stationtasksIds.push(task.id);
+      })
+
+      try {
+        const post = await insertStation(
+          get_title,
+          getDescription,
+          props.mySite,
+          stationtasksIds
+        );//, imageData, audioData);
+
+        setDone(true);
+        setFlagClickOK((flagClickOK = false));
+
+        let length = props.stationArray.length + 1;
+        let color = props.pastelColors[length];
+        post.color = color;
+        props.setOpenModalPlaces(false);
+        await props.setStationArray((stations) => [...stations, post]);
+      } catch (error) {
+        alert('שם התחנה כבר קיים - בחר שם אחר');
+        console.error(error);
       }
     } else {
       // let imageData;

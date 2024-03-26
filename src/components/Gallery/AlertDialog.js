@@ -24,10 +24,6 @@ export default function AlertDialog(props) {
   };
 
   return (
-    // <React.Fragment>
-    //   <Button variant="outlined" onClick={handleClickOpen}>
-    //     Open alert dialog
-    //   </Button>
     <Dialog
       open={open}
       onClose={handleClose}
@@ -35,21 +31,17 @@ export default function AlertDialog(props) {
       aria-describedby="alert-dialog-description"
     >
       <DialogTitle id="alert-dialog-title">
-        {"Use Google's location service?"}
+        {"Please select"}
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Let Google help apps determine location. This means sending anonymous
-          location data to Google, even when no apps are running.
+        An image to upload or choose to delete an existing image.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>DELETE</Button>
-        <Button onClick={handleClickOpen} autoFocus>
-          Agree
-        </Button>
+        <Button onClick={handleClickOpen} autoFocus>Agree</Button>
       </DialogActions>
     </Dialog>
-    // </React.Fragment>
   );
 }

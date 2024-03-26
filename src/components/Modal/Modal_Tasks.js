@@ -15,11 +15,11 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 const style = {
   position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: '1002px',
-  height: '400px',
+  top: '5%',
+  left: '5%',
+  // transform: 'translate(-50%, -50%)',
+  width:'90%', //'1002px',
+  height: '90%',//'400px',
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,

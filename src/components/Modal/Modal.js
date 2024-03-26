@@ -4,6 +4,7 @@ import {
   get,
   insertRoute,
   updateRoute,
+  getingData_Routes,
   getingDataUsers,
   getingData_Users,
 } from '../../api/api';
@@ -21,6 +22,8 @@ let obj = { tasks: [], users: [], mySite: [] };
 let myStudents = [];
 let myStudentsChoice = [];
 let flagClickOK = false;
+
+
 //--------------------------
 function Modal({
   setOpenModal,
@@ -36,6 +39,7 @@ function Modal({
   requestForEditing,
   newRoute,
 }) {
+  // let myStudentslist = [];
   const [obj, set_obj] = useState({
     name: '',
     studentIds: [],
@@ -56,6 +60,10 @@ function Modal({
   const [routeTitle, setRouteTitle] = useState(routeName);
   // const [newRoute, setNewRoute] = useState();
 
+  const [ischecked, setIsChecked] = useState(false);
+  const [Routes, setRoutes] = useState([]);
+  const [myStudentsList, setMyStudentsList] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -69,6 +77,32 @@ function Modal({
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        setRoutes(await getingData_Routes());
+      } catch (error) {
+        console.error(error.message);
+      }
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    let tempStudentslist = [];//myStudentslist = [];
+    Routes.map((route) => {
+      if (route.name === routeTitle) {
+        route.students.map((student) => {
+          tempStudentslist.push(student);
+        })
+      }
+    })
+    setMyStudentsList(tempStudentslist);
+    console.log("myStudentsList", myStudentsList);
+  }, [routeTitle, Routes]);
 
   function Post_Route() {
     setFlagClickOK((flagClickOK = true));
@@ -86,7 +120,7 @@ function Modal({
       setSite(JSON.parse(localStorage.getItem('New_Routes')));
       tasksForNewRoute.map((task) => taskIdList.push(task.id));
       let studentIdList = [];
-      myStudents.map((student) => studentIdList.push(student.id));
+      myStudentsList.map((student) => studentIdList.push(student.id));//myStudents
       let newRouteObj = {
         name: routeTitle,
         studentIds: studentIdList,
@@ -94,6 +128,8 @@ function Modal({
         siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
       };
       // set_obj((obj.mySite = JSON.parse(localStorage.getItem("MySite"))));
+
+      console.log('newRouteObj',newRouteObj);
 
       updateRoute(routeUUID, newRouteObj).then((data) => {
         setDone(true);
@@ -106,8 +142,8 @@ function Modal({
 
   function Post_new_Route() {
     let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    let today  = new Date();
-    
+    let today = new Date();
+
     setFlagClickOK((flagClickOK = true));
     resultMyArrayStudent();
 
@@ -119,9 +155,9 @@ function Modal({
       setSite(JSON.parse(localStorage.getItem('New_Routes')));
       tasksForNewRoute.map((task) => taskIdList.push(task.id));
       let studentIdList = [];
-      myStudents.map((student) => studentIdList.push(student.id));
+      myStudentsList.map((student) => studentIdList.push(student.id));//myStudents
       let newRouteObj = {
-        name: routeTitle+"-"+(Math.floor((Math.random() * 100000)))+"-"+today.toLocaleDateString("en-US"),
+        name: routeTitle + "-" + (Math.floor((Math.random() * 100000))) + "-" + today.toLocaleDateString("en-US"),
         studentIds: studentIdList,
         taskIds: taskIdList,
         siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
@@ -133,9 +169,13 @@ function Modal({
         setFlagClickOK((flagClickOK = false));
         // window.location.replace("/forms");
       });
-       setOpenModal(false);
+      setOpenModal(false);
     }
   }
+  const saveCheckboxstudentList = (val) => {
+    setMyStudents(myStudents.push(val));
+    if (myStudents.length > 1) sortById();
+  };
 
   const saveCheckbox = (val) => {
     setMyStudents(myStudents.push(val));
@@ -458,12 +498,40 @@ function Modal({
                                 <input
                                   dir='ltr'
                                   style={{ marginLeft: '10px' }}
-                                  onChange={() => saveCheckbox(value)}
+                                  onChange={() => {
+                                    console.log("testing",myStudentsList);
+                                    // saveCheckbox(value)
+                                    const isStudentInList = myStudentsList.some((student) => student.id === value.id);
+                                    console.log('isStudentInList', isStudentInList);
+                                    if (isStudentInList) {
+                                      // Student exists in the list, remove the student with the matching id
+                                      const updatedStudentsList = myStudentsList.filter((student) => student.id !== value.id);
+                                      setMyStudentsList(updatedStudentsList);
+                                    } else {
+                                      // Student does not exist in the list, add the new student
+                                      const updatedStudentsList = [...myStudentsList, value];
+                                      setMyStudentsList(updatedStudentsList);
+                                    }
+
+                                    if (false) {
+                                      saveCheckboxstudentList(value)
+                                      setIsChecked(!ischecked)
+                                    }
+                                  }}
                                   className='form-check-input me-1'
                                   type='checkbox'
                                   id={value.name}
                                   name={value.name}
                                   value=''
+                                  // checked={value.routes.some((route) => {
+                                  //   if (route.id === routeUUID && ischecked) {
+                                  //     return true
+                                  //   }
+                                  //   else {
+                                  //     return false
+                                  //   }
+                                  // }) ? true : false}
+                                  checked={myStudentsList.some((student) => student.id === value.id)}
                                 ></input>
                                 {value.name}
                               </label>

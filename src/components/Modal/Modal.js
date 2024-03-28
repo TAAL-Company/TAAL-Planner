@@ -14,7 +14,7 @@ import Modal_Loading from './Modal_Loading';
 import { baseUrl } from '../../config';
 import { RiAsterisk } from 'react-icons/ri';
 import stopIcon from '../../Pictures/stopIcon.svg';
-import Modal_no_site_selected from './Modal_No_Site_Selected';
+import Modal_no_site_selected from './Modal_no_site_selected';
 
 //--------------------------
 let obj = { tasks: [], users: [], mySite: [] };

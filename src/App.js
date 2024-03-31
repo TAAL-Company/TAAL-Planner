@@ -19,20 +19,45 @@ import Community from './components/Community/community';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+import SuperTokens, { SuperTokensWrapper } from "supertokens-auth-react";
+import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
+import Session from "supertokens-auth-react/recipe/session";
+
+import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui";
+import { EmailPasswordPreBuiltUI } from "supertokens-auth-react/recipe/emailpassword/prebuiltui";
+import * as reactRouterDom from "react-router-dom";
+
+SuperTokens.init({
+    appInfo: {
+        // learn more about this on https://supertokens.com/docs/emailpassword/appinfo
+        appName: "TAAL",
+        apiDomain: "http://localhost:3000",
+        websiteDomain: "http://localhost:3001",
+        apiBasePath: "/auth",
+        websiteBasePath: "/auth",
+    },
+    recipeList: [
+        EmailPassword.init(),
+        Session.init()
+    ]
+});
+
 // import CallState from "./components/CallState/CallState";
 function App() {
   return (
     <>
+    <SuperTokensWrapper>
       <div>
         <DndProvider backend={HTML5Backend}>
           <Provider store={store}>
             <Router>
               <div>
-                {sessionStorage.logged_in == 1 ? (
+              {getSuperTokensRoutesForReactRouterDom(reactRouterDom, [EmailPasswordPreBuiltUI])}
+                {/* {sessionStorage.logged_in == 1 ? (
                   <>
                     <Nav />
                   </>
-                ) : null}
+                ) : null} */}
                 <Switch>
                   <Route path='/' exact component={Home}></Route>
                   <Route path='/planner' component={Planner}></Route>
@@ -51,6 +76,7 @@ function App() {
           </Provider>
         </DndProvider>
       </div>
+      </SuperTokensWrapper>
     </>
   );
 }

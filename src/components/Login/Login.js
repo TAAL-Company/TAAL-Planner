@@ -4,6 +4,7 @@ import logo from '../../Pictures/loginLogoTaal.svg';
 import userLogo from '../../Pictures/user-logo.png';
 import lockLogo from '../../Pictures/lock-logo.png';
 import './styleLogin.css';
+import Session from 'supertokens-web-js/recipe/session';
 
 let flagLoading = false;
 
@@ -28,6 +29,11 @@ function Login(props) {
     setFlagLoading((flagLoading = true));
   }
 
+  async function logout () {
+    await Session.signOut(); 
+    window.location.href = "/auth"; // or to wherever your logic page is
+  }
+
   return (
     <>
       {sessionStorage.logged_in ? (
@@ -37,6 +43,7 @@ function Login(props) {
         </h1>
       ) : (
         <>
+        <butttom onClick={logout}>logout</butttom>
           <div className='App-header'>
             <div className='box'>
               <div className='logoHeader'>

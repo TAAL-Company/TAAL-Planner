@@ -1,24 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import './Modal.css';
 import {
-  get,
   insertRoute,
   updateRoute,
   getingData_Routes,
-  getingDataUsers,
   getingData_Users,
 } from '../../api/api';
 import { FcLink } from 'react-icons/fc';
 import { BsExclamationLg } from 'react-icons/bs';
 import Modal_Loading from './Modal_Loading';
-import { baseUrl } from '../../config';
-import { RiAsterisk } from 'react-icons/ri';
-import stopIcon from '../../Pictures/stopIcon.svg';
 import Modal_no_site_selected from './Modal_No_Site_Selected';
 
 //--------------------------
-let obj = { tasks: [], users: [], mySite: [] };
-// let student = [];
 let myStudents = [];
 let myStudentsChoice = [];
 let flagClickOK = false;
@@ -172,27 +165,7 @@ function Modal({
       setOpenModal(false);
     }
   }
-  const saveCheckboxstudentList = (val) => {
-    setMyStudents(myStudents.push(val));
-    if (myStudents.length > 1) sortById();
-  };
 
-  const saveCheckbox = (val) => {
-    setMyStudents(myStudents.push(val));
-    if (myStudents.length > 1) sortById();
-  };
-  const sortById = () => {
-    for (let i = 0; i < myStudents.length; i++) {
-      let min = myStudents[i];
-      for (let j = i; j < myStudents.length; j++) {
-        if (myStudents[j].id < min.id) {
-          setMyStudents((myStudents[i] = myStudents[j]));
-          setMyStudents((myStudents[j] = min));
-          min = myStudents[j].id;
-        }
-      }
-    }
-  };
   const resultMyArrayStudent = () => {
     if (myStudents.length > 1)
       for (let i = 0; i < myStudents.length; i++) {
@@ -210,9 +183,7 @@ function Modal({
       }
     setMyStudentsChoice(myStudentsChoice.push(myStudents[0]));
   };
-  function getName(val) {
-    setName(val.target.value);
-  }
+
   const saveData = () => {
     setFlagStudent(false);
     setOpenModal(false);
@@ -246,9 +217,6 @@ function Modal({
       });
     }
   };
-
-  // useEffect(() => {
-  // }, [newRoute]);
 
   return (
     <>
@@ -308,12 +276,27 @@ function Modal({
                             <input
                               style={{ marginLeft: '10px' }}
                               dir='ltr'
-                              onChange={() => saveCheckbox(value)}
+                              onChange={() => {
+                                console.log("testing",myStudentsList);
+                                // saveCheckbox(value)
+                                const isStudentInList = myStudentsList.some((student) => student.id === value.id);
+                                console.log('isStudentInList', isStudentInList);
+                                if (isStudentInList) {
+                                  // Student exists in the list, remove the student with the matching id
+                                  const updatedStudentsList = myStudentsList.filter((student) => student.id !== value.id);
+                                  setMyStudentsList(updatedStudentsList);
+                                } else {
+                                  // Student does not exist in the list, add the new student
+                                  const updatedStudentsList = [...myStudentsList, value];
+                                  setMyStudentsList(updatedStudentsList);
+                                }
+                              }}
                               className='form-check-input me-1'
                               type='checkbox'
                               id={value.name}
                               name={value.name}
                               value=''
+                              checked={myStudentsList.some((student) => student.id === value.id)}
                             ></input>
                             {value.name}
                           </label>
@@ -512,25 +495,12 @@ function Modal({
                                       const updatedStudentsList = [...myStudentsList, value];
                                       setMyStudentsList(updatedStudentsList);
                                     }
-
-                                    if (false) {
-                                      saveCheckboxstudentList(value)
-                                      setIsChecked(!ischecked)
-                                    }
                                   }}
                                   className='form-check-input me-1'
                                   type='checkbox'
                                   id={value.name}
                                   name={value.name}
                                   value=''
-                                  // checked={value.routes.some((route) => {
-                                  //   if (route.id === routeUUID && ischecked) {
-                                  //     return true
-                                  //   }
-                                  //   else {
-                                  //     return false
-                                  //   }
-                                  // }) ? true : false}
                                   checked={myStudentsList.some((student) => student.id === value.id)}
                                 ></input>
                                 {value.name}

@@ -145,7 +145,7 @@ const Coaches = () => {
     } else {
       let picture_url;
       try {
-        if (picture) picture_url = await uploadFiles(picture, 'Coaches media'); //await uploadImageGD(picture)
+        if (picture) picture_url = await uploadFiles(picture, 'Coaches media/picture'); //await uploadImageGD(picture)
 
         const user = {
           email,

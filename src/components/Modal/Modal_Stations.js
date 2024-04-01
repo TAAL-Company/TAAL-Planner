@@ -127,10 +127,10 @@ const Modal_Stations = (props) => {
 
       // try {
       //   if (picture) {
-      //     imageData = await uploadFiles(picture, 'Station media');
+      //     imageData = await uploadFiles(picture, 'Station media/picture');
       //   }
       //   if (audio) {
-      //     audioData = await uploadFiles(audio, 'Station media');
+      //     audioData = await uploadFiles(audio, 'Station media/audio');
       //   }
       // } catch (error) {
       //   console.error(error);

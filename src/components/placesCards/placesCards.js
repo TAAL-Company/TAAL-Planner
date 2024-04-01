@@ -36,7 +36,7 @@ const PlacesCards = () => {
     } else {
       let picture_url;
       try {
-        if (picture) picture_url = await uploadFiles(picture, 'Site media'); //await uploadImageGD(picture);
+        if (picture) picture_url = await uploadFiles(picture, 'Site media/picture'); //await uploadImageGD(picture);
 
         const place = {
           name,

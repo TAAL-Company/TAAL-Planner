@@ -64,7 +64,6 @@ function Gallery2(props) {
       if (!sortedUrls[folderName]) {
         sortedUrls[folderName] = {};
       }
-
       sortedUrls[folderName][key] = url;
     }
 
@@ -113,7 +112,7 @@ function Gallery2(props) {
   const DisplayImagesFromContainer = (selectedFolder) => (
 
     <div className='galleryImages'>
-      {console.log(sortedUrls)}
+      {/* {console.log(sortedUrls[selectedFolder])} */}
       {sortedUrls[selectedFolder] ? (
         Object.keys(sortedUrls[selectedFolder]).map((key) => {
           return (
@@ -190,12 +189,15 @@ function Gallery2(props) {
       }}>Close</Button>
       <h1>Gallery</h1>
       <div>
+        {console.log(folderNames)}
         {folderNames.map((folderName) => (
+          
           <button
             key={folderName}
             onClick={() => handleFolderClick(folderName)}
             style={{ marginRight: '10px' }}
           >
+            
             {folderName}
           </button>
         ))}

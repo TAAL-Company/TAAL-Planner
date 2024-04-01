@@ -85,7 +85,7 @@ function Modal_Tasks(props) {
 
       try {
         if (picture && !picture?.name?.includes(urlAlreadyExist)) {
-          picture_url = await uploadFiles(picture, 'Task media');
+          picture_url = await uploadFiles(picture, 'Task media/picture');//ask media/picture
         }
       } catch (error) {
         console.error(error);
@@ -93,7 +93,7 @@ function Modal_Tasks(props) {
       }
       try {
         if (audio && !audio?.name?.includes(urlAlreadyExist)) {
-          audio_url = await uploadFiles(audio, 'Task media');
+          audio_url = await uploadFiles(audio, 'Task media/audio');
         }
       } catch (error) {
         console.error(error);

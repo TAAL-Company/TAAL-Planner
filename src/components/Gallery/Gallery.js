@@ -12,7 +12,11 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import {deleteFileByUrl} from '../../api/api';
+import { deleteFileByUrl } from '../../api/api';
+
+import ImageIcon from '@mui/icons-material/Image';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 const storageConfigured = isStorageConfigured();
 
@@ -22,8 +26,11 @@ function Gallery(props) {
   const [offset, setOffset] = useState(0);
   const [uploadMessage, setUploadMessage] = useState('');
   const [sortedUrls, setSortedUrls] = useState([]);
-  const [selectedFolder, setSelectedFolder] = useState('general');
+  const [fileTypeFolder, setfileTypeFolder] = useState('');
   const [open, setOpen] = React.useState(false);
+
+  const [selectedFolderType, setselectedFolderType] = useState('pictures');
+  const [selectedFolder, setSelectedFolder] = useState('general');
 
   const [urlAudio, setUrlAudio] = useState('');
   // all blobs in container
@@ -50,29 +57,29 @@ function Gallery(props) {
     setBlobList(await getBlobsInContainer());
   }, []);
   useEffect(() => {
-    // const sortedUrls = {};
-
     for (const key in blobList) {
       const url = blobList[key];
       const parts = url.split('/');
       let folderName = 'general';
 
-      for (let i = 0; i < parts.length; i++) {
-        if (parts[i] === 'images') {
-          if (i + 2 < parts.length) {
-            folderName = parts[i + 1];
-          }
-          break;
-        }
+      const imageIndex = parts.indexOf('images');
+      if (imageIndex !== -1 && imageIndex + 2 < parts.length) {
+        folderName = parts[imageIndex + 1];
       }
 
-      if (!sortedUrls[folderName]) {
-        sortedUrls[folderName] = {};
+      let fileType = getFileType(url);
+      let fileTypeFolder = '';
+
+      if (['jpeg', 'png', 'jpg', 'webp'].includes(fileType)) {
+        fileTypeFolder = 'pictures';
+      } else if (['aac', 'mp3', 'wav'].includes(fileType)) {
+        fileTypeFolder = 'audio';
       }
 
-      sortedUrls[folderName][key] = url;
+      sortedUrls[folderName] = sortedUrls[folderName] || {};
+      sortedUrls[folderName][fileTypeFolder] = sortedUrls[folderName][fileTypeFolder] || {};
+      sortedUrls[folderName][fileTypeFolder][key] = url;
     }
-
     setFolderNames(Object.keys(sortedUrls));
   }, [blobList]);
 
@@ -108,41 +115,40 @@ function Gallery(props) {
   );
 
   const getFileType = (url) => {
-    const parts = url.split('.');
-    const extension = parts[parts.length - 1];
-    const fileType = extension.toLowerCase();
+    if (typeof url === 'string') {
+      const parts = url.split('.');
+      const extension = parts[parts.length - 1];
+      const fileType = extension.toLowerCase();
 
-    return fileType;
+      return fileType;
+    } else {
+      return 'unknown';
+    }
   };
   // display file name and image
-  const DisplayImagesFromContainer = (selectedFolder) => (
-    // sortedUrls.length === 0 ? (
-    //   <div></div>
-    // ) : (
+  const DisplayImagesFromContainer = (selectedFolder, selectedFolderType) => (
     <div className='galleryImages'>
-      {sortedUrls[selectedFolder] ? (
-        Object.keys(sortedUrls[selectedFolder]).map((key) => {
+      {sortedUrls[selectedFolder] && sortedUrls[selectedFolder][selectedFolderType] ? (
+        Object.keys(sortedUrls[selectedFolder][selectedFolderType]).map((key) => {
           return (
             <div key={key}>
-              {/* {Path.basename(item)} */}
               <br />
               {['aac', 'mp3', 'wav'].includes(
-                getFileType(sortedUrls[selectedFolder][key])
+                getFileType(sortedUrls[selectedFolder][selectedFolderType][key])
               ) ? (
-                <a onClick={() => handleOpen(sortedUrls[selectedFolder][key])}>
+                <a onClick={() => handleOpen(sortedUrls[selectedFolder][selectedFolderType][key])}>
                   <FileIcon
-                    extension={getFileType(sortedUrls[selectedFolder][key])}
+                    extension={getFileType(sortedUrls[selectedFolder][selectedFolderType][key])}
                   />
                 </a>
               ) : (
                 <img
-                  // style={{ borderRadius: "30px" }}
                   key={key}
-                  src={sortedUrls[selectedFolder][key]}
+                  src={sortedUrls[selectedFolder][selectedFolderType][key]}
                   alt={`Image ${key}`}
                   height='200'
                   onClick={() => {
-                    setImageToDelete(sortedUrls[selectedFolder][key]);
+                    setImageToDelete(sortedUrls[selectedFolder][selectedFolderType][key]);
                   }}
                 />
               )}
@@ -222,8 +228,9 @@ function Gallery(props) {
 
   //     await blockBlobClient.uploadData(file);
   //   };
-  function handleFolderClick(folderName) {
+  function handleFolderClick(folderName, FolderType) {
     setSelectedFolder(folderName);
+    setselectedFolderType(FolderType)
   }
   const style = {
     position: 'absolute',
@@ -245,15 +252,40 @@ function Gallery(props) {
       }}>DELETE</Button>
       <h1>Gallery</h1>
       <div>
-        {folderNames.map((folderName) => (
-          <button
-            key={folderName}
-            onClick={() => handleFolderClick(folderName)}
-            style={{ marginRight: '10px' }}
-          >
-            {folderName}
-          </button>
+      <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >   
+      <ButtonGroup size="small" aria-label="Large button group">
+      {folderNames.map((folderName) => (
+          <div key={folderName}>
+            <Button onClick={() =>
+              handleFolderClick(folderName, "pictures")} >
+              <ImageIcon />{folderName}
+            </Button>
+            <Button onClick={() =>
+              handleFolderClick(folderName, "audio")}>
+             <MusicNoteIcon /> {folderName}
+            </Button>
+          </div>
         ))}
+      </ButtonGroup>
+    </Box>
+        {/* {folderNames.map((folderName) => (
+          <div key={folderName}>
+            <button onClick={() =>
+              handleFolderClick(folderName, "pictures")} style={{ marginRight: '10px' }}>
+              {folderName + "pictures"}
+            </button>
+            <button onClick={() =>
+              handleFolderClick(folderName, "audio")} style={{ marginRight: '10px' }} >
+              {folderName + "audio"}
+            </button>
+          </div>
+        ))} */}
       </div>
       {/* <form onSubmit={handleUpload}>
         <input type="file" name="file" accept="image/*" required />
@@ -266,7 +298,7 @@ function Gallery(props) {
         <hr />
         {storageConfigured &&
           blobList.length > 0 &&
-          DisplayImagesFromContainer(selectedFolder)}
+          DisplayImagesFromContainer(selectedFolder, selectedFolderType)}
         {!storageConfigured && <div>Storage is not configured.</div>}
       </div>
       {/* <div className="gallery">

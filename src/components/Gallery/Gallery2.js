@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 // import '../Gallery/Gallery.css';
 import { getBlobsInContainer } from '../azureBlob';
-import uploadFileToBlob from '../azureBlob';
 import { isStorageConfigured } from '../azureBlob';
 import { FileIcon } from 'react-file-icon';
 import ReactPlayer from 'react-player';
@@ -9,14 +8,15 @@ import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
 import AlertDialog from './AlertDialog';
-
+import ImageIcon from '@mui/icons-material/Image';
+import MusicNoteIcon from '@mui/icons-material/MusicNote';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 const storageConfigured = isStorageConfigured();
 
 function Gallery2(props) {
-  const [images, setImages] = useState([]);
-  const [offset, setOffset] = useState(0);
   const [sortedUrls, setSortedUrls] = useState([]);
+  const [selectedFolderType, setselectedFolderType] = useState('pictures');
   const [selectedFolder, setSelectedFolder] = useState('general');
   const [open, setOpen] = React.useState(false);
   const [popup, setpopup] = useState(false);
@@ -25,11 +25,6 @@ function Gallery2(props) {
   // all blobs in container
   const [blobList, setBlobList] = useState([]);
   // current file to upload into container
-  const [fileSelected, setFileSelected] = useState(null);
-
-  // UI/form management
-  const [uploading, setUploading] = useState(false);
-  const [inputKey, setInputKey] = useState(Math.random().toString(36));
   const [folderNames, setFolderNames] = useState([]);
 
   const [GetImageUrl, setGetImageUrl] = useState([]);
@@ -53,92 +48,66 @@ function Gallery2(props) {
       const parts = url.split('/');
       let folderName = 'general';
 
-      for (let i = 0; i < parts.length; i++) {
-        if (parts[i] === 'images') {
-          if (i + 2 < parts.length) {
-            folderName = parts[i + 1];
-          }
-          break;
-        }
+      const imageIndex = parts.indexOf('images');
+      if (imageIndex !== -1 && imageIndex + 2 < parts.length) {
+        folderName = parts[imageIndex + 1];
       }
-      if (!sortedUrls[folderName]) {
-        sortedUrls[folderName] = {};
-      }
-      sortedUrls[folderName][key] = url;
-    }
 
+      let fileType = getFileType(url);
+      let fileTypeFolder = '';
+
+      if (['jpeg', 'png', 'jpg', 'webp'].includes(fileType)) {
+        fileTypeFolder = 'pictures';
+      } else if (['aac', 'mp3', 'wav'].includes(fileType)) {
+        fileTypeFolder = 'audio';
+      }
+
+      sortedUrls[folderName] = sortedUrls[folderName] || {};
+      sortedUrls[folderName][fileTypeFolder] = sortedUrls[folderName][fileTypeFolder] || {};
+      sortedUrls[folderName][fileTypeFolder][key] = url;
+    }
     setFolderNames(Object.keys(sortedUrls));
   }, [blobList]);
 
-  const onFileChange = (event) => {
-    // capture file into state
-    setFileSelected(event.target.files[0]);
-  };
-
-  const onFileUpload = async () => {
-    // prepare UI
-    setUploading(true);
-
-    // *** UPLOAD TO AZURE STORAGE ***
-    const blobsInContainer = await uploadFileToBlob(fileSelected);
-
-    // prepare UI for results
-    setBlobList(blobsInContainer);
-
-    // reset state/form
-    setFileSelected(null);
-    setUploading(false);
-    setInputKey(Math.random().toString(36));
-  };
-
-  // display form
-  const DisplayForm = () => (
-    <div>
-      <input type='file' onChange={onFileChange} key={inputKey || ''} />
-      <button type='submit' onClick={onFileUpload}>
-        Upload!
-      </button>
-    </div>
-  );
 
   const getFileType = (url) => {
-    const parts = url.split('.');
-    const extension = parts[parts.length - 1];
-    const fileType = extension.toLowerCase();
+    if (typeof url === 'string') {
+      const parts = url.split('.');
+      const extension = parts[parts.length - 1];
+      const fileType = extension.toLowerCase();
 
-    return fileType;
+      return fileType;
+    } else {
+      return 'unknown';
+    }
   };
   // display file name and image
-  const DisplayImagesFromContainer = (selectedFolder) => (
-
+  const DisplayImagesFromContainer = (selectedFolder, selectedFolderType) => (
     <div className='galleryImages'>
-      {/* {console.log(sortedUrls[selectedFolder])} */}
-      {sortedUrls[selectedFolder] ? (
-        Object.keys(sortedUrls[selectedFolder]).map((key) => {
+      {sortedUrls[selectedFolder] && sortedUrls[selectedFolder][selectedFolderType] ? (
+        Object.keys(sortedUrls[selectedFolder][selectedFolderType]).map((key) => {
           return (
             <div key={key}>
               <br />
               {['aac', 'mp3', 'wav'].includes(
-                getFileType(sortedUrls[selectedFolder][key])
+                getFileType(sortedUrls[selectedFolder][selectedFolderType][key])
               ) ? (
-                <a onClick={() => handleOpen(sortedUrls[selectedFolder][key])}>
+                <a onClick={() => handleOpen(sortedUrls[selectedFolder][selectedFolderType][key])}>
                   <FileIcon
-                    extension={getFileType(sortedUrls[selectedFolder][key])}
+                    extension={getFileType(sortedUrls[selectedFolder][selectedFolderType][key])}
                   />
                 </a>
               ) : (
                 <img
                   key={key}
-                  src={sortedUrls[selectedFolder][key]}
+                  src={sortedUrls[selectedFolder][selectedFolderType][key]}
                   alt={`Image ${key}`}
                   height='200'
                   onClick={() => {
-                    props.setPicture(sortedUrls[selectedFolder][key]);
+                    props.setPicture(sortedUrls[selectedFolder][selectedFolderType][key]);
                     setpopup(true);
                     console.log("setpopup", popup);
-                    // SelectOrDeleteImagepopup()
-                    // props.sethandleClose(false)
-                    setGetImageUrl(sortedUrls[selectedFolder][key])
+                    setGetImageUrl(sortedUrls[selectedFolder][selectedFolderType][key])
                   }}
                 />
               )}
@@ -151,24 +120,9 @@ function Gallery2(props) {
     </div>
   );
 
-  // useEffect(() => {
-  //   async function fetchImages() {
-  //     const response = await fetch(
-  //       `https://taal.tech/wp-json/wp/v2/media?per_page=100&offset=${offset}`
-  //     );
-  //     const data = await response.json();
-  //     setImages((prevImages) => [...prevImages, ...data]);
-  //   }
-
-  //   fetchImages();
-  // }, [offset]);
-
-  // const loadMoreImages = () => {
-  //   setOffset(offset + 100);
-  // };
-
-  function handleFolderClick(folderName) {
+  function handleFolderClick(folderName, FolderType) {
     setSelectedFolder(folderName);
+    setselectedFolderType(FolderType)
   }
   const style = {
     position: 'absolute',
@@ -189,18 +143,28 @@ function Gallery2(props) {
       }}>Close</Button>
       <h1>Gallery</h1>
       <div>
-        {console.log(folderNames)}
-        {folderNames.map((folderName) => (
-          
-          <button
-            key={folderName}
-            onClick={() => handleFolderClick(folderName)}
-            style={{ marginRight: '10px' }}
-          >
-            
-            {folderName}
-          </button>
-        ))}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <ButtonGroup size="small" aria-label="Large button group">
+            {folderNames.map((folderName) => (
+              <div key={folderName}>
+                <Button onClick={() =>
+                  handleFolderClick(folderName, "pictures")} >
+                  <ImageIcon />{folderName}
+                </Button>
+                <Button onClick={() =>
+                  handleFolderClick(folderName, "audio")}>
+                  <MusicNoteIcon /> {folderName}
+                </Button>
+              </div>
+            ))}
+          </ButtonGroup>
+        </Box>
       </div>
       <div>
         {/* {storageConfigured && !uploading && DisplayForm()} */}
@@ -208,7 +172,7 @@ function Gallery2(props) {
         <hr />
         {storageConfigured &&
           blobList.length > 0 &&
-          DisplayImagesFromContainer(selectedFolder)}
+          DisplayImagesFromContainer(selectedFolder, selectedFolderType)}
         {!storageConfigured && <div>Storage is not configured.</div>}
       </div>
       {

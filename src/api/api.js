@@ -38,10 +38,18 @@ export const deleteFileByUrl = async (imageUrl) => {
 
   const array = parsedUrl.pathname.split('/');
   const lastElement = array[array.length - 1];
-  const secondLastElement = array[array.length - 2];
 
-
-  const containerName = 'images/' + decodeURIComponent(secondLastElement);
+  // Remove the first element if it's an empty string
+  if (array[0] === '') {
+    array.shift();
+  }
+  
+  // Combine all elements except the last one
+  const combined = array.slice(1, -1).join('/');
+  
+  const containerName = decodeURIComponent(combined);
+  
+  // const containerName = 'images/' + decodeURIComponent(secondLastElement);
   const blobName = lastElement;
 
   console.log(parsedUrl.pathname);

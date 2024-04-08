@@ -8,7 +8,10 @@ import './style.css';
 import { FaUser, FaAddressCard, FaRoute } from 'react-icons/fa';
 import { useState } from 'react';
 import { baseUrl } from '../../config';
-import {getingData_Users } from '../../api/api';
+import { getingData_coaches } from '../../api/api';
+
+import Session from 'supertokens-web-js/recipe/session';
+
 let flag_token = false;
 
 const Nav = () => {
@@ -34,7 +37,7 @@ const Nav = () => {
   // });
 
   useEffect(() => {
-      fetch(baseUrl+'/auth/token', {
+    fetch(baseUrl + '/auth/token', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -42,17 +45,23 @@ const Nav = () => {
       },
     })
       .then((response) => response.json())
-      .then(function (user) {
+      .then(async function (user) {
         if (!flag_token) {
           login_token((flag_token = true));
-          const username = getingData_Users().then((data) => {
-            console.log('data: ', data);
-          })
-          setcomplete_name(user.user.email);
+          const coachesData = await getingData_coaches();
+          const coachWithEmail = coachesData.find(coach => coach.email === user.user.email);
+          if(coachWithEmail==null||coachWithEmail==undefined){
+            logout();
+          }
+          console.log('Coach with email:', coachWithEmail);
+          setcomplete_name(coachWithEmail.name);
         }
       });
   });
-
+async function logout () {
+    await Session.signOut(); 
+    window.location.href = "/auth"; // or to wherever your logic page is
+  }
   return (
     <div className='nav'>
       <ul className='nav-links'>

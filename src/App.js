@@ -67,11 +67,11 @@ function App() {
             <Router>
               <div>
               {getSuperTokensRoutesForReactRouterDom(reactRouterDom, [EmailPasswordPreBuiltUI])}
-                {/* {sessionStorage.logged_in == 1 ? (
+                {sessionStorage.logged_in == 1 ? (
                   <>
                     <Nav />
                   </>
-                ) : null} */}
+                ) : null}
                 <Switch>
                   <Route path='/' exact component={Home}></Route>
                   <Route path='/planner' component={Planner}></Route>

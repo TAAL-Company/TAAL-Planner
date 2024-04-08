@@ -36,6 +36,11 @@ const Nav = () => {
   //     });
   // });
 
+  async function logout () {
+    await Session.signOut(); 
+    window.location.href = "/auth"; // or to wherever your logic page is
+  }
+
   useEffect(() => {
     fetch(baseUrl + '/auth/token', {
       method: 'GET',
@@ -83,11 +88,10 @@ async function logout () {
             &nbsp;&nbsp;מסלולים{" "}
           </li>
         </Link>
-        <Link to="/planner" className="link">
-          <li>
-            <FcPlus style={{ fontSize: "24px" }} /> &nbsp;&nbsp;הוסף מסלול{" "}
-          </li>
-        </Link> */}
+        */}
+        <Link onClick={logout()}>
+          <div className='logout'></div>
+        </Link>
         <Link to='/Dashboard'>
           <div className='home'></div>
         </Link>

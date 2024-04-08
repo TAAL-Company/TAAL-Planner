@@ -35,8 +35,8 @@ SuperTokens.init({
   appInfo: {
     // learn more about this on https://supertokens.com/docs/emailpassword/appinfo
     appName: "TAAL",
-    apiDomain: "http://localhost:3000",//https://prod-web-app0da5905.azurewebsites.net
-    websiteDomain: "http://localhost:3001",//https://planner.taal.link
+    apiDomain: "https://prod-web-app0da5905.azurewebsites.net",//https://prod-web-app0da5905.azurewebsites.net
+    websiteDomain: "https://planner.taal.link",//https://planner.taal.link
     apiBasePath: "/auth",
     websiteBasePath: "/auth",
   },

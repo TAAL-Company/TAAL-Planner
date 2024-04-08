@@ -20,10 +20,6 @@ function LoginAPI(props) {
         'Content-Type': 'application/json',
         accept: 'application/json',
       },
-      body: JSON.stringify({
-        username: props.APIDetailsLogin.user,
-        password: props.APIDetailsLogin.pass,
-      }),
     })
       .then((response) =>
         response.status === 403

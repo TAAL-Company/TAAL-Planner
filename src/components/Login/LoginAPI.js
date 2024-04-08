@@ -14,7 +14,7 @@ function LoginAPI(props) {
   if (props.APIDetailsLogin.user.length > 0) {
     // const url = `https://taal.tech/wp-json/jwt-auth/v1/token/`;
     //fetch(url, {
-    fetch(baseUrl+'auth/token', {
+    fetch(baseUrl+'/auth/token', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

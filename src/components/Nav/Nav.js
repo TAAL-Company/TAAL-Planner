@@ -16,7 +16,7 @@ let flag_token = false;
 
 const Nav = () => {
   const [, login_token] = useState('');
-  const [complete_name, setcomplete_name] = useState('');
+  const [complete_name, setcomplete_name] = useState(sessionStorage['complete_name']);
   // useEffect(() => {
   //   const url2 = `https://taal.tech/wp-json/wp/v2/users/me/`;
   //   fetch(url2, {
@@ -37,6 +37,7 @@ const Nav = () => {
   // });
 
   async function logout () {
+    console.log('logging out');
     await Session.signOut(); 
     window.location.href = "/auth"; // or to wherever your logic page is
   }
@@ -58,15 +59,19 @@ const Nav = () => {
           if(coachWithEmail==null||coachWithEmail==undefined){
             logout();
           }
+          sessionStorage.setItem('jwt', user.token);//user.token);
+          sessionStorage.setItem('logged_in', 1);
+          sessionStorage.setItem('userName', user.user.email);//props.APIDetailsLogin.user);
           console.log('Coach with email:', coachWithEmail);
           setcomplete_name(coachWithEmail.name);
+          sessionStorage.complete_name=complete_name;
         }
       });
   });
-async function logout () {
-    await Session.signOut(); 
-    window.location.href = "/auth"; // or to wherever your logic page is
-  }
+
+  useEffect(() => {
+    sessionStorage.complete_name=complete_name;
+  }, [complete_name]);
   return (
     <div className='nav'>
       <ul className='nav-links'>
@@ -89,7 +94,7 @@ async function logout () {
           </li>
         </Link>
         */}
-        <Link onClick={logout()}>
+        <Link to= "/auth" onClick={logout}>
           <div className='logout'></div>
         </Link>
         <Link to='/Dashboard'>

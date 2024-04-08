@@ -5,6 +5,7 @@ import Calculator from './components/Calculator/Calculator';
 import Student from './components/Student/Student';
 // import Student from '/components/Student/Student';
 import './App.css';
+import logo from './Pictures/loginLogoTaal.svg';
 import Login from './components/Login/Login';
 import { Provider } from 'react-redux';
 import store from './redux/store';
@@ -24,28 +25,26 @@ import EmailPassword from "supertokens-auth-react/recipe/emailpassword";
 import Session, { SessionAuth } from "supertokens-auth-react/recipe/session";
 
 import { getSuperTokensRoutesForReactRouterDom } from "supertokens-auth-react/ui";
-import { EmailPasswordPreBuiltUI } from "supertokens-auth-react/recipe/emailpassword/prebuiltui";
+import { EmailPasswordPreBuiltUI, SignInAndUp } from "supertokens-auth-react/recipe/emailpassword/prebuiltui";
+
 import * as reactRouterDom from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { useEffect } from 'react';
 
 SuperTokens.init({
   appInfo: {
     // learn more about this on https://supertokens.com/docs/emailpassword/appinfo
     appName: "TAAL",
-    apiDomain: "http://localhost:3000",
-    websiteDomain: "http://localhost:3001",
+    apiDomain: "http://localhost:3000",//https://prod-web-app0da5905.azurewebsites.net
+    websiteDomain: "http://localhost:3001",//https://planner.taal.link
     apiBasePath: "/auth",
     websiteBasePath: "/auth",
   },
-  getRedirectionURL: async (context) => {
-    console.log('context', context.action);
-    if (context.action === "TO_AUTH") {
-      return "/auth"; // return the path where you are rendering the Auth UI
-    } else if (context.action === "SUCCESS" && context.newSessionCreated) {
-      return "/planner"; // defaults to "/"
-    };
-  },
   recipeList: [
     EmailPassword.init({
+      signInAndUpFeature: {
+        disableDefaultUI: true, // This will prevent SuperTokens from displaying the default login UI in the `/auth` page.
+      },
       style: `
               [data-supertokens~=container] {
                   --palette-background: 51, 51, 51;
@@ -75,7 +74,6 @@ function App() {
           <DndProvider backend={HTML5Backend}>
             <Provider store={store}>
               <BrowserRouter>
-                {getSuperTokensRoutesForReactRouterDom(reactRouterDom, [EmailPasswordPreBuiltUI])}
                 <Route path='/' exact><SessionAuth><Nav /><Planner /></SessionAuth></Route>
                 <Route path='/planner' ><SessionAuth><Nav /><Planner /></SessionAuth></Route>
                 <Route path='/student' ><SessionAuth><Nav /><Student /></SessionAuth></Route>
@@ -87,6 +85,8 @@ function App() {
                 <Route path='/Forms' ><SessionAuth><Nav /><Forms /></SessionAuth></Route>
                 <Route path='/coaches' ><SessionAuth><Nav /><Coaches /></SessionAuth></Route>
                 <Route path='/community' ><SessionAuth><Nav /><Community /></SessionAuth></Route>
+                <Route path='/auth' ><AuthPage /></Route>
+                <Route path='/logout' ><LogoutPage /></Route>
               </BrowserRouter>
             </Provider>
           </DndProvider>
@@ -95,5 +95,29 @@ function App() {
     </>
   );
 }
-const Home = () => <Login />;
+
+function AuthPage() {
+  const history = useHistory();
+  return (
+    <div style={{ marginTop: 24 }}>
+      <div className='logoHeader'>
+        <img src={logo} className='App-logo' alt='logo'></img>
+      </div>
+      <SignInAndUp navigate={history} />
+    </div >
+  );
+}
+
+function LogoutPage() {
+  useEffect(() => {
+    const logout = async () => {
+      console.log('logout');
+      await Session.signOut();
+    }
+    logout();
+  }, [])
+  return <div>Logout</div>;
+}
+
+
 export default App;

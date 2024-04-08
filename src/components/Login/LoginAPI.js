@@ -28,6 +28,7 @@ function LoginAPI(props) {
       )
 
       .then(function (user) {
+        console.log('user: ', user);
         if (!flag_token) {
           if (user.message !== undefined) {
             if (user.message.includes('2FA')) {
@@ -38,9 +39,9 @@ function LoginAPI(props) {
             }
           }
           setFlag((flag = true));
-          sessionStorage.setItem('jwt', user.token);
+          sessionStorage.setItem('jwt', user.token);//user.token);
           sessionStorage.setItem('logged_in', 1);
-          sessionStorage.setItem('userName', props.APIDetailsLogin.user);
+          sessionStorage.setItem('userName', user.user.email );//props.APIDetailsLogin.user);
 
           window.location.replace('/Planner');
         }

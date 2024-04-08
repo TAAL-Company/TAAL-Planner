@@ -8,30 +8,51 @@ import './style.css';
 import { FaUser, FaAddressCard, FaRoute } from 'react-icons/fa';
 import { useState } from 'react';
 import { baseUrl } from '../../config';
-
+import {getingData_Users } from '../../api/api';
 let flag_token = false;
 
 const Nav = () => {
   const [, login_token] = useState('');
   const [complete_name, setcomplete_name] = useState('');
+  // useEffect(() => {
+  //   const url2 = `https://taal.tech/wp-json/wp/v2/users/me/`;
+  //   fetch(url2, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       accept: 'application/json',
+  //       Authorization: 'Bearer' + sessionStorage.jwt,
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then(function (user) {
+  //       if (!flag_token) {
+  //         login_token((flag_token = true));
+  //         setcomplete_name(user.name);
+  //       }
+  //     });
+  // });
+
   useEffect(() => {
-    const url2 = `https://taal.tech/wp-json/wp/v2/users/me/`;
-    fetch(url2, {
+      fetch(baseUrl+'/auth/token', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         accept: 'application/json',
-        Authorization: 'Bearer' + sessionStorage.jwt,
       },
     })
       .then((response) => response.json())
       .then(function (user) {
         if (!flag_token) {
           login_token((flag_token = true));
-          setcomplete_name(user.name);
+          const username = getingData_Users().then((data) => {
+            console.log('data: ', data);
+          })
+          setcomplete_name(user.user.email);
         }
       });
   });
+
   return (
     <div className='nav'>
       <ul className='nav-links'>

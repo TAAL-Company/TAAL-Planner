@@ -8,30 +8,70 @@ import './style.css';
 import { FaUser, FaAddressCard, FaRoute } from 'react-icons/fa';
 import { useState } from 'react';
 import { baseUrl } from '../../config';
+import { getingData_coaches } from '../../api/api';
+
+import Session from 'supertokens-web-js/recipe/session';
 
 let flag_token = false;
 
 const Nav = () => {
   const [, login_token] = useState('');
-  const [complete_name, setcomplete_name] = useState('');
+  const [complete_name, setcomplete_name] = useState(sessionStorage['complete_name']);
+  // useEffect(() => {
+  //   const url2 = `https://taal.tech/wp-json/wp/v2/users/me/`;
+  //   fetch(url2, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       accept: 'application/json',
+  //       Authorization: 'Bearer' + sessionStorage.jwt,
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then(function (user) {
+  //       if (!flag_token) {
+  //         login_token((flag_token = true));
+  //         setcomplete_name(user.name);
+  //       }
+  //     });
+  // });
+
+  async function logout () {
+    console.log('logging out');
+    await Session.signOut(); 
+    window.location.href = "/auth"; // or to wherever your logic page is
+  }
+
   useEffect(() => {
-    const url2 = `https://taal.tech/wp-json/wp/v2/users/me/`;
-    fetch(url2, {
+    fetch(baseUrl + '/auth/token', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         accept: 'application/json',
-        Authorization: 'Bearer' + sessionStorage.jwt,
       },
     })
       .then((response) => response.json())
-      .then(function (user) {
+      .then(async function (user) {
         if (!flag_token) {
           login_token((flag_token = true));
-          setcomplete_name(user.name);
+          const coachesData = await getingData_coaches();
+          const coachWithEmail = coachesData.find(coach => coach.email === user.user.email);
+          if(coachWithEmail==null||coachWithEmail==undefined){
+            logout();
+          }
+          sessionStorage.setItem('jwt', user.token);//user.token);
+          sessionStorage.setItem('logged_in', 1);
+          sessionStorage.setItem('userName', user.user.email);//props.APIDetailsLogin.user);
+          console.log('Coach with email:', coachWithEmail);
+          setcomplete_name(coachWithEmail.name);
+          sessionStorage.complete_name=complete_name;
         }
       });
   });
+
+  useEffect(() => {
+    sessionStorage.complete_name=complete_name;
+  }, [complete_name]);
   return (
     <div className='nav'>
       <ul className='nav-links'>
@@ -53,11 +93,10 @@ const Nav = () => {
             &nbsp;&nbsp;מסלולים{" "}
           </li>
         </Link>
-        <Link to="/planner" className="link">
-          <li>
-            <FcPlus style={{ fontSize: "24px" }} /> &nbsp;&nbsp;הוסף מסלול{" "}
-          </li>
-        </Link> */}
+        */}
+        <Link to= "/auth" onClick={logout}>
+          <div className='logout'></div>
+        </Link>
         <Link to='/Dashboard'>
           <div className='home'></div>
         </Link>

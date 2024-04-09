@@ -149,22 +149,17 @@ const Planner = () => {
     setMarginHebrew('150px');
   };
   return (
-    <>
-      {!get_logged_in ? (
-        <div style={{ color: 'white' }}>Please connect properly !</div>
-      ) : (
+    <div className='Planner'>
+      {loading && <div>Loading</div>}
+      {!loading && (
         <>
-          <div className='Planner'>
-            {loading && <div>Loading</div>}
-            {!loading && (
-              <>
-                {/* <div
+          {/* <div
                   className={`Actions ${
                     language !== "English" ? "english" : ""
                   }`}
                 > */}
-                {/* כפתור שפות */}
-                {/* <button
+          {/* כפתור שפות */}
+          {/* <button
                     className="language"
                     style={{ marginLeft: marginHebrew, marginTop: "22px" }}
                     onClick={() => {
@@ -174,44 +169,41 @@ const Planner = () => {
                   >
                     {language}
                   </button> */}
-                {/* </div> */}
+          {/* </div> */}
 
-                {modalOpen && (
-                  <Modal setOpenModal={setModalOpen} setText={get_Name} />
-                )}
-                <div className='warpper'>
-                  <Places
-                    setFloatLang={floatLan}
-                    stationsBeforeChoosingSite={stationsBeforeChoosingSite}
-                    tasksBeforeChoosingSite={tasksBeforeChoosingSite}
-                    routesBeforeChoosingSite={routesBeforeChoosingSite}
-                    language={language}
-                    sites={sites}
-                    stations={stations}
-                    siteLanguage={siteLanguage}
-                    workerLanguage={workerLanguage}
-                    siteQuestionLanguage={siteQuestionLanguage}
-                    saveButton={saveButton}
-                    myTasks={myTasks}
-                    drag={drag}
-                    addSite={addSite}
-                    addStation={addStation}
-                    addMyTask={addMyTask}
-                    titlePlacesCss={titlePlacesCss}
-                    titleStationCss={titleStationCss}
-                    titleTaskCss={titleTaskCss}
-                    flagHebrew={flagHebrew}
-                    hebrew={hebrew}
-                    english={english}
-                    Hebrew={Hebrew}
-                  />
-                </div>
-              </>
-            )}
+          {modalOpen && (
+            <Modal setOpenModal={setModalOpen} setText={get_Name} />
+          )}
+          <div className='warpper'>
+            <Places
+              setFloatLang={floatLan}
+              stationsBeforeChoosingSite={stationsBeforeChoosingSite}
+              tasksBeforeChoosingSite={tasksBeforeChoosingSite}
+              routesBeforeChoosingSite={routesBeforeChoosingSite}
+              language={language}
+              sites={sites}
+              stations={stations}
+              siteLanguage={siteLanguage}
+              workerLanguage={workerLanguage}
+              siteQuestionLanguage={siteQuestionLanguage}
+              saveButton={saveButton}
+              myTasks={myTasks}
+              drag={drag}
+              addSite={addSite}
+              addStation={addStation}
+              addMyTask={addMyTask}
+              titlePlacesCss={titlePlacesCss}
+              titleStationCss={titleStationCss}
+              titleTaskCss={titleTaskCss}
+              flagHebrew={flagHebrew}
+              hebrew={hebrew}
+              english={english}
+              Hebrew={Hebrew}
+            />
           </div>
         </>
       )}
-    </>
+    </div>
   );
 };
 export default Planner;

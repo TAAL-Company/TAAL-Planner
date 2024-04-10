@@ -10,7 +10,9 @@ import Professions from '../../Pictures/Professions.svg';
 import coachImage from '../../Pictures/coach.png';
 import galleryImage from '../../Pictures/gallery.png';
 import communityImage from '../../Pictures/community.png';
-import pic from '../../Pictures/defualtSiteImg.svg';
+// import pic from '../../Pictures/defualtSiteImg.svg';
+// import Barchart from '../charts/Barchart';
+// import Piechart from '../charts/Piechart';
 
 const Dashboard = () => {
   const cards = [

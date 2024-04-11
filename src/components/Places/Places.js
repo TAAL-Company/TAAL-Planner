@@ -294,11 +294,12 @@ const Places = (props) => {
           setPercentProgressBar(
             (percentProgressBar) => percentProgressBar + percentTemp
           );
-          //allTasksOfTheSite
-          let taskTemp = allTasksOfTheSite?.find(
-            (item) => item.id === element.taskId
-          );
-
+          //allTasksOfTheSite - allTasksOfTheSite
+          let taskTemp = allTasks?.find((item) => item.id === element.taskId);
+          // console.log('e',e);
+          // console.log('firstStation',firstStation);
+          // console.log('allTasksOfTheSite',allTasksOfTheSite);
+          // console.log('taskTemp',taskTemp);
           if (taskTemp === undefined) {
             return {
               id: element.taskId,
@@ -652,7 +653,7 @@ const Places = (props) => {
       }
     }
   }, [allTasksOfTheSite]);
-
+ 
   const clickOnhreeDotsVerticaIcont = (value) => {
     if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);

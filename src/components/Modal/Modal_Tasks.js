@@ -5,7 +5,7 @@ import { RiAsterisk } from 'react-icons/ri';
 import { IoMdCheckbox } from 'react-icons/io';
 import Modal_Loading from './Modal_Loading';
 import { baseUrl } from '../../config';
-import Modal_no_site_selected from './Modal_No_Site_Selected';
+import Modal_no_site_selected from './Modal_no_site_selected';
 import { uploadFiles, uploadFile, insertTask, updateTask } from '../../api/api';
 import uploadFileToBlob from '../azureBlob';
 import Gallery2 from '../Gallery/Gallery2';

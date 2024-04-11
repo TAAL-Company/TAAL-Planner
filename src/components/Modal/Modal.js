@@ -9,7 +9,10 @@ import {
 import { FcLink } from 'react-icons/fc';
 import { BsExclamationLg } from 'react-icons/bs';
 import Modal_Loading from './Modal_Loading';
-import Modal_no_site_selected from './Modal_No_Site_Selected';
+import { baseUrl } from '../../config';
+import { RiAsterisk } from 'react-icons/ri';
+import stopIcon from '../../Pictures/stopIcon.svg';
+import Modal_no_site_selected from './Modal_no_site_selected';
 
 //--------------------------
 let myStudents = [];
@@ -122,7 +125,7 @@ function Modal({
       };
       // set_obj((obj.mySite = JSON.parse(localStorage.getItem("MySite"))));
 
-      console.log('newRouteObj',newRouteObj);
+      console.log('newRouteObj', newRouteObj);
 
       updateRoute(routeUUID, newRouteObj).then((data) => {
         setDone(true);
@@ -277,7 +280,7 @@ function Modal({
                               style={{ marginLeft: '10px' }}
                               dir='ltr'
                               onChange={() => {
-                                console.log("testing",myStudentsList);
+                                console.log("testing", myStudentsList);
                                 // saveCheckbox(value)
                                 const isStudentInList = myStudentsList.some((student) => student.id === value.id);
                                 console.log('isStudentInList', isStudentInList);
@@ -482,7 +485,7 @@ function Modal({
                                   dir='ltr'
                                   style={{ marginLeft: '10px' }}
                                   onChange={() => {
-                                    console.log("testing",myStudentsList);
+                                    console.log("testing", myStudentsList);
                                     // saveCheckbox(value)
                                     const isStudentInList = myStudentsList.some((student) => student.id === value.id);
                                     console.log('isStudentInList', isStudentInList);

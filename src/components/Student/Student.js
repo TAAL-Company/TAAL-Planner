@@ -18,7 +18,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { insertUser } from '../../api/api';
 import { BsThreeDotsVertical } from 'react-icons/bs';
-import ModalDropdown from '../Modal/Modal_Dropdown';
+import ModalDropdown from '../Modal/Modal_dropdown';
 import cognitiveList from '../Form/cognitive.json';
 import Autocomplete from '@mui/material/Autocomplete';
 

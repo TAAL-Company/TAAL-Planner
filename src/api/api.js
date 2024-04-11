@@ -43,12 +43,12 @@ export const deleteFileByUrl = async (imageUrl) => {
   if (array[0] === '') {
     array.shift();
   }
-  
+
   // Combine all elements except the last one
   const combined = array.slice(1, -1).join('/');
-  
+
   const containerName = decodeURIComponent(combined);
-  
+
   // const containerName = 'images/' + decodeURIComponent(secondLastElement);
   const blobName = lastElement;
 
@@ -319,9 +319,7 @@ export const updateRoute = async (routeUUID, routeData, callback) => {
   //   ...routeData
   // };
 
-  return await patch(`${baseUrl}/routes/` + routeUUID, routeData, {
-    headers: headers,
-  })
+  return await patch(`${baseUrl}/routes/` + routeUUID, routeData)
     .then(async (response) => {
       return response.data;
     })
@@ -813,7 +811,7 @@ export const insertStation = async (
         title: get_title,
         parentSiteId: site.id,
         subtitle: getDescription,
-        taskIds:tasksIds
+        taskIds: tasksIds
         // fields: {
         //   image: imageData,
         //   audio: audioData.id,

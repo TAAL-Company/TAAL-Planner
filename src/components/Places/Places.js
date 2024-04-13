@@ -294,8 +294,13 @@ const Places = (props) => {
           setPercentProgressBar(
             (percentProgressBar) => percentProgressBar + percentTemp
           );
+          //allTasksOfTheSite
+          let taskTemp = allTasksOfTheSite?.find(
+            (item) => item.id === element.taskId
+          );
+
           //allTasksOfTheSite - allTasksOfTheSite
-          let taskTemp = allTasks?.find((item) => item.id === element.taskId);
+          // let taskTemp = allTasks?.find((item) => item.id === element.taskId);
           // console.log('e',e);
           // console.log('firstStation',firstStation);
           // console.log('allTasksOfTheSite',allTasksOfTheSite);
@@ -653,7 +658,7 @@ const Places = (props) => {
       }
     }
   }, [allTasksOfTheSite]);
- 
+
   const clickOnhreeDotsVerticaIcont = (value) => {
     if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
     else setOpenThreeDotsVertical(value);
@@ -758,9 +763,8 @@ const Places = (props) => {
         </div>
       </div>
       <div
-        className={`mainRectangles ${
-          props.language !== 'English' ? 'english' : ''
-        }`}
+        className={`mainRectangles ${props.language !== 'English' ? 'english' : ''
+          }`}
       >
         {/* routes */}
 
@@ -784,9 +788,8 @@ const Places = (props) => {
             <div className='TitlePlacesCover'>
               <div className='TitlePlaces'>
                 <div
-                  className={`MyTitle text ${
-                    props.language !== 'English' ? 'english' : ''
-                  }`}
+                  className={`MyTitle text ${props.language !== 'English' ? 'english' : ''
+                    }`}
                 >
                   {props.language === 'English' ? 'מסלולים' : 'Routes'}
                 </div>

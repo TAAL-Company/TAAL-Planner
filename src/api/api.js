@@ -319,7 +319,9 @@ export const updateRoute = async (routeUUID, routeData, callback) => {
   //   ...routeData
   // };
 
-  return await patch(`${baseUrl}/routes/` + routeUUID, routeData)
+  return await patch(`${baseUrl}/routes/` + routeUUID, routeData, {
+    headers: headers,
+  })
     .then(async (response) => {
       return response.data;
     })

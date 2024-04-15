@@ -18,6 +18,9 @@ import ImageIcon from '@mui/icons-material/Image';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
+import {uploadFiles} from '../../api/api';
+import  BasicSelect  from './BasicSelect';
+
 const storageConfigured = isStorageConfigured();
 
 function Gallery(props) {
@@ -43,6 +46,8 @@ function Gallery(props) {
   const [uploading, setUploading] = useState(false);
   const [inputKey, setInputKey] = useState(Math.random().toString(36));
   const [folderNames, setFolderNames] = useState([]);
+
+  const [Foldersite, setFoldersite] = useState('general');
 
   const handleOpen = (url) => {
     setOpen(true);
@@ -104,12 +109,33 @@ function Gallery(props) {
     setInputKey(Math.random().toString(36));
   };
 
+  const onFileUpload2 = async () => {
+    // prepare UI
+    setUploading(true);
+    await uploadFiles(fileSelected, 'general',Foldersite);
+    setUploading(false);
+  };
   // display form
+  // const DisplayForm = () => (
+  //   <div>
+  //     <input type='file' onChange={onFileChange} key={inputKey || ''} />
+  //     <button type='submit' onClick={onFileUpload}>
+  //       Upload!
+  //     </button>
+  //   </div>
+  // );
+
   const DisplayForm = () => (
-    <div>
+    <div style={{
+      display: 'flex',
+      flexDirection: 'row',
+      padding: '5px',
+      width: '500px'
+  }} >
       <input type='file' onChange={onFileChange} key={inputKey || ''} />
-      <button type='submit' onClick={onFileUpload}>
-        Upload!
+      <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames}/>
+      <button type='submit' onClick={onFileUpload2}>
+        click to Upload!
       </button>
     </div>
   );

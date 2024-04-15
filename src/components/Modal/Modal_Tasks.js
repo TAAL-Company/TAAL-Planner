@@ -10,6 +10,9 @@ import { uploadFiles, uploadFile, insertTask, updateTask } from '../../api/api';
 import uploadFileToBlob from '../azureBlob';
 import Gallery2 from '../Gallery/Gallery2';
 import Gallery3 from '../Gallery/Gallery3';
+import  BasicSelect  from '../Gallery/BasicSelect';
+import { getBlobsInContainer } from '../azureBlob';
+
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -52,6 +55,54 @@ function Modal_Tasks(props) {
   );
   const audioRef = useRef(null);
 
+  const [Foldersite, setFoldersite] = useState('general');
+  const [blobList, setBlobList] = useState([]);
+  const [sortedUrls, setSortedUrls] = useState({});
+  const [folderNames, setFolderNames] = useState([]);
+
+  const getFileType = (url) => {
+    if (typeof url === 'string') {
+      const parts = url.split('.');
+      const extension = parts[parts.length - 1];
+      const fileType = extension.toLowerCase();
+
+      return fileType;
+    } else {
+      return 'unknown';
+    }
+  };
+
+  useEffect(async () => {
+    // prepare UI for results
+    setBlobList(await getBlobsInContainer());
+  }, []);
+  useEffect(() => {
+    for (const key in blobList) {
+      const url = blobList[key];
+      const parts = url.split('/');
+      let folderName = 'general';
+
+      const imageIndex = parts.indexOf('images');
+      if (imageIndex !== -1 && imageIndex + 2 < parts.length) {
+        folderName = parts[imageIndex + 1];
+      }
+
+      let fileType = getFileType(url);
+      let fileTypeFolder = '';
+
+      if (['jpeg', 'png', 'jpg', 'webp'].includes(fileType)) {
+        fileTypeFolder = 'pictures';
+      } else if (['aac', 'mp3', 'wav'].includes(fileType)) {
+        fileTypeFolder = 'audio';
+      }
+
+      sortedUrls[folderName] = sortedUrls[folderName] || {};
+      sortedUrls[folderName][fileTypeFolder] = sortedUrls[folderName][fileTypeFolder] || {};
+      sortedUrls[folderName][fileTypeFolder][key] = url;
+    }
+    setFolderNames(Object.keys(sortedUrls));
+  }, [blobList]);
+
   useEffect(() => {
     if (
       (props.requestForEditing === 'edit' ||
@@ -86,7 +137,7 @@ function Modal_Tasks(props) {
 
       try {
         if (picture && !picture?.name?.includes(urlAlreadyExist)) {
-          picture_url = await uploadFiles(picture, 'Task media/picture');//ask media/picture
+          picture_url = await uploadFiles(picture, 'Task media/picture',Foldersite);//ask media/picture
         }
       } catch (error) {
         // console.error(error);
@@ -94,7 +145,7 @@ function Modal_Tasks(props) {
       }
       try {
         if (audio && !audio?.name?.includes(urlAlreadyExist)) {
-          audio_url = await uploadFiles(audio, 'Task media/audio');
+          audio_url = await uploadFiles(audio, 'Task media/audio',Foldersite);
         }
       } catch (error) {
         // console.error(error);
@@ -350,11 +401,18 @@ function Modal_Tasks(props) {
                     value={estimatedTimeSeconds}
                   />
                 </div>
+                <h6>
+                    {props.language !== 'English'
+                      ? 'Select where to save picture / voice'
+                      : ':בחר היכן לשמור תמונה/קול'}
+                    <FcMultipleInputs />
+                  </h6>
+                  <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames}/>
                 <form id='IPU' className='w3-container'>
                   <h6>
                     {props.language !== 'English'
-                      ? 'Add a picture of a task from desktop '
-                      : ' : הוסף תמונה של משימה משולחן העבודה '}
+                      ? 'Add a picture of a task from the Gallery / Desktop '
+                      : ' : הוסף תמונה של משימה מהגלריה/שולחן העבודה'}
                     <FcMultipleInputs />
                   </h6>
                   <div>
@@ -371,13 +429,6 @@ function Modal_Tasks(props) {
                         direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     ></input>
-                    <h6>
-                    {props.language !== 'English'
-                      ? 'Add a picture of a task from Gallery'
-                      : ':הוסף תמונה של משימה מהגלריה '}
-
-                    <FcMultipleInputs />
-                  </h6>
                     <Button variant="outlined" onClick={handleOpen}>Gallery</Button>
                     <Modal
                       open={open}

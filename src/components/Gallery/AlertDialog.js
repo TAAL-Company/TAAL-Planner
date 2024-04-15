@@ -18,6 +18,12 @@ export default function AlertDialog(props) {
   const handleClose = () => {
     // setOpen(false);
     console.log("clicked", props.GetImageUrl)
+    props.setpopup(false);
+  };
+
+  const handleDelete = () => {
+    // setOpen(false);
+    console.log("clicked", props.GetImageUrl)
     deleteFileByUrl(props.GetImageUrl)
 
     props.setpopup(false);
@@ -39,7 +45,7 @@ export default function AlertDialog(props) {
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>DELETE</Button>
+        <Button onClick={handleDelete}>DELETE</Button>
         <Button onClick={handleClickOpen} autoFocus>Agree</Button>
       </DialogActions>
     </Dialog>

@@ -9,6 +9,7 @@ import Modal_no_site_selected from './Modal_no_site_selected';
 import { uploadFiles, uploadFile, insertTask, updateTask } from '../../api/api';
 import uploadFileToBlob from '../azureBlob';
 import Gallery2 from '../Gallery/Gallery2';
+import Gallery3 from '../Gallery/Gallery3';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -88,7 +89,7 @@ function Modal_Tasks(props) {
           picture_url = await uploadFiles(picture, 'Task media/picture');//ask media/picture
         }
       } catch (error) {
-        console.error(error);
+        // console.error(error);
         picture_url = picture
       }
       try {
@@ -96,11 +97,12 @@ function Modal_Tasks(props) {
           audio_url = await uploadFiles(audio, 'Task media/audio');
         }
       } catch (error) {
-        console.error(error);
+        // console.error(error);
+        audio_url = audio;
       }
 
       if (props.requestForEditing === 'edit') {
-        const newTask = {
+        let newTask = {
           title: get_title,
           subtitle: getDescription,
           stationIds: myPlacesChoice,
@@ -108,6 +110,10 @@ function Modal_Tasks(props) {
           audio_url,
           estimatedTimeSeconds,
         };
+        if (newTask.picture_url===undefined) {
+          newTask.picture_url='';
+        }
+        console.log('newTask: ', newTask);
         update_task(props.uuid, newTask);
       } else {
         Post_Task(picture_url, audio_url);
@@ -245,8 +251,13 @@ function Modal_Tasks(props) {
   };
 
   const [open, setOpen] = React.useState(false);
+  const [open2, setOpen2] = React.useState(false);
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen2 = () => setOpen2(true);
+  const handleClose = () => {
+    setOpen(false);
+    setOpen2(false);
+  }
   return (
     <>
       {!props.help && !props.siteSelected ? (
@@ -413,6 +424,20 @@ function Modal_Tasks(props) {
                       : ':הוסף קטע קול המתאר את המשימה '}
                     <FcMultipleInputs />
                   </h6>
+                  <Button variant="outlined" onClick={handleOpen2}>Gallery audio</Button>
+                    <Modal
+                      open={open2}
+                      onClose={()=>{
+                        handleClose()
+                        console.log(open2);
+                      }}
+                      aria-labelledby="modal-modal-title"
+                      aria-describedby="modal-modal-description"
+                    >
+                      <Box sx={style}>
+                        <Gallery3 sethandleClose={handleClose} setAudio={setAudio}/>
+                      </Box>
+                    </Modal>
                   <div>
                     <input
                       required={true}
@@ -442,14 +467,15 @@ function Modal_Tasks(props) {
                           : audio?.name}
                       </div>
                       <div>
-                        {typeof audio === 'string' && (
+                        {/* {typeof audio === 'string' && (
                           <button
                             className='play-button'
                             onClick={handlePlayClick}
                           >
+                            {audio}
                             Play
                           </button>
-                        )}
+                        )} */}
                       </div>
                       <audio ref={audioRef} controls>
                         <source

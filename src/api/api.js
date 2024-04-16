@@ -13,9 +13,9 @@ const blobServiceClient = new BlobServiceClient(connectionString);
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 export const uploadFiles = async (selectedFile, folder, site) => {
-  console.log('enter', selectedFile);
-  console.log('enter folder', folder);
-  console.log('enter site', site);
+  console.log('enter', decodeURIComponent(selectedFile));
+  console.log('enter folder', decodeURIComponent(folder)); //folder);
+  console.log('enter site', decodeURIComponent(site)); //site);
 
   const containerName = site + '/' + folder; // The name of the container in Azure Blob Storage
   const containerClient = blobServiceClient.getContainerClient(containerName);

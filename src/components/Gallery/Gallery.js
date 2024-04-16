@@ -18,8 +18,9 @@ import ImageIcon from '@mui/icons-material/Image';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
-import {uploadFiles} from '../../api/api';
-import  BasicSelect  from './BasicSelect';
+import { uploadFiles } from '../../api/api';
+import BasicSelect from './BasicSelect';
+import MediaControlCard from './MediaControlCard';
 
 const storageConfigured = isStorageConfigured();
 
@@ -112,7 +113,7 @@ function Gallery(props) {
   const onFileUpload2 = async () => {
     // prepare UI
     setUploading(true);
-    await uploadFiles(fileSelected, 'general',Foldersite);
+    await uploadFiles(fileSelected, 'general', Foldersite);
     setUploading(false);
   };
   // display form
@@ -131,9 +132,9 @@ function Gallery(props) {
       flexDirection: 'row',
       padding: '5px',
       width: '500px'
-  }} >
+    }} >
       <input type='file' onChange={onFileChange} key={inputKey || ''} />
-      <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames}/>
+      <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
       <button type='submit' onClick={onFileUpload2}>
         click to Upload!
       </button>
@@ -162,11 +163,16 @@ function Gallery(props) {
               {['aac', 'mp3', 'wav'].includes(
                 getFileType(sortedUrls[selectedFolder][selectedFolderType][key])
               ) ? (
-                <a onClick={() => handleOpen(sortedUrls[selectedFolder][selectedFolderType][key])}>
-                  <FileIcon
-                    extension={getFileType(sortedUrls[selectedFolder][selectedFolderType][key])}
-                  />
-                </a>
+                // <a onClick={() => handleOpen(sortedUrls[selectedFolder][selectedFolderType][key])}>
+                //   <FileIcon
+                //     extension={getFileType(sortedUrls[selectedFolder][selectedFolderType][key])}
+                //   />
+                // </a>
+
+                <MediaControlCard url={sortedUrls[selectedFolder][selectedFolderType][key]}
+                  setAudio={props.setAudio}
+                  sethandleClose={props.sethandleClose}
+                />
               ) : (
                 <img
                   key={key}
@@ -278,28 +284,28 @@ function Gallery(props) {
       }}>DELETE</Button>
       <h1>Gallery</h1>
       <div>
-      <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-      }}
-    >   
-      <ButtonGroup size="small" aria-label="Large button group">
-      {folderNames.map((folderName) => (
-          <div key={folderName}>
-            <Button onClick={() =>
-              handleFolderClick(folderName, "pictures")} >
-              <ImageIcon />{folderName}
-            </Button>
-            <Button onClick={() =>
-              handleFolderClick(folderName, "audio")}>
-             <MusicNoteIcon /> {folderName}
-            </Button>
-          </div>
-        ))}
-      </ButtonGroup>
-    </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <ButtonGroup size="small" aria-label="Large button group">
+            {folderNames.map((folderName) => (
+              <div key={folderName}>
+                <Button onClick={() =>
+                  handleFolderClick(folderName, "pictures")} >
+                  <ImageIcon />{folderName}
+                </Button>
+                <Button onClick={() =>
+                  handleFolderClick(folderName, "audio")}>
+                  <MusicNoteIcon /> {folderName}
+                </Button>
+              </div>
+            ))}
+          </ButtonGroup>
+        </Box>
         {/* {folderNames.map((folderName) => (
           <div key={folderName}>
             <button onClick={() =>

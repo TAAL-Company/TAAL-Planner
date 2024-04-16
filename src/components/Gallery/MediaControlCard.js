@@ -20,9 +20,15 @@ export default function MediaControlCard(props) {
 
   const handleClickOpen = () => {
     console.log("clicked", props.url)
-    props.setAudio(props.url);
+    
+    try {
+      props.setAudio(props.url);
+      props.sethandleClose(false);
+    } catch (error) {
+      
+    }
     // props.handleOpen(props.url);
-    props.sethandleClose(false);
+    
   };
 
   const handleDelete = () => {

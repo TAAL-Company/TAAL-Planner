@@ -54,7 +54,7 @@ function DragnDrop(props) {
   const [, setKavTaskTopMarginTop] = useState('-7px');
   const [, setBorderLeft] = useState('2px solid #c2bfbf');
   const [, setFlagStress] = useState(false);
-  const [activeButton, setActiveButton] = useState('tree');
+  const [activeButton, setActiveButton] = useState('tree');//reorder -- tree
   const [siteSelected, setSiteSelected] = useState(false);
   const [boardArrayDND, setBoardArrayDND] = useState([]);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
@@ -232,28 +232,42 @@ function DragnDrop(props) {
     setOpenRemove(false);
   };
   const handleCloseRemoveConfirm = async () => {
-    let deleteTaskTemp = await deleteTask(openThreeDotsVerticalBoard);
+    // board={board}
+    // setBoard={setBoard}
 
-    if (deleteTaskTemp !== undefined) {
-      alert('המחיקה בוצעה בהצלחה!');
-      const newTasks = [...props.tasksOfChosenStation];
-      let indexaTask = props.tasksOfChosenStation.findIndex(
-        (task) => task.id === openThreeDotsVerticalBoard
-      );
-      newTasks.splice(indexaTask, 1); // remove one element at index x
-      props.setTasksOfChosenStation(newTasks);
+    console.log("board", board);
+    console.log("openThreeDotsVerticalBoard", openThreeDotsVerticalBoard);
+    console.log("location", location);
 
-      // const indexBoardTask = board.findIndex(
-      //   (task) => task.id === openThreeDotsVerticalBoard
-      // );
-      // board.splice(indexBoardTask, 1); // remove one element at index x
+    const items = Array.from(board);
+    const filteredItems = items.filter((item, index) => index !== parseInt(location, 10));
+    console.log('filteredItems', filteredItems);
+    setBoard(filteredItems);
 
-      let indexStation = props.stationArray.findIndex(
-        (station) => station.id === props.myStation.id
-      );
 
-      props.stationArray[indexStation].tasks = newTasks;
-    }
+
+    // let deleteTaskTemp = await deleteTask(openThreeDotsVerticalBoard);
+
+    // if (deleteTaskTemp !== undefined) {
+    //   alert('המחיקה בוצעה בהצלחה!');
+    //   const newTasks = [...props.tasksOfChosenStation];
+    //   let indexaTask = props.tasksOfChosenStation.findIndex(
+    //     (task) => task.id === openThreeDotsVerticalBoard
+    //   );
+    //   newTasks.splice(indexaTask, 1); // remove one element at index x
+    //   props.setTasksOfChosenStation(newTasks);
+
+    //   // const indexBoardTask = board.findIndex(
+    //   //   (task) => task.id === openThreeDotsVerticalBoard
+    //   // );
+    //   // board.splice(indexBoardTask, 1); // remove one element at index x
+
+    //   let indexStation = props.stationArray.findIndex(
+    //     (station) => station.id === props.myStation.id
+    //   );
+
+    //   props.stationArray[indexStation].tasks = newTasks;
+    // }
     handleCloseRemove();
   };
 
@@ -343,7 +357,7 @@ function DragnDrop(props) {
     dndArray = props.tasksOfChosenStation.map(mapTask);
   }, [props.tasksOfChosenStation]);
 
-  //---------------------------------------------------------
+  // ---------------------------------------------------------
   // const [{ isOver }, drop] = useDrop(() => ({
   //   accept: "image",
   //   drop(item, monitor) {
@@ -419,7 +433,7 @@ function DragnDrop(props) {
     return fallbackValue;
   };
 
-  useEffect(() => {
+  useEffect(() => {//
     if (Object.keys(props.dropToBoard).length > 0) {
       if (
         props.dropToBoard.destination !== undefined &&

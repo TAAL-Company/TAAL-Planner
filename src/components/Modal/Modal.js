@@ -492,10 +492,12 @@ function Modal({
                                     if (isStudentInList) {
                                       // Student exists in the list, remove the student with the matching id
                                       const updatedStudentsList = myStudentsList.filter((student) => student.id !== value.id);
+                                      console.log('isStudentInList - yes', isStudentInList,updatedStudentsList);
                                       setMyStudentsList(updatedStudentsList);
                                     } else {
                                       // Student does not exist in the list, add the new student
                                       const updatedStudentsList = [...myStudentsList, value];
+                                      console.log('isStudentInList - no ', isStudentInList,updatedStudentsList);
                                       setMyStudentsList(updatedStudentsList);
                                     }
                                   }}

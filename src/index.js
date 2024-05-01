@@ -7,18 +7,16 @@ import $ from "jquery";
 import { LicenseInfo } from "@mui/x-license-pro";
 import { muiLicenseKey } from "./TopSecret";
 import posthog from "posthog-js";
-import {PostHogProvider} from 'posthog-js/react'
-// posthog.init("phc_GI1wu4eVOdPZaWmNCsmrvGzisDDLPX1StZIR6mcJGJ6", {
-//   api_host: "https://app.posthog.com",
-// })
-posthog.init('phc_GI1wu4eVOdPZaWmNCsmrvGzisDDLPX1StZIR6mcJGJ6',{api_host:'https://us.i.posthog.com'})
+import { PostHogProvider } from 'posthog-js/react'
+
+posthog.init('phc_GI1wu4eVOdPZaWmNCsmrvGzisDDLPX1StZIR6mcJGJ6', { api_host:'https://us.i.posthog.com' })
 
 LicenseInfo.setLicenseKey(muiLicenseKey);
 
 ReactDOM.render(
   <React.StrictMode>
     <PostHogProvider >
-    <App />
+      <App  />
     </PostHogProvider>
   </React.StrictMode>,
   document.getElementById("root")

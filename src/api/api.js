@@ -255,7 +255,12 @@ export const getingData_Routes = async () => {
   let allRoutes;
 
   await get(`${baseUrl}/routes`).then((res) => {
-    allRoutes = res.data;
+    allRoutes = res.data.map((route)=>{
+      // console.log(route.tasks);
+      route.tasks.sort((a, b) => a.position - b.position);
+      return route
+    })
+    // allRoutes = res.data;
   });
   console.log('res allRoutes: ', allRoutes);
 
@@ -321,7 +326,6 @@ export const updateRoute = async (routeUUID, routeData, callback) => {
   // const data = {
   //   ...routeData
   // };
-
   return await patch(`${baseUrl}/routes/` + routeUUID, routeData, {
     headers: headers,
   })

@@ -39,6 +39,7 @@ const Cards = () => {
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState('');
   const [studentForAction, setStudentForAction] = useState('');
+  const [Phone, setPhone] = useState();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -120,6 +121,7 @@ const Cards = () => {
       email: users[openThreeDotsVertical].email,
       user_name: users[openThreeDotsVertical].user_name,
       name: users[openThreeDotsVertical].name,
+      phone: users[openThreeDotsVertical].phone,
       cognitiveProfileId:
         users[openThreeDotsVertical].cognitiveProfile?.id || '',
       siteIds:
@@ -160,6 +162,7 @@ const Cards = () => {
     const email = document.getElementById('email').value;
     const fullName = document.getElementById('name').value;
     const user_name = document.getElementById('userName').value;
+    const phone = document.getElementById('phone').value;
     // const coach = document.getElementById("coach").value;
     // const coachId = document.getElementById("coach").value;
 
@@ -172,17 +175,19 @@ const Cards = () => {
 
         const user = {
           email,
+          phone,
           name: fullName,
           user_name,
           coachId: coach.id,
           picture_url,
         };
-
+        console.log('user : ',user);
         if (requestForEditing === 'edit' || requestForEditing === 'details') {
           const userToUpdate = users[studentForAction];
           updateUser(userToUpdate.id, user).then((updatedUser) => {
             userToUpdate.name = updatedUser.data.name;
             userToUpdate.email = updatedUser.data.email;
+            userToUpdate.phone = updatedUser.data.phone;
             userToUpdate.user_name = updatedUser.data.user_name;
             userToUpdate.coach = updatedUser.data.coach;
             userToUpdate.picture_url = updatedUser.data.picture_url;
@@ -191,6 +196,7 @@ const Cards = () => {
             setUsers(newUsers);
           });
         } else {
+          console.log('user : ',user);
           insertUser(user).then((data) => {
             data.picture_url = user.picture_url;
             updateUser(data.id, data).then((updatedUser) => {
@@ -289,6 +295,19 @@ const Cards = () => {
               defaultValue={
                 openThreeDotsVertical !== -1
                   ? users[openThreeDotsVertical].name
+                  : ''
+              }
+            />
+            <TextField
+              margin='dense'
+              id='phone'
+              label='טלפון'
+              type='phone'
+              fullWidth
+              variant='standard'
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? users[openThreeDotsVertical].phone
                   : ''
               }
             />

@@ -199,6 +199,7 @@ export const insertUser = async (user) => {
       body: JSON.stringify({
         email: user.email,
         name: user.name,
+        phone: user.phone,
         user_name: user.user_name,
         coachId: user.coachId || null,
         picture_url: user.picture_url || null,
@@ -233,6 +234,7 @@ export const updateUser = async (userId, user) => {
   const body = {
     email: user.email,
     name: user.name,
+    phone: user.phone,
     user_name: user.user_name,
     coachId: user.coachId || null,
     picture_url: user.picture_url || null,

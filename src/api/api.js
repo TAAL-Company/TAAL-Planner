@@ -411,6 +411,7 @@ export const insertSite = async (site) => {
         name: site.name,
         description: site.description,
         picture_url: site.picture_url || null,
+        // nameinEnglish: site.nameinEnglish,
       }),
     });
 

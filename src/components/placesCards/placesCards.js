@@ -66,6 +66,7 @@ const PlacesCards = () => {
   const duplicatePlace = async () => {
     const PlaceToDuplicate = {
       name: places[openThreeDotsVertical].name,
+      nameinEnglish: places[openThreeDotsVertical].nameinEnglish,
       description: places[openThreeDotsVertical].description,
       picture_url: places[openThreeDotsVertical].picture_url || '',
     };
@@ -91,18 +92,20 @@ const PlacesCards = () => {
   const handleConfirm = async () => {
     const name = document.getElementById('name').value;
     const description = document.getElementById('description').value;
+    const nameinEnglish = document.getElementById('nameinEnglish').value;
 
     if (name === '' || description === '') {
       alert('עליך למלא שדות חובה המסומנים בכוכבית');
     } else {
       let picture_url;
       try {
-        if (picture) picture_url = await uploadFiles(picture, 'Site media/picture', 'image'); //await uploadImageGD(picture);
+        if (picture) picture_url = await uploadFiles(picture, 'Site media/picture', nameinEnglish); //await uploadImageGD(picture);
 
         const place = {
           name,
           description,
           picture_url,
+          nameinEnglish
         };
 
         if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -112,6 +115,7 @@ const PlacesCards = () => {
             placeToUpdate.name = updatedPlace.data.name;
             placeToUpdate.description = updatedPlace.data.description;
             placeToUpdate.picture_url = updatedPlace.data.picture_url;
+            placeToUpdate.nameinEnglish = updatedPlace.data.nameinEnglish;
             const newplaces = [...places];
             setPlaces(newplaces);
           });
@@ -319,6 +323,7 @@ const PlacesCards = () => {
             <div className='places_cards_container' key={place.name}>
               <h5>{place.name}</h5>
               <p>{place.description}</p>
+              <p>{place.nameinEnglish}</p>
             </div>
           </div>
         ))}

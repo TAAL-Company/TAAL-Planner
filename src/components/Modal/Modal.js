@@ -113,7 +113,7 @@ function Modal({
       return;
     } else {
       let taskIdList = [];
-      setSite(JSON.parse(localStorage.getItem('New_Routes')));
+      // setSite(JSON.parse(localStorage.getItem('New_Routes')));
       tasksForNewRoute.map((task) => taskIdList.push(task.id));
       let studentIdList = [];
       myStudentsList.map((student) => studentIdList.push(student.id));//myStudents
@@ -148,7 +148,7 @@ function Modal({
       return;
     } else {
       let taskIdList = [];
-      setSite(JSON.parse(localStorage.getItem('New_Routes')));
+      // setSite(JSON.parse(localStorage.getItem('New_Routes')));
       tasksForNewRoute.map((task) => taskIdList.push(task.id));
       let studentIdList = [];
       myStudentsList.map((student) => studentIdList.push(student.id));//myStudents

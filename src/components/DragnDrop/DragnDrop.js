@@ -415,7 +415,7 @@ function DragnDrop(props) {
       thisIdArray.push(Route.id);
 
       prevStation = myStation;
-      localStorage.setItem('New_Routes', JSON.stringify(thisIdArray));
+      localStorage.setItem('New_Routes', "routenotempty");
     }
   };
 

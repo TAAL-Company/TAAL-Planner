@@ -19,6 +19,9 @@ import Community from './components/Community/community';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
+console.log("Version", process.env.REACT_APP_VERSION);
+console.log("Version", process.env);
+
 // import CallState from "./components/CallState/CallState";
 function App() {
   return (

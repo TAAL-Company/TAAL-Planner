@@ -89,8 +89,9 @@ const Dashboard = () => {
           <iframe
             width="100%"
             height="100%"
-            // src="https://dashboardskillsservice.azurewebsites.net/?embed=true"
-            src="https://dashboard-cqlntvbnc64rp8srvkpze7.streamlit.app/?embed=true"
+            src={"https://dashboardskillsservice.azurewebsites.net/?embed=true"+"&data=ADMIN"}
+            // src="https://dashboard-cqlntvbnc64rp8srvkpze7.streamlit.app/?embed=true"
+            // src={'http://localhost:8501/?embed=true'+"&data=f3bc4fec-8586-4b98-a46c-80bf1cb12fee"}
           ></iframe>
         </div>
         <div className='right'>

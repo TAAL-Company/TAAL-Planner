@@ -28,6 +28,8 @@ import { DragDropContext } from 'react-beautiful-dnd';
 import stopIcon from '../../Pictures/stopIcon.svg';
 import '../Modal/Modal.css';
 import './style.css';
+import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
 
 let tasksOfRoutes = {};
 // let allRoutes = [];
@@ -54,7 +56,7 @@ const Places = (props) => {
   const [tempSelectedSite, setTempSelectedSite] = useState(null);
   const [allWorkersForSite, setAllWorkersForSite] = useState([]);
   const [done, setDone] = useState(false);
-  const [, setLoading] = useState(false);
+  const [Loading, setLoading] = useState(true);
   const [, setStateStation] = useState([]);
   const [stationArray, setStationArray] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -176,8 +178,8 @@ const Places = (props) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
+        setLoading(true);
         setAllTasks(await getingData_Tasks()); //get request for tasks
         setAllRoutes(await getingData_Routes()); //get request for routes
         setOnlyAllStation(await getingDataStation()); //get request for station
@@ -185,10 +187,13 @@ const Places = (props) => {
       } catch (error) {
         console.error(error.message);
       }
-      setLoading(false);
+      finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, []);
+
   useEffect(() => {
     let user;
     if (allUsers !== undefined) {
@@ -198,16 +203,16 @@ const Places = (props) => {
       );
     }
   }, [allUsers]);
+
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
+        setLoading(true);
         // setLogged_in(sessionStorage.getItem('logged_in'));
-        getData();
+        await getData();
       } catch (error) {
         console.error(error.message);
       }
-      setLoading(false);
     };
     fetchData();
   }, []);
@@ -289,6 +294,7 @@ const Places = (props) => {
       let prevStation = '';
 
       let percentTemp = 50 / tasksOfRoutes?.tasks?.length;
+      // console.log('tasksOfRoutes', tasksOfRoutes);
       setBoardArrayDND(
         tasksOfRoutes?.tasks?.map((element) => {
           setPercentProgressBar(
@@ -712,6 +718,15 @@ const Places = (props) => {
   //----------------------------------------------------------------------
   return (
     <>
+      <div>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={Loading}
+        >
+          <CircularProgress size="10rem" color="info" />
+        </Backdrop>
+      </div>
+
       <div
         className={`Places ${props.language !== 'English' ? 'english' : ''}`}
       >

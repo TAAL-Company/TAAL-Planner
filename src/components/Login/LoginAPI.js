@@ -11,17 +11,55 @@ let flag = false;
 function LoginAPI(props) {
   const [, login_token] = useState('');
   const [, setFlag] = useState(false);
+  // if (props.APIDetailsLogin.user.length > 0) {
+  //   const url = `https://taal.tech/wp-json/jwt-auth/v1/token/`;
+  //   fetch(url, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       accept: 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       username: props.APIDetailsLogin.user,
+  //       password: props.APIDetailsLogin.pass,
+  //     }),
+  //   })
+  //     .then((response) =>
+  //       response.status === 403
+  //         ? alert('Wrong username/mail or wrong Password')
+  //         : response.json()
+  //     )
+
+  //     .then(function (user) {
+  //       if (!flag_token) {
+  //         if (user.message !== undefined) {
+  //           if (user.message.includes('2FA')) {
+  //             alert(
+  //               '2FA is activated, No support for this feature, Please login with another user'
+  //             );
+  //             login_token((flag_token = true));
+  //           }
+  //         }
+  //         setFlag((flag = true));
+  //         sessionStorage.setItem('jwt', user.token);
+  //         sessionStorage.setItem('logged_in', 1);
+  //         sessionStorage.setItem('userName', props.APIDetailsLogin.user);
+
+  //         window.location.replace('/Planner');
+  //       }
+  //     });
+  // }
+
   if (props.APIDetailsLogin.user.length > 0) {
-    const url = `https://taal.tech/wp-json/jwt-auth/v1/token/`;
-    fetch(url, {
+    fetch(baseUrl + "/editor/login", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         accept: 'application/json',
       },
       body: JSON.stringify({
-        username: props.APIDetailsLogin.user,
-        password: props.APIDetailsLogin.pass,
+        name: props.APIDetailsLogin.user,
+        googleID: props.APIDetailsLogin.pass,
       }),
     })
       .then((response) =>
@@ -30,23 +68,18 @@ function LoginAPI(props) {
           : response.json()
       )
 
-      .then(function (user) {
-        if (!flag_token) {
-          if (user.message !== undefined) {
-            if (user.message.includes('2FA')) {
-              alert(
-                '2FA is activated, No support for this feature, Please login with another user'
-              );
-              login_token((flag_token = true));
-            }
-          }
-          setFlag((flag = true));
-          sessionStorage.setItem('jwt', user.token);
-          sessionStorage.setItem('logged_in', 1);
-          sessionStorage.setItem('userName', props.APIDetailsLogin.user);
-
-          window.location.replace('/Planner');
+      .then((user)=> {
+        console.log(user);
+        if (user !== undefined) {
+          login_token((flag_token = true));
         }
+        setFlag((flag = true));
+        // sessionStorage.setItem('jwt', user.token);
+        sessionStorage.setItem('jwt', JSON.stringify(user));
+        sessionStorage.setItem('logged_in', 1);
+        sessionStorage.setItem('userName', props.APIDetailsLogin.user);
+
+        window.location.replace('/Planner');
       });
   }
   return (

@@ -15,22 +15,23 @@ const Nav = () => {
   const [, login_token] = useState('');
   const [complete_name, setcomplete_name] = useState('');
   useEffect(() => {
-    const url2 = `https://taal.tech/wp-json/wp/v2/users/me/`;
-    fetch(url2, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        accept: 'application/json',
-        Authorization: 'Bearer' + sessionStorage.jwt,
-      },
-    })
-      .then((response) => response.json())
-      .then(function (user) {
-        if (!flag_token) {
-          login_token((flag_token = true));
-          setcomplete_name(user.name);
-        }
-      });
+    // const url2 = `https://taal.tech/wp-json/wp/v2/users/me/`;
+    // fetch(url2, {
+    //   method: 'GET',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     accept: 'application/json',
+    //     Authorization: 'Bearer' + sessionStorage.jwt,
+    //   },
+    // })
+    //   .then((response) => response.json())
+    //   .then(function (user) {
+    //     if (!flag_token) {
+    //       login_token((flag_token = true));
+    //       setcomplete_name(user.name);
+    //     }
+    //   });
+    setcomplete_name(JSON.parse(sessionStorage.getItem('jwt')).name);
   });
   return (
     <div className='nav'>

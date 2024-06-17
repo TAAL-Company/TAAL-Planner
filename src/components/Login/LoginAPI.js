@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import ReactLoading from 'react-loading';
 import { baseUrl } from '../../config';
-
+import {
+  getingData_coaches,
+  getingData_Users
+} from '../../api/api';
 //---------------------
 let flag_token = false;
 let flag = false;
@@ -68,7 +71,7 @@ function LoginAPI(props) {
           : response.json()
       )
 
-      .then((user)=> {
+      .then(async (user)=> {
         console.log(user);
         if (user !== undefined) {
           login_token((flag_token = true));
@@ -76,6 +79,19 @@ function LoginAPI(props) {
         setFlag((flag = true));
         // sessionStorage.setItem('jwt', user.token);
         sessionStorage.setItem('jwt', JSON.stringify(user));
+        if (user.role == "ADMIN") {
+          const coaches = await getingData_coaches();
+          const coache = coaches.filter((coache)=>coache.name == JSON.parse(sessionStorage.getItem('jwt')).name)
+          sessionStorage.setItem('jwt-EDITOR', JSON.stringify(coache[0]));
+        }else if(user.role == "EDITOR"){
+          const coaches = await getingData_coaches();
+          const coache = coaches.filter((coache)=>coache.name == JSON.parse(sessionStorage.getItem('jwt')).name)
+          sessionStorage.setItem('jwt-EDITOR', JSON.stringify(coache[0]));
+        }else if(user.role == "STUDENT"){
+          const users = await getingData_Users()
+          const userX = users.filter((userX)=>userX.name == JSON.parse(sessionStorage.getItem('jwt')).name)
+          sessionStorage.setItem('jwt-EDITOR', JSON.stringify(userX[0]));
+        }
         sessionStorage.setItem('logged_in', 1);
         sessionStorage.setItem('userName', props.APIDetailsLogin.user);
 

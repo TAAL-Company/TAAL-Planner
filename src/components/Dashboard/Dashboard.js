@@ -79,6 +79,13 @@ const Dashboard = () => {
       image: route,
       color: '#57c8ca'
     },
+    {
+      id: 10,
+      headline: 'עורך',
+      addLabel: 'עורך',
+      image: coachImage,
+      color: '#57c8ca'
+    },
   ];
 
   return (
@@ -86,13 +93,20 @@ const Dashboard = () => {
       {/* <Navbar /> */}
       <div className='content'>
         <div className='left'>
-          <iframe
-            width="100%"
-            height="100%"
-            src={"https://dashboardskillsservice.azurewebsites.net/?embed=true"+"&data=ADMIN"}
-            // src="https://dashboard-cqlntvbnc64rp8srvkpze7.streamlit.app/?embed=true"
-            // src={'http://localhost:8501/?embed=true'+"&data=f3bc4fec-8586-4b98-a46c-80bf1cb12fee"}
-          ></iframe>
+          {JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN" ? (
+            <iframe
+              width="100%"
+              height="100%"
+              src={"https://dashboardskillsservice.azurewebsites.net/?embed=true" + "&data=ADMIN"}
+            ></iframe>
+          ) : (
+            <iframe
+              width="100%"
+              height="100%"
+              src={"https://dashboardskillsservice.azurewebsites.net/?embed=true" + "&data=" + JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id}
+            ></iframe>
+          )}
+
         </div>
         <div className='right'>
           <div className='cardsLine'>
@@ -113,6 +127,9 @@ const Dashboard = () => {
           </div>
           <div className='cardsLine'>
             <CardDash cards={cards[7]} />
+            {JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN" ? (
+              <CardDash cards={cards[9]} />
+            ) : (<></>)}
           </div>
         </div>
       </div>

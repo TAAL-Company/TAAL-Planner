@@ -224,7 +224,15 @@ const Cards = () => {
   useEffect(() => {
     const fetchData = async () => {
       const usersData = await getingData_Users();
-      setUsers(usersData);
+      if(JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN"){
+        setUsers(usersData);
+      }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR"){
+        const usersDatafilterbycoachId = usersData.filter((user)=>user.coachId == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+        setUsers(usersDatafilterbycoachId);
+      }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT"){
+        const usersDatafilterbycoachId = usersData.filter((user)=>user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+        setUsers(usersDatafilterbycoachId);
+      }
     };
 
     fetchData();

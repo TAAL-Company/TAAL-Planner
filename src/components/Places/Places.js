@@ -219,7 +219,57 @@ const Places = (props) => {
 
   const getData = async () => {
     try {
-      allPlaces = await getingData_Places(); //get request for places
+
+      if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
+        allPlaces = await getingData_Places(); //get request for places
+      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
+        const routes = await getingData_Routes()
+        console.log(JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id);
+        const filterroutesbycoachId = routes.filter(route =>
+          route.students.some(student => student.coachId === JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id)
+        );
+
+        console.log(filterroutesbycoachId);
+        const uniqueSiteIds = new Set();
+        const uniqueSites = [];
+
+        filterroutesbycoachId.forEach(route => {
+          route.sites.forEach(site => {
+            if (!uniqueSiteIds.has(site.id)) {
+              uniqueSiteIds.add(site.id);
+              uniqueSites.push(site);
+            }
+          });
+        });
+
+        console.log(uniqueSiteIds);
+        console.log(uniqueSites);
+        allPlaces = uniqueSites
+
+      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
+        const routes = await getingData_Routes()
+        const filterroutesbycoachId = routes.filter(route =>
+          route.students.some(student => student.id === JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id)
+        );
+
+        console.log(filterroutesbycoachId);
+        const uniqueSiteIds = new Set();
+        const uniqueSites = [];
+
+        filterroutesbycoachId.forEach(route => {
+          route.sites.forEach(site => {
+            if (!uniqueSiteIds.has(site.id)) {
+              uniqueSiteIds.add(site.id);
+              uniqueSites.push(site);
+            }
+          });
+        });
+
+        console.log(uniqueSiteIds);
+        console.log(uniqueSites);
+        allPlaces = uniqueSites
+      }
+      // allPlaces = await getingData_Places(); //get request for places
     } catch (error) {
       console.error(error.message);
     }

@@ -526,6 +526,85 @@ export const updateCoach = async (userId, user) => {
   return await patch(url, body, headers);
 };
 
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  Editors  ~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+export const getingData_Editors = async () => {
+  let all_Users;
+
+  await get(baseUrl + '/editor').then((res) => {
+    all_Users = res.data;
+
+    const sortedArray = all_Users.sort(
+      (a, b) =>
+        a.name.localeCompare(b.name, 'he', { sensitivity: 'base' }) ||
+        a.name.localeCompare(b.name, 'en', { sensitivity: 'base' })
+    );
+
+    console.log(sortedArray);
+  });
+  console.log('res all_Editors: ', all_Users);
+
+  return all_Users;
+};
+export const insertEditor = async (user) => {
+  try {
+    const response = await fetch(baseUrl + '/editor', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      },
+      body: JSON.stringify({
+        email: user.email,
+        name: user.name,
+        googleID: user.googleID,
+        siteIds: user.siteIds,
+        role: user.role,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error inserting user: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const deleteEditor = async (user_id) => {
+  let confirm;
+
+  await fetch(baseUrl + '/editor/' + user_id, { method: 'DELETE' }).then(
+    (res) => {
+      confirm = res;
+    }
+  );
+  console.log('res deleteEditor: ', confirm);
+
+  return confirm;
+};
+export const updateEditor = async (userId, user) => {
+  const url = baseUrl + '/editor/' + userId;
+  const body = {
+    googleID: user.googleID,
+    siteIds: user.siteIds,
+    role: user.role,
+    email: user.email,
+    name: user.name,
+  };
+  const headers = {
+    'Content-Type': 'application/json',
+    Accept: '*/*',
+  };
+
+  return await patch(url, body, headers);
+};
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*~~~~~~~~~~~~~~~~~  Cognitive Profile  ~~~~~~~~~~~~~~*/
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

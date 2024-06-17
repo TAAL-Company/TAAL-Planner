@@ -43,6 +43,8 @@ const CardDash = (props) => {
       history.replace('/community');
     } else if (id === 9) {
       history.replace('/planner');
+    } else if (id === 10) {
+      history.replace('/editor');
     } else console.log('fail');
   };
 

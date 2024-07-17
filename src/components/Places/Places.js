@@ -7,6 +7,7 @@ import {
   getingData_Users,
   deleteRoute,
   updateRoute,
+  getingData_Editors
 } from '../../api/api';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -223,51 +224,98 @@ const Places = (props) => {
       if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
         allPlaces = await getingData_Places(); //get request for places
       } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
-        const routes = await getingData_Routes()
-        console.log(JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id);
-        const filterroutesbycoachId = routes.filter(route =>
-          route.students.some(student => student.coachId === JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id)
-        );
-
-        console.log(filterroutesbycoachId);
+        const Editors = await getingData_Editors()
         const uniqueSiteIds = new Set();
         const uniqueSites = [];
 
-        filterroutesbycoachId.forEach(route => {
-          route.sites.forEach(site => {
-            if (!uniqueSiteIds.has(site.id)) {
-              uniqueSiteIds.add(site.id);
-              uniqueSites.push(site);
-            }
-          });
+        Editors.forEach(Editor => {
+          console.log(Editor.id === JSON.parse(sessionStorage.getItem('jwt')).id);
+          if(Editor.id === JSON.parse(sessionStorage.getItem('jwt')).id){
+            Editor.sites.forEach(site => {
+              console.log("site",site);
+              if (!uniqueSiteIds.has(site.id)) {
+                console.log("site.id",site.id);
+                uniqueSiteIds.add(site.id);
+                uniqueSites.push(site);
+              }
+            });
+          }
         });
+
 
         console.log(uniqueSiteIds);
         console.log(uniqueSites);
         allPlaces = uniqueSites
+
+        // const routes = await getingData_Routes()
+        // console.log(JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id);
+        // const filterroutesbycoachId = routes.filter(route =>
+        //   route.students.some(student => student.coachId === JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id)
+        // );
+
+        // console.log(filterroutesbycoachId);
+        // const uniqueSiteIds = new Set();
+        // const uniqueSites = [];
+
+        // filterroutesbycoachId.forEach(route => {
+        //   route.sites.forEach(site => {
+        //     if (!uniqueSiteIds.has(site.id)) {
+        //       uniqueSiteIds.add(site.id);
+        //       uniqueSites.push(site);
+        //     }
+        //   });
+        // });
+
+        // console.log(uniqueSiteIds);
+        // console.log(uniqueSites);
+        // allPlaces = uniqueSites
 
       } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
-        const routes = await getingData_Routes()
-        const filterroutesbycoachId = routes.filter(route =>
-          route.students.some(student => student.id === JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id)
-        );
 
-        console.log(filterroutesbycoachId);
+        const Editors = await getingData_Editors()
         const uniqueSiteIds = new Set();
         const uniqueSites = [];
 
-        filterroutesbycoachId.forEach(route => {
-          route.sites.forEach(site => {
-            if (!uniqueSiteIds.has(site.id)) {
-              uniqueSiteIds.add(site.id);
-              uniqueSites.push(site);
-            }
-          });
+        Editors.forEach(Editor => {
+          console.log(Editor.id === JSON.parse(sessionStorage.getItem('jwt')).id);
+          if(Editor.id === JSON.parse(sessionStorage.getItem('jwt')).id){
+            Editor.sites.forEach(site => {
+              console.log("site",site);
+              if (!uniqueSiteIds.has(site.id)) {
+                console.log("site.id",site.id);
+                uniqueSiteIds.add(site.id);
+                uniqueSites.push(site);
+              }
+            });
+          }
         });
+
 
         console.log(uniqueSiteIds);
         console.log(uniqueSites);
         allPlaces = uniqueSites
+        
+        // const routes = await getingData_Routes()
+        // const filterroutesbycoachId = routes.filter(route =>
+        //   route.students.some(student => student.id === JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id)
+        // );
+
+        // console.log(filterroutesbycoachId);
+        // const uniqueSiteIds = new Set();
+        // const uniqueSites = [];
+
+        // filterroutesbycoachId.forEach(route => {
+        //   route.sites.forEach(site => {
+        //     if (!uniqueSiteIds.has(site.id)) {
+        //       uniqueSiteIds.add(site.id);
+        //       uniqueSites.push(site);
+        //     }
+        //   });
+        // });
+
+        // console.log(uniqueSiteIds);
+        // console.log(uniqueSites);
+        // allPlaces = uniqueSites
       }
       // allPlaces = await getingData_Places(); //get request for places
     } catch (error) {

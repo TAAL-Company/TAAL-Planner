@@ -152,8 +152,8 @@ const Editors = () => {
       try {
         if (picture) picture_url = await uploadFiles(picture, 'Editors media/picture'); //await uploadImageGD(picture)
 
-        let myStudentsListIdonly =[]
-        myStudentsList.map((site)=>{
+        let myStudentsListIdonly = []
+        myStudentsList.map((site) => {
           myStudentsListIdonly.push(site.id)
         })
 
@@ -222,7 +222,7 @@ const Editors = () => {
   }, []);
 
   useEffect(() => {
-    let tempStudentslist = [];//myStudentslist = [];
+    let tempStudentslist = openThreeDotsVertical !== -1 ? users[openThreeDotsVertical].sites : [];//myStudentslist = [];
     setMyStudentsList(tempStudentslist);
     console.log("myStudentsList", myStudentsList);
   }, [open]);
@@ -333,7 +333,7 @@ const Editors = () => {
               value={
                 openThreeDotsVertical !== -1
                   ? users[openThreeDotsVertical].role
-                  : ''
+                  : role
               }
             />
             {/* <h1 label='בחירת מדריך' /> */}

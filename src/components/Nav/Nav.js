@@ -14,6 +14,20 @@ let flag_token = false;
 const Nav = () => {
   const [, login_token] = useState('');
   const [complete_name, setcomplete_name] = useState('');
+
+  const logout=()=>{
+    sessionStorage.removeItem('jwt');
+    sessionStorage.removeItem('jwt-EDITOR');
+    sessionStorage.removeItem('logged_in');
+    sessionStorage.removeItem('userName');
+
+    localStorage.removeItem('MySite');
+    localStorage.removeItem('New_Routes');
+    localStorage.removeItem('myLastStation');
+
+
+    window.location.replace('/');
+  }
   useEffect(() => {
     // const url2 = `https://taal.tech/wp-json/wp/v2/users/me/`;
     // fetch(url2, {
@@ -64,6 +78,9 @@ const Nav = () => {
         </Link>
         <Link to="/Forms">
           <div className="forms"></div>
+        </Link>
+        <Link to="/">
+          <div onClick={logout} className="logout"></div>
         </Link>
       </ul>
       <div className='userName'>{complete_name}</div>

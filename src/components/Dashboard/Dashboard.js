@@ -93,19 +93,11 @@ const Dashboard = () => {
       {/* <Navbar /> */}
       <div className='content'>
         <div className='left'>
-          {JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN" ? (
             <iframe
               width="100%"
               height="100%"
-              src={"https://dashboardskillsservice.azurewebsites.net/?embed=true" + "&data=ADMIN"}
+              src={"https://dashboardskillsservice.azurewebsites.net/?embed=true" + "&role="+JSON.parse(sessionStorage.getItem('jwt'))?.role+"&data=" + JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id}
             ></iframe>
-          ) : (
-            <iframe
-              width="100%"
-              height="100%"
-              src={"https://dashboardskillsservice.azurewebsites.net/?embed=true" + "&data=" + JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id}
-            ></iframe>
-          )}
 
         </div>
         <div className='right'>

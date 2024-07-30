@@ -8,6 +8,8 @@ import {
   post_cognitive_abillities,
   uploadFiles,
   getingData_Places,
+  getingData_Users,
+  getingData_coaches
 } from '../../api/api';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -27,30 +29,45 @@ import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
 import { Autocomplete } from '@mui/material';
 
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+
 const Editors = () => {
-  const [users, setUsers] = useState([]); // State to store the users
-  const [userForRemove, setUserForRemove] = useState([]); // State to store the user to be removed
-  const [userForUpdate, setUserForUpdate] = useState(-1); // State to store the index of the user to be updated
+  const [Editors, setEditors] = useState([]); // State to store the users
+  const [EditorForRemove, setEditorForRemove] = useState([]); // State to store the user to be removed
+  const [EditorForUpdate, setEditorForUpdate] = useState(-1); // State to store the index of the user to be updated
   const [open, setOpen] = useState(false); // State to manage the open state of the dialog
   const [openRemove, setOpenRemove] = useState(false); // State to manage the open state of the remove dialog
   const [picture, setPicture] = useState(null);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1); // State to manage the open state of the vertical three dots
   const [requestForEditing, setRequestForEditing] = useState(''); // State to store the request for editing
   const [updateAdd, setupdateAdd] = useState(false);
-  const [myStudentsList, setMyStudentsList] = useState([]);
-  const [student, setStudent] = useState([]);
-  const [role, setrole] = useState('');
+  const [mysitesList, setMySitesList] = useState([]);
+  const [myusers, setMyusers] = useState('');
+  const [sites, setSites] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [coaches, setcoaches] = useState([]);
+  const [myrole, setrole] = useState('');
 
   useEffect(() => { }, [openThreeDotsVertical]);
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
-      setUserForUpdate(openThreeDotsVertical);
+      setrole(Editors[openThreeDotsVertical].role);
+      setMyusers(Editors[openThreeDotsVertical].userid);
+      setEditorForUpdate(openThreeDotsVertical);
       setOpen(true);
     } else if (requestForEditing === 'duplication') {
       // duplicateCoache();
     } else if (requestForEditing === 'delete') {
-      setUserForRemove(openThreeDotsVertical);
+      setEditorForRemove(openThreeDotsVertical);
       setOpenRemove(true);
     }
   }, [requestForEditing]);
@@ -61,6 +78,8 @@ const Editors = () => {
 
   const handleClose = () => {
     setOpen(false);
+    setrole('');
+    setMyusers('');
     setRequestForEditing('');
     setOpenThreeDotsVertical(-1);
   };
@@ -73,16 +92,18 @@ const Editors = () => {
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
     setRequestForEditing('');
+    setrole('');
+    setMyusers('');
   };
 
   const handleCloseRemoveConfirm = async () => {
-    let deletedUser = await deleteEditor(users[userForRemove].id);
+    let deletedUser = await deleteEditor(Editors[EditorForRemove].id);
 
     if (deletedUser.status === 200) {
       alert('המחיקה בוצעה בהצלחה!');
-      const newUsers = [...users];
-      newUsers.splice(userForRemove, 1); // Remove one element at index x
-      setUsers(newUsers);
+      const newEditors = [...Editors];
+      newEditors.splice(EditorForRemove, 1); // Remove one element at index x
+      setEditors(newEditors);
     }
 
     setOpenRemove(false);
@@ -90,24 +111,6 @@ const Editors = () => {
     setRequestForEditing('');
   };
 
-  const handleJson = () => {
-    cognitiveList.map(async (cognitive) => {
-      let cognitiveTemp = {
-        trait: cognitive.trait === undefined ? '' : cognitive.trait,
-        requiredField: cognitive.RequiredField === 'לא' ? false : true,
-        score: cognitive.score === undefined ? '' : cognitive.score,
-        general: cognitive.general === undefined ? '' : cognitive.general,
-        category: cognitive.category === undefined ? '' : cognitive.category,
-        classification:
-          cognitive.classification === undefined
-            ? ''
-            : cognitive.classification,
-        ML: cognitive.ML === 'לא' ? false : true,
-      };
-
-      await post_cognitive_abillities(cognitiveTemp);
-    });
-  };
 
   function extractFilenameFromURL(url) {
     const parts = url.split('?');
@@ -119,15 +122,15 @@ const Editors = () => {
 
   const duplicateCoache = async () => {
     const CoacheToDuplicate = {
-      email: users[openThreeDotsVertical].email,
-      name: users[openThreeDotsVertical].name,
-      phone: users[openThreeDotsVertical].phone,
-      picture_url: users[openThreeDotsVertical].picture_url || '',
+      email: Editors[openThreeDotsVertical].email,
+      name: Editors[openThreeDotsVertical].name,
+      phone: Editors[openThreeDotsVertical].phone,
+      picture_url: Editors[openThreeDotsVertical].picture_url || '',
     };
     try {
       if (requestForEditing === 'duplication') {
         insertEditor(CoacheToDuplicate).then((data) => {
-          setUsers([data, ...users]);
+          setEditors([data, ...Editors]);
           setupdateAdd(true);
         });
         setupdateAdd(false);
@@ -144,43 +147,57 @@ const Editors = () => {
     const email = document.getElementById('email').value;
     const fullName = document.getElementById('name').value;
     const phone = document.getElementById('phone').value;
+    const password = document.getElementById('password').value;
+    const userid = myusers;
+    const googleID = document.getElementById('googleID').value;
+    const role = myrole;
+    console.log('role : ',role);
 
     if (email === '' || fullName === '') {
       alert('עליך למלא שדות חובה המסומנים בכוכבית');
     } else {
-      let picture_url;
+      let picture_url = '';
       try {
         if (picture) picture_url = await uploadFiles(picture, 'Editors media/picture'); //await uploadImageGD(picture)
 
         let myStudentsListIdonly = []
-        myStudentsList.map((site) => {
+        mysitesList.map((site) => {
           myStudentsListIdonly.push(site.id)
         })
 
         const user = {
           email,
           name: fullName,
-          googleID: phone,
+          googleID,
           siteIds: myStudentsListIdonly,
-          role
+          role,
+          phone,
+          picture_url,
+          password,
+          userid,
         };
+        console.log(user);
 
         if (requestForEditing === 'edit' || requestForEditing === 'details') {
-          const userToUpdate = users[userForUpdate];
+          const userToUpdate = Editors[EditorForUpdate];
           updateEditor(userToUpdate.id, user).then((updatedUser) => {
             userToUpdate.name = updatedUser.data.name;
             userToUpdate.email = updatedUser.data.email;
             userToUpdate.googleID = updatedUser.data.googleID;
             userToUpdate.siteIds = updatedUser.data.siteIds;
             userToUpdate.role = updatedUser.data.role;
+            userToUpdate.phone = updatedUser.data.phone;
+            userToUpdate.picture_url = updatedUser.data.picture_url;
+            userToUpdate.password = updatedUser.data.password;
+            userToUpdate.userid = updatedUser.data.userid;
 
-            const newUsers = [...users];
-            setUsers(newUsers);
+            const newUsers = [...Editors];
+            setEditors(newUsers);
           });
         } else {
           console.log(user);
           insertEditor(user).then((data) => {
-            setUsers([data, ...users]);
+            setEditors([data, ...Editors]);
           });
         }
       } catch (error) {
@@ -194,7 +211,9 @@ const Editors = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setStudent(await getingData_Places());
+        setSites(await getingData_Places());
+        setUsers(await getingData_Users());
+        setcoaches(await getingData_coaches());
         // getData();
       } catch (error) {
         console.error(error.message);
@@ -206,7 +225,7 @@ const Editors = () => {
   useEffect(() => {
     const fetchData = async () => {
       const usersData = await getingData_Editors();
-      setUsers(usersData);
+      setEditors(usersData);
     };
 
     fetchData();
@@ -215,16 +234,16 @@ const Editors = () => {
   useEffect(() => {
     const fetchData = async () => {
       const usersData = await getingData_Editors();
-      setUsers(usersData);
+      setEditors(usersData);
     };
 
     fetchData();
   }, []);
 
   useEffect(() => {
-    let tempStudentslist = openThreeDotsVertical !== -1 ? users[openThreeDotsVertical].sites : [];//myStudentslist = [];
-    setMyStudentsList(tempStudentslist);
-    console.log("myStudentsList", myStudentsList);
+    let tempsiteslist = openThreeDotsVertical !== -1 ? Editors[openThreeDotsVertical].sites : [];//myStudentslist = [];
+    setMySitesList(tempsiteslist);
+    console.log("mysitesList", mysitesList);
   }, [open]);
 
   const clickOnhreeDotsVerticaIcont = (value) => {
@@ -271,12 +290,11 @@ const Editors = () => {
               variant='standard'
               defaultValue={
                 openThreeDotsVertical !== -1
-                  ? users[openThreeDotsVertical].email
+                  ? Editors[openThreeDotsVertical].email
                   : ''
               }
             />
             <TextField
-              autoFocus
               margin='dense'
               id='name'
               label='שם מלא'
@@ -285,12 +303,24 @@ const Editors = () => {
               variant='standard'
               defaultValue={
                 openThreeDotsVertical !== -1
-                  ? users[openThreeDotsVertical].name
+                  ? Editors[openThreeDotsVertical].name
                   : ''
               }
             />
             <TextField
-              autoFocus
+              margin='dense'
+              id='password'
+              label='password'
+              type='password'
+              fullWidth
+              variant='standard'
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? Editors[openThreeDotsVertical].password
+                  : ''
+              }
+            />
+            <TextField
               margin='dense'
               id='phone'
               label='מספר פלאפון'
@@ -299,7 +329,20 @@ const Editors = () => {
               variant='standard'
               defaultValue={
                 openThreeDotsVertical !== -1
-                  ? users[openThreeDotsVertical].googleID
+                  ? Editors[openThreeDotsVertical].phone
+                  : ''
+              }
+            />
+            <TextField
+              margin='dense'
+              id='googleID'
+              label='גוגל'
+              type='googleID'
+              fullWidth
+              variant='standard'
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? Editors[openThreeDotsVertical].googleID
                   : ''
               }
             />
@@ -314,7 +357,7 @@ const Editors = () => {
 
               defaultValue={
                 openThreeDotsVertical !== -1
-                  ? users[openThreeDotsVertical].role
+                  ? Editors[openThreeDotsVertical].role
                   : ''
               }
               renderOption={(props, option) => (
@@ -332,34 +375,97 @@ const Editors = () => {
               }}
               value={
                 openThreeDotsVertical !== -1
-                  ? users[openThreeDotsVertical].role
-                  : role
+                  ? Editors[openThreeDotsVertical].role
+                  : myrole
               }
             />
+            <DialogContent style={{ direction: 'rtl' }}>
+              user
+            </DialogContent>
+            {myrole==="EDITOR"?(<div className='allStudent'>
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={openThreeDotsVertical !== -1
+                    ? Editors[openThreeDotsVertical].userid
+                    : myusers}
+                  defaultValue={openThreeDotsVertical !== -1
+                    ? Editors[openThreeDotsVertical].userid
+                    : ''}
+                  onChange={(event, value) => {
+                    setMyusers(value)
+                  }}
+                >
+                  {coaches.map((value, index) => {
+                    return (
+                      <FormControlLabel
+                        key={value.id}
+                        value={value.id}
+                        name={value.name}
+                        label={value.name}
+                        control={<Radio />}
+                      />
+                    )
+                  }
+                  )}
+                </RadioGroup>
+              </FormControl>
+            </div>):(<></>)}
+            {myrole==="STUDENT"?(<div className='allStudent'>
+              <FormControl>
+                <RadioGroup
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={openThreeDotsVertical !== -1
+                    ? Editors[openThreeDotsVertical].userid
+                    : myusers}
+                  defaultValue={openThreeDotsVertical !== -1
+                    ? Editors[openThreeDotsVertical].userid
+                    : ''}
+                  onChange={(event, value) => {
+                    setMyusers(value)
+                  }}
+                >
+                  {users.map((value, index) => {
+                    return (
+                      <FormControlLabel
+                        key={value.id}
+                        value={value.id}
+                        name={value.name}
+                        label={value.name}
+                        control={<Radio />}
+                      />
+                    )
+                  }
+                  )}
+                </RadioGroup>
+              </FormControl>
+            </div>):(<></>)}
             {/* <h1 label='בחירת מדריך' /> */}
             <DialogContent style={{ direction: 'rtl' }}>
               בחר אתרים
             </DialogContent>
             <div className='allStudent'>
-              {student.map((value, index) => {
+              {sites.map((value, index) => {
                 return (
                   <label key={index} className='list-group-item'>
                     <input
                       style={{ marginLeft: '10px' }}
                       dir='ltr'
                       onChange={() => {
-                        console.log("testing", myStudentsList);
+                        console.log("testing", mysitesList);
                         // saveCheckbox(value)
-                        const isStudentInList = myStudentsList.some((student) => student.id === value.id);
+                        const isStudentInList = mysitesList.some((student) => student.id === value.id);
                         console.log('isStudentInList', isStudentInList);
                         if (isStudentInList) {
                           // Student exists in the list, remove the student with the matching id
-                          const updatedStudentsList = myStudentsList.filter((student) => student.id !== value.id);
-                          setMyStudentsList(updatedStudentsList);
+                          const updatedSitesList = mysitesList.filter((student) => student.id !== value.id);
+                          setMySitesList(updatedSitesList);
                         } else {
                           // Student does not exist in the list, add the new student
-                          const updatedStudentsList = [...myStudentsList, value];
-                          setMyStudentsList(updatedStudentsList);
+                          const updatedSitesList = [...mysitesList, value];
+                          setMySitesList(updatedSitesList);
                         }
                       }}
                       className='form-check-input me-1'
@@ -367,7 +473,7 @@ const Editors = () => {
                       id={value.name}
                       name={value.name}
                       value=''
-                      checked={myStudentsList.some((student) => student.id === value.id)}
+                      checked={mysitesList.some((student) => student.id === value.id)}
                     ></input>
                     {value.name}
                   </label>
@@ -439,7 +545,7 @@ const Editors = () => {
         </Dialog>
         {/* end cencel */}
         <div className='user_cards_warpper'>
-          {users.map((user, index) => (
+          {Editors.map((user, index) => (
             <div key={user.id} className='user_card'>
               <div className='dropdownThreeDotsUsers'>
                 <button

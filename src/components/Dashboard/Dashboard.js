@@ -88,6 +88,11 @@ const Dashboard = () => {
     },
   ];
 
+  const jwt = sessionStorage.getItem('jwt');
+  const jwtEditor = sessionStorage.getItem('jwt-EDITOR');
+  const role = jwt ? JSON.parse(jwt)?.role : null;
+  const editorId = jwtEditor && jwtEditor !== "undefined" ? JSON.parse(jwtEditor)?.id : "ADMIN";
+
   return (
     <div className='Dashboard'>
       {/* <Navbar /> */}
@@ -96,7 +101,7 @@ const Dashboard = () => {
             <iframe
               width="100%"
               height="100%"
-              src={"https://dashboardskillsservice.azurewebsites.net/?embed=true" + "&role="+JSON.parse(sessionStorage.getItem('jwt'))?.role+"&data=" + JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id}
+              src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}`}
             ></iframe>
 
         </div>
@@ -119,7 +124,7 @@ const Dashboard = () => {
           </div>
           <div className='cardsLine'>
             <CardDash cards={cards[7]} />
-            {JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN" ? (
+            {role === "ADMIN" ? (
               <CardDash cards={cards[9]} />
             ) : (<></>)}
           </div>

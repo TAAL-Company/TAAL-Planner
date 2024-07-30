@@ -255,7 +255,7 @@ export const getingData_Routes = async () => {
   let allRoutes;
 
   await get(`${baseUrl}/routes`).then((res) => {
-    allRoutes = res.data.map((route)=>{
+    allRoutes = res.data.map((route) => {
       // console.log(route.tasks);
       route.tasks.sort((a, b) => a.position - b.position);
       return route
@@ -562,6 +562,10 @@ export const insertEditor = async (user) => {
         googleID: user.googleID,
         siteIds: user.siteIds,
         role: user.role,
+        phone: user.phone,
+        picture_url: user.picture_url,
+        password: user.password,
+        userid: user.userid,
       }),
     });
 
@@ -596,6 +600,10 @@ export const updateEditor = async (userId, user) => {
     role: user.role,
     email: user.email,
     name: user.name,
+    phone: user.phone,
+    picture_url: user.picture_url,
+    password: user.password,
+    userid: user.userid,
   };
   const headers = {
     'Content-Type': 'application/json',

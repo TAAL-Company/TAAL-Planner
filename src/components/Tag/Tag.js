@@ -43,11 +43,11 @@ function Tag({
   const clickOnThreeDotsVerticaIcontBoard = (value, value2) => {
     console.log("value2", value2);
     setLocation(value2);
-    if (openThreeDotsVerticalBoard === value){
+    if (openThreeDotsVerticalBoard === value) {
       setOpenThreeDotsVerticalBoard(-1);
-    } else{
+    } else {
       setOpenThreeDotsVerticalBoard(value);
-    } 
+    }
   };
 
   const clickOnThreeDotsVerticaIcont = (value) => {
@@ -181,6 +181,7 @@ function Tag({
                     <></>
                   ) : dragFromCover === 'TasksNew' ? (
                     <Modal_dropdown
+                      language={language}
                       setRequestForEditing={setRequestForEditing}
                       setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                       editable={true}
@@ -198,6 +199,7 @@ function Tag({
                     <></>
                   ) : dragFromCover === 'border' ? (
                     <Modal_dropdown
+                      language={language}
                       setRequestForEditing={setRequestForEditing}
                       setOpenThreeDotsVertical={setOpenThreeDotsVerticalBoard}
                       editable={true}
@@ -209,7 +211,7 @@ function Tag({
                     <></>
                   )}
                 </div>
-                <div style={{ marginRight: '15px' }} className='nameOfTask'>
+                <div style={{ marginLeft: language === 'English' ? '0' : '15px', marginRight: language !== 'English' ? '0' : '15px' }} className='nameOfTask'>
                   {' '}
                   {title}
                 </div>

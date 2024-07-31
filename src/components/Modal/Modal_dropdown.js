@@ -23,7 +23,10 @@ function Modal_Dropdown(props) {
 
   return (
     <div style={{ position: 'relative' }} ref={menuRef}>
-      <div style={{ position: 'absolute', top: '0', left: '100%' }} id='dropdown' className='button-dropdown-content'>
+      <div
+        // style={{ position: 'absolute', top: '0', left: '100%' }} 
+        style={{ position: 'absolute', top: '0', left: props.language === 'English' ? '100%' : '', right: props.language !== 'English' ? '100%' : '' }}
+        id='dropdown' className='button-dropdown-content'>
         {props.editable ? (
           <Link onClick={() => props.setRequestForEditing('edit')}>עריכה</Link>
         ) : (

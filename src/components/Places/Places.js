@@ -230,11 +230,11 @@ const Places = (props) => {
 
         Editors.forEach(Editor => {
           console.log(Editor.id === JSON.parse(sessionStorage.getItem('jwt')).id);
-          if(Editor.id === JSON.parse(sessionStorage.getItem('jwt')).id){
+          if (Editor.id === JSON.parse(sessionStorage.getItem('jwt')).id) {
             Editor.sites.forEach(site => {
-              console.log("site",site);
+              console.log("site", site);
               if (!uniqueSiteIds.has(site.id)) {
-                console.log("site.id",site.id);
+                console.log("site.id", site.id);
                 uniqueSiteIds.add(site.id);
                 uniqueSites.push(site);
               }
@@ -278,11 +278,11 @@ const Places = (props) => {
 
         Editors.forEach(Editor => {
           console.log(Editor.id === JSON.parse(sessionStorage.getItem('jwt')).id);
-          if(Editor.id === JSON.parse(sessionStorage.getItem('jwt')).id){
+          if (Editor.id === JSON.parse(sessionStorage.getItem('jwt')).id) {
             Editor.sites.forEach(site => {
-              console.log("site",site);
+              console.log("site", site);
               if (!uniqueSiteIds.has(site.id)) {
-                console.log("site.id",site.id);
+                console.log("site.id", site.id);
                 uniqueSiteIds.add(site.id);
                 uniqueSites.push(site);
               }
@@ -294,7 +294,7 @@ const Places = (props) => {
         console.log(uniqueSiteIds);
         console.log(uniqueSites);
         allPlaces = uniqueSites
-        
+
         // const routes = await getingData_Routes()
         // const filterroutesbycoachId = routes.filter(route =>
         //   route.students.some(student => student.id === JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id)
@@ -849,7 +849,7 @@ const Places = (props) => {
           </select>
         </div>
         <div
-          style={{ marginRight: '17px' }}
+          style={{ margin: '20px' }}
           className={
             siteSelected === true && allWorkersForSite.length > 0
               ? ''
@@ -858,15 +858,15 @@ const Places = (props) => {
         >
           <div className='placesTitle'>
             {props.language !== 'english'
-              ? 'לאיזו סטודנט ברצונך לבנות מסלול?'
-              : 'For which student do you want to build a track?'}
+              ? props.siteQuestionLanguage
+              : props.siteQuestionLanguage}
           </div>
           <select
             className='selectPlace'
             onChange={handleWorkerSelectChange}
             value={selectedWorker ? selectedWorker.name : 'DEFAULT'}
           >
-            <option defaultValue='DEFAULT'>כללי</option>
+            <option defaultValue='DEFAULT'>{props.workerLanguage}</option>
             {allWorkersForSite.map((user, index) => (
               <option key={index} value={user.name}>
                 {user.name}
@@ -920,7 +920,7 @@ const Places = (props) => {
             }}
           >
             <input
-              className='searchButton'
+              className={`searchButton ${props.language !== 'English' ? 'english' : ''}`}
               dir='rtl'
               placeholder={
                 props.language === 'English' ? 'חפש מסלול' : 'search route'
@@ -936,11 +936,15 @@ const Places = (props) => {
           <div className='routs'>
             {filteredDataRoutes.length === 0 ? (
               <div
-                className='textBeforeStation'
+                className={`textBeforeStation ${props.language !== 'English' ? 'english' : ''}`}
                 style={{ backgroundImage: `url(${textArea})` }}
               >
-                {props.routesBeforeChoosingSite}
+                <div
+                  className={`textBeforeStationtext ${props.language !== 'English' ? 'english' : ''}`}>
+                  {props.routesBeforeChoosingSite}
+                </div>
               </div>
+
             ) : (
               filteredDataRoutes.map((route, index) => {
                 return (
@@ -969,6 +973,7 @@ const Places = (props) => {
                       {openThreeDotsVertical === index ? (
                         // <div ref={menuRef}>
                         <ModalDropdown
+                          language={props.language}
                           setRequestForEditing={setRequestForEditing}
                           setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                           editable={true}

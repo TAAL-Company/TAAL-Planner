@@ -326,11 +326,11 @@ function Modal_Tasks(props) {
             className='BackgroundTasks'
             style={{
               textAlign: props.language === 'English' ? 'right' : 'left',
-              direction: props.language === 'English' ? 'ltr' : 'rtl',
-              transform:
-                props.language === 'English'
-                  ? ' translate(-50%, -50%)'
-                  : ' translate(50%, -50%)',
+              direction: props.language !== 'English' ? 'ltr' : 'rtl',
+              // transform:
+              //   props.language === 'English'
+              //     ? ' translate(-50%, -50%)'
+              //     : ' translate(50%, -50%)',
             }}
           >
             <div className='modalContainerTasks'>
@@ -389,7 +389,9 @@ function Modal_Tasks(props) {
                   </p>
                 </form>
                 <div className='estimatedTimeContainer'>
-                  <h6>הזן את הזמן המשוער בשניות עבור המשימה</h6>
+                  <h6>{props.language !== 'English'
+                          ? "Enter the estimated time in seconds for the task : "
+                          : "תמונה שנבחרה: לא נמצא קובץ תמונה"}</h6>
                   <input
                     type='number'
                     name='estimatedTimeSeconds'
@@ -463,7 +465,9 @@ function Modal_Tasks(props) {
                       </div>
                     ) : (
                       <div style={{ marginBottom: '1rem' }}>
-                        תמונה שנבחרה: לא נמצא קובץ תמונה
+                        {props.language !== 'English'
+                      ? 'Selected image: No image file found'
+                      : ' :  תמונה שנבחרה: לא נמצא קובץ תמונה'}
                       </div>
                     )}
                   </div>
@@ -539,7 +543,9 @@ function Modal_Tasks(props) {
                   </div>
                 ) : (
                   <div style={{ marginBottom: '1rem' }}>
-                    אודיו שנבחר: לא נמצא קובץ אודיו
+                    {props.language !== 'English'?
+                    'Selected audio: No audio file found':
+                   ' אודיו שנבחר: לא נמצא קובץ אודיו'}
                   </div>
                 )}
                 <div className='list-group'>
@@ -557,7 +563,10 @@ function Modal_Tasks(props) {
                             className='form-check-input me-1'
                             type='checkbox'
                             onChange={() => saveCheckbox(value)}
-                            style={{ marginLeft: '5px' }}
+                            style={{ 
+                              marginLeft: props.language === 'English'? '0':'5px',
+                              marginRight: props.language !== 'English'? '0':'5px',
+                            }}
                             checked={myPlacesChoice.includes(value.id)}
                           ></input>
                           {value.title}

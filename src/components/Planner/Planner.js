@@ -31,6 +31,9 @@ const Planner = () => {
   const [siteQuestionLanguage, setSiteQuestionLanguage] = useState(
     'Which site do you want to build a route on?'
   );
+  const [SiteStudentQuestionLanguage, setSiteStudentQuestionLanguage] = useState(
+    'For which student do you want to build a track?'
+  );
   const [
     ,
     // routeWrite
@@ -98,6 +101,7 @@ const Planner = () => {
     setAddStation('add stations');
     setAddTask('Add tasks');
     setSiteQuestionLanguage('Which site do you want to build a route on?');
+    setSiteStudentQuestionLanguage('For which student do you want to build a track?');
     setSiteLanguage('Site');
     setWorkerLanguage('Worker');
     setRoutesBeforeChoosingSite(
@@ -121,6 +125,7 @@ const Planner = () => {
     setLanguage('English');
     setFloatLan('right');
     setSiteQuestionLanguage('באיזה אתר ברצונך לבנות מסלול?');
+    setSiteStudentQuestionLanguage('לאיזו סטודנט ברצונך לבנות מסלול?');
     setSiteLanguage('אתר');
     setWorkerLanguage('סטודנט');
     setSites('אתרים');
@@ -191,6 +196,7 @@ const Planner = () => {
                     siteLanguage={siteLanguage}
                     workerLanguage={workerLanguage}
                     siteQuestionLanguage={siteQuestionLanguage}
+                    SiteStudentQuestionLanguage={SiteStudentQuestionLanguage}
                     saveButton={saveButton}
                     myTasks={myTasks}
                     drag={drag}

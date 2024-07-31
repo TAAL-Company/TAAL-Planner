@@ -105,6 +105,12 @@
   left: 8%;
   transform: translate(50%, 0%);
 }
+.modalContainerNewRoute.english {
+  direction: rtl; /* Align content to the right */
+  left: auto;
+  right: 8%;
+  transform: translate(-50%, 0%);
+}
 
 .modalMyTasksContainer {
   background-color: #f0f8ff;
@@ -421,6 +427,28 @@
   top: 50%;
   transform: translate(-50%, -50%);
   box-shadow: 0px 3px 10px #0000004d;
+  overflow: scroll;
+  overflow-block: hidden;
+  height: 96%;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
 }
 
 .headerNewTask {
@@ -464,7 +492,7 @@
   gap: 16px;
   height: 100px;
   align-items: center;
-  padding-left: 68px;
+  padding-left: 165px;
   margin-bottom: 22px;
 }
 
@@ -520,7 +548,6 @@ input.cancelTaskButton {
   border: 1px solid #c9c9c9;
   border-radius: 4px;
   opacity: 1;
-  padding-right: 20px;
 }
 
 .allStudent {
@@ -590,9 +617,13 @@ input.newStationButton {
 .list-group-item {
   text-align: right;
   direction: rtl;
-  direction: rtl;
   justify-content: flex-start;
   gap: 8px;
+}
+
+.list-group-item.english {
+  text-align: left;
+  direction: ltr;
 }
 
 .headerNewRoute {

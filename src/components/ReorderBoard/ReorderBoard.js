@@ -89,7 +89,10 @@ const ReorderBoard = (props) => {
                             props.language === 'English'
                               ? `linear-gradient(270deg, ${task.color} 7%, #ffffff 1%)`
                               : `linear-gradient(90deg, ${task.color} 7%, #ffffff 1%)`,
-                          justifyContent: 'flex-end',
+                          justifyContent: 
+                          props.language === 'English'
+                              ? 'flex-end'
+                              : '',
                           padding: '22px',
                         }}
                       >

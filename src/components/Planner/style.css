@@ -15,6 +15,7 @@
   text-align: right;
   right: 64px;
   position: relative;
+  direction: ltr;
 }
 .Planner {
   /* background-color: aliceblue; */

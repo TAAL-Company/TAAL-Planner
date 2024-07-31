@@ -185,9 +185,8 @@ const Stations = (props) => {
             <>
               <div className='TitleStation'>
                 <div
-                  className={`MyTitle text ${
-                    props.language !== 'English' ? 'english' : ''
-                  }`}
+                  className={`MyTitle text ${props.language !== 'English' ? 'english' : ''
+                    }`}
                 >
                   {' '}
                   {props.stationsName}
@@ -206,7 +205,7 @@ const Stations = (props) => {
               }}
             >
               <input
-                className='searchButton'
+                className={`searchButton ${props.language !== 'English' ? 'english' : ''}`}
                 dir='rtl'
                 placeholder={
                   props.language === 'English' ? 'חפש תחנה' : 'search station'
@@ -279,6 +278,7 @@ const Stations = (props) => {
 
                                         {openThreeDotsVertical === index ? (
                                           <Modal_dropdown
+                                            language={props.language}
                                             setRequestForEditing={
                                               setRequestForEditing
                                             }
@@ -318,10 +318,15 @@ const Stations = (props) => {
                 </>
               ) : (
                 <div
-                  className='textBeforeStation'
-                  style={{ backgroundImage: `url(${textArea})` }}
+                  className={`textBeforeStation ${props.language !== 'English' ? 'english' : ''}`}
+                  style={{
+                    backgroundImage: `url(${textArea})`,
+                  }}
                 >
-                  {props.stationsBeforeChoosingSite}
+                  <div
+                    className={`textBeforeStationtext ${props.language !== 'English' ? 'english' : ''}`}>
+                    {props.stationsBeforeChoosingSite}
+                  </div>
                 </div>
               )}
             </div>

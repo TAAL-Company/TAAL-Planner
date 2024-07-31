@@ -15,10 +15,11 @@
 .Places.english {
   padding-left: 40px;
   direction: ltr;
+  text-align:left;
 }
 
 .selectPlace {
-  width: 272px;
+  width: 350px;
   padding-right: 10px;
   padding-left: 10px;
   border: 1px black solid;
@@ -64,6 +65,7 @@
 .MyTitle.english {
   justify-content: left;
   padding-left: 15px;
+  direction: ltr;
 }
 
 .eyeIcon {
@@ -130,6 +132,7 @@
 .mainRectangles.english {
   flex-direction: revert;
   justify-content: start;
+  direction: ltr;
 }
 
 @media only screen and (max-width: 600px) {
@@ -174,6 +177,7 @@
 
 .buttons.english {
   margin-left: 56px;
+  direction: ltr;
 }
 
 .AddButton {
@@ -261,6 +265,11 @@ h3 {
 .search {
   text-align: center;
   padding: 14px 0px 14px 0px;
+}
+
+.searchButton.english {
+  background-position: 17px 5px;
+  direction: ltr;
 }
 
 .searchButton {

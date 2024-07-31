@@ -35,6 +35,20 @@
   padding-top: 69px;
 }
 
+.textBeforeStation.english{
+  direction: ltr;
+  height: 175px;
+  transform: scaleX(-1);
+}
+
+.textBeforeStationtext {
+  transform: scaleX(1);
+}
+
+.textBeforeStationtext.english {
+  transform: scaleX(-1);
+}
+
 .Station:focus {
   background: linear-gradient(90deg, #fffbf7 0, #efe3d6);
   transition: 0.4s;

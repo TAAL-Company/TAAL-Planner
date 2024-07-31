@@ -162,9 +162,8 @@ const Tasks = (props) => {
     <div className='Cover_Tasks'>
       <div className='TitleTasks'>
         <div
-          className={`MyTitle text ${
-            props.language !== 'English' ? 'english' : ''
-          }`}
+          className={`MyTitle text ${props.language !== 'English' ? 'english' : ''
+            }`}
         >
           {props.myTasks}
         </div>
@@ -176,7 +175,7 @@ const Tasks = (props) => {
         }}
       >
         <input
-          className='searchButton'
+          className={`searchButton ${props.language !== 'English' ? 'english' : ''}`}
           // dir="rtl"
           placeholder={
             props.language === 'English' ? 'חפש משימה' : 'search task'
@@ -189,12 +188,15 @@ const Tasks = (props) => {
       {/* המשימות */}
       <div className='TasksCover'>
         {props.tasksOfChosenStation.length === 0 ||
-        props.chosenStation.length === 0 ? (
+          props.chosenStation.length === 0 ? (
           <div
-            className='textBeforeStation'
+            className={`textBeforeStation ${props.language !== 'English' ? 'english' : ''}`}
             style={{ backgroundImage: `url(${textArea})` }}
           >
-            {props.tasksBeforeChoosingSite}
+            <div
+            className={`textBeforeStationtext ${props.language !== 'English' ? 'english' : ''}`}>
+              {props.tasksBeforeChoosingSite}
+            </div>
           </div>
         ) : (
           // <></
@@ -240,7 +242,7 @@ const Tasks = (props) => {
                             requestForEditing={requestForEditing}
                             setRequestForEditing={setRequestForEditing}
                             requestForEditingBoard={requestForEditing}
-                            // setRequestForEditingBoard={setRequestForEditingBoard}
+                          // setRequestForEditingBoard={setRequestForEditingBoard}
                           />
                         </div>
                       )}
@@ -289,42 +291,42 @@ const Tasks = (props) => {
           title={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVertical
-                ).title
+                (task) => task.id === openThreeDotsVertical
+              ).title
               : ''
           }
           subtitle={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVertical
-                ).subtitle
+                (task) => task.id === openThreeDotsVertical
+              ).subtitle
               : ''
           }
           estimatedTimeSeconds={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVertical
-                ).estimatedTimeSeconds
+                (task) => task.id === openThreeDotsVertical
+              ).estimatedTimeSeconds
               : 20
           }
           picture={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVertical
-                ).picture_url
+                (task) => task.id === openThreeDotsVertical
+              ).picture_url
               : null
           }
           audio={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(
-                  (task) => task.id === openThreeDotsVertical
-                ).audio_url
+                (task) => task.id === openThreeDotsVertical
+              ).audio_url
               : null
           }
           stationOfTask={
             openThreeDotsVertical !== -1
               ? props.allTasks.find((task) => task.id === openThreeDotsVertical)
-                  .stations
+                .stations
               : []
           }
         />

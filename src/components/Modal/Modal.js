@@ -387,7 +387,7 @@ function Modal({
               </div>
             </>
           ) : (
-            <div className='modalContainerNewRoute'>
+            <div className={`modalContainerNewRoute ${language === 'English' ? 'english' : ''}`}>
               {!siteSelected ? (
                 <>
                   <Modal_no_site_selected
@@ -458,32 +458,43 @@ function Modal({
                   ) : (
                     <>
                       {' '}
-                      <div className='headerNewRoute'>
+                      <div className='headerNewRoute'
+                        dir={language === 'English' ? 'ltr' : 'rtl'} >
                         <div className='newRoutTitle'>
                           {language !== 'English'
-                            ? 'save route'
+                            ? 'Save Route'
                             : 'שמירת מסלול'}
                         </div>
                       </div>
-                      <div className='bodySaveRoute'>
-                        <div>:שם המסלול</div>
+                      <div className='bodySaveRoute'
+                        style={{
+                          textAlign:
+                            language === 'English' ? 'right' : 'left',
+                        }}
+                      >
+                        <div>
+                          {language !== 'English' ? 'Name of the route :' : 'שם המסלול :'}
+                        </div>
                         <input
-                          dir='rtl'
+                          // dir={language !== 'English' ? 'ltr' : 'rtl'}
                           className='inputRouteName'
+                          style={{  paddingRight: language !== 'English' ? '' : '10px', paddingLeft: language !== 'English' ? '10px' : ''}}
                           required={true}
                           type='text'
                           // onChange={getName}
                           value={routeTitle}
                           onChange={(e) => setRouteTitle(e.target.value)}
                         ></input>
-                        <div>:שיוך עובד</div>
+                        <div>
+                          {language !== 'English' ? 'List of students:' :'שיוך עובד :'}
+                          </div>
                         <div className='allStudent'>
                           {student.map((value, index) => {
                             return (
-                              <label key={index} className='list-group-item'>
+                              <label key={index} className={`list-group-item ${language !== 'English' ? 'english' : ''}`}>
                                 <input
-                                  dir='ltr'
-                                  style={{ marginLeft: '10px' }}
+                                  // dir={language !== 'English' ? 'ltr' : 'rtl'}
+                                  // style={{ marginLeft: language !== 'English' ? '0' : '10px', }}
                                   onChange={() => {
                                     console.log("testing", myStudentsList);
                                     // saveCheckbox(value)
@@ -492,12 +503,12 @@ function Modal({
                                     if (isStudentInList) {
                                       // Student exists in the list, remove the student with the matching id
                                       const updatedStudentsList = myStudentsList.filter((student) => student.id !== value.id);
-                                      console.log('isStudentInList - yes', isStudentInList,updatedStudentsList);
+                                      console.log('isStudentInList - yes', isStudentInList, updatedStudentsList);
                                       setMyStudentsList(updatedStudentsList);
                                     } else {
                                       // Student does not exist in the list, add the new student
                                       const updatedStudentsList = [...myStudentsList, value];
-                                      console.log('isStudentInList - no ', isStudentInList,updatedStudentsList);
+                                      console.log('isStudentInList - no ', isStudentInList, updatedStudentsList);
                                       setMyStudentsList(updatedStudentsList);
                                     }
                                   }}

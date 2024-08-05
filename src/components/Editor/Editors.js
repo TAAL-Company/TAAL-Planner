@@ -56,6 +56,22 @@ const Editors = () => {
   const [coaches, setcoaches] = useState([]);
   const [myrole, setrole] = useState('');
 
+  const [language, setLanguage] = useState('Hebrew');
+  const [addEditorButtonText, setAddEditorButtonText] = useState('הוסף משתמש חדש');
+
+
+  useEffect(()=>{
+    setLanguage(sessionStorage.getItem('language'));
+
+    if (sessionStorage.getItem('language')=='English') {
+      setAddEditorButtonText('Add a new user');
+    }else if (sessionStorage.getItem('language')=='Hebrew') {
+      setAddEditorButtonText('הוסף משתמש חדש');
+    }else{
+      setAddEditorButtonText('הוסף משתמש חדש');
+    }
+  })
+
   useEffect(() => { }, [openThreeDotsVertical]);
 
   useEffect(() => {
@@ -151,7 +167,7 @@ const Editors = () => {
     const userid = myusers;
     const googleID = document.getElementById('googleID').value;
     const role = myrole;
-    console.log('role : ',role);
+    console.log('role : ', role);
 
     if (email === '' || fullName === '') {
       alert('עליך למלא שדות חובה המסומנים בכוכבית');
@@ -251,31 +267,31 @@ const Editors = () => {
     else setOpenThreeDotsVertical(value);
   };
 
-  const cacheRtl = createCache({
-    key: 'muirtl',
-    stylisPlugins: [prefixer, rtlPlugin],
+  const cache = createCache({
+    key: language === 'Hebrew' ? 'muirtl' : 'muiltr',
+    stylisPlugins: language === 'Hebrew' ? [prefixer, rtlPlugin] : [prefixer],
   });
 
   return (
-    <CacheProvider value={cacheRtl}>
+    <CacheProvider value={cache}>
       <div
         style={{
-          direction: 'rtl',
+          direction: language === 'Hebrew' ? 'rtl' : 'ltr',
           marginTop: '14px',
           textAlign: '-webkit-center',
         }}
       >
         <Button variant='outlined' onClick={handleClickOpen}>
-          הוסף משתמש חדש
+          {addEditorButtonText}
         </Button>
         <Dialog open={open} onClose={handleClose}>
           {requestForEditing === 'edit' ? (
-            <DialogTitle style={{ direction: 'rtl', marginTop: '10px' }}>
-              משתמש עריכה
+            <DialogTitle style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr', marginTop: '10px' }}>
+              {language === 'Hebrew' ? 'משתמש עריכה' : 'Edit User'}
             </DialogTitle>
           ) : (
-            <DialogTitle style={{ direction: 'rtl', marginTop: '10px' }}>
-              משתמש חדש
+            <DialogTitle style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr', marginTop: '10px' }}>
+              {language === 'Hebrew' ? 'משתמש חדש' : 'New User'}
             </DialogTitle>
           )}
           <DialogContent>
@@ -284,7 +300,7 @@ const Editors = () => {
               autoFocus
               margin='dense'
               id='email'
-              label='אימייל'
+              label={language === 'Hebrew' ? 'אימייל' : 'Email'}
               type='email'
               fullWidth
               variant='standard'
@@ -293,11 +309,12 @@ const Editors = () => {
                   ? Editors[openThreeDotsVertical].email
                   : ''
               }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <TextField
               margin='dense'
               id='name'
-              label='שם מלא'
+              label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
               type='name'
               fullWidth
               variant='standard'
@@ -306,11 +323,12 @@ const Editors = () => {
                   ? Editors[openThreeDotsVertical].name
                   : ''
               }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <TextField
               margin='dense'
               id='password'
-              label='password'
+              label={language === 'Hebrew' ? 'סיסמה' : 'Password'}
               type='password'
               fullWidth
               variant='standard'
@@ -319,11 +337,12 @@ const Editors = () => {
                   ? Editors[openThreeDotsVertical].password
                   : ''
               }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <TextField
               margin='dense'
               id='phone'
-              label='מספר פלאפון'
+              label={language === 'Hebrew' ? 'מספר פלאפון' : 'Phone Number'}
               type='phone'
               fullWidth
               variant='standard'
@@ -332,11 +351,12 @@ const Editors = () => {
                   ? Editors[openThreeDotsVertical].phone
                   : ''
               }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <TextField
               margin='dense'
               id='googleID'
-              label='גוגל'
+              label={language === 'Hebrew' ? 'גוגל' : 'Google ID'}
               type='googleID'
               fullWidth
               variant='standard'
@@ -345,16 +365,12 @@ const Editors = () => {
                   ? Editors[openThreeDotsVertical].googleID
                   : ''
               }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <Autocomplete
               disablePortal
               id='role'
-              options={[
-                `ADMIN`,
-                `STUDENT`,
-                `EDITOR`
-              ]}
-
+              options={['ADMIN', 'STUDENT', 'EDITOR']}
               defaultValue={
                 openThreeDotsVertical !== -1
                   ? Editors[openThreeDotsVertical].role
@@ -368,7 +384,7 @@ const Editors = () => {
               getOptionLabel={(option) => option || ''}
               // sx={{ width: 300 }}
               renderInput={(params) => (
-                <TextField {...params} label='בחירת מדריך' />
+                <TextField {...params} label={language === 'Hebrew' ? 'בחירת מדריך' : 'Select Role'} />
               )}
               onChange={(event, value) => {
                 setrole(value);
@@ -379,72 +395,82 @@ const Editors = () => {
                   : myrole
               }
             />
-            <DialogContent style={{ direction: 'rtl' }}>
-              user
+            <DialogContent style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr' }}>
+              {language === 'Hebrew' ? 'משתמש' : 'User'}
             </DialogContent>
-            {myrole==="EDITOR"?(<div className='allStudent'>
-              <FormControl>
-                <RadioGroup
-                  aria-labelledby="demo-controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                  value={openThreeDotsVertical !== -1
-                    ? Editors[openThreeDotsVertical].userid
-                    : myusers}
-                  defaultValue={openThreeDotsVertical !== -1
-                    ? Editors[openThreeDotsVertical].userid
-                    : ''}
-                  onChange={(event, value) => {
-                    setMyusers(value)
-                  }}
-                >
-                  {coaches.map((value, index) => {
-                    return (
-                      <FormControlLabel
-                        key={value.id}
-                        value={value.id}
-                        name={value.name}
-                        label={value.name}
-                        control={<Radio />}
-                      />
-                    )
-                  }
-                  )}
-                </RadioGroup>
-              </FormControl>
-            </div>):(<></>)}
-            {myrole==="STUDENT"?(<div className='allStudent'>
-              <FormControl>
-                <RadioGroup
-                  aria-labelledby="demo-controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                  value={openThreeDotsVertical !== -1
-                    ? Editors[openThreeDotsVertical].userid
-                    : myusers}
-                  defaultValue={openThreeDotsVertical !== -1
-                    ? Editors[openThreeDotsVertical].userid
-                    : ''}
-                  onChange={(event, value) => {
-                    setMyusers(value)
-                  }}
-                >
-                  {users.map((value, index) => {
-                    return (
-                      <FormControlLabel
-                        key={value.id}
-                        value={value.id}
-                        name={value.name}
-                        label={value.name}
-                        control={<Radio />}
-                      />
-                    )
-                  }
-                  )}
-                </RadioGroup>
-              </FormControl>
-            </div>):(<></>)}
-            {/* <h1 label='בחירת מדריך' /> */}
-            <DialogContent style={{ direction: 'rtl' }}>
-              בחר אתרים
+            {myrole === 'EDITOR' ? (
+              <div className='allStudent'>
+                <FormControl>
+                  <RadioGroup
+                    aria-labelledby='demo-controlled-radio-buttons-group'
+                    name='controlled-radio-buttons-group'
+                    value={
+                      openThreeDotsVertical !== -1
+                        ? Editors[openThreeDotsVertical].userid
+                        : myusers
+                    }
+                    defaultValue={
+                      openThreeDotsVertical !== -1
+                        ? Editors[openThreeDotsVertical].userid
+                        : ''
+                    }
+                    onChange={(event, value) => {
+                      setMyusers(value);
+                    }}
+                  >
+                    {coaches.map((value, index) => {
+                      return (
+                        <FormControlLabel
+                          key={value.id}
+                          value={value.id}
+                          name={value.name}
+                          label={value.name}
+                          control={<Radio />}
+                        />
+                      );
+                    })}
+                  </RadioGroup>
+                </FormControl>
+              </div>
+            ) : (
+              <></>
+            )}
+            {myrole === 'STUDENT' ? (
+              <div className='allStudent'>
+                <FormControl>
+                  <RadioGroup
+                    aria-labelledby='demo-controlled-radio-buttons-group'
+                    name='controlled-radio-buttons-group'
+                    value={
+                      openThreeDotsVertical !== -1
+                        ? Editors[openThreeDotsVertical].userid
+                        : myusers
+                    }
+                    defaultValue={
+                      openThreeDotsVertical !== -1
+                        ? Editors[openThreeDotsVertical].userid
+                        : ''
+                    }
+                    onChange={(event, value) => {
+                      setMyusers(value);
+                    }}
+                  >
+                    {users.map((value, index) => {
+                      return (
+                        <FormControlLabel
+                          key={value.id}
+                          value={value.id}
+                          name={value.name}
+                          label={value.name}
+                          control={<Radio />}
+                        />
+                      );
+                    })}
+                  </RadioGroup>
+                </FormControl>
+                </div>):(<></>)}
+            <DialogContent style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr' }}>
+              {language === 'Hebrew' ? 'בחר אתרים' : 'Select Sites'}
             </DialogContent>
             <div className='allStudent'>
               {sites.map((value, index) => {
@@ -452,7 +478,7 @@ const Editors = () => {
                   <label key={index} className='list-group-item'>
                     <input
                       style={{ marginLeft: '10px' }}
-                      dir='ltr'
+                      dir={language === 'Hebrew' ? 'rtl' : 'ltr'}
                       onChange={() => {
                         console.log("testing", mysitesList);
                         // saveCheckbox(value)
@@ -519,8 +545,8 @@ const Editors = () => {
             </div> */}
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>ביטול</Button>
-            <Button onClick={handleConfirm}>שמירה</Button>
+            <Button onClick={handleClose}>{language === 'Hebrew' ? 'ביטול' : 'Cancel'}</Button>
+            <Button onClick={handleConfirm}>{language === 'Hebrew' ? 'שמירה' : 'Save'}</Button>
           </DialogActions>
         </Dialog>
         {/* sure for Remove */}
@@ -530,23 +556,25 @@ const Editors = () => {
           aria-labelledby='alert-dialog-title'
           aria-describedby='alert-dialog-description'
         >
-          <DialogTitle id='alert-dialog-title'>{'מחיקת משתמש'}</DialogTitle>
+          <DialogTitle id='alert-dialog-title'>
+            {language === 'Hebrew' ? 'מחיקת משתמש' : 'Delete User'}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id='alert-dialog-description'>
-              האם אתה בטוח במחיקת המשתמש?
+              {language === 'Hebrew' ? 'האם אתה בטוח במחיקת המשתמש?' : 'Are you sure you want to delete the user?'}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseRemove}>ביטול</Button>
+            <Button onClick={handleCloseRemove}>{language === 'Hebrew' ? 'ביטול' : 'Cancel'}</Button>
             <Button onClick={handleCloseRemoveConfirm} autoFocus>
-              מחיקה
+              {language === 'Hebrew' ? 'מחיקה' : 'Delete'}
             </Button>
           </DialogActions>
         </Dialog>
         {/* end cencel */}
         <div className='user_cards_warpper'>
-          {Editors.map((user, index) => (
-            <div key={user.id} className='user_card'>
+          {Editors.map((editor, index) => (
+            <div key={editor.id} className='user_card'>
               <div className='dropdownThreeDotsUsers'>
                 <button
                   className='threeDotsVerticalEng'
@@ -560,7 +588,7 @@ const Editors = () => {
                     setRequestForEditing={setRequestForEditing}
                     setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                     editable={true}
-                    Reproducible={false}
+                    Reproducible={true}
                     details={true}
                     erasable={true}
                   />
@@ -569,13 +597,13 @@ const Editors = () => {
                 )}
               </div>
               <img
-                src={user.picture_url || defualtSiteImg}
+                src={editor.picture_url || defualtSiteImg}
                 alt='Avatar'
                 style={{ width: '100%' }}
               />
-              <div className='users_cards_container' key={user.id}>
-                <h5>{user.name}</h5>
-                <p>{user.email}</p>
+              <div className='users_cards_container' key={editor.name}>
+                <h5>{editor.name}</h5>
+                <p>{editor.email}</p>
               </div>
             </div>
           ))}

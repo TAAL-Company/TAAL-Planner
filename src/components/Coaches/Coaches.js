@@ -36,6 +36,21 @@ const Coaches = () => {
   const [requestForEditing, setRequestForEditing] = useState(''); // State to store the request for editing
   const [updateAdd, setupdateAdd] = useState(false);
 
+  const [language, setLanguage] = useState('Hebrew');
+  const [addUserButtonText, setAddUserButtonText] = useState('הוסף משתמש חדש');
+
+  useEffect(()=>{
+    setLanguage(sessionStorage.getItem('language'));
+
+    if (sessionStorage.getItem('language')=='English') {
+      setAddUserButtonText('Add a new employee');
+    }else if (sessionStorage.getItem('language')=='Hebrew') {
+      setAddUserButtonText('הוסף עובד חדש');
+    }else{
+      setAddUserButtonText('הוסף עובד חדש');
+    }
+  })
+
   useEffect(() => {}, [openThreeDotsVertical]);
 
   useEffect(() => {
@@ -216,31 +231,31 @@ const Coaches = () => {
     else setOpenThreeDotsVertical(value);
   };
 
-  const cacheRtl = createCache({
-    key: 'muirtl',
-    stylisPlugins: [prefixer, rtlPlugin],
+  const cache = createCache({
+    key: language === 'Hebrew' ? 'muirtl' : 'muiltr',
+    stylisPlugins: language === 'Hebrew' ? [prefixer, rtlPlugin] : [prefixer],
   });
 
   return (
-    <CacheProvider value={cacheRtl}>
+    <CacheProvider value={cache}>
       <div
         style={{
-          direction: 'rtl',
+          direction: language === 'Hebrew' ? 'rtl' : 'ltr',
           marginTop: '14px',
           textAlign: '-webkit-center',
         }}
       >
         <Button variant='outlined' onClick={handleClickOpen}>
-          הוסף משתמש חדש
+          {addUserButtonText}
         </Button>
         <Dialog open={open} onClose={handleClose}>
           {requestForEditing === 'edit' ? (
-            <DialogTitle style={{ direction: 'rtl', marginTop: '10px' }}>
-              משתמש עריכה
+            <DialogTitle style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr', marginTop: '10px' }}>
+              {language === 'Hebrew' ? 'משתמש עריכה' : 'Edit User'}
             </DialogTitle>
           ) : (
-            <DialogTitle style={{ direction: 'rtl', marginTop: '10px' }}>
-              משתמש חדש
+            <DialogTitle style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr', marginTop: '10px' }}>
+              {language === 'Hebrew' ? 'משתמש חדש' : 'New User'}
             </DialogTitle>
           )}
           <DialogContent>
@@ -249,7 +264,7 @@ const Coaches = () => {
               autoFocus
               margin='dense'
               id='email'
-              label='אימייל'
+              label={language === 'Hebrew' ? 'אימייל' : 'Email'}
               type='email'
               fullWidth
               variant='standard'
@@ -258,12 +273,13 @@ const Coaches = () => {
                   ? users[openThreeDotsVertical].email
                   : ''
               }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <TextField
               autoFocus
               margin='dense'
               id='name'
-              label='שם מלא'
+              label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
               type='name'
               fullWidth
               variant='standard'
@@ -272,12 +288,13 @@ const Coaches = () => {
                   ? users[openThreeDotsVertical].name
                   : ''
               }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <TextField
               autoFocus
               margin='dense'
               id='phone'
-              label='מספר פלאפון'
+              label={language === 'Hebrew' ? 'מספר פלאפון' : 'Phone Number'}
               type='phone'
               fullWidth
               variant='standard'
@@ -286,11 +303,14 @@ const Coaches = () => {
                   ? users[openThreeDotsVertical].phone
                   : ''
               }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
-            <div style={{ direction: 'rtl', marginTop: '10px' }}>תמונה:</div>
+            <div style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr', marginTop: '10px' }}>
+              {language === 'Hebrew' ? 'תמונה:' : 'Picture:'}
+            </div>
             <div>
               <input
-                label='שם מלא'
+                label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
                 accept='image/*'
                 id='image-input'
                 type='file'
@@ -298,36 +318,38 @@ const Coaches = () => {
               />
               {users[openThreeDotsVertical]?.picture_url ? (
                 <div className='selectedFileContainer'>
-                  <div className='selectedFileTitle'>:תמונה שנבחרה</div>
+                  <div className='selectedFileTitle'>
+                    {language === 'Hebrew' ? ':תמונה שנבחרה' : 'Selected Picture:'}
+                  </div>
                   <div style={{ marginBottom: '1rem' }}>
                     {typeof users[openThreeDotsVertical]?.picture_url ===
-                    'string'
+                      'string'
                       ? extractFilenameFromURL(
-                          users[openThreeDotsVertical]?.picture_url
-                        )
+                        users[openThreeDotsVertical]?.picture_url
+                      )
                       : users[openThreeDotsVertical]?.name}
                   </div>
                   <div className='thumbnail'>
                     {typeof users[openThreeDotsVertical]?.picture_url ===
                       'string' && (
-                      <img
-                        src={users[openThreeDotsVertical]?.picture_url}
-                        className='thumbnailImg'
-                        alt=''
-                      />
-                    )}
+                        <img
+                          src={users[openThreeDotsVertical]?.picture_url}
+                          className='thumbnailImg'
+                          alt=''
+                        />
+                      )}
                   </div>
                 </div>
               ) : (
                 <div style={{ marginBottom: '1rem' }}>
-                  תמונה שנבחרה: לא נמצא קובץ תמונה
+                  {language === 'Hebrew' ? 'תמונה שנבחרה: לא נמצא קובץ תמונה' : 'Selected Picture: No image file found'}
                 </div>
               )}
             </div>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>ביטול</Button>
-            <Button onClick={handleConfirm}>שמירה</Button>
+            <Button onClick={handleClose}>{language === 'Hebrew' ? 'ביטול' : 'Cancel'}</Button>
+            <Button onClick={handleConfirm}>{language === 'Hebrew' ? 'שמירה' : 'Save'}</Button>
           </DialogActions>
         </Dialog>
         {/* sure for Remove */}
@@ -337,16 +359,18 @@ const Coaches = () => {
           aria-labelledby='alert-dialog-title'
           aria-describedby='alert-dialog-description'
         >
-          <DialogTitle id='alert-dialog-title'>{'מחיקת משתמש'}</DialogTitle>
+          <DialogTitle id='alert-dialog-title'>
+            {language === 'Hebrew' ? 'מחיקת משתמש' : 'Delete User'}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id='alert-dialog-description'>
-              האם אתה בטוח במחיקת המשתמש?
+              {language === 'Hebrew' ? 'האם אתה בטוח במחיקת המשתמש?' : 'Are you sure you want to delete the user?'}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseRemove}>ביטול</Button>
+            <Button onClick={handleCloseRemove}>{language === 'Hebrew' ? 'ביטול' : 'Cancel'}</Button>
             <Button onClick={handleCloseRemoveConfirm} autoFocus>
-              מחיקה
+              {language === 'Hebrew' ? 'מחיקה' : 'Delete'}
             </Button>
           </DialogActions>
         </Dialog>

@@ -41,6 +41,22 @@ const Cards = () => {
   const [studentForAction, setStudentForAction] = useState('');
   const [Phone, setPhone] = useState();
 
+  const [language, setLanguage] = useState('Hebrew');
+  const [addUserButtonText, setAddUserButtonText] = useState('הוסף עובד חדש');
+
+  useEffect(()=>{
+    setLanguage(sessionStorage.getItem('language'));
+
+    if (sessionStorage.getItem('language')=='English') {
+      setAddUserButtonText('Add a new employee');
+    }else if (sessionStorage.getItem('language')=='Hebrew') {
+      setAddUserButtonText('הוסף עובד חדש');
+    }else{
+      setAddUserButtonText('הוסף עובד חדש');
+    }
+  })
+
+
   useEffect(() => {
     const fetchData = async () => {
       const coachesData = await getingData_coaches();
@@ -243,16 +259,16 @@ const Cards = () => {
     else setOpenThreeDotsVertical(value);
   };
 
-  const cacheRtl = createCache({
-    key: 'muirtl',
-    stylisPlugins: [prefixer, rtlPlugin],
+  const cache = createCache({
+    key: language === 'Hebrew' ? 'muirtl' : 'muiltr',
+    stylisPlugins: language === 'Hebrew' ? [prefixer, rtlPlugin] : [prefixer],
   });
 
   return (
-    <CacheProvider value={cacheRtl}>
+    <CacheProvider value={cache}>
       <div
         style={{
-          direction: 'rtl',
+          direction: language === 'Hebrew' ? 'rtl' : 'ltr',
           marginTop: '14px',
           textAlign: '-webkit-center',
         }}
@@ -261,16 +277,16 @@ const Cards = () => {
         הכנסת יכולות קוגנטיביות
       </Button> */}
         <Button variant='outlined' onClick={handleClickOpen}>
-          הוסף עובד חדש
+          {addUserButtonText}
         </Button>
         <Dialog open={open} onClose={handleClose}>
           {requestForEditing === 'edit' ? (
-            <DialogTitle style={{ direction: 'rtl', marginTop: '10px' }}>
-              עריכה עובד
+            <DialogTitle style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr', marginTop: '10px' }}>
+              {language === 'Hebrew' ? 'עריכה עובד' : 'Edit Employee'}
             </DialogTitle>
           ) : (
-            <DialogTitle style={{ direction: 'rtl', marginTop: '10px' }}>
-              עובד חדש
+            <DialogTitle style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr', marginTop: '10px' }}>
+              {language === 'Hebrew' ? 'עובד חדש' : 'New Employee'}
             </DialogTitle>
           )}
 
@@ -283,7 +299,7 @@ const Cards = () => {
               autoFocus
               margin='dense'
               id='email'
-              label='אימייל'
+              label={language === 'Hebrew' ? 'אימייל' : 'Email'}
               type='email'
               fullWidth
               variant='standard'
@@ -292,11 +308,12 @@ const Cards = () => {
                   ? users[openThreeDotsVertical].email
                   : ''
               }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <TextField
               margin='dense'
               id='name'
-              label='שם מלא'
+              label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
               type='name'
               fullWidth
               variant='standard'
@@ -305,11 +322,12 @@ const Cards = () => {
                   ? users[openThreeDotsVertical].name
                   : ''
               }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <TextField
               margin='dense'
               id='phone'
-              label='טלפון'
+              label={language === 'Hebrew' ? 'טלפון' : 'Phone'}
               type='phone'
               fullWidth
               variant='standard'
@@ -318,11 +336,12 @@ const Cards = () => {
                   ? users[openThreeDotsVertical].phone
                   : ''
               }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <TextField
               margin='dense'
               id='userName'
-              label='שם משתמש'
+              label={language === 'Hebrew' ? 'שם משתמש' : 'Username'}
               type='name'
               fullWidth
               variant='standard'
@@ -331,6 +350,7 @@ const Cards = () => {
                   ? users[openThreeDotsVertical].user_name
                   : ''
               }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <Autocomplete
               disablePortal
@@ -344,7 +364,7 @@ const Cards = () => {
               getOptionLabel={(option) => option.name || ''}
               // sx={{ width: 300 }}
               renderInput={(params) => (
-                <TextField {...params} label='בחירת מדריך' />
+                <TextField {...params} label={language === 'Hebrew' ? 'בחירת מדריך' : 'Select Coach'} />
               )}
               onChange={(event, value) => {
                 setCoach(value);
@@ -352,14 +372,14 @@ const Cards = () => {
               }}
               defaultValue={
                 openThreeDotsVertical !== -1 &&
-                coaches.find(
-                  (coach) =>
-                    coach.id === users[openThreeDotsVertical]?.coach?.id
-                )
+                  coaches.find(
+                    (coach) =>
+                      coach.id === users[openThreeDotsVertical]?.coach?.id
+                  )
                   ? users[openThreeDotsVertical]?.coach
                   : manager !== null
-                  ? manager
-                  : null
+                    ? manager
+                    : null
               }
               value={
                 (openThreeDotsVertical !== -1 &&
@@ -370,10 +390,12 @@ const Cards = () => {
                 (manager !== null ? manager : null)
               }
             />
-            <div style={{ direction: 'rtl', marginTop: '10px' }}>תמונה:</div>
+            <div style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr', marginTop: '10px' }}>
+              {language === 'Hebrew' ? 'תמונה:' : 'Picture:'}
+            </div>
             <div>
               <input
-                label='שם מלא'
+                label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
                 accept='image/*'
                 id='image-input'
                 type='file'
@@ -381,36 +403,38 @@ const Cards = () => {
               />
               {users[openThreeDotsVertical]?.picture_url ? (
                 <div className='selectedFileContainer'>
-                  <div className='selectedFileTitle'>:תמונה שנבחרה</div>
+                  <div className='selectedFileTitle'>
+                    {language === 'Hebrew' ? ':תמונה שנבחרה' : 'Selected Picture:'}
+                  </div>
                   <div style={{ marginBottom: '1rem' }}>
                     {typeof users[openThreeDotsVertical]?.picture_url ===
-                    'string'
+                      'string'
                       ? extractFilenameFromURL(
-                          users[openThreeDotsVertical]?.picture_url
-                        )
+                        users[openThreeDotsVertical]?.picture_url
+                      )
                       : users[openThreeDotsVertical]?.name}
                   </div>
                   <div className='thumbnail'>
                     {typeof users[openThreeDotsVertical]?.picture_url ===
                       'string' && (
-                      <img
-                        src={users[openThreeDotsVertical]?.picture_url}
-                        className='thumbnailImg'
-                        alt=''
-                      />
-                    )}
+                        <img
+                          src={users[openThreeDotsVertical]?.picture_url}
+                          className='thumbnailImg'
+                          alt=''
+                        />
+                      )}
                   </div>
                 </div>
               ) : (
                 <div style={{ marginBottom: '1rem' }}>
-                  תמונה שנבחרה: לא נמצא קובץ תמונה
+                  {language === 'Hebrew' ? 'תמונה שנבחרה: לא נמצא קובץ תמונה' : 'Selected Picture: No image file found'}
                 </div>
               )}
             </div>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>ביטול</Button>
-            <Button onClick={handleConfirm}>שמירה</Button>
+            <Button onClick={handleClose}>{language === 'Hebrew' ? 'ביטול' : 'Cancel'}</Button>
+            <Button onClick={handleConfirm}>{language === 'Hebrew' ? 'שמירה' : 'Save'}</Button>
           </DialogActions>
         </Dialog>
         {/* sure for Remove */}
@@ -420,16 +444,18 @@ const Cards = () => {
           aria-labelledby='alert-dialog-title'
           aria-describedby='alert-dialog-description'
         >
-          <DialogTitle id='alert-dialog-title'>{'מחיקת משתמש'}</DialogTitle>
+          <DialogTitle id='alert-dialog-title'>
+            {language === 'Hebrew' ? 'מחיקת משתמש' : 'Delete User'}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id='alert-dialog-description'>
-              האם אתה בטוח במחיקת המשתמש?
+              {language === 'Hebrew' ? 'האם אתה בטוח במחיקת המשתמש?' : 'Are you sure you want to delete the user?'}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseRemove}>cancel</Button>
+            <Button onClick={handleCloseRemove}>{language === 'Hebrew' ? 'ביטול' : 'Cancel'}</Button>
             <Button onClick={handleCloseRemoveConfirm} autoFocus>
-              מחיקה
+              {language === 'Hebrew' ? 'מחיקה' : 'Delete'}
             </Button>
           </DialogActions>
         </Dialog>
@@ -485,3 +511,4 @@ const Cards = () => {
 };
 
 export default Cards;
+

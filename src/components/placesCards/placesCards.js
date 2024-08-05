@@ -19,10 +19,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import ModalDropdown from '../Modal/Modal_dropdown';
 
+import rtlPlugin from 'stylis-plugin-rtl';
+import { CacheProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
+import { prefixer } from 'stylis';
 
 const PlacesCards = () => {
   const [places, setPlaces] = useState([]);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const [picture, setPicture] = useState(null);
 
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
@@ -31,6 +35,25 @@ const PlacesCards = () => {
   const [updateAdd, setupdateAdd] = useState(false);
   const [openRemove, setOpenRemove] = useState(false);
 
+  const [language, setLanguage] = useState('Hebrew');
+  const [addPlaceButtonText, setAddPlaceButtonText] = useState('הוספת אתר חדש');
+
+  useEffect(()=>{
+    setLanguage(sessionStorage.getItem('language'));
+
+    if (sessionStorage.getItem('language')=='English') {
+      setAddPlaceButtonText('Add a new employee');
+    }else if (sessionStorage.getItem('language')=='Hebrew') {
+      setAddPlaceButtonText('הוסף עובד חדש');
+    }else{
+      setAddPlaceButtonText('הוסף עובד חדש');
+    }
+  })
+
+  const cache = createCache({
+    key: language === 'Hebrew' ? 'muirtl' : 'muiltr',
+    stylisPlugins: language === 'Hebrew' ? [prefixer, rtlPlugin] : [prefixer],
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -170,165 +193,179 @@ const PlacesCards = () => {
   }, [updateAdd]);
 
   return (
-    <div style={{
-      // direction: 'rtl',
-      marginTop: '14px',
-      textAlign: '-webkit-center',
-    }} >
-      <Button size='large' variant='outlined' onClick={handleClickOpen}>
-        הוספת אתר חדש
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>אתר חדש</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {/* To subscribe to this website, please enter your email address here.
-            We will send updates occasionally. */}
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin='dense'
-            id='name'
-            label='שם'
-            type='name'
-            fullWidth
-            variant='standard'
-            defaultValue={
-              openThreeDotsVertical !== -1
-                ? places[openThreeDotsVertical].name
-                : ''
-            }
-          />
-          <TextField
-            margin='dense'
-            id='description'
-            label='תיאור אתר'
-            type='description'
-            fullWidth
-            variant='standard'
-            defaultValue={
-              openThreeDotsVertical !== -1
-                ? places[openThreeDotsVertical].description
-                : ''
-            }
-          />
-          <TextField
-            autoFocus
-            margin="dense"
-            id="nameinEnglish"
-            label="שם באנגלית"
-            type="name in English"
-            fullWidth
-            variant="standard"
-            defaultValue={
-              openThreeDotsVertical !== -1
-                ? places[openThreeDotsVertical]?.nameinEnglish
-                : ''
-            }
-          />
-          <div>תמונה:</div>
-
-          <div>
-            <input
-              label='שם מלא'
-              accept='image/*'
-              id='image-input'
-              type='file'
-              onChange={(e) => setPicture(e.target.files[0])}
+    <CacheProvider value={cache}>
+      <div
+        style={{
+          direction: language === 'Hebrew' ? 'rtl' : 'ltr',
+          marginTop: '14px',
+          textAlign: '-webkit-center',
+        }}
+      >
+        <Button size='large' variant='outlined' onClick={handleClickOpen}>
+          {addPlaceButtonText}
+        </Button>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr' }}>
+            {language === 'Hebrew' ? 'אתר חדש' : 'New Place'}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              {/* To subscribe to this website, please enter your email address here.
+              We will send updates occasionally. */}
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin='dense'
+              id='name'
+              label={language === 'Hebrew' ? 'שם' : 'Name'}
+              type='name'
+              fullWidth
+              variant='standard'
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? places[openThreeDotsVertical].name
+                  : ''
+              }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
-            {places[openThreeDotsVertical]?.picture_url ? (
-              <div className='selectedFileContainer'>
-                <div className='selectedFileTitle'>:תמונה שנבחרה</div>
+            <TextField
+              margin='dense'
+              id='description'
+              label={language === 'Hebrew' ? 'תיאור אתר' : 'Description'}
+              type='description'
+              fullWidth
+              variant='standard'
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? places[openThreeDotsVertical].description
+                  : ''
+              }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
+            />
+            <TextField
+              autoFocus
+              margin="dense"
+              id="nameinEnglish"
+              label={language === 'Hebrew' ? 'שם באנגלית' : 'Name in English'}
+              type="name in English"
+              fullWidth
+              variant="standard"
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? places[openThreeDotsVertical]?.nameinEnglish
+                  : ''
+              }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
+            />
+            <div style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr', marginTop: '10px' }}>
+              {language === 'Hebrew' ? 'תמונה:' : 'Picture:'}
+            </div>
+            <div>
+              <input
+                label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
+                accept='image/*'
+                id='image-input'
+                type='file'
+                onChange={(e) => setPicture(e.target.files[0])}
+              />
+              {places[openThreeDotsVertical]?.picture_url ? (
+                <div className='selectedFileContainer'>
+                  <div className='selectedFileTitle'>
+                    {language === 'Hebrew' ? ':תמונה שנבחרה' : 'Selected Picture:'}
+                  </div>
+                  <div style={{ marginBottom: '1rem' }}>
+                    {typeof places[openThreeDotsVertical]?.picture_url ===
+                      'string'
+                      ? extractFilenameFromURL(
+                        places[openThreeDotsVertical]?.picture_url
+                      )
+                      : places[openThreeDotsVertical]?.name}
+                  </div>
+                  <div className='thumbnail'>
+                    {typeof places[openThreeDotsVertical]?.picture_url ===
+                      'string' && (
+                        <img
+                          src={places[openThreeDotsVertical]?.picture_url}
+                          className='thumbnailImg'
+                          alt=''
+                        />
+                      )}
+                  </div>
+                </div>
+              ) : (
                 <div style={{ marginBottom: '1rem' }}>
-                  {typeof places[openThreeDotsVertical]?.picture_url ===
-                    'string'
-                    ? extractFilenameFromURL(
-                      places[openThreeDotsVertical]?.picture_url
-                    )
-                    : places[openThreeDotsVertical]?.name}
+                  {language === 'Hebrew' ? 'תמונה שנבחרה: לא נמצא קובץ תמונה' : 'Selected Picture: No image file found'}
                 </div>
-                <div className='thumbnail'>
-                  {typeof places[openThreeDotsVertical]?.picture_url ===
-                    'string' && (
-                      <img
-                        src={places[openThreeDotsVertical]?.picture_url}
-                        className='thumbnailImg'
-                        alt=''
-                      />
-                    )}
-                </div>
-              </div>
-            ) : (
-              <div style={{ marginBottom: '1rem' }}>
-                תמונה שנבחרה: לא נמצא קובץ תמונה
-              </div>
-            )}
-          </div>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>ביטול</Button>
-          <Button onClick={handleConfirm}>שמירה</Button>
-        </DialogActions>
-      </Dialog>
-      {/* sure for Remove */}
-      <Dialog
+              )}
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>{language === 'Hebrew' ? 'ביטול' : 'Cancel'}</Button>
+            <Button onClick={handleConfirm}>{language === 'Hebrew' ? 'שמירה' : 'Save'}</Button>
+          </DialogActions>
+        </Dialog>
+        {/* sure for Remove */}
+        <Dialog
           open={openRemove}
           onClose={handleCloseRemove}
           aria-labelledby='alert-dialog-title'
           aria-describedby='alert-dialog-description'
         >
-          <DialogTitle id='alert-dialog-title'>{'מחיקת משתמש'}</DialogTitle>
+          <DialogTitle id='alert-dialog-title'>
+            {language === 'Hebrew' ? 'מחיקת משתמש' : 'Delete User'}
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id='alert-dialog-description'>
-              האם אתה בטוח במחיקת המשתמש?
+              {language === 'Hebrew' ? 'האם אתה בטוח במחיקת המשתמש?' : 'Are you sure you want to delete the user?'}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseRemove}>cancel</Button>
+            <Button onClick={handleCloseRemove}>{language === 'Hebrew' ? 'ביטול' : 'Cancel'}</Button>
             <Button onClick={handleCloseRemoveConfirm} autoFocus>
-              מחיקה
+              {language === 'Hebrew' ? 'מחיקה' : 'Delete'}
             </Button>
           </DialogActions>
         </Dialog>
         {/* end cencel */}
-      <div className='place_cards_warpper'>
-        {places.map((place, index) => (
-          <div key={index} className='place_card'>
-            <div className='dropdownThreeDotsUsers'>
-              <button
-                className='threeDotsVerticalEng'
-                onClick={() => clickOnhreeDotsVerticaIcont(index)}
-              >
-                <BsThreeDotsVertical />
-              </button>
+        <div className='place_cards_warpper'>
+          {places.map((place, index) => (
+            <div key={index} className='place_card'>
+              <div className='dropdownThreeDotsUsers'>
+                <button
+                  className='threeDotsVerticalEng'
+                  onClick={() => clickOnhreeDotsVerticaIcont(index)}
+                >
+                  <BsThreeDotsVertical />
+                </button>
 
-              {openThreeDotsVertical === index ? (
-                <ModalDropdown
-                  setRequestForEditing={setRequestForEditing}
-                  setOpenThreeDotsVertical={setOpenThreeDotsVertical}
-                  editable={true}
-                  Reproducible={true}
-                  details={true}
-                  erasable={true}
-                />
-              ) : (
-                <></>
-              )}
+                {openThreeDotsVertical === index ? (
+                  <ModalDropdown
+                    setRequestForEditing={setRequestForEditing}
+                    setOpenThreeDotsVertical={setOpenThreeDotsVertical}
+                    editable={true}
+                    Reproducible={true}
+                    details={true}
+                    erasable={true}
+                  />
+                ) : (
+                  <></>
+                )}
+              </div>
+              <img
+                src={place.picture_url || defualtSiteImg}
+                alt='Avatar'
+                style={{ width: '100%' }}
+              />
+              <div className='places_cards_container' key={place.name}>
+                <h5>{place.name}</h5>
+                <p>{place.description}</p>
+                <p>{place.nameinEnglish}</p>
+              </div>
             </div>
-            <img
-              src={place.picture_url || defualtSiteImg}
-              alt='Avatar'
-              style={{ width: '100%' }}
-            />
-            <div className='places_cards_container' key={place.name}>
-              <h5>{place.name}</h5>
-              <p>{place.description}</p>
-              <p>{place.nameinEnglish}</p>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
+    </CacheProvider>
   );
 };
 

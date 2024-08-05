@@ -77,7 +77,15 @@ const Planner = () => {
       }
       setLoading(false);
     };
-    english();
+
+    if (sessionStorage.getItem('language') === 'English') {
+      hebrew();
+    } else if (sessionStorage.getItem('language') === 'Hebrew') {
+      english();
+    }else{
+      english();
+    }
+    
     fetchData();
   }, []);
 

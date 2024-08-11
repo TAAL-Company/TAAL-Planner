@@ -210,7 +210,7 @@ const Dashboard = () => {
       <iframe
         width="100%"
         height="100%"
-        src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}`}
+        src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}`}
       ></iframe>
     } </div>
   ]

@@ -10,9 +10,11 @@ import { uploadFiles, uploadFile, insertTask, updateTask } from '../../api/api';
 import uploadFileToBlob from '../azureBlob';
 import Gallery2 from '../Gallery/Gallery2';
 import Gallery3 from '../Gallery/Gallery3';
-import  BasicSelect  from '../Gallery/BasicSelect';
+import BasicSelect from '../Gallery/BasicSelect';
 import { getBlobsInContainer } from '../azureBlob';
 
+
+import Model_Tasks_Pop from './Model_Tasks_Pop';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -22,7 +24,7 @@ const style = {
   top: '5%',
   left: '5%',
   // transform: 'translate(-50%, -50%)',
-  width:'90%', //'1002px',
+  width: '90%', //'1002px',
   height: '90%',//'400px',
   bgcolor: 'background.paper',
   border: '2px solid #000',
@@ -45,6 +47,8 @@ function Modal_Tasks(props) {
   const [estimatedTimeSeconds, setEstimatedTimeSeconds] = useState(
     props.estimatedTimeSeconds
   );
+  const [multi_language_description, setMulti_language_description] = useState(props.multi_language_description);
+  const [language_description, setlanguage_description] = useState('English');
   const [picture, setPicture] = useState(props.picture);
   const [audio, setAudio] = useState(props.audio);
   const [flagClickOK, setFlagClickOK] = useState(false);
@@ -137,7 +141,7 @@ function Modal_Tasks(props) {
 
       try {
         if (picture && !picture?.name?.includes(urlAlreadyExist)) {
-          picture_url = await uploadFiles(picture, 'Task media/picture',Foldersite);//ask media/picture
+          picture_url = await uploadFiles(picture, 'Task media/picture', Foldersite);//ask media/picture
         }
       } catch (error) {
         // console.error(error);
@@ -145,7 +149,7 @@ function Modal_Tasks(props) {
       }
       try {
         if (audio && !audio?.name?.includes(urlAlreadyExist)) {
-          audio_url = await uploadFiles(audio, 'Task media/audio',Foldersite);
+          audio_url = await uploadFiles(audio, 'Task media/audio', Foldersite);
         }
       } catch (error) {
         // console.error(error);
@@ -160,9 +164,10 @@ function Modal_Tasks(props) {
           picture_url,
           audio_url,
           estimatedTimeSeconds,
+          multi_language_description
         };
-        if (newTask.picture_url===undefined) {
-          newTask.picture_url='';
+        if (newTask.picture_url === undefined) {
+          newTask.picture_url = '';
         }
         console.log('newTask: ', newTask);
         update_task(props.uuid, newTask);
@@ -215,7 +220,8 @@ function Modal_Tasks(props) {
           picture_url,
           audio_url,
           props.mySite.id,
-          estimatedTimeSeconds
+          estimatedTimeSeconds,
+          multi_language_description
         );
 
         let color = props.allStations.find(
@@ -303,12 +309,46 @@ function Modal_Tasks(props) {
 
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
+  const [open3, setOpen3] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleOpen2 = () => setOpen2(true);
+  const handleOpen3 = () => setOpen3(true);
   const handleClose = () => {
     setOpen(false);
     setOpen2(false);
+    setOpen3(false);
   }
+
+  const data = {
+    "English": {
+      "title": "",
+      "estimatedTimeSeconds": 0,
+      "subtitle": "",
+      "picture_url": "",
+      "audio_url": "",
+      "dataEntryLabel": "",
+      "dataEntryValidation": "",
+      "dataEntryType": {},
+      "TaskType": {}
+    },
+    "arabic": {
+      "title": "",
+      "estimatedTimeSeconds": 0,
+      "subtitle": "",
+      "picture_url": "",
+      "audio_url": "",
+      "dataEntryLabel": "",
+      "dataEntryValidation": "",
+      "dataEntryType": {},
+      "TaskType": {}
+    }
+  }
+
+  useEffect(() => {
+    console.log("multi_language_description", multi_language_description);
+    console.log("data", data);
+
+  }, [multi_language_description, data]);
   return (
     <>
       {!props.help && !props.siteSelected ? (
@@ -326,7 +366,7 @@ function Modal_Tasks(props) {
             className='BackgroundTasks'
             style={{
               textAlign: props.language === 'English' ? 'right' : 'left',
-              direction: props.language !== 'English' ? 'ltr' : 'rtl',
+              direction: props.language !== 'English' ? 'rtl' : 'ltr',
               // transform:
               //   props.language === 'English'
               //     ? ' translate(-50%, -50%)'
@@ -390,8 +430,8 @@ function Modal_Tasks(props) {
                 </form>
                 <div className='estimatedTimeContainer'>
                   <h6>{props.language !== 'English'
-                          ? "Enter the estimated time in seconds for the task : "
-                          : "תמונה שנבחרה: לא נמצא קובץ תמונה"}</h6>
+                    ? "Enter the estimated time in seconds for the task : "
+                    : "תמונה שנבחרה: לא נמצא קובץ תמונה"}</h6>
                   <input
                     type='number'
                     name='estimatedTimeSeconds'
@@ -404,12 +444,12 @@ function Modal_Tasks(props) {
                   />
                 </div>
                 <h6>
-                    {props.language !== 'English'
-                      ? 'Select where to save picture / voice'
-                      : ':בחר היכן לשמור תמונה/קול'}
-                    <FcMultipleInputs />
-                  </h6>
-                  <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames}/>
+                  {props.language !== 'English'
+                    ? 'Select where to save picture / voice'
+                    : ':בחר היכן לשמור תמונה/קול'}
+                  <FcMultipleInputs />
+                </h6>
+                <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
                 <form id='IPU' className='w3-container'>
                   <h6>
                     {props.language !== 'English'
@@ -434,7 +474,7 @@ function Modal_Tasks(props) {
                     <Button variant="outlined" onClick={handleOpen}>Gallery</Button>
                     <Modal
                       open={open}
-                      onClose={()=>{
+                      onClose={() => {
                         handleClose()
                         console.log(open);
                       }}
@@ -442,7 +482,7 @@ function Modal_Tasks(props) {
                       aria-describedby="modal-modal-description"
                     >
                       <Box sx={style}>
-                        <Gallery2 sethandleClose={handleClose} setPicture={setPicture}/>
+                        <Gallery2 sethandleClose={handleClose} setPicture={setPicture} />
                       </Box>
                     </Modal>
                     {picture ? (
@@ -466,8 +506,8 @@ function Modal_Tasks(props) {
                     ) : (
                       <div style={{ marginBottom: '1rem' }}>
                         {props.language !== 'English'
-                      ? 'Selected image: No image file found'
-                      : ' :  תמונה שנבחרה: לא נמצא קובץ תמונה'}
+                          ? 'Selected image: No image file found'
+                          : ' :  תמונה שנבחרה: לא נמצא קובץ תמונה'}
                       </div>
                     )}
                   </div>
@@ -480,19 +520,19 @@ function Modal_Tasks(props) {
                     <FcMultipleInputs />
                   </h6>
                   <Button variant="outlined" onClick={handleOpen2}>Gallery audio</Button>
-                    <Modal
-                      open={open2}
-                      onClose={()=>{
-                        handleClose()
-                        console.log(open2);
-                      }}
-                      aria-labelledby="modal-modal-title"
-                      aria-describedby="modal-modal-description"
-                    >
-                      <Box sx={style}>
-                        <Gallery3 sethandleClose={handleClose} setAudio={setAudio}/>
-                      </Box>
-                    </Modal>
+                  <Modal
+                    open={open2}
+                    onClose={() => {
+                      handleClose()
+                      console.log(open2);
+                    }}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={style}>
+                      <Gallery3 sethandleClose={handleClose} setAudio={setAudio} />
+                    </Box>
+                  </Modal>
                   <div>
                     <input
                       required={true}
@@ -543,11 +583,68 @@ function Modal_Tasks(props) {
                   </div>
                 ) : (
                   <div style={{ marginBottom: '1rem' }}>
-                    {props.language !== 'English'?
-                    'Selected audio: No audio file found':
-                   ' אודיו שנבחר: לא נמצא קובץ אודיו'}
+                    {props.language !== 'English' ?
+                      'Selected audio: No audio file found' :
+                      ' אודיו שנבחר: לא נמצא קובץ אודיו'}
                   </div>
                 )}
+                <h6>
+                  {props.language !== 'English'
+                    ? 'add multi language'
+                    : ': רב שפות'}
+                  <IoMdCheckbox style={{ color: 'blue' }} />
+                </h6>
+                <Button variant="outlined" onClick={handleOpen3}>
+                  {props.language !== 'English'
+                    ? 'language'
+                    : ' שפות'}
+                </Button>
+                <Modal
+                  open={open3}
+                  onClose={() => {
+                    handleClose()
+                    console.log(open3);
+                  }}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    {/* <h1>{props.multi_language_description == {} ? props.multi_language_description : 'No description'}</h1>
+                    <form id='IPU' className='w3-container'>
+                      <h6>
+                        {props.language !== 'English'
+                          ? 'Write task language '
+                          : ': כתוב שפת משימה'}
+
+                        <RiAsterisk style={{ color: 'red' }} />
+                      </h6>
+                      <p>
+                        <input
+                          required={true}
+                          type='text'
+                          onChange={(e) => setlanguage_description( e.target.value)}
+                          style={{
+                            width: '100%',
+                            height: '38px',
+                            paddingRight: '20px',
+                            direction: props.language === 'English' ? 'rtl' : 'ltr',
+                          }}
+                          value={language_description}
+                        ></input>
+                      </p>
+                    </form> */}
+                    {/* {Object.keys(multi_language_description).map((languagedescription, index) => ( */}
+                      <Model_Tasks_Pop
+                        // key={index}
+                        language={props.language}
+                        language_description={language_description}
+                        sethandleClose={handleClose}
+                        multi_language_description={multi_language_description}//data[language_description]
+                        setMulti_language_description={setMulti_language_description}
+                      />
+                    {/* ))} */}
+                  </Box>
+                </Modal>
                 <div className='list-group'>
                   <h6>
                     {props.language !== 'English'
@@ -563,9 +660,9 @@ function Modal_Tasks(props) {
                             className='form-check-input me-1'
                             type='checkbox'
                             onChange={() => saveCheckbox(value)}
-                            style={{ 
-                              marginLeft: props.language === 'English'? '0':'5px',
-                              marginRight: props.language !== 'English'? '0':'5px',
+                            style={{
+                              marginLeft: props.language === 'English' ? '0' : '5px',
+                              marginRight: props.language !== 'English' ? '0' : '5px',
                             }}
                             checked={myPlacesChoice.includes(value.id)}
                           ></input>

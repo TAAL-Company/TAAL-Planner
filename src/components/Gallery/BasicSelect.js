@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 export default function BasicSelect(props) {
-    const [Folder, setFolder] = React.useState('');
+    const [Folder, setFolder] = React.useState(props.folderName);
 
     const handleChange = (event) => {
         props.setFoldersite(event.target.value);
@@ -14,9 +14,9 @@ export default function BasicSelect(props) {
     };
 
     return (
-        <Box sx={{ width: 200}}>
+        <Box >
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Folder site</InputLabel>
+                <InputLabel id="demo-simple-select-label">select</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"

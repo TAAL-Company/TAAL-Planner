@@ -785,7 +785,8 @@ export const insertTask = async (
   picture_url,
   audio_url,
   siteIds,
-  estimatedTimeSeconds = 20
+  estimatedTimeSeconds = 20,
+  multi_language_description
 ) => {
   try {
     const response = await fetch(baseUrl + '/tasks', {
@@ -795,6 +796,7 @@ export const insertTask = async (
         // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
       },
       body: JSON.stringify({
+        multi_language_description,
         title: get_title,
         siteIds: [siteIds],
         stationIds: myPlacesChoice,

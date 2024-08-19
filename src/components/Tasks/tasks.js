@@ -329,6 +329,13 @@ const Tasks = (props) => {
                 .stations
               : []
           }
+          multi_language_description={
+            openThreeDotsVertical !== -1
+              ? props.tasksOfChosenStation.find(
+                (task) => task.id === openThreeDotsVertical
+              ).multi_language_description
+              : {}
+          }
         />
       ) : (
         <></>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import LoginAPI from './LoginAPI';
 import logo from '../../Pictures/loginLogoTaal.svg';
 import userLogo from '../../Pictures/user-logo.png';
@@ -29,6 +29,10 @@ function Login(props) {
   const [passwordLanguage, setpasswordLanguage] = useState('סיסמה');
   const [usernameLanguage, setUsernameLanguage] = useState('שם משתמש');
   const [language, setLanguage] = useState('Hebrew');
+
+  useEffect(() => {
+    sessionStorage.setItem('language', "Hebrew");
+  }, []);
 
   const handlecheckedChange = (event) => {
     

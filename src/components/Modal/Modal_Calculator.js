@@ -23,7 +23,7 @@ function Modal({
 
   function Post_Route() {
     if (get_title === '') {
-      alert('עליך למלא שדות חובה המסומנים בכוכבית');
+      alert( sessionStorage.getItem('language') !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
     } else {
       setFlagClickOK((flagClickOK = true));
 

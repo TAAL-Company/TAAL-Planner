@@ -12,6 +12,7 @@ import Gallery2 from '../Gallery/Gallery2';
 import Gallery3 from '../Gallery/Gallery3';
 import BasicSelect from '../Gallery/BasicSelect';
 import { getBlobsInContainer } from '../azureBlob';
+import InputFileUpload from '../InputFileUpload/InputFileUpload';
 
 
 import Model_Tasks_Pop from './Model_Tasks_Pop';
@@ -130,7 +131,7 @@ function Modal_Tasks(props) {
     setFlagClickOK(true);
 
     if (get_title === '' || getDescription === '') {
-      alert('עליך למלא שדות חובה המסומנים בכוכבית');
+      alert( props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
       setDone(false);
       setFlagClickOK(false);
       props.setModalOpen(true);
@@ -242,7 +243,7 @@ function Modal_Tasks(props) {
     } else {
       setDone(false);
       setFlagClickOK(false);
-      alert('את/ה חייב/ת לבחור תחנה!');
+      alert(props.language !== 'English' ? 'You must choose a station!' : 'את/ה חייב/ת לבחור תחנה!')
       props.setModalOpen(true);
     }
   };
@@ -458,19 +459,7 @@ function Modal_Tasks(props) {
                     <FcMultipleInputs />
                   </h6>
                   <div>
-                    <input
-                      required={true}
-                      accept='.png, .jpg, .jpeg'
-                      className='form-control'
-                      type='file'
-                      onChange={(e) => setPicture(e.target.files[0])}
-                      style={{
-                        textAlign: 'right',
-                        width: '100%',
-                        height: '38px',
-                        direction: props.language === 'English' ? 'rtl' : 'ltr',
-                      }}
-                    ></input>
+                    <InputFileUpload setPicture={setPicture} language={props.language} />
                     <Button variant="outlined" onClick={handleOpen}>Gallery</Button>
                     <Modal
                       open={open}
@@ -519,6 +508,7 @@ function Modal_Tasks(props) {
                       : ':הוסף קטע קול המתאר את המשימה '}
                     <FcMultipleInputs />
                   </h6>
+                  <InputFileUpload setPicture={setAudio} language={props.language}/>
                   <Button variant="outlined" onClick={handleOpen2}>Gallery audio</Button>
                   <Modal
                     open={open2}
@@ -533,21 +523,6 @@ function Modal_Tasks(props) {
                       <Gallery3 sethandleClose={handleClose} setAudio={setAudio} />
                     </Box>
                   </Modal>
-                  <div>
-                    <input
-                      required={true}
-                      accept='.mp3'
-                      type='file'
-                      className='form-control'
-                      onChange={(e) => setAudio(e.target.files[0])}
-                      style={{
-                        textAlign: 'right',
-                        width: '100%',
-                        height: '38px',
-                        direction: props.language === 'English' ? 'rtl' : 'ltr',
-                      }}
-                    ></input>
-                  </div>
                 </form>
                 {audio ? (
                   <div className='selectedFileContainer'>

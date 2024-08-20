@@ -6,7 +6,7 @@ import Gallery2 from '../Gallery/Gallery2';
 import Gallery3 from '../Gallery/Gallery3';
 import BasicSelect from '../Gallery/BasicSelect';
 import { getBlobsInContainer } from '../azureBlob';
-
+import InputFileUpload from '../InputFileUpload/InputFileUpload';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -28,19 +28,27 @@ const style = {
 
 //--------------------------
 function Model_Tasks_Pop(props) {
-
-  const multi_language_description = JSON.parse(props.multi_language_description)[props.language_description] //props.multi_language_description;
-  // console.log('multi_language_description: ', JSON.parse(props.multi_language_description)[props.language_description],props.multi_language_description,props.language_description);
+  let multi_language_description
+  console.log('multi_language_description: ', props.multi_language_description);
+  console.log("check",Object.keys(props.multi_language_description).length === 0);
   
-  const [get_title, setTitle] = useState(multi_language_description.title);
-  const [estimatedTimeSeconds, setEstimatedTimeSeconds] = useState(multi_language_description.estimatedTimeSeconds);
-  const [get_subtitle, setsubtitle] = useState(multi_language_description.subtitle);
-  const [picture, setPicture] = useState(multi_language_description.picture);
-  const [audio, setAudio] = useState(multi_language_description.audio);
-  const [dataEntryLabel, setdataEntryLabel] = useState(multi_language_description.dataEntryLabel);
-  const [dataEntryValidation, setdataEntryValidation] = useState(multi_language_description.dataEntryValidation);
-  const [dataEntryType, setdataEntryType] = useState(multi_language_description.dataEntryType);
-  const [TaskType, setTaskType] = useState(multi_language_description.TaskType);
+
+  if (Object.keys(props.multi_language_description).length === 0) {
+    multi_language_description = props.multi_language_description[props.language_description]
+  } else {
+    multi_language_description = JSON.parse(props.multi_language_description)[props.language_description] //props.multi_language_description;
+  }
+  // console.log('multi_language_description: ', JSON.parse(props.multi_language_description)[props.language_description],props.multi_language_description,props.language_description);
+
+  const [get_title, setTitle] = useState(multi_language_description?.title);
+  const [estimatedTimeSeconds, setEstimatedTimeSeconds] = useState(multi_language_description?.estimatedTimeSeconds);
+  const [get_subtitle, setsubtitle] = useState(multi_language_description?.subtitle);
+  const [picture, setPicture] = useState(multi_language_description?.picture);
+  const [audio, setAudio] = useState(multi_language_description?.audio);
+  const [dataEntryLabel, setdataEntryLabel] = useState(multi_language_description?.dataEntryLabel);
+  const [dataEntryValidation, setdataEntryValidation] = useState(multi_language_description?.dataEntryValidation);
+  const [dataEntryType, setdataEntryType] = useState(multi_language_description?.dataEntryType);
+  const [TaskType, setTaskType] = useState(multi_language_description?.TaskType);
 
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
@@ -89,7 +97,7 @@ function Model_Tasks_Pop(props) {
       dataEntryType,
       TaskType
     };
-    
+
     props.setMulti_language_description(JSON.stringify(newTask)); //{ ...newTask });
     console.log(newTask);
     props.sethandleClose(false)
@@ -299,7 +307,8 @@ function Model_Tasks_Pop(props) {
             <FcMultipleInputs />
           </h6>
           <div>
-            <input
+          <InputFileUpload setPicture={setPicture} language={props.language} />
+            {/* <input
               required={true}
               accept='.png, .jpg, .jpeg'
               className='form-control'
@@ -311,7 +320,7 @@ function Model_Tasks_Pop(props) {
                 height: '38px',
                 direction: props.language === 'English' ? 'rtl' : 'ltr',
               }}
-            ></input>
+            ></input> */}
             <Button variant="outlined" onClick={handleOpen}>Gallery</Button>
             <Modal
               open={open}
@@ -360,6 +369,7 @@ function Model_Tasks_Pop(props) {
               : ':הוסף קטע קול המתאר את המשימה '}
             <FcMultipleInputs />
           </h6>
+          <InputFileUpload setPicture={setAudio} language={props.language} />
           <Button variant="outlined" onClick={handleOpen2}>Gallery audio</Button>
           <Modal
             open={open2}
@@ -374,7 +384,7 @@ function Model_Tasks_Pop(props) {
               <Gallery3 sethandleClose={handleClose} setAudio={setAudio} />
             </Box>
           </Modal>
-          <div>
+          {/* <div>
             <input
               required={true}
               accept='.mp3'
@@ -388,7 +398,7 @@ function Model_Tasks_Pop(props) {
                 direction: props.language === 'English' ? 'rtl' : 'ltr',
               }}
             ></input>
-          </div>
+          </div> */}
         </form>
         {audio ? (
           <div className='selectedFileContainer'>

@@ -38,6 +38,7 @@ import Box from '@mui/material/Box';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import InputFileUpload from '../InputFileUpload/InputFileUpload';
 
 const Editors = () => {
   const [Editors, setEditors] = useState([]); // State to store the users
@@ -58,17 +59,26 @@ const Editors = () => {
 
   const [language, setLanguage] = useState('Hebrew');
   const [addEditorButtonText, setAddEditorButtonText] = useState('הוסף משתמש חדש');
+  const [addUserButtonError, setAddUserButtonError] = useState('עליך למלא שדות חובה המסומנים בכוכבית');
+  
+  const [deleteMessage, setDeleteMessage] = useState('המחיקה בוצעה בהצלחה!');
 
 
   useEffect(()=>{
     setLanguage(sessionStorage.getItem('language'));
 
     if (sessionStorage.getItem('language')=='English') {
-      setAddEditorButtonText('Add a new user');
+      setAddEditorButtonText('Add a new editor');
+      setAddUserButtonError('Please fill in the required fields marked with *');
+      setDeleteMessage('The deletion was successful!');
     }else if (sessionStorage.getItem('language')=='Hebrew') {
       setAddEditorButtonText('הוסף משתמש חדש');
+      setAddUserButtonError('עליך למלא שדות חובה המסומנים בכוכבית');
+      setDeleteMessage('המחיקה בוצעה בהצלחה!');
     }else{
       setAddEditorButtonText('הוסף משתמש חדש');
+      setAddUserButtonError('עליך למלא שדות חובה המסומנים בכוכבית');
+      setDeleteMessage('המחיקה בוצעה בהצלחה!');
     }
   })
 
@@ -116,7 +126,7 @@ const Editors = () => {
     let deletedUser = await deleteEditor(Editors[EditorForRemove].id);
 
     if (deletedUser.status === 200) {
-      alert('המחיקה בוצעה בהצלחה!');
+      alert(deleteMessage);
       const newEditors = [...Editors];
       newEditors.splice(EditorForRemove, 1); // Remove one element at index x
       setEditors(newEditors);
@@ -170,7 +180,7 @@ const Editors = () => {
     console.log('role : ', role);
 
     if (email === '' || fullName === '') {
-      alert('עליך למלא שדות חובה המסומנים בכוכבית');
+      alert(addUserButtonError);
     } else {
       let picture_url = '';
       try {
@@ -367,6 +377,45 @@ const Editors = () => {
               }
               inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
+                        <div>
+              <InputFileUpload setPicture={setPicture} language={language === 'Hebrew' ? 'English' : 'Hebrew'} />
+              {/* <input
+                label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
+                accept='image/*'
+                id='image-input'
+                type='file'
+                onChange={(e) => setPicture(e.target.files[0])}
+              /> */}
+              {Editors[openThreeDotsVertical]?.picture_url ? (
+                <div className='selectedFileContainer'>
+                  <div className='selectedFileTitle'>
+                    {language === 'Hebrew' ? ':תמונה שנבחרה' : 'Selected Picture:'}
+                  </div>
+                  <div style={{ marginBottom: '1rem' }}>
+                    {typeof Editors[openThreeDotsVertical]?.picture_url ===
+                      'string'
+                      ? extractFilenameFromURL(
+                        Editors[openThreeDotsVertical]?.picture_url
+                      )
+                      : Editors[openThreeDotsVertical]?.name}
+                  </div>
+                  <div className='thumbnail'>
+                    {typeof Editors[openThreeDotsVertical]?.picture_url ===
+                      'string' && (
+                        <img
+                          src={Editors[openThreeDotsVertical]?.picture_url}
+                          className='thumbnailImg'
+                          alt=''
+                        />
+                      )}
+                  </div>
+                </div>
+              ) : (
+                <div style={{ marginBottom: '1rem' }}>
+                  {language === 'Hebrew' ? 'תמונה שנבחרה: לא נמצא קובץ תמונה' : 'Selected Picture: No image file found'}
+                </div>
+              )}
+            </div>
             <Autocomplete
               disablePortal
               id='role'

@@ -203,6 +203,7 @@ export const insertUser = async (user) => {
         user_name: user.user_name,
         coachId: user.coachId || null,
         picture_url: user.picture_url || null,
+        password: user.password || "TAAL1234",
       }),
     });
 
@@ -411,7 +412,7 @@ export const insertSite = async (site) => {
         name: site.name,
         description: site.description,
         picture_url: site.picture_url || null,
-        // nameinEnglish: site.nameinEnglish,
+        nameInEnglish: site.nameinEnglish,
       }),
     });
 

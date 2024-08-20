@@ -122,7 +122,7 @@ const Places = (props) => {
     let deleteRoutes = await deleteRoute(filteredDataRoutes[routrForDelete].id);
 
     if (deleteRoutes.status === 200) {
-      alert('המחיקה בוצעה בהצלחה!');
+      alert(props.language ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
       const newRoutes = [...filteredDataRoutes];
       newRoutes.splice(routrForDelete, 1); // remove one element at index x
       setFilteredDataRoutes(newRoutes);
@@ -578,7 +578,8 @@ const Places = (props) => {
   );
 
   const handleWorkerSelectChange = (event) => {
-    const answer = window.confirm('האם את/ה רוצה להחליף?');
+    const answer = window.confirm(props.language !== "English" ? "האם ברצונך לבצע פעולה זו?" : "Are you sure you want to do this?");
+
     const selectedWorkerValue =
       allWorkersForSite[event.target.selectedIndex - 1];
 
@@ -858,8 +859,8 @@ const Places = (props) => {
         >
           <div className='placesTitle'>
             {props.language !== 'english'
-              ? props.siteQuestionLanguage
-              : props.siteQuestionLanguage}
+              ? props.SiteStudentQuestionLanguage
+              : props.SiteStudentQuestionLanguage}
           </div>
           <select
             className='selectPlace'
@@ -1087,6 +1088,7 @@ const Places = (props) => {
       {openModalRouteChosen ? (
         <>
           <ModalRouteChosen
+            language={props.language}
             setReplaceRouteFlag={setReplaceRouteFlag}
             setOpenModalRouteChosen={setOpenModalRouteChosen}
           ></ModalRouteChosen>
@@ -1097,6 +1099,7 @@ const Places = (props) => {
       {openModalSiteChosen ? (
         <>
           <ModalSiteChosen
+            language={props.language}
             setReplaceSiteFlag={setReplaceSiteFlag}
             setOpenModalSiteChosen={setOpenModalSiteChosen}
           ></ModalSiteChosen>
@@ -1108,15 +1111,15 @@ const Places = (props) => {
               className='body'
               style={{ textAlign: 'center', direction: 'rtl' }}
             >
-              <h4>בחרת כבר באתר אחר, ברצונך להחליף?</h4>
-              <div>החלפת אתר תמחק את השינויים שביצעת באתר הנוכחי</div>
+              <h4>{props.language !== 'English' ? 'Chose another site' : 'בחרת כבר באתר אחר, ברצונך להחליף?'}</h4>
+              <div>{props.language !== 'English' ? 'Changing site will delete the changes you made on the current site' : 'החלפת אתר תמחק את השינויים שביצעת באתר הנוכחי'}</div>
             </div>
             <div className='footer' style={{ display: 'flex' }}>
               <button className='cancelBtn' onClick={closeSiteSelectionModal}>
-                ביטול
+                {props.language !== 'English' ? 'Cancel' : 'ביטול'}
               </button>
               <button className='cancelBtn' onClick={handleSiteReplacement}>
-                החלף אתר
+                { props.language !== 'English' ? 'Replace' : 'החלף אתר'}
               </button>
             </div>
           </div>
@@ -1144,13 +1147,13 @@ const Places = (props) => {
         <DialogTitle id='alert-dialog-title'>{'מחיקת מסלול'}</DialogTitle>
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
-            האם אתה בטוח במחיקת המסלול?
+            {props.language !== 'English' ? 'האם אתה בטוח במחיקת המסלול?' : 'Are you sure you want to delete the route?'}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseRemove}>cancel</Button>
+          <Button onClick={handleCloseRemove}>{props.language !== 'English' ? 'ביטול' : 'Cancel'}</Button>
           <Button onClick={handleCloseRemoveConfirm} autoFocus>
-            מחיקה
+            {props.language !== 'English' ? 'מחיקה' : 'Delete'}
           </Button>
         </DialogActions>
       </Dialog>

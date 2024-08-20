@@ -826,10 +826,11 @@ function DragnDrop(props) {
       )}
 
       <ModalDelete
+        language={props.language}
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
-        DialogTitle={'מחיקת משימה'}
-        DialogContent={'האם אתה בטוח במחיקת המשימה?'}
+        DialogTitle={props.language === 'English' ? 'Delete Task' : 'מחיקת משימה'}
+        DialogContent={props.language === 'English' ? 'Are you sure you want to delete this task?' : 'האם אתה בטוח שברצונך למחוק את המשימה?'}
         handleCloseRemoveConfirm={handleCloseRemoveConfirm}
       />
     </>

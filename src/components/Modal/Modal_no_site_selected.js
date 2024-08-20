@@ -19,7 +19,7 @@ const Modal_No_Site_Selected = (props) => {
                 <div className="body" style={{ textAlign: "center" }}>
                     <h4>
                         {" "}
-                        עליך לבחור אתר
+                    {props.language !== 'English' ? 'You must choose a site' : 'עליך לבחור אתר'}
                     </h4>
 
                 </div>
@@ -30,7 +30,7 @@ const Modal_No_Site_Selected = (props) => {
                             props.setOpenModal(false);
                         }}
                     >
-                        סגור
+                       {props.language !== 'English' ? 'Cancel' : 'ביטול'}
                     </button>
                 </div>
             </div>

@@ -26,9 +26,9 @@ function Modal_Delete(props) {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={props.handleCloseRemove}>cancel</Button>
+          <Button onClick={props.handleCloseRemove}>{props.language === 'English' ? 'ביטול' : 'Cancel'}</Button>
           <Button onClick={props.handleCloseRemoveConfirm} autoFocus>
-            מחיקה
+            {props.language === 'English' ? 'מחיקה' : 'Delete'}
           </Button>
         </DialogActions>
       </Dialog>

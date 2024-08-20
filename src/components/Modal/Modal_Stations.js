@@ -67,7 +67,7 @@ const Modal_Stations = (props) => {
     if (get_title === '' || getDescription === '') {
       setFlagClickOK((flagClickOK = false));
       setDone(false);
-      alert('עליך למלא שדות חובה המסומנים בכוכבית');
+      alert( props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
     } else if (props.requestForEditing === 'edit' || props.requestForEditing === 'details') {
       let response = await updateStation(
         stationUUId,
@@ -151,7 +151,7 @@ const Modal_Stations = (props) => {
         props.setOpenModalPlaces(false);
         await props.setStationArray((stations) => [...stations, post]);
       } catch (error) {
-        alert('שם התחנה כבר קיים - בחר שם אחר');
+        alert( props.language !== "English" ? 'שם התחנה כבר קיים - בחר שם אחר' : 'The station name already exists - choose another name');
         console.error(error);
       }
     }
@@ -167,7 +167,7 @@ const Modal_Stations = (props) => {
               <img src={stopIcon} alt='logo'></img>
             </div>
             <div className='body' style={{ textAlign: 'center' }}>
-              <h4> עליך לבחור ראשית אתר, ואז לשייך אליו תחנה</h4>
+              <h4> {props.language !== 'English' ? 'You must first select a site, then associate a station with it' :' עליך לבחור ראשית אתר, ואז לשייך אליו תחנה '}</h4>
             </div>
             <div className='footer'>
               <button
@@ -176,7 +176,7 @@ const Modal_Stations = (props) => {
                   props.setOpenModalPlaces(false);
                 }}
               >
-                סגור
+                {props.language !== 'English' ? 'Close' : 'סגור'}
               </button>
             </div>
           </div>
@@ -244,7 +244,7 @@ const Modal_Stations = (props) => {
                   ></input>
                 </p>
               </form>
-              <form id='IPU' className='w3-container'>
+              {/* <form id='IPU' className='w3-container'>
                 <h6>
                   {props.language !== 'English'
                     ? 'add picture of the station:'
@@ -297,7 +297,7 @@ const Modal_Stations = (props) => {
                     }}
                   ></input>
                 </p>
-              </form>
+              </form> */}
             </div>
             <div className='footerNewStation'>
               <input

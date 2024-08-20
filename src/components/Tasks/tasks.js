@@ -47,7 +47,7 @@ const Tasks = (props) => {
     let deleteTaskTemp = await deleteTask(taskForDelete);
 
     if (deleteTaskTemp !== undefined) {
-      alert('המחיקה בוצעה בהצלחה!');
+      alert(props.language !== 'English' ? 'Task deleted successfully' : 'המשימה נמחקה בהצלחה');
       const newTasks = [...props.tasksOfChosenStation];
       let indexaTask = props.tasksOfChosenStation.findIndex(
         (task) => task.id === taskForDelete
@@ -194,7 +194,7 @@ const Tasks = (props) => {
             style={{ backgroundImage: `url(${textArea})` }}
           >
             <div
-            className={`textBeforeStationtext ${props.language !== 'English' ? 'english' : ''}`}>
+              className={`textBeforeStationtext ${props.language !== 'English' ? 'english' : ''}`}>
               {props.tasksBeforeChoosingSite}
             </div>
           </div>
@@ -262,7 +262,7 @@ const Tasks = (props) => {
             if (Object.keys(props.chosenStation).length > 0) {
               setModalOpen(true);
               setModalOpenNoSiteSelected(true);
-            } else alert('את/ה חייב/ת לבחור תחנה!');
+            } else alert(props.language !== 'English' ? 'You must choose a station!' : 'את/ה חייב/ת לבחור תחנה!')
           }}
         >
           <AiOutlinePlus className='plus' />
@@ -341,10 +341,11 @@ const Tasks = (props) => {
         <></>
       )}
       <ModalDelete
+        language={props.language}
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
-        DialogTitle={'מחיקת משימה'}
-        DialogContent={'האם אתה בטוח במחיקת המשימה?'}
+        DialogTitle={props.language !== 'English' ? 'Delete task' : 'מחיקת משימה'}
+        DialogContent={props.language !== 'English' ? 'Are you sure you want to delete the task?' : 'האם את/ה בטוח/בטוח שברצונך למחוק את המשימה?'}
         handleCloseRemoveConfirm={handleCloseRemoveConfirm}
       />
     </div>

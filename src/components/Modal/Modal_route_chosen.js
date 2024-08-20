@@ -9,8 +9,8 @@ const Modal_route_chosen = (props) => {
           <img src={stopIcon} alt='logo'></img>
         </div>
         <div className='body' style={{ textAlign: 'center', direction: 'rtl' }}>
-          <h4>בחרת כבר במסלול אחר, ברצונך להחליף?</h4>
-          <div>החלפת מסלול תמחק את השינויים שביצעת במסלול הנוכחי</div>
+          <h4>{props.language !== 'English' ? 'Chose another route' : 'בחרת כבר מסלול אחר, ברצונך להחליף?'} </h4>
+          <div>{props.language !== 'English' ? 'Changing route will delete the changes you made on the current route' : 'החלפת מסלול תמחק את השינויים שביצעת במסלול הנוכחי'}</div>
         </div>
         <div className='footer' style={{ display: 'flex' }}>
           <button
@@ -19,7 +19,7 @@ const Modal_route_chosen = (props) => {
               props.setOpenModalRouteChosen(false);
             }}
           >
-            ביטול
+            {props.language !== 'English' ? 'Cancel' : 'ביטול'}
           </button>
           <button
             className='cancelBtn'
@@ -27,7 +27,7 @@ const Modal_route_chosen = (props) => {
               props.setReplaceRouteFlag(true);
             }}
           >
-            החלף מסלול
+           {props.language !== 'English' ? 'Replace' : 'החלף מסלול'}
           </button>
         </div>
       </div>

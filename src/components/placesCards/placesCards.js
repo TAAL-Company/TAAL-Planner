@@ -23,6 +23,7 @@ import rtlPlugin from 'stylis-plugin-rtl';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
+import InputFileUpload from '../InputFileUpload/InputFileUpload';
 
 const PlacesCards = () => {
   const [places, setPlaces] = useState([]);
@@ -37,16 +38,24 @@ const PlacesCards = () => {
 
   const [language, setLanguage] = useState('Hebrew');
   const [addPlaceButtonText, setAddPlaceButtonText] = useState('הוספת אתר חדש');
+  const [addUserButtonError, setAddUserButtonError] = useState('עליך למלא שדות חובה המסומנים בכוכבית');
+  const [confermdelete, setconfermdelete] = useState('המחיקה בוצעה בהצלחה!');
 
-  useEffect(()=>{
+  useEffect(() => {
     setLanguage(sessionStorage.getItem('language'));
 
-    if (sessionStorage.getItem('language')=='English') {
-      setAddPlaceButtonText('Add a new employee');
-    }else if (sessionStorage.getItem('language')=='Hebrew') {
-      setAddPlaceButtonText('הוסף עובד חדש');
-    }else{
-      setAddPlaceButtonText('הוסף עובד חדש');
+    if (sessionStorage.getItem('language') == 'English') {
+      setAddPlaceButtonText('Add a new site');
+      setAddUserButtonError('Please fill in the required fields marked with a star');
+      setconfermdelete('The deletion was successful!');
+    } else if (sessionStorage.getItem('language') == 'Hebrew') {
+      setAddPlaceButtonText('הוספת אתר חדש');
+      setAddUserButtonError('עליך למלא שדות חובה המסומנים בכוכבית');
+      setconfermdelete('המחיקה בוצעה בהצלחה!');
+    } else {
+      setAddPlaceButtonText('הוספת אתר חדש');
+      setAddUserButtonError('עליך למלא שדות חובה המסומנים בכוכבית');
+      setconfermdelete('המחיקה בוצעה בהצלחה!');
     }
   })
 
@@ -75,7 +84,7 @@ const PlacesCards = () => {
     let deletedPlace = await deleteSites(places[studentForAction].id);
 
     if (deletedPlace.status === 200) {
-      alert('המחיקה בוצעה בהצלחה!');
+      alert(confermdelete);
       const newPlaces = [...places];
       newPlaces.splice(studentForAction, 1); // remove one element at index x
       setPlaces(newPlaces);
@@ -118,7 +127,7 @@ const PlacesCards = () => {
     const nameinEnglish = document.getElementById('nameinEnglish').value;
 
     if (name === '' || description === '') {
-      alert('עליך למלא שדות חובה המסומנים בכוכבית');
+      alert(addUserButtonError);
     } else {
       let picture_url;
       try {
@@ -261,13 +270,14 @@ const PlacesCards = () => {
               {language === 'Hebrew' ? 'תמונה:' : 'Picture:'}
             </div>
             <div>
-              <input
+              <InputFileUpload setPicture={setPicture} language={language === 'Hebrew' ? 'English' : 'Hebrew'} />
+              {/* <input
                 label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
                 accept='image/*'
                 id='image-input'
                 type='file'
                 onChange={(e) => setPicture(e.target.files[0])}
-              />
+              /> */}
               {places[openThreeDotsVertical]?.picture_url ? (
                 <div className='selectedFileContainer'>
                   <div className='selectedFileTitle'>

@@ -9,8 +9,8 @@ const Modal_Site_Chosen = (props) => {
           <img src={stopIcon} alt='logo'></img>
         </div>
         <div className='body' style={{ textAlign: 'center', direction: 'rtl' }}>
-          <h4>בחרת כבר באתר אחר, ברצונך להחליף?</h4>
-          <div>החלפת אתר תמחק את השינויים שביצעת באתר הנוכחי</div>
+          <h4>{props.language !== 'English' ? 'Chose another site' : 'בחרת כבר באתר אחר, ברצונך להחליף?'}</h4>
+          <div>{props.language !== 'English' ? 'Changing site will delete the changes you made on the current site' : 'החלפת אתר תמחק את השינויים שביצעת באתר הנוכחי'} </div>
         </div>
         <div className='footer' style={{ display: 'flex' }}>
           <button
@@ -19,7 +19,7 @@ const Modal_Site_Chosen = (props) => {
               props.setOpenModalSiteChosen(false);
             }}
           >
-            ביטול
+            {props.language !== 'English' ? 'Cancel' : 'ביטול'}
           </button>
           <button
             className='cancelBtn'
@@ -27,7 +27,7 @@ const Modal_Site_Chosen = (props) => {
               props.setReplaceSiteFlag(true);
             }}
           >
-            החלף אתר
+            {props.language !== 'English' ? 'Replace' : 'החלף אתר'}
           </button>
         </div>
       </div>

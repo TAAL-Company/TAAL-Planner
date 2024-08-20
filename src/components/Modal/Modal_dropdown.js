@@ -28,27 +28,29 @@ function Modal_Dropdown(props) {
         style={{ position: 'absolute', top: '0', left: props.language === 'English' ? '100%' : '', right: props.language !== 'English' ? '100%' : '' }}
         id='dropdown' className='button-dropdown-content'>
         {props.editable ? (
-          <Link onClick={() => props.setRequestForEditing('edit')}>עריכה</Link>
+          <Link onClick={() => props.setRequestForEditing('edit')}>
+            {props.language !== 'English' ? 'Edit' : 'עריכה'}
+          </Link>
         ) : (
           <></>
         )}
         {props.Reproducible ? (
           <Link onClick={() => props.setRequestForEditing('duplication')}>
-            שכפול
+            {props.language !== 'English' ? 'Duplicate' : 'העתקה'}
           </Link>
         ) : (
           <></>
         )}
         {props.details ? (
           <Link onClick={() => props.setRequestForEditing('details')}>
-            פרטים
+            {props.language !== 'English' ? 'Details' : 'פרטים'}
           </Link>
         ) : (
           <></>
         )}
         {props.erasable ? (
           <Link onClick={() => props.setRequestForEditing('delete')}>
-            מחיקה
+            {props.language !== 'English' ? 'Delete' : 'מחיקה'}
           </Link>
         ) : (
           <></>

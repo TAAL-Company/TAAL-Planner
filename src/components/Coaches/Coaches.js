@@ -24,6 +24,7 @@ import rtlPlugin from 'stylis-plugin-rtl';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
+import InputFileUpload from '../InputFileUpload/InputFileUpload';
 
 const Coaches = () => {
   const [users, setUsers] = useState([]); // State to store the users
@@ -38,20 +39,29 @@ const Coaches = () => {
 
   const [language, setLanguage] = useState('Hebrew');
   const [addUserButtonText, setAddUserButtonText] = useState('הוסף משתמש חדש');
+  const [addUserButtonError, setAddUserButtonError] = useState('עליך למלא שדות חובה המסומנים בכוכבית');
+  const [deleteSuccess, setDeleteSuccess] = useState(' המחיקה בוצעה בהצלחה!');
 
-  useEffect(()=>{
+
+  useEffect(() => {
     setLanguage(sessionStorage.getItem('language'));
 
-    if (sessionStorage.getItem('language')=='English') {
-      setAddUserButtonText('Add a new employee');
-    }else if (sessionStorage.getItem('language')=='Hebrew') {
-      setAddUserButtonText('הוסף עובד חדש');
-    }else{
-      setAddUserButtonText('הוסף עובד חדש');
+    if (sessionStorage.getItem('language') == 'English') {
+      setAddUserButtonText('Add a new Coach');
+      setAddUserButtonError('Please fill in the required fields marked with *');
+      setDeleteSuccess('The deletion was successful!');
+    } else if (sessionStorage.getItem('language') == 'Hebrew') {
+      setAddUserButtonText('הוסף משתמש חדש');
+      setAddUserButtonError('עליך למלא שדות חובה המסומנים בכוכבית');
+      setDeleteSuccess('המחיקה בוצעה בהצלחה!');
+    } else {
+      setAddUserButtonText('הוסף משתמש חדש');
+      setAddUserButtonError('עליך למלא שדות חובה המסומנים בכוכבית');
+      setDeleteSuccess('המחיקה בוצעה בהצלחה!');
     }
   })
 
-  useEffect(() => {}, [openThreeDotsVertical]);
+  useEffect(() => { }, [openThreeDotsVertical]);
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -89,7 +99,7 @@ const Coaches = () => {
     let deletedUser = await deleteCoach(users[userForRemove].id);
 
     if (deletedUser.status === 200) {
-      alert('המחיקה בוצעה בהצלחה!');
+      alert(deleteSuccess);
       const newUsers = [...users];
       newUsers.splice(userForRemove, 1); // Remove one element at index x
       setUsers(newUsers);
@@ -156,7 +166,7 @@ const Coaches = () => {
     const phone = document.getElementById('phone').value;
 
     if (email === '' || fullName === '') {
-      alert('עליך למלא שדות חובה המסומנים בכוכבית');
+      alert(addUserButtonError);
     } else {
       let picture_url;
       try {
@@ -196,13 +206,13 @@ const Coaches = () => {
   useEffect(() => {
     const fetchData = async () => {
       const usersData = await getingData_coaches();
-      if(JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN"){
+      if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
         setUsers(usersData);
-      }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR"){
-        const usersDatafilterbycoachId = usersData.filter((user)=>user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
+        const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
         setUsers(usersDatafilterbycoachId);
-      }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT"){
-        const usersDatafilterbycoachId = usersData.filter((user)=>user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).coachId && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
+        const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).coachId && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
         setUsers(usersDatafilterbycoachId);
       }
     };
@@ -213,13 +223,13 @@ const Coaches = () => {
   useEffect(() => {
     const fetchData = async () => {
       const usersData = await getingData_coaches();
-      if(JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN"){
+      if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
         setUsers(usersData);
-      }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR"){
-        const usersDatafilterbycoachId = usersData.filter((user)=>user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
+        const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
         setUsers(usersDatafilterbycoachId);
-      }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT"){
-        const usersDatafilterbycoachId = usersData.filter((user)=>user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).coachId && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
+        const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).coachId && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
         setUsers(usersDatafilterbycoachId);
       }
     }
@@ -309,13 +319,14 @@ const Coaches = () => {
               {language === 'Hebrew' ? 'תמונה:' : 'Picture:'}
             </div>
             <div>
-              <input
+              <InputFileUpload setPicture={setPicture} language={language === 'Hebrew' ? 'English' : 'Hebrew'} />
+              {/* <input
                 label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
                 accept='image/*'
                 id='image-input'
                 type='file'
                 onChange={(e) => setPicture(e.target.files[0])}
-              />
+              /> */}
               {users[openThreeDotsVertical]?.picture_url ? (
                 <div className='selectedFileContainer'>
                   <div className='selectedFileTitle'>

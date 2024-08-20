@@ -26,6 +26,8 @@ import rtlPlugin from 'stylis-plugin-rtl';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
+import { Password } from '@mui/icons-material';
+import InputFileUpload from '../InputFileUpload/InputFileUpload';
 
 const Cards = () => {
   const [users, setUsers] = useState([]);
@@ -43,16 +45,24 @@ const Cards = () => {
 
   const [language, setLanguage] = useState('Hebrew');
   const [addUserButtonText, setAddUserButtonText] = useState('הוסף עובד חדש');
+  const [addUserButtonError, setAddUserButtonError] = useState('עליך למלא שדות חובה המסומנים בכוכבית');
+  const [deleteSuccess, setDeleteSuccess] = useState(' המחיקה בוצעה בהצלחה!');
 
   useEffect(()=>{
     setLanguage(sessionStorage.getItem('language'));
 
     if (sessionStorage.getItem('language')=='English') {
       setAddUserButtonText('Add a new employee');
+      setAddUserButtonError('Please fill in the required fields marked with *');
+      setDeleteSuccess('The deletion was successful!');
     }else if (sessionStorage.getItem('language')=='Hebrew') {
       setAddUserButtonText('הוסף עובד חדש');
+      setAddUserButtonError('עליך למלא שדות חובה המסומנים בכוכבית');
+      setDeleteSuccess('המחיקה בוצעה בהצלחה!');
     }else{
       setAddUserButtonText('הוסף עובד חדש');
+      setAddUserButtonError('עליך למלא שדות חובה המסומנים בכוכבית');
+      setDeleteSuccess('המחיקה בוצעה בהצלחה!');
     }
   })
 
@@ -103,7 +113,7 @@ const Cards = () => {
     let deletedUser = await deleteUser(users[studentForAction].id);
 
     if (deletedUser.status === 200) {
-      alert('המחיקה בוצעה בהצלחה!');
+      alert(deleteSuccess);
       const newUsers = [...users];
       newUsers.splice(studentForAction, 1); // remove one element at index x
       setUsers(newUsers);
@@ -179,11 +189,12 @@ const Cards = () => {
     const fullName = document.getElementById('name').value;
     const user_name = document.getElementById('userName').value;
     const phone = document.getElementById('phone').value;
+    const Password = document.getElementById('password').value;
     // const coach = document.getElementById("coach").value;
     // const coachId = document.getElementById("coach").value;
 
     if (email === '' || fullName === '') {
-      alert('עליך למלא שדות חובה המסומנים בכוכבית');
+      alert(addUserButtonError);
     } else {
       let picture_url;
       try {
@@ -196,6 +207,7 @@ const Cards = () => {
           user_name,
           coachId: coach.id,
           picture_url,
+          Password
         };
         console.log('user : ',user);
         if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -207,6 +219,7 @@ const Cards = () => {
             userToUpdate.user_name = updatedUser.data.user_name;
             userToUpdate.coach = updatedUser.data.coach;
             userToUpdate.picture_url = updatedUser.data.picture_url;
+            userToUpdate.Password = updatedUser.data.Password;
 
             const newUsers = [...users];
             setUsers(newUsers);
@@ -352,6 +365,20 @@ const Cards = () => {
               }
               inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
+            <TextField
+              margin='dense'
+              id='password'
+              label={language === 'Hebrew' ? 'סיסמה' : 'Password'}
+              type='password'
+              fullWidth
+              variant='standard'
+              defaultValue={
+                openThreeDotsVertical !== -1
+                  ? users[openThreeDotsVertical].password
+                  : ''
+              }
+              inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
+            />
             <Autocomplete
               disablePortal
               id='coach'
@@ -394,13 +421,14 @@ const Cards = () => {
               {language === 'Hebrew' ? 'תמונה:' : 'Picture:'}
             </div>
             <div>
-              <input
+            <InputFileUpload setPicture={setPicture} language={language==='Hebrew'? 'English':'Hebrew'} />
+              {/* <input
                 label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
                 accept='image/*'
                 id='image-input'
                 type='file'
                 onChange={(e) => setPicture(e.target.files[0])}
-              />
+              /> */}
               {users[openThreeDotsVertical]?.picture_url ? (
                 <div className='selectedFileContainer'>
                   <div className='selectedFileTitle'>

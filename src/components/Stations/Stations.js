@@ -385,10 +385,11 @@ const Stations = (props) => {
       )}
 
       <Modal_Delete
+        language={props.language}
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
-        DialogTitle={'מחיקת תחנה'}
-        DialogContent={'האם אתה בטוח במחיקת התחנה?'}
+        DialogTitle={props.language !== 'English' ? 'Delete Station' : 'מחיקת תחנה'}
+        DialogContent={props.language !== 'English' ? 'Are you sure you want to delete this station?' : 'האם אתה בטוח שברצונך למחוק את התחנה?'}
         handleCloseRemoveConfirm={handleCloseRemoveConfirm}
       />
     </>

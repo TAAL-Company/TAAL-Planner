@@ -59,7 +59,7 @@ const Modal_Stations = (props) => {
     }
 
     if (get_title === '' || getDescription === '') {
-      alert('עליך למלא שדות חובה המסומנים בכוכבית');
+      alert( props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
     } else {
       try {
         const post = await insertStation(
@@ -77,7 +77,7 @@ const Modal_Stations = (props) => {
 
         await props.stationArray.push(post);
       } catch (error) {
-        alert('שם התחנה כבר קיים - בחר שם אחר');
+        alert( props.language !== "English" ? 'שם התחנה כבר קיים - בחר שם אחר' : 'The station name already exists - choose another name');
         console.error(error);
       }
     }
@@ -95,7 +95,7 @@ const Modal_Stations = (props) => {
               <img src={stopIcon} alt='logo'></img>
             </div>
             <div className='body' style={{ textAlign: 'center' }}>
-              <h4> עליך לבחור ראשית אתר, ואז לשייך אליו תחנה</h4>
+              <h4> {props.language !== 'English' ? 'You must first select a site, then associate a station with it' : '  עליך לבחור ראשית אתר, ואז לשייך אליו תחנה'}</h4>
             </div>
             <div className='footer'>
               <button

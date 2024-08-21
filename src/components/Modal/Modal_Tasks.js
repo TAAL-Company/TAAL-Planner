@@ -48,6 +48,12 @@ function Modal_Tasks(props) {
   const [estimatedTimeSeconds, setEstimatedTimeSeconds] = useState(
     props.estimatedTimeSeconds
   );
+  const [dataEntryLabel, setdataEntryLabel] = useState(props?.dataEntryLabel);
+  const [dataEntryValidation, setdataEntryValidation] = useState(props?.dataEntryValidation);
+  const [dataEntryType, setdataEntryType] = useState(props?.dataEntryType);
+  const [TaskType, setTaskType] = useState(props?.TaskType);
+  const [dataEntryTypelist, setDataEntryTypelist] = useState(["String", "Int", "Number"]);
+  const [TaskTypelist, setTaskTypelist] = useState(["specialTask", "normal", "onlyOnce", "popupAfterCurrentTask"]);
   const [multi_language_description, setMulti_language_description] = useState(props.multi_language_description);
   const [language_description, setlanguage_description] = useState('English');
   const [picture, setPicture] = useState(props.picture);
@@ -64,6 +70,14 @@ function Modal_Tasks(props) {
   const [blobList, setBlobList] = useState([]);
   const [sortedUrls, setSortedUrls] = useState({});
   const [folderNames, setFolderNames] = useState([]);
+
+  const handleDataEntryLabelInput = (e) => {
+    setdataEntryLabel(e.target.value);
+  };
+
+  const handleDataEntryValidationInput = (e) => {
+    setdataEntryValidation(e.target.value);
+  };
 
   const getFileType = (url) => {
     if (typeof url === 'string') {
@@ -131,7 +145,7 @@ function Modal_Tasks(props) {
     setFlagClickOK(true);
 
     if (get_title === '' || getDescription === '') {
-      alert( props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
+      alert(props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
       setDone(false);
       setFlagClickOK(false);
       props.setModalOpen(true);
@@ -165,7 +179,11 @@ function Modal_Tasks(props) {
           picture_url,
           audio_url,
           estimatedTimeSeconds,
-          multi_language_description
+          multi_language_description,
+          dataEntryLabel,
+          dataEntryValidation,
+          dataEntryType,
+          TaskType
         };
         if (newTask.picture_url === undefined) {
           newTask.picture_url = '';
@@ -222,7 +240,11 @@ function Modal_Tasks(props) {
           audio_url,
           props.mySite.id,
           estimatedTimeSeconds,
-          multi_language_description
+          multi_language_description,
+          dataEntryLabel,
+          dataEntryValidation,
+          dataEntryType,
+          TaskType
         );
 
         let color = props.allStations.find(
@@ -444,6 +466,62 @@ function Modal_Tasks(props) {
                     value={estimatedTimeSeconds}
                   />
                 </div>
+                <form id='IPU' className='w3-container'>
+                  <h6>
+                    {props.language !== 'English'
+                      ? 'Write Data Entry Label'
+                      : ':רשום את תווית הנתונים '}
+                    <RiAsterisk style={{ color: 'red' }} />
+                  </h6>
+                  <p>
+                    <input
+                      required={true}
+                      type='text'
+                      onChange={handleDataEntryLabelInput}
+                      style={{
+                        width: '100%',
+                        height: '38px',
+                        paddingRight: '20px',
+                        direction: props.language === 'English' ? 'rtl' : 'ltr',
+                      }}
+                      value={dataEntryLabel}
+                    ></input>
+                  </p>
+                </form>
+                {/* <form id='IPU' className='w3-container'>
+                  <h6>
+                    {props.language !== 'English'
+                      ? 'Write Data Entry Validation'
+                      : ':רשום את תווית הנתונים '}
+                    <RiAsterisk style={{ color: 'red' }} />
+                  </h6>
+                  <p>
+                    <input
+                      required={true}
+                      type='text'
+                      onChange={handleDataEntryValidationInput}
+                      style={{
+                        width: '100%',
+                        height: '38px',
+                        paddingRight: '20px',
+                        direction: props.language === 'English' ? 'rtl' : 'ltr',
+                      }}
+                      value={dataEntryValidation}
+                    ></input>
+                  </p>
+                </form> */}
+                {/* <h6>
+                  {props.language !== 'English'
+                    ? 'Select data entry type'
+                    : ':בחר סוג נתונים '}
+                </h6>
+                <BasicSelect setFoldersite={setdataEntryType} folderName={dataEntryType} folderlist={dataEntryTypelist} />
+                <h6>
+                  {props.language !== 'English'
+                    ? 'Select type of task'
+                    : ':בחר סוג משימה '}
+                </h6>
+                <BasicSelect setFoldersite={setTaskType} folderName={TaskType} folderlist={TaskTypelist} /> */}
                 <h6>
                   {props.language !== 'English'
                     ? 'Select where to save picture / voice'
@@ -508,7 +586,7 @@ function Modal_Tasks(props) {
                       : ':הוסף קטע קול המתאר את המשימה '}
                     <FcMultipleInputs />
                   </h6>
-                  <InputFileUpload setPicture={setAudio} language={props.language}/>
+                  <InputFileUpload setPicture={setAudio} language={props.language} />
                   <Button variant="outlined" onClick={handleOpen2}>Gallery audio</Button>
                   <Modal
                     open={open2}
@@ -609,14 +687,14 @@ function Modal_Tasks(props) {
                       </p>
                     </form> */}
                     {/* {Object.keys(multi_language_description).map((languagedescription, index) => ( */}
-                      <Model_Tasks_Pop
-                        // key={index}
-                        language={props.language}
-                        language_description={language_description}
-                        sethandleClose={handleClose}
-                        multi_language_description={multi_language_description}//data[language_description]
-                        setMulti_language_description={setMulti_language_description}
-                      />
+                    <Model_Tasks_Pop
+                      // key={index}
+                      language={props.language}
+                      language_description={language_description}
+                      sethandleClose={handleClose}
+                      multi_language_description={multi_language_description}//data[language_description]
+                      setMulti_language_description={setMulti_language_description}
+                    />
                     {/* ))} */}
                   </Box>
                 </Modal>

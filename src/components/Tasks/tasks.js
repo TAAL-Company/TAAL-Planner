@@ -316,6 +316,13 @@ const Tasks = (props) => {
               ).picture_url
               : null
           }
+          dataEntryLabel={
+            openThreeDotsVertical !== -1
+              ? props.tasksOfChosenStation.find(
+                (task) => task.id === openThreeDotsVertical
+              ).dataEntryLabel
+              : null
+          }
           audio={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(

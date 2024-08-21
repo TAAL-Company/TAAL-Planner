@@ -787,7 +787,11 @@ export const insertTask = async (
   audio_url,
   siteIds,
   estimatedTimeSeconds = 20,
-  multi_language_description
+  multi_language_description,
+  dataEntryLabel,
+  // dataEntryValidation,
+  // dataEntryType,
+  // TaskType
 ) => {
   try {
     const response = await fetch(baseUrl + '/tasks', {
@@ -805,6 +809,10 @@ export const insertTask = async (
         subtitle: subtitle,
         picture_url,
         audio_url,
+        dataEntryLabel,
+        // dataEntryValidation,
+        // dataEntryType,
+        // TaskType
       }),
     });
 

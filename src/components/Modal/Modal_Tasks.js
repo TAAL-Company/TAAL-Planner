@@ -390,10 +390,10 @@ function Modal_Tasks(props) {
             style={{
               textAlign: props.language === 'English' ? 'right' : 'left',
               direction: props.language !== 'English' ? 'rtl' : 'ltr',
-              // transform:
-              //   props.language === 'English'
-              //     ? ' translate(-50%, -50%)'
-              //     : ' translate(50%, -50%)',
+              transform:
+                props.language === 'English'
+                  ? ' translate(-50%, -50%)'
+                  : ' translate(50%, -50%)',
             }}
           >
             <div className='modalContainerTasks'>

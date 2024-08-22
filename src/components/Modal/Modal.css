@@ -425,7 +425,6 @@
   align-self: center;
   z-index: 2;
   top: 50%;
-  transform: translate(-50%, -50%);
   box-shadow: 0px 3px 10px #0000004d;
   overflow: scroll;
   overflow-block: hidden;

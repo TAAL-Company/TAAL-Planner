@@ -817,6 +817,7 @@ function DragnDrop(props) {
               ).stations
               : []
           }
+          multi_language_description={props.multi_language_description}
           estimatedTimeSeconds={getValueForProperty('estimatedTimeSeconds', 20)}
           picture={getValueForProperty('picture_url', null)}
           audio={getValueForProperty('audio_url', null)}

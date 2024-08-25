@@ -1133,7 +1133,7 @@ export const getingTask_Performance = async (
 
   await get(
     baseUrl +
-    '/tasks-performance/' +
+    '/task-performance/' +
     dateFilter +
     studentId +
     taskId +

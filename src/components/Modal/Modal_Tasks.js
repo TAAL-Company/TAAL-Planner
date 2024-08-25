@@ -126,7 +126,7 @@ function Modal_Tasks(props) {
     if (
       (props.requestForEditing === 'edit' ||
         props.requestForEditing === 'details') &&
-      props.stationOfTask.length > 0
+      Array.isArray(props.stationOfTask) && props.stationOfTask.length > 0
     ) {
       props.stationOfTask.forEach((station) => {
         setMyPlacesChoice((prev) => [...prev, station.id]);

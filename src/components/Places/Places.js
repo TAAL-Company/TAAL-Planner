@@ -1068,6 +1068,7 @@ const Places = (props) => {
             boardArrayDND={boardArrayDND}
             setBoardArrayDND={setBoardArrayDND}
             allTasks={allTasks}
+            setAllTasks={setAllTasks}
             setDropToBoard={setDropToBoard}
             dropToBoard={dropToBoard}
             allTasksOfTheSite={allTasksOfTheSite}

@@ -4,7 +4,7 @@ import Tag from '../Tag/Tag.js';
 import { CgSearch } from 'react-icons/cg';
 import textArea from '../../Pictures/textArea.svg';
 import ModalTasks from '../Modal/Modal_Tasks.js';
-import { deleteTask, insertTask } from '../../api/api.js';
+import { deleteTask, getingData_Tasks, insertTask } from '../../api/api.js';
 import ModalDelete from '../Modal/Modal_Delete.js';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -37,7 +37,8 @@ const Tasks = (props) => {
     }
   }, [taskForEdit, props.mySite.id, props.tasksOfChosenStation]);
 
-  const handleCloseRemove = () => {
+  const handleCloseRemove = async () => {
+    props.setAllTasks(await getingData_Tasks());
     setOpenThreeDotsVertical(-1);
     setRequestForEditing('');
     setOpenRemove(false);
@@ -98,7 +99,6 @@ const Tasks = (props) => {
         newTasks.push(post);
         props.setTasksOfChosenStation(newTasks);
         props.stationArray[indexStation].tasks = newTasks;
-
         setRequestForEditing('');
         setOpenThreeDotsVertical(-1);
       } catch (error) {
@@ -268,7 +268,6 @@ const Tasks = (props) => {
           <AiOutlinePlus className='plus' />
         </button>
       </div>
-
       {modalOpen ? (
         <ModalTasks
           setTaskForEdit={setTaskForEdit}
@@ -332,7 +331,7 @@ const Tasks = (props) => {
           }
           stationOfTask={
             openThreeDotsVertical !== -1
-              ? props.allTasks.find((task) => task.id === openThreeDotsVertical)
+              ? props.tasksOfChosenStation.find((task) => task.id === openThreeDotsVertical)
                 .stations
               : []
           }
@@ -341,7 +340,7 @@ const Tasks = (props) => {
               ? props.tasksOfChosenStation.find(
                 (task) => task.id === openThreeDotsVertical
               ).multi_language_description
-              : {}
+              : "{}"
           }
         />
       ) : (

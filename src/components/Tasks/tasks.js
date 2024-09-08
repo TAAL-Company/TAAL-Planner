@@ -322,6 +322,27 @@ const Tasks = (props) => {
               ).dataEntryLabel
               : null
           }
+          dataEntryValidation={
+            openThreeDotsVertical !== -1
+              ? props.tasksOfChosenStation.find(
+                (task) => task.id === openThreeDotsVertical
+              ).dataEntryValidation
+              : null
+          }
+          dataEntryType={
+            openThreeDotsVertical !== -1
+              ? props.tasksOfChosenStation.find(
+                (task) => task.id === openThreeDotsVertical
+              ).dataEntryType
+              : null
+          }
+          taskType={
+            openThreeDotsVertical !== -1
+              ? props.tasksOfChosenStation.find(
+                (task) => task.id === openThreeDotsVertical
+              ).taskType
+              : null
+          }
           audio={
             openThreeDotsVertical !== -1
               ? props.tasksOfChosenStation.find(

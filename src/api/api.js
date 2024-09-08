@@ -412,7 +412,7 @@ export const insertSite = async (site) => {
         name: site.name,
         description: site.description,
         picture_url: site.picture_url || null,
-        nameInEnglish: site.nameinEnglish,
+        nameInEnglish: site.nameInEnglish,
       }),
     });
 
@@ -789,9 +789,9 @@ export const insertTask = async (
   estimatedTimeSeconds = 20,
   multi_language_description,
   dataEntryLabel,
-  // dataEntryValidation,
-  // dataEntryType,
-  // TaskType
+  dataEntryValidation,
+  dataEntryType,
+  taskType
 ) => {
   try {
     const response = await fetch(baseUrl + '/tasks', {
@@ -810,9 +810,9 @@ export const insertTask = async (
         picture_url,
         audio_url,
         dataEntryLabel,
-        // dataEntryValidation,
-        // dataEntryType,
-        // TaskType
+        dataEntryValidation,
+        dataEntryType,
+        taskType
       }),
     });
 

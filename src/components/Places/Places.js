@@ -7,7 +7,8 @@ import {
   getingData_Users,
   deleteRoute,
   updateRoute,
-  getingData_Editors
+  getingData_Editors,
+  insertRoute
 } from '../../api/api';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -106,7 +107,45 @@ const Places = (props) => {
       setModalOpen(true);
       setRouteName(filteredDataRoutes[openThreeDotsVertical].name);
       setRouteUUID(filteredDataRoutes[openThreeDotsVertical].id);
-    } else if (requestForEditing === 'duplication') {
+    } else if (requestForEditing == 'duplication') {
+      console.log(filteredDataRoutes[openThreeDotsVertical]);
+      let newRoute = filteredDataRoutes[openThreeDotsVertical];
+
+      let today = new Date();
+
+      let taskIdList = [];
+      filteredDataRoutes[openThreeDotsVertical].tasks.map((task) => taskIdList.push(task.taskId));
+
+      let studentIdList = [];
+      filteredDataRoutes[openThreeDotsVertical].students.map((student) => studentIdList.push(student.id));
+
+      let newRouteObj = {
+        // ...newRoute,
+        name: newRoute.name + "-" + (Math.floor((Math.random() * 100000))) + "-" + today.toLocaleDateString("en-US"),
+        studentIds: studentIdList,
+        taskIds: taskIdList,
+        siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
+      };
+
+      // delete newRouteObj.students;
+      // delete newRouteObj.tasks;
+      // delete newRouteObj.sites;
+
+      // console.log(newRouteObj);
+      insertRoute(newRouteObj).then(async (newaddedroute) => {
+        alert(props.language ? 'ההוראה הועתקה בהצלחה!' : 'The instruction was copied successfully!');
+        setOpenThreeDotsVertical(-1);
+        setRequestForEditing('');
+        let newadded = await getingData_Routes().then(data => { return data.find(route => route.id === newaddedroute.id);
+        })
+        console.log(newadded);
+        
+        const newRoutes = [...filteredDataRoutes];
+        newRoutes.push(newadded);
+        setFilteredDataRoutes(newRoutes);
+      })
+
+
     } else if (requestForEditing === 'delete') {
       setOpenRemove(true);
       setRouteForDelete(openThreeDotsVertical);
@@ -975,7 +1014,7 @@ const Places = (props) => {
                         // <div ref={menuRef}>
                         <ModalDropdown
                           language={props.language}
-                          setRequestForEditing={setRequestForEditing}
+                          setRequestForEditing={setRequestForEditing}//sdfsdfsdfsdfds
                           setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                           editable={true}
                           Reproducible={true}
@@ -1120,7 +1159,7 @@ const Places = (props) => {
                 {props.language !== 'English' ? 'Cancel' : 'ביטול'}
               </button>
               <button className='cancelBtn' onClick={handleSiteReplacement}>
-                { props.language !== 'English' ? 'Replace' : 'החלף אתר'}
+                {props.language !== 'English' ? 'Replace' : 'החלף אתר'}
               </button>
             </div>
           </div>

@@ -98,7 +98,7 @@ const PlacesCards = () => {
   const duplicatePlace = async () => {
     const PlaceToDuplicate = {
       name: places[openThreeDotsVertical].name,
-      nameinEnglish: places[openThreeDotsVertical].nameinEnglish,
+      nameInEnglish: places[openThreeDotsVertical].nameInEnglish,
       description: places[openThreeDotsVertical].description,
       picture_url: places[openThreeDotsVertical].picture_url || '',
     };
@@ -124,20 +124,20 @@ const PlacesCards = () => {
   const handleConfirm = async () => {
     const name = document.getElementById('name').value;
     const description = document.getElementById('description').value;
-    const nameinEnglish = document.getElementById('nameinEnglish').value;
+    const nameInEnglish = document.getElementById('nameInEnglish').value;
 
     if (name === '' || description === '') {
       alert(addUserButtonError);
     } else {
       let picture_url;
       try {
-        if (picture) picture_url = await uploadFiles(picture, 'Site media/picture', nameinEnglish); //await uploadImageGD(picture);
+        if (picture) picture_url = await uploadFiles(picture, 'Site media/picture', nameInEnglish); //await uploadImageGD(picture);
 
         const place = {
           name,
           description,
           picture_url,
-          nameinEnglish
+          nameInEnglish
         };
 
         if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -147,7 +147,7 @@ const PlacesCards = () => {
             placeToUpdate.name = updatedPlace.data.name;
             placeToUpdate.description = updatedPlace.data.description;
             placeToUpdate.picture_url = updatedPlace.data.picture_url;
-            placeToUpdate.nameinEnglish = updatedPlace.data.nameinEnglish;
+            placeToUpdate.nameInEnglish = updatedPlace.data.nameInEnglish;
             const newplaces = [...places];
             setPlaces(newplaces);
           });
@@ -223,7 +223,7 @@ const PlacesCards = () => {
               We will send updates occasionally. */}
             </DialogContentText>
             <TextField
-              autoFocus
+              // autoFocus
               margin='dense'
               id='name'
               label={language === 'Hebrew' ? 'שם' : 'Name'}
@@ -252,16 +252,16 @@ const PlacesCards = () => {
               inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <TextField
-              autoFocus
+              // autoFocus
               margin="dense"
-              id="nameinEnglish"
+              id="nameInEnglish"
               label={language === 'Hebrew' ? 'שם באנגלית' : 'Name in English'}
               type="name in English"
               fullWidth
               variant="standard"
               defaultValue={
                 openThreeDotsVertical !== -1
-                  ? places[openThreeDotsVertical]?.nameinEnglish
+                  ? places[openThreeDotsVertical]?.nameInEnglish
                   : ''
               }
               inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
@@ -331,7 +331,9 @@ const PlacesCards = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseRemove}>{language === 'Hebrew' ? 'ביטול' : 'Cancel'}</Button>
-            <Button onClick={handleCloseRemoveConfirm} autoFocus>
+            <Button onClick={handleCloseRemoveConfirm}
+            // autoFocus
+            >
               {language === 'Hebrew' ? 'מחיקה' : 'Delete'}
             </Button>
           </DialogActions>
@@ -369,7 +371,7 @@ const PlacesCards = () => {
               <div className='places_cards_container' key={place.name}>
                 <h5>{place.name}</h5>
                 <p>{place.description}</p>
-                <p>{place.nameinEnglish}</p>
+                {/* <p>{place.nameInEnglish}</p> */}
               </div>
             </div>
           ))}

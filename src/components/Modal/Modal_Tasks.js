@@ -42,6 +42,8 @@ let myPlacesChoiceTemp = [];
 
 //--------------------------
 function Modal_Tasks(props) {
+  console.log('props:', props);
+  
   const [, setDone] = useState(false);
   const [get_title, setTitle] = useState(props.title);
   const [getDescription, setDescription] = useState(props.subtitle);
@@ -51,7 +53,7 @@ function Modal_Tasks(props) {
   const [dataEntryLabel, setdataEntryLabel] = useState(props?.dataEntryLabel);
   const [dataEntryValidation, setdataEntryValidation] = useState(props?.dataEntryValidation);
   const [dataEntryType, setdataEntryType] = useState(props?.dataEntryType);
-  const [TaskType, setTaskType] = useState(props?.TaskType);
+  const [taskType, setTaskType] = useState(props?.taskType);
   const [dataEntryTypelist, setDataEntryTypelist] = useState(["String", "Int", "Number"]);
   const [TaskTypelist, setTaskTypelist] = useState(["specialTask", "normal", "onlyOnce", "popupAfterCurrentTask"]);
   const [multi_language_description, setMulti_language_description] = useState(props.multi_language_description);
@@ -59,10 +61,7 @@ function Modal_Tasks(props) {
   const [picture, setPicture] = useState(props.picture);
   const [audio, setAudio] = useState(props.audio);
   const [flagClickOK, setFlagClickOK] = useState(false);
-  const [myPlacesChoice, setMyPlacesChoice] = useState(
-    props.requestForEditing === 'edit' || props.requestForEditing === 'details'
-      ? []
-      : [props.myStation.id]
+  const [myPlacesChoice, setMyPlacesChoice] = useState([props.myStation.id]
   );
   const audioRef = useRef(null);
 
@@ -183,12 +182,14 @@ function Modal_Tasks(props) {
           dataEntryLabel,
           dataEntryValidation,
           dataEntryType,
-          TaskType
+          taskType
         };
         if (newTask.picture_url === undefined) {
           newTask.picture_url = '';
         }
         console.log('newTask: ', newTask);
+        console.log('uuid: ', props.uuid);
+        
         update_task(props.uuid, newTask);
       } else {
         Post_Task(picture_url, audio_url);
@@ -244,7 +245,7 @@ function Modal_Tasks(props) {
           dataEntryLabel,
           dataEntryValidation,
           dataEntryType,
-          TaskType
+          taskType
         );
 
         let color = props.allStations.find(
@@ -352,7 +353,7 @@ function Modal_Tasks(props) {
       "dataEntryLabel": "",
       "dataEntryValidation": "",
       "dataEntryType": {},
-      "TaskType": {}
+      "taskType": {}
     },
     "arabic": {
       "title": "",
@@ -363,7 +364,7 @@ function Modal_Tasks(props) {
       "dataEntryLabel": "",
       "dataEntryValidation": "",
       "dataEntryType": {},
-      "TaskType": {}
+      "taskType": {}
     }
   }
 
@@ -454,7 +455,7 @@ function Modal_Tasks(props) {
                 <div className='estimatedTimeContainer'>
                   <h6>{props.language !== 'English'
                     ? "Enter the estimated time in seconds for the task : "
-                    : "תמונה שנבחרה: לא נמצא קובץ תמונה"}</h6>
+                    : " זמן מינימלי למשימה (שניות) "}</h6>
                   <input
                     type='number'
                     name='estimatedTimeSeconds'
@@ -469,8 +470,8 @@ function Modal_Tasks(props) {
                 <form id='IPU' className='w3-container'>
                   <h6>
                     {props.language !== 'English'
-                      ? 'Write Data Entry Label'
-                      : ':רשום את תווית הנתונים '}
+                      ? 'Write a weight'
+                      : ':רשום משקל '}
                     <RiAsterisk style={{ color: 'red' }} />
                   </h6>
                   <p>
@@ -488,7 +489,7 @@ function Modal_Tasks(props) {
                     ></input>
                   </p>
                 </form>
-                {/* <form id='IPU' className='w3-container'>
+                <form id='IPU' className='w3-container'>
                   <h6>
                     {props.language !== 'English'
                       ? 'Write Data Entry Validation'
@@ -509,8 +510,8 @@ function Modal_Tasks(props) {
                       value={dataEntryValidation}
                     ></input>
                   </p>
-                </form> */}
-                {/* <h6>
+                </form> 
+                 <h6>
                   {props.language !== 'English'
                     ? 'Select data entry type'
                     : ':בחר סוג נתונים '}
@@ -521,7 +522,7 @@ function Modal_Tasks(props) {
                     ? 'Select type of task'
                     : ':בחר סוג משימה '}
                 </h6>
-                <BasicSelect setFoldersite={setTaskType} folderName={TaskType} folderlist={TaskTypelist} /> */}
+                <BasicSelect setFoldersite={setTaskType} folderName={taskType} folderlist={TaskTypelist} /> 
                 <h6>
                   {props.language !== 'English'
                     ? 'Select where to save picture / voice'
@@ -615,7 +616,7 @@ function Modal_Tasks(props) {
                           : audio?.name}
                       </div>
                       <div>
-                        {/* {typeof audio === 'string' && (
+                        {typeof audio === 'string' && (
                           <button
                             className='play-button'
                             onClick={handlePlayClick}
@@ -623,7 +624,7 @@ function Modal_Tasks(props) {
                             {audio}
                             Play
                           </button>
-                        )} */}
+                        )}
                       </div>
                       <audio ref={audioRef} controls>
                         <source

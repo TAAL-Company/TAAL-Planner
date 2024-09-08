@@ -673,7 +673,7 @@ function DragnDrop(props) {
                     ) : (
                       board.map((tag, keyCount) => {
                         if (tag !== undefined) {
-                          // console.log(keyCount, tag);
+                          console.log(keyCount, tag);
                           return (saveTag = (
                             <Tag
                               keyCount={keyCount}
@@ -808,19 +808,95 @@ function DragnDrop(props) {
           help={helpFlag}
           tasksOfChosenStation={props.tasksOfChosenStation}
           setTasksOfChosenStation={props.setTasksOfChosenStation}
-          title={getValueForProperty('title', '')}
-          subtitle={getValueForProperty('subtitle', '')}
-          stationOfTask={
+          // title={getValueForProperty('title', '')}
+          // subtitle={getValueForProperty('subtitle', '')}
+          // stationOfTask={
+          //   openThreeDotsVerticalBoard !== -1
+          //     ? props.allTasks.find(
+          //       (task) => task.id === openThreeDotsVerticalBoard
+          //     ).stations
+          //     : []
+          // }
+          // multi_language_description={props.multi_language_description}
+          // estimatedTimeSeconds={getValueForProperty('estimatedTimeSeconds', 20)}
+          // picture={getValueForProperty('picture_url', null)}
+          // audio={getValueForProperty('audio_url', null)}
+          title={
             openThreeDotsVerticalBoard !== -1
               ? props.allTasks.find(
                 (task) => task.id === openThreeDotsVerticalBoard
-              ).stations
+              ).title
+              : ''
+          }
+          subtitle={
+            openThreeDotsVerticalBoard !== -1
+              ? props.allTasks.find(
+                (task) => task.id === openThreeDotsVerticalBoard
+              ).subtitle
+              : ''
+          }
+          estimatedTimeSeconds={
+            openThreeDotsVerticalBoard !== -1
+              ? props.allTasks.find(
+                (task) => task.id === openThreeDotsVerticalBoard
+              ).estimatedTimeSeconds
+              : 20
+          }
+          picture={
+            openThreeDotsVerticalBoard !== -1
+              ? props.allTasks.find(
+                (task) => task.id === openThreeDotsVerticalBoard
+              ).picture_url
+              : null
+          }
+          dataEntryLabel={
+            openThreeDotsVerticalBoard !== -1
+              ? props.allTasks.find(
+                (task) => task.id === openThreeDotsVerticalBoard
+              ).dataEntryLabel
+              : null
+          }
+          dataEntryValidation={
+            openThreeDotsVerticalBoard !== -1
+              ? props.allTasks.find(
+                (task) => task.id === openThreeDotsVerticalBoard
+              ).dataEntryValidation
+              : null
+          }
+          dataEntryType={
+            openThreeDotsVerticalBoard !== -1
+              ? props.allTasks.find(
+                (task) => task.id === openThreeDotsVerticalBoard
+              ).dataEntryType
+              : null
+          }
+          taskType={
+            openThreeDotsVerticalBoard !== -1
+              ? props.allTasks.find(
+                (task) => task.id === openThreeDotsVerticalBoard
+              ).taskType
+              : null
+          }
+          audio={
+            openThreeDotsVerticalBoard !== -1
+              ? props.allTasks.find(
+                (task) => task.id === openThreeDotsVerticalBoard
+              ).audio_url
+              : null
+          }
+          stationOfTask={
+            openThreeDotsVerticalBoard !== -1
+              ? props.allTasks.find((task) => task.id === openThreeDotsVerticalBoard)
+                .stations
               : []
           }
-          multi_language_description={props.multi_language_description}
-          estimatedTimeSeconds={getValueForProperty('estimatedTimeSeconds', 20)}
-          picture={getValueForProperty('picture_url', null)}
-          audio={getValueForProperty('audio_url', null)}
+          multi_language_description={
+            openThreeDotsVerticalBoard !== -1
+              ? props.allTasks.find(
+                (task) => task.id === openThreeDotsVerticalBoard
+              ).multi_language_description
+              : "{}"
+          }
         />
       ) : (
         <></>

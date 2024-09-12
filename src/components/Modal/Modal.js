@@ -64,7 +64,16 @@ function Modal({
     const fetchData = async () => {
       setLoading(true);
       try {
-        setStudent(await getingData_Users());
+        const usersData = await getingData_Users();
+        if(JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN"){
+          setStudent(usersData);
+        }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR"){
+          const usersDatafilterbycoachId = usersData.filter((user)=>user.coachId == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+          setStudent(usersDatafilterbycoachId);
+        }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT"){
+          const usersDatafilterbycoachId = usersData.filter((user)=>user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+          setStudent(usersDatafilterbycoachId);
+        }
         // getData();
       } catch (error) {
         console.error(error.message);

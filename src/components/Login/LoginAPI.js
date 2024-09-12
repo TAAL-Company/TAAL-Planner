@@ -81,15 +81,15 @@ function LoginAPI(props) {
         sessionStorage.setItem('jwt', JSON.stringify(user));
         if (user.role == "ADMIN") {
           const coaches = await getingData_coaches();
-          const coache = coaches.filter((coache)=>coache.id == user.id)
+          const coache = coaches.filter((coache)=>coache.id == user.userid)
           sessionStorage.setItem('jwt-EDITOR', JSON.stringify(coache[0]));
         }else if(user.role == "EDITOR"){
           const coaches = await getingData_coaches();
-          const coache = coaches.filter((coache)=>coache.id == user.id)
+          const coache = coaches.filter((coache)=>coache.id == user.userid)
           sessionStorage.setItem('jwt-EDITOR', JSON.stringify(coache[0]));
         }else if(user.role == "STUDENT"){
           const users = await getingData_Users()
-          const userX = users.filter((userX)=>userX.id == user.id)
+          const userX = users.filter((userX)=>userX.id == user.userid)
           sessionStorage.setItem('jwt-EDITOR', JSON.stringify(userX[0]));
         }
         sessionStorage.setItem('logged_in', 1);

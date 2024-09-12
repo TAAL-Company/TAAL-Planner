@@ -62,7 +62,7 @@ function LoginAPI(props) {
       },
       body: JSON.stringify({
         name: props.APIDetailsLogin.user,
-        googleID: props.APIDetailsLogin.pass,
+        password: props.APIDetailsLogin.pass,
       }),
     })
       .then((response) =>

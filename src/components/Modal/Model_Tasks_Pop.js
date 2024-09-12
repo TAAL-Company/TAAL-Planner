@@ -154,7 +154,21 @@ function Model_Tasks_Pop(props) {
       sortedUrls[folderName][fileTypeFolder] = sortedUrls[folderName][fileTypeFolder] || {};
       sortedUrls[folderName][fileTypeFolder][key] = url;
     }
-    setFolderNames(Object.keys(sortedUrls));
+    console.log("sortedUrls", Object.keys(sortedUrls));
+    console.log("sortedUrls- 2", sortedUrls);
+
+    if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
+      setFolderNames(Object.keys(sortedUrls));
+    } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "STUDENT" || JSON.parse(sessionStorage.getItem('jwt'))?.role === "EDITOR") {
+      const usersites = JSON.parse(sessionStorage.getItem('jwt')).sites;
+      console.log("usersites", usersites);
+      const filteredSortedUrls = Object.keys(sortedUrls).filter(url => {
+        console.log("url", url);
+        return usersites.some(site => site.nameInEnglish === url)
+      });
+      console.log(filteredSortedUrls);
+      setFolderNames(filteredSortedUrls);
+    }
   }, [blobList]);
 
   return (

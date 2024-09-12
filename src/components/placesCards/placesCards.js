@@ -195,9 +195,14 @@ const PlacesCards = () => {
   useEffect(() => {
     const fetchData = async () => {
       const placesData = await getingData_Places();
-      setPlaces(placesData);
-    };
-
+      if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
+        setPlaces(placesData);
+      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR" || JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
+        const placesDatafilterbyId = placesData.filter((place) => place.editors.map((editor) => editor.id).includes(JSON.parse(sessionStorage.getItem('jwt')).id));
+        console.log('placesDatafilterbyId', placesDatafilterbyId);
+        setPlaces(placesDatafilterbyId);
+      }
+    }
     fetchData();
   }, [updateAdd]);
 

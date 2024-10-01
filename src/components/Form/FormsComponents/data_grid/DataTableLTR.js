@@ -18,6 +18,7 @@ import AddColumn from '../add_column/AddColumn';
 import SaveIcon from '@mui/icons-material/Save';
 
 import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 
 function CustomToolbar({
   isInfoUserRoute,
@@ -365,7 +366,7 @@ const DataTableLTR = ({
         {/* <MultipleSelectChip></MultipleSelectChip>
         <AccessibleTabs1></AccessibleTabs1> */}
         <div></div>
-        <DataGridPro
+        <DataGrid
           sx={{
             '& .MuiDataGrid-row:hover': {
               backgroundColor: '#EDF3F8',

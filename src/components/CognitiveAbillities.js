@@ -9,6 +9,8 @@ import '../components/Form/FormsComponents/data_grid/DataTableRTL.css';
 import CustomToolbar from '../components/Form/FormsComponents/data_grid/CustomToolbar';
 
 import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
+
 import { heIL } from '@mui/x-data-grid';
 import {
   Button,
@@ -259,7 +261,7 @@ const CognitiveAbillities = () => {
           // border-bottom: solid #1976d2 1px;
         }}
       >
-        <DataGridPro
+        <DataGrid
           autoHeight
           columnTypes={{
             string: {

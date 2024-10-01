@@ -26,6 +26,7 @@ import {
 import MultipleEdit from '../multiple_edit/MultipleEdit';
 import AddColumn from '../add_column/AddColumn';
 import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGrid } from '@mui/x-data-grid';
 import SaveIcon from '@mui/icons-material/Save';
 import CustomToolbar from './CustomToolbar';
 import Dialog from '@mui/material/Dialog';
@@ -248,7 +249,7 @@ const TaskAbility = ({
           // border-bottom: solid #1976d2 1px;
         }}
       >
-        <DataGridPro
+        <DataGrid
           autoHeight
           columnTypes={{
             string: {

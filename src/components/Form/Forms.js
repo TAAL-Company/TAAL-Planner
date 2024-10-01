@@ -36,6 +36,8 @@ import {
 import { useEffect } from 'react';
 import { id } from 'date-fns/locale';
 import predictions from './predictions.json';
+import TaskAbility2 from './FormsComponents/data_grid/Taskability2';
+import DataTableRTL2 from './FormsComponents/data_grid/DataTableRTL2';
 
 function Forms() {
   const [explainationError, setExplainationError] = useState('');
@@ -134,6 +136,8 @@ function Forms() {
   }, []);
 
   useEffect(() => {
+    console.log("tasksOfChosenRoute", tasksOfChosenRoute);
+    console.log("routeForTasksAbility", routeForTasksAbility);
     let cognitiveRequirements;
     let accept = false;
     tasksOfChosenRoute.map(async (task, index) => {
@@ -194,6 +198,10 @@ function Forms() {
 
   useEffect(() => {
     if (changeRoute) {
+      setTasksOfChosenRoute([]);
+      setRowsTaskabilityHE([]);
+      console.log('routeForTasksAbility.tasks', routeForTasksAbility.tasks);
+
       routeForTasksAbility.tasks.map(async (task) => {
         // let cogniitiveRequirements = await gettaskCognitiveRequirements(
         //   task.id
@@ -331,6 +339,9 @@ function Forms() {
   };
 
   const handleChangeRouteFlags = async (event, value) => {
+    setTaskAbilityList([]);
+    setAllFlags([]);
+    setRowsFlagsHE([]);
     setRroutenewName(value.name);
 
     const route = allRoutes.find((route) => route.id === value.id);
@@ -338,10 +349,9 @@ function Forms() {
 
     const taskIds = route.tasks?.map((task) => task.taskId);
     const studentIds = [worker.id];
-
-    const algoResult = setTaskAbilityList(
-      await postEvaluation(studentIds, taskIds)
-    );
+    console.log('studentIds:', studentIds, 'taskIds:', taskIds);
+    const algoResult = await postEvaluation(studentIds, taskIds)
+    setTaskAbilityList(algoResult);
 
     const flagsData = await getingDataFlags();
 
@@ -351,7 +361,7 @@ function Forms() {
         (flag) => flag.taskId === taskId && flag.studentId === worker.id
       );
     });
-
+    console.log("algoResult:", algoResult);
     if (!hasMatchingTask) {
       // If there are no matching task IDs, run the function
       taskIds.map(async (task) => {
@@ -410,7 +420,7 @@ function Forms() {
       if (updatedRowsFlagsHE.length > 0)
         setRowsFlagsHE((prev) => [...prev, ...updatedRowsFlagsHE]);
     }
-  }, [allFlags, allTasks, cognitiveAbillities, routesOfFlags, worker.id]);
+  }, [allFlags, allTasks, cognitiveAbillities, routesOfFlags]);
 
   const validateExplaination = (value) => {
     if (value.length > 100) {
@@ -1358,6 +1368,8 @@ function Forms() {
       editable: true,
       headerAlign: 'center',
       align: 'center',
+      type: 'singleSelect',
+      valueOptions: ['F','E1', 'E2', 'E3', 'E4', 'E5','C1', 'C2', 'C3', 'C4', 'C5', 'B1', 'B2', 'B3', 'B4', 'B5','A1', 'A2', 'A3', 'A4', 'A5'],
     },
     {
       field: 'fieldEN',
@@ -1370,7 +1382,7 @@ function Forms() {
     {
       field: 'classificationHE',
       headerName: 'סיווג',
-      width: 100,
+      width: 200,
       editable: false,
       headerAlign: 'center',
       align: 'center',
@@ -1877,8 +1889,8 @@ function Forms() {
                       // keepMounted={slide}
                       // transitionDuration={300}
                       disableEscapeKeyDown
-                      // style={{ direction: "rtl" }}
-                      // style={{ position: "absolute", top: "0", right: "0" }}
+                    // style={{ direction: "rtl" }}
+                    // style={{ position: "absolute", top: "0", right: "0" }}
                     >
                       <div
                         style={{
@@ -2193,7 +2205,23 @@ function Forms() {
               <div>
                 <div className='headlineForms'>יכולות ביצוע למשימות</div>
                 <div className='tableForms'>
-                  <DataTableRTL // DataTableLTR
+                  <DataTableRTL2
+                    columns={columnsCognitiveHE}
+                    setColumns={setColumnsCognitiveHE}
+                    rows={rowsCognitiveHE}
+                    tableType={'CognitiveProfileHE'}
+                    routeForTasksAbility={routeForTasksAbility}
+                    setRouteForTasksAbility={setRouteForTasksAbility}
+                    allRoutes={allRoutes}
+                    isInfoUserRoute={false}
+                    isInfoUserSite={true}
+                    setWorker={setWorker}
+                    worker={worker}
+                    allUsers={allUsers}
+                    setChangeUser={setChangeUser}
+                    setSaveProfileChanges={setSaveProfileChanges}
+                  />
+                  {/* <DataTableRTL // DataTableLTR
                     setChangeUser={setChangeUser}
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
@@ -2218,7 +2246,7 @@ function Forms() {
                     setRouteForTasksAbility={setRouteForTasksAbility}
                     routeName={routeNameHE}
                     siteName={siteNameHE}
-                  />
+                  /> */}
                 </div>
               </div>
             )}
@@ -2257,6 +2285,16 @@ function Forms() {
                 <div className='headlineForms'>דרישות למשימה</div>
                 {/* <TaskAbility /> */}
                 <div className='tableForms'>
+                  {/* <TaskAbility2
+                    columns={columnsTaskabilityHE}
+                    setColumns={setColumnsTaskabilityHE}
+                    rows={rowsTaskabilityHE}
+                    tableType={'TaskabilityHE'}
+                    routeForTasksAbility={routeForTasksAbility}
+                    setRouteForTasksAbility={setRouteForTasksAbility}
+                    allRoutes={allRoutes}
+                  /> */}
+                  {console.log('TaskabilityHE - rows', rowsTaskabilityHE, 'TaskabilityHE - columns', columnsTaskabilityHE)}
                   <TaskAbility //------DataTableLTR
                     setChangeUser={setChangeUser}
                     prevSelectedWorker={prevSelectedWorker}

@@ -45,6 +45,52 @@ export default function DataTableRTL2({
   }, {});
   const columnGroupingModel = Object.values(groups);
 
+  const handleCellEdit = (params) => {
+      // if (params.value >= 0 && params.value < 6) {
+      const updatedRows = rows.map((row) => {
+        if (row.id === params.id) {
+          return {
+            ...row,
+            [params.field]: params.value,
+          };
+        } else {
+          return row;
+        }
+      });
+
+      setRows(updatedRows);
+
+      const valueMap = {
+        A: 5,
+        B: 3,
+        C: 2,
+        D: 1,
+        a: 5,
+        b: 3,
+        c: 2,
+        d: 1,
+      };
+
+      // Convert input value to its corresponding numerical value
+      let outputValue = 0;
+      if (valueMap.hasOwnProperty(params.value)) {
+        outputValue = valueMap[params.value];
+      }
+
+      setCognitiveProfileValues(
+        cognitiveProfileValues.map((cog, index) => {
+          if (index === params.id) {
+            return outputValue;
+          } else {
+            return cog;
+          }
+        })
+      );
+      // } else {
+      //   alert("בבקשה אכנס מספר בין 0-5");
+      // }
+  };
+  
   return (
     <div className='allForms' >
       <Box
@@ -115,6 +161,7 @@ export default function DataTableRTL2({
           checkboxSelection
           disableRowSelectionOnClick
           columnGroupingModel={columnGroupingModel}
+          onCellEditCommit={handleCellEdit}
           sx={{
             direction: 'rtl',
             '& .MuiDataGrid-virtualScroller': {

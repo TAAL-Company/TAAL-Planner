@@ -134,7 +134,7 @@ export default function DataTableRTL2({
             },
             '& .MuiDataGrid-main': {
               overflow: 'auto',
-              height: '25vmax',
+              height: '40vmax',
             },
             '& .MuiTablePagination-actions': {
               direction: 'ltr',

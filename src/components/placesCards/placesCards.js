@@ -40,6 +40,7 @@ const PlacesCards = () => {
   const [addPlaceButtonText, setAddPlaceButtonText] = useState('הוספת אתר חדש');
   const [addUserButtonError, setAddUserButtonError] = useState('עליך למלא שדות חובה המסומנים בכוכבית');
   const [confermdelete, setconfermdelete] = useState('המחיקה בוצעה בהצלחה!');
+  const [addImageError, setAddImage] = useState('הוספת תמונה');
 
   useEffect(() => {
     setLanguage(sessionStorage.getItem('language'));
@@ -48,14 +49,17 @@ const PlacesCards = () => {
       setAddPlaceButtonText('Add a new site');
       setAddUserButtonError('Please fill in the required fields marked with a star');
       setconfermdelete('The deletion was successful!');
+      setAddImage('Add image');
     } else if (sessionStorage.getItem('language') == 'Hebrew') {
       setAddPlaceButtonText('הוספת אתר חדש');
       setAddUserButtonError('עליך למלא שדות חובה המסומנים בכוכבית');
       setconfermdelete('המחיקה בוצעה בהצלחה!');
+      setAddImage('הוספת תמונה');
     } else {
       setAddPlaceButtonText('הוספת אתר חדש');
       setAddUserButtonError('עליך למלא שדות חובה המסומנים בכוכבית');
       setconfermdelete('המחיקה בוצעה בהצלחה!');
+      setAddImage('הוספת תמונה');
     }
   })
 
@@ -131,35 +135,39 @@ const PlacesCards = () => {
     } else {
       let picture_url;
       try {
-        if (picture) picture_url = await uploadFiles(picture, 'Site media/picture', nameInEnglish); //await uploadImageGD(picture);
-
-        const place = {
-          name,
-          description,
-          picture_url,
-          nameInEnglish
-        };
-
-        if (requestForEditing === 'edit' || requestForEditing === 'details') {
-          const placeToUpdate = places[studentForAction];
-          console.log('placeToUpdate', placeToUpdate);
-          updateSite(placeToUpdate.id, place).then((updatedPlace) => {
-            placeToUpdate.name = updatedPlace.data.name;
-            placeToUpdate.description = updatedPlace.data.description;
-            placeToUpdate.picture_url = updatedPlace.data.picture_url;
-            placeToUpdate.nameInEnglish = updatedPlace.data.nameInEnglish;
-            const newplaces = [...places];
-            setPlaces(newplaces);
-          });
-        } else {
-          insertSite(place).then((data) => {
-            data.picture_url = place.picture_url;
-            updateSite(data.id, data).then((updatedSite) => {
-              setPlaces((prev) => [updatedSite.data, ...prev]);
-              setupdateAdd(true);
+        if (picture) {
+          picture_url = await uploadFiles(picture, 'Site media/picture', name);
+          const place = {
+            name,
+            description,
+            picture_url,
+            nameInEnglish
+          };
+  
+          if (requestForEditing === 'edit' || requestForEditing === 'details') {
+            const placeToUpdate = places[studentForAction];
+            console.log('placeToUpdate', placeToUpdate);
+            updateSite(placeToUpdate.id, place).then((updatedPlace) => {
+              placeToUpdate.name = updatedPlace.data.name;
+              placeToUpdate.description = updatedPlace.data.description;
+              placeToUpdate.picture_url = updatedPlace.data.picture_url;
+              placeToUpdate.nameInEnglish = updatedPlace.data.nameInEnglish;
+              const newplaces = [...places];
+              setPlaces(newplaces);
             });
-          });
-          setupdateAdd(false);
+          } else {
+            insertSite(place).then((data) => {
+              data.picture_url = place.picture_url;
+              updateSite(data.id, data).then((updatedSite) => {
+                setPlaces((prev) => [updatedSite.data, ...prev]);
+                setupdateAdd(true);
+              });
+            });
+            setupdateAdd(false);
+          }
+        }
+        else {
+          alert(addImageError);
         }
       } catch (error) {
         console.error(error);

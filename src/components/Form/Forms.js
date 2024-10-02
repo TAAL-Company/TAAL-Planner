@@ -12,6 +12,7 @@ import {
   getingData_Tasks,
   getingData_Routes,
   postDataCognitiveProfile,
+  updateDataCognitiveProfile,
   getCognitiveProfile,
   getCognitiveAbillities,
   gettaskCognitiveRequirements,
@@ -72,6 +73,7 @@ function Forms() {
   const [rowsCognitiveHE, setRowsCognitiveHE] = useState([]);
   const [changeUser, setChangeUser] = useState(false);
   const [changeRoute, setChangeRoute] = useState(false);
+  const [updateProfile, setUpdateProfile] = useState("");
   const [tasksOfChosenRoute, setTasksOfChosenRoute] = useState([]);
 
   const [saveProfileChanges, setSaveProfileChanges] = useState(false);
@@ -243,21 +245,38 @@ function Forms() {
     }
   }, [cognitiveAbillities]);
 
-  useEffect(() => {
+  const SaveProfileChanges = async () => {
+    console.log('saveProfileChanges', saveProfileChanges);
+    console.log('updateProfile', updateProfile);
     if (saveProfileChanges === true) {
       setSaveProfileChanges(false);
       if (worker.length != 0) {
-        postDataCognitiveProfile(worker.id, cognitiveProfileValues);
-        alert('המידע נשמר !');
+        try {
+          await postDataCognitiveProfile(worker.id, cognitiveProfileValues).then(
+            alert('המידע נשמר !')
+          )
+        } catch (error) {
+          console.error(error.message);
+        }
       }
+    } else if (updateProfile !== "") {
+      await updateDataCognitiveProfile(cognitiveProfileValues, worker.id);
+      alert('המידע נשמר !');
     }
-  }, [saveProfileChanges, cognitiveProfileValues, worker]);
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setCognitiveProfileValues(await getCognitiveProfile(worker.id));
+        await getCognitiveProfile(worker.id).then((res) => {
+          setCognitiveProfileValues(res.value);
+          setUpdateProfile(res.id);
+          setSaveProfileChanges(false);
+        })
       } catch (error) {
         console.error(error.message);
+        setUpdateProfile("");
+        setSaveProfileChanges(true);
         setCognitiveProfileValues(new Array(242).fill(0));
       }
     };
@@ -1369,7 +1388,7 @@ function Forms() {
       headerAlign: 'center',
       align: 'center',
       type: 'singleSelect',
-      valueOptions: ['F', 'D','C', 'B', 'A'],
+      valueOptions: ['F', 'D', 'C', 'B', 'A'],
       // valueOptions: ['F','E1', 'E2', 'E3', 'E4', 'E5','C1', 'C2', 'C3', 'C4', 'C5', 'B1', 'B2', 'B3', 'B4', 'B5','A1', 'A2', 'A3', 'A4', 'A5'],
     },
     {
@@ -2221,6 +2240,8 @@ function Forms() {
                     allUsers={allUsers}
                     setChangeUser={setChangeUser}
                     setSaveProfileChanges={setSaveProfileChanges}
+                    SaveProfileChanges={SaveProfileChanges}
+                    setUpdateProfile={setUpdateProfile}
                     setCognitiveProfileValues={setCognitiveProfileValues}
                     cognitiveProfileValues={cognitiveProfileValues}
                     setRows={setRowsCognitiveHE}

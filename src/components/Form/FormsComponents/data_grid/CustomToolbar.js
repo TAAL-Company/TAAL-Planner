@@ -51,6 +51,8 @@ const CustomToolbar = ({
   handleChangeRouteFlags,
   RroutenewName,
   setRroutenewName,
+  setUpdateProfile,
+  SaveProfileChanges,
 }) => {
   // const [prevSelected, setPrevSelected] = useState([]);
   useEffect(() => {}, [prevSelectedWorker]);
@@ -58,6 +60,7 @@ const CustomToolbar = ({
   const saveProfileChanges = (e) => {
     if (tableType === 'CognitiveProfileHE') {
       setSaveProfileChanges(true);
+      SaveProfileChanges(true, "data");
     } else if (tableType === 'TaskabilityHE') {
       newTaskCognitiveRequirements.forEach((element) => {
         try {
@@ -77,6 +80,8 @@ const CustomToolbar = ({
   };
   const handleChangeRoute = (event) => {
     const selectedValue = JSON.parse(event.target.value);
+    console.log("selectedValue",selectedValue);
+    
 
     setRouteForTasksAbility(selectedValue);
     // setRoutesOfFlags(selectedValue);
@@ -196,9 +201,9 @@ const CustomToolbar = ({
                 onChange={handleChangeRoute}
               >
                 <option value='DEFAULT' disabled>
-                  {routeForTasksAbility.length === 0
+                  {routeForTasksAbility?.length === 0
                     ? 'בחירת מסלול'
-                    : routeForTasksAbility.name}
+                    : routeForTasksAbility?.name}
                 </option>
                 {allRoutes.map((value, index) => {
                   return (
@@ -319,7 +324,7 @@ const CustomToolbar = ({
         </div>
       </GridToolbarContainer>
 
-      {tableType === 'TaskabilityHE' && selectedRows.length >= 2 ? (
+      {tableType === 'TaskabilityHE' && selectedRows?.length >= 2 ? (
         <>
           <div
             className='buttonaNavbarForms'
@@ -329,7 +334,7 @@ const CustomToolbar = ({
               <MultipleEdit
                 textButton={'עריכה קבוצתית'}
                 selectedRows={selectedRows}
-                fieldsCount={columns.length}
+                fieldsCount={columns?.length}
                 columns={columns}
               />{' '}
             </div>

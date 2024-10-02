@@ -656,11 +656,31 @@ export const getCognitiveProfile = async (user_id) => {
   let CognitiveProfile;
 
   await get(baseUrl + '/cognitive-profiles/' + user_id).then((res) => {
-    CognitiveProfile = res.data.value;
+    CognitiveProfile = res.data;
   });
   console.log('res CognitiveProfile: ', CognitiveProfile);
 
   return CognitiveProfile;
+};
+
+export const updateDataCognitiveProfile = async (
+  cognitiveProfileValues,
+  workerId
+) => {
+  const postUrl = baseUrl + '/cognitive-profiles/' + workerId;
+  const postData = {
+    remark: null,
+    studentId: workerId,
+    value: cognitiveProfileValues,
+  };
+  try {
+    const res = await axios.patch(postUrl, postData);
+    console.log('success');
+    return res;
+  } catch (e) {
+    console.log(e);
+  }
+
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -1075,6 +1095,7 @@ export const postEvaluation = async (studentIds, taskIds) => {
 
     return objectArray;
   } catch (error) {
+    alert("ERROR: " + "does not have a cognitive requirement , does not have a cognitive Profile");
     throw error;
   }
 };

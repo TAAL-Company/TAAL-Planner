@@ -28,6 +28,8 @@ export default function DataTableRTL2({
   cognitiveProfileValues,
   setSaveProfileChanges,
   prevSelectedWorker,
+  setUpdateProfile,
+  SaveProfileChanges,
 }) {
 
   const groups = columns.reduce((groups, column) => {
@@ -229,6 +231,8 @@ export default function DataTableRTL2({
                 worker={worker}
                 setChangeUser={setChangeUser}
                 setSaveProfileChanges={setSaveProfileChanges}
+                setUpdateProfile={setUpdateProfile}
+                SaveProfileChanges={SaveProfileChanges}
               />
             ),
           }}

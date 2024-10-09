@@ -2035,7 +2035,7 @@ function Forms() {
                         {currRow.Alternatives !== ' ' && (
                           <Select
                             native
-                            value={currRow.Alternatives.toString()}
+                            value={currRow?.Alternatives?.toString()}
                             id='select-Alternatives'
                             label='Alternatives'
                             fullWidth

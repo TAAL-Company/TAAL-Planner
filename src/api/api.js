@@ -1029,44 +1029,122 @@ export const getingDataFlags = async () => {
 
   return allEvaluation;
 };
+// export const postEvaluationEvents = async (
+//   studentId,
+//   taskId,
+//   flag,
+//   alternativeTaskId = null,
+//   intervention = '',
+//   explanation = ''
+// ) => {
+//   try {
+//     const response = await fetch(baseUrl + '/evaluation-events', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         Accept: '*/*',
+//         // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+//       },
+//       body: JSON.stringify({
+//         studentId: studentId,
+//         taskId: taskId,
+//         flag: flag,
+//         alternativeTaskId: alternativeTaskId,
+//         intervention: intervention,
+//         explanation: explanation,
+//       }),
+//     });
+
+//     if (!response.ok) {
+//       throw new Error(`Error inserting task: ${response.statusText}`);
+//     }
+
+//     const data = await response.json();
+//     return data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
 export const postEvaluationEvents = async (
   studentId,
   taskId,
   flag,
   alternativeTaskId = null,
-  intervention = '',
-  explanation = ''
+  intervention = "",
+  explanation = ""
 ) => {
   try {
-    const response = await fetch(baseUrl + '/evaluation-events', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: '*/*',
-        // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-      },
-      body: JSON.stringify({
-        studentId: studentId,
-        taskId: taskId,
-        flag: flag,
-        alternativeTaskId: alternativeTaskId,
-        intervention: intervention,
-        explanation: explanation,
-      }),
-    });
+      const response = await axios.post(baseUrl + '/evaluation-events',
+          {
+              studentId: studentId,
+              taskId: taskId,
+              flag: flag,
+              alternativeTaskId: alternativeTaskId,
+              intervention: intervention,
+              explanation: explanation,
+          },
+          {
+              headers: {
+                  'Content-Type': 'application/json',
+                  Accept: '*/*',
+              },
+          });
 
-    if (!response.ok) {
-      throw new Error(`Error inserting task: ${response.statusText}`);
-    }
+      if (response.status !== 201) {
+          console.error(`Error posting evaluation event: ${response.status} ${response.statusText}`);
+          // console.error(response.data);
+          throw new Error(`Error posting evaluation event: ${response.status} ${response.statusText}`);
+      }
 
-    const data = await response.json();
-    return data;
+      // console.log(response.status);
+      const data = response.data;
+      return data;
   } catch (error) {
-    throw error;
+      console.error(`Error posting evaluation event: ${error.message}`);
+      // console.error(error);
+      throw error.status;
   }
 };
+// export const postEvaluation = async (studentIds, taskIds) => {
+//   try {
+//     const response = await fetch(baseUrl + '/evaluation', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+//       },
+//       body: JSON.stringify({
+//         taskIds: taskIds,
+//         studentIds: studentIds,
+//       }),
+//     });
+
+//     if (!response.ok) {
+//       throw new Error(`Error inserting task: ${response.statusText}`);
+//     }
+//     console.log('response b:', response);
+
+//     const data = await response.json();
+//     console.log('data b:', data);
+
+//     const objectArray = data.response.map((jsonString) => JSON.parse(jsonString));
+
+//     objectArray.map(async (flag) => {
+//       console.log("flag:", flag.userId, flag.taskId, flag.evaluation);
+//       await postEvaluationEvents(flag.userId, flag.taskId, flag.evaluation);
+//     });
+
+//     return objectArray;
+//   } catch (error) {
+//     alert("ERROR: " + "does not have a cognitive requirement , does not have a cognitive Profile");
+//     throw error;
+//   }
+// };
+
 export const postEvaluation = async (studentIds, taskIds) => {
   try {
+    console.log('Starting postEvaluation');
     const response = await fetch(baseUrl + '/evaluation', {
       method: 'POST',
       headers: {
@@ -1079,23 +1157,33 @@ export const postEvaluation = async (studentIds, taskIds) => {
       }),
     });
 
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
+
     if (!response.ok) {
-      throw new Error(`Error inserting task: ${response.statusText}`);
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
-    console.log('response b:', response);
 
     const data = await response.json();
-    console.log('data b:', data);
+    console.log('Received data:', data);
 
     const objectArray = data.response.map((jsonString) => JSON.parse(jsonString));
 
-    objectArray.map(async (flag) => {
-      await postEvaluationEvents(flag.userId, flag.taskId, flag.evaluation);
-    });
+    console.log('Processing flags:', objectArray.length);
+
+    for (const flag of objectArray) {
+      console.log("Processing flag:", flag.userId, flag.taskId, flag.evaluation);
+      try {
+        await postEvaluationEvents(flag.userId, flag.taskId, flag.evaluation);
+      } catch (postError) {
+        console.error('Error processing flag:', postError);
+      }
+    }
 
     return objectArray;
   } catch (error) {
-    alert("ERROR: " + "does not have a cognitive requirement , does not have a cognitive Profile");
+    console.error('Error in postEvaluation:', error);
+    alert("ERROR: " + error.message || "An unknown error occurred");
     throw error;
   }
 };

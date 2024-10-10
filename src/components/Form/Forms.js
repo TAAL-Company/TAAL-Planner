@@ -369,29 +369,45 @@ function Forms() {
     const taskIds = route.tasks?.map((task) => task.taskId);
     const studentIds = [worker.id];
     console.log('studentIds:', studentIds, 'taskIds:', taskIds);
+    // const previousPromise = Promise.resolve()
+    // const algoResult = await previousPromise.then(() => postEvaluation(studentIds, taskIds))
     const algoResult = await postEvaluation(studentIds, taskIds)
     setTaskAbilityList(algoResult);
 
     const flagsData = await getingDataFlags();
 
     // Check if there are any matching task IDs in flagsData
-    const hasMatchingTask = taskIds.every((taskId) => {
-      return flagsData.some(
-        (flag) => flag.taskId === taskId && flag.studentId === worker.id
-      );
-    });
-    console.log("algoResult:", algoResult);
-    if (!hasMatchingTask) {
+    // const hasMatchingTask = taskIds.every((taskId) => {
+    //   return flagsData.some(
+    //     (flag) => flag.taskId === taskId && flag.studentId === worker.id
+    //   );
+    // });
+    // console.log("algoResult:", algoResult);
+    // if (!hasMatchingTask) {
       // If there are no matching task IDs, run the function
-      taskIds.map(async (task) => {
-        try {
-          await postEvaluationEvents(worker.id, task, algoResult.evaluation);
-          setAllFlags(await getingDataFlags());
-        } catch (error) {
-          console.error('Error posting evaluation event:', error);
-        }
-      });
-    } else setAllFlags(flagsData);
+      // taskIds.map(async (task) => {
+      //   try {
+      //     await postEvaluationEvents(worker.id, task, algoResult.evaluation);
+      //     setAllFlags(await getingDataFlags());
+      //   } catch (error) {
+      //     console.error('Error posting evaluation event:', error);
+      //   }
+      // });
+
+      // taskIds.reduce(async (previousPromise, task) => {
+      //   await previousPromise;
+      //   try {
+      //     console.log(worker.id, task, algoResult.evaluation);
+      //     await postEvaluationEvents(worker.id, task, algoResult.evaluation);
+      //     console.log('Evaluation event posted successfully');
+      //     setAllFlags(await getingDataFlags());
+      //   } catch (error) {
+      //     console.error('Error posting evaluation event:', error);
+      //   }
+      // }, Promise.resolve());
+
+    // } else 
+    setAllFlags(flagsData);
   };
 
   useEffect(() => {
@@ -1836,9 +1852,8 @@ function Forms() {
       <div style={{ width: '100%' }}>
         <div>
           <button
-            className={`switch-button-forms ${
-              language === 'hebrew' ? 'hebrew' : 'english'
-            }`}
+            className={`switch-button-forms ${language === 'hebrew' ? 'hebrew' : 'english'
+              }`}
             onClick={() =>
               setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
             }

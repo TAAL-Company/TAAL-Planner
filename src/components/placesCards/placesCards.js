@@ -136,7 +136,7 @@ const PlacesCards = () => {
       let picture_url;
       try {
         if (picture) {
-          picture_url = await uploadFiles(picture, 'Site media/picture', name);
+          picture_url = await uploadFiles(picture, 'Site media/picture', nameInEnglish);
           const place = {
             name,
             description,

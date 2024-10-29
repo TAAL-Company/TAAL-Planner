@@ -25,6 +25,9 @@ import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
 import InputFileUpload from '../InputFileUpload/InputFileUpload';
+import { FcMultipleInputs } from 'react-icons/fc';
+import BasicSelect from '../Gallery/BasicSelect';
+import { getBlobsInContainer } from '../azureBlob';
 
 const Coaches = () => {
   const [users, setUsers] = useState([]); // State to store the users
@@ -60,6 +63,69 @@ const Coaches = () => {
       setDeleteSuccess('המחיקה בוצעה בהצלחה!');
     }
   })
+
+  const [Foldersite, setFoldersite] = useState('general');
+  const [blobList, setBlobList] = useState([]);
+  const [sortedUrls, setSortedUrls] = useState({});
+  const [folderNames, setFolderNames] = useState([]);
+
+  useEffect(async () => {
+    // prepare UI for results
+    setBlobList(await getBlobsInContainer());
+  }, []);
+  useEffect(() => {
+    for (const key in blobList) {
+      const url = blobList[key];
+      const parts = url.split('/');
+      let folderName = 'general';
+
+      const imageIndex = parts.indexOf('images');
+      if (imageIndex !== -1 && imageIndex + 2 < parts.length) {
+        folderName = parts[imageIndex + 1];
+      }
+
+      let fileType = getFileType(url);
+      let fileTypeFolder = '';
+
+      if (['jpeg', 'png', 'jpg', 'webp'].includes(fileType)) {
+        fileTypeFolder = 'pictures';
+      } else if (['aac', 'mp3', 'wav'].includes(fileType)) {
+        fileTypeFolder = 'audio';
+      }
+
+      sortedUrls[folderName] = sortedUrls[folderName] || {};
+      sortedUrls[folderName][fileTypeFolder] = sortedUrls[folderName][fileTypeFolder] || {};
+      sortedUrls[folderName][fileTypeFolder][key] = url;
+    }
+    console.log("sortedUrls", Object.keys(sortedUrls));
+    console.log("sortedUrls- 2", sortedUrls);
+
+    if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
+      setFolderNames(Object.keys(sortedUrls));
+    } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "STUDENT" || JSON.parse(sessionStorage.getItem('jwt'))?.role === "EDITOR") {
+      const usersites = JSON.parse(sessionStorage.getItem('jwt')).sites;
+      console.log("usersites", usersites);
+      const filteredSortedUrls = Object.keys(sortedUrls).filter(url => {
+        console.log("url", url);
+        return usersites.some(site => site.nameInEnglish === url)
+      });
+      console.log(filteredSortedUrls);
+      setFolderNames(filteredSortedUrls);
+    }
+  }, [blobList]);
+
+  const getFileType = (url) => {
+    if (typeof url === 'string') {
+      const parts = url.split('.');
+      const extension = parts[parts.length - 1];
+      const fileType = extension.toLowerCase();
+
+      return fileType;
+    } else {
+      return 'unknown';
+    }
+  };
+
 
   useEffect(() => { }, [openThreeDotsVertical]);
 
@@ -170,7 +236,7 @@ const Coaches = () => {
     } else {
       let picture_url;
       try {
-        if (picture) picture_url = await uploadFiles(picture, 'Coaches media/picture'); //await uploadImageGD(picture)
+        if (picture) picture_url = await uploadFiles(picture, 'Coaches media/picture', Foldersite); //await uploadImageGD(picture)
 
         const user = {
           email,
@@ -319,6 +385,13 @@ const Coaches = () => {
               {language === 'Hebrew' ? 'תמונה:' : 'Picture:'}
             </div>
             <div>
+              <h6>
+                {language === 'English'
+                  ? 'Select where to save picture / voice'
+                  : ':בחר היכן לשמור תמונה/קול'}
+                <FcMultipleInputs />
+              </h6>
+              <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
               <InputFileUpload setPicture={setPicture} language={language === 'Hebrew' ? 'English' : 'Hebrew'} />
               {/* <input
                 label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}

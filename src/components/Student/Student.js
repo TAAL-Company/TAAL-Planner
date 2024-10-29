@@ -28,6 +28,9 @@ import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
 import { Password } from '@mui/icons-material';
 import InputFileUpload from '../InputFileUpload/InputFileUpload';
+import BasicSelect from '../Gallery/BasicSelect';
+import { FcMultipleInputs } from 'react-icons/fc';
+import { getBlobsInContainer } from '../azureBlob';
 
 const Cards = () => {
   const [users, setUsers] = useState([]);
@@ -48,18 +51,80 @@ const Cards = () => {
   const [addUserButtonError, setAddUserButtonError] = useState('עליך למלא שדות חובה המסומנים בכוכבית');
   const [deleteSuccess, setDeleteSuccess] = useState(' המחיקה בוצעה בהצלחה!');
 
-  useEffect(()=>{
+  const [Foldersite, setFoldersite] = useState('general');
+  const [blobList, setBlobList] = useState([]);
+  const [sortedUrls, setSortedUrls] = useState({});
+  const [folderNames, setFolderNames] = useState([]);
+
+  useEffect(async () => {
+    // prepare UI for results
+    setBlobList(await getBlobsInContainer());
+  }, []);
+  useEffect(() => {
+    for (const key in blobList) {
+      const url = blobList[key];
+      const parts = url.split('/');
+      let folderName = 'general';
+
+      const imageIndex = parts.indexOf('images');
+      if (imageIndex !== -1 && imageIndex + 2 < parts.length) {
+        folderName = parts[imageIndex + 1];
+      }
+
+      let fileType = getFileType(url);
+      let fileTypeFolder = '';
+
+      if (['jpeg', 'png', 'jpg', 'webp'].includes(fileType)) {
+        fileTypeFolder = 'pictures';
+      } else if (['aac', 'mp3', 'wav'].includes(fileType)) {
+        fileTypeFolder = 'audio';
+      }
+
+      sortedUrls[folderName] = sortedUrls[folderName] || {};
+      sortedUrls[folderName][fileTypeFolder] = sortedUrls[folderName][fileTypeFolder] || {};
+      sortedUrls[folderName][fileTypeFolder][key] = url;
+    }
+    console.log("sortedUrls", Object.keys(sortedUrls));
+    console.log("sortedUrls- 2", sortedUrls);
+
+    if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
+      setFolderNames(Object.keys(sortedUrls));
+    } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "STUDENT" || JSON.parse(sessionStorage.getItem('jwt'))?.role === "EDITOR") {
+      const usersites = JSON.parse(sessionStorage.getItem('jwt')).sites;
+      console.log("usersites", usersites);
+      const filteredSortedUrls = Object.keys(sortedUrls).filter(url => {
+        console.log("url", url);
+        return usersites.some(site => site.nameInEnglish === url)
+      });
+      console.log(filteredSortedUrls);
+      setFolderNames(filteredSortedUrls);
+    }
+  }, [blobList]);
+
+  const getFileType = (url) => {
+    if (typeof url === 'string') {
+      const parts = url.split('.');
+      const extension = parts[parts.length - 1];
+      const fileType = extension.toLowerCase();
+
+      return fileType;
+    } else {
+      return 'unknown';
+    }
+  };
+
+  useEffect(() => {
     setLanguage(sessionStorage.getItem('language'));
 
-    if (sessionStorage.getItem('language')=='English') {
+    if (sessionStorage.getItem('language') == 'English') {
       setAddUserButtonText('Add a new employee');
       setAddUserButtonError('Please fill in the required fields marked with *');
       setDeleteSuccess('The deletion was successful!');
-    }else if (sessionStorage.getItem('language')=='Hebrew') {
+    } else if (sessionStorage.getItem('language') == 'Hebrew') {
       setAddUserButtonText('הוסף עובד חדש');
       setAddUserButtonError('עליך למלא שדות חובה המסומנים בכוכבית');
       setDeleteSuccess('המחיקה בוצעה בהצלחה!');
-    }else{
+    } else {
       setAddUserButtonText('הוסף עובד חדש');
       setAddUserButtonError('עליך למלא שדות חובה המסומנים בכוכבית');
       setDeleteSuccess('המחיקה בוצעה בהצלחה!');
@@ -198,7 +263,7 @@ const Cards = () => {
     } else {
       let picture_url;
       try {
-        if (picture) picture_url = await uploadFiles(picture, 'Worker media/picture'); //await uploadImageGD(picture)
+        if (picture) picture_url = await uploadFiles(picture, 'Worker media/picture',Foldersite); //await uploadImageGD(picture)
 
         const user = {
           email,
@@ -209,7 +274,7 @@ const Cards = () => {
           picture_url,
           Password
         };
-        console.log('user : ',user);
+        console.log('user : ', user);
         if (requestForEditing === 'edit' || requestForEditing === 'details') {
           const userToUpdate = users[studentForAction];
           updateUser(userToUpdate.id, user).then((updatedUser) => {
@@ -225,7 +290,7 @@ const Cards = () => {
             setUsers(newUsers);
           });
         } else {
-          console.log('user : ',user);
+          console.log('user : ', user);
           insertUser(user).then((data) => {
             data.picture_url = user.picture_url;
             updateUser(data.id, data).then((updatedUser) => {
@@ -253,10 +318,10 @@ const Cards = () => {
   useEffect(() => {
     const fetchData = async () => {
       const usersData = await getingData_Users();
-      if(JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN"){
+      if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
         setUsers(usersData);
-      }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR"){
-        const usersDatafilterbycoachId = usersData.filter((user)=>user.coachId == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
+        const usersDatafilterbycoachId = usersData.filter((user) => user.coachId == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
         setUsers(usersDatafilterbycoachId);
       }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT"){
         const usersDatafilterbycoachId = usersData.filter((user)=>user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
@@ -421,7 +486,14 @@ const Cards = () => {
               {language === 'Hebrew' ? 'תמונה:' : 'Picture:'}
             </div>
             <div>
-            <InputFileUpload setPicture={setPicture} language={language==='Hebrew'? 'English':'Hebrew'} />
+            <h6>
+              {language === 'English'
+                ? 'Select where to save picture / voice'
+                : ':בחר היכן לשמור תמונה/קול'}
+              <FcMultipleInputs />
+            </h6>
+            <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
+              <InputFileUpload setPicture={setPicture} language={language === 'Hebrew' ? 'English' : 'Hebrew'} />
               {/* <input
                 label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
                 accept='image/*'

@@ -37,7 +37,7 @@ import {
 import { useEffect } from 'react';
 import { id } from 'date-fns/locale';
 import predictions from './predictions.json';
-import TaskAbility2 from './FormsComponents/data_grid/Taskability2';
+// import TaskAbility2 from './FormsComponents/data_grid/Taskability2';
 import DataTableRTL2 from './FormsComponents/data_grid/DataTableRTL2';
 
 function Forms() {

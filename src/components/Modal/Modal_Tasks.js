@@ -43,7 +43,7 @@ let myPlacesChoiceTemp = [];
 //--------------------------
 function Modal_Tasks(props) {
   console.log('props:', props);
-  
+
   const [, setDone] = useState(false);
   const [get_title, setTitle] = useState(props.title);
   const [getDescription, setDescription] = useState(props.subtitle);
@@ -203,7 +203,7 @@ function Modal_Tasks(props) {
         }
         console.log('newTask: ', newTask);
         console.log('uuid: ', props.uuid);
-        
+
         update_task(props.uuid, newTask);
       } else {
         Post_Task(picture_url, audio_url);
@@ -387,6 +387,9 @@ function Modal_Tasks(props) {
     console.log("data", data);
 
   }, [multi_language_description, data]);
+
+  const [showForm, setShowForm] = useState(false);
+
   return (
     <>
       {!props.help && !props.siteSelected ? (
@@ -481,62 +484,81 @@ function Modal_Tasks(props) {
                     value={estimatedTimeSeconds}
                   />
                 </div>
-                <form id='IPU' className='w3-container'>
+                <label>
+                <input
+                    type="checkbox"
+                    checked={showForm}
+                    onChange={() => setShowForm(!showForm)}
+                    style={{
+                      width: '85px',
+                      height: '20px',
+                      paddingRight: '20px',
+                      direction: props.language === 'English' ? 'rtl' : 'ltr',
+                    }}
+                  />
+                  {props.language === 'English' ? 'הוסף נתונים נוספים' : 'Add additional data'}
+
+                </label>
+                {showForm && (
+                <form id='IPU' className='w3-container'  >
+                  <form id='IPU' className='w3-container'>
+                    <h6>
+                      {props.language !== 'English'
+                        ? 'Write a weight'
+                        : ':רשום משקל '}
+                      <RiAsterisk style={{ color: 'red' }} />
+                    </h6>
+                    <p>
+                      <input
+                        required={true}
+                        type='text'
+                        onChange={handleDataEntryLabelInput}
+                        style={{
+                          width: '100%',
+                          height: '38px',
+                          paddingRight: '20px',
+                          direction: props.language === 'English' ? 'rtl' : 'ltr',
+                        }}
+                        value={dataEntryLabel}
+                      ></input>
+                    </p>
+                  </form>
+                  <form id='IPU' className='w3-container'>
+                    <h6>
+                      {props.language !== 'English'
+                        ? 'Write Data Entry Validation'
+                        : ':רשום את תווית הנתונים '}
+                      <RiAsterisk style={{ color: 'red' }} />
+                    </h6>
+                    <p>
+                      <input
+                        required={true}
+                        type='text'
+                        onChange={handleDataEntryValidationInput}
+                        style={{
+                          width: '100%',
+                          height: '38px',
+                          paddingRight: '20px',
+                          direction: props.language === 'English' ? 'rtl' : 'ltr',
+                        }}
+                        value={dataEntryValidation}
+                      ></input>
+                    </p>
+                  </form>
                   <h6>
                     {props.language !== 'English'
-                      ? 'Write a weight'
-                      : ':רשום משקל '}
-                    <RiAsterisk style={{ color: 'red' }} />
+                      ? 'Select data entry type'
+                      : ':בחר סוג נתונים '}
                   </h6>
-                  <p>
-                    <input
-                      required={true}
-                      type='text'
-                      onChange={handleDataEntryLabelInput}
-                      style={{
-                        width: '100%',
-                        height: '38px',
-                        paddingRight: '20px',
-                        direction: props.language === 'English' ? 'rtl' : 'ltr',
-                      }}
-                      value={dataEntryLabel}
-                    ></input>
-                  </p>
+                  <BasicSelect setFoldersite={setdataEntryType} folderName={dataEntryType} folderlist={dataEntryTypelist} />
+                  <h6>
+                    {props.language !== 'English'
+                      ? 'Select type of task'
+                      : ':בחר סוג משימה '}
+                  </h6>
+                  <BasicSelect setFoldersite={setTaskType} folderName={taskType} folderlist={TaskTypelist} />
                 </form>
-                <form id='IPU' className='w3-container'>
-                  <h6>
-                    {props.language !== 'English'
-                      ? 'Write Data Entry Validation'
-                      : ':רשום את תווית הנתונים '}
-                    <RiAsterisk style={{ color: 'red' }} />
-                  </h6>
-                  <p>
-                    <input
-                      required={true}
-                      type='text'
-                      onChange={handleDataEntryValidationInput}
-                      style={{
-                        width: '100%',
-                        height: '38px',
-                        paddingRight: '20px',
-                        direction: props.language === 'English' ? 'rtl' : 'ltr',
-                      }}
-                      value={dataEntryValidation}
-                    ></input>
-                  </p>
-                </form> 
-                 <h6>
-                  {props.language !== 'English'
-                    ? 'Select data entry type'
-                    : ':בחר סוג נתונים '}
-                </h6>
-                <BasicSelect setFoldersite={setdataEntryType} folderName={dataEntryType} folderlist={dataEntryTypelist} />
-                <h6>
-                  {props.language !== 'English'
-                    ? 'Select type of task'
-                    : ':בחר סוג משימה '}
-                </h6>
-                <BasicSelect setFoldersite={setTaskType} folderName={taskType} folderlist={TaskTypelist} /> 
+                )}
                 <h6>
                   {props.language !== 'English'
                     ? 'Select where to save picture / voice'

@@ -74,7 +74,7 @@ const Tasks = (props) => {
     imageData,
     audioData,
     mySiteId,
-    estimatedTimeSeconds = 20
+    estimatedTimeSeconds
   ) => {
     let station = props.stationArray.find(
       (s) => s.id === props.chosenStation.id
@@ -306,7 +306,7 @@ const Tasks = (props) => {
               ? props.tasksOfChosenStation.find(
                 (task) => task.id === openThreeDotsVertical
               ).estimatedTimeSeconds
-              : 20
+              : 5
           }
           picture={
             openThreeDotsVertical !== -1

@@ -263,7 +263,7 @@ const Cards = () => {
     } else {
       let picture_url;
       try {
-        if (picture) picture_url = await uploadFiles(picture, 'Worker media/picture',Foldersite); //await uploadImageGD(picture)
+        if (picture) picture_url = await uploadFiles(picture, 'Worker media/picture', Foldersite); //await uploadImageGD(picture)
 
         const user = {
           email,
@@ -323,8 +323,8 @@ const Cards = () => {
       } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
         const usersDatafilterbycoachId = usersData.filter((user) => user.coachId == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
         setUsers(usersDatafilterbycoachId);
-      }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT"){
-        const usersDatafilterbycoachId = usersData.filter((user)=>user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
+        const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
         setUsers(usersDatafilterbycoachId);
       }
     };
@@ -486,13 +486,13 @@ const Cards = () => {
               {language === 'Hebrew' ? 'תמונה:' : 'Picture:'}
             </div>
             <div>
-            <h6>
-              {language === 'English'
-                ? 'Select where to save picture / voice'
-                : ':בחר היכן לשמור תמונה/קול'}
-              <FcMultipleInputs />
-            </h6>
-            <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
+              <h6>
+                {language === 'English'
+                  ? 'Select where to save picture / voice'
+                  : ':בחר היכן לשמור תמונה/קול'}
+                <FcMultipleInputs />
+              </h6>
+              <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
               <InputFileUpload setPicture={setPicture} language={language === 'Hebrew' ? 'English' : 'Hebrew'} />
               {/* <input
                 label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
@@ -611,4 +611,3 @@ const Cards = () => {
 };
 
 export default Cards;
-

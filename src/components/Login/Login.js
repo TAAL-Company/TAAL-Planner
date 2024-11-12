@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import LoginAPI from './LoginAPI';
 import logo from '../../Pictures/loginLogoTaal.svg';
 import userLogo from '../../Pictures/user-logo.png';
@@ -6,6 +6,7 @@ import lockLogo from '../../Pictures/lock-logo.png';
 import './styleLogin.css';
 
 import Checkbox from '@mui/material/Checkbox';
+import { RiEyeLine, RiEyeOffLine } from 'react-icons/ri';
 
 let flagLoading = false;
 
@@ -35,7 +36,7 @@ function Login(props) {
   }, []);
 
   const handlecheckedChange = (event) => {
-    
+
     const checkedLanguage = event.target.name;
 
     sessionStorage.setItem('language', checkedLanguage);
@@ -74,7 +75,7 @@ function Login(props) {
     setpasswordLanguage('סיסמה');
     setUsernameLanguage('שם משתמש');
   };
-  const english = () => { 
+  const english = () => {
     setLanguage('english');
     setpasswordLanguage('Password');
     setUsernameLanguage('Username');
@@ -84,6 +85,12 @@ function Login(props) {
     setLanguage('arabic');
     setpasswordLanguage('كلمة المرور');
     setUsernameLanguage('اسم المستخدم');
+  };
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(prevShowPassword => !prevShowPassword);
   };
 
   return (
@@ -118,17 +125,17 @@ function Login(props) {
                   </div> */}
                   <div className='p-2'>
                     <div className='login'>
-                      
+
                       <div className='input-container'>
                         {language === 'english' ? (
                           <div className={`img-container ${language === 'english' ? 'english' : ''}`}>
-                          <img
-                            src={userLogo}
-                            className='user-logo'
-                            alt='logo'
-                          ></img>
-                        </div>
-                        ):(<div></div>)}
+                            <img
+                              src={userLogo}
+                              className='user-logo'
+                              alt='logo'
+                            ></img>
+                          </div>
+                        ) : (<div></div>)}
                         <input
                           className={`inputLogin ${language === 'english' ? 'english' : ''}`}
                           type='text'
@@ -139,27 +146,30 @@ function Login(props) {
                         />
                         {language !== 'english' ? (
                           <div className={`img-container ${language === 'english' ? 'english' : ''}`}>
-                          <img
-                            src={userLogo}
-                            className='user-logo'
-                            alt='logo'
-                          ></img>
-                        </div>
-                        ):(<div></div>)}
+                            <img
+                              src={userLogo}
+                              className='user-logo'
+                              alt='logo'
+                            ></img>
+                          </div>
+                        ) : (<div></div>)}
                       </div>
                       <div className={`input-container ${language === 'english' ? 'english' : ''}`}>
-                      {language === 'english' ? (
+                        {language === 'english' ? (
                           <div className={`img-container ${language === 'english' ? 'english' : ''}`}>
-                          <img
-                            src={lockLogo}
-                            className='user-logo'
-                            alt='logo'
-                          ></img>
-                        </div>
-                        ):(<div></div>)}
+                            <img src={lockLogo} className='user-logo' alt='logo' />
+                          </div>
+                        ) : (
+                          <div>
+                            <div className={`img-container ${language !== 'english' ? 'english' : ''}`} onClick={togglePasswordVisibility} style={{ cursor: 'pointer', marginLeft: '10px' , color: 'white'}}>
+                              {showPassword ? <RiEyeOffLine /> : <RiEyeLine />}
+                            </div>
+                          </div>
+                        )}
+
                         <input
                           className={`inputLogin ${language === 'english' ? 'english' : ''}`}
-                          type='password'
+                          type={showPassword ? 'text' : 'password'}
                           placeholder={passwordLanguage}
                           name='pass'
                           value={loginDetails.pass}
@@ -167,13 +177,15 @@ function Login(props) {
                         />
                         {language !== 'english' ? (
                           <div className={`img-container ${language === 'english' ? 'english' : ''}`}>
-                          <img
-                            src={lockLogo}
-                            className='user-logo'
-                            alt='logo'
-                          ></img>
-                        </div>
-                        ):(<div></div>)}
+                            <img src={lockLogo} className='user-logo' alt='logo' />
+                          </div>
+                        ) : (
+                          <div>
+                            <div className={`img-container ${language !== 'english' ? 'english' : ''}`} onClick={togglePasswordVisibility} style={{ cursor: 'pointer', marginRight: '10px' , color: 'white'}}>
+                              {showPassword ? <RiEyeOffLine /> : <RiEyeLine />}
+                            </div>
+                          </div>
+                        )}
                       </div>
 
                       <div className='input-container'>
@@ -201,7 +213,7 @@ function Login(props) {
                         <input
                           type='submit'
                           onClick={handleSubmit}
-                          value={ language === 'english' ? 'Login' : 'התחברות'}
+                          value={language === 'english' ? 'Login' : 'התחברות'}
                         />
                       </div>
                       <div className='forgetPassword'>{language === 'english' ? '?Forget Password' : 'שכחת סיסמה?'}</div>

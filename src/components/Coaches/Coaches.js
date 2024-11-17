@@ -28,6 +28,7 @@ import InputFileUpload from '../InputFileUpload/InputFileUpload';
 import { FcMultipleInputs } from 'react-icons/fc';
 import BasicSelect from '../Gallery/BasicSelect';
 import { getBlobsInContainer } from '../azureBlob';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 const Coaches = () => {
   const [users, setUsers] = useState([]); // State to store the users
@@ -45,6 +46,7 @@ const Coaches = () => {
   const [addUserButtonError, setAddUserButtonError] = useState('עליך למלא שדות חובה המסומנים בכוכבית');
   const [deleteSuccess, setDeleteSuccess] = useState(' המחיקה בוצעה בהצלחה!');
 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLanguage(sessionStorage.getItem('language'));
@@ -271,36 +273,43 @@ const Coaches = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const usersData = await getingData_coaches();
-      if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
-        setUsers(usersData);
-      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
-        const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
-        setUsers(usersDatafilterbycoachId);
-      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
-        const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).coachId && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
-        setUsers(usersDatafilterbycoachId);
+      try {
+        setLoading(true);
+        const usersData = await getingData_coaches();
+        if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
+          setUsers(usersData);
+        } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
+          const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+          setUsers(usersDatafilterbycoachId);
+        } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
+          const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).coachId && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+          setUsers(usersDatafilterbycoachId);
+        }
+      } catch (error) {
+        console.error(error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, [updateAdd]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const usersData = await getingData_coaches();
-      if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
-        setUsers(usersData);
-      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
-        const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
-        setUsers(usersDatafilterbycoachId);
-      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
-        const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).coachId && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
-        setUsers(usersDatafilterbycoachId);
-      }
-    }
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const usersData = await getingData_coaches();
+  //     if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
+  //       setUsers(usersData);
+  //     } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
+  //       const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+  //       setUsers(usersDatafilterbycoachId);
+  //     } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
+  //       const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).coachId && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+  //       setUsers(usersDatafilterbycoachId);
+  //     }
+  //   }
+  //   fetchData();
+  // }, []);
 
   const clickOnhreeDotsVerticaIcont = (value) => {
     if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
@@ -314,6 +323,14 @@ const Coaches = () => {
 
   return (
     <CacheProvider value={cache}>
+            <div>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress size="10rem" color="info" />
+        </Backdrop>
+      </div>
       <div
         style={{
           direction: language === 'Hebrew' ? 'rtl' : 'ltr',

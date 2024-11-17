@@ -42,6 +42,7 @@ import InputFileUpload from '../InputFileUpload/InputFileUpload';
 import { FcMultipleInputs } from 'react-icons/fc';
 import BasicSelect from '../Gallery/BasicSelect';
 import { getBlobsInContainer } from '../azureBlob';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 const Editors = () => {
   const [Editors, setEditors] = useState([]); // State to store the users
@@ -66,6 +67,7 @@ const Editors = () => {
 
   const [deleteMessage, setDeleteMessage] = useState('המחיקה בוצעה בהצלחה!');
 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLanguage(sessionStorage.getItem('language'));
@@ -302,12 +304,15 @@ const Editors = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         setSites(await getingData_Places());
         setUsers(await getingData_Users());
         setcoaches(await getingData_coaches());
         // getData();
       } catch (error) {
         console.error(error.message);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -349,6 +354,14 @@ const Editors = () => {
 
   return (
     <CacheProvider value={cache}>
+      <div>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress size="10rem" color="info" />
+        </Backdrop>
+      </div>
       <div
         style={{
           direction: language === 'Hebrew' ? 'rtl' : 'ltr',
@@ -443,13 +456,13 @@ const Editors = () => {
               inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <div>
-            <h6>
-              {language === 'English'
-                ? 'Select where to save picture / voice'
-                : ':בחר היכן לשמור תמונה/קול'}
-              <FcMultipleInputs />
-            </h6>
-            <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
+              <h6>
+                {language === 'English'
+                  ? 'Select where to save picture / voice'
+                  : ':בחר היכן לשמור תמונה/קול'}
+                <FcMultipleInputs />
+              </h6>
+              <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
               <InputFileUpload setPicture={setPicture} language={language === 'Hebrew' ? 'English' : 'Hebrew'} />
               {/* <input
                 label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}

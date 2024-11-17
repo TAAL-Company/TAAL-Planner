@@ -31,6 +31,7 @@ import InputFileUpload from '../InputFileUpload/InputFileUpload';
 import BasicSelect from '../Gallery/BasicSelect';
 import { FcMultipleInputs } from 'react-icons/fc';
 import { getBlobsInContainer } from '../azureBlob';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 const Cards = () => {
   const [users, setUsers] = useState([]);
@@ -55,6 +56,8 @@ const Cards = () => {
   const [blobList, setBlobList] = useState([]);
   const [sortedUrls, setSortedUrls] = useState({});
   const [folderNames, setFolderNames] = useState([]);
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(async () => {
     // prepare UI for results
@@ -317,15 +320,22 @@ const Cards = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const usersData = await getingData_Users();
-      if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
-        setUsers(usersData);
-      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
-        const usersDatafilterbycoachId = usersData.filter((user) => user.coachId == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
-        setUsers(usersDatafilterbycoachId);
-      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
-        const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
-        setUsers(usersDatafilterbycoachId);
+      try {
+        setLoading(true);
+        const usersData = await getingData_Users();
+        if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
+          setUsers(usersData);
+        } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
+          const usersDatafilterbycoachId = usersData.filter((user) => user.coachId == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+          setUsers(usersDatafilterbycoachId);
+        } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
+          const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+          setUsers(usersDatafilterbycoachId);
+        }
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -344,6 +354,14 @@ const Cards = () => {
 
   return (
     <CacheProvider value={cache}>
+      <div>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress size="10rem" color="info" />
+        </Backdrop>
+      </div>
       <div
         style={{
           direction: language === 'Hebrew' ? 'rtl' : 'ltr',

@@ -25,7 +25,10 @@ import createCache from '@emotion/cache';
 import { prefixer } from 'stylis';
 import InputFileUpload from '../InputFileUpload/InputFileUpload';
 
+import { Backdrop, CircularProgress } from '@mui/material';
+
 const PlacesCards = () => {
+  const [Loading, setLoading] = useState(true);
   const [places, setPlaces] = useState([]);
   const [open, setOpen] = useState(false);
   const [picture, setPicture] = useState(null);
@@ -143,7 +146,7 @@ const PlacesCards = () => {
             picture_url,
             nameInEnglish
           };
-  
+
           if (requestForEditing === 'edit' || requestForEditing === 'details') {
             const placeToUpdate = places[studentForAction];
             console.log('placeToUpdate', placeToUpdate);
@@ -202,13 +205,20 @@ const PlacesCards = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const placesData = await getingData_Places();
-      if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
-        setPlaces(placesData);
-      } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR" || JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
-        const placesDatafilterbyId = placesData.filter((place) => place.editors.map((editor) => editor.id).includes(JSON.parse(sessionStorage.getItem('jwt')).id));
-        console.log('placesDatafilterbyId', placesDatafilterbyId);
-        setPlaces(placesDatafilterbyId);
+      try {
+        setLoading(true);
+        const placesData = await getingData_Places();
+        if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
+          setPlaces(placesData);
+        } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR" || JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
+          const placesDatafilterbyId = placesData.filter((place) => place.editors.map((editor) => editor.id).includes(JSON.parse(sessionStorage.getItem('jwt')).id));
+          console.log('placesDatafilterbyId', placesDatafilterbyId);
+          setPlaces(placesDatafilterbyId);
+        }
+      } catch (error) {
+        console.error(error.message);
+      } finally {
+        setLoading(false);
       }
     }
     fetchData();
@@ -216,6 +226,14 @@ const PlacesCards = () => {
 
   return (
     <CacheProvider value={cache}>
+      <div>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={Loading}
+        >
+          <CircularProgress size="10rem" color="info" />
+        </Backdrop>
+      </div>
       <div
         style={{
           direction: language === 'Hebrew' ? 'rtl' : 'ltr',

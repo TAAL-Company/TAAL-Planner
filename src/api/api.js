@@ -204,6 +204,8 @@ export const insertUser = async (user) => {
         coachId: user.coachId || null,
         picture_url: user.picture_url || null,
         password: user.password || "TAAL1234",
+        siteIds: user.sites.map((site) => site.id) || [],
+        routeIds: user.routeIds || [],
       }),
     });
 

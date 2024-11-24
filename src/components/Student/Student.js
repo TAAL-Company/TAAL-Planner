@@ -8,6 +8,7 @@ import {
   post_cognitive_abillities,
   getingData_coaches,
   uploadFiles,
+  getingData_Places,
 } from '../../api/api';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -32,9 +33,12 @@ import BasicSelect from '../Gallery/BasicSelect';
 import { FcMultipleInputs } from 'react-icons/fc';
 import { getBlobsInContainer } from '../azureBlob';
 import { Backdrop, CircularProgress } from '@mui/material';
+import MultipleSelect from './MultipleSelectCheckmarks';
 
 const Cards = () => {
   const [users, setUsers] = useState([]);
+  const [sites, setSites] = useState([]);
+  const [selectedSites, setSelectedSites] = useState([]);
   const [open, setOpen] = useState(false);
   const [openRemove, setOpenRemove] = useState(false);
   const [coaches, setCoaches] = useState([]);
@@ -166,6 +170,7 @@ const Cards = () => {
     setmanager(null);
     setRequestForEditing('');
     setOpenThreeDotsVertical(-1);
+    setSelectedSites([]);
   };
 
   const handleClickOpenRemove = () => {
@@ -260,6 +265,7 @@ const Cards = () => {
     const Password = document.getElementById('password').value;
     // const coach = document.getElementById("coach").value;
     // const coachId = document.getElementById("coach").value;
+    console.log('selectedSites : ', selectedSites);
 
     if (email === '' || fullName === '') {
       alert(addUserButtonError);
@@ -274,6 +280,7 @@ const Cards = () => {
           name: fullName,
           user_name,
           coachId: coach.id,
+          siteIds: selectedSites.map((site) => (site.id)),
           picture_url,
           Password
         };
@@ -288,6 +295,7 @@ const Cards = () => {
             userToUpdate.coach = updatedUser.data.coach;
             userToUpdate.picture_url = updatedUser.data.picture_url;
             userToUpdate.Password = updatedUser.data.Password;
+            userToUpdate.sites = updatedUser.data.sites;
 
             const newUsers = [...users];
             setUsers(newUsers);
@@ -322,6 +330,7 @@ const Cards = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setSites(await getingData_Places());
         const usersData = await getingData_Users();
         if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
           setUsers(usersData);
@@ -462,6 +471,15 @@ const Cards = () => {
               }
               inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
+            <MultipleSelect 
+            sites={sites} 
+            setSites={setSites} 
+            language={language} 
+            setSelectedSites={setSelectedSites} 
+            selectedSites={
+              openThreeDotsVertical !== -1
+              ? users[openThreeDotsVertical]?.sites
+              : selectedSites}/>
             <Autocomplete
               disablePortal
               id='coach'

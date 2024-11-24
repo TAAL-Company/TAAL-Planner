@@ -6,17 +6,19 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { DataGrid } from '@mui/x-data-grid';
-import { getingData_Users, getingData_coaches } from '../../api/api';
+import { getingData_Users, getingData_coaches, getingData_Places, insertUser } from '../../api/api';
+import { deleteUser, updateUser } from '../../api/api';
 import { useState, useEffect } from 'react';
-import CircularProgress from '@mui/material/CircularProgress';
-import { Button, TextField, MenuItem, Select, InputLabel, FormControl, IconButton, Menu, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Button, MenuItem, IconButton, Menu } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import UserForm from './UserForm';
 
 export default function DataGridDemo() {
   const [users, setUsers] = useState([]);
   const [expandedRows, setExpandedRows] = useState({});
   const [loading, setLoading] = useState(true);
   const [coaches, setCoaches] = useState([]);
+  const [sites, setSites] = useState([]);
   const [newUser, setNewUser] = useState({
     email: '',
     phone: '',
@@ -24,14 +26,13 @@ export default function DataGridDemo() {
     user_name: '',
     coachId: '',
     picture_url: '',
-    Password: '',  // Add Password field
+    Password: '',
   });
-
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false); // State for dialog visibility
-  const [openEditDialog, setOpenEditDialog] = useState(false); // State for edit dialog visibility
+  const [openDialog, setOpenDialog] = useState(false);
+  const [updateduplicateUser, setupdateduplicateUser] = useState(false);
 
   const handleClickMenu = (event, user) => {
     setAnchorEl(event.currentTarget);
@@ -43,21 +44,21 @@ export default function DataGridDemo() {
     setSelectedUser(null);
   };
 
-  const handleClickOpenDialog = () => {
-    setOpenDialog(true); // Open dialog when the user clicks 'Add User'
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setNewUser({});
+    setSelectedUser(null);
+    setAnchorEl(null);
   };
 
-  const handleCloseDialog = () => {
-    setOpenDialog(false); // Close dialog
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
+    setNewUser(newUser);
   };
 
   const handleClickOpenEditDialog = () => {
-    setOpenEditDialog(true); // Open edit dialog
-    setNewUser(selectedUser); // Prepopulate fields with selected user's data
-  };
-
-  const handleCloseEditDialog = () => {
-    setOpenEditDialog(false); // Close dialog
+    setOpenDialog(true);
+    setNewUser(selectedUser);
   };
 
   // Fetch users and coaches data
@@ -66,6 +67,8 @@ export default function DataGridDemo() {
       setLoading(true);
       const usersData = await getingData_Users();
       const coachesData = await getingData_coaches();
+      const sitesData = await getingData_Places();
+      setSites(sitesData);
       setCoaches(coachesData);
 
       const jwt = sessionStorage.getItem('jwt');
@@ -98,10 +101,10 @@ export default function DataGridDemo() {
       if (role === "ADMIN") {
         setUsers(usersWithStatus);
       } else if (role === "EDITOR" && userId) {
-        const filteredUsers = usersWithStatus.filter(user => user.coachId === userId);
+        const filteredUsers = usersWithStatus.filter(user => user.coachId === userId && userId != null);
         setUsers(filteredUsers);
       } else if (role === "STUDENT" && userId) {
-        const filteredUsers = usersWithStatus.filter(user => user.id === userId);
+        const filteredUsers = usersWithStatus.filter(user => user.id === userId && userId != null);
         setUsers(filteredUsers);
       }
 
@@ -109,41 +112,46 @@ export default function DataGridDemo() {
     };
 
     fetchData();
-  }, []);
-
-  // Add a new user
-  const handleAddUser = async () => {
-    const newUserData = { ...newUser, coachId: newUser.coachId };
-    setUsers(prevUsers => [...prevUsers, { ...newUserData, id: new Date().getTime(), active: 0 }]);
-    setNewUser({ email: '', phone: '', name: '', user_name: '', coachId: '', picture_url: '', Password: '' });
-    setOpenDialog(false); // Close dialog after adding user
-  };
-
-  // Update user
-  const handleUpdateUser = () => {
-    if (selectedUser) {
-      setUsers(prevUsers => prevUsers.map(user =>
-        user.id === selectedUser.id ? { ...user, ...newUser } : user
-      ));
-    }
-    setOpenEditDialog(false); // Close the edit dialog
-    handleCloseMenu(); // Close the menu
-  };
+  }, [updateduplicateUser]);
 
   // Delete user
-  const handleDeleteUser = () => {
-    setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUser.id));
-    handleCloseMenu();
+  const handleDeleteUser = async () => {
+    await deleteUser(selectedUser.id).then(() => {
+      setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUser.id));
+      handleCloseMenu();
+    });
   };
 
   // Duplicate user
-  const handleDuplicateUser = () => {
+  const handleDuplicateUser = async () => {
     const userToDuplicate = users.find(user => user.id === selectedUser.id);
+
+    const userDuplicatedata = {
+      email: userToDuplicate.email,
+      user_name: userToDuplicate.user_name,
+      name: userToDuplicate.name,
+      phone: userToDuplicate.phone,
+      cognitiveProfileId:
+        userToDuplicate.cognitiveProfile?.id || '',
+      sites: userToDuplicate.sites,
+      routeIds:
+        userToDuplicate.routes.map((routeId) => (routeId.id)) || [],
+      coachId: userToDuplicate.coach?.id || '',
+      taskIds:
+        userToDuplicate.tasks.map((taskId) => ({
+          id: taskId?.id,
+        })) || [],
+      picture_url: userToDuplicate.picture_url || '',
+    };
+
     if (userToDuplicate) {
-      const duplicatedUser = { ...userToDuplicate, id: new Date().getTime() };
-      setUsers(prevUsers => [...prevUsers, duplicatedUser]);
+      const userDuplicatedatawithname = { ...userDuplicatedata, name: userToDuplicate.name + '-' + new Date().getTime() };
+      insertUser(userDuplicatedatawithname).then((data) => {
+        setupdateduplicateUser(!updateduplicateUser);
+        // setUsers(prevUsers => [...prevUsers, userDuplicatedatawithname]);
+        handleCloseMenu();
+      })
     }
-    handleCloseMenu();
   };
 
   // Expand toggle for rows
@@ -158,7 +166,7 @@ export default function DataGridDemo() {
   const getRowsWithRoutes = () => {
     const rows = [];
     users.forEach((user) => {
-      rows.push(user);
+      rows.push(user); // Push the main user row
       if (expandedRows[user.id]) {
         // Add routes as additional rows for expanded user
         user.routes.forEach((route, index) => {
@@ -171,10 +179,13 @@ export default function DataGridDemo() {
             role: '',
             cognitiveProfile: '',
             coach: '',
-            picture_url: '',
+            picture_url: null,
             routeName: route.name,
             routeOnlyOnce: route.OnlyOnce ? 'Yes' : 'No',
             isRoute: true, // Mark this row as a route row
+            menu: null, // Include placeholder for menu
+            expand: null, // Include placeholder for expand
+            active: null, // Placeholder for active
           });
         });
       }
@@ -184,21 +195,22 @@ export default function DataGridDemo() {
 
   // Columns for the DataGrid
   const columns = [
-    { field: 'id', headerName: 'ID' },
+    // { field: 'id', headerName: 'ID', width: 300 },
     {
       field: 'picture_url',
       headerName: 'Avatar',
-      width: 100,
-      renderCell: (params) => (
-        <Avatar alt="User Avatar" src={params.value} />
-      ),
+      width: 70,
+      renderCell: (params) => {
+        if (params.row.isRoute) return null; // Skip avatar rendering for route rows
+        return <Avatar alt="User Avatar" src={params.value} />;
+      },
     },
     { field: 'user_name', headerName: 'Username', width: 150, editable: true },
     { field: 'email', headerName: 'Email', width: 200, editable: true },
     { field: 'name', headerName: 'Name', width: 150, editable: true },
     { field: 'phone', headerName: 'Phone', width: 150, editable: true },
     { field: 'role', headerName: 'Role', width: 120 },
-    { field: 'cognitiveProfile', headerName: 'Cognitive Profile', width: 200 },
+    // { field: 'cognitiveProfile', headerName: 'Cognitive Profile', width: 200 },
     {
       field: 'coach',
       headerName: 'Coach Name',
@@ -213,6 +225,7 @@ export default function DataGridDemo() {
       headerName: 'Online',
       width: 120,
       renderCell: (params) => {
+        if (params.row.isRoute) return null; // Skip active status for route rows
         return params.value ? (
           <CheckCircleIcon style={{ color: 'green' }} />
         ) : (
@@ -225,6 +238,7 @@ export default function DataGridDemo() {
       headerName: '',
       width: 50,
       renderCell: (params) => {
+        if (params.row.isRoute) return null; // Skip expand icon for route rows
         return (
           <div onClick={() => handleRowExpandToggle(params.id)}>
             {expandedRows[params.id] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
@@ -236,11 +250,14 @@ export default function DataGridDemo() {
       field: 'menu',
       headerName: '',
       width: 50,
-      renderCell: (params) => (
-        <IconButton onClick={(e) => handleClickMenu(e, params.row)}>
-          <MoreVertIcon />
-        </IconButton>
-      ),
+      renderCell: (params) => {
+        if (params.row.isRoute) return null; // Skip menu for route rows
+        return (
+          <IconButton onClick={(e) => handleClickMenu(e, params.row)}>
+            <MoreVertIcon />
+          </IconButton>
+        );
+      },
     },
   ];
 
@@ -252,15 +269,15 @@ export default function DataGridDemo() {
 
   return (
     <>
+      <Button variant="contained" color="primary" onClick={handleClickOpenDialog}>
+        Add User
+      </Button>
       <Box style={{ height: 600, width: '100%' }}>
-        <Button variant="contained" color="primary" onClick={handleClickOpenDialog}>
-          Add User
-        </Button>
         <DataGrid
           rows={getRowsWithRoutes()}
           columns={[...columns, ...customColumns]}
-          pageSize={5}
-          rowsPerPageOptions={[5]}
+          pageSize={100}
+          rowsPerPageOptions={[100]}
           loading={loading}
         />
         <Menu
@@ -272,106 +289,17 @@ export default function DataGridDemo() {
           <MenuItem onClick={handleDeleteUser}>Delete</MenuItem>
           <MenuItem onClick={handleDuplicateUser}>Duplicate</MenuItem>
         </Menu>
+
+        <UserForm
+          open={openDialog}
+          handleCloseDialog={handleCloseDialog}
+          title="Add User"
+          coaches={coaches}
+          initialValues={newUser}
+          setUsers={setUsers}
+          sites={sites}
+        />
       </Box>
-
-      {/* Add User Dialog */}
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Add New User</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="Username"
-            fullWidth
-            value={newUser.user_name}
-            onChange={(e) => setNewUser({ ...newUser, user_name: e.target.value })}
-            margin="normal"
-          />
-          <TextField
-            label="Email"
-            fullWidth
-            value={newUser.email}
-            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-            margin="normal"
-          />
-          <TextField
-            label="Phone"
-            fullWidth
-            value={newUser.phone}
-            onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
-            margin="normal"
-          />
-          <TextField
-            label="Password"
-            type="password"  // Set type to 'password' for secure input
-            fullWidth
-            value={newUser.Password}
-            onChange={(e) => setNewUser({ ...newUser, Password: e.target.value })}
-            margin="normal"
-          />
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Coach</InputLabel>
-            <Select
-              value={newUser.coachId}
-              onChange={(e) => setNewUser({ ...newUser, coachId: e.target.value })}
-            >
-              {coaches.map((coach) => (
-                <MenuItem key={coach.id} value={coach.id}>
-                  {coach.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </DialogContent>
-
-        <DialogActions>
-          <Button onClick={handleCloseDialog}>Cancel</Button>
-          <Button onClick={handleAddUser}>Add</Button>
-        </DialogActions>
-      </Dialog>
-
-      {/* Edit User Dialog */}
-      <Dialog open={openEditDialog} onClose={handleCloseEditDialog}>
-        <DialogTitle>Edit User</DialogTitle>
-        <DialogContent>
-          <TextField
-            label="Username"
-            fullWidth
-            value={newUser.user_name}
-            onChange={(e) => setNewUser({ ...newUser, user_name: e.target.value })}
-            margin="normal"
-          />
-          <TextField
-            label="Email"
-            fullWidth
-            value={newUser.email}
-            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-            margin="normal"
-          />
-          <TextField
-            label="Phone"
-            fullWidth
-            value={newUser.phone}
-            onChange={(e) => setNewUser({ ...newUser, phone: e.target.value })}
-            margin="normal"
-          />
-          <FormControl fullWidth margin="normal">
-            <InputLabel>Coach</InputLabel>
-            <Select
-              value={newUser.coachId}
-              onChange={(e) => setNewUser({ ...newUser, coachId: e.target.value })}
-            >
-              {coaches.map((coach) => (
-                <MenuItem key={coach.id} value={coach.id}>
-                  {coach.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseEditDialog}>Cancel</Button>
-          <Button onClick={handleUpdateUser}>Update</Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 }

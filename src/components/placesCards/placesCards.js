@@ -3,6 +3,11 @@ import {
   deleteSites,
   getingData_Places,
   insertSite,
+  insertRoute,
+  getingDataStationbyId,
+  insertTask,
+  insertStation,
+  getingData_RoutesbyIds,
   updateSite,
   uploadFiles,
 } from '../../api/api';
@@ -103,29 +108,116 @@ const PlacesCards = () => {
   };
 
   const duplicatePlace = async () => {
-    const PlaceToDuplicate = {
+    setLoading(true);
+    let newTasksID = [];
+    let newStationsID = [];
+    let newRoutesID = [];
+
+    // Step 1: Prepare site duplication details
+    let placeToDuplicate = {
       name: places[openThreeDotsVertical].name,
       nameInEnglish: places[openThreeDotsVertical].nameInEnglish,
       description: places[openThreeDotsVertical].description,
-      picture_url: places[openThreeDotsVertical].picture_url || '',
+      picture_url: places[openThreeDotsVertical].picture_url,
+      studentIds: [],
+      editorIds: [],
+      taskIds: [],
+      routeIds: [],
+      stationIds: [],
     };
-    try {
-      if (requestForEditing === 'duplication') {
-        insertSite(PlaceToDuplicate).then((data) => {
-          data.picture_url = PlaceToDuplicate.picture_url;
-          updateSite(data.id, data).then((updatedSite) => {
-            setPlaces((prev) => [updatedSite.data, ...prev]);
-            setupdateAdd(true);
-          });
-        });
-        setupdateAdd(false);
-      }
-    } catch (error) {
-      console.error(error);
-    }
 
-    setOpenThreeDotsVertical(-1);
-    setRequestForEditing('');
+    try {
+      // Insert the duplicated site
+      const siteInfo = await insertSite(placeToDuplicate);
+
+      // Step 2: Duplicate Stations and Collect All Tasks
+      const stations = places[openThreeDotsVertical]?.stations || [];
+      const allTasksMap = new Map(); // Use a map to track tasks
+      const stationTasksMap = new Map(); // Track tasks for each station
+      
+      for (const station of stations) {
+        
+        const stationDetails = await getingDataStationbyId(station.id);
+
+        let stationTaskIDs = [];
+        for (const task of stationDetails.tasks) {
+          // Check if task is already duplicated
+          if (!allTasksMap.has(task.id)) {
+            const newTask = await insertTask(
+              task.title,
+              task.subtitle,
+              [], // Will be updated later
+              task.picture_url,
+              task.audio_url,
+              siteInfo.id, // Parent site ID
+              task.estimatedTimeSeconds,
+              task.multi_language_description,
+              task.dataEntryLabel,
+              task.dataEntryValidation,
+              task.dataEntryType,
+              task.taskType
+            );
+            allTasksMap.set(task.id, newTask.id);
+          }
+
+          stationTaskIDs.push(allTasksMap.get(task.id));
+        }
+
+        const newStation = await insertStation(
+          station.title,
+          station.subtitle,
+          siteInfo, // Parent site
+          stationTaskIDs
+        );
+        newStationsID.push(newStation.id);
+        stationTasksMap.set(station.id, stationTaskIDs);
+      }
+
+      // Step 3: Duplicate Routes
+      const routes = places[openThreeDotsVertical]?.routes || [];
+      for (const route of routes) {
+        // Retrieve tasks for the current route
+        const routesTasks = await getingData_RoutesbyIds([route.id]);
+
+        let routeTaskIDs = [];
+        console.log('routesTasks', routesTasks[0].tasks);
+
+        for (const task of routesTasks[0].tasks) {
+          // Use the already duplicated task ID
+          if (allTasksMap.has(task.taskId)) {
+            routeTaskIDs.push(allTasksMap.get(task.taskId));
+          }
+        }
+
+        const newRoute = await insertRoute(
+          {
+            name: route.name,
+            studentIds: [],
+            taskIds: routeTaskIDs,
+            siteIds: [siteInfo.id],
+            OnlyOnce: false
+          });
+        newRoutesID.push(newRoute.id);
+      }
+
+      // Update the site with the new stations and routes
+      const updatedSite = {
+        ...siteInfo.data,
+        stationIds: newStationsID,
+        routeIds: newRoutesID,
+      };
+      await updateSite(siteInfo.id, updatedSite);
+
+      setLoading(false);
+      // Optionally update UI or state
+      setPlaces((prev) => [updatedSite, ...prev]);
+      setupdateAdd(true);
+
+      console.log('Duplication complete:', updatedSite);
+    } catch (error) {
+      console.error('Error duplicating place:', error);
+      setLoading(false);
+    }
   };
 
   const handleConfirm = async () => {

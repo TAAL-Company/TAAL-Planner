@@ -238,6 +238,7 @@ export const updateUser = async (userId, user) => {
     email: user.email,
     name: user.name,
     phone: user.phone,
+    password: user.password,
     user_name: user.user_name,
     coachId: user.coachId || null,
     picture_url: user.picture_url || null,
@@ -258,6 +259,22 @@ export const getingData_Routes = async () => {
   let allRoutes;
 
   await get(`${baseUrl}/routes`).then((res) => {
+    allRoutes = res.data.map((route) => {
+      // console.log(route.tasks);
+      route.tasks.sort((a, b) => a.position - b.position);
+      return route
+    })
+    // allRoutes = res.data;
+  });
+  console.log('res allRoutes: ', allRoutes);
+
+  return allRoutes;
+};
+
+export const getingData_RoutesbyIds = async (ids) => {
+  let allRoutes;
+
+  await post(`${baseUrl}/routes/ids`,ids).then((res) => {
     allRoutes = res.data.map((route) => {
       // console.log(route.tasks);
       route.tasks.sort((a, b) => a.position - b.position);
@@ -415,6 +432,11 @@ export const insertSite = async (site) => {
         description: site.description,
         picture_url: site.picture_url || null,
         nameInEnglish: site.nameInEnglish,
+        studentIds: site.studentIds,
+        editorIds: site.editorIds,
+        taskIds: site.taskIds,
+        routeIds: site.routeIds,
+        stationIds: site.stationIds,
       }),
     });
 
@@ -988,6 +1010,20 @@ export const getingDataStation = async () => {
   let allStations;
 
   await get(baseUrl + '/stations', {
+    params: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+    },
+  }).then((res) => {
+    allStations = res.data;
+  });
+  console.log("allStations", allStations);
+  return allStations;
+};
+export const getingDataStationbyId = async (stationUUID) => {
+  let allStations;
+
+  await get(baseUrl + '/stations/'+stationUUID, {
     params: {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-cache',

@@ -13,8 +13,11 @@ import { Button, MenuItem, IconButton, Menu } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import UserForm from './UserForm';
 
+import './StudentsCard.css';
+
 export default function DataGridDemo() {
   const [users, setUsers] = useState([]);
+  const [UserAction, setUserAction] = useState('');
   const [expandedRows, setExpandedRows] = useState({});
   const [loading, setLoading] = useState(true);
   const [coaches, setCoaches] = useState([]);
@@ -49,15 +52,18 @@ export default function DataGridDemo() {
     setNewUser({});
     setSelectedUser(null);
     setAnchorEl(null);
+    setUserAction('');
   };
 
   const handleClickOpenDialog = () => {
     setOpenDialog(true);
+    setUserAction('add');
     setNewUser(newUser);
   };
 
   const handleClickOpenEditDialog = () => {
     setOpenDialog(true);
+    setUserAction('edit');
     setNewUser(selectedUser);
   };
 
@@ -268,16 +274,26 @@ export default function DataGridDemo() {
   ];
 
   return (
-    <>
-      <Button variant="contained" color="primary" onClick={handleClickOpenDialog}>
-        Add User
+    <div
+      style={{
+        textAlign: '-webkit-center',
+      }}
+    >
+      <Button
+        style={{
+          marginTop: '14px',
+          marginBottom: '14px',
+        }}
+        variant="outlined" onClick={handleClickOpenDialog}>
+        ADD A New Employee
       </Button>
       <Box style={{ height: 600, width: '100%' }}>
         <DataGrid
           rows={getRowsWithRoutes()}
           columns={[...columns, ...customColumns]}
-          pageSize={100}
-          rowsPerPageOptions={[100]}
+          pageSize={12} //integer value representing max number of rows
+          autoHeight={true}
+          rowsPerPageOptions={[12]}
           loading={loading}
         />
         <Menu
@@ -298,8 +314,9 @@ export default function DataGridDemo() {
           initialValues={newUser}
           setUsers={setUsers}
           sites={sites}
+          UserAction={UserAction}
         />
       </Box>
-    </>
+    </div>
   );
 }

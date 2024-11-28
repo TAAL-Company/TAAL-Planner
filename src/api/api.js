@@ -240,8 +240,12 @@ export const updateUser = async (userId, user) => {
     phone: user.phone,
     password: user.password,
     user_name: user.user_name,
-    coachId: user.coachId || null,
-    picture_url: user.picture_url || null,
+    coachId: user.coachId ,
+    picture_url: user.picture_url,
+    cognitiveProfileId: user.cognitiveProfileId,
+    siteIds: user.siteIds?.map((site) => site.id),
+    routeIds: user.routes?.map((route) => route.id),
+    taskIds: user.taskIds?.map((task) => task.id),
   };
   const headers = {
     'Content-Type': 'application/json',

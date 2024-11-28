@@ -14,7 +14,7 @@ import {
     ListItemText,
 } from '@mui/material';
 
-import { insertUser, uploadFiles } from '../../api/api';
+import { insertUser, uploadFiles, updateUser } from '../../api/api';
 import MultipleSelect from './MultipleSelectCheckmarks';
 import BasicSelect from '../Gallery/BasicSelect';
 import InputFileUpload from '../InputFileUpload/InputFileUpload';
@@ -27,10 +27,10 @@ export default function UserForm({
     title,
     coaches,
     setUsers,
-    sites
+    sites,
+    UserAction
 }) {
     const [formValues, setFormValues] = useState({ ...initialValues });
-
     const [Foldersite, setFoldersite] = useState('general');
     const [blobList, setBlobList] = useState([]);
     const [sortedUrls, setSortedUrls] = useState({});
@@ -106,13 +106,20 @@ export default function UserForm({
 
     const handleSubmit = async () => {
         try {
+            if (picture) {
+                formValues.picture_url = await uploadFiles(picture, 'Worker media/picture', Foldersite);
+            }
+            if (UserAction === 'edit') {
+                await updateUser(formValues.id,formValues).then((response) => {
+                    setUsers((prevUsers) => [...prevUsers, { ...response.data }]);
+                });
 
-            formValues.picture_url = await uploadFiles(picture, 'Worker media/picture', Foldersite);
-            console.log('formValues : ', formValues);
+            } else {
+                await insertUser({ ...formValues }).then((response) => {
+                    setUsers((prevUsers) => [...prevUsers, { ...response }]);
+                });
+            }
 
-            await insertUser({ ...formValues }).then(() => {
-                setUsers((prevUsers) => [...prevUsers, { ...formValues }]);
-            });
         } catch (error) {
             alert(error.message);
         }

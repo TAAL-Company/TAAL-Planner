@@ -575,21 +575,25 @@ const Places = (props) => {
   }, []);
 
   useEffect(() => {
+    // debugger;
     if (selectedSite && Object.keys(selectedSite).length > 0) {
+      console.log('selectedSite: ', selectedSite);
+  
+      // Filter routes containing the selected site
       const workers = allRoutes
-        .map((route) => {
-          const matchingSite = route.sites.find(
-            (site) => site.id === selectedSite.id
-          );
-
-          if (matchingSite && route.students.length > 0) {
-            return route.students.map((student) => ({ ...student }));
-          }
-
-          return [];
-        })
-        .flat();
-      setAllWorkersForSite(workers);
+        .filter((route) => route.sites.some((site) => site.id === selectedSite.id))
+        .flatMap((route) => route.students); // Collect and flatten students
+  
+      console.log('workers: ', workers);
+  
+      // Optionally remove duplicates if necessary
+      const uniqueWorkers = Array.from(
+        new Set(workers.map((worker) => worker.id)) // Use IDs for uniqueness
+      ).map((id) => workers.find((worker) => worker.id === id)); // Re-map to full objects
+  
+      console.log('uniqueWorkers: ', uniqueWorkers);
+  
+      setAllWorkersForSite(uniqueWorkers); // Update state with unique workers
     }
   }, [allRoutes, selectedSite]);
 
@@ -619,8 +623,7 @@ const Places = (props) => {
   const handleWorkerSelectChange = (event) => {
     const answer = window.confirm(props.language !== "English" ? "האם ברצונך לבצע פעולה זו?" : "Are you sure you want to do this?");
 
-    const selectedWorkerValue =
-      allWorkersForSite[event.target.selectedIndex - 1];
+    const selectedWorkerValue = allWorkersForSite[event.target.selectedIndex - 1]; 
 
     if (answer === true) {
       setAllTasksOfTheSite([]);
@@ -629,7 +632,17 @@ const Places = (props) => {
       // setRouteFlags(false);
       // setReplaceSiteFlag(false);
 
-      if (event.target.value === 'כללי') {
+      console.log('selectedWorkerValue: ', selectedWorkerValue);
+      console.log('allTasksOfTheSite: ', allTasksOfTheSite);
+      console.log('selectedSite stations : ', selectedSite.stations);
+      
+      if(selectedWorkerValue === undefined){
+        Display_The_Stations(selectedSite.stations);
+        setSelectedWorker(null);
+      }
+      
+
+      if (event.target.value === 'כללי' || selectedWorkerValue === undefined) {
         Display_The_Stations(selectedSite);
         setSelectedWorker(null);
       } else {
@@ -688,49 +701,60 @@ const Places = (props) => {
   };
 
   const displayRoutesFromSelectedWorker = async (selectedWorker) => {
-    // Filter routes that include the selected worker
+    // Step 1: Filter routes containing the selected worker
     const routes = allRoutes.filter((route) =>
-      route.students.some((student) => student.id === selectedWorker.id)
+      route.students.some((student) => student.id === selectedWorker.id && route.sites.some((site) => site.id === selectedSite.id))
     );
-
-    // Find the first matched site
+  
+    // Step 2: Find the first matched site (handle undefined cases)
     const matchedSite = routes
-      .map((route) => route.sites.find((site) => site.id === selectedSite.id))
-      .find((site) => site !== undefined);
-
-    // Filter stations that belong to the matched site
+      .flatMap((route) => route.sites) // Flatten all sites in the routes
+      .find((site) => site?.id === selectedSite?.id);
+  
+    if (!matchedSite) {
+      console.warn("No matched site found.");
+      return;
+    }
+  
+    // Step 3: Filter stations under the matched site
     const stationsArray = onlyAllStation.filter(
       (station) => station.parentSiteId === matchedSite.id
     );
-
-    // Find tasks associated with the selected worker's routes
+  
+    // Step 4: Filter tasks assigned to the worker
     const tasksOfTheWorker = allTasks.filter((task) =>
       routes.some((route) =>
         route.tasks.some((routeTask) => routeTask.taskId === task.id)
       )
     );
-
-    // Filter stations that are associated with the tasks of the worker
-    const matchedStation = stationsArray.filter((station) =>
+  
+    // Step 5: Match stations to worker tasks
+    const matchedStations = stationsArray.filter((station) =>
       tasksOfTheWorker.some((task) =>
         task.stations.some((taskStation) => taskStation.id === station.id)
       )
     );
-
+  
+    // Step 6: Prepare station data with tasks and colors
+    const stationsWithDetails = matchedStations.map((station, index) => ({
+      ...station,
+      tasks: station.tasks.filter((task) =>
+        tasksOfTheWorker.some((t) => task.id === t.id)
+      ),
+      color: pastelColors[index % pastelColors.length] || "#CCCCCC", // Fallback color
+    }));
+  
+    // Step 7: Update state
     setTasksLength(tasksOfTheWorker.length);
     setAllTasksOfTheSite(tasksOfTheWorker);
-    setStationArray(
-      matchedStation.map((station, index) => ({
-        ...station,
-        tasks: station.tasks.filter((task) =>
-          tasksOfTheWorker.some((t) => task.id === t.id)
-        ),
-        color: pastelColors[index % pastelColors.length],
-      }))
-    );
-    if (myRoutes.length > 0) setRoutes([]);
-    setRoutes(routes);
+    setStationArray(stationsWithDetails);
+  
+    if (myRoutes.length > 0) setRoutes([]); // Clear `myRoutes` if not empty
+    setRoutes(routes); // Update routes
+    console.log('routes', routes);
+    
   };
+  
 
   useEffect(() => {
     if (allTasksOfTheSite.length > 0) {
@@ -986,7 +1010,7 @@ const Places = (props) => {
               </div>
 
             ) : (
-              filteredDataRoutes.map((route, index) => {
+              filteredDataRoutes.filter((route) => route.id).map((route, index) => {
                 return (
                   <div
                     className='buttons'

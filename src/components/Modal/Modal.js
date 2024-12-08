@@ -60,18 +60,20 @@ function Modal({
   const [Routes, setRoutes] = useState([]);
   const [myStudentsList, setMyStudentsList] = useState([]);
 
+  const [searchStudent, setSearchStudent] = useState('');
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         const usersData = await getingData_Users();
-        if(JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN"){
+        if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
           setStudent(usersData);
-        }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR"){
-          const usersDatafilterbycoachId = usersData.filter((user)=>user.coachId == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+        } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "EDITOR") {
+          const usersDatafilterbycoachId = usersData.filter((user) => user.coachId == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
           setStudent(usersDatafilterbycoachId);
-        }else if(JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT"){
-          const usersDatafilterbycoachId = usersData.filter((user)=>user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
+        } else if (JSON.parse(sessionStorage.getItem('jwt'))?.role == "STUDENT") {
+          const usersDatafilterbycoachId = usersData.filter((user) => user.id == JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id && JSON.parse(sessionStorage.getItem('jwt-EDITOR')).id != null)
           setStudent(usersDatafilterbycoachId);
         }
         // getData();
@@ -487,7 +489,7 @@ function Modal({
                         <input
                           // dir={language !== 'English' ? 'ltr' : 'rtl'}
                           className='inputRouteName'
-                          style={{  paddingRight: language !== 'English' ? '' : '10px', paddingLeft: language !== 'English' ? '10px' : ''}}
+                          style={{ paddingRight: language !== 'English' ? '' : '10px', paddingLeft: language !== 'English' ? '10px' : '' }}
                           required={true}
                           type='text'
                           // onChange={getName}
@@ -495,10 +497,17 @@ function Modal({
                           onChange={(e) => setRouteTitle(e.target.value)}
                         ></input>
                         <div>
-                          {language !== 'English' ? 'List of students:' :'שיוך עובד :'}
-                          </div>
+                          {language !== 'English' ? 'List of students:' : 'שיוך עובד :'}
+                        </div>
+                        <input
+                          type='text'
+                          style={{ paddingRight: language !== 'English' ? '' : '10px', paddingLeft: language !== 'English' ? '10px' : '', width: '100%' }}
+                          placeholder={language !== 'English' ? 'Search student' : 'חפש סטודנט'}
+                          value={searchStudent}
+                          onChange={(e) => setSearchStudent(e.target.value)}
+                        />
                         <div className='allStudent'>
-                          {student.map((value, index) => {
+                          {student.filter((value) => value.name.toLowerCase().includes(searchStudent.toLowerCase())).map((value, index) => {
                             return (
                               <label key={index} className={`list-group-item ${language !== 'English' ? 'english' : ''}`}>
                                 <input

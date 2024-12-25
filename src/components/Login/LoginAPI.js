@@ -5,6 +5,7 @@ import {
   getingData_coaches,
   getingData_Users
 } from '../../api/api';
+import posthog from 'posthog-js';
 //---------------------
 let flag_token = false;
 let flag = false;
@@ -95,6 +96,13 @@ function LoginAPI(props) {
         sessionStorage.setItem('logged_in', 1);
         sessionStorage.setItem('userName', props.APIDetailsLogin.user);
 
+        posthog.identify(user.name)
+        posthog.capture(
+          '$set', 
+          { 
+              $$set: [process.env.REACT_APP_VERSION],
+          }
+      )
         window.location.replace('/Planner');
       });
   }

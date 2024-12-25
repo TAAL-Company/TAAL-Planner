@@ -9,7 +9,7 @@ import { muiLicenseKey } from "./TopSecret";
 import posthog from "posthog-js";
 import { PostHogProvider } from 'posthog-js/react'
 
-posthog.init('phc_GI1wu4eVOdPZaWmNCsmrvGzisDDLPX1StZIR6mcJGJ6', { api_host:'https://us.i.posthog.com' })
+posthog.init('phc_GI1wu4eVOdPZaWmNCsmrvGzisDDLPX1StZIR6mcJGJ6', { api_host: 'https://us.i.posthog.com', person_profiles: 'always' })
 
 LicenseInfo.setLicenseKey(muiLicenseKey);
 

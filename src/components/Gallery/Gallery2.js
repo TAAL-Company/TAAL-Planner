@@ -157,24 +157,25 @@ function Gallery2(props) {
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
             alignItems: 'center',
+            gap: '10px',
           }}
         >
-          <ButtonGroup size="small" aria-label="Large button group">
-            {folderNames.map((folderName) => (
-              <div key={folderName}>
-                <Button onClick={() =>
-                  handleFolderClick(folderName, "pictures")} >
+          {folderNames.map((folderName, index) => (
+            <div key={folderName} style={{ flex: '1 0 21%', maxWidth: '21%' }}>
+              <ButtonGroup size="small" aria-label="Large button group">
+                <Button onClick={() => handleFolderClick(folderName, "pictures")}>
                   <ImageIcon />{folderName}
                 </Button>
-                <Button onClick={() =>
-                  handleFolderClick(folderName, "audio")}>
+                <Button onClick={() => handleFolderClick(folderName, "audio")}>
                   <MusicNoteIcon /> {folderName}
                 </Button>
-              </div>
-            ))}
-          </ButtonGroup>
+              </ButtonGroup>
+            </div>
+          ))}
         </Box>
       </div>
       <div>

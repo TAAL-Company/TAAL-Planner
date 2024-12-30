@@ -350,7 +350,7 @@ function Model_Tasks_Pop(props) {
               </Box>
             </Modal>
             {picture ? (
-              <div className='selectedFileContainer'>
+              <div className='selectedFileContainertask'>
                 <div className='selectedFileTitle'>:תמונה שנבחרה</div>
                 <div style={{ marginBottom: '1rem' }}>
                   {typeof picture === 'string'
@@ -415,7 +415,7 @@ function Model_Tasks_Pop(props) {
           </div> */}
         </form>
         {audio ? (
-          <div className='selectedFileContainer'>
+          <div className='selectedFileContainertask'>
             <div className='selectedFileTitle'>
               <span>:</span>
               אודיו שנבח

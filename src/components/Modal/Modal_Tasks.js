@@ -13,7 +13,7 @@ import Gallery3 from '../Gallery/Gallery3';
 import BasicSelect from '../Gallery/BasicSelect';
 import { getBlobsInContainer } from '../azureBlob';
 import InputFileUpload from '../InputFileUpload/InputFileUpload';
-
+import Draggable from 'react-draggable';
 
 import Model_Tasks_Pop from './Model_Tasks_Pop';
 
@@ -403,15 +403,14 @@ function Modal_Tasks(props) {
       )}
       {!props.help && props.siteSelected ? (
         <>
+        <Draggable>
           <div
             className='BackgroundTasks'
             style={{
               textAlign: props.language === 'English' ? 'right' : 'left',
               direction: props.language !== 'English' ? 'rtl' : 'ltr',
-              transform:
-                props.language === 'English'
-                  ? ' translate(-50%, -50%)'
-                  : ' translate(50%, -50%)',
+              top:'3%',
+              left:'31%',
             }}
           >
             <div className='modalContainerTasks'>
@@ -640,7 +639,7 @@ function Modal_Tasks(props) {
                   </Modal>
                 </form>
                 {audio ? (
-                  <div className='selectedFileContainer'>
+                  <div className='selectedFileContainertask'>
                     <div className='selectedFileTitle'>
                       <span>:</span>
                       אודיו שנבח
@@ -657,7 +656,7 @@ function Modal_Tasks(props) {
                             className='play-button'
                             onClick={handlePlayClick}
                           >
-                            {audio}
+                            {/* {audio} */}
                             Play
                           </button>
                         )}
@@ -807,6 +806,7 @@ function Modal_Tasks(props) {
               )}
             </div>
           </div>
+          </Draggable>
         </>
       ) : (
         <></>

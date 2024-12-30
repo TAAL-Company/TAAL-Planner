@@ -21,6 +21,13 @@
 .selectedFileContainer {
   display: flex;
   flex-direction: row-reverse;
+  /* height: 17px; */
+}
+
+.selectedFileContainertask {
+  display: flex;
+  flex-direction: row-reverse;
+  height: 17px;
 }
 
 .selectedFileTitle {

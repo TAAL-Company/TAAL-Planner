@@ -596,11 +596,11 @@ function Modal_Tasks(props) {
                             ? extractFilenameFromURL(picture)
                             : picture?.name}
                         </div>
-                        <div className='thumbnail'>
+                        <div className='thumbnailtask'>
                           {typeof picture === 'string' && (
                             <img
                               src={picture}
-                              className='thumbnailImg'
+                              className='thumbnailImgtask'
                               alt=''
                             />
                           )}

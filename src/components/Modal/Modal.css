@@ -53,6 +53,21 @@
   margin-right: 1rem;
 }
 
+.thumbnailtask .thumbnailImgtask {
+  width: 190px;
+  height: 160px;
+  border: 2px solid #000;
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 10;
+  left: 58px;
+}
+
+.thumbnailtask:hover .thumbnailImgtask {
+  transform: scale(1.5);
+  margin-right: 1rem;
+}
+
 .audioNameContainer {
   display: flex;
   flex-direction: row-reverse;

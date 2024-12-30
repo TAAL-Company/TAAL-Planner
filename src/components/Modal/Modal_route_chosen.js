@@ -9,8 +9,8 @@ const Modal_route_chosen = (props) => {
           <img src={stopIcon} alt='logo'></img>
         </div>
         <div className='body' style={{ textAlign: 'center', direction: 'rtl' }}>
-          <h4>{props.language !== 'English' ? 'Chose another route' : 'בחרת כבר מסלול אחר, ברצונך להחליף?'} </h4>
-          <div>{props.language !== 'English' ? 'Changing route will delete the changes you made on the current route' : 'החלפת מסלול תמחק את השינויים שביצעת במסלול הנוכחי'}</div>
+          <h4>{props.language !== 'English' ? 'Changing Route' : 'שינוי מסלול'} </h4>
+          <div>{props.language !== 'English' ? 'Changing route will delete the changes you made on the current route if not saved' : 'שינוי מסלול ימחק את השינויים שביצעת במסלול הנוכחי אם לא יישמרו'}</div>
         </div>
         <div className='footer' style={{ display: 'flex' }}>
           <button

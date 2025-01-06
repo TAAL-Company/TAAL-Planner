@@ -243,15 +243,15 @@ export const updateUser = async (userId, user) => {
     coachId: user.coachId ,
     picture_url: user.picture_url,
     cognitiveProfileId: user.cognitiveProfileId,
-    siteIds: user.siteIds?.map((site) => site.id),
+    siteIds: user.sites?.map((site) => site.id),
     routeIds: user.routes?.map((route) => route.id),
-    taskIds: user.taskIds?.map((task) => task.id),
+    taskIds: user.tasks?.map((task) => task.id),
   };
   const headers = {
     'Content-Type': 'application/json',
     Accept: '*/*',
   };
-
+  console.log('body', body);
   return await patch(url, body, headers);
 };
 

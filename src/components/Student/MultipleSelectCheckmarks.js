@@ -1,25 +1,38 @@
-import React from 'react';
-import { Checkbox, ListItemText, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Checkbox, ListItemText, MenuItem, Select, InputLabel, FormControl, OutlinedInput } from '@mui/material';
 
-export default function MultipleSelect({ label, options, selectedOptions, onChange }) {
-    const handleChange = (event) => {
-        const value = event.target.value;
-        onChange(typeof value === 'string' ? value.split(',') : value);
+export default function MultipleSelect({ label, formValues, handleChange, sites }) {
+    const [selectedSites, setSelectedSites] = useState([]);
+    useEffect(() => {
+        sites.map((site) => {
+            if (formValues.sites.find((item) => item.id === site.id)) {
+                setSelectedSites((prev) => [...prev, site]);
+            }
+        })
+    }, []);
+
+    const handleSiteChange = (event) => {
+        const { value } = event.target;
+        setSelectedSites(value);
+        handleChange('sites', value);
     };
 
     return (
-        <FormControl fullWidth>
+        <FormControl fullWidth margin="normal">
             <InputLabel>{label}</InputLabel>
             <Select
                 multiple
-                value={selectedOptions}
-                onChange={handleChange}
+                value={selectedSites}
+                onChange={handleSiteChange}
+                input={<OutlinedInput label={label} />}
                 renderValue={(selected) => selected.map((option) => option.name).join(', ')}
             >
-                {options.map((option) => (
-                    <MenuItem key={option.id} value={option}>
-                        <Checkbox checked={selectedOptions.indexOf(option.name) > -1} />
-                        <ListItemText primary={option.name} />
+                {sites.map((site) => (
+                    <MenuItem key={site.id} value={site}>
+                        <Checkbox
+                            checked={selectedSites.some((selectedSite) => selectedSite.id === site.id)}
+                        />
+                        <ListItemText primary={site.name} />
                     </MenuItem>
                 ))}
             </Select>

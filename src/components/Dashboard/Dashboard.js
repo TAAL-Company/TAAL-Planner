@@ -38,7 +38,7 @@ const Dashboard = () => {
     },
     {
       id: 3,
-      headline: 'מְתַכנֵן',
+      headline: 'מסלולים',
       addLabel: '',
       image: route,
       color: '#5bcfd0'

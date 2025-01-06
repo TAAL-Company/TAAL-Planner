@@ -106,12 +106,13 @@ export default function UserForm({
 
     const handleSubmit = async () => {
         try {
+            console.log('formValues', formValues);
             if (picture) {
                 formValues.picture_url = await uploadFiles(picture, 'Worker media/picture', Foldersite);
             }
             if (UserAction === 'edit') {
-                await updateUser(formValues.id,formValues).then((response) => {
-                    setUsers((prevUsers) => [...prevUsers, { ...response.data }]);
+                await updateUser(formValues.id, formValues).then((response) => {
+                    setUsers((prevUsers) => prevUsers.map(user => user.id === formValues.id ? { ...response.data } : user));
                 });
 
             } else {
@@ -179,24 +180,13 @@ export default function UserForm({
                         ))}
                     </Select>
                 </FormControl>
-                <FormControl fullWidth margin="normal">
-                    <InputLabel>Sites</InputLabel>
-                    <Select
-                        multiple
-                        value={formValues.sites || []} // Ensure value is always an array
-                        onChange={handleChange('sites')}
-                        renderValue={(selected) => selected.map((option) => option.name).join(', ')}
-                    >
-                        {sites.map((site) => (
-                            <MenuItem key={site.id} value={site}>
-                                <Checkbox
-                                    checked={(formValues.sites || []).some((selectedSite) => selectedSite.id === site.id)}
-                                />
-                                <ListItemText primary={site.name} />
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+
+                <MultipleSelect
+                    label="Select Sites"
+                    formValues={formValues}
+                    handleChange={handleChange}
+                    sites={sites}
+                />
                 <FormControl fullWidth margin="normal">
                     <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
                     <InputFileUpload setPicture={setPicture} />

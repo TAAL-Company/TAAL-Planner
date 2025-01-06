@@ -306,7 +306,7 @@ const Tasks = (props) => {
               ? props.tasksOfChosenStation.find(
                 (task) => task.id === openThreeDotsVertical
               ).estimatedTimeSeconds
-              : 5
+              : 1
           }
           picture={
             openThreeDotsVertical !== -1

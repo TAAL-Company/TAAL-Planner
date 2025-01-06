@@ -834,7 +834,7 @@ export const insertTask = async (
   picture_url,
   audio_url,
   siteIds,
-  estimatedTimeSeconds = 5,
+  estimatedTimeSeconds = 1,
   multi_language_description,
   dataEntryLabel,
   dataEntryValidation,

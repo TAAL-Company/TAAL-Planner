@@ -382,6 +382,7 @@ const Places = (props) => {
       setRouteFlags(false);
       setReplaceRouteFlag(false);
       setOpenModalRouteChosen(false);
+      localStorage.setItem('changetasksRoutes', false);
     }
   }, [flagRoute, openModalSiteChosen, replaceRouteFlag]);
 

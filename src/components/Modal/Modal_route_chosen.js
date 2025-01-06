@@ -1,7 +1,16 @@
 import './Modal.css';
 import stopIcon from '../../Pictures/stopIcon.svg';
+import React, { useState, useEffect } from 'react';
 
 const Modal_route_chosen = (props) => {
+
+  const [isBoardChanged, setIsBoardChanged] = useState(false);
+
+  useEffect(() => {
+    let changetasksRoutes = localStorage.getItem('changetasksRoutes');
+    setIsBoardChanged(changetasksRoutes);
+  }, []);
+
   return (
     <>
       <div className='modal_route_chosen'>
@@ -10,7 +19,9 @@ const Modal_route_chosen = (props) => {
         </div>
         <div className='body' style={{ textAlign: 'center', direction: 'rtl' }}>
           <h4>{props.language !== 'English' ? 'Changing Route' : 'שינוי מסלול'} </h4>
+          {isBoardChanged === 'true' ? (
           <div>{props.language !== 'English' ? 'Changing route will delete the changes you made on the current route if not saved' : 'שינוי מסלול ימחק את השינויים שביצעת במסלול הנוכחי אם לא יישמרו'}</div>
+          ) : (<></>)}
         </div>
         <div className='footer' style={{ display: 'flex' }}>
           <button

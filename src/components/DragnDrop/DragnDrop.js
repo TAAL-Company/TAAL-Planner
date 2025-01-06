@@ -442,6 +442,7 @@ function DragnDrop(props) {
       ) {
         addImageToBoard(props.dropToBoard.draggableId, 'tasks');
         setBoardName('tasks');
+        localStorage.setItem('changetasksRoutes', true);
       }
       // props.setDropToBoard({});
     }
@@ -673,7 +674,7 @@ function DragnDrop(props) {
                     ) : (
                       board.map((tag, keyCount) => {
                         if (tag !== undefined) {
-                          console.log(keyCount, tag);
+                          // console.log(keyCount, tag);
                           return (saveTag = (
                             <Tag
                               keyCount={keyCount}

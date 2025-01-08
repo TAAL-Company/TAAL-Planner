@@ -9,7 +9,7 @@ import Login from './components/Login/Login';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import Dashboard from './components/Dashboard/Dashboard';
-import Gallery from './components/Gallery/Gallery';
+import GalleryPage from './components/Gallery/Gallerypage/gallery-page';
 import Cards from './components/Cards/Cards';
 import { Switch, Route } from 'react-router-loading';
 import PlacesCards from './components/placesCards/placesCards';
@@ -45,7 +45,7 @@ function App() {
                   <Route path='/Calculator' component={Calculator}></Route>
                   <Route path='/routes_cards' component={Cards}></Route>
                   <Route path='/Dashboard' component={Dashboard}></Route>
-                  <Route path='/Gallery' component={Gallery}></Route>
+                  <Route path='/Gallery' component={GalleryPage}></Route>
                   <Route path='/places' component={PlacesCards}></Route>
                   <Route path='/Forms' component={Forms}></Route>
                   <Route path='/coaches' component={Coaches}></Route>

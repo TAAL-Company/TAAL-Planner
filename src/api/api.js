@@ -32,6 +32,44 @@ export const uploadFiles = async (selectedFile, folder, site) => {
   return imageUrl;
 };
 
+export const transferFile = async (fileUrl, targetFolder) => {
+
+  const parsedUrl = new URL(fileUrl);
+
+  const array = parsedUrl.pathname.split('/');
+  const lastElement = array[array.length - 1];
+
+  // Remove the first element if it's an empty string
+  if (array[0] === '') {
+    array.shift();
+  }
+
+  // Combine all elements except the last one
+  const combined = array.slice(1, -1).join('/');
+
+  const sourceContainerName = decodeURIComponent(combined);
+  const targetContainerName = targetFolder;
+
+  // const sourceContainerName = 'images/' + decodeURIComponent(secondLastElement);
+  const fileName = lastElement;
+
+  const sourceBlobClient = blobServiceClient.getContainerClient(sourceContainerName).getBlobClient(fileName);
+  const targetBlobClient = blobServiceClient.getContainerClient(targetContainerName).getBlobClient(fileName);
+
+  // Check if the source blob exists
+  const exists = await sourceBlobClient.exists();
+  if (!exists) {
+    console.error('Source blob does not exist:', sourceBlobClient.url);
+    throw new Error('Source blob does not exist');
+  }
+
+  // Copy the file to the target container
+  await targetBlobClient.beginCopyFromURL(sourceBlobClient.url);
+
+  // Delete the file from the source container
+  await sourceBlobClient.delete();
+};
+
 export const deleteFileByUrl = async (imageUrl) => {
   console.log('Deleting file:', imageUrl);
 
@@ -240,7 +278,7 @@ export const updateUser = async (userId, user) => {
     phone: user.phone,
     password: user.password,
     user_name: user.user_name,
-    coachId: user.coachId ,
+    coachId: user.coachId,
     picture_url: user.picture_url,
     cognitiveProfileId: user.cognitiveProfileId,
     siteIds: user.sites?.map((site) => site.id),
@@ -278,7 +316,7 @@ export const getingData_Routes = async () => {
 export const getingData_RoutesbyIds = async (ids) => {
   let allRoutes;
 
-  await post(`${baseUrl}/routes/ids`,ids).then((res) => {
+  await post(`${baseUrl}/routes/ids`, ids).then((res) => {
     allRoutes = res.data.map((route) => {
       // console.log(route.tasks);
       route.tasks.sort((a, b) => a.position - b.position);
@@ -1027,7 +1065,7 @@ export const getingDataStation = async () => {
 export const getingDataStationbyId = async (stationUUID) => {
   let allStations;
 
-  await get(baseUrl + '/stations/'+stationUUID, {
+  await get(baseUrl + '/stations/' + stationUUID, {
     params: {
       'Content-Type': 'application/json',
       'Cache-Control': 'no-cache',
@@ -1117,35 +1155,35 @@ export const postEvaluationEvents = async (
   explanation = ""
 ) => {
   try {
-      const response = await axios.post(baseUrl + '/evaluation-events',
-          {
-              studentId: studentId,
-              taskId: taskId,
-              flag: flag,
-              alternativeTaskId: alternativeTaskId,
-              intervention: intervention,
-              explanation: explanation,
-          },
-          {
-              headers: {
-                  'Content-Type': 'application/json',
-                  Accept: '*/*',
-              },
-          });
+    const response = await axios.post(baseUrl + '/evaluation-events',
+      {
+        studentId: studentId,
+        taskId: taskId,
+        flag: flag,
+        alternativeTaskId: alternativeTaskId,
+        intervention: intervention,
+        explanation: explanation,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: '*/*',
+        },
+      });
 
-      if (response.status !== 201) {
-          console.error(`Error posting evaluation event: ${response.status} ${response.statusText}`);
-          // console.error(response.data);
-          throw new Error(`Error posting evaluation event: ${response.status} ${response.statusText}`);
-      }
+    if (response.status !== 201) {
+      console.error(`Error posting evaluation event: ${response.status} ${response.statusText}`);
+      // console.error(response.data);
+      throw new Error(`Error posting evaluation event: ${response.status} ${response.statusText}`);
+    }
 
-      // console.log(response.status);
-      const data = response.data;
-      return data;
+    // console.log(response.status);
+    const data = response.data;
+    return data;
   } catch (error) {
-      console.error(`Error posting evaluation event: ${error.message}`);
-      // console.error(error);
-      throw error.status;
+    console.error(`Error posting evaluation event: ${error.message}`);
+    // console.error(error);
+    throw error.status;
   }
 };
 // export const postEvaluation = async (studentIds, taskIds) => {

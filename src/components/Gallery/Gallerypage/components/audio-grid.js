@@ -3,9 +3,9 @@ import { Box, List, ListItem, ListItemText, IconButton, Menu, MenuItem } from '@
 import { MoreVert } from '@mui/icons-material';
 import ReactPlayer from 'react-player';
 import AlertDialog from './AlertDialog';
-import { deleteFileByUrl } from '../../../../api/api';
+import { deleteFileByUrl, transferFile } from '../../../../api/api';
 
-const AudioList = ({ audios, setReload }) => {
+const AudioList = ({ audios, setReload, setLoading, targetFolder }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -20,8 +20,15 @@ const AudioList = ({ audios, setReload }) => {
     setSelectedItem(null);
   };
 
-  const handleTransfer = () => {
-    console.log('Transfer');
+  const handleTransfer = async () => {
+    setLoading(true);
+    try {
+      await transferFile(selectedItem, targetFolder);
+      setReload(prev => !prev); // Trigger useEffect to fetch blobs
+    } catch (error) {
+      console.error("Error transferring file:", error);
+    }
+    setLoading(false);
     handleMenuClose();
   };
 
@@ -70,7 +77,7 @@ const AudioList = ({ audios, setReload }) => {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleTransfer}>Edit</MenuItem>
+        <MenuItem onClick={handleTransfer}>Transfer</MenuItem>
         <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
       </Menu>
 

@@ -139,9 +139,9 @@ const GalleryPage = () => {
         <UploadZone onFileUpload={handleFileUpload} />
         <SearchBar onSearch={handleSearch} />
         {selectedType === 'pictures' ? (
-          <ImageGrid images={getFilteredItems()} setReload={setReload} />
+          <ImageGrid images={getFilteredItems()} setReload={setReload} setLoading={setLoading} targetFolder={selectedFolder}/>
         ) : (
-          <AudioList audios={getFilteredItems()} setReload={setReload} />
+          <AudioList audios={getFilteredItems()} setReload={setReload} setLoading={setLoading} targetFolder={selectedFolder}/>
         )}
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

@@ -11,12 +11,15 @@ import {
 } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
 import AlertDialog from './AlertDialog';
+import BasicSelect from './BasicSelect';
 import { deleteFileByUrl, transferFile } from '../../../../api/api';
 
-const ImageGrid = ({ images, setReload, setLoading, targetFolder }) => {
+const ImageGrid = ({ images, setReload, setLoading, folderNames }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [targetFolder, setTargetFolder] = useState('');
+  const [dialogOpenTransfer, setDialogOpenTransfer] = useState(false);
 
   const handleMenuClick = (event, item) => {
     setAnchorEl(event.currentTarget);
@@ -38,6 +41,7 @@ const ImageGrid = ({ images, setReload, setLoading, targetFolder }) => {
     }
     setLoading(false);
     handleMenuClose();
+    handleDialogCloseTransfer();
   };
 
   const handleDelete = async () => {
@@ -54,6 +58,14 @@ const ImageGrid = ({ images, setReload, setLoading, targetFolder }) => {
 
   const handleDeleteClick = () => {
     setDialogOpen(true);
+  };
+
+  const handleTransferClick = () => {
+    setDialogOpenTransfer(true);
+  };
+
+  const handleDialogCloseTransfer = () => {
+    setDialogOpenTransfer(false);
   };
 
   const handleDialogClose = () => {
@@ -94,9 +106,17 @@ const ImageGrid = ({ images, setReload, setLoading, targetFolder }) => {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleTransfer}>Transfer</MenuItem>
+        <MenuItem onClick={handleTransferClick}>Transfer</MenuItem>
         <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
       </Menu>
+
+      <BasicSelect
+        open={dialogOpenTransfer}
+        handleDialogCloseTransfer={handleDialogCloseTransfer}
+        handleTransfer={handleTransfer}
+        setTargetFolder={setTargetFolder}
+        folderlist={folderNames}
+      />
 
       <AlertDialog
         open={dialogOpen}

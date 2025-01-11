@@ -3,12 +3,15 @@ import { Box, List, ListItem, ListItemText, IconButton, Menu, MenuItem } from '@
 import { MoreVert } from '@mui/icons-material';
 import ReactPlayer from 'react-player';
 import AlertDialog from './AlertDialog';
+import BasicSelect from './BasicSelect';
 import { deleteFileByUrl, transferFile } from '../../../../api/api';
 
-const AudioList = ({ audios, setReload, setLoading, targetFolder }) => {
+const AudioList = ({ audios, setReload, setLoading, folderNames }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [targetFolder, setTargetFolder] = useState('');
+  const [dialogOpenTransfer, setDialogOpenTransfer] = useState(false);
 
   const handleMenuClick = (event, item) => {
     setAnchorEl(event.currentTarget);
@@ -30,6 +33,7 @@ const AudioList = ({ audios, setReload, setLoading, targetFolder }) => {
     }
     setLoading(false);
     handleMenuClose();
+    handleDialogCloseTransfer();
   };
 
   const handleDelete = async () => {
@@ -46,6 +50,14 @@ const AudioList = ({ audios, setReload, setLoading, targetFolder }) => {
 
   const handleDeleteClick = () => {
     setDialogOpen(true);
+  };
+
+  const handleTransferClick = () => {
+    setDialogOpenTransfer(true);
+  };
+
+  const handleDialogCloseTransfer = () => {
+    setDialogOpenTransfer(false);
   };
 
   const handleDialogClose = () => {
@@ -77,9 +89,17 @@ const AudioList = ({ audios, setReload, setLoading, targetFolder }) => {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleTransfer}>Transfer</MenuItem>
+        <MenuItem onClick={handleTransferClick}>Transfer</MenuItem>
         <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
       </Menu>
+
+      <BasicSelect
+        open={dialogOpenTransfer}
+        handleDialogCloseTransfer={handleDialogCloseTransfer}
+        handleTransfer={handleTransfer}
+        setTargetFolder={setTargetFolder}
+        folderlist={folderNames}
+      />
 
       <AlertDialog
         open={dialogOpen}

@@ -12,6 +12,15 @@
   align-items: center;
 }
 
+.deselect-button {
+    background: #256fa1;
+    border-radius: 4px;
+    color: white;
+    font-size: 18px;
+    box-shadow: 0px 3px 6px #0000004d;
+    border: 2px solid #256fa1;
+}
+
 .Places.english {
   padding-left: 40px;
   direction: ltr;

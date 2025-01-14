@@ -136,10 +136,11 @@ const Places = (props) => {
         alert(props.language ? 'ההוראה הועתקה בהצלחה!' : 'The instruction was copied successfully!');
         setOpenThreeDotsVertical(-1);
         setRequestForEditing('');
-        let newadded = await getingData_Routes().then(data => { return data.find(route => route.id === newaddedroute.id);
+        let newadded = await getingData_Routes().then(data => {
+          return data.find(route => route.id === newaddedroute.id);
         })
         console.log(newadded);
-        
+
         const newRoutes = [...filteredDataRoutes];
         newRoutes.push(newadded);
         setFilteredDataRoutes(newRoutes);
@@ -546,8 +547,8 @@ const Places = (props) => {
           };
         })
       );
-      let TasksOfChosenStationtemp = onlyAllStation.find((station) => station?.id === theStation?.id)?.tasks ? onlyAllStation.find((station) => station.id === theStation.id).tasks : []
-      setTasksOfChosenStation(TasksOfChosenStationtemp);
+      // let TasksOfChosenStationtemp = onlyAllStation.find((station) => station?.id === theStation?.id)?.tasks ? onlyAllStation.find((station) => station.id === theStation.id).tasks : []
+      // setTasksOfChosenStation(TasksOfChosenStationtemp);
     } else {
       setReplaceRoute(e);
       setOpenModalRouteChosen(true);
@@ -579,21 +580,21 @@ const Places = (props) => {
     // debugger;
     if (selectedSite && Object.keys(selectedSite).length > 0) {
       console.log('selectedSite: ', selectedSite);
-  
+
       // Filter routes containing the selected site
       const workers = allRoutes
         .filter((route) => route.sites.some((site) => site.id === selectedSite.id))
         .flatMap((route) => route.students); // Collect and flatten students
-  
+
       console.log('workers: ', workers);
-  
+
       // Optionally remove duplicates if necessary
       const uniqueWorkers = Array.from(
         new Set(workers.map((worker) => worker.id)) // Use IDs for uniqueness
       ).map((id) => workers.find((worker) => worker.id === id)); // Re-map to full objects
-  
+
       console.log('uniqueWorkers: ', uniqueWorkers);
-  
+
       setAllWorkersForSite(uniqueWorkers); // Update state with unique workers
     }
   }, [allRoutes, selectedSite]);
@@ -624,7 +625,7 @@ const Places = (props) => {
   const handleWorkerSelectChange = (event) => {
     const answer = window.confirm(props.language !== "English" ? "האם ברצונך לבצע פעולה זו?" : "Are you sure you want to do this?");
 
-    const selectedWorkerValue = allWorkersForSite[event.target.selectedIndex - 1]; 
+    const selectedWorkerValue = allWorkersForSite[event.target.selectedIndex - 1];
 
     if (answer === true) {
       setAllTasksOfTheSite([]);
@@ -636,12 +637,12 @@ const Places = (props) => {
       console.log('selectedWorkerValue: ', selectedWorkerValue);
       console.log('allTasksOfTheSite: ', allTasksOfTheSite);
       console.log('selectedSite stations : ', selectedSite.stations);
-      
-      if(selectedWorkerValue === undefined){
+
+      if (selectedWorkerValue === undefined) {
         Display_The_Stations(selectedSite.stations);
         setSelectedWorker(null);
       }
-      
+
 
       if (event.target.value === 'כללי' || selectedWorkerValue === undefined) {
         Display_The_Stations(selectedSite);
@@ -706,36 +707,36 @@ const Places = (props) => {
     const routes = allRoutes.filter((route) =>
       route.students.some((student) => student.id === selectedWorker.id && route.sites.some((site) => site.id === selectedSite.id))
     );
-  
+
     // Step 2: Find the first matched site (handle undefined cases)
     const matchedSite = routes
       .flatMap((route) => route.sites) // Flatten all sites in the routes
       .find((site) => site?.id === selectedSite?.id);
-  
+
     if (!matchedSite) {
       console.warn("No matched site found.");
       return;
     }
-  
+
     // Step 3: Filter stations under the matched site
     const stationsArray = onlyAllStation.filter(
       (station) => station.parentSiteId === matchedSite.id
     );
-  
+
     // Step 4: Filter tasks assigned to the worker
     const tasksOfTheWorker = allTasks.filter((task) =>
       routes.some((route) =>
         route.tasks.some((routeTask) => routeTask.taskId === task.id)
       )
     );
-  
+
     // Step 5: Match stations to worker tasks
     const matchedStations = stationsArray.filter((station) =>
       tasksOfTheWorker.some((task) =>
         task.stations.some((taskStation) => taskStation.id === station.id)
       )
     );
-  
+
     // Step 6: Prepare station data with tasks and colors
     const stationsWithDetails = matchedStations.map((station, index) => ({
       ...station,
@@ -744,18 +745,54 @@ const Places = (props) => {
       ),
       color: pastelColors[index % pastelColors.length] || "#CCCCCC", // Fallback color
     }));
-  
+
     // Step 7: Update state
     setTasksLength(tasksOfTheWorker.length);
     setAllTasksOfTheSite(tasksOfTheWorker);
     setStationArray(stationsWithDetails);
-  
+
     if (myRoutes.length > 0) setRoutes([]); // Clear `myRoutes` if not empty
     setRoutes(routes); // Update routes
     console.log('routes', routes);
-    
+
   };
-  
+
+  const displayStationsFromSelectedRoute = async (selectedRoute) => {
+    setAllTasksOfTheSite([]);
+    setTasksOfChosenStation([]);
+    setTasksLength(0);
+
+    // Step 1: Filter stations under the selected route
+    const stationsArray = onlyAllStation.filter(
+      (station) => station.parentSiteId === selectedRoute.sites[0].id
+    );
+
+    // Step 2: Filter tasks assigned to the selected route
+    const tasksOfTheRoute = allTasks.filter((task) =>
+      selectedRoute.tasks.some((routeTask) => routeTask.taskId === task.id)
+    );
+
+    // Step 3: Match stations to route tasks
+    const matchedStations = stationsArray.filter((station) =>
+      tasksOfTheRoute.some((task) =>
+        task.stations.some((taskStation) => taskStation.id === station.id)
+      )
+    );
+
+    // Step 4: Prepare station data with tasks and colors
+    const stationsWithDetails = matchedStations.map((station, index) => ({
+      ...station,
+      tasks: station.tasks.filter((task) =>
+        tasksOfTheRoute.some((t) => task.id === t.id)
+      ),
+      color: pastelColors[index % pastelColors.length] || "#CCCCCC", // Fallback color
+    }));
+
+    // Step 5: Update state
+    setTasksLength(tasksOfTheRoute.length);
+    setAllTasksOfTheSite(tasksOfTheRoute);
+    setStationArray(stationsWithDetails);
+  };
 
   useEffect(() => {
     if (allTasksOfTheSite.length > 0) {
@@ -878,6 +915,16 @@ const Places = (props) => {
   function handleDragEnd(result) {
     setDropToBoard(result);
   }
+
+  const handleDeselectRoute = () => {
+    setAllTasksOfTheSite([]);
+    setTasksOfChosenStation([]);
+    setTasksLength(0);
+    
+    setSelectedWorker(null);
+    Display_The_Stations(selectedSite);
+  };
+
   //----------------------------------------------------------------------
   return (
     <>
@@ -998,6 +1045,22 @@ const Places = (props) => {
               onChange={inputHandlerRoutes}
             ></input>
           </div>
+          <div
+            className='search'
+            style={{
+              backgroundColor: '#F5F5F5',
+              // borderStyle: "none none solid none",
+              // borderColor: "#fff",
+              // borderWidth: "5px",
+            }}
+          >
+            <button
+              className="deselect-button"
+              onClick={handleDeselectRoute}
+            >
+              {props.language === "English" ? "הצג את כל התחנות" : "show all Stations"}
+            </button>
+          </div>
           <div className='routs'>
             {filteredDataRoutes.length === 0 ? (
               <div
@@ -1039,7 +1102,7 @@ const Places = (props) => {
                         // <div ref={menuRef}>
                         <ModalDropdown
                           language={props.language}
-                          setRequestForEditing={setRequestForEditing}//sdfsdfsdfsdfds
+                          setRequestForEditing={setRequestForEditing}
                           setOpenThreeDotsVertical={setOpenThreeDotsVertical}
                           editable={true}
                           Reproducible={true}
@@ -1056,6 +1119,7 @@ const Places = (props) => {
                       className='nameOfButton'
                       onClick={
                         () => {
+                          displayStationsFromSelectedRoute(route);
                           DisplayTasks(route);
                         } //הצגת המסלול
                       }

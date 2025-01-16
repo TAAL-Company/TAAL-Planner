@@ -9,7 +9,8 @@ import {
   uploadFiles,
   getingData_Places,
   getingData_Users,
-  getingData_coaches
+  getingData_coaches,
+  getingData_Routes,
 } from '../../api/api';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -56,6 +57,7 @@ const Editors = () => {
   const [updateAdd, setupdateAdd] = useState(false);
   const [mysitesList, setMySitesList] = useState([]);
   const [myusers, setMyusers] = useState('');
+  const [Mydefaultdashboard, setMydefaultdashboard] = useState('');
   const [sites, setSites] = useState([]);
   const [users, setUsers] = useState([]);
   const [coaches, setcoaches] = useState([]);
@@ -156,6 +158,7 @@ const Editors = () => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
       setrole(Editors[openThreeDotsVertical].role);
       setMyusers(Editors[openThreeDotsVertical].userid);
+      setMydefaultdashboard(Editors[openThreeDotsVertical].defaultdashboard);
       setEditorForUpdate(openThreeDotsVertical);
       setOpen(true);
     } else if (requestForEditing === 'duplication') {
@@ -174,6 +177,7 @@ const Editors = () => {
     setOpen(false);
     setrole('');
     setMyusers('');
+    setMydefaultdashboard('');
     setRequestForEditing('');
     setOpenThreeDotsVertical(-1);
   };
@@ -188,6 +192,7 @@ const Editors = () => {
     setRequestForEditing('');
     setrole('');
     setMyusers('');
+    setMydefaultdashboard('');
   };
 
   const handleCloseRemoveConfirm = async () => {
@@ -245,6 +250,8 @@ const Editors = () => {
     const userid = myusers;
     const googleID = document.getElementById('googleID').value;
     const role = myrole;
+    const defaultdashboard = Mydefaultdashboard;
+
     console.log('role : ', role);
 
     if (email === '' || fullName === '') {
@@ -268,6 +275,7 @@ const Editors = () => {
           picture_url,
           password,
           userid,
+          defaultdashboard,
         };
         console.log(user);
 
@@ -283,20 +291,23 @@ const Editors = () => {
             userToUpdate.picture_url = updatedUser.data.picture_url;
             userToUpdate.password = updatedUser.data.password;
             userToUpdate.userid = updatedUser.data.userid;
+            userToUpdate.defaultdashboard = updatedUser.data.defaultdashboard;
 
             const newUsers = [...Editors];
             setEditors(newUsers);
+            setupdateAdd(true);
           });
         } else {
           console.log(user);
           insertEditor(user).then((data) => {
             setEditors([data, ...Editors]);
           });
+          setupdateAdd(true);
         }
       } catch (error) {
         console.error(error);
       }
-
+      setupdateAdd(false);
       handleClose(); // Close the dialog after the form is submitted
     }
   };
@@ -337,8 +348,13 @@ const Editors = () => {
   }, []);
 
   useEffect(() => {
-    let tempsiteslist = openThreeDotsVertical !== -1 ? Editors[openThreeDotsVertical].sites : [];//myStudentslist = [];
-    setMySitesList(tempsiteslist);
+    let usersList = [];
+    const tempSitesList = openThreeDotsVertical !== -1 ? Editors[openThreeDotsVertical].sites : [];
+  
+    if (tempSitesList) {
+      usersList = sites.filter(site => tempSitesList.some(tempsite => tempsite.id === site.id));
+    }
+    setMySitesList(usersList);
     console.log("mysitesList", mysitesList);
   }, [open]);
 
@@ -640,6 +656,44 @@ const Editors = () => {
                 );
               })}
             </div>
+            {mysitesList.length > 0 ? (
+              <>
+                <DialogContent style={{ direction: language === 'Hebrew' ? 'rtl' : 'ltr' }}>
+                  {language === 'Hebrew' ? ' בחר מסלול ברירת מחדל עבור לוח המחוונים ' : 'select default route for dashboard'}
+                </DialogContent>
+                <div className='allStudent'>
+                  <FormControl>
+                    <RadioGroup
+                      aria-labelledby='demo-controlled-radio-buttons-group'
+                      name='controlled-radio-buttons-group'
+                      value={
+                        openThreeDotsVertical !== -1
+                          ? Editors[openThreeDotsVertical].defaultdashboard
+                          : Mydefaultdashboard
+                      }
+                      defaultValue={
+                        openThreeDotsVertical !== -1
+                          ? Editors[openThreeDotsVertical].defaultdashboard
+                          : ''
+                      }
+                      onChange={(event, value) => {
+                        setMydefaultdashboard(value);
+                      }}
+                    >
+                      {mysitesList.flatMap(site => site.routes).map((route, index) => (
+                        <FormControlLabel
+                          key={route.id}
+                          value={route.id}
+                          name={route.name}
+                          label={route.name}
+                          control={<Radio />}
+                          checked={Editors[openThreeDotsVertical] && Editors[openThreeDotsVertical].defaultdashboard === route.id}
+                        />
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </div>
+              </>) : (<></>)}
             {/* <div style={{ direction: 'rtl', marginTop: '10px' }}>תמונה:</div>
             <div>
               <input

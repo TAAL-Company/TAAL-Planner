@@ -633,6 +633,7 @@ export const insertEditor = async (user) => {
         picture_url: user.picture_url,
         password: user.password,
         userid: user.userid,
+        defaultdashboard: user.defaultdashboard,
       }),
     });
 
@@ -671,6 +672,7 @@ export const updateEditor = async (userId, user) => {
     picture_url: user.picture_url,
     password: user.password,
     userid: user.userid,
+    defaultdashboard: user.defaultdashboard,
   };
   const headers = {
     'Content-Type': 'application/json',

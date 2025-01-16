@@ -180,6 +180,7 @@ const Dashboard = () => {
   const jwtEditor = sessionStorage.getItem('jwt-EDITOR');
   const role = jwt ? JSON.parse(jwt)?.role : null;
   const editorId = jwtEditor && jwtEditor !== "undefined" ? JSON.parse(jwtEditor)?.id : "ADMIN";
+  const defaultdashboard = jwt ? JSON.parse(jwt)?.defaultdashboard : null;
 
   const leftElements = [
     <div className='right'>
@@ -210,7 +211,7 @@ const Dashboard = () => {
       <iframe
         width="100%"
         height="100%"
-        src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}`}
+        src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}`}
       ></iframe>
     } </div>
   ]

@@ -245,9 +245,18 @@ export default function DataGridDemo() {
       width: 50,
       renderCell: (params) => {
         if (params.row.isRoute) return null; // Skip expand icon for route rows
+        const hasRoutes = params.row.routes && params.row.routes.length > 0;
         return (
           <div onClick={() => handleRowExpandToggle(params.id)}>
-            {expandedRows[params.id] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+            {hasRoutes ? (
+              expandedRows[params.id] ? (
+                <ExpandLessIcon style={{ color: 'blue' }} />
+              ) : (
+                <ExpandMoreIcon style={{ color: 'blue' }} />
+              )
+            ) : (
+              <></>
+            )}
           </div>
         );
       },

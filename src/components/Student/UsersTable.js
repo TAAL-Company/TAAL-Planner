@@ -181,6 +181,7 @@ export default function DataGridDemo() {
             user_name: '',
             email: '',
             name: '',
+            sites: [],
             phone: '',
             role: '',
             cognitiveProfile: '',
@@ -211,9 +212,9 @@ export default function DataGridDemo() {
         return <Avatar alt="User Avatar" src={params.value} />;
       },
     },
+    { field: 'name', headerName: 'Name', width: 150, editable: true },
     { field: 'user_name', headerName: 'Username', width: 150, editable: true },
     { field: 'email', headerName: 'Email', width: 200, editable: true },
-    { field: 'name', headerName: 'Name', width: 150, editable: true },
     { field: 'phone', headerName: 'Phone', width: 150, editable: true },
     { field: 'role', headerName: 'Role', width: 120 },
     // { field: 'cognitiveProfile', headerName: 'Cognitive Profile', width: 200 },
@@ -224,6 +225,17 @@ export default function DataGridDemo() {
       valueGetter: (params) => {
         const coach = coaches.find(coach => coach.id === params.row.coachId);
         return coach ? coach.name : '';
+      },
+    },
+    {
+      field: 'sites',
+      headerName: 'Sites',
+      width: 200,
+      renderCell: (params) => {
+        const sites = params.row.sites.map((site) => site.name);
+        const sitesfromsitesdata = params.row.sites.flatMap((site) => site.students?.find((student) => student.id === params.row.id)?.name);
+        const allsites = sites.concat(sitesfromsitesdata);
+        return <div>{allsites.join(', ')}</div>;
       },
     },
     {

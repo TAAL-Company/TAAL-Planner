@@ -12,7 +12,7 @@ import { useState, useEffect } from 'react';
 import { Button, MenuItem, IconButton, Menu } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import UserForm from './UserForm';
-
+import Toolbar  from './Toolbar';
 import './StudentsCard.css';
 
 export default function DataGridDemo() {
@@ -304,6 +304,9 @@ export default function DataGridDemo() {
           autoHeight={true}
           rowsPerPageOptions={[12]}
           loading={loading}
+          components={{
+            Toolbar: Toolbar ,
+          }}
         />
         <Menu
           anchorEl={anchorEl}

@@ -182,6 +182,8 @@ export default function DataGridDemo() {
             email: '',
             name: '',
             sites: [],
+            createdAt: user.createdAt,
+            lastLoginAt: user.lastLoginAt,
             phone: '',
             role: '',
             cognitiveProfile: '',
@@ -209,7 +211,10 @@ export default function DataGridDemo() {
       width: 70,
       renderCell: (params) => {
         if (params.row.isRoute) return null; // Skip avatar rendering for route rows
-        return <Avatar alt="User Avatar" src={params.value} />;
+        return <Avatar 
+        alt="User Avatar" 
+        src={params.value} 
+        />;
       },
     },
     { field: 'name', headerName: 'Name', width: 150, editable: true },
@@ -236,6 +241,24 @@ export default function DataGridDemo() {
         const sitesfromsitesdata = params.row.sites.flatMap((site) => site.students?.find((student) => student.id === params.row.id)?.name);
         const allsites = sites.concat(sitesfromsitesdata);
         return <div>{allsites.join(', ')}</div>;
+      },
+    },
+    {
+      field: 'created_at',
+      headerName: 'Created At',
+      width: 150,
+      valueGetter: (params) => {
+        const createdAt = params.row.createdAt;
+        return createdAt ? new Date(createdAt).toLocaleString() : '';
+      },
+    },
+    {
+      field: 'last_login_at',
+      headerName: 'Last Login At',
+      width: 150,
+      valueGetter: (params) => {
+        const lastLoginAt = params.row.lastLoginAt;
+        return lastLoginAt ? new Date(lastLoginAt).toLocaleString() : '';
       },
     },
     {
@@ -291,7 +314,7 @@ export default function DataGridDemo() {
   // Custom columns for route data
   const customColumns = [
     { field: 'routeName', headerName: 'Route', width: 200 },
-    { field: 'routeOnlyOnce', headerName: 'Once Only', width: 100 },
+    // { field: 'routeOnlyOnce', headerName: 'Once Only', width: 100 },
   ];
 
   return (

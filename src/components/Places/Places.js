@@ -912,8 +912,164 @@ const Places = (props) => {
     searchRoute();
   }, [myRoutes]);
 
+  // const DisplayTasksfordragStation = (stationId) => {
+  //   const station = stationArray.find((station) => station.id === stationId);
+
+  //   station.title = station.title
+  //       .replace('&#8211;', '-')
+  //       .replace('&#8217;', "'"); //replace gebrish for - or '
+
+  //     let firstStation;
+
+  //     if (station.tasks && station.tasks.length > 0) {
+  //       firstStation = allTasks.find((obj) => {
+  //         return obj.id === station.tasks[0].id;
+  //       });
+  //     }
+
+  //     let theStation;
+  //     let stationName;
+  //     if (firstStation !== undefined) {
+  //       firstStation.stations.forEach((station) => {
+  //         if (station.parentSiteId === mySite.id) {
+  //           theStation = station;
+  //           stationName = station.title;
+  //         }
+  //       });
+  //       setFirstStationName(stationName);
+
+  //       //
+  //     } else setFirstStationName(undefined);
+
+  //     let prevStation = '';
+  //     setBoardArrayDND(
+  //       station?.tasks?.map((element) => {
+
+  //         //allTasksOfTheSite
+  //         let taskTemp = allTasksOfTheSite?.find(
+  //           (item) => item.id === element.taskId
+  //         );
+
+  //         //allTasksOfTheSite - allTasksOfTheSite
+  //         // let taskTemp = allTasks?.find((item) => item.id === element.taskId);
+  //         // console.log('e',e);
+  //         // console.log('firstStation',firstStation);
+  //         // console.log('allTasksOfTheSite',allTasksOfTheSite);
+  //         // console.log('taskTemp',taskTemp);
+  //         if (taskTemp === undefined) {
+  //           return {
+  //             id: element.taskId,
+  //             title:
+  //               element.taskId +
+  //               ' לא משוייך'.replace('&#8211;', '-').replace('&#8217;', "' "),
+  //             mySite: mySite,
+  //             myStation: 'לא משוייך',
+  //             data: stationArray,
+  //             nameStation: 'לא משוייך',
+  //             width: '-13px',
+  //             borderLeft: '2px solid #c2bfbf',
+  //             height: '70px',
+  //             kavTaskTopMarginTop: '-7px',
+  //             bottom: '-27px',
+  //             kavTopWidth: '25px',
+  //             newkavTaskTop: '100px',
+  //             dataImg: '',
+  //             color: 'black',
+  //           };
+  //         }
+
+  //         let color;
+  //         let stationID = taskTemp.stations.find(
+  //           (station) => {
+  //             if (station.parentSiteId === mySite.id) return true;
+  //           }
+  //           // isStationOfMySite(item).includes(true)
+  //         );
+
+  //         if (stationID !== undefined) {
+  //           stationName = stationID.title;
+  //           theStation = stationID;
+  //           color = stationArray.find((item) => item.id === stationID.id).color;
+  //         } else {
+  //           // stationName = "כללי";
+  //           // color = stationArray.find((item) => item.id === 0).color;
+  //         }
+
+  //         // let color = stationArray.find(item => item.id === stationID).color
+  //         let width = '-13px';
+  //         let height = '70px';
+  //         let nameStation = '14px';
+  //         let bottom = '-27px';
+  //         let kavTopWidth = '25px';
+  //         let newkavTaskTop = '100px';
+  //         let kavTaskTopMarginTop = '-7px';
+  //         let borderLeft = '2px solid #c2bfbf';
+
+  //         if (prevStation === stationName) {
+  //           // sameStation
+  //           width = '-84px';
+  //           borderLeft = '2x solid #c2bfbf';
+  //           height = '86px';
+  //           bottom = '45px';
+  //           kavTopWidth = '0px';
+  //           newkavTaskTop = '100px';
+  //           nameStation = '';
+  //           kavTaskTopMarginTop = '-27px';
+  //         } else {
+  //           borderLeft = '0x solid #c2bfbf';
+  //           width = '-13px';
+  //           height = '70px';
+  //           bottom = '-27px';
+  //           kavTopWidth = '25px';
+  //           newkavTaskTop = '0px';
+  //           nameStation = stationName;
+  //           kavTaskTopMarginTop = '-7px';
+  //         }
+
+  //         prevStation = stationName;
+
+  //         return {
+  //           id: taskTemp.id,
+  //           title: taskTemp.title
+  //             .replace('&#8211;', '-')
+  //             .replace('&#8217;', "' "),
+  //           subtitle: taskTemp.subtitle,
+  //           audio_url: taskTemp.audio_url,
+  //           picture_url: taskTemp.picture_url,
+  //           estimatedTimeSeconds: taskTemp.estimatedTimeSeconds,
+  //           myStation: stationName,
+  //           data: stationArray,
+  //           mySite,
+  //           theStation,
+  //           nameStation,
+  //           width,
+  //           borderLeft,
+  //           height,
+  //           kavTaskTopMarginTop,
+  //           bottom,
+  //           kavTopWidth,
+  //           newkavTaskTop,
+  //           color,
+  //         };
+  //       })
+  //     );
+  //     // let TasksOfChosenStationtemp = onlyAllStation.find((station) => station?.id === theStation?.id)?.tasks ? onlyAllStation.find((station) => station.id === theStation.id).tasks : []
+  //     // setTasksOfChosenStation(TasksOfChosenStationtemp);
+
+  // };
+
   function handleDragEnd(result) {
-    setDropToBoard(result);
+    if (result.source.droppableId == "tasks-droppable") {
+      setDropToBoard(result);
+    }
+
+    if (result.source.droppableId == "stationArray") {
+      setDropToBoard(result);
+      const stationId = result.draggableId;
+      const station = stationArray.find((station) => station.id === stationId);
+      setTasksOfChosenStation(station.tasks);
+      // DisplayTasksfordragStation(result.draggableId);
+    }
   }
 
   const handleDeselectRoute = () => {

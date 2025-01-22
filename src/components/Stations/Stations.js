@@ -217,7 +217,7 @@ const Stations = (props) => {
             <div className='Stations'>
               {props.stationArray.length > 0 ? ( //DND
                 <>
-                  <DragDropContext onDragEnd={handleOnDragEnd}>
+                  < >
                     <Droppable droppableId='stationArray'>
                       {(provided) => (
                         <ul
@@ -314,7 +314,7 @@ const Stations = (props) => {
                         </ul>
                       )}
                     </Droppable>
-                  </DragDropContext>
+                  </>
                 </>
               ) : (
                 <div

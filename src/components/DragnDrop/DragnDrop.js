@@ -438,13 +438,46 @@ function DragnDrop(props) {
       if (
         props.dropToBoard.destination !== undefined &&
         props.dropToBoard.destination !== null &&
-        props.dropToBoard.destination.droppableId === 'board-droppable'
+        props.dropToBoard.destination.droppableId === 'board-droppable' &&
+        props.dropToBoard.source.droppableId !== "stationArray"
       ) {
         addImageToBoard(props.dropToBoard.draggableId, 'tasks');
         setBoardName('tasks');
         localStorage.setItem('changetasksRoutes', true);
       }
       // props.setDropToBoard({});
+    }
+  }, [props.dropToBoard]);
+
+  useEffect(() => {
+    if (Object.keys(props.dropToBoard).length > 0) {
+      if (
+        props.dropToBoard.destination !== undefined &&
+        props.dropToBoard.destination !== null &&
+        props.dropToBoard.destination.droppableId === 'board-droppable' &&
+        props.dropToBoard.source.droppableId == "stationArray"
+      ) {
+        const stationId = props.dropToBoard.draggableId;
+        const station = props.stationArray.find((station) => station.id === stationId);
+
+        dndArray.forEach(async (task) => {
+          task.color=station.color;
+          task.data=station.data;  
+          task.myStation = station.title;    
+          task.nameStation = station.title;
+          task.theStation = station;
+        });
+
+        if (station) {
+          const tasks = dndArray; // assuming tasks is an array of task objects
+          tasks.forEach(async (task) => {
+            await addImageToBoard(task.id, 'tasks');
+            setBoardName('tasks');
+            localStorage.setItem('changetasksRoutes', true);
+          });
+          localStorage.setItem('changetasksRoutes', true);
+        }
+      }
     }
   }, [props.dropToBoard]);
 

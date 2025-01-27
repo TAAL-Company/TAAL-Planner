@@ -270,6 +270,7 @@ const Tasks = (props) => {
       </div>
       {modalOpen ? (
         <ModalTasks
+          allUsers={props.allUsers}
           setTaskForEdit={setTaskForEdit}
           uuid={taskUuidForEdit}
           tasksOfChosenStation={props.tasksOfChosenStation}

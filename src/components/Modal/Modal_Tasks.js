@@ -16,6 +16,7 @@ import InputFileUpload from '../InputFileUpload/InputFileUpload';
 import Draggable from 'react-draggable';
 
 import Model_Tasks_Pop from './Model_Tasks_Pop';
+import Model_Tasks_help_Pop from './Model_Tasks_help_Pop';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -57,6 +58,7 @@ function Modal_Tasks(props) {
   const [dataEntryTypelist, setDataEntryTypelist] = useState(["String", "Int", "Number"]);
   const [TaskTypelist, setTaskTypelist] = useState(["specialTask", "normal", "onlyOnce", "popupAfterCurrentTask"]);
   const [multi_language_description, setMulti_language_description] = useState(props.multi_language_description);
+  const [additonalHelp, setAdditonalHelp] = useState(props.additonalHelp);
   const [language_description, setlanguage_description] = useState('English');
   const [picture, setPicture] = useState(props.picture);
   const [audio, setAudio] = useState(props.audio);
@@ -156,6 +158,8 @@ function Modal_Tasks(props) {
 
   const saveTask = async () => {
     setFlagClickOK(true);
+    console.log("additonalHelp", additonalHelp);
+    
 
     if (get_title === '' || getDescription === '') {
       alert(props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
@@ -196,7 +200,8 @@ function Modal_Tasks(props) {
           dataEntryLabel,
           dataEntryValidation,
           dataEntryType,
-          taskType
+          taskType,
+          additonalHelp: JSON.stringify(additonalHelp),
         };
         if (newTask.picture_url === undefined) {
           newTask.picture_url = '';
@@ -259,7 +264,8 @@ function Modal_Tasks(props) {
           dataEntryLabel,
           dataEntryValidation,
           dataEntryType,
-          taskType
+          taskType,
+          additonalHelp
         );
 
         let color = props.allStations.find(
@@ -348,13 +354,18 @@ function Modal_Tasks(props) {
   const [open, setOpen] = React.useState(false);
   const [open2, setOpen2] = React.useState(false);
   const [open3, setOpen3] = React.useState(false);
+  const [open4, setOpen4] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleOpen2 = () => setOpen2(true);
   const handleOpen3 = () => setOpen3(true);
+  const handleOpen4 = () => setOpen4(true);
   const handleClose = () => {
+        console.log("additonalHelp", additonalHelp);
+    
     setOpen(false);
     setOpen2(false);
     setOpen3(false);
+    setOpen4(false);
   }
 
   const data = {
@@ -403,302 +414,302 @@ function Modal_Tasks(props) {
       )}
       {!props.help && props.siteSelected ? (
         <>
-        <Draggable>
-          <div
-            className='BackgroundTasks'
-            style={{
-              textAlign: props.language === 'English' ? 'right' : 'left',
-              direction: props.language !== 'English' ? 'rtl' : 'ltr',
-              top:'3%',
-              left:'31%',
-            }}
-          >
-            <div className='modalContainerTasks'>
-              <div className='headerNewTask'>
-                <div className='NewTaskTitle'>
-                  {props.language !== 'English' ? 'New task' : ':משימה חדשה'}
+          <Draggable>
+            <div
+              className='BackgroundTasks'
+              style={{
+                textAlign: props.language === 'English' ? 'right' : 'left',
+                direction: props.language !== 'English' ? 'rtl' : 'ltr',
+                top: '3%',
+                left: '31%',
+              }}
+            >
+              <div className='modalContainerTasks'>
+                <div className='headerNewTask'>
+                  <div className='NewTaskTitle'>
+                    {props.language !== 'English' ? 'New task' : ':משימה חדשה'}
+                  </div>
                 </div>
-              </div>
-              <div
-                className={`bodyNewTask ${props.requestForEditing === 'details' ? 'disabledModal' : ''
-                  }`}
-              >
-                {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
-                <form id='IPU' className='w3-container'>
-                  <h6>
-                    {props.language !== 'English'
-                      ? 'Write the name of the task'
-                      : ':רשום את שם המשימה '}
-
-                    <RiAsterisk style={{ color: 'red' }} />
-                  </h6>
-                  <p>
-                    <input
-                      required={true}
-                      type='text'
-                      onChange={handleTitleInput}
-                      style={{
-                        width: '100%',
-                        height: '38px',
-                        paddingRight: '20px',
-                        direction: props.language === 'English' ? 'rtl' : 'ltr',
-                      }}
-                      value={get_title}
-                    ></input>
-                  </p>
-                </form>
-                <form id='IPU' className='w3-container'>
-                  <h6>
-                    {props.language !== 'English'
-                      ? 'Describe the task'
-                      : ':תאר במשפט את משימה '}
-                    <RiAsterisk style={{ color: 'red' }} />
-                  </h6>
-                  <p>
-                    <input
-                      type='text'
-                      onChange={handleDescriptionInput}
-                      style={{
-                        width: '100%',
-                        height: '38px',
-                        paddingRight: '20px',
-                        direction: props.language === 'English' ? 'rtl' : 'ltr',
-                      }}
-                      value={getDescription}
-                    ></input>
-                  </p>
-                </form>
-                <div className='estimatedTimeContainer'>
-                  <h6>{props.language !== 'English'
-                    ? "Enter the estimated time in seconds for the task : "
-                    : " זמן מינימלי למשימה (שניות) "}</h6>
-                  <input
-                    type='number'
-                    name='estimatedTimeSeconds'
-                    id='estimatedTimeSeconds'
-                    min={1}
-                    onChange={(e) =>
-                      setEstimatedTimeSeconds(parseInt(e.target.value))
-                    }
-                    value={estimatedTimeSeconds}
-                  />
-                </div>
-                <label>
-                <input
-                    type="checkbox"
-                    checked={showForm}
-                    onChange={() => setShowForm(!showForm)}
-                    style={{
-                      width: '85px',
-                      height: '20px',
-                      paddingRight: '20px',
-                      direction: props.language === 'English' ? 'rtl' : 'ltr',
-                    }}
-                  />
-                  {props.language === 'English' ? 'הוסף נתונים נוספים' : 'Add additional data'}
-
-                </label>
-                {showForm && (
-                <form id='IPU' className='w3-container'  >
+                <div
+                  className={`bodyNewTask ${props.requestForEditing === 'details' ? 'disabledModal' : ''
+                    }`}
+                >
+                  {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
                   <form id='IPU' className='w3-container'>
                     <h6>
                       {props.language !== 'English'
-                        ? 'Write a weight'
-                        : ':רשום משקל '}
+                        ? 'Write the name of the task'
+                        : ':רשום את שם המשימה '}
+
                       <RiAsterisk style={{ color: 'red' }} />
                     </h6>
                     <p>
                       <input
                         required={true}
                         type='text'
-                        onChange={handleDataEntryLabelInput}
+                        onChange={handleTitleInput}
                         style={{
                           width: '100%',
                           height: '38px',
                           paddingRight: '20px',
                           direction: props.language === 'English' ? 'rtl' : 'ltr',
                         }}
-                        value={dataEntryLabel}
+                        value={get_title}
                       ></input>
                     </p>
                   </form>
                   <form id='IPU' className='w3-container'>
                     <h6>
                       {props.language !== 'English'
-                        ? 'Write Data Entry Validation'
-                        : ':רשום את תווית הנתונים '}
+                        ? 'Describe the task'
+                        : ':תאר במשפט את משימה '}
                       <RiAsterisk style={{ color: 'red' }} />
                     </h6>
                     <p>
                       <input
-                        required={true}
                         type='text'
-                        onChange={handleDataEntryValidationInput}
+                        onChange={handleDescriptionInput}
                         style={{
                           width: '100%',
                           height: '38px',
                           paddingRight: '20px',
                           direction: props.language === 'English' ? 'rtl' : 'ltr',
                         }}
-                        value={dataEntryValidation}
+                        value={getDescription}
                       ></input>
                     </p>
                   </form>
+                  <div className='estimatedTimeContainer'>
+                    <h6>{props.language !== 'English'
+                      ? "Enter the estimated time in seconds for the task : "
+                      : " זמן מינימלי למשימה (שניות) "}</h6>
+                    <input
+                      type='number'
+                      name='estimatedTimeSeconds'
+                      id='estimatedTimeSeconds'
+                      min={1}
+                      onChange={(e) =>
+                        setEstimatedTimeSeconds(parseInt(e.target.value))
+                      }
+                      value={estimatedTimeSeconds}
+                    />
+                  </div>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={showForm}
+                      onChange={() => setShowForm(!showForm)}
+                      style={{
+                        width: '85px',
+                        height: '20px',
+                        paddingRight: '20px',
+                        direction: props.language === 'English' ? 'rtl' : 'ltr',
+                      }}
+                    />
+                    {props.language === 'English' ? 'הוסף נתונים נוספים' : 'Add additional data'}
+
+                  </label>
+                  {showForm && (
+                    <form id='IPU' className='w3-container'  >
+                      <form id='IPU' className='w3-container'>
+                        <h6>
+                          {props.language !== 'English'
+                            ? 'Write a weight'
+                            : ':רשום משקל '}
+                          <RiAsterisk style={{ color: 'red' }} />
+                        </h6>
+                        <p>
+                          <input
+                            required={true}
+                            type='text'
+                            onChange={handleDataEntryLabelInput}
+                            style={{
+                              width: '100%',
+                              height: '38px',
+                              paddingRight: '20px',
+                              direction: props.language === 'English' ? 'rtl' : 'ltr',
+                            }}
+                            value={dataEntryLabel}
+                          ></input>
+                        </p>
+                      </form>
+                      <form id='IPU' className='w3-container'>
+                        <h6>
+                          {props.language !== 'English'
+                            ? 'Write Data Entry Validation'
+                            : ':רשום את תווית הנתונים '}
+                          <RiAsterisk style={{ color: 'red' }} />
+                        </h6>
+                        <p>
+                          <input
+                            required={true}
+                            type='text'
+                            onChange={handleDataEntryValidationInput}
+                            style={{
+                              width: '100%',
+                              height: '38px',
+                              paddingRight: '20px',
+                              direction: props.language === 'English' ? 'rtl' : 'ltr',
+                            }}
+                            value={dataEntryValidation}
+                          ></input>
+                        </p>
+                      </form>
+                      <h6>
+                        {props.language !== 'English'
+                          ? 'Select data entry type'
+                          : ':בחר סוג נתונים '}
+                      </h6>
+                      <BasicSelect setFoldersite={setdataEntryType} folderName={dataEntryType} folderlist={dataEntryTypelist} />
+                      <h6>
+                        {props.language !== 'English'
+                          ? 'Select type of task'
+                          : ':בחר סוג משימה '}
+                      </h6>
+                      <BasicSelect setFoldersite={setTaskType} folderName={taskType} folderlist={TaskTypelist} />
+                    </form>
+                  )}
                   <h6>
                     {props.language !== 'English'
-                      ? 'Select data entry type'
-                      : ':בחר סוג נתונים '}
-                  </h6>
-                  <BasicSelect setFoldersite={setdataEntryType} folderName={dataEntryType} folderlist={dataEntryTypelist} />
-                  <h6>
-                    {props.language !== 'English'
-                      ? 'Select type of task'
-                      : ':בחר סוג משימה '}
-                  </h6>
-                  <BasicSelect setFoldersite={setTaskType} folderName={taskType} folderlist={TaskTypelist} />
-                </form>
-                )}
-                <h6>
-                  {props.language !== 'English'
-                    ? 'Select where to save picture / voice'
-                    : ':בחר היכן לשמור תמונה/קול'}
-                  <FcMultipleInputs />
-                </h6>
-                <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
-                <form id='IPU' className='w3-container'>
-                  <h6>
-                    {props.language !== 'English'
-                      ? 'Add a picture of a task from the Gallery / Desktop '
-                      : ' : הוסף תמונה של משימה מהגלריה/שולחן העבודה'}
+                      ? 'Select where to save picture / voice'
+                      : ':בחר היכן לשמור תמונה/קול'}
                     <FcMultipleInputs />
                   </h6>
-                  <div>
-                    <InputFileUpload setPicture={setPicture} language={props.language} />
-                    <Button variant="outlined" onClick={handleOpen}>Gallery</Button>
+                  <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
+                  <form id='IPU' className='w3-container'>
+                    <h6>
+                      {props.language !== 'English'
+                        ? 'Add a picture of a task from the Gallery / Desktop '
+                        : ' : הוסף תמונה של משימה מהגלריה/שולחן העבודה'}
+                      <FcMultipleInputs />
+                    </h6>
+                    <div>
+                      <InputFileUpload setPicture={setPicture} language={props.language} />
+                      <Button variant="outlined" onClick={handleOpen}>Gallery</Button>
+                      <Modal
+                        open={open}
+                        onClose={() => {
+                          handleClose()
+                          console.log(open);
+                        }}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                      >
+                        <Box sx={style}>
+                          <Gallery2 sethandleClose={handleClose} setPicture={setPicture} />
+                        </Box>
+                      </Modal>
+                      {picture ? (
+                        <div className='selectedFileContainer'>
+                          <div className='selectedFileTitle'>:תמונה שנבחרה</div>
+                          <div style={{ marginBottom: '1rem' }}>
+                            {typeof picture === 'string'
+                              ? extractFilenameFromURL(picture)
+                              : picture?.name}
+                          </div>
+                          <div className='thumbnailtask'>
+                            {typeof picture === 'string' && (
+                              <img
+                                src={picture}
+                                className='thumbnailImgtask'
+                                alt=''
+                              />
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{ marginBottom: '1rem' }}>
+                          {props.language !== 'English'
+                            ? 'Selected image: No image file found'
+                            : ' :  תמונה שנבחרה: לא נמצא קובץ תמונה'}
+                        </div>
+                      )}
+                    </div>
+                  </form>
+                  <form id='IPU' className='w3-container'>
+                    <h6>
+                      {props.language !== 'English'
+                        ? 'Add a voice clip describing the task'
+                        : ':הוסף קטע קול המתאר את המשימה '}
+                      <FcMultipleInputs />
+                    </h6>
+                    <InputFileUpload setPicture={setAudio} language={props.language} />
+                    <Button variant="outlined" onClick={handleOpen2}>Gallery audio</Button>
                     <Modal
-                      open={open}
+                      open={open2}
                       onClose={() => {
                         handleClose()
-                        console.log(open);
+                        console.log(open2);
                       }}
                       aria-labelledby="modal-modal-title"
                       aria-describedby="modal-modal-description"
                     >
                       <Box sx={style}>
-                        <Gallery2 sethandleClose={handleClose} setPicture={setPicture} />
+                        <Gallery3 sethandleClose={handleClose} setAudio={setAudio} />
                       </Box>
                     </Modal>
-                    {picture ? (
-                      <div className='selectedFileContainer'>
-                        <div className='selectedFileTitle'>:תמונה שנבחרה</div>
+                  </form>
+                  {audio ? (
+                    <div className='selectedFileContainertask'>
+                      <div className='selectedFileTitle'>
+                        <span>:</span>
+                        אודיו שנבח
+                      </div>
+                      <div className='audioNameContainer'>
                         <div style={{ marginBottom: '1rem' }}>
-                          {typeof picture === 'string'
-                            ? extractFilenameFromURL(picture)
-                            : picture?.name}
+                          {typeof audio === 'string'
+                            ? extractFilenameFromURL(audio)
+                            : audio?.name}
                         </div>
-                        <div className='thumbnailtask'>
-                          {typeof picture === 'string' && (
-                            <img
-                              src={picture}
-                              className='thumbnailImgtask'
-                              alt=''
-                            />
+                        <div>
+                          {typeof audio === 'string' && (
+                            <button
+                              className='play-button'
+                              onClick={handlePlayClick}
+                            >
+                              {/* {audio} */}
+                              Play
+                            </button>
                           )}
                         </div>
+                        <audio ref={audioRef} controls>
+                          <source
+                            src={typeof audio === 'string' ? audio : ''}
+                            type='audio/mpeg'
+                          />
+                          Your browser does not support the audio element.
+                        </audio>
                       </div>
-                    ) : (
-                      <div style={{ marginBottom: '1rem' }}>
-                        {props.language !== 'English'
-                          ? 'Selected image: No image file found'
-                          : ' :  תמונה שנבחרה: לא נמצא קובץ תמונה'}
-                      </div>
-                    )}
-                  </div>
-                </form>
-                <form id='IPU' className='w3-container'>
+                    </div>
+                  ) : (
+                    <div style={{ marginBottom: '1rem' }}>
+                      {props.language !== 'English' ?
+                        'Selected audio: No audio file found' :
+                        ' אודיו שנבחר: לא נמצא קובץ אודיו'}
+                    </div>
+                  )}
                   <h6>
                     {props.language !== 'English'
-                      ? 'Add a voice clip describing the task'
-                      : ':הוסף קטע קול המתאר את המשימה '}
-                    <FcMultipleInputs />
+                      ? 'add multi language'
+                      : ': רב שפות'}
+                    <IoMdCheckbox style={{ color: 'blue' }} />
                   </h6>
-                  <InputFileUpload setPicture={setAudio} language={props.language} />
-                  <Button variant="outlined" onClick={handleOpen2}>Gallery audio</Button>
+                  <Button variant="outlined" onClick={handleOpen3}>
+                    {props.language !== 'English'
+                      ? 'language'
+                      : ' שפות'}
+                  </Button>
                   <Modal
-                    open={open2}
+                    open={open3}
                     onClose={() => {
                       handleClose()
-                      console.log(open2);
+                      console.log(open3);
                     }}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                   >
                     <Box sx={style}>
-                      <Gallery3 sethandleClose={handleClose} setAudio={setAudio} />
-                    </Box>
-                  </Modal>
-                </form>
-                {audio ? (
-                  <div className='selectedFileContainertask'>
-                    <div className='selectedFileTitle'>
-                      <span>:</span>
-                      אודיו שנבח
-                    </div>
-                    <div className='audioNameContainer'>
-                      <div style={{ marginBottom: '1rem' }}>
-                        {typeof audio === 'string'
-                          ? extractFilenameFromURL(audio)
-                          : audio?.name}
-                      </div>
-                      <div>
-                        {typeof audio === 'string' && (
-                          <button
-                            className='play-button'
-                            onClick={handlePlayClick}
-                          >
-                            {/* {audio} */}
-                            Play
-                          </button>
-                        )}
-                      </div>
-                      <audio ref={audioRef} controls>
-                        <source
-                          src={typeof audio === 'string' ? audio : ''}
-                          type='audio/mpeg'
-                        />
-                        Your browser does not support the audio element.
-                      </audio>
-                    </div>
-                  </div>
-                ) : (
-                  <div style={{ marginBottom: '1rem' }}>
-                    {props.language !== 'English' ?
-                      'Selected audio: No audio file found' :
-                      ' אודיו שנבחר: לא נמצא קובץ אודיו'}
-                  </div>
-                )}
-                <h6>
-                  {props.language !== 'English'
-                    ? 'add multi language'
-                    : ': רב שפות'}
-                  <IoMdCheckbox style={{ color: 'blue' }} />
-                </h6>
-                <Button variant="outlined" onClick={handleOpen3}>
-                  {props.language !== 'English'
-                    ? 'language'
-                    : ' שפות'}
-                </Button>
-                <Modal
-                  open={open3}
-                  onClose={() => {
-                    handleClose()
-                    console.log(open3);
-                  }}
-                  aria-labelledby="modal-modal-title"
-                  aria-describedby="modal-modal-description"
-                >
-                  <Box sx={style}>
-                    {/* <h1>{props.multi_language_description == {} ? props.multi_language_description : 'No description'}</h1>
+                      {/* <h1>{props.multi_language_description == {} ? props.multi_language_description : 'No description'}</h1>
                     <form id='IPU' className='w3-container'>
                       <h6>
                         {props.language !== 'English'
@@ -722,90 +733,119 @@ function Modal_Tasks(props) {
                         ></input>
                       </p>
                     </form> */}
-                    {/* {Object.keys(multi_language_description).map((languagedescription, index) => ( */}
-                    <Model_Tasks_Pop
-                      // key={index}
-                      language={props.language}
-                      language_description={language_description}
-                      sethandleClose={handleClose}
-                      multi_language_description={multi_language_description}//data[language_description]
-                      setMulti_language_description={setMulti_language_description}
-                    />
-                    {/* ))} */}
-                  </Box>
-                </Modal>
-                <div className='list-group'>
+                      {/* {Object.keys(multi_language_description).map((languagedescription, index) => ( */}
+                      <Model_Tasks_Pop
+                        // key={index}
+                        language={props.language}
+                        language_description={language_description}
+                        sethandleClose={handleClose}
+                        multi_language_description={multi_language_description}//data[language_description]
+                        setMulti_language_description={setMulti_language_description}
+                      />
+                      {/* ))} */}
+                    </Box>
+                  </Modal>
                   <h6>
                     {props.language !== 'English'
-                      ? 'Select the stations you want to associate the task with'
-                      : ':בחר את התחנות שברצונך לשייך את המשימה'}
+                      ? 'add additional help'
+                      : ': הוסף עזרה נוספת'}
                     <IoMdCheckbox style={{ color: 'blue' }} />
                   </h6>
-                  <div className='allTasks'>
-                    {props.allStations.map((value, index) => {
-                      return (
-                        <label key={index} className='list-group-item'>
-                          <input
-                            className='form-check-input me-1'
-                            type='checkbox'
-                            onChange={() => saveCheckbox(value)}
-                            style={{
-                              marginLeft: props.language === 'English' ? '0' : '5px',
-                              marginRight: props.language !== 'English' ? '0' : '5px',
-                            }}
-                            checked={myPlacesChoice.includes(value.id)}
-                          ></input>
-                          {value.title}
-                        </label>
-                      );
-                    })}
+                  <Button variant="outlined" onClick={handleOpen4}>
+                    {props.language !== 'English'
+                      ? 'additional help'
+                      : ' עזרה נוספת'}
+                  </Button>
+                  <Modal
+                    open={open4}
+                    onClose={() => {
+                      handleClose()
+                    }}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={style}>
+                      <Model_Tasks_help_Pop
+                        allUsers={props.allUsers}
+                        language={props.language}
+                        additonalHelp={additonalHelp}
+                        sethandleClose={handleClose}
+                        setAdditonalHelp={setAdditonalHelp}
+                      />
+                    </Box>
+                  </Modal>
+                  <div className='list-group'>
+                    <h6>
+                      {props.language !== 'English'
+                        ? 'Select the stations you want to associate the task with'
+                        : ':בחר את התחנות שברצונך לשייך את המשימה'}
+                      <IoMdCheckbox style={{ color: 'blue' }} />
+                    </h6>
+                    <div className='allTasks'>
+                      {props.allStations.map((value, index) => {
+                        return (
+                          <label key={index} className='list-group-item'>
+                            <input
+                              className='form-check-input me-1'
+                              type='checkbox'
+                              onChange={() => saveCheckbox(value)}
+                              style={{
+                                marginLeft: props.language === 'English' ? '0' : '5px',
+                                marginRight: props.language !== 'English' ? '0' : '5px',
+                              }}
+                              checked={myPlacesChoice.includes(value.id)}
+                            ></input>
+                            {value.title}
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  gap: '16px',
-                  height: '100px',
-                  alignItems: 'center',
-                  padding: '40px',
-                  marginBottom: '20px',
-                }}
-                className='footerNewTasks'
-              >
-                {props.requestForEditing === 'details' ? (
-                  <></>
-                ) : (
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: '16px',
+                    height: '100px',
+                    alignItems: 'center',
+                    padding: '40px',
+                    marginBottom: '20px',
+                  }}
+                  className='footerNewTasks'
+                >
+                  {props.requestForEditing === 'details' ? (
+                    <></>
+                  ) : (
+                    <input
+                      type='submit'
+                      className='saveTaskButton'
+                      value={
+                        props.language !== 'English' ? 'Save Task' : 'שמור משימה'
+                      }
+                      onClick={saveTask}
+                    />
+                  )}
                   <input
                     type='submit'
-                    className='saveTaskButton'
-                    value={
-                      props.language !== 'English' ? 'Save Task' : 'שמור משימה'
-                    }
-                    onClick={saveTask}
+                    className='cancelTaskButton'
+                    value={props.language !== 'English' ? 'Cancel' : 'ביטול'}
+                    onClick={() => {
+                      setMyPlacesChoice([]);
+                      props.setModalOpen(false);
+                      props.handleClose();
+                    }}
                   />
+                </div>
+                {flagClickOK ? (
+                  <>
+                    <Modal_Loading props={false} />
+                  </>
+                ) : (
+                  <></>
                 )}
-                <input
-                  type='submit'
-                  className='cancelTaskButton'
-                  value={props.language !== 'English' ? 'Cancel' : 'ביטול'}
-                  onClick={() => {
-                    setMyPlacesChoice([]);
-                    props.setModalOpen(false);
-                    props.handleClose();
-                  }}
-                />
               </div>
-              {flagClickOK ? (
-                <>
-                  <Modal_Loading props={false} />
-                </>
-              ) : (
-                <></>
-              )}
             </div>
-          </div>
           </Draggable>
         </>
       ) : (

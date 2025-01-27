@@ -1349,6 +1349,7 @@ const Places = (props) => {
             settaskcolor={handleColor}
           />
           <Tasks
+            allUsers={allUsers}
             boardArrayDND={boardArrayDND}
             setBoardArrayDND={setBoardArrayDND}
             allTasks={allTasks}

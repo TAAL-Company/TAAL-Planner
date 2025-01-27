@@ -120,7 +120,7 @@ export default function UserForm({
 
             } else {
                 await insertUser({ ...formValues }).then((response) => {
-                    setUsers((prevUsers) => [...prevUsers, { ...response }]);
+                    // setUsers((prevUsers) => [...prevUsers, { ...response }]);
                     setupdateduplicateUser(!updateduplicateUser);
                 });
             }

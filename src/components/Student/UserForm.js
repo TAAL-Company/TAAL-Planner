@@ -108,7 +108,7 @@ export default function UserForm({
     };
 
     const handleSubmit = async () => {
-        // try {
+        try {
             console.log('formValues', formValues);
             if (picture) {
                 formValues.picture_url = await uploadFiles(picture, 'Worker media/picture', Foldersite);
@@ -125,9 +125,9 @@ export default function UserForm({
                 });
             }
 
-        // } catch (error) {
-        //     alert(error.message);
-        // }
+        } catch (error) {
+            alert(error.message);
+        }
         handleCloseDialog(); // Close the dialog
     };
 

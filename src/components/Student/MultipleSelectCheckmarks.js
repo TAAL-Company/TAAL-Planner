@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Checkbox, ListItemText, MenuItem, Select, InputLabel, FormControl, OutlinedInput } from '@mui/material';
 
-export default function MultipleSelect({ label, formValues, handleChange, sites }) {
+export default function MultipleSelect({ label, formValues, handleChange, sites, setFormValues }) {
     const [selectedSites, setSelectedSites] = useState([]);
     useEffect(() => {
+        console.log('sites', sites);
         sites.map((site) => {
-            if (formValues.sites.find((item) => item.id === site.id)) {
+            if (formValues?.sites?.find((item) => item.id === site.id)) {
                 setSelectedSites((prev) => [...prev, site]);
             }
         })
@@ -15,6 +16,10 @@ export default function MultipleSelect({ label, formValues, handleChange, sites 
         const { value } = event.target;
         setSelectedSites(value);
         handleChange('sites', value);
+        setFormValues((prev) => ({
+            ...prev,
+            sites: value,
+        }));
     };
 
     return (

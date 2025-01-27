@@ -28,7 +28,10 @@ export default function UserForm({
     coaches,
     setUsers,
     sites,
-    UserAction
+    UserAction,
+    setupdateduplicateUser,
+    updateduplicateUser
+
 }) {
     const [formValues, setFormValues] = useState({ ...initialValues });
     const [Foldersite, setFoldersite] = useState('general');
@@ -105,7 +108,7 @@ export default function UserForm({
     };
 
     const handleSubmit = async () => {
-        try {
+        // try {
             console.log('formValues', formValues);
             if (picture) {
                 formValues.picture_url = await uploadFiles(picture, 'Worker media/picture', Foldersite);
@@ -118,12 +121,13 @@ export default function UserForm({
             } else {
                 await insertUser({ ...formValues }).then((response) => {
                     setUsers((prevUsers) => [...prevUsers, { ...response }]);
+                    setupdateduplicateUser(!updateduplicateUser);
                 });
             }
 
-        } catch (error) {
-            alert(error.message);
-        }
+        // } catch (error) {
+        //     alert(error.message);
+        // }
         handleCloseDialog(); // Close the dialog
     };
 
@@ -186,6 +190,7 @@ export default function UserForm({
                     formValues={formValues}
                     handleChange={handleChange}
                     sites={sites}
+                    setFormValues={setFormValues}
                 />
                 <FormControl fullWidth margin="normal">
                     <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />

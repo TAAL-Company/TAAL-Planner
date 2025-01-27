@@ -237,8 +237,8 @@ export default function DataGridDemo() {
       headerName: 'Sites',
       width: 200,
       renderCell: (params) => {
-        const sites = params.row.sites.map((site) => site.name);
-        const sitesfromsitesdata = params.row.sites.flatMap((site) => site.students?.find((student) => student.id === params.row.id)?.name);
+        const sites = params.row.sites ? params.row.sites.map((site) => site.name) : [];
+        const sitesfromsitesdata = params.row.sites ? params.row.sites.flatMap((site) => site.students?.find((student) => student.id === params.row.id)?.name) : [];
         const allsites = sites.concat(sitesfromsitesdata);
         return <div>{allsites.join(', ')}</div>;
       },
@@ -362,6 +362,8 @@ export default function DataGridDemo() {
           setUsers={setUsers}
           sites={sites}
           UserAction={UserAction}
+          setupdateduplicateUser={setupdateduplicateUser}
+          updateduplicateUser={updateduplicateUser}
         />
       </Box>
     </div>

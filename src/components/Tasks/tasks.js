@@ -270,6 +270,7 @@ const Tasks = (props) => {
       </div>
       {modalOpen ? (
         <ModalTasks
+          allTasks={props.allTasks}
           allUsers={props.allUsers}
           setTaskForEdit={setTaskForEdit}
           uuid={taskUuidForEdit}
@@ -363,6 +364,13 @@ const Tasks = (props) => {
                 (task) => task.id === openThreeDotsVertical
               ).multi_language_description
               : "{}"
+          }
+          additonalHelp={
+            openThreeDotsVertical !== -1
+              ? props.tasksOfChosenStation.find(
+                (task) => task.id === openThreeDotsVertical
+              ).additonalHelp
+              : []
           }
         />
       ) : (

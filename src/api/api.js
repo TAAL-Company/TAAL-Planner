@@ -879,7 +879,8 @@ export const insertTask = async (
   dataEntryLabel,
   dataEntryValidation,
   dataEntryType,
-  taskType
+  taskType,
+  additonalHelp
 ) => {
   try {
     const response = await fetch(baseUrl + '/tasks', {
@@ -900,7 +901,8 @@ export const insertTask = async (
         dataEntryLabel,
         dataEntryValidation,
         dataEntryType,
-        taskType
+        taskType,
+        additonalHelp,
       }),
     });
 
@@ -1334,4 +1336,54 @@ export const getingTask_Performance = async (
     taskssperformance = res.data;
   });
   return taskssperformance;
+};
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  additonalHelp  ~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+export const postAdditonalHelp = async (additonalHelp) => {
+  try {
+    const response = await post (baseUrl + '/additonal-help', additonalHelp, {
+      headers: {
+        'Content-Type': 'application/json',
+        // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      },
+    }).then((res) => {
+      return res;
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAdditonalHelp = async () => {
+  try {
+    const response = await get(baseUrl + '/additonal-help');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};  
+
+export const updateAdditonalHelp = async (id, additonalHelp) => {
+  try {
+    const body = {
+        help_text: additonalHelp.help_text,
+        picture_url: additonalHelp.picture_url,
+        audio_url: additonalHelp.audio_url,
+        video_url: additonalHelp.video_url,
+        UserID: additonalHelp.UserID
+    };
+    const response = await patch(baseUrl + '/additonal-help/' + id, body, {
+      headers: {
+        'Content-Type': 'application/json',
+        // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
+      },
+    }).then((res) => {
+      return res;
+    });
+  } catch (error) {
+    throw error;
+  }
 };

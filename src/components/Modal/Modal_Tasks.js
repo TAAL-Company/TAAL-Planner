@@ -6,7 +6,7 @@ import { IoMdCheckbox } from 'react-icons/io';
 import Modal_Loading from './Modal_Loading';
 import { baseUrl } from '../../config';
 import Modal_no_site_selected from './Modal_no_site_selected';
-import { uploadFiles, uploadFile, insertTask, updateTask } from '../../api/api';
+import { uploadFiles, uploadFile, insertTask, updateTask, updateAdditonalHelp, postAdditonalHelp } from '../../api/api';
 import uploadFileToBlob from '../azureBlob';
 import Gallery2 from '../Gallery/Gallery2';
 import Gallery3 from '../Gallery/Gallery3';
@@ -159,7 +159,7 @@ function Modal_Tasks(props) {
   const saveTask = async () => {
     setFlagClickOK(true);
     console.log("additonalHelp", additonalHelp);
-    
+
 
     if (get_title === '' || getDescription === '') {
       alert(props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
@@ -201,7 +201,7 @@ function Modal_Tasks(props) {
           dataEntryValidation,
           dataEntryType,
           taskType,
-          additonalHelp: JSON.stringify(additonalHelp),
+          additonalHelp: additonalHelp,
         };
         if (newTask.picture_url === undefined) {
           newTask.picture_url = '';
@@ -217,8 +217,25 @@ function Modal_Tasks(props) {
     }
   };
   const update_task = async (uuid, newTask) => {
+    console.log(additonalHelp);
     try {
-      const update = await updateTask(uuid, newTask);
+      if (additonalHelp[0].id === undefined || additonalHelp[0].id === null || additonalHelp[0].id === '') {
+        additonalHelp[0].taskId = uuid;
+        delete additonalHelp[0].id;
+        await postAdditonalHelp(additonalHelp[0]);
+      } else {
+        await updateAdditonalHelp(additonalHelp[0].id, additonalHelp[0]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    // Create a copy of newTask without additonalHelp
+    const newTaskWithoutHelp = { ...newTask };
+    delete newTaskWithoutHelp.additonalHelp;
+
+    try {
+      const update = await updateTask(uuid, newTaskWithoutHelp);
 
       if (update.status === 200) {
         let indexStation = props.allStations.findIndex(
@@ -360,8 +377,8 @@ function Modal_Tasks(props) {
   const handleOpen3 = () => setOpen3(true);
   const handleOpen4 = () => setOpen4(true);
   const handleClose = () => {
-        console.log("additonalHelp", additonalHelp);
-    
+    console.log("additonalHelp", additonalHelp);
+
     setOpen(false);
     setOpen2(false);
     setOpen3(false);

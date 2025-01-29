@@ -30,20 +30,32 @@ const style = {
 
 //--------------------------
 function Model_Tasks_Pop(props) {
+    console.log(props.additonalHelp);
     let additonalHelp = {};
 
-    // if (Object.keys(props.additonalHelp).length === 0) {
-    //     additonalHelp = props.additonalHelp[props.additonalHelp]
-    // } else {
-    //     additonalHelp = JSON.parse(props.additonalHelp)[props.additonalHelp]
-    // }
-    
-    const [studentIds, setStudentIds] = useState(additonalHelp?.studentIds || '');
-    const [help_text, setHelp_text] = useState(additonalHelp?.help_text || '');
-    const [picture, setPicture] = useState(additonalHelp?.picture || '');
-    const [audio, setAudio] = useState(additonalHelp?.audio || '');
-    const [video, setVideo] = useState(additonalHelp?.video || '');
-    
+    if (props.additonalHelp.length > 0) {
+        if (props.additonalHelp[0].UserID === "General") {
+            additonalHelp = props.additonalHelp[0];
+        }
+    } else {
+        additonalHelp = {
+            id: '',
+            help_text: '',
+            picture_url: '',
+            audio_url: '',
+            video_url: '',
+            UserID: "General",
+        }
+    }
+
+    const [UserIDs, setUserIDs] = useState(additonalHelp?.UserID);
+    const [help_text, setHelp_text] = useState(additonalHelp?.help_text);
+    const [picture, setPicture] = useState(additonalHelp?.picture_url);
+    const [audio, setAudio] = useState(additonalHelp?.audio_url);
+    const [video, setVideo] = useState(additonalHelp?.video_url);
+
+    const [additonalHelpUsers, setAdditonalHelpUsers] = useState(props.additonalHelp);
+
 
     const [open, setOpen] = React.useState(false);
     const [open2, setOpen2] = React.useState(false);
@@ -70,18 +82,39 @@ function Model_Tasks_Pop(props) {
 
 
     const saveTask = () => {
-        let additonalHelp = {
+        let GeneraladditonalHelp = {
+            id: additonalHelp?.id,
             help_text: help_text,
             picture_url: picture,
             audio_url: audio,
             video_url: video,
-            studentIds: "General",
+            UserID: "General",
+        };
+
+        console.log(GeneraladditonalHelp);
+        if (props.additonalHelp.length > 0 && props.additonalHelp[0].UserID === "General") {
+            props.additonalHelp[0] = GeneraladditonalHelp
+        } else {
+            props.setAdditonalHelp([...(props.additonalHelp || []), GeneraladditonalHelp]);
+        }
+        if (additonalHelpUsers.length && additonalHelpUsers[0].UserID !== "General") {
+            props.setAdditonalHelp([...(props.additonalHelp || []), additonalHelpUsers]);
         }
 
+        // if (props.additonalHelp.length >= 0 && GeneraladditonalHelp.UserID === "General" ) {
+        //     if (props.additonalHelp[0].UserID === "General" || props.additonalHelp[0].UserID === "General" ) {
+        //         props.additonalHelp[0] = GeneraladditonalHelp;
+        //     } else {
+        //         props.setAdditonalHelp([...(props.additonalHelp || []), GeneraladditonalHelp]);
+        //     }
+        // } else {
+        //     props.setAdditonalHelp([...(props.additonalHelp || []), GeneraladditonalHelp]);
+        // }
+        console.log(GeneraladditonalHelp);
+        console.log(additonalHelpUsers);
         console.log(props.additonalHelp);
-        props.setAdditonalHelp([...(props.additonalHelp || []), additonalHelp]);
-        console.log(additonalHelp);
-        props.sethandleClose(false)
+
+        props.sethandleClose(false);
     };
 
     const audioRef = useRef(null);
@@ -300,7 +333,7 @@ function Model_Tasks_Pop(props) {
                             : ': הוסף טקסט נוסף לתלמידים מסוימים'}
                         <FcMultipleInputs />
                     </h6>
-                    <Button variant="outlined" onClick={handleOpen3}>additional help for specific user</Button>
+                    {/*<Button variant="outlined" onClick={handleOpen3}>additional help for specific user</Button> */}
 
                     <Modal
                         open={open3}
@@ -323,10 +356,12 @@ function Model_Tasks_Pop(props) {
                         }}>
                             <Model_Tasks_help_for_user_Popup
                                 allUsers={props.allUsers}
-                                studentIds={studentIds}
-                                setStudentIds={setStudentIds}
+                                UserIDs={UserIDs}
+                                setUserIDs={setUserIDs}
                                 language={props.language}
                                 sethandleClose={handleClose}
+                                setAdditonalHelpUsers={setAdditonalHelpUsers}
+                                additonalHelpUsers={additonalHelpUsers}
                                 setAdditonalHelp={props.setAdditonalHelp}
                                 additonalHelp={props.additonalHelp}
                             />

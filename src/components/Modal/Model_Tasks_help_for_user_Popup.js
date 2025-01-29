@@ -27,7 +27,7 @@ const initialFormConfig = [
     {
         label: 'Select a user',
         type: 'select',
-        value: 'studentIds',
+        value: 'UserID',
         options: 'allUsers',
         required: true,
     },
@@ -54,12 +54,22 @@ const initialFormConfig = [
 function Model_Tasks_Pop_for_user(props) {
     let additonalHelp = {};
 
+    if (props.additonalHelp.UserID === "General" && props.additonalHelp.length > 0) {
+        console.log(additonalHelp);
+        let withGrenal = props.additonalHelp;
+        let removefirst = withGrenal.shift();
+        additonalHelp = removefirst
+        console.log(additonalHelp);
+    }
+    
+
     const [formData, setFormData] = useState([{
+        id: additonalHelp?.id || '',
         help_text: additonalHelp?.help_text || '',
         picture: additonalHelp?.picture || '',
         audio: additonalHelp?.audio || '',
         video: additonalHelp?.video || '',
-        studentIds: additonalHelp?.studentIds || '',
+        UserID: additonalHelp?.UserID || '',
     }]);
 
     const [formConfigs, setFormConfigs] = useState([initialFormConfig]);
@@ -94,15 +104,17 @@ function Model_Tasks_Pop_for_user(props) {
 
     const saveTask = () => {
         const allHelpData = formData.map(data => ({
+            id: data.id,
             help_text: data.help_text,
             picture_url: data.picture,
             audio_url: data.audio,
             video_url: data.video,
-            studentIds: data.studentIds,
+            UserID: data.UserID,
         }));
 
-        console.log(allHelpData);
-        props.setAdditonalHelp(...(props.additonalHelp || []), allHelpData);
+        console.log("allHelpData",allHelpData);
+        props.setAdditonalHelpUsers(allHelpData);
+        // props.setAdditonalHelp(...(props.additonalHelp || []), allHelpData);
         props.sethandleClose(false);
     };
 
@@ -177,7 +189,7 @@ function Model_Tasks_Pop_for_user(props) {
             picture: '',
             audio: '',
             video: '',
-            studentIds: '',
+            UserID: '',
         }]);
     };
 

@@ -52,25 +52,22 @@ const initialFormConfig = [
 ];
 
 function Model_Tasks_Pop_for_user(props) {
-    let additonalHelp = {};
+    let additonalHelp = [];
 
-    if (props.additonalHelp.UserID === "General" && props.additonalHelp.length > 0) {
-        console.log(additonalHelp);
-        let withGrenal = props.additonalHelp;
-        let removefirst = withGrenal.shift();
-        additonalHelp = removefirst
-        console.log(additonalHelp);
+    if (props.additonalHelp && props.additonalHelp.length > 0) {
+        additonalHelp = props.additonalHelp.filter(help => help.UserID !== "General");
     }
     
-
-    const [formData, setFormData] = useState([{
-        id: additonalHelp?.id || '',
-        help_text: additonalHelp?.help_text || '',
-        picture: additonalHelp?.picture || '',
-        audio: additonalHelp?.audio || '',
-        video: additonalHelp?.video || '',
-        UserID: additonalHelp?.UserID || '',
-    }]);
+    console.log("additonalHelp", additonalHelp);
+    
+    const [formData, setFormData] = useState(additonalHelp.map(help => ({
+        id: help.id || '',
+        help_text: help.help_text || '',
+        picture: help.picture || '',
+        audio: help.audio || '',
+        video: help.video || '',
+        UserID: help.UserID || '',
+    })));
 
     const [formConfigs, setFormConfigs] = useState([initialFormConfig]);
 

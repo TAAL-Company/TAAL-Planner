@@ -91,28 +91,18 @@ function Model_Tasks_Pop(props) {
             UserID: "General",
         };
 
-        console.log(GeneraladditonalHelp);
         if (props.additonalHelp.length > 0 && props.additonalHelp[0].UserID === "General") {
             props.additonalHelp[0] = GeneraladditonalHelp
         } else {
-            props.setAdditonalHelp([...(props.additonalHelp || []), GeneraladditonalHelp]);
+            props.setAdditonalHelp([ GeneraladditonalHelp]);
         }
+
+
         if (additonalHelpUsers.length && additonalHelpUsers[0].UserID !== "General") {
             props.setAdditonalHelp([...(props.additonalHelp || []), additonalHelpUsers]);
         }
 
-        // if (props.additonalHelp.length >= 0 && GeneraladditonalHelp.UserID === "General" ) {
-        //     if (props.additonalHelp[0].UserID === "General" || props.additonalHelp[0].UserID === "General" ) {
-        //         props.additonalHelp[0] = GeneraladditonalHelp;
-        //     } else {
-        //         props.setAdditonalHelp([...(props.additonalHelp || []), GeneraladditonalHelp]);
-        //     }
-        // } else {
-        //     props.setAdditonalHelp([...(props.additonalHelp || []), GeneraladditonalHelp]);
-        // }
-        console.log(GeneraladditonalHelp);
-        console.log(additonalHelpUsers);
-        console.log(props.additonalHelp);
+        props.setMainAdditonalHelp([ GeneraladditonalHelp , additonalHelpUsers]);
 
         props.sethandleClose(false);
     };
@@ -333,7 +323,7 @@ function Model_Tasks_Pop(props) {
                             : ': הוסף טקסט נוסף לתלמידים מסוימים'}
                         <FcMultipleInputs />
                     </h6>
-                    {/*<Button variant="outlined" onClick={handleOpen3}>additional help for specific user</Button> */}
+                    <Button variant="outlined" onClick={handleOpen3}>additional help for specific user</Button>
 
                     <Modal
                         open={open3}

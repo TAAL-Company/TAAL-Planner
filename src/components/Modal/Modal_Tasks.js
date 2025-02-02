@@ -59,6 +59,7 @@ function Modal_Tasks(props) {
   const [TaskTypelist, setTaskTypelist] = useState(["specialTask", "normal", "onlyOnce", "popupAfterCurrentTask"]);
   const [multi_language_description, setMulti_language_description] = useState(props.multi_language_description);
   const [additonalHelp, setAdditonalHelp] = useState(props.additonalHelp);
+  const [mainadditonalHelp, setMainAdditonalHelp] = useState();
   const [language_description, setlanguage_description] = useState('English');
   const [picture, setPicture] = useState(props.picture);
   const [audio, setAudio] = useState(props.audio);
@@ -159,6 +160,7 @@ function Modal_Tasks(props) {
   const saveTask = async () => {
     setFlagClickOK(true);
     console.log("additonalHelp", additonalHelp);
+    console.log(mainadditonalHelp);
 
 
     if (get_title === '' || getDescription === '') {
@@ -201,7 +203,7 @@ function Modal_Tasks(props) {
           dataEntryValidation,
           dataEntryType,
           taskType,
-          additonalHelp: additonalHelp,
+          additonalHelp: mainadditonalHelp,
         };
         if (newTask.picture_url === undefined) {
           newTask.picture_url = '';
@@ -217,14 +219,27 @@ function Modal_Tasks(props) {
     }
   };
   const update_task = async (uuid, newTask) => {
-    console.log(additonalHelp);
     try {
-      if (additonalHelp[0].id === undefined || additonalHelp[0].id === null || additonalHelp[0].id === '') {
-        additonalHelp[0].taskId = uuid;
-        delete additonalHelp[0].id;
-        await postAdditonalHelp(additonalHelp[0]);
-      } else {
-        await updateAdditonalHelp(additonalHelp[0].id, additonalHelp[0]);
+      for (let i = 0; i < additonalHelp.length; i++) {
+        if (Array.isArray(additonalHelp[i])) {
+          for (let j = 0; j < additonalHelp[i].length; j++) {
+            if (!additonalHelp[i][j].id) {
+              additonalHelp[i][j].taskId = uuid;
+              delete additonalHelp[i][j].id;
+              await postAdditonalHelp(additonalHelp[i][j]);
+            } else {
+              await updateAdditonalHelp(additonalHelp[i][j].id, additonalHelp[i][j]);
+            }
+          }
+        } else {
+          if (!additonalHelp[i].id) {
+            additonalHelp[i].taskId = uuid;
+            delete additonalHelp[i].id;
+            await postAdditonalHelp(additonalHelp[i]);
+          } else {
+            await updateAdditonalHelp(additonalHelp[i].id, additonalHelp[i]);
+          }
+        }
       }
     } catch (error) {
       console.error(error);
@@ -788,6 +803,8 @@ function Modal_Tasks(props) {
                         additonalHelp={additonalHelp}
                         sethandleClose={handleClose}
                         setAdditonalHelp={setAdditonalHelp}
+                        setMainAdditonalHelp={setMainAdditonalHelp}
+                        mainadditonalHelp={mainadditonalHelp}
                       />
                     </Box>
                   </Modal>

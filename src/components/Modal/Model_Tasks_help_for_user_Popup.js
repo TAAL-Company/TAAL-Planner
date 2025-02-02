@@ -52,14 +52,42 @@ const initialFormConfig = [
 ];
 
 function Model_Tasks_Pop_for_user(props) {
-    let additonalHelp = [];
+    let additonalHelp = [{
+        id: "",
+        help_text: "",
+        picture: "",
+        audio: "",
+        video: "",
+        UserID: "",
+    }];
 
     if (props.additonalHelp && props.additonalHelp.length > 0) {
         additonalHelp = props.additonalHelp.filter(help => help.UserID !== "General");
+        if (additonalHelp.length === 0) {
+            additonalHelp = [{
+                id: "",
+                help_text: "",
+                picture: "",
+                audio: "",
+                video: "",
+                UserID: "",
+            }];
+        }
+    } else {
+        additonalHelp = [
+            {
+                id: "",
+                help_text: "",
+                picture: "",
+                audio: "",
+                video: "",
+                UserID: "",
+            }
+        ];
     }
-    
+
     console.log("additonalHelp", additonalHelp);
-    
+
     const [formData, setFormData] = useState(additonalHelp.map(help => ({
         id: help.id || '',
         help_text: help.help_text || '',
@@ -109,7 +137,7 @@ function Model_Tasks_Pop_for_user(props) {
             UserID: data.UserID,
         }));
 
-        console.log("allHelpData",allHelpData);
+        console.log("allHelpData", allHelpData);
         props.setAdditonalHelpUsers(allHelpData);
         // props.setAdditonalHelp(...(props.additonalHelp || []), allHelpData);
         props.sethandleClose(false);
@@ -353,7 +381,7 @@ function Model_Tasks_Pop_for_user(props) {
                                         )}
                                     </div>
                                 ) : null}
-                                
+
                             </form>
                         ))}
                         <Button variant="outlined" color="secondary" onClick={() => removeForm(formIndex)}>Remove</Button>

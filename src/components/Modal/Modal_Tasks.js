@@ -6,7 +6,7 @@ import { IoMdCheckbox } from 'react-icons/io';
 import Modal_Loading from './Modal_Loading';
 import { baseUrl } from '../../config';
 import Modal_no_site_selected from './Modal_no_site_selected';
-import { uploadFiles, uploadFile, insertTask, updateTask, updateAdditonalHelp, postAdditonalHelp } from '../../api/api';
+import { uploadFiles, uploadFile, insertTask, updateTask, updateAdditonalHelp, postAdditonalHelp, getingData_Tasks } from '../../api/api';
 import uploadFileToBlob from '../azureBlob';
 import Gallery2 from '../Gallery/Gallery2';
 import Gallery3 from '../Gallery/Gallery3';
@@ -59,7 +59,7 @@ function Modal_Tasks(props) {
   const [TaskTypelist, setTaskTypelist] = useState(["specialTask", "normal", "onlyOnce", "popupAfterCurrentTask"]);
   const [multi_language_description, setMulti_language_description] = useState(props.multi_language_description);
   const [additonalHelp, setAdditonalHelp] = useState(props.additonalHelp);
-  const [mainadditonalHelp, setMainAdditonalHelp] = useState();
+  const [mainadditonalHelp, setMainAdditonalHelp] = useState([]);
   const [language_description, setlanguage_description] = useState('English');
   const [picture, setPicture] = useState(props.picture);
   const [audio, setAudio] = useState(props.audio);
@@ -281,6 +281,17 @@ function Modal_Tasks(props) {
   };
   const Post_Task = async (picture_url, audio_url) => {
     // resultMyPlacesChoice();
+    let additonalHelpflat = [];
+    console.log("mainadditonalHelp", mainadditonalHelp);
+    
+    if (mainadditonalHelp.length > 0) {
+      additonalHelpflat = mainadditonalHelp.flat(Infinity);
+      additonalHelpflat.forEach(item => {
+        delete item.id;
+      });
+      console.log("additonalHelpflat", additonalHelpflat);
+    }
+
 
     if (myPlacesChoice.length > 0) {
       try {
@@ -297,7 +308,7 @@ function Modal_Tasks(props) {
           dataEntryValidation,
           dataEntryType,
           taskType,
-          additonalHelp
+          additonalHelpflat
         );
 
         let color = props.allStations.find(

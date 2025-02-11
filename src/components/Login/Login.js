@@ -31,6 +31,8 @@ function Login(props) {
   const [usernameLanguage, setUsernameLanguage] = useState('שם משתמש');
   const [language, setLanguage] = useState('Hebrew');
 
+  const [submit, setSubmit] = useState(false);
+
   useEffect(() => {
     sessionStorage.setItem('language', "Hebrew");
   }, []);
@@ -66,6 +68,7 @@ function Login(props) {
   }
 
   function handleSubmit() {
+    setSubmit(true);
     setAPIDetailsLogin({ ...loginDetails });
     setFlagLoading((flagLoading = true));
   }
@@ -229,6 +232,8 @@ function Login(props) {
             setIsLoggedIn={props.setIsLoggedIn}
             setServerMessage={props.setServerMessage}
             getFlagLoading={flagLoading}
+            setSubmit={setSubmit}
+            submit={submit}
           />
         </>
       )}

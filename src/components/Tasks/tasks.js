@@ -7,6 +7,7 @@ import ModalTasks from '../Modal/Modal_Tasks.js';
 import { deleteTask, getingData_Tasks, insertTask } from '../../api/api.js';
 import ModalDelete from '../Modal/Modal_Delete.js';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { useNotification } from "../Notification/NotificationProvider";
 
 const Tasks = (props) => {
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
@@ -19,6 +20,7 @@ const Tasks = (props) => {
   const [filteredDataTasks, setFilteredDataTasks] = useState([]);
   const [taskForDelete, setTaskForDelete] = useState('');
   const [siteSelected, setSiteSelected] = useState(false);
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     setFilteredDataTasks(props.tasksOfChosenStation);
@@ -45,10 +47,12 @@ const Tasks = (props) => {
   };
 
   const handleCloseRemoveConfirm = async () => {
-    let deleteTaskTemp = await deleteTask(taskForDelete);
+    try {
+    let deleteTaskTemp = await deleteTask(taskForDelete)
+    showNotification('success', props.language === 'English' ? 'Task deleted successfully' : 'המשימה נמחקה בהצלחה');
 
     if (deleteTaskTemp !== undefined) {
-      alert(props.language !== 'English' ? 'Task deleted successfully' : 'המשימה נמחקה בהצלחה');
+      // alert(props.language !== 'English' ? 'Task deleted successfully' : 'המשימה נמחקה בהצלחה');
       const newTasks = [...props.tasksOfChosenStation];
       let indexaTask = props.tasksOfChosenStation.findIndex(
         (task) => task.id === taskForDelete
@@ -65,6 +69,10 @@ const Tasks = (props) => {
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
     setRequestForEditing('');
+    } catch (error) {
+      console.error(error);
+      showNotification('error', props.language === 'English' ?'Error deleting task'+error: 'שגיאה במחיקת משימה'+error);  
+    }
   };
 
   const duplicateTask = async (
@@ -84,6 +92,7 @@ const Tasks = (props) => {
     );
     if (station && indexStation !== -1) {
       try {
+        
         const post = await insertTask(
           get_title,
           getDescription,
@@ -93,6 +102,7 @@ const Tasks = (props) => {
           mySiteId,
           estimatedTimeSeconds
         );
+        showNotification('success', props.language === 'English' ? 'Task duplicated successfully' : 'המשימה נוספה בהצלחה');  
 
         // props.setAllTasksOfTheSite((prev) => [...prev, post]);
         const newTasks = [...props.tasksOfChosenStation];
@@ -103,6 +113,7 @@ const Tasks = (props) => {
         setOpenThreeDotsVertical(-1);
       } catch (error) {
         console.error(error);
+        showNotification('error', props.language === 'English' ?'Error duplicating task'+error: 'שגיאה בשכפול משימה'+error);  
       }
     }
   };

@@ -6,6 +6,8 @@ import {
   getingData_Users
 } from '../../api/api';
 import posthog from 'posthog-js';
+import { useNotification } from "../Notification/NotificationProvider";
+
 //---------------------
 let flag_token = false;
 let flag = false;
@@ -15,46 +17,50 @@ let flag = false;
 function LoginAPI(props) {
   const [, login_token] = useState('');
   const [, setFlag] = useState(false);
-  // if (props.APIDetailsLogin.user.length > 0) {
-  //   const url = `https://taal.tech/wp-json/jwt-auth/v1/token/`;
-  //   fetch(url, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       accept: 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       username: props.APIDetailsLogin.user,
-  //       password: props.APIDetailsLogin.pass,
-  //     }),
-  //   })
-  //     .then((response) =>
-  //       response.status === 403
-  //         ? alert('Wrong username/mail or wrong Password')
-  //         : response.json()
-  //     )
+  const { showNotification } = useNotification();
 
-  //     .then(function (user) {
-  //       if (!flag_token) {
-  //         if (user.message !== undefined) {
-  //           if (user.message.includes('2FA')) {
-  //             alert(
-  //               '2FA is activated, No support for this feature, Please login with another user'
-  //             );
-  //             login_token((flag_token = true));
-  //           }
-  //         }
-  //         setFlag((flag = true));
-  //         sessionStorage.setItem('jwt', user.token);
-  //         sessionStorage.setItem('logged_in', 1);
-  //         sessionStorage.setItem('userName', props.APIDetailsLogin.user);
+  async function handleLogin(response) {
+    if (response.status === 403) {
+      showNotification('error', 'Wrong username/mail or wrong Password');
+    } else if (response.status === 404) {
+      showNotification('error', 'user not found you need to register first');
+    } else  if (response.status === 201)  {
+      try {
+        const user = await response.json();
+        if (user !== undefined) {
+          login_token(true);
+        }
+        setFlag(true);
+        sessionStorage.setItem('jwt', JSON.stringify(user));
+        
+        if (user.role == "ADMIN") {
+          const coaches = await getingData_coaches();
+          const coache = coaches.filter((coache) => coache.id == user.userid);
+          sessionStorage.setItem('jwt-EDITOR', JSON.stringify(coache[0]));
+        } else if (user.role == "EDITOR") {
+          const coaches = await getingData_coaches();
+          const coache = coaches.filter((coache) => coache.id == user.userid);
+          sessionStorage.setItem('jwt-EDITOR', JSON.stringify(coache[0]));
+        } else if (user.role == "STUDENT") {
+          const users = await getingData_Users()
+          const userX = users.filter((userX) => userX.id == user.userid);
+          sessionStorage.setItem('jwt-EDITOR', JSON.stringify(userX[0]));
+        }
 
-  //         window.location.replace('/Planner');
-  //       }
-  //     });
-  // }
+        sessionStorage.setItem('logged_in', 1);
+        sessionStorage.setItem('userName', props.APIDetailsLogin.user);
 
-  if (props.APIDetailsLogin.user.length > 0) {
+        posthog.identify(user.name);
+        posthog.capture('$set', { $$set: [process.env.REACT_APP_VERSION] });
+        window.location.replace('/Planner');
+      } catch (error) {
+        console.error("Error during login:", error);
+      }
+    }
+  }
+
+  if (props.submit && props.APIDetailsLogin.user.length > 0) {
+    props.setSubmit(false);
     fetch(baseUrl + "/editor/login", {
       method: 'POST',
       headers: {
@@ -65,47 +71,9 @@ function LoginAPI(props) {
         name: props.APIDetailsLogin.user,
         password: props.APIDetailsLogin.pass,
       }),
-    })
-      .then((response) =>
-        response.status === 403
-          ? alert('Wrong username/mail or wrong Password')
-          : response.json()
-      )
-
-      .then(async (user)=> {
-        console.log(user);
-        if (user !== undefined) {
-          login_token((flag_token = true));
-        }
-        setFlag((flag = true));
-        // sessionStorage.setItem('jwt', user.token);
-        sessionStorage.setItem('jwt', JSON.stringify(user));
-        if (user.role == "ADMIN") {
-          const coaches = await getingData_coaches();
-          const coache = coaches.filter((coache)=>coache.id == user.userid)
-          sessionStorage.setItem('jwt-EDITOR', JSON.stringify(coache[0]));
-        }else if(user.role == "EDITOR"){
-          const coaches = await getingData_coaches();
-          const coache = coaches.filter((coache)=>coache.id == user.userid)
-          sessionStorage.setItem('jwt-EDITOR', JSON.stringify(coache[0]));
-        }else if(user.role == "STUDENT"){
-          const users = await getingData_Users()
-          const userX = users.filter((userX)=>userX.id == user.userid)
-          sessionStorage.setItem('jwt-EDITOR', JSON.stringify(userX[0]));
-        }
-        sessionStorage.setItem('logged_in', 1);
-        sessionStorage.setItem('userName', props.APIDetailsLogin.user);
-
-        posthog.identify(user.name)
-        posthog.capture(
-          '$set', 
-          { 
-              $$set: [process.env.REACT_APP_VERSION],
-          }
-      )
-        window.location.replace('/Planner');
-      });
+    }).then(handleLogin);
   }
+
   return (
     <>
       {props.getFlagLoading && flag ? (

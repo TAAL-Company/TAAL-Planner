@@ -20,6 +20,8 @@ import BasicSelect from '../Gallery/BasicSelect';
 import InputFileUpload from '../InputFileUpload/InputFileUpload';
 import { getBlobsInContainer } from '../azureBlob';
 
+import { useNotification } from '../Notification/NotificationProvider';
+
 export default function UserForm({
     open,
     handleCloseDialog,
@@ -39,6 +41,8 @@ export default function UserForm({
     const [sortedUrls, setSortedUrls] = useState({});
     const [folderNames, setFolderNames] = useState([]);
     const [picture, setPicture] = useState(null);
+
+    const { showNotification } = useNotification();
 
     useEffect(async () => {
         // prepare UI for results
@@ -114,19 +118,30 @@ export default function UserForm({
                 formValues.picture_url = await uploadFiles(picture, 'Worker media/picture', Foldersite);
             }
             if (UserAction === 'edit') {
+                try {
                 await updateUser(formValues.id, formValues).then((response) => {
+                    showNotification('success', 'המשתמש עודכן בהצלחה');
                     setUsers((prevUsers) => prevUsers.map(user => user.id === formValues.id ? { ...response.data } : user));
                 });
+                } catch (error) {
+                    showNotification('error', "שגיאה בעדכון משתמש "+error.message);
+                }
 
             } else {
+                try {
                 await insertUser({ ...formValues }).then((response) => {
+                    showNotification('success', 'המשתמש נוסף בהצלחה');
                     // setUsers((prevUsers) => [...prevUsers, { ...response }]);
                     setupdateduplicateUser(!updateduplicateUser);
                 });
+                } catch (error) {
+                    showNotification('error', "שגיאה בהוספת משתמש "+error.message);
+                }
             }
 
         } catch (error) {
-            alert(error.message);
+            showNotification('error', "שגיאה בהוספת משתמש "+error.message);
+            // alert(error.message);
         }
         handleCloseDialog(); // Close the dialog
     };

@@ -45,6 +45,8 @@ import BasicSelect from '../Gallery/BasicSelect';
 import { getBlobsInContainer } from '../azureBlob';
 import { Backdrop, CircularProgress } from '@mui/material';
 
+import { useNotification } from "../Notification/NotificationProvider";
+
 const Editors = () => {
   const [Editors, setEditors] = useState([]); // State to store the users
   const [EditorForRemove, setEditorForRemove] = useState([]); // State to store the user to be removed
@@ -70,6 +72,8 @@ const Editors = () => {
   const [deleteMessage, setDeleteMessage] = useState('המחיקה בוצעה בהצלחה!');
 
   const [loading, setLoading] = useState(true);
+
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     setLanguage(sessionStorage.getItem('language'));
@@ -196,13 +200,18 @@ const Editors = () => {
   };
 
   const handleCloseRemoveConfirm = async () => {
-    let deletedUser = await deleteEditor(Editors[EditorForRemove].id);
+    try {
+      let deletedUser = await deleteEditor(Editors[EditorForRemove].id);
 
-    if (deletedUser.status === 200) {
-      alert(deleteMessage);
-      const newEditors = [...Editors];
-      newEditors.splice(EditorForRemove, 1); // Remove one element at index x
-      setEditors(newEditors);
+      if (deletedUser.status === 200) {
+        showNotification('success', deleteMessage);
+        alert(deleteMessage);
+        const newEditors = [...Editors];
+        newEditors.splice(EditorForRemove, 1); // Remove one element at index x
+        setEditors(newEditors);
+      }
+    } catch (error) {
+      showNotification('error', " שגיאה במחיקת משתמש "+error.message);
     }
 
     setOpenRemove(false);
@@ -229,6 +238,7 @@ const Editors = () => {
     try {
       if (requestForEditing === 'duplication') {
         insertEditor(CoacheToDuplicate).then((data) => {
+          showNotification('success', 'המשתמש נוסף בהצלחה');
           setEditors([data, ...Editors]);
           setupdateAdd(true);
         });
@@ -236,6 +246,7 @@ const Editors = () => {
       }
     } catch (error) {
       console.error(error);
+      showNotification('error', "שגיאה בהוספת משתמש "+error.message);
     }
 
     setOpenThreeDotsVertical(-1);
@@ -255,7 +266,8 @@ const Editors = () => {
     console.log('role : ', role);
 
     if (email === '' || fullName === '') {
-      alert(addUserButtonError);
+      // alert(addUserButtonError);
+      showNotification('error', addUserButtonError);
     } else {
       let picture_url = '';
       try {
@@ -294,18 +306,21 @@ const Editors = () => {
             userToUpdate.defaultdashboard = updatedUser.data.defaultdashboard;
 
             const newUsers = [...Editors];
+            showNotification('success', 'המשתמש עודכן בהצלחה');
             setEditors(newUsers);
             setupdateAdd(true);
           });
         } else {
           console.log(user);
           insertEditor(user).then((data) => {
+            showNotification('success', 'המשתמש נוסף בהצלחה');
             setEditors([data, ...Editors]);
           });
           setupdateAdd(true);
         }
       } catch (error) {
         console.error(error);
+        showNotification('error', "שגיאה בהוספת משתמש "+error.message);
       }
       setupdateAdd(false);
       handleClose(); // Close the dialog after the form is submitted

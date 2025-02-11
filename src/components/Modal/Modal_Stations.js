@@ -13,6 +13,8 @@ import {
   updateStation,
   uploadFiles,
 } from '../../api/api';
+import { useNotification } from "../Notification/NotificationProvider";
+
 
 //--------------------------
 // let getPicture, getSound;
@@ -29,6 +31,8 @@ const Modal_Stations = (props) => {
   const [picturePreview, setPicturePreview] = useState(false);
   const [srcImage, setSrcImage] = useState('');
   const [stationUUId, setStationUUId] = useState('');
+
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     if (
@@ -67,8 +71,11 @@ const Modal_Stations = (props) => {
     if (get_title === '' || getDescription === '') {
       setFlagClickOK((flagClickOK = false));
       setDone(false);
-      alert( props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
+      showNotification('error', props.language === "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
+      // alert( props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
+
     } else if (props.requestForEditing === 'edit' || props.requestForEditing === 'details') {
+      try {
       let response = await updateStation(
         stationUUId,
         get_title,
@@ -76,7 +83,8 @@ const Modal_Stations = (props) => {
         props.mySite.id
       );
       if (response.status === 200) {
-        alert('התחנה עודכנה');
+        // alert('התחנה עודכנה');
+        showNotification('success', props.language !== "English" ? 'The station has been updated' : 'התחנה עודכנה');
         setFlagClickOK((flagClickOK = false));
         props.setOpenModalPlaces(false);
         let station = props.stationArray.find(
@@ -89,6 +97,11 @@ const Modal_Stations = (props) => {
         props.setOpenThreeDotsVertical(-1);
         props.setRequestForEditing('');
       }
+    } catch (error) {
+      // alert('שם התחנה כבר קיים - בחר שם אחר');
+      showNotification('error', props.language !== "English" ? 'The station name already exists - choose another name' : 'שם התחנה כבר קיים - בחר שם אחר');
+      console.error(error);
+    }
     } else if (props.requestForEditing === 'duplication') {
       console.log("duplication", props.stationArray);
       let station = props.stationArray.find(
@@ -108,6 +121,7 @@ const Modal_Stations = (props) => {
           props.mySite,
           stationtasksIds
         );//, imageData, audioData);
+        showNotification('success', props.language !== "English" ? 'The station has been duplicated' : 'התחנה הועתקה');
 
         setDone(true);
         setFlagClickOK((flagClickOK = false));
@@ -118,7 +132,8 @@ const Modal_Stations = (props) => {
         props.setOpenModalPlaces(false);
         await props.setStationArray((stations) => [...stations, post]);
       } catch (error) {
-        alert('שם התחנה כבר קיים - בחר שם אחר');
+        // alert('שם התחנה כבר קיים - בחר שם אחר');
+        showNotification('error', props.language !== "English" ? 'The station name already exists - choose another name' : 'שם התחנה כבר קיים - בחר שם אחר');
         console.error(error);
       }
     } else {
@@ -142,6 +157,7 @@ const Modal_Stations = (props) => {
           getDescription,
           props.mySite
         ); //, imageData, audioData);
+        showNotification('success', props.language !== "English" ? 'The station has been saved' : 'התחנה נשמרה');
         setDone(true);
         setFlagClickOK((flagClickOK = false));
 
@@ -151,7 +167,8 @@ const Modal_Stations = (props) => {
         props.setOpenModalPlaces(false);
         await props.setStationArray((stations) => [...stations, post]);
       } catch (error) {
-        alert( props.language !== "English" ? 'שם התחנה כבר קיים - בחר שם אחר' : 'The station name already exists - choose another name');
+        // alert( props.language !== "English" ? 'שם התחנה כבר קיים - בחר שם אחר' : 'The station name already exists - choose another name');
+        showNotification('error', props.language !== "English" ? 'The station name already exists - choose another name' : 'שם התחנה כבר קיים - בחר שם אחר');
         console.error(error);
       }
     }

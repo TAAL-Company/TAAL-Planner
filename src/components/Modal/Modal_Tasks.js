@@ -21,6 +21,10 @@ import Model_Tasks_help_Pop from './Model_Tasks_help_Pop';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
+
+import { useNotification } from "../Notification/NotificationProvider";
+
+
 const style = {
   position: 'absolute',
   top: '5%',
@@ -72,6 +76,8 @@ function Modal_Tasks(props) {
   const [blobList, setBlobList] = useState([]);
   const [sortedUrls, setSortedUrls] = useState({});
   const [folderNames, setFolderNames] = useState([]);
+
+  const { showNotification } = useNotification();
 
   const handleDataEntryLabelInput = (e) => {
     setdataEntryLabel(e.target.value);
@@ -164,7 +170,9 @@ function Modal_Tasks(props) {
 
 
     if (get_title === '' || getDescription === '') {
-      alert(props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
+      
+      // alert(props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
+      showNotification('error',props.language === "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields' );
       setDone(false);
       setFlagClickOK(false);
       props.setModalOpen(true);
@@ -226,23 +234,44 @@ function Modal_Tasks(props) {
             if (!additonalHelp[i][j].id) {
               additonalHelp[i][j].taskId = uuid;
               delete additonalHelp[i][j].id;
+              try {
               await postAdditonalHelp(additonalHelp[i][j]);
+              showNotification('success', props.language === "English" ? 'עזרה נוספת נוספה בהצלחה' : 'Additional help added successfully');
+              } catch (error) {
+                showNotification('error',props.language === "English" ? ' שגיאה בהוספת עזרה' :  'Error adding additional help');
+              }
             } else {
+              try {
               await updateAdditonalHelp(additonalHelp[i][j].id, additonalHelp[i][j]);
+              showNotification('success', props.language === "English" ? 'עזרה עודכנה בהצלחה' : 'Additional help updated successfully');
+              } catch (error) {
+                showNotification('error', props.language === "English" ? ' שגיאה בעדכונה עזרה' :  'Error updating additional help');
+              }
             }
           }
         } else {
           if (!additonalHelp[i].id) {
             additonalHelp[i].taskId = uuid;
             delete additonalHelp[i].id;
+            try {
             await postAdditonalHelp(additonalHelp[i]);
+            showNotification('success', props.language === "English" ? 'עזרה נוספת נוספה בהצלחה' : 'Additional help added successfully');
+            } catch (error) {
+              showNotification('error', props.language === "English" ? ' שגיאה בהוספת עזרה' :  'Error adding additional help');
+            }
           } else {
+            try {
             await updateAdditonalHelp(additonalHelp[i].id, additonalHelp[i]);
+            showNotification('success', props.language === "English" ? 'עזרה עודכנה בהצלחה' : 'Additional help updated successfully');
+            } catch (error) {
+              showNotification('error', props.language === "English" ? ' שגיאה בעדכונה עזרה' :  'Error updating additional help');
+            }
           }
         }
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
+      showNotification('error', props.language === "English" ? ' שגיאה בעדכונה עזרה' :  'Error updating additional help');
     }
 
     // Create a copy of newTask without additonalHelp
@@ -251,6 +280,7 @@ function Modal_Tasks(props) {
 
     try {
       const update = await updateTask(uuid, newTaskWithoutHelp);
+      showNotification('success', props.language === "English" ? 'משימה עודכנה בהצלחה' : 'Task updated successfully');  
 
       if (update.status === 200) {
         let indexStation = props.allStations.findIndex(
@@ -277,6 +307,7 @@ function Modal_Tasks(props) {
       }
     } catch (error) {
       console.error(error);
+      showNotification('error', props.language === "English" ? ' שגיאה בעדכונה משימה' :  'Error updating task');
     }
   };
   const Post_Task = async (picture_url, audio_url) => {
@@ -309,7 +340,9 @@ function Modal_Tasks(props) {
           dataEntryType,
           taskType,
           additonalHelpflat
-        );
+        )
+
+        showNotification('success', props.language === 'English' ? 'Task added successfully' : 'המשימה נוספה בהצלחה');  
 
         let color = props.allStations.find(
           (item) => item.id === myPlacesChoice[0]
@@ -325,11 +358,13 @@ function Modal_Tasks(props) {
         props.setModalOpen(false);
       } catch (error) {
         console.error(error);
+        showNotification('error', props.language === "English" ? ' שגיאה בהוספת משימה' :  'Error adding task');
       }
     } else {
       setDone(false);
       setFlagClickOK(false);
-      alert(props.language !== 'English' ? 'You must choose a station!' : 'את/ה חייב/ת לבחור תחנה!')
+      // alert(props.language !== 'English' ? 'You must choose a station!' : 'את/ה חייב/ת לבחור תחנה!')
+      showNotification('warning', props.language === 'English' ? 'You must choose a station!' : 'את/ה חייב/ת לבחור תחנה!');
       props.setModalOpen(true);
     }
   };

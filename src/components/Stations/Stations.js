@@ -13,6 +13,7 @@ import Modal_Delete from '../Modal/Modal_Delete';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import DragnDrop from '../DragnDrop/DragnDrop';
+import { useNotification } from "../Notification/NotificationProvider";
 
 //-----------------------
 // let allTasks = [];
@@ -42,6 +43,8 @@ const Stations = (props) => {
   const [stationForEdit, setStationForEdit] = useState('');
   const [dpcolor, setdpcolor] = useState('');
 
+  const { showNotification } = useNotification();
+
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
       setStationForEdit(openThreeDotsVertical);
@@ -61,20 +64,26 @@ const Stations = (props) => {
     setRequestForEditing('');
   };
   const handleCloseRemoveConfirm = async () => {
-    let deleteStationTemp = await deleteStation(
-      props.stationArray[stationForDelete].id
-    );
+    try {
+      let deleteStationTemp = await deleteStation(
+        props.stationArray[stationForDelete].id
+      );
 
-    if (deleteStationTemp.status === 200) {
-      alert('המחיקה בוצעה בהצלחה!');
-      const newStations = [...props.stationArray];
-      newStations.splice(stationForDelete, 1);
-      props.setStationArray(newStations);
+      if (deleteStationTemp.status === 200) {
+        // alert('המחיקה בוצעה בהצלחה!');
+        showNotification('success', 'המחיקה בוצעה בהצלחה!');
+        const newStations = [...props.stationArray];
+        newStations.splice(stationForDelete, 1);
+        props.setStationArray(newStations);
+      }
+
+      setOpenRemove(false);
+      setOpenThreeDotsVertical(-1);
+      setRequestForEditing('');
+    } catch (error) {
+      console.error(error);
+      showNotification('error', 'שגיאה במחיקת תחנה' + error);
     }
-
-    setOpenRemove(false);
-    setOpenThreeDotsVertical(-1);
-    setRequestForEditing('');
   };
 
   //changing the order of the stations
@@ -239,6 +248,11 @@ const Stations = (props) => {
                                     ref={provided.innerRef}
                                     {...provided.draggableProps}
                                     {...provided.dragHandleProps}
+                                    onClick={() => {
+                                      Display_The_Tasks(id, title);
+                                      props.settaskcolor(color);
+                                      setdpcolor(color);
+                                    }}
                                   >
                                     <div
                                       className='buttons'
@@ -296,11 +310,7 @@ const Stations = (props) => {
                                       </div>
                                       <button
                                         className='nameOfButton'
-                                        onClick={() => {
-                                          Display_The_Tasks(id, title);
-                                          props.settaskcolor(color);
-                                          setdpcolor(color);
-                                        }}
+
                                       >
                                         {title}
                                       </button>

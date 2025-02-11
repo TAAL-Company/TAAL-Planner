@@ -30,6 +30,8 @@ import BasicSelect from '../Gallery/BasicSelect';
 import { getBlobsInContainer } from '../azureBlob';
 import { Backdrop, CircularProgress } from '@mui/material';
 
+import { useNotification } from "../Notification/NotificationProvider";
+
 const Coaches = () => {
   const [users, setUsers] = useState([]); // State to store the users
   const [userForRemove, setUserForRemove] = useState([]); // State to store the user to be removed
@@ -47,6 +49,8 @@ const Coaches = () => {
   const [deleteSuccess, setDeleteSuccess] = useState(' המחיקה בוצעה בהצלחה!');
 
   const [loading, setLoading] = useState(true);
+
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     setLanguage(sessionStorage.getItem('language'));
@@ -164,14 +168,18 @@ const Coaches = () => {
   };
 
   const handleCloseRemoveConfirm = async () => {
+    try{
     let deletedUser = await deleteCoach(users[userForRemove].id);
 
     if (deletedUser.status === 200) {
-      alert(deleteSuccess);
+      showNotification('success', deleteSuccess);
       const newUsers = [...users];
       newUsers.splice(userForRemove, 1); // Remove one element at index x
       setUsers(newUsers);
     }
+  } catch (error) {
+    showNotification('error', " שגיאה במחיקת משתמש "+error.message);
+  }
 
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
@@ -217,11 +225,13 @@ const Coaches = () => {
         insertCoach(CoacheToDuplicate).then((data) => {
           setUsers([data, ...users]);
           setupdateAdd(true);
+          showNotification('success', 'המשתמש נוסף בהצלחה');
         });
         setupdateAdd(false);
       }
     } catch (error) {
       console.error(error);
+      showNotification('error', "שגיאה בהוספת משתמש "+error.message);
     }
 
     setOpenThreeDotsVertical(-1);
@@ -234,7 +244,8 @@ const Coaches = () => {
     const phone = document.getElementById('phone').value;
 
     if (email === '' || fullName === '') {
-      alert(addUserButtonError);
+      // alert(addUserButtonError);
+      showNotification('error', addUserButtonError);
     } else {
       let picture_url;
       try {
@@ -249,6 +260,7 @@ const Coaches = () => {
 
         if (requestForEditing === 'edit' || requestForEditing === 'details') {
           const userToUpdate = users[userForUpdate];
+          try {
           updateCoach(userToUpdate.id, user).then((updatedUser) => {
             userToUpdate.name = updatedUser.data.name;
             userToUpdate.email = updatedUser.data.email;
@@ -257,14 +269,26 @@ const Coaches = () => {
 
             const newUsers = [...users];
             setUsers(newUsers);
+            showNotification('success', 'המשתמש עודכן בהצלחה');
           });
+          } catch (error) {
+            console.error(error);
+            showNotification('error', "שגיאה בעדכון משתמש "+error.message);
+          }
         } else {
+          try {
           insertCoach(user).then((data) => {
+            showNotification('success', 'המשתמש נוסף בהצלחה');
             setUsers([data, ...users]);
           });
+          } catch (error) {
+            console.error(error);
+            showNotification('error', "שגיאה בהוספת משתמש "+error.message);
+          }
         }
       } catch (error) {
         console.error(error);
+        showNotification('error', "שגיאה בהוספת משתמש "+error.message);
       }
 
       handleClose(); // Close the dialog after the form is submitted

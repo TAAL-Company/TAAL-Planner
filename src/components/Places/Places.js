@@ -32,6 +32,7 @@ import '../Modal/Modal.css';
 import './style.css';
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
+import { useNotification } from "../Notification/NotificationProvider";
 
 let tasksOfRoutes = {};
 // let allRoutes = [];
@@ -53,6 +54,7 @@ let flagTest = false;
 
 //-----------------------
 const Places = (props) => {
+  const { showNotification } = useNotification();
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
   const [tempSelectedSite, setTempSelectedSite] = useState(null);
@@ -132,8 +134,10 @@ const Places = (props) => {
       // delete newRouteObj.sites;
 
       // console.log(newRouteObj);
+      try {
       insertRoute(newRouteObj).then(async (newaddedroute) => {
-        alert(props.language ? 'ההוראה הועתקה בהצלחה!' : 'The instruction was copied successfully!');
+        // alert(props.language ? 'ההוראה הועתקה בהצלחה!' : 'The instruction was copied successfully!');
+        showNotification("success", props.language ? "ההוראה הועתקה בהצלחה!" : "The instruction was copied successfully!");
         setOpenThreeDotsVertical(-1);
         setRequestForEditing('');
         let newadded = await getingData_Routes().then(data => {
@@ -145,6 +149,10 @@ const Places = (props) => {
         newRoutes.push(newadded);
         setFilteredDataRoutes(newRoutes);
       })
+      } catch (error) {
+        console.log(error);
+        showNotification("error", props.language ? "ההוראה לא הועתקה!" : "The instruction was not copied!");
+      }
 
 
     } else if (requestForEditing === 'delete') {
@@ -159,10 +167,12 @@ const Places = (props) => {
     setRequestForEditing('');
   };
   const handleCloseRemoveConfirm = async () => {
+    try{
     let deleteRoutes = await deleteRoute(filteredDataRoutes[routrForDelete].id);
 
     if (deleteRoutes.status === 200) {
-      alert(props.language ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
+      // alert(props.language ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
+      showNotification('success', props.language ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
       const newRoutes = [...filteredDataRoutes];
       newRoutes.splice(routrForDelete, 1); // remove one element at index x
       setFilteredDataRoutes(newRoutes);
@@ -172,6 +182,10 @@ const Places = (props) => {
     setOpenThreeDotsVertical(-1);
     setRouteForDelete(-1);
     setRequestForEditing('');
+    } catch (error) {
+      console.error(error);
+      showNotification('error', props.language ? 'המחיקה נכשלה!' : 'Deletion failed!');
+    }
   };
   const [pastelColors, setPastelColors] = useState([
     '#91D3A8', //
@@ -714,6 +728,7 @@ const Places = (props) => {
       .find((site) => site?.id === selectedSite?.id);
 
     if (!matchedSite) {
+      showNotification("warning", props.language ? 'לא נמצאו מקומות שונים!' : 'No different sites found!');
       console.warn("No matched site found.");
       return;
     }
@@ -882,7 +897,14 @@ const Places = (props) => {
         let uuidRoute = newRoute.id;
 
         setTimeout(() => {
+          try {
           updateRoute(uuidRoute, { siteIds: mySite.id });
+          showNotification("success",  props.language === "English" ? "Route Updated Successfully" : "המסלול עודכן בהצלחה");
+          } catch (error) {
+            console.error(error);
+            showNotification("error",  props.language === "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+          }
+          
         }, 60000);
       }
       setNewRoute([]);

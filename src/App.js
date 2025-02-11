@@ -21,6 +21,8 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 // import './i18n'; // Import the i18n configuration
 
+import { NotificationProvider } from "./components/Notification/NotificationProvider";
+
 console.log("Version", process.env.REACT_APP_VERSION);
 console.log("Version", process.env);
 
@@ -29,6 +31,7 @@ function App() {
   return (
     <>
       <div>
+        <NotificationProvider>
         <DndProvider backend={HTML5Backend}>
           <Provider store={store}>
             <Router>
@@ -56,6 +59,7 @@ function App() {
             </Router>
           </Provider>
         </DndProvider>
+        </NotificationProvider>
       </div>
     </>
   );

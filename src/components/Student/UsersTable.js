@@ -14,6 +14,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import UserForm from './UserForm';
 import Toolbar  from './Toolbar';
 import './StudentsCard.css';
+import { useNotification } from "../Notification/NotificationProvider";
 
 export default function DataGridDemo() {
   const [users, setUsers] = useState([]);
@@ -36,6 +37,8 @@ export default function DataGridDemo() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [updateduplicateUser, setupdateduplicateUser] = useState(false);
+
+  const { showNotification } = useNotification();
 
   const handleClickMenu = (event, user) => {
     setAnchorEl(event.currentTarget);
@@ -122,10 +125,16 @@ export default function DataGridDemo() {
 
   // Delete user
   const handleDeleteUser = async () => {
+    try { 
     await deleteUser(selectedUser.id).then(() => {
+      showNotification('success', 'המשתמש נמחק בהצלחה');
       setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUser.id));
       handleCloseMenu();
     });
+    } catch (error) {
+      console.error(error.message);
+      showNotification('error', 'שגיאה במחיקת משתמש');
+    }
   };
 
   // Duplicate user
@@ -152,11 +161,17 @@ export default function DataGridDemo() {
 
     if (userToDuplicate) {
       const userDuplicatedatawithname = { ...userDuplicatedata, name: userToDuplicate.name + '-' + new Date().getTime() };
+      try {
       insertUser(userDuplicatedatawithname).then((data) => {
+        showNotification('success', 'המשתמש נוסף בהצלחה');
         setupdateduplicateUser(!updateduplicateUser);
         // setUsers(prevUsers => [...prevUsers, userDuplicatedatawithname]);
         handleCloseMenu();
       })
+      } catch (error) {
+        console.error(error.message);
+        showNotification('error', 'שגיאה בהוספת משתמש');
+      }
     }
   };
 

@@ -13,6 +13,7 @@ import { baseUrl } from '../../config';
 import { RiAsterisk } from 'react-icons/ri';
 import stopIcon from '../../Pictures/stopIcon.svg';
 import Modal_no_site_selected from './Modal_no_site_selected';
+import { useNotification } from "../Notification/NotificationProvider";
 
 //--------------------------
 let myStudents = [];
@@ -35,6 +36,7 @@ function Modal({
   requestForEditing,
   newRoute,
 }) {
+  const { showNotification } = useNotification();
   // let myStudentslist = [];
   const [obj, set_obj] = useState({
     name: '',
@@ -120,7 +122,8 @@ function Modal({
     // }
 
     if (JSON.parse(localStorage.getItem('New_Routes')) === null) {
-      alert('Route is empty ! ');
+      showNotification("error", language === "English" ? "Route is empty !" : "הרשומה ריקה !");
+      // alert('Route is empty ! ');
       return;
     } else {
       let taskIdList = [];
@@ -138,12 +141,18 @@ function Modal({
 
       console.log('newRouteObj', newRouteObj);
 
+      try {
       updateRoute(routeUUID, newRouteObj).then((data) => {
         setDone(true);
         setFlagClickOK((flagClickOK = false));
         // window.location.replace("/forms");
+        setOpenModal(false);
+        showNotification("success", language === "English" ? "route updated successfully" : "המסלול עודכן בהצלחה");
       });
-      setOpenModal(false);
+      } catch (error) {
+        console.error(error.message);
+        showNotification("error", language === "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+      }
     }
   }
 
@@ -155,7 +164,8 @@ function Modal({
     resultMyArrayStudent();
 
     if (JSON.parse(localStorage.getItem('New_Routes')) === null) {
-      alert('Route is empty ! ');
+      // alert('Route is empty ! ');
+      showNotification("error", language === "English" ? "Route is empty !" : "הרשומה ריקה !");
       return;
     } else {
       let taskIdList = [];
@@ -171,12 +181,18 @@ function Modal({
       };
       // set_obj((obj.mySite = JSON.parse(localStorage.getItem("MySite"))));
       console.log(newRouteObj);
+      try {
       insertRoute(newRouteObj).then((data) => {
         setDone(true);
         setFlagClickOK((flagClickOK = false));
         // window.location.replace("/forms");
       });
       setOpenModal(false);
+      showNotification("success", language === "English" ? "route created successfully" : "המסלול נוצר בהצלחה");
+      } catch (error) {
+        console.error(error.message);
+        showNotification("error", language === "English" ? "Error Creating Route" : "שגיאה ביצירת המסלול");
+      }
     }
   }
 
@@ -214,6 +230,7 @@ function Modal({
     console.log(routeData);
 
     if (requestForEditing == 'edit' || requestForEditing == 'details') {
+      try{
       updateRoute(routeUUID, routeData).then((data) => {
         setNewRoute(data);
         // setNewTitleForRoute(data);
@@ -221,7 +238,13 @@ function Modal({
         // setFlagStudent(false);
         setOpenModal(false);
       });
+      showNotification("success", language === "English" ? "route updated successfully" : "המסלול עודכן בהצלחה");
+    }catch (error) {
+        console.error(error.message);
+        showNotification("error", language === "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+      }
     } else {
+      try {
       insertRoute(routeData).then((data) => {
         setNewRoute(data);
         setNewTitleForRoute(data);
@@ -229,6 +252,11 @@ function Modal({
         setFlagStudent(false);
         setOpenModal(false);
       });
+      showNotification("success", language === "English" ? "route created successfully" : "המסלול נוצר בהצלחה");
+    } catch (error) {
+        console.error(error.message);
+        showNotification("error", language === "English" ? "Error Creating Route" : "שגיאה ביצירת המסלול");
+      }
     }
   };
 

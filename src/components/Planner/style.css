@@ -18,12 +18,16 @@
   direction: ltr;
 }
 .Planner {
-  /* background-color: aliceblue; */
   position: fixed;
   width: 100vw;
-  height: 100vw;
+  overflow-x: auto; /* Add this line to enable horizontal scrolling */
 }
-
+@media (max-height: 800px) {
+  .Planner {
+    transform: scale(0.9999); /* Adjust the scale value as needed */
+    transform-origin: top left;
+  }
+}
 .RouteName {
   text-align: right;
   border: none;

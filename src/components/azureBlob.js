@@ -2,7 +2,8 @@
 import { BlobServiceClient } from '@azure/storage-blob';
 
 const sasToken =process.env.REACT_APP_STORAGE_SAS_TOKEN ||
-'?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-02-12T20:01:37Z&st=2024-02-12T12:01:37Z&spr=https,http&sig=XjpFdJl6WweqY0j9MrQDiubPMqOdUtM16QhmPK7h3aI%3D'
+   '?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2035-02-15T20:16:50Z&st=2025-02-15T12:16:50Z&spr=https&sig=QfrdsezQ%2Ff%2Ffu2oub4dUzIUZ0r7sYSesqXghOpavqCY%3D'
+// '?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2025-02-12T20:01:37Z&st=2024-02-12T12:01:37Z&spr=https,http&sig=XjpFdJl6WweqY0j9MrQDiubPMqOdUtM16QhmPK7h3aI%3D'
 // '?sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-12-31T14:50:42Z&st=2023-05-31T05:50:42Z&spr=https,http&sig=k%2F88nLfkD%2BFXBc%2FC5rdWNHE7gTNfPr2M5pm%2Fa0oSfIA%3D'; // Fill string with your SAS token
      
 const containerName = `images`;

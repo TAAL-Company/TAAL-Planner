@@ -5,7 +5,9 @@ import { BlobServiceClient } from '@azure/storage-blob';
 import React, { useState } from 'react';
 
 const connectionString =
-  'https://taalmedia.blob.core.windows.net/images?sp=racwdl&st=2024-02-13T18:56:06Z&se=2025-02-14T02:56:06Z&sv=2022-11-02&sr=c&sig=dftkQiefHvDJ5EPyZzd9l%2B1i6TVPvT2JZif%2F3T5BFOs%3D'
+     'https://taalmedia.blob.core.windows.net/images?sp=rwdlacupiytfx&se=2025-02-15T20:23:20Z&st=2025-02-15T12:23:20Z&spr=https&sig=28wRRGVf0rhm%2BUGFcn1GxuWSCr2QiatRCR6PoExPRdU%3D'
+  // 'https://taalmedia.blob.core.windows.net/images?sp=racwdl&st=2024-02-13T18:56:06Z&se=2025-02-14T02:56:06Z&sv=2022-11-02&sr=c&sig=dftkQiefHvDJ5EPyZzd9l%2B1i6TVPvT2JZif%2F3T5BFOs%3D'
+
 const blobServiceClient = new BlobServiceClient(connectionString);
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

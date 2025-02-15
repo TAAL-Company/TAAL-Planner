@@ -166,7 +166,7 @@ const Editors = () => {
       setEditorForUpdate(openThreeDotsVertical);
       setOpen(true);
     } else if (requestForEditing === 'duplication') {
-      // duplicateCoache();
+      duplicateCoache();
     } else if (requestForEditing === 'delete') {
       setEditorForRemove(openThreeDotsVertical);
       setOpenRemove(true);
@@ -234,14 +234,26 @@ const Editors = () => {
       name: Editors[openThreeDotsVertical].name,
       phone: Editors[openThreeDotsVertical].phone,
       picture_url: Editors[openThreeDotsVertical].picture_url || '',
+      role: Editors[openThreeDotsVertical].role,
+      password: Editors[openThreeDotsVertical].password,
+      userid: Editors[openThreeDotsVertical].userid,
+      defaultdashboard: Editors[openThreeDotsVertical].defaultdashboard,
+      siteIds: Editors[openThreeDotsVertical].siteIds,
+      // googleID: Editors[openThreeDotsVertical].googleID,
     };
     try {
       if (requestForEditing === 'duplication') {
-        insertEditor(CoacheToDuplicate).then((data) => {
-          showNotification('success', 'המשתמש נוסף בהצלחה');
-          setEditors([data, ...Editors]);
-          setupdateAdd(true);
-        });
+        const data = await insertEditor(CoacheToDuplicate)
+          if (data.id) {
+            showNotification('success', 'המשתמש נוסף בהצלחה');
+            setEditors([data, ...Editors]);
+            setupdateAdd(true);
+          }else{
+            const error = JSON.parse(data);
+            console.error(error);
+            showNotification('error', "שגיאה בהוספת משתמש "+error.message);
+          }
+
         setupdateAdd(false);
       }
     } catch (error) {
@@ -312,10 +324,14 @@ const Editors = () => {
           });
         } else {
           console.log(user);
-          insertEditor(user).then((data) => {
+          try {
+            const data = await insertEditor(user);
             showNotification('success', 'המשתמש נוסף בהצלחה');
             setEditors([data, ...Editors]);
-          });
+          } catch (error) {
+            console.error(error);
+            showNotification('error', "שגיאה בהוספת משתמש " + error.message);
+          }
           setupdateAdd(true);
         }
       } catch (error) {

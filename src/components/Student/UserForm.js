@@ -9,9 +9,7 @@ import {
     FormControl,
     InputLabel,
     Select,
-    MenuItem,
-    Checkbox,
-    ListItemText,
+    MenuItem
 } from '@mui/material';
 
 import { insertUser, uploadFiles, updateUser } from '../../api/api';
@@ -42,6 +40,7 @@ export default function UserForm({
     const [folderNames, setFolderNames] = useState([]);
     const [picture, setPicture] = useState(null);
 
+    const [errors, setErrors] = useState({});
     const { showNotification } = useNotification();
 
     useEffect(async () => {
@@ -111,7 +110,26 @@ export default function UserForm({
         setFormValues((prev) => ({ ...prev, [field]: event.target.value }));
     };
 
+    const validate = () => {
+        let tempErrors = {};
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+        if (!formValues.email) {
+            tempErrors.email = "Email is required";
+        } else if (!emailRegex.test(formValues.email)) {
+            tempErrors.email = "Invalid email format";
+        }
+    
+        if (!formValues.name) tempErrors.name = "Name is required";
+        if (!formValues.user_name) tempErrors.user_name = "Username is required";
+        if (!formValues.password) tempErrors.password = "Password is required";
+        setErrors(tempErrors);
+        return Object.keys(tempErrors).length === 0;
+    };
+
     const handleSubmit = async () => {
+        if (!validate()) return;
+
         try {
             console.log('formValues', formValues);
             if (picture) {
@@ -119,16 +137,17 @@ export default function UserForm({
             }
             if (UserAction === 'edit') {
                 try {
-                await updateUser(formValues.id, formValues).then((response) => {
-                    showNotification('success', 'המשתמש עודכן בהצלחה');
-                    setUsers((prevUsers) => prevUsers.map(user => user.id === formValues.id ? { ...response.data } : user));
-                });
+                    await updateUser(formValues.id, formValues).then((response) => {
+                        showNotification('success', 'המשתמש עודכן בהצלחה');
+                        setUsers((prevUsers) => prevUsers.map(user => user.id === formValues.id ? { ...response.data } : user));
+                    });
                 } catch (error) {
                     showNotification('error', "שגיאה בעדכון משתמש "+error.message);
                 }
 
             } else {
                 try {
+                    debugger
                 await insertUser({ ...formValues }).then((response) => {
                     showNotification('success', 'המשתמש נוסף בהצלחה');
                     // setUsers((prevUsers) => [...prevUsers, { ...response }]);
@@ -151,18 +170,24 @@ export default function UserForm({
             <DialogTitle>{title}</DialogTitle>
             <DialogContent>
                 <TextField
+                    required
                     label="Email"
                     fullWidth
                     value={formValues.email}
                     onChange={handleChange('email')}
                     margin="normal"
+                    error={!!errors.email}
+                    helperText={errors.email}
                 />
                 <TextField
+                    required
                     label="Name"
                     fullWidth
                     value={formValues.name}
                     onChange={handleChange('name')}
                     margin="normal"
+                    error={!!errors.name}
+                    helperText={errors.name}
                 />
                 <TextField
                     label="Phone"
@@ -172,19 +197,25 @@ export default function UserForm({
                     margin="normal"
                 />
                 <TextField
+                    required
                     label="Username"
                     fullWidth
                     value={formValues.user_name}
                     onChange={handleChange('user_name')}
                     margin="normal"
+                    error={!!errors.user_name}
+                    helperText={errors.user_name}
                 />
                 <TextField
+                    required
                     label="Password"
                     type="password"
                     fullWidth
                     value={formValues.password}
                     onChange={handleChange('password')}
                     margin="normal"
+                    error={!!errors.password}
+                    helperText={errors.password}
                 />
                 <FormControl fullWidth margin="normal">
                     <InputLabel>Coach</InputLabel>

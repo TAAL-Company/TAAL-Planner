@@ -247,8 +247,8 @@ export const insertUser = async (user) => {
         user_name: user.user_name,
         coachId: user.coachId || null,
         picture_url: user.picture_url || null,
-        password: user.password || "TAAL1234",
-        siteIds: user.sites.map((site) => site.id) || [],
+        password: user.password,
+        siteIds: user.sites?.map((site) => site.id) || [],
         routeIds: user.routeIds || [],
       }),
     });

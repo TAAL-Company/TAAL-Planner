@@ -205,7 +205,7 @@ const Editors = () => {
 
       if (deletedUser.status === 200) {
         showNotification('success', deleteMessage);
-        alert(deleteMessage);
+        // alert(deleteMessage);
         const newEditors = [...Editors];
         newEditors.splice(EditorForRemove, 1); // Remove one element at index x
         setEditors(newEditors);
@@ -353,6 +353,7 @@ const Editors = () => {
         // getData();
       } catch (error) {
         console.error(error.message);
+        showNotification('error', "שגיאה בהוספת משתמש "+error.message);
       } finally {
         setLoading(false);
       }

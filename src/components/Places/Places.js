@@ -103,6 +103,7 @@ const Places = (props) => {
   const [chosenStation, setChosenStation] = useState([]);
   const [dropToBoard, setDropToBoard] = useState({});
   const [tasksLength, setTasksLength] = useState(0);
+  const [selectedRoute, setSelectedRoute] = useState(null);
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -706,11 +707,12 @@ const Places = (props) => {
           color: pastelColors[index % pastelColors.length],
         }))
     );
-
+    const newallRoutes = await getingData_Routes();
     //myRoutes saves only the routes that belong to the site that choosen
     if (myRoutes.length > 0) setRoutes([]);
+    
     setRoutes(
-      allRoutes.filter((route) =>
+      newallRoutes.filter((route) =>
         route.sites.some((site) => site.id === mySite.id)
       )
     );
@@ -1297,8 +1299,11 @@ const Places = (props) => {
                       className='nameOfButton'
                       onClick={
                         () => {
-                          displayStationsFromSelectedRoute(route);
-                          DisplayTasks(route);
+                          setSelectedRoute(route);
+                          if (selectedRoute === null || selectedRoute.id !== route.id) {
+                            displayStationsFromSelectedRoute(route);
+                            DisplayTasks(route);
+                          }
                         } //הצגת המסלול
                       }
                     >
@@ -1455,13 +1460,13 @@ const Places = (props) => {
         <DialogTitle id='alert-dialog-title'>{'מחיקת מסלול'}</DialogTitle>
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
-            {props.language !== 'English' ? 'האם אתה בטוח במחיקת המסלול?' : 'Are you sure you want to delete the route?'}
+            {props.language === 'English' ? 'האם אתה בטוח במחיקת המסלול?' : 'Are you sure you want to delete the route?'}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseRemove}>{props.language !== 'English' ? 'ביטול' : 'Cancel'}</Button>
+          <Button onClick={handleCloseRemove}>{props.language === 'English' ? 'ביטול' : 'Cancel'}</Button>
           <Button onClick={handleCloseRemoveConfirm} autoFocus>
-            {props.language !== 'English' ? 'מחיקה' : 'Delete'}
+            {props.language === 'English' ? 'מחיקה' : 'Delete'}
           </Button>
         </DialogActions>
       </Dialog>

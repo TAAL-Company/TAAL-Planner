@@ -49,7 +49,7 @@ const Tasks = (props) => {
   const handleCloseRemoveConfirm = async () => {
     try {
     let deleteTaskTemp = await deleteTask(taskForDelete)
-    showNotification('success', props.language === 'English' ? 'Task deleted successfully' : 'המשימה נמחקה בהצלחה');
+    showNotification('success', props.language !== 'English' ? 'Task deleted successfully' : 'המשימה נמחקה בהצלחה');
 
     if (deleteTaskTemp !== undefined) {
       // alert(props.language !== 'English' ? 'Task deleted successfully' : 'המשימה נמחקה בהצלחה');
@@ -102,7 +102,7 @@ const Tasks = (props) => {
           mySiteId,
           estimatedTimeSeconds
         );
-        showNotification('success', props.language === 'English' ? 'Task duplicated successfully' : 'המשימה נוספה בהצלחה');  
+        showNotification('success', props.language !== 'English' ? 'Task duplicated successfully' : 'המשימה נוספה בהצלחה');  
 
         // props.setAllTasksOfTheSite((prev) => [...prev, post]);
         const newTasks = [...props.tasksOfChosenStation];

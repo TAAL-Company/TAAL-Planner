@@ -277,7 +277,7 @@ const Coaches = () => {
           }
         } else {
           try {
-          insertCoach(user).then((data) => {
+            await insertCoach(user).then((data) => {
             showNotification('success', 'המשתמש נוסף בהצלחה');
             setUsers([data, ...users]);
           });
@@ -378,7 +378,7 @@ const Coaches = () => {
           <DialogContent>
             <DialogContentText></DialogContentText>
             <TextField
-              autoFocus
+              required
               margin='dense'
               id='email'
               label={language === 'Hebrew' ? 'אימייל' : 'Email'}
@@ -393,7 +393,7 @@ const Coaches = () => {
               inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <TextField
-              autoFocus
+              required
               margin='dense'
               id='name'
               label={language === 'Hebrew' ? 'שם מלא' : 'Full Name'}
@@ -408,7 +408,7 @@ const Coaches = () => {
               inputProps={{ style: { direction: language === 'Hebrew' ? 'rtl' : 'ltr' } }}
             />
             <TextField
-              autoFocus
+              required
               margin='dense'
               id='phone'
               label={language === 'Hebrew' ? 'מספר פלאפון' : 'Phone Number'}

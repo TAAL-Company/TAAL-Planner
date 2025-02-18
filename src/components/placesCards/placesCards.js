@@ -32,6 +32,8 @@ import InputFileUpload from '../InputFileUpload/InputFileUpload';
 
 import { Backdrop, CircularProgress } from '@mui/material';
 
+import { useNotification } from "../Notification/NotificationProvider";
+
 const PlacesCards = () => {
   const [Loading, setLoading] = useState(true);
   const [places, setPlaces] = useState([]);
@@ -49,6 +51,8 @@ const PlacesCards = () => {
   const [addUserButtonError, setAddUserButtonError] = useState('עליך למלא שדות חובה המסומנים בכוכבית');
   const [confermdelete, setconfermdelete] = useState('המחיקה בוצעה בהצלחה!');
   const [addImageError, setAddImage] = useState('הוספת תמונה');
+
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     setLanguage(sessionStorage.getItem('language'));
@@ -96,7 +100,8 @@ const PlacesCards = () => {
     let deletedPlace = await deleteSites(places[studentForAction].id);
 
     if (deletedPlace.status === 200) {
-      alert(confermdelete);
+      // alert(confermdelete);
+      showNotification('success', confermdelete);
       const newPlaces = [...places];
       newPlaces.splice(studentForAction, 1); // remove one element at index x
       setPlaces(newPlaces);
@@ -212,10 +217,11 @@ const PlacesCards = () => {
       // Optionally update UI or state
       setPlaces((prev) => [updatedSite, ...prev]);
       setupdateAdd(true);
-
+      showNotification('success', 'המשתמש נוסף בהצלחה');
       console.log('Duplication complete:', updatedSite);
     } catch (error) {
       console.error('Error duplicating place:', error);
+      showNotification('error', "שגיאה בהוספת משתמש "+error.message);
       setLoading(false);
     }
   };
@@ -226,7 +232,8 @@ const PlacesCards = () => {
     const nameInEnglish = document.getElementById('nameInEnglish').value;
 
     if (name === '' || description === '') {
-      alert(addUserButtonError);
+      // alert(addUserButtonError);
+      showNotification('error', addUserButtonError);
     } else {
       let picture_url;
       try {
@@ -242,30 +249,35 @@ const PlacesCards = () => {
           if (requestForEditing === 'edit' || requestForEditing === 'details') {
             const placeToUpdate = places[studentForAction];
             console.log('placeToUpdate', placeToUpdate);
-            updateSite(placeToUpdate.id, place).then((updatedPlace) => {
+            await updateSite(placeToUpdate.id, place).then((updatedPlace) => {
               placeToUpdate.name = updatedPlace.data.name;
               placeToUpdate.description = updatedPlace.data.description;
               placeToUpdate.picture_url = updatedPlace.data.picture_url;
               placeToUpdate.nameInEnglish = updatedPlace.data.nameInEnglish;
               const newplaces = [...places];
               setPlaces(newplaces);
+              showNotification('success', 'המשתמש עודכן בהצלחה');
             });
           } else {
-            insertSite(place).then((data) => {
+            await insertSite(place).then( async(data) => {
+              showNotification('success', 'המשתמש נוסף בהצלחה');
               data.picture_url = place.picture_url;
-              updateSite(data.id, data).then((updatedSite) => {
+              await updateSite(data.id, data).then((updatedSite) => {
                 setPlaces((prev) => [updatedSite.data, ...prev]);
                 setupdateAdd(true);
+                showNotification('success', 'המשתמש עודכן בהצלחה');
               });
             });
             setupdateAdd(false);
           }
         }
         else {
-          alert(addImageError);
+          // alert(addImageError);
+          showNotification('error', addImageError);
         }
       } catch (error) {
         console.error(error);
+        showNotification('error', "שגיאה בהוספת משתמש "+error.message);
       }
       handleClose(); // Close the dialog after the form is submitted
     }

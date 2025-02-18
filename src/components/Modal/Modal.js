@@ -147,11 +147,11 @@ function Modal({
         setFlagClickOK((flagClickOK = false));
         // window.location.replace("/forms");
         setOpenModal(false);
-        showNotification("success", language === "English" ? "route updated successfully" : "המסלול עודכן בהצלחה");
+        showNotification("success", language !== "English" ? "route updated successfully" : "המסלול עודכן בהצלחה");
       });
       } catch (error) {
         console.error(error.message);
-        showNotification("error", language === "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+        showNotification("error", language !== "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
       }
     }
   }
@@ -188,10 +188,10 @@ function Modal({
         // window.location.replace("/forms");
       });
       setOpenModal(false);
-      showNotification("success", language === "English" ? "route created successfully" : "המסלול נוצר בהצלחה");
+      showNotification("success", language !== "English" ? "route created successfully" : "המסלול נוצר בהצלחה");
       } catch (error) {
         console.error(error.message);
-        showNotification("error", language === "English" ? "Error Creating Route" : "שגיאה ביצירת המסלול");
+        showNotification("error", language !== "English" ? "Error Creating Route" : "שגיאה ביצירת המסלול");
       }
     }
   }
@@ -218,7 +218,7 @@ function Modal({
     setFlagStudent(false);
     setOpenModal(false);
   };
-  const handleSubmitRouteTitle = (event) => {
+  const handleSubmitRouteTitle = async (event) => {
     event.preventDefault();
 
     setNewTitleForRoute(routeTitle);
@@ -231,31 +231,31 @@ function Modal({
 
     if (requestForEditing == 'edit' || requestForEditing == 'details') {
       try{
-      updateRoute(routeUUID, routeData).then((data) => {
+        await updateRoute(routeUUID, routeData).then((data) => {
         setNewRoute(data);
         // setNewTitleForRoute(data);
         setRouteTitle('');
         // setFlagStudent(false);
         setOpenModal(false);
       });
-      showNotification("success", language === "English" ? "route updated successfully" : "המסלול עודכן בהצלחה");
+      showNotification("success", language !== "English" ? "route updated successfully" : "המסלול עודכן בהצלחה");
     }catch (error) {
         console.error(error.message);
-        showNotification("error", language === "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+        showNotification("error", language !== "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
       }
     } else {
       try {
-      insertRoute(routeData).then((data) => {
+      await insertRoute(routeData).then((data) => {
         setNewRoute(data);
         setNewTitleForRoute(data);
         setRouteTitle('');
         setFlagStudent(false);
         setOpenModal(false);
       });
-      showNotification("success", language === "English" ? "route created successfully" : "המסלול נוצר בהצלחה");
+      showNotification("success", language !== "English" ? "route created successfully" : "המסלול נוצר בהצלחה");
     } catch (error) {
         console.error(error.message);
-        showNotification("error", language === "English" ? "Error Creating Route" : "שגיאה ביצירת המסלול");
+        showNotification("error", language !== "English" ? "Error Creating Route" : "שגיאה ביצירת המסלול");
       }
     }
   };

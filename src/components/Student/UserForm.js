@@ -20,6 +20,8 @@ import { getBlobsInContainer } from '../azureBlob';
 
 import { useNotification } from '../Notification/NotificationProvider';
 
+import { useTranslation } from "react-i18next";
+
 export default function UserForm({
     open,
     handleCloseDialog,
@@ -42,6 +44,8 @@ export default function UserForm({
 
     const [errors, setErrors] = useState({});
     const { showNotification } = useNotification();
+
+    const { t } = useTranslation();
 
     useEffect(async () => {
         // prepare UI for results
@@ -115,14 +119,14 @@ export default function UserForm({
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     
         if (!formValues.email) {
-            tempErrors.email = "Email is required";
+            tempErrors.email = t("FormsErrors.emailRequired");
         } else if (!emailRegex.test(formValues.email)) {
-            tempErrors.email = "Invalid email format";
+            tempErrors.email = t("FormsErrors.emailFormat");
         }
     
-        if (!formValues.name) tempErrors.name = "Name is required";
-        if (!formValues.user_name) tempErrors.user_name = "Username is required";
-        if (!formValues.password) tempErrors.password = "Password is required";
+        if (!formValues.name) tempErrors.name = t("FormsErrors.nameRequired");
+        if (!formValues.user_name) tempErrors.user_name = t("FormsErrors.usernameRequired");
+        if (!formValues.password) tempErrors.password = t("FormsErrors.passwordRequired");
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
     };
@@ -138,40 +142,40 @@ export default function UserForm({
             if (UserAction === 'edit') {
                 try {
                     await updateUser(formValues.id, formValues).then((response) => {
-                        showNotification('success', 'המשתמש עודכן בהצלחה');
+                        showNotification('success', t("showNotification.Success_edit_user"));
                         setUsers((prevUsers) => prevUsers.map(user => user.id === formValues.id ? { ...response.data } : user));
                     });
                 } catch (error) {
-                    showNotification('error', "שגיאה בעדכון משתמש "+error.message);
+                    showNotification('error', t("showNotification.Error_edit_user") +error.message);
                 }
 
             } else {
                 try {
                     debugger
                 await insertUser({ ...formValues }).then((response) => {
-                    showNotification('success', 'המשתמש נוסף בהצלחה');
+                    showNotification('success', t("showNotification.Success_add_user"));
                     // setUsers((prevUsers) => [...prevUsers, { ...response }]);
                     setupdateduplicateUser(!updateduplicateUser);
                 });
                 } catch (error) {
-                    showNotification('error', "שגיאה בהוספת משתמש "+error.message);
+                    showNotification('error', t("showNotification.Error_add_user") +error.message);
                 }
             }
 
         } catch (error) {
-            showNotification('error', "שגיאה בהוספת משתמש "+error.message);
+            showNotification('error', t("showNotification.Error_add_user") +error.message);
             // alert(error.message);
         }
         handleCloseDialog(); // Close the dialog
     };
 
     return (
-        <Dialog open={open}>
+        <Dialog open={open} style={{ direction: t('Direction') }}  >
             <DialogTitle>{title}</DialogTitle>
-            <DialogContent>
+            <DialogContent dir="rtl" >
                 <TextField
                     required
-                    label="Email"
+                    label={t("Forms.Email")}
                     fullWidth
                     value={formValues.email}
                     onChange={handleChange('email')}
@@ -181,7 +185,7 @@ export default function UserForm({
                 />
                 <TextField
                     required
-                    label="Name"
+                    label={t("Forms.Name")}
                     fullWidth
                     value={formValues.name}
                     onChange={handleChange('name')}
@@ -190,7 +194,7 @@ export default function UserForm({
                     helperText={errors.name}
                 />
                 <TextField
-                    label="Phone"
+                    label={t("Forms.Phone")}
                     fullWidth
                     value={formValues.phone}
                     onChange={handleChange('phone')}
@@ -198,7 +202,7 @@ export default function UserForm({
                 />
                 <TextField
                     required
-                    label="Username"
+                    label={t("Forms.Username")}
                     fullWidth
                     value={formValues.user_name}
                     onChange={handleChange('user_name')}
@@ -208,7 +212,7 @@ export default function UserForm({
                 />
                 <TextField
                     required
-                    label="Password"
+                    label={t("Forms.Password")}
                     type="password"
                     fullWidth
                     value={formValues.password}
@@ -218,7 +222,7 @@ export default function UserForm({
                     helperText={errors.password}
                 />
                 <FormControl fullWidth margin="normal">
-                    <InputLabel>Coach</InputLabel>
+                    <InputLabel>{t("Forms.Select_Coach")}</InputLabel>
                     <Select
                         value={formValues.coachId}
                         onChange={handleChange('coachId')}
@@ -232,7 +236,7 @@ export default function UserForm({
                 </FormControl>
 
                 <MultipleSelect
-                    label="Select Sites"
+                    label={t("Forms.Select_Sites")}
                     formValues={formValues}
                     handleChange={handleChange}
                     sites={sites}
@@ -253,8 +257,8 @@ export default function UserForm({
                 </FormControl> */}
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseDialog}>Cancel</Button>
-                <Button onClick={handleSubmit}>Submit</Button>
+                <Button onClick={handleCloseDialog}>{t("Forms.Cancel")}</Button>
+                <Button onClick={handleSubmit}>{t("Forms.Submit")}</Button>
             </DialogActions>
         </Dialog>
     );

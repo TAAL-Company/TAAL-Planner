@@ -19,7 +19,7 @@ import Editors from './components/Editor/Editors';
 import Community from './components/Community/community';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-// import './i18n'; // Import the i18n configuration
+import './i18n'; // Import the i18n configuration
 
 import { NotificationProvider } from "./components/Notification/NotificationProvider";
 

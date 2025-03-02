@@ -6,8 +6,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { DataGrid } from '@mui/x-data-grid';
-import { getingData_Users, getingData_coaches, getingData_Places, insertUser } from '../../api/api';
-import { deleteUser, updateUser } from '../../api/api';
+import { getingData_Users, getingData_coaches, getingData_Places, insertUser, deleteUser } from '../../api/api';
 import { useState, useEffect } from 'react';
 import { Button, MenuItem, IconButton, Menu } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -15,6 +14,7 @@ import UserForm from './UserForm';
 import Toolbar  from './Toolbar';
 import './StudentsCard.css';
 import { useNotification } from "../Notification/NotificationProvider";
+import { useTranslation } from "react-i18next";
 
 export default function DataGridDemo() {
   const [users, setUsers] = useState([]);
@@ -39,6 +39,8 @@ export default function DataGridDemo() {
   const [updateduplicateUser, setupdateduplicateUser] = useState(false);
 
   const { showNotification } = useNotification();
+
+  const { t } = useTranslation();
 
   const handleClickMenu = (event, user) => {
     setAnchorEl(event.currentTarget);
@@ -127,13 +129,13 @@ export default function DataGridDemo() {
   const handleDeleteUser = async () => {
     try { 
     await deleteUser(selectedUser.id).then(() => {
-      showNotification('success', 'המשתמש נמחק בהצלחה');
+      showNotification('success',t('Success_delete_user') );
       setUsers(prevUsers => prevUsers.filter(user => user.id !== selectedUser.id));
       handleCloseMenu();
     });
     } catch (error) {
       console.error(error.message);
-      showNotification('error', 'שגיאה במחיקת משתמש');
+      showNotification('error', t('Error_delete_user') );
     }
   };
 
@@ -163,14 +165,14 @@ export default function DataGridDemo() {
       const userDuplicatedatawithname = { ...userDuplicatedata, name: userToDuplicate.name + '-' + new Date().getTime() };
       try {
       insertUser(userDuplicatedatawithname).then((data) => {
-        showNotification('success', 'המשתמש נוסף בהצלחה');
+        showNotification('success', t('Success_duplicate_user'));
         setupdateduplicateUser(!updateduplicateUser);
         // setUsers(prevUsers => [...prevUsers, userDuplicatedatawithname]);
         handleCloseMenu();
       })
       } catch (error) {
         console.error(error.message);
-        showNotification('error', 'שגיאה בהוספת משתמש');
+        showNotification('error', t('Error_duplicate_user'));
       }
     }
   };
@@ -222,7 +224,7 @@ export default function DataGridDemo() {
     // { field: 'id', headerName: 'ID', width: 300 },
     {
       field: 'picture_url',
-      headerName: 'Avatar',
+      headerName: t('UserPage.Avatar'),
       width: 70,
       renderCell: (params) => {
         if (params.row.isRoute) return null; // Skip avatar rendering for route rows
@@ -232,15 +234,15 @@ export default function DataGridDemo() {
         />;
       },
     },
-    { field: 'name', headerName: 'Name', width: 150, editable: true },
-    { field: 'user_name', headerName: 'Username', width: 150, editable: true },
-    { field: 'email', headerName: 'Email', width: 200, editable: true },
-    { field: 'phone', headerName: 'Phone', width: 150, editable: true },
-    { field: 'role', headerName: 'Role', width: 120 },
-    // { field: 'cognitiveProfile', headerName: 'Cognitive Profile', width: 200 },
+    { field: 'name', headerName: t('UserPage.Name'), width: 150, editable: true },
+    { field: 'user_name', headerName: t('UserPage.Username'), width: 150, editable: true },
+    { field: 'email', headerName: t('UserPage.Email'), width: 200, editable: true },
+    { field: 'phone', headerName: t('UserPage.Phone'), width: 150, editable: true },
+    { field: 'role', headerName: t('UserPage.Role'), width: 120 },
+    // { field: 'cognitiveProfile', headerName: t('UserPage.cognitive_profile'), width: 200 },
     {
       field: 'coach',
-      headerName: 'Coach Name',
+      headerName: t('UserPage.CoachName'),
       width: 150,
       valueGetter: (params) => {
         const coach = coaches.find(coach => coach.id === params.row.coachId);
@@ -249,7 +251,7 @@ export default function DataGridDemo() {
     },
     {
       field: 'sites',
-      headerName: 'Sites',
+      headerName: t('UserPage.SitesName'),
       width: 200,
       renderCell: (params) => {
         const sites = params.row.sites ? params.row.sites.map((site) => site.name) : [];
@@ -260,7 +262,7 @@ export default function DataGridDemo() {
     },
     {
       field: 'created_at',
-      headerName: 'Created At',
+      headerName: t('UserPage.CreatedAt'),
       width: 150,
       valueGetter: (params) => {
         const createdAt = params.row.createdAt;
@@ -269,7 +271,7 @@ export default function DataGridDemo() {
     },
     {
       field: 'last_login_at',
-      headerName: 'Last Login At',
+      headerName: t('UserPage.LastLoginAt'),
       width: 150,
       valueGetter: (params) => {
         const lastLoginAt = params.row.lastLoginAt;
@@ -278,7 +280,7 @@ export default function DataGridDemo() {
     },
     {
       field: 'active',
-      headerName: 'Online',
+      headerName: t('UserPage.Online'),
       width: 120,
       renderCell: (params) => {
         if (params.row.isRoute) return null; // Skip active status for route rows
@@ -328,8 +330,8 @@ export default function DataGridDemo() {
 
   // Custom columns for route data
   const customColumns = [
-    { field: 'routeName', headerName: 'Route', width: 200 },
-    // { field: 'routeOnlyOnce', headerName: 'Once Only', width: 100 },
+    { field: 'routeName', headerName: t('UserPage.RouteName'), width: 200 },
+    // { field: 'routeOnlyOnce', headerName: t('UserPage.RouteOnlyOnce'), width: 100 },
   ];
 
   return (
@@ -344,10 +346,11 @@ export default function DataGridDemo() {
           marginBottom: '14px',
         }}
         variant="outlined" onClick={handleClickOpenDialog}>
-        ADD A New Employee
+        {t('UserPage.ADDANewEmployee')}
       </Button>
       <Box style={{ height: 600, width: '100%' }}>
         <DataGrid
+          style={{ direction: t('Direction') }}
           rows={getRowsWithRoutes()}
           columns={[...columns, ...customColumns]}
           pageSize={12} //integer value representing max number of rows
@@ -363,15 +366,15 @@ export default function DataGridDemo() {
           open={Boolean(anchorEl)}
           onClose={handleCloseMenu}
         >
-          <MenuItem onClick={handleClickOpenEditDialog}>Edit</MenuItem>
-          <MenuItem onClick={handleDeleteUser}>Delete</MenuItem>
-          <MenuItem onClick={handleDuplicateUser}>Duplicate</MenuItem>
+          <MenuItem onClick={handleClickOpenEditDialog}>{t('UserPage.Edit')}</MenuItem>
+          <MenuItem onClick={handleDeleteUser}>{t('UserPage.Delete')}</MenuItem>
+          <MenuItem onClick={handleDuplicateUser}>{t('UserPage.Duplicate')}</MenuItem>
         </Menu>
 
         <UserForm
           open={openDialog}
           handleCloseDialog={handleCloseDialog}
-          title="Add User"
+          title={t('UserPage.ADDANewEmployee')}
           coaches={coaches}
           initialValues={newUser}
           setUsers={setUsers}

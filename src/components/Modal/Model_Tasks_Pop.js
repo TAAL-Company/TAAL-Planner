@@ -25,13 +25,26 @@ const style = {
   overflowY: "scroll",
   p: 4,
 };
-
+const style2 = {
+  position: 'absolute',
+  top: '5%',
+  left: '5%',
+  // transform: 'translate(-50%, -50%)',
+  width: '90%', //'1002px',
+  height: '90%',//'400px',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  // overflow: "hidden",
+  // overflowY: "scroll",
+  // p: 4,
+};
 //--------------------------
 function Model_Tasks_Pop(props) {
   let multi_language_description
   console.log('multi_language_description: ', props.multi_language_description);
-  console.log("check",Object.keys(props.multi_language_description).length === 0);
-  
+  console.log("check", Object.keys(props.multi_language_description).length === 0);
+
 
   if (Object.keys(props.multi_language_description).length === 0) {
     multi_language_description = props.multi_language_description[props.language_description]
@@ -321,7 +334,7 @@ function Model_Tasks_Pop(props) {
             <FcMultipleInputs />
           </h6>
           <div>
-          <InputFileUpload setPicture={setPicture} language={props.language} />
+            <InputFileUpload setPicture={setPicture} language={props.language} />
             {/* <input
               required={true}
               accept='.png, .jpg, .jpeg'
@@ -345,8 +358,8 @@ function Model_Tasks_Pop(props) {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <Box sx={style}>
-                <Gallery2 sethandleClose={handleClose} setPicture={setPicture} />
+              <Box sx={style2}>
+                <Gallery2 sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true} />
               </Box>
             </Modal>
             {picture ? (
@@ -394,8 +407,8 @@ function Model_Tasks_Pop(props) {
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box sx={style}>
-              <Gallery3 sethandleClose={handleClose} setAudio={setAudio} />
+            <Box sx={style2}>
+              <Gallery2 sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false} />
             </Box>
           </Modal>
           {/* <div>
@@ -453,8 +466,8 @@ function Model_Tasks_Pop(props) {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
         >
-          <Box sx={style}>
-            <Gallery2 sethandleClose={handleClose} setPicture={setPicture} />
+          <Box sx={style2}>
+          <Gallery2 sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true}/>
           </Box>
         </Modal>
       </div>

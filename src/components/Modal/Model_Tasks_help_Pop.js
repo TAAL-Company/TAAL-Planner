@@ -28,6 +28,21 @@ const style = {
     p: 4,
 };
 
+const style2 = {
+    position: 'absolute',
+    top: '5%',
+    left: '5%',
+    // transform: 'translate(-50%, -50%)',
+    width: '90%', //'1002px',
+    height: '90%',//'400px',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    // overflow: "hidden",
+    // overflowY: "scroll",
+    // p: 4,
+  };
+
 //--------------------------
 function Model_Tasks_Pop(props) {
     console.log(props.additonalHelp);
@@ -231,8 +246,8 @@ function Model_Tasks_Pop(props) {
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
                         >
-                            <Box sx={style}>
-                                <Gallery2 sethandleClose={handleClose} setPicture={setPicture} />
+                            <Box sx={style2}>
+                                <Gallery2 sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true}/>
                             </Box>
                         </Modal>
                         {picture ? (
@@ -280,8 +295,8 @@ function Model_Tasks_Pop(props) {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={style}>
-                            <Gallery3 sethandleClose={handleClose} setAudio={setAudio} />
+                        <Box sx={style2}>
+                            <Gallery2 sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false}/>
                         </Box>
                     </Modal>
                     {audio ? (

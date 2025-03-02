@@ -1,6 +1,7 @@
 import React from 'react';
-import { Paper, Typography } from '@mui/material';
+import { Paper, Typography, Button } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const UploadZone = ({ onFileUpload }) => {
   const handleDrop = (e) => {
@@ -15,10 +16,21 @@ const UploadZone = ({ onFileUpload }) => {
     onFileUpload(files);
   };
 
+  const handleUploadClick = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.multiple = true;
+    input.onchange = (e) => {
+      onFileUpload(Array.from(e.target.files));
+    };
+    input.click();
+  };
+
   return (
     <Paper 
       onDrop={handleDrop}
       onDragOver={handleDragOver}
+      onClick={handleUploadClick}
       sx={{ 
         p: 3, 
         mb: 3, 

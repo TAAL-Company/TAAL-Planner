@@ -10,11 +10,11 @@ import {
   MenuItem
 } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
-import AlertDialog from './AlertDialog';
-import BasicSelect from './BasicSelect';
-import { deleteFileByUrl, transferFile } from '../../../../api/api';
+import AlertDialog from './Gallerypage/components/AlertDialog';
+import BasicSelect from './Gallerypage/components/BasicSelect';
+import { deleteFileByUrl, transferFile } from '../../api/api';
 
-const ImageGrid = ({ images, setReload, setLoading, folderNames }) => {
+const ImageGrid = ({ images, setReload, setLoading, folderNames, setPicture, sethandleClose }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -85,12 +85,18 @@ const ImageGrid = ({ images, setReload, setLoading, folderNames }) => {
       gap: 2
     }}>
       {Object.entries(images).map(([key, url]) => (
-        <Card key={key}>
+        <Card key={key}
+        >
           <CardMedia
             component="img"
             height="200"
             image={url}
             alt={key}
+            onClick={(e) => {
+              console.log(url);
+              setPicture(url);
+              sethandleClose(false);
+            }}
           />
           <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <Typography>{getFileName(url)}</Typography>

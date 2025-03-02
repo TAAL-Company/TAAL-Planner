@@ -17,7 +17,7 @@ import {
   AudiotrackOutlined
 } from '@mui/icons-material';
 
-const SidebarNav = ({ folderNames, sortedUrls, onFolderSelect, setSelectedType }) => {
+const SidebarNav = ({ folderNames, sortedUrls, onFolderSelect, setSelectedType, showaudio, showimage }) => {
   const [openFolder, setOpenFolder] = useState(null);
 
   const handleFolderClick = (folderName) => {
@@ -53,22 +53,35 @@ const SidebarNav = ({ folderNames, sortedUrls, onFolderSelect, setSelectedType }
             </ListItem>
             {openFolder === folderName && (
               <List component="div" disablePadding>
-                {Object.keys(sortedUrls[folderName]).map((type) => (
-                  <ListItemButton
-                    key={type}
-                    sx={{ pl: 4 }}
-                    onClick={() => handleTypeClick(folderName, type)}
-                  >
-                    <ListItemIcon sx={{ color: 'white' }}>
-                      {type === 'pictures' ? (
-                        <ImageOutlined />
-                      ) : (
-                        <AudiotrackOutlined />
-                      )}
-                    </ListItemIcon>
-                    <ListItemText primary={type} />
+                {(showimage && Object.keys(sortedUrls[folderName]).includes('pictures')) ||
+                  (showaudio && Object.keys(sortedUrls[folderName]).includes('audio')) ? (
+                  Object.keys(sortedUrls[folderName]).map((type) => {
+                    if ((type === 'pictures' && showimage) || (type === 'audio' && showaudio)) {
+                      return (
+                        <ListItemButton
+                          key={type}
+                          sx={{ pl: 4 }}
+                          onClick={() => handleTypeClick(folderName, type)}
+                        >
+                          <ListItemIcon sx={{ color: 'white' }}>
+                            {type === 'pictures' ? (
+                              <ImageOutlined />
+                            ) : (
+                              <AudiotrackOutlined />
+                            )}
+                          </ListItemIcon>
+                          <ListItemText primary={type} />
+                        </ListItemButton>
+                      );
+                    } else {
+                      return null;
+                    }
+                  })
+                ) : (
+                  <ListItemButton sx={{ pl: 4 }}>
+                    <ListItemText primary="No media available" />
                   </ListItemButton>
-                ))}
+                )}
               </List>
             )}
           </React.Fragment>

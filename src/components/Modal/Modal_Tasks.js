@@ -40,6 +40,21 @@ const style = {
   p: 4,
 };
 
+const style2 = {
+  position: 'absolute',
+  top: '5%',
+  left: '5%',
+  // transform: 'translate(-50%, -50%)',
+  width: '90%', //'1002px',
+  height: '90%',//'400px',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  // overflow: "hidden",
+  // overflowY: "scroll",
+  // p: 4,
+};
+
 //--------------------------
 let ichour = 'אישור';
 let file = '';
@@ -72,7 +87,7 @@ function Modal_Tasks(props) {
   );
   const audioRef = useRef(null);
 
-  const [Foldersite, setFoldersite] = useState('general');
+  const [Foldersite, setFoldersite] = useState(props.mySite.nameInEnglish);
   const [blobList, setBlobList] = useState([]);
   const [sortedUrls, setSortedUrls] = useState({});
   const [folderNames, setFolderNames] = useState([]);
@@ -167,6 +182,8 @@ function Modal_Tasks(props) {
     setFlagClickOK(true);
     console.log("additonalHelp", additonalHelp);
     console.log(mainadditonalHelp);
+    console.log(Foldersite);
+    
 
 
     if (get_title === '' || getDescription === '') {
@@ -649,11 +666,17 @@ function Modal_Tasks(props) {
                   )}
                   <h6>
                     {props.language !== 'English'
+                      ? "Site where the image / voice will be save : "+ props.mySite.nameInEnglish
+                      :   props.mySite.nameInEnglish +' : nאתר בו יישמרו התמונה/הקול'}
+                    <FcMultipleInputs />
+                  </h6>
+                  {/* <h6>
+                    {props.language !== 'English'
                       ? 'Select where to save picture / voice'
                       : ':בחר היכן לשמור תמונה/קול'}
                     <FcMultipleInputs />
                   </h6>
-                  <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
+                  <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} /> */}
                   <form id='IPU' className='w3-container'>
                     <h6>
                       {props.language !== 'English'
@@ -673,8 +696,8 @@ function Modal_Tasks(props) {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                       >
-                        <Box sx={style}>
-                          <Gallery2 sethandleClose={handleClose} setPicture={setPicture} />
+                        <Box sx={style2}>
+                          <Gallery2 sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true}/>
                         </Box>
                       </Modal>
                       {picture ? (
@@ -722,9 +745,9 @@ function Modal_Tasks(props) {
                       aria-labelledby="modal-modal-title"
                       aria-describedby="modal-modal-description"
                     >
-                      <Box sx={style}>
-                        <Gallery3 sethandleClose={handleClose} setAudio={setAudio} />
-                      </Box>
+                      <Box sx={style2}>
+                          <Gallery2 sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false}/>
+                        </Box>
                     </Modal>
                   </form>
                   {audio ? (

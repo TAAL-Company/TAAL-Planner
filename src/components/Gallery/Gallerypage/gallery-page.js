@@ -134,6 +134,8 @@ const GalleryPage = () => {
         sortedUrls={sortedUrls}
         onFolderSelect={handleFolderSelect}
         setSelectedType={setSelectedType}
+        showaudio={true}
+        showimage={true}
       />
       <Box sx={{ flexGrow: 1, p: 3, overflowY: 'scroll' }}>
         <UploadZone onFileUpload={handleFileUpload} />

@@ -45,7 +45,7 @@ let thisIdTask = 0;
 // let filteredDataRoutes = [];
 let inputText = '';
 let inputTextRouts = '';
-let mySite = { name: '', id: '' };
+let mySite = { name: '', id: '', nameInEnglish: '' };
 // let flagButtonRoute = false;
 // let tasksOfRoutes = [];
 let clickAddRoute = false;
@@ -683,12 +683,14 @@ const Places = (props) => {
   }, [openModalSiteChosen, replaceSiteFlag, selectedSite, tempSelectedSite]);
 
   const Display_The_Stations = async (selectedValue) => {
+    const newallRoutes = await getingData_Routes();
     setThisIdTask((thisIdTask = selectedValue.id));
 
     if (stationArray.length > 0) setStationArray([]);
 
     mySite.name = selectedValue.name;
     mySite.id = selectedValue.id;
+    mySite.nameInEnglish = selectedValue.nameInEnglish;
 
     const tasksOfTheSite = allTasks.filter((task) =>
       task.sites.find((site) => site.id === mySite.id)
@@ -707,7 +709,6 @@ const Places = (props) => {
           color: pastelColors[index % pastelColors.length],
         }))
     );
-    const newallRoutes = await getingData_Routes();
     //myRoutes saves only the routes that belong to the site that choosen
     if (myRoutes.length > 0) setRoutes([]);
     

@@ -169,6 +169,8 @@ function Tag({
                   <button
                     className='threeDotsVerticalEng'
                     onClick={() => {
+                      console.log('id', id);
+                      
                       dragFromCover === 'TasksNew'
                         ? clickOnThreeDotsVerticaIcont(id)
                         : clickOnThreeDotsVerticaIcontBoard(id, keyCount);
@@ -202,9 +204,9 @@ function Tag({
                       language={language}
                       setRequestForEditing={setRequestForEditing}
                       setOpenThreeDotsVertical={setOpenThreeDotsVerticalBoard}
-                      editable={true}
-                      Reproducible={true}
-                      details={true}
+                      editable={false}
+                      Reproducible={false}
+                      details={false}
                       erasable={true}
                     />
                   ) : (

@@ -22,7 +22,20 @@ const style = {
     overflowY: "scroll",
     p: 4,
 };
-
+const style2 = {
+    position: 'absolute',
+    top: '5%',
+    left: '5%',
+    // transform: 'translate(-50%, -50%)',
+    width: '90%', //'1002px',
+    height: '90%',//'400px',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    // overflow: "hidden",
+    // overflowY: "scroll",
+    // p: 4,
+  };
 const initialFormConfig = [
     {
         label: 'Select a user',
@@ -293,12 +306,12 @@ function Model_Tasks_Pop_for_user(props) {
                                             aria-labelledby="modal-modal-title"
                                             aria-describedby="modal-modal-description"
                                         >
-                                            <Box sx={style}>
+                                            <Box sx={style2}>
                                                 <Gallery2 sethandleClose={handleClose} setPicture={(file) => setFormData((prevData) => {
                                                     const newData = [...prevData];
                                                     newData[formIndex].picture = file;
                                                     return newData;
-                                                })} />
+                                                })} showaudio={false} showimage={true}/>
                                             </Box>
                                         </Modal>
                                         {formData[formIndex].picture ? (
@@ -341,12 +354,12 @@ function Model_Tasks_Pop_for_user(props) {
                                             aria-labelledby="modal-modal-title"
                                             aria-describedby="modal-modal-description"
                                         >
-                                            <Box sx={style}>
-                                                <Gallery3 sethandleClose={handleClose} setAudio={(file) => setFormData((prevData) => {
+                                            <Box sx={style2}>
+                                                <Gallery2 sethandleClose={handleClose} setPicture={(file) => setFormData((prevData) => {
                                                     const newData = [...prevData];
                                                     newData[formIndex].audio = file;
                                                     return newData;
-                                                })} />
+                                                })} showaudio={true} showimage={false}/>
                                             </Box>
                                         </Modal>
                                         {formData[formIndex].audio ? (

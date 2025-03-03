@@ -35,7 +35,7 @@ const style2 = {
     // overflow: "hidden",
     // overflowY: "scroll",
     // p: 4,
-  };
+};
 const initialFormConfig = [
     {
         label: 'Select a user',
@@ -163,7 +163,7 @@ function Model_Tasks_Pop_for_user(props) {
 
     const audioRef = useRef(null);
 
-    const [Foldersite, setFoldersite] = useState('general');
+    const [Foldersite, setFoldersite] = useState(props.siteNameInEnglish);
     const [blobList, setBlobList] = useState([]);
     const [sortedUrls, setSortedUrls] = useState({});
     const [folderNames, setFolderNames] = useState([]);
@@ -286,8 +286,8 @@ function Model_Tasks_Pop_for_user(props) {
                                         onChange={(e) => handleInputChange(e, formIndex)}
                                         style={{
                                             width: '100%',
-                                            height: '38px',
-                                            paddingRight: '20px',
+                                            // height: '38px',
+                                            // paddingRight: '20px',
                                             direction: props.language === 'English' ? 'rtl' : 'ltr',
                                         }}
                                         value={formData[formIndex][field.value]}
@@ -401,13 +401,19 @@ function Model_Tasks_Pop_for_user(props) {
                     </div>
                 ))}
                 <Button variant="outlined" onClick={addNewForm}>Add More</Button>
-                <h6>
+                {/* <h6>
                     {props.language !== 'English'
                         ? 'Select where to save picture / voice'
                         : ':בחר היכן לשמור תמונה/קול'}
                     <FcMultipleInputs />
                 </h6>
-                <BasicSelect setFoldersite={setFoldersite} folderName={Foldersite} folderlist={folderNames} />
+                <BasicSelect setFoldersite={setFoldersite} folderName={Foldersite} folderlist={folderNames} /> */}
+                <h6>
+                    {props.language !== 'English'
+                        ? "Site where the image / voice will be save : " + props.siteNameInEnglish
+                        : props.siteNameInEnglish + ' : nאתר בו יישמרו התמונה/הקול'}
+                    <FcMultipleInputs />
+                </h6>
             </div>
             <div
                 style={{

@@ -118,7 +118,7 @@ function Model_Tasks_Pop(props) {
 
   const audioRef = useRef(null);
 
-  const [Foldersite, setFoldersite] = useState('general');
+  const [Foldersite, setFoldersite] = useState(props.siteNameInEnglish);
   const [blobList, setBlobList] = useState([]);
   const [sortedUrls, setSortedUrls] = useState({});
   const [folderNames, setFolderNames] = useState([]);
@@ -319,13 +319,20 @@ function Model_Tasks_Pop(props) {
             : ':בחר סוג משימה '}
         </h6>
         <BasicSelect setFoldersite={setTaskType} folderName={TaskType} folderlist={TaskTypelist} />
-        <h6>
+        {/* <h6>
           {props.language !== 'English'
             ? 'Select where to save picture / voice'
             : ':בחר היכן לשמור תמונה/קול'}
           <FcMultipleInputs />
         </h6>
-        <BasicSelect setFoldersite={setFoldersite} folderName={Foldersite} folderlist={folderNames} />
+        <BasicSelect setFoldersite={setFoldersite} folderName={Foldersite} folderlist={folderNames} /> */}
+        
+        <h6>
+          {props.language !== 'English'
+            ? "Site where the image / voice will be save : " + props.siteNameInEnglish
+            : props.siteNameInEnglish + ' : nאתר בו יישמרו התמונה/הקול'}
+          <FcMultipleInputs />
+        </h6>
         <form id='IPU' className='w3-container'>
           <h6>
             {props.language !== 'English'
@@ -467,7 +474,7 @@ function Model_Tasks_Pop(props) {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style2}>
-          <Gallery2 sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true}/>
+            <Gallery2 sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true} />
           </Box>
         </Modal>
       </div>

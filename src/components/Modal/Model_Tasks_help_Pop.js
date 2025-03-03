@@ -63,11 +63,11 @@ function Model_Tasks_Pop(props) {
         }
     }
 
-    const [UserIDs, setUserIDs] = useState(additonalHelp?.UserID);
-    const [help_text, setHelp_text] = useState(additonalHelp?.help_text);
-    const [picture, setPicture] = useState(additonalHelp?.picture_url);
-    const [audio, setAudio] = useState(additonalHelp?.audio_url);
-    const [video, setVideo] = useState(additonalHelp?.video_url);
+    const [UserIDs, setUserIDs] = useState(additonalHelp.UserID|| '');
+    const [help_text, setHelp_text] = useState(additonalHelp.help_text|| '');
+    const [picture, setPicture] = useState(additonalHelp.picture_url|| '');
+    const [audio, setAudio] = useState(additonalHelp.audio_url|| '');
+    const [video, setVideo] = useState(additonalHelp.video_url|| '');
 
     const [additonalHelpUsers, setAdditonalHelpUsers] = useState(props.additonalHelp);
 
@@ -124,7 +124,7 @@ function Model_Tasks_Pop(props) {
 
     const audioRef = useRef(null);
 
-    const [Foldersite, setFoldersite] = useState('general');
+    const [Foldersite, setFoldersite] = useState(props.siteNameInEnglish);
     const [blobList, setBlobList] = useState([]);
     const [sortedUrls, setSortedUrls] = useState({});
     const [folderNames, setFolderNames] = useState([]);
@@ -220,13 +220,19 @@ function Model_Tasks_Pop(props) {
                         ></input>
                     </p>
                 </form>
-                <h6>
+                {/* <h6>
                     {props.language !== 'English'
                         ? 'Select where to save picture / voice'
                         : ':בחר היכן לשמור תמונה/קול'}
                     <FcMultipleInputs />
                 </h6>
-                <BasicSelect setFoldersite={setFoldersite} folderName={Foldersite} folderlist={folderNames} />
+                <BasicSelect setFoldersite={setFoldersite} folderName={Foldersite} folderlist={folderNames} /> */}
+                <h6>
+                    {props.language !== 'English'
+                        ? "Site where the image / voice will be save : " + props.siteNameInEnglish
+                        : props.siteNameInEnglish + ' : nאתר בו יישמרו התמונה/הקול'}
+                    <FcMultipleInputs />
+                </h6>
                 <form id='IPU' className='w3-container'>
                     <h6>
                         {props.language !== 'English'
@@ -360,6 +366,7 @@ function Model_Tasks_Pop(props) {
                             p: 4,
                         }}>
                             <Model_Tasks_help_for_user_Popup
+                                siteNameInEnglish={props.siteNameInEnglish}
                                 allUsers={props.allUsers}
                                 UserIDs={UserIDs}
                                 setUserIDs={setUserIDs}

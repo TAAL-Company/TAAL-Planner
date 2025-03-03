@@ -837,6 +837,7 @@ function Modal_Tasks(props) {
                       {/* {Object.keys(multi_language_description).map((languagedescription, index) => ( */}
                       <Model_Tasks_Pop
                         // key={index}
+                        siteNameInEnglish={props.mySite.nameInEnglish}
                         language={props.language}
                         language_description={language_description}
                         sethandleClose={handleClose}
@@ -867,6 +868,7 @@ function Modal_Tasks(props) {
                   >
                     <Box sx={style}>
                       <Model_Tasks_help_Pop
+                        siteNameInEnglish={props.mySite.nameInEnglish}
                         allUsers={props.allUsers}
                         language={props.language}
                         additonalHelp={additonalHelp}

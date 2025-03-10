@@ -67,9 +67,13 @@ function CsvtojsonRouteAdd(props) {
         try {
             await updateRoute(props.selectedRoute.id, route);
             showNotification('success', props.language === "English" ? 'המסלול עודכן בהצלחה' : 'Route updated successfully');
+            await props.reloadData(); 
         } catch (error) {
             showNotification('error', props.language === "English" ? 'שגיאה בעדכון המסלול' : 'Error Updating Route');
-        }
+        } finally {
+            props.handleDeselectRoute(); // Call handleDeselectRoute after processing
+            props.handleCloseopenUpload(); // Close the modal
+          }
         
     };
 
@@ -136,7 +140,6 @@ function CsvtojsonRouteAdd(props) {
                     }
                     onClick={() => {
                         processGroupedData();
-                        props.handleCloseopenUpload();
                     }}
                 />
                 <input

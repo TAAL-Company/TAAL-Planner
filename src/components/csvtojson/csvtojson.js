@@ -52,7 +52,7 @@ function App(props) {
         // console.log("key", key);
         let stationId = await insertStation(key, key, siteId, [], null, null);
         console.log("stationId", stationId.id);
-  
+
         for (const data of groupedData[key]) {
           // console.log("data", data.title);
           const response = await insertTask(data.title, data.subtitle, [stationId.id], null, null, siteId.id, parseInt(data.estimatedTimeSeconds));
@@ -62,6 +62,9 @@ function App(props) {
       showNotification('success', props.language === "English" ? 'מסלול נוסף בהצלחה' : 'Add sheet successfully');
     } catch (error) {
       showNotification('error', props.language === "English" ? ' שגיאה בעדכונה מסלול' : 'Error updating sheet');
+    } finally {
+      props.handleDeselectRoute(); // Call handleDeselectRoute after processing
+      props.handleCloseopenUpload(); // Close the modal
     }
   };
 
@@ -128,7 +131,6 @@ function App(props) {
           }
           onClick={() => {
             processGroupedData();
-            props.handleCloseopenUpload();
           }}
         />
         <input

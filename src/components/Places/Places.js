@@ -35,6 +35,7 @@ import Backdrop from '@mui/material/Backdrop';
 import { useNotification } from "../Notification/NotificationProvider";
 import ButtonToRunScript from '../csvtojson/csvtojson';
 import CsvtojsonRouteAdd from '../csvtojson/csvtojsonRouteAdd';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 let tasksOfRoutes = {};
 // let allRoutes = [];
@@ -247,23 +248,23 @@ const Places = (props) => {
     setInputTextRouts((inputTextRouts = e.target.value.toLowerCase()));
     searchRoute();
   };
-
+  const fetchALLData = async () => {
+    try {
+      setLoading(true);
+      setAllTasks(await getingData_Tasks()); //get request for tasks
+      setAllRoutes(await getingData_Routes()); //get request for routes
+      setOnlyAllStation(await getingDataStation()); //get request for station
+      setAllUsers(await getingData_Users()); //get request for Users
+    } catch (error) {
+      console.error(error.message);
+    }
+    finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setAllTasks(await getingData_Tasks()); //get request for tasks
-        setAllRoutes(await getingData_Routes()); //get request for routes
-        setOnlyAllStation(await getingDataStation()); //get request for station
-        setAllUsers(await getingData_Users()); //get request for Users
-      } catch (error) {
-        console.error(error.message);
-      }
-      finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
+
+    fetchALLData();
   }, []);
 
   useEffect(() => {
@@ -700,6 +701,8 @@ const Places = (props) => {
 
   const Display_The_Stations = async (selectedValue) => {
     const newallRoutes = await getingData_Routes();
+    const onlyAllStation = await getingDataStation();
+    
     setThisIdTask((thisIdTask = selectedValue.id));
 
     if (stationArray.length > 0) setStationArray([]);
@@ -1185,9 +1188,10 @@ const Places = (props) => {
           className={siteSelected === true ? '' : 'disabledWorker'}
         >
           <div className='placesTitle'>
+            <DescriptionIcon />
             {props.language !== 'English' ? "Upload sheet" : " העלה גיליון"}
           </div>
-          <button className="deselect-button" style={{ backgroundColor: "green"}} onClick={() => setOpenUploadsheets(true)}>
+          <button className="deselect-button" style={{ backgroundColor: "green" }} onClick={() => setOpenUploadsheets(true)}>
             {props.language !== 'English' ? "upload sheet" : " העלה גיליון"}
           </button>
         </div>
@@ -1506,7 +1510,7 @@ const Places = (props) => {
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
-        <CsvtojsonRouteAdd selectedSite={selectedSite} selectedRoute={selectedRoute} language={props.language} handleCloseopenUpload={handleCloseopenUpload} />
+        <CsvtojsonRouteAdd selectedSite={selectedSite} selectedRoute={selectedRoute} language={props.language} handleCloseopenUpload={handleCloseopenUpload} reloadData={fetchALLData} handleDeselectRoute={handleDeselectRoute} />
       </Dialog>
       {/* </div> */}
       <Dialog
@@ -1515,7 +1519,7 @@ const Places = (props) => {
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
-        <ButtonToRunScript selectedSite={selectedSite} language={props.language} handleCloseopenUpload={handleCloseopenUploadsheets} />
+        <ButtonToRunScript selectedSite={selectedSite} language={props.language} handleCloseopenUpload={handleCloseopenUploadsheets} reloadData={fetchALLData} handleDeselectRoute={handleDeselectRoute}/>
       </Dialog>
     </>
   );

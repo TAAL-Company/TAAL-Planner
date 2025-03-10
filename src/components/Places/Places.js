@@ -33,6 +33,8 @@ import './style.css';
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
 import { useNotification } from "../Notification/NotificationProvider";
+import ButtonToRunScript from '../csvtojson/csvtojson';
+import CsvtojsonRouteAdd from '../csvtojson/csvtojsonRouteAdd';
 
 let tasksOfRoutes = {};
 // let allRoutes = [];
@@ -104,6 +106,8 @@ const Places = (props) => {
   const [dropToBoard, setDropToBoard] = useState({});
   const [tasksLength, setTasksLength] = useState(0);
   const [selectedRoute, setSelectedRoute] = useState(null);
+  const [openUpload, setOpenUpload] = React.useState(false);
+  const [openUploadsheets, setOpenUploadsheets] = React.useState(false);
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -136,20 +140,20 @@ const Places = (props) => {
 
       // console.log(newRouteObj);
       try {
-      insertRoute(newRouteObj).then(async (newaddedroute) => {
-        // alert(props.language ? 'ההוראה הועתקה בהצלחה!' : 'The instruction was copied successfully!');
-        showNotification("success", props.language ? "ההוראה הועתקה בהצלחה!" : "The instruction was copied successfully!");
-        setOpenThreeDotsVertical(-1);
-        setRequestForEditing('');
-        let newadded = await getingData_Routes().then(data => {
-          return data.find(route => route.id === newaddedroute.id);
-        })
-        console.log(newadded);
+        insertRoute(newRouteObj).then(async (newaddedroute) => {
+          // alert(props.language ? 'ההוראה הועתקה בהצלחה!' : 'The instruction was copied successfully!');
+          showNotification("success", props.language ? "ההוראה הועתקה בהצלחה!" : "The instruction was copied successfully!");
+          setOpenThreeDotsVertical(-1);
+          setRequestForEditing('');
+          let newadded = await getingData_Routes().then(data => {
+            return data.find(route => route.id === newaddedroute.id);
+          })
+          console.log(newadded);
 
-        const newRoutes = [...filteredDataRoutes];
-        newRoutes.push(newadded);
-        setFilteredDataRoutes(newRoutes);
-      })
+          const newRoutes = [...filteredDataRoutes];
+          newRoutes.push(newadded);
+          setFilteredDataRoutes(newRoutes);
+        })
       } catch (error) {
         console.log(error);
         showNotification("error", props.language ? "ההוראה לא הועתקה!" : "The instruction was not copied!");
@@ -159,6 +163,8 @@ const Places = (props) => {
     } else if (requestForEditing === 'delete') {
       setOpenRemove(true);
       setRouteForDelete(openThreeDotsVertical);
+    } else if (requestForEditing === 'uploadfromsheet') {
+      setOpenUpload(true);
     }
   }, [requestForEditing]);
 
@@ -167,22 +173,32 @@ const Places = (props) => {
     setOpenThreeDotsVertical(-1);
     setRequestForEditing('');
   };
-  const handleCloseRemoveConfirm = async () => {
-    try{
-    let deleteRoutes = await deleteRoute(filteredDataRoutes[routrForDelete].id);
-
-    if (deleteRoutes.status === 200) {
-      // alert(props.language ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
-      showNotification('success', props.language ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
-      const newRoutes = [...filteredDataRoutes];
-      newRoutes.splice(routrForDelete, 1); // remove one element at index x
-      setFilteredDataRoutes(newRoutes);
-    }
-
-    setOpenRemove(false);
+  const handleCloseopenUpload = () => {
+    setOpenUpload(false);
     setOpenThreeDotsVertical(-1);
-    setRouteForDelete(-1);
     setRequestForEditing('');
+  };
+
+  const handleCloseopenUploadsheets = () => {
+    setOpenUploadsheets(false);
+  };
+
+  const handleCloseRemoveConfirm = async () => {
+    try {
+      let deleteRoutes = await deleteRoute(filteredDataRoutes[routrForDelete].id);
+
+      if (deleteRoutes.status === 200) {
+        // alert(props.language ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
+        showNotification('success', props.language ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
+        const newRoutes = [...filteredDataRoutes];
+        newRoutes.splice(routrForDelete, 1); // remove one element at index x
+        setFilteredDataRoutes(newRoutes);
+      }
+
+      setOpenRemove(false);
+      setOpenThreeDotsVertical(-1);
+      setRouteForDelete(-1);
+      setRequestForEditing('');
     } catch (error) {
       console.error(error);
       showNotification('error', props.language ? 'המחיקה נכשלה!' : 'Deletion failed!');
@@ -711,7 +727,6 @@ const Places = (props) => {
     );
     //myRoutes saves only the routes that belong to the site that choosen
     if (myRoutes.length > 0) setRoutes([]);
-    
     setRoutes(
       newallRoutes.filter((route) =>
         route.sites.some((site) => site.id === mySite.id)
@@ -901,13 +916,12 @@ const Places = (props) => {
 
         setTimeout(() => {
           try {
-          updateRoute(uuidRoute, { siteIds: mySite.id });
-          showNotification("success",  props.language === "English" ? "Route Updated Successfully" : "המסלול עודכן בהצלחה");
+            updateRoute(uuidRoute, { siteIds: mySite.id });
+            showNotification("success", props.language === "English" ? "Route Updated Successfully" : "המסלול עודכן בהצלחה");
           } catch (error) {
             console.error(error);
-            showNotification("error",  props.language === "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+            showNotification("error", props.language === "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
           }
-          
         }, 60000);
       }
       setNewRoute([]);
@@ -1101,7 +1115,6 @@ const Places = (props) => {
     setAllTasksOfTheSite([]);
     setTasksOfChosenStation([]);
     setTasksLength(0);
-    
     setSelectedWorker(null);
     Display_The_Stations(selectedSite);
   };
@@ -1166,6 +1179,17 @@ const Places = (props) => {
               </option>
             ))}
           </select>
+        </div>
+        <div
+          style={{ margin: '20px' }}
+          className={siteSelected === true ? '' : 'disabledWorker'}
+        >
+          <div className='placesTitle'>
+            {props.language !== 'English' ? "Upload sheet" : " העלה גיליון"}
+          </div>
+          <button className="deselect-button" style={{ backgroundColor: "green"}} onClick={() => setOpenUploadsheets(true)}>
+            {props.language !== 'English' ? "upload sheet" : " העלה גיליון"}
+          </button>
         </div>
       </div>
       <div
@@ -1274,7 +1298,10 @@ const Places = (props) => {
                     <div className='dropdownThreeDots'>
                       <button
                         className='threeDotsVerticalEng'
-                        onClick={() => clickOnhreeDotsVerticaIcont(index)}
+                        onClick={() => {
+                          clickOnhreeDotsVerticaIcont(index)
+                          setSelectedRoute(route);
+                        }}
                       >
                         <BsThreeDotsVertical />
                       </button>
@@ -1289,6 +1316,7 @@ const Places = (props) => {
                           Reproducible={true}
                           details={true}
                           erasable={true}
+                          uploadfromsheet={true}
                         />
                       ) : (
                         // </div>
@@ -1472,6 +1500,23 @@ const Places = (props) => {
         </DialogActions>
       </Dialog>
       {/* </div> */}
+      <Dialog
+        open={openUpload}
+        onClose={handleCloseopenUpload}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <CsvtojsonRouteAdd selectedSite={selectedSite} selectedRoute={selectedRoute} language={props.language} handleCloseopenUpload={handleCloseopenUpload} />
+      </Dialog>
+      {/* </div> */}
+      <Dialog
+        open={openUploadsheets}
+        onClose={handleCloseopenUploadsheets}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <ButtonToRunScript selectedSite={selectedSite} language={props.language} handleCloseopenUpload={handleCloseopenUploadsheets} />
+      </Dialog>
     </>
   );
 };

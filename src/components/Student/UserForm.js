@@ -172,7 +172,7 @@ export default function UserForm({
     return (
         <Dialog open={open} style={{ direction: t('Direction') }}  >
             <DialogTitle>{title}</DialogTitle>
-            <DialogContent dir="rtl" >
+            <DialogContent dir={t('Direction')} >
                 <TextField
                     required
                     label={t("Forms.Email")}

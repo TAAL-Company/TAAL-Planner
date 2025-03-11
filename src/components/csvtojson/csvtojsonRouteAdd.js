@@ -39,7 +39,7 @@ function CsvtojsonRouteAdd(props) {
 
         jsonData.forEach((data) => {
             tasks.find((task) => {
-                if (task.title.replace(/[\r\n]/g, "") === data.title.replace(/[\r\n]/g, "") && task.stations[0].title.replace(/[\r\n]/g, "") === data.stationIds.replace(/[\r\n]/g, "") && task.subtitle.replace(/[\r\n]/g, "") === data.subtitle.replace(/[\r\n]/g, "")) {
+                if (task.title.replace(/[\r\n]/g, "") === data.title.replace(/[\r\n]/g, "") && task.stations[0].title.replace(/[\r\n]/g, "") === data.stationIds.replace(/[\r\n]/g, "") && task.subtitle.replace(/[\r\n]/g, "") === data.subtitle.replace(/[\r\n]/g, "") && task.sites[0].name.replace(/[\r\n]/g, "") === data.siteIds.replace(/[\r\n]/g, "")) {
                     // if (task.title === data.title && task.sites[0].name === data.siteIds) {
                     // console.log("stations ", task.stations[0].title === data.stationIds, " - station ", data.stationIds);
                     // console.log("task ", task.title, " - task ", data.title);
@@ -67,14 +67,15 @@ function CsvtojsonRouteAdd(props) {
         try {
             await updateRoute(props.selectedRoute.id, route);
             showNotification('success', props.language === "English" ? 'המסלול עודכן בהצלחה' : 'Route updated successfully');
-            await props.reloadData(); 
+            // await props.reloadData();
         } catch (error) {
             showNotification('error', props.language === "English" ? 'שגיאה בעדכון המסלול' : 'Error Updating Route');
         } finally {
             props.handleDeselectRoute(); // Call handleDeselectRoute after processing
             props.handleCloseopenUpload(); // Close the modal
-          }
-        
+            props.setSelectedRoute(-1);
+        }
+
     };
 
     return (

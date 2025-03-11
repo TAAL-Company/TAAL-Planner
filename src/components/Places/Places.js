@@ -799,7 +799,7 @@ const Places = (props) => {
     setTasksLength(0);
 
     // Step 1: Filter stations under the selected route
-    const stationsArray = onlyAllStation.filter(
+    const stationsArray = onlyAllStation?.filter(
       (station) => station.parentSiteId === selectedRoute.sites[0].id
     );
 
@@ -1333,6 +1333,9 @@ const Places = (props) => {
                       onClick={
                         () => {
                           setSelectedRoute(route);
+                          // console.log(selectedRoute === null , selectedRoute.id !== route.id);
+                          // console.log(selectedRoute , selectedRoute.id , route.id);
+
                           if (selectedRoute === null || selectedRoute.id !== route.id) {
                             displayStationsFromSelectedRoute(route);
                             DisplayTasks(route);
@@ -1510,7 +1513,7 @@ const Places = (props) => {
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
-        <CsvtojsonRouteAdd selectedSite={selectedSite} selectedRoute={selectedRoute} language={props.language} handleCloseopenUpload={handleCloseopenUpload} reloadData={fetchALLData} handleDeselectRoute={handleDeselectRoute} />
+        <CsvtojsonRouteAdd selectedSite={selectedSite} setSelectedRoute={setSelectedRoute} selectedRoute={selectedRoute} language={props.language} handleCloseopenUpload={handleCloseopenUpload} reloadData={fetchALLData} handleDeselectRoute={handleDeselectRoute} />
       </Dialog>
       {/* </div> */}
       <Dialog

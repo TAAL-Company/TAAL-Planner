@@ -101,6 +101,17 @@
   margin-top: 51px;
 }
 
+.listenIconStation.english {
+  border: none;
+  height: 117.2px;
+  width: 36px;
+  position: relative;
+  top: -54px;
+  margin-top: 51px;
+  left: auto;
+  right: -205px;
+}
+
 .nameOfTaskPhone {
   width: 170px;
   font: normal normal bold 15px/20px Assistant;
@@ -155,6 +166,15 @@
   text-align-last: right;
   top: 13px;
   left: -10px;
+}
+
+.nameStationBoardPhone.english {
+  position: relative;
+  color: white;
+  text-align-last: right;
+  top: -162px;
+  left: auto;
+  right: 106px;
 }
 
 .kavPhoneStationBoard {

@@ -786,6 +786,7 @@ function DragnDrop(props) {
                           flagTree={flagTree}
                           flagStress={flagStress}
                           mySite={props.mySite}
+                          language={props.language}
                         />
                       </>
                     ) : (
@@ -802,6 +803,7 @@ function DragnDrop(props) {
                               flagTree={flagTree}
                               flagStress={flagStress}
                               mySite={props.mySite}
+                              language={props.language}
                             />
                           </>
                         ) : (

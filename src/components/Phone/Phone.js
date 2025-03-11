@@ -65,6 +65,7 @@ const Phone = (props) => {
                         newkavTaskTop={tag.newkavTaskTop}
                         nameStation={tag.nameStation}
                         flagPhone={props.flagPhone}
+                        language={props.language}
                       />
                     );
                   })}

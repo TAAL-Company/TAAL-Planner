@@ -98,10 +98,7 @@ function Tag({
                 }`}
               style={{ marginTop: width }}
             ></div>
-            <div
-              className={`nameStationBoard ${language !== 'English' ? 'english' : ''
-                }`}
-            >
+            <div className={`nameStationBoard ${language !== 'English' ? 'english' : ''}`}>
               {nameStation}
             </div>
           </div>
@@ -115,11 +112,26 @@ function Tag({
           {nameStation !== '' ? (
             <>
               <div className='stap1'>
-                <div className='nameStationBoardPhone'>{nameStation}</div>
-                <button
-                  className='listenIconStation'
-                  onClick={() => listenMyStation()}
-                ></button>
+                {language === 'English' ? (
+                  <>
+                    <div
+                      className={`nameStationBoardPhone ${language !== 'English' ? 'english' : ''}`} >{nameStation}</div>
+                    <button
+                      className={`listenIconStation ${language !== 'English' ? 'english' : ''} `}
+                      onClick={() => listenMyStation()}
+                    ></button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className={`listenIconStation ${language !== 'English' ? 'english' : ''}`}
+                      onClick={() => listenMyStation()}
+                    ></button>
+                    <div
+                      className={`nameStationBoardPhone ${language !== 'English' ? 'english' : ''}`} >{nameStation}</div>
+
+                  </>
+                )}
                 <div className='kavPhoneStationBoard'></div>
               </div>
             </>
@@ -170,7 +182,7 @@ function Tag({
                     className='threeDotsVerticalEng'
                     onClick={() => {
                       console.log('id', id);
-                      
+
                       dragFromCover === 'TasksNew'
                         ? clickOnThreeDotsVerticaIcont(id)
                         : clickOnThreeDotsVerticaIcontBoard(id, keyCount);

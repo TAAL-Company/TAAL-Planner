@@ -14,16 +14,10 @@ export default function Toolbar() {
         <GridToolbarContainer>
             <GridToolbarColumnsButton />
             <GridToolbarFilterButton />
-            <GridToolbarDensitySelector
-                slotProps={{ tooltip: { title: 'Change density' } }}
-            />
+            <GridToolbarDensitySelector/>
             <Box sx={{ flexGrow: 1 }} />
             <GridToolbarQuickFilter />
             <GridToolbarExport
-                slotProps={{
-                    tooltip: { title: 'Export data' },
-                    button: { variant: 'outlined' },
-                }}
             />
         </GridToolbarContainer>
     );

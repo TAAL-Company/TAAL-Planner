@@ -43,6 +43,16 @@
     margin-left: -583px; */
 }
 
+.languageicon {
+  width: 51px;
+  height: 46px;
+  background: transparent url('../../Pictures/language.svg') 0% 0% no-repeat padding-box;
+  /* border: 0px solid white; */
+  /* position: relative; */
+  /* top: 12px;
+    margin-left: -583px; */
+}
+
 .logout {
   width: 51px;
   height: 45px;

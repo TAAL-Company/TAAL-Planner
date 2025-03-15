@@ -8,6 +8,7 @@ import './style.css';
 import { FaUser, FaAddressCard, FaRoute } from 'react-icons/fa';
 import { useState } from 'react';
 import { baseUrl } from '../../config';
+import TranslateIcon from '@mui/icons-material/Translate';
 
 let flag_token = false;
 
@@ -15,7 +16,7 @@ const Nav = () => {
   const [, login_token] = useState('');
   const [complete_name, setcomplete_name] = useState('');
 
-  const logout=()=>{
+  const logout = () => {
     sessionStorage.removeItem('jwt');
     sessionStorage.removeItem('jwt-EDITOR');
     sessionStorage.removeItem('logged_in');
@@ -79,6 +80,12 @@ const Nav = () => {
         <Link to="/Forms">
           <div className="forms"></div>
         </Link>
+        <div className="languageicon" onClick={() => {
+          const currentLanguage = sessionStorage.getItem('language');
+          const newLanguage = currentLanguage === 'English' ? 'Hebrew' : 'English';
+          sessionStorage.setItem('language', newLanguage);
+          window.location.reload();
+        }}></div>
         <Link to="/">
           <div onClick={logout} className="logout"></div>
         </Link>

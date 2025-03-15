@@ -712,7 +712,7 @@ function Modal_Tasks(props) {
                             {typeof picture === 'string' && (
                               <img
                                 src={picture}
-                                className='thumbnailImgtask'
+                                className={`thumbnailImgtask ${props.language !== 'English' ? 'english' : '' }`}
                                 alt=''
                               />
                             )}

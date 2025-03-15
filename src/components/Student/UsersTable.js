@@ -55,6 +55,7 @@ export default function DataGridDemo() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [updateduplicateUser, setupdateduplicateUser] = useState(false);
+  const [title, setTitle] = useState('');
 
   const { showNotification } = useNotification();
   const { t } = useTranslation();
@@ -81,12 +82,14 @@ export default function DataGridDemo() {
     setOpenDialog(true);
     setUserAction('add');
     setNewUser(newUser);
+    setTitle(t('UserPage.ADDANewEmployee'));
   };
 
   const handleClickOpenEditDialog = () => {
     setOpenDialog(true);
     setUserAction('edit');
     setNewUser(selectedUser);
+    setTitle(t('UserPage.EditEmployeeInfo'));
   };
 
   // Fetch users and coaches data
@@ -284,7 +287,7 @@ export default function DataGridDemo() {
             <UserForm
               open={openDialog}
               handleCloseDialog={handleCloseDialog}
-              title={t('UserPage.ADDANewEmployee')}
+              title={title}
               coaches={coaches}
               initialValues={newUser}
               setUsers={setUsers}

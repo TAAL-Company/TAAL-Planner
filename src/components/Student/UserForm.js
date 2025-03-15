@@ -108,6 +108,7 @@ export default function UserForm({
     // Reset form values when initialValues change
     useEffect(() => {
         setFormValues({ ...initialValues });
+        setPicture(initialValues.picture_url);
     }, [initialValues]);
 
     const handleChange = (field) => (event) => {
@@ -117,13 +118,13 @@ export default function UserForm({
     const validate = () => {
         let tempErrors = {};
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
+
         if (!formValues.email) {
             tempErrors.email = t("FormsErrors.emailRequired");
         } else if (!emailRegex.test(formValues.email)) {
             tempErrors.email = t("FormsErrors.emailFormat");
         }
-    
+
         if (!formValues.name) tempErrors.name = t("FormsErrors.nameRequired");
         if (!formValues.user_name) tempErrors.user_name = t("FormsErrors.usernameRequired");
         if (!formValues.password) tempErrors.password = t("FormsErrors.passwordRequired");
@@ -146,24 +147,24 @@ export default function UserForm({
                         setUsers((prevUsers) => prevUsers.map(user => user.id === formValues.id ? { ...response.data } : user));
                     });
                 } catch (error) {
-                    showNotification('error', t("showNotification.Error_edit_user") +error.message);
+                    showNotification('error', t("showNotification.Error_edit_user") + error.message);
                 }
 
             } else {
                 try {
                     debugger
-                await insertUser({ ...formValues }).then((response) => {
-                    showNotification('success', t("showNotification.Success_add_user"));
-                    // setUsers((prevUsers) => [...prevUsers, { ...response }]);
-                    setupdateduplicateUser(!updateduplicateUser);
-                });
+                    await insertUser({ ...formValues }).then((response) => {
+                        showNotification('success', t("showNotification.Success_add_user"));
+                        // setUsers((prevUsers) => [...prevUsers, { ...response }]);
+                        setupdateduplicateUser(!updateduplicateUser);
+                    });
                 } catch (error) {
-                    showNotification('error', t("showNotification.Error_add_user") +error.message);
+                    showNotification('error', t("showNotification.Error_add_user") + error.message);
                 }
             }
 
         } catch (error) {
-            showNotification('error', t("showNotification.Error_add_user") +error.message);
+            showNotification('error', t("showNotification.Error_add_user") + error.message);
             // alert(error.message);
         }
         handleCloseDialog(); // Close the dialog
@@ -242,9 +243,15 @@ export default function UserForm({
                     sites={sites}
                     setFormValues={setFormValues}
                 />
-                <FormControl fullWidth margin="normal">
+                <FormControl fullWidth margin="normal">                    
+                    {picture && (
+                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            <img src={picture} alt="Uploaded Picture" style={{ width: '50%', height: '50%' }} />
+                        </div>
+                    )}
+                    <br />
                     <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
-                    <InputFileUpload setPicture={setPicture} />
+                    <InputFileUpload setPicture={(newPicture) => setPicture(URL.createObjectURL(newPicture))} />
                 </FormControl>
                 {/* Add the MultipleSelect for sites //TODO: ask marc about this
                 <FormControl fullWidth margin="normal">

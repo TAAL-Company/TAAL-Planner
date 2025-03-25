@@ -66,6 +66,9 @@ const resources = {
         "Password": "Password",
         "Submit": "Submit",
         "Cancel": "Cancel",
+        "UploadImageText": "Upload an image",
+        "SelectCoachText": "Please select a coach from the dropdown menu",
+        "SelectSitesText": "Please select sites from the dropdown menu"
       },
       FormsErrors: {
         "NameRequired": "Name is required",
@@ -123,6 +126,9 @@ const resources = {
         "Password": "סיסמה",
         "Submit": "שלח",
         "Cancel": "ביטול",
+        "UploadImageText": "העלה תמונה",
+        "SelectCoachText": "אנא בחר מדריך מהתפריט הנפתח",
+        "SelectSitesText": "אנא בחר אתרים מהתפריט הנפתח"
       },
       FormsErrors: {
         "NameRequired": "שם חובה",
@@ -180,6 +186,9 @@ const resources = {
         "Password": "كلمة المرور",
         "Submit": "إرسال",
         "Cancel": "إلغاء",
+        "UploadImageText": "تحميل صورة",
+        "SelectCoachText": "يرجى اختيار مدرب من القائمة المنسدلة",
+        "SelectSitesText": "يرجى اختيار المواقع من القائمة المنسدلة"
       },
       FormsErrors: {
         "NameRequired": "الاسم مطلوب",
@@ -237,6 +246,9 @@ const resources = {
         "Password": "Пароль",
         "Submit": "Отправить",
         "Cancel": "Отмена",
+        "UploadImageText": "Загрузить изображение",
+        "SelectCoachText": "Пожалуйста, выберите тренера из выпадающего меню",
+        "SelectSitesText": "Пожалуйста, выберите сайты из выпадающего меню"
       },
       FormsErrors: {
         "NameRequired": "Имя обязательно",

@@ -234,6 +234,7 @@ export default function UserForm({
                             </MenuItem>
                         ))}
                     </Select>
+                    <p>{t("Forms.SelectCoachText")}</p>
                 </FormControl>
 
                 <MultipleSelect
@@ -243,6 +244,7 @@ export default function UserForm({
                     sites={sites}
                     setFormValues={setFormValues}
                 />
+                <p>{t("Forms.SelectSitesText")}</p>
                 <FormControl fullWidth margin="normal">                    
                     {picture && (
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -252,6 +254,7 @@ export default function UserForm({
                     <br />
                     <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
                     <InputFileUpload setPicture={(newPicture) => setPicture(URL.createObjectURL(newPicture))} />
+                    <p>{t("Forms.UploadImageText")}</p>
                 </FormControl>
                 {/* Add the MultipleSelect for sites //TODO: ask marc about this
                 <FormControl fullWidth margin="normal">

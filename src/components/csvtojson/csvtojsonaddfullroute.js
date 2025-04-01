@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import csvtojson from "csvtojson";
-import { insertStation, insertTask } from "../../api/api";
-import { RiAsterisk } from 'react-icons/ri';
+import { insertTask, insertStation, insertRoute } from "../../api/api";
 import { useNotification } from "../Notification/NotificationProvider";
 
-function App(props) {
+function CsvtojsonAddFullRoute(props) {
   const [file, setFile] = useState(null);
   const [jsonData, setJsonData] = useState([]);
+  const tasksIds = [];
 
   const { showNotification } = useNotification();
 
@@ -14,7 +14,7 @@ function App(props) {
     setFile(e.target.files[0]);
     handleOnSubmit(e);
   };
-
+  
   const csvFileToArray = async (text) => {
     const jsonArray = await csvtojson().fromString(text);
   
@@ -77,25 +77,34 @@ function App(props) {
     const siteId = props.selectedSite; // Replace with actual siteId if needed
     console.log("siteId", siteId);
 
-
-
     try {
       for (const key of Object.keys(groupedData)) {
         // console.log("key", key);
         let stationId = await insertStation(key, key, siteId, [], null, null);
-        console.log("stationId", stationId.id);
+        // console.log("stationId", stationId.id);
 
         for (const data of groupedData[key]) {
-          // console.log("data", data.title);
+          // console.log("data", data);
           const response = await insertTask(data.title, data.subtitle, [stationId.id], null, null, siteId.id, parseInt(data.estimatedTimeSeconds));
-          console.log(response);
+          // console.log(response);
+          tasksIds.push(response.id);
         }
       }
+      const routeName = "Route"+Date.now();
+      // console.log("tasksIds", tasksIds);
+      // console.log("routeName", routeName);
+      let route = {
+        "name": routeName,
+        "studentIds": [],
+        "taskIds": tasksIds,
+        "siteIds": [siteId.id]
+      };
       // props.setLoading(false);
-      showNotification('success', props.language === "English" ? 'מסלול נוסף בהצלחה' : 'Add sheet successfully');
+      await insertRoute(route);
+      showNotification('success', props.language !== "English" ? 'Route added successfully' : 'מסלול נוסף בהצלחה');
       await props.reloadData();
     } catch (error) {
-      showNotification('error', props.language === "English" ? ' שגיאה בעדכונה מסלול' : 'Error updating sheet');
+      showNotification('error', props.language !== "English" ? 'Error adding route' : 'שגיאה בהוספת מסלול');
     } finally {
       props.handleDeselectRoute(); // Call handleDeselectRoute after processing
     }
@@ -117,7 +126,6 @@ function App(props) {
         <form id='IPU' className='w3-container'>
           <h6>
             {props.language !== 'English' ? 'Upload a CSV file' : ' העלה קובץ CSV '}
-            <RiAsterisk style={{ color: 'red' }} />
           </h6>
           <p>
             <input
@@ -140,7 +148,6 @@ function App(props) {
             onClick={handleOnSubmit}
           />
         </form>
-
       </div>
       <div
         style={{
@@ -177,4 +184,4 @@ function App(props) {
   );
 }
 
-export default App;
+export default CsvtojsonAddFullRoute;

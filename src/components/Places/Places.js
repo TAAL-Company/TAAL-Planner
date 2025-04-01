@@ -35,6 +35,7 @@ import Backdrop from '@mui/material/Backdrop';
 import { useNotification } from "../Notification/NotificationProvider";
 import ButtonToRunScript from '../csvtojson/csvtojson';
 import CsvtojsonRouteAdd from '../csvtojson/csvtojsonRouteAdd';
+import CsvtojsonAddFullRoute from "../csvtojson/csvtojsonaddfullroute";
 import DescriptionIcon from '@mui/icons-material/Description';
 
 let tasksOfRoutes = {};
@@ -109,6 +110,7 @@ const Places = (props) => {
   const [selectedRoute, setSelectedRoute] = useState(null);
   const [openUpload, setOpenUpload] = React.useState(false);
   const [openUploadsheets, setOpenUploadsheets] = React.useState(false);
+  const [uploadOption, setUploadOption] = useState(null);
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -182,6 +184,7 @@ const Places = (props) => {
 
   const handleCloseopenUploadsheets = () => {
     setOpenUploadsheets(false);
+    setUploadOption(null);
   };
 
   const handleCloseRemoveConfirm = async () => {
@@ -1122,6 +1125,9 @@ const Places = (props) => {
     Display_The_Stations(selectedSite);
   };
 
+  const handleSelectOption = (option) => {
+    setUploadOption(option);
+  };
   //----------------------------------------------------------------------
   return (
     <>
@@ -1513,17 +1519,92 @@ const Places = (props) => {
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
-        <CsvtojsonRouteAdd selectedSite={selectedSite} setSelectedRoute={setSelectedRoute} selectedRoute={selectedRoute} language={props.language} handleCloseopenUpload={handleCloseopenUpload} reloadData={fetchALLData} handleDeselectRoute={handleDeselectRoute} />
+        <CsvtojsonRouteAdd selectedSite={selectedSite} setSelectedRoute={setSelectedRoute} selectedRoute={selectedRoute} language={props.language} handleCloseopenUpload={handleCloseopenUpload} reloadData={fetchALLData} handleDeselectRoute={handleDeselectRoute} setLoading={setLoading} />
       </Dialog>
       {/* </div> */}
       <Dialog
-        open={openUploadsheets}
-        onClose={handleCloseopenUploadsheets}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <ButtonToRunScript selectedSite={selectedSite} language={props.language} handleCloseopenUpload={handleCloseopenUploadsheets} reloadData={fetchALLData} handleDeselectRoute={handleDeselectRoute}/>
-      </Dialog>
+  open={openUploadsheets}
+  onClose={handleCloseopenUploadsheets}
+  aria-labelledby="alert-dialog-title"
+  aria-describedby="alert-dialog-description"
+>
+  {!uploadOption ? (
+    <DialogContent>
+<DialogContentText 
+  id="alert-dialog-description" 
+  style={{ textAlign: 'center' }}
+>
+  {props.language === "English"
+    ? "בחר אפשרות להעלאת גיליון"
+    : "Choose an option to upload a sheet"}
+</DialogContentText>
+      <DialogActions>
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={() => handleSelectOption("CsvtojsonAddFullRoute")}
+        >
+          {props.language === "English"
+            ? "העלה מסלול עם תחנות ומשימות"
+            : "Upload Route with Stations and Tasks"}
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="small"
+          onClick={() => handleSelectOption("ButtonToRunScript")}
+        >
+          {props.language === "English"
+            ? "העלאת תחנות ומשימות"
+            : "Upload Stations and Tasks"}
+        </Button>
+      </DialogActions>
+      <div style={{ margin: "20px", display: "flex", gap: "10px" }}>
+        <Button
+          variant="contained"
+          color="success"
+          size="small"
+          href="/SpreadsheetTemplate/EN-Fill-In-Spreadsheet-Template.csv"
+          download="EN-Fill-In-Spreadsheet-Template.csv"
+        >
+          {props.language !== "English"
+            ? "Download English Template"
+            : "הורד תבנית באנגלית"}
+        </Button>
+        <Button
+          variant="contained"
+          color="success"
+          size="small"
+          href="/SpreadsheetTemplate/HE-Fill-In-Spreadsheet-Template.csv"
+          download="HE-Fill-In-Spreadsheet-Template.csv"
+        >
+          {props.language !== "English"
+            ? "Download Hebrew Template"
+            : "הורד תבנית בעברית"}
+        </Button>
+      </div>
+    </DialogContent>
+  ) : uploadOption === "CsvtojsonAddFullRoute" ? (
+    <CsvtojsonAddFullRoute
+      selectedSite={selectedSite}
+      language={props.language}
+      handleCloseopenUpload={handleCloseopenUploadsheets}
+      reloadData={fetchALLData}
+      handleDeselectRoute={handleDeselectRoute}
+      setLoading={setLoading}
+    />
+  ) : (
+    <ButtonToRunScript
+      selectedSite={selectedSite}
+      language={props.language}
+      handleCloseopenUpload={handleCloseopenUploadsheets}
+      reloadData={fetchALLData}
+      handleDeselectRoute={handleDeselectRoute}
+      setLoading={setLoading}
+    />
+  )}
+</Dialog>
     </>
   );
 };

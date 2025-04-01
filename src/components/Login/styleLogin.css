@@ -34,7 +34,7 @@ nav {
 input {
   /* margin: 0.5rem; */
   border-radius: 5px;
-  direction: rtl;
+  /* direction: rtl; */
   height: 56px;
   width: 374px;
   border: unset;

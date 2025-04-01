@@ -19,8 +19,38 @@ function CsvtojsonRouteAdd(props) {
 
     const csvFileToArray = async (text) => {
         const jsonArray = await csvtojson().fromString(text);
-        setJsonData(jsonArray);
-    };
+      
+        // Log headers to verify
+        const headers = Object.keys(jsonArray[0]);
+        // console.log("Headers:", headers);
+      
+        // Define a generic mapping for expected keys
+        const headerMapping = {
+          title: ["title", "כותרת"],
+          stationIds: ["stationIds", "תחנה"],
+          subtitle: ["subtitle", "כותרת משנה"],
+          siteIds: ["siteIds", "אתר"],
+          estimatedTimeSeconds: ["estimatedTimeSeconds", "שניות זמן משוערות"],
+          help: ["help", "גלגל הצלה"], // Optional
+        };
+      
+        // Map the headers dynamically
+        const mappedJsonArray = jsonArray.map((row) => {
+          const mappedRow = {};
+          for (const [key, possibleHeaders] of Object.entries(headerMapping)) {
+            const matchedHeader = headers.find((header) =>
+              possibleHeaders.some((possibleHeader) =>
+                header.toLowerCase().includes(possibleHeader.toLowerCase())
+              )
+            );
+            mappedRow[key] = matchedHeader ? row[matchedHeader] : undefined;
+          }
+          return mappedRow;
+        });
+      
+        // console.log("Mapped JSON Array:", mappedJsonArray);
+        setJsonData(mappedJsonArray);
+      };
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
@@ -34,12 +64,14 @@ function CsvtojsonRouteAdd(props) {
     };
 
     const processGroupedData = async () => {
+        props.handleCloseopenUpload(); // Close the modal
+        props.setLoading(true);
         // console.log(jsonData);
         const tasks = await getingData_Tasks();
 
         jsonData.forEach((data) => {
             tasks.find((task) => {
-                if (task.title.replace(/[\r\n]/g, "") === data.title.replace(/[\r\n]/g, "") && task.stations[0].title.replace(/[\r\n]/g, "") === data.stationIds.replace(/[\r\n]/g, "") && task.subtitle.replace(/[\r\n]/g, "") === data.subtitle.replace(/[\r\n]/g, "") && task.sites[0].name.replace(/[\r\n]/g, "") === data.siteIds.replace(/[\r\n]/g, "")) {
+                if (task.title.replace(/[\r\n]/g, "") === data.title.replace(/[\r\n]/g, "") && task.stations[0].title.replace(/[\r\n]/g, "") === data.stationIds.replace(/[\r\n]/g, "") && task.subtitle.replace(/[\r\n]/g, "") === data.subtitle.replace(/[\r\n]/g, "") && task.sites[0].name.replace(/[\r\n]/g, "") === data.siteIds.replace(/[\r\n]/g, "") && props.selectedSite.name.replace(/[\r\n]/g, "") === task.sites[0].name.replace(/[\r\n]/g, "")) {
                     // if (task.title === data.title && task.sites[0].name === data.siteIds) {
                     // console.log("stations ", task.stations[0].title === data.stationIds, " - station ", data.stationIds);
                     // console.log("task ", task.title, " - task ", data.title);
@@ -65,14 +97,15 @@ function CsvtojsonRouteAdd(props) {
         // console.log("route", route);
         // console.log("route", route.taskIds.length);
         try {
+            
             await updateRoute(props.selectedRoute.id, route);
+            // props.setLoading(false);
             showNotification('success', props.language === "English" ? 'המסלול עודכן בהצלחה' : 'Route updated successfully');
-            // await props.reloadData();
+            await props.reloadData();
         } catch (error) {
             showNotification('error', props.language === "English" ? 'שגיאה בעדכון המסלול' : 'Error Updating Route');
         } finally {
             props.handleDeselectRoute(); // Call handleDeselectRoute after processing
-            props.handleCloseopenUpload(); // Close the modal
             props.setSelectedRoute(-1);
         }
 

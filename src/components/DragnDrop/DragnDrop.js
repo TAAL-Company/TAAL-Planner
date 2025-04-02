@@ -10,6 +10,10 @@ import ModalDelete from '../Modal/Modal_Delete';
 import { deleteTask } from '../../api/api.js';
 import { Droppable } from 'react-beautiful-dnd';
 import './style.css';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import GTranslateIcon from '@mui/icons-material/GTranslate';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 
 let Route = [];
 let dndArray = [];
@@ -64,6 +68,15 @@ function DragnDrop(props) {
   const [taskForEdit, setTaskForEdit] = useState('');
   const [openThreeDotsVerticalBoard, setOpenThreeDotsVerticalBoard] = useState(-1);
   const [location, setLocation] = useState(-1);
+  const [alignment, setAlignment] = useState('original');
+  
+
+  const handleChange = (event,newAlignment) => {
+    console.log("newAlignment", newAlignment);
+    props.setTranslateData(newAlignment);
+    
+    setAlignment(newAlignment);
+  };
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -461,9 +474,9 @@ function DragnDrop(props) {
         const station = props.stationArray.find((station) => station.id === stationId);
 
         dndArray.forEach(async (task) => {
-          task.color=station.color;
-          task.data=station.data;  
-          task.myStation = station.title;    
+          task.color = station.color;
+          task.data = station.data;
+          task.myStation = station.title;
           task.nameStation = station.title;
           task.theStation = station;
         });
@@ -611,7 +624,7 @@ function DragnDrop(props) {
               {props.saveButton}
             </button>
             {/* כפתור שפות */}
-            <button
+            {/* <button
               className='language'
               // style={{ marginLeft: marginHebrew, marginTop: "22px" }}
               onClick={() => {
@@ -620,7 +633,21 @@ function DragnDrop(props) {
               }}
             >
               {props.language}
-            </button>
+            </button> */}
+
+            <ToggleButtonGroup
+              className='language'
+              color="warning"
+              value={alignment}
+              exclusive
+              onChange={handleChange}
+              aria-label="Platform"
+            >
+              <ToggleButton value="original"><TextSnippetIcon /></ToggleButton>
+              <ToggleButton value="translated"><GTranslateIcon /></ToggleButton>
+              <ToggleButton value="Mixed">Mixed</ToggleButton>
+            </ToggleButtonGroup>
+
           </div>
           <div
             className={`txt ${props.language !== 'English' ? 'english' : ''}`}

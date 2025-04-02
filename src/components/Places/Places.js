@@ -37,6 +37,8 @@ import ButtonToRunScript from '../csvtojson/csvtojson';
 import CsvtojsonRouteAdd from '../csvtojson/csvtojsonRouteAdd';
 import CsvtojsonAddFullRoute from "../csvtojson/csvtojsonaddfullroute";
 import DescriptionIcon from '@mui/icons-material/Description';
+import PlacesDropdown from "./PlacesDropdown"
+import { useTranslator } from '../../Utility/TranslationProvider';
 
 let tasksOfRoutes = {};
 // let allRoutes = [];
@@ -111,6 +113,39 @@ const Places = (props) => {
   const [openUpload, setOpenUpload] = React.useState(false);
   const [openUploadsheets, setOpenUploadsheets] = React.useState(false);
   const [uploadOption, setUploadOption] = useState(null);
+  const [translateData, setTranslateData] = useState('original'); // 'original', 'translated', 'Mixed'
+  const { translate } = useTranslator();
+
+  const translateRouteName = async (routeName) => {
+    try {
+      return await translate(routeName, props.language);
+    } catch (error) {
+      console.error('Translation error:', error);
+      return routeName; // Fallback to the original name in case of an error
+    }
+  };
+
+  // Add a state to store translated route names
+  const [translatedRoutes, setTranslatedRoutes] = useState({});
+
+  // Translate route names when `filteredDataRoutes` changes
+  useEffect(() => {
+    const translateRoutes = async () => {
+      setLoading(true);
+      console.log(translateData);
+      
+      const translations = {};
+      for (const route of filteredDataRoutes) {
+        const translatedName = await translateRouteName(route.name.replace('&#8211;', '-').replace('&#8217;', "'"));
+        translations[route.id] = translatedName;
+      }
+      setTranslatedRoutes(translations);
+      setLoading(false);
+    };
+    if (translateData === 'translated' || translateData === 'Mixed') {
+      translateRoutes();
+    }
+  }, [filteredDataRoutes, translateData]);
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -705,7 +740,7 @@ const Places = (props) => {
   const Display_The_Stations = async (selectedValue) => {
     const newallRoutes = await getingData_Routes();
     const onlyAllStation = await getingDataStation();
-    
+
     setThisIdTask((thisIdTask = selectedValue.id));
 
     if (stationArray.length > 0) setStationArray([]);
@@ -1143,7 +1178,7 @@ const Places = (props) => {
       <div
         className={`Places ${props.language !== 'English' ? 'english' : ''}`}
       >
-        <div>
+        {/* <div>
           <div className='placesTitle'>{props.siteQuestionLanguage}</div>
           <select
             className='selectPlace'
@@ -1162,7 +1197,18 @@ const Places = (props) => {
               );
             })}
           </select>
-        </div>
+        </div> */}
+        <PlacesDropdown
+          currentLanguage={props.language !== 'English' ? 'EN' : 'HE'}
+          allPlaces={allPlaces}
+          siteQuestionLanguage={props.siteQuestionLanguage}
+          siteLanguage={props.siteLanguage}
+          handleSiteSelectChange={handleSiteSelectChange}
+          showDataTranslate={translateData} // props.showDataTranslate ||original - translated - Mixed
+          selectedValuewithjsons={true}
+          selectedSite={selectedSite}
+          value={selectedSite ? JSON.stringify(selectedSite) : 'DEFAULT'}
+        />
         <div
           style={{ margin: '20px' }}
           className={
@@ -1171,7 +1217,7 @@ const Places = (props) => {
               : 'disabledWorker'
           }
         >
-          <div className='placesTitle'>
+          {/* <div className='placesTitle'>
             {props.language !== 'english'
               ? props.SiteStudentQuestionLanguage
               : props.SiteStudentQuestionLanguage}
@@ -1187,7 +1233,18 @@ const Places = (props) => {
                 {user.name}
               </option>
             ))}
-          </select>
+          </select> */}
+          <PlacesDropdown
+            currentLanguage={props.language !== 'English' ? 'EN' : 'HE'}
+            allPlaces={allWorkersForSite}
+            siteQuestionLanguage={props.SiteStudentQuestionLanguage}
+            siteLanguage={props.siteLanguage}
+            handleSiteSelectChange={handleWorkerSelectChange}
+            showDataTranslate={translateData} // props.showDataTranslate ||original - translated - Mixed
+            selectedValuewithjsons={false}
+            selectedSite={selectedWorker}
+            value={selectedWorker ? selectedWorker.name : 'DEFAULT'}
+          />
         </div>
         <div
           style={{ margin: '20px' }}
@@ -1333,7 +1390,6 @@ const Places = (props) => {
                         <></>
                       )}
                     </div>
-
                     <button
                       className='nameOfButton'
                       onClick={
@@ -1349,9 +1405,11 @@ const Places = (props) => {
                         } //הצגת המסלול
                       }
                     >
-                      {route.name
-                        .replace('&#8211;', '-')
-                        .replace('&#8217;', "'")}
+                      {translateData === 'translated'
+                        ? translatedRoutes[route.id] || route.name.replace('&#8211;', '-').replace('&#8217;', "'")
+                        : translateData === 'Mixed'
+                          ? `${route.name.replace('&#8211;', '-').replace('&#8217;', "'")} (${translatedRoutes[route.id] || route.name.replace('&#8211;', '-').replace('&#8217;', "'")})`
+                          : route.name.replace('&#8211;', '-').replace('&#8217;', "'")}
                     </button>
                   </div>
                 );
@@ -1373,6 +1431,7 @@ const Places = (props) => {
         </div>
         <DragDropContext onDragEnd={handleDragEnd}>
           <Stations
+            setTranslateData={setTranslateData}
             setDropToBoard={setDropToBoard}
             dropToBoard={dropToBoard}
             setAllTasksOfTheSite={setAllTasksOfTheSite}
@@ -1523,88 +1582,88 @@ const Places = (props) => {
       </Dialog>
       {/* </div> */}
       <Dialog
-  open={openUploadsheets}
-  onClose={handleCloseopenUploadsheets}
-  aria-labelledby="alert-dialog-title"
-  aria-describedby="alert-dialog-description"
->
-  {!uploadOption ? (
-    <DialogContent>
-<DialogContentText 
-  id="alert-dialog-description" 
-  style={{ textAlign: 'center' }}
->
-  {props.language === "English"
-    ? "בחר אפשרות להעלאת גיליון"
-    : "Choose an option to upload a sheet"}
-</DialogContentText>
-      <DialogActions>
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={() => handleSelectOption("CsvtojsonAddFullRoute")}
-        >
-          {props.language === "English"
-            ? "העלה מסלול עם תחנות ומשימות"
-            : "Upload Route with Stations and Tasks"}
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          size="small"
-          onClick={() => handleSelectOption("ButtonToRunScript")}
-        >
-          {props.language === "English"
-            ? "העלאת תחנות ומשימות"
-            : "Upload Stations and Tasks"}
-        </Button>
-      </DialogActions>
-      <div style={{ margin: "20px", display: "flex", gap: "10px" }}>
-        <Button
-          variant="contained"
-          color="success"
-          size="small"
-          href="/SpreadsheetTemplate/EN-Fill-In-Spreadsheet-Template.csv"
-          download="EN-Fill-In-Spreadsheet-Template.csv"
-        >
-          {props.language !== "English"
-            ? "Download English Template"
-            : "הורד תבנית באנגלית"}
-        </Button>
-        <Button
-          variant="contained"
-          color="success"
-          size="small"
-          href="/SpreadsheetTemplate/HE-Fill-In-Spreadsheet-Template.csv"
-          download="HE-Fill-In-Spreadsheet-Template.csv"
-        >
-          {props.language !== "English"
-            ? "Download Hebrew Template"
-            : "הורד תבנית בעברית"}
-        </Button>
-      </div>
-    </DialogContent>
-  ) : uploadOption === "CsvtojsonAddFullRoute" ? (
-    <CsvtojsonAddFullRoute
-      selectedSite={selectedSite}
-      language={props.language}
-      handleCloseopenUpload={handleCloseopenUploadsheets}
-      reloadData={fetchALLData}
-      handleDeselectRoute={handleDeselectRoute}
-      setLoading={setLoading}
-    />
-  ) : (
-    <ButtonToRunScript
-      selectedSite={selectedSite}
-      language={props.language}
-      handleCloseopenUpload={handleCloseopenUploadsheets}
-      reloadData={fetchALLData}
-      handleDeselectRoute={handleDeselectRoute}
-      setLoading={setLoading}
-    />
-  )}
-</Dialog>
+        open={openUploadsheets}
+        onClose={handleCloseopenUploadsheets}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        {!uploadOption ? (
+          <DialogContent>
+            <DialogContentText
+              id="alert-dialog-description"
+              style={{ textAlign: 'center' }}
+            >
+              {props.language === "English"
+                ? "בחר אפשרות להעלאת גיליון"
+                : "Choose an option to upload a sheet"}
+            </DialogContentText>
+            <DialogActions>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={() => handleSelectOption("CsvtojsonAddFullRoute")}
+              >
+                {props.language === "English"
+                  ? "העלה מסלול עם תחנות ומשימות"
+                  : "Upload Route with Stations and Tasks"}
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                size="small"
+                onClick={() => handleSelectOption("ButtonToRunScript")}
+              >
+                {props.language === "English"
+                  ? "העלאת תחנות ומשימות"
+                  : "Upload Stations and Tasks"}
+              </Button>
+            </DialogActions>
+            <div style={{ margin: "20px", display: "flex", gap: "10px" }}>
+              <Button
+                variant="contained"
+                color="success"
+                size="small"
+                href="/SpreadsheetTemplate/EN-Fill-In-Spreadsheet-Template.csv"
+                download="EN-Fill-In-Spreadsheet-Template.csv"
+              >
+                {props.language !== "English"
+                  ? "Download English Template"
+                  : "הורד תבנית באנגלית"}
+              </Button>
+              <Button
+                variant="contained"
+                color="success"
+                size="small"
+                href="/SpreadsheetTemplate/HE-Fill-In-Spreadsheet-Template.csv"
+                download="HE-Fill-In-Spreadsheet-Template.csv"
+              >
+                {props.language !== "English"
+                  ? "Download Hebrew Template"
+                  : "הורד תבנית בעברית"}
+              </Button>
+            </div>
+          </DialogContent>
+        ) : uploadOption === "CsvtojsonAddFullRoute" ? (
+          <CsvtojsonAddFullRoute
+            selectedSite={selectedSite}
+            language={props.language}
+            handleCloseopenUpload={handleCloseopenUploadsheets}
+            reloadData={fetchALLData}
+            handleDeselectRoute={handleDeselectRoute}
+            setLoading={setLoading}
+          />
+        ) : (
+          <ButtonToRunScript
+            selectedSite={selectedSite}
+            language={props.language}
+            handleCloseopenUpload={handleCloseopenUploadsheets}
+            reloadData={fetchALLData}
+            handleDeselectRoute={handleDeselectRoute}
+            setLoading={setLoading}
+          />
+        )}
+      </Dialog>
     </>
   );
 };

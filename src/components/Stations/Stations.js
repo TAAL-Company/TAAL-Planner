@@ -353,6 +353,7 @@ const Stations = (props) => {
           </div>
           {/* <DndProvider backend={HTML5Backend}> */}
           <DragnDrop
+            setTranslateData={props.setTranslateData}
             dropToBoard={props.dropToBoard}
             setDropToBoard={props.setDropToBoard}
             setStationArray={props.setStationArray}

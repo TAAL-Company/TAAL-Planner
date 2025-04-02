@@ -22,6 +22,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import './i18n'; // Import the i18n configuration
 
 import { NotificationProvider } from "./components/Notification/NotificationProvider";
+import { TranslationProvider } from './Utility/TranslationProvider';
 
 console.log("Version", process.env.REACT_APP_VERSION);
 console.log("Version", process.env);
@@ -31,6 +32,7 @@ function App() {
   return (
     <>
       <div>
+        <TranslationProvider>
         <NotificationProvider>
         <DndProvider backend={HTML5Backend}>
           <Provider store={store}>
@@ -60,6 +62,7 @@ function App() {
           </Provider>
         </DndProvider>
         </NotificationProvider>
+        </TranslationProvider>
       </div>
     </>
   );

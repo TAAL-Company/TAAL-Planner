@@ -87,7 +87,12 @@ function App(props) {
 
         for (const data of groupedData[key]) {
           // console.log("data", data.title);
-          const response = await insertTask(data.title, data.subtitle, [stationId.id], null, null, siteId.id, parseInt(data.estimatedTimeSeconds));
+          const response = await insertTask(data.title, data.subtitle, [stationId.id], null, null, siteId.id, parseInt(data.estimatedTimeSeconds),"{}", null,null, null,null,
+           [{
+            help_text:data.help,
+            UserID: "General"
+           }]
+          );
           console.log(response);
         }
       }
@@ -98,6 +103,7 @@ function App(props) {
       showNotification('error', props.language === "English" ? ' שגיאה בעדכונה מסלול' : 'Error updating sheet');
     } finally {
       props.handleDeselectRoute(); // Call handleDeselectRoute after processing
+      props.setLoading(false); // Ensure loading is set to false after processing
     }
   };
 

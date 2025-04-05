@@ -104,8 +104,8 @@ const Dashboard = () => {
     },
     {
       id: 2,
-      headline: 'Students',
-      addLabel: 'Add Student',
+      headline: 'Employees',
+      addLabel: 'Add Employees',
       image: group,
       color: '#b1cdf9'
     },
@@ -216,13 +216,13 @@ const Dashboard = () => {
     } </div>
   ]
 
-  // const elements = currentLanguage === "English" ? (
-  //   [leftElements, rightElements]
-  // ) : (
-  //   [rightElements, leftElements]
-  // );
+  const elements = currentLanguage === "English" ? (
+    [leftElements, rightElements]
+  ) : (
+    [rightElements, leftElements]
+  );
 
-  const elements = [rightElements, leftElements];
+  // const elements = [rightElements, leftElements];
   return (
     <div className='Dashboard'>
       {/* <Navbar /> */}

@@ -217,11 +217,12 @@ const PlacesCards = () => {
       // Optionally update UI or state
       setPlaces((prev) => [updatedSite, ...prev]);
       setupdateAdd(true);
-      showNotification('success', 'המשתמש נוסף בהצלחה');
+      showNotification('success', language !== "English" ? 'שוכפל בהצלחה': 'Duplicated successfully');
       console.log('Duplication complete:', updatedSite);
     } catch (error) {
       console.error('Error duplicating place:', error);
       showNotification('error', "שגיאה בהוספת משתמש "+error.message);
+      showNotification('error', ( language !== "English" ?'השכפול נכשל ':'Duplicate Failed') +error.message);
       setLoading(false);
     }
   };
@@ -256,16 +257,16 @@ const PlacesCards = () => {
               placeToUpdate.nameInEnglish = updatedPlace.data.nameInEnglish;
               const newplaces = [...places];
               setPlaces(newplaces);
-              showNotification('success', 'המשתמש עודכן בהצלחה');
+              showNotification('success', language !== "English" ? ' עודכן בהצלחה ': ' Updated successfully');
             });
           } else {
             await insertSite(place).then( async(data) => {
-              showNotification('success', 'המשתמש נוסף בהצלחה');
+              showNotification('success', language !== "English" ? 'האתר נוסף בהצלחה ': ' Added successfully');
               data.picture_url = place.picture_url;
               await updateSite(data.id, data).then((updatedSite) => {
                 setPlaces((prev) => [updatedSite.data, ...prev]);
                 setupdateAdd(true);
-                showNotification('success', 'המשתמש עודכן בהצלחה');
+                showNotification('success', language !== "English" ? ' עודכן בהצלחה ': ' Updated successfully');
               });
             });
             setupdateAdd(false);
@@ -277,7 +278,7 @@ const PlacesCards = () => {
         }
       } catch (error) {
         console.error(error);
-        showNotification('error', "שגיאה בהוספת משתמש "+error.message);
+        showNotification('error', language !== "English" ? ' שגיאה בהוספת אתר' : 'Error adding place');
       }
       handleClose(); // Close the dialog after the form is submitted
     }

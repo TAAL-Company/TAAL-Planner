@@ -178,7 +178,7 @@ const Coaches = () => {
       setUsers(newUsers);
     }
   } catch (error) {
-    showNotification('error', " שגיאה במחיקת משתמש "+error.message);
+    showNotification('error', ( language !== "English" ?'המחיקה נכשל ':' Deletion Failed') +error.message);
   }
 
     setOpenRemove(false);
@@ -225,13 +225,14 @@ const Coaches = () => {
         insertCoach(CoacheToDuplicate).then((data) => {
           setUsers([data, ...users]);
           setupdateAdd(true);
-          showNotification('success', 'המשתמש נוסף בהצלחה');
+          showNotification('success', language !== "English" ? 'שוכפל בהצלחה': 'Duplicated successfully');
+
         });
         setupdateAdd(false);
       }
     } catch (error) {
       console.error(error);
-      showNotification('error', "שגיאה בהוספת משתמש "+error.message);
+      showNotification('error', (language !== "English" ? 'שגיאה בשכפול משתמש' : 'Error duplicating user') + error.message);
     }
 
     setOpenThreeDotsVertical(-1);
@@ -269,26 +270,26 @@ const Coaches = () => {
 
             const newUsers = [...users];
             setUsers(newUsers);
-            showNotification('success', 'המשתמש עודכן בהצלחה');
+            showNotification('success', language !== "English" ? 'עודכן בהצלחה' : 'Updated successfully');
           });
           } catch (error) {
             console.error(error);
-            showNotification('error', "שגיאה בעדכון משתמש "+error.message);
+            showNotification('error', (language !== "English" ? 'שגיאה בעדכון משתמש' : 'Error updating user') + error.message);
           }
         } else {
           try {
             await insertCoach(user).then((data) => {
-            showNotification('success', 'המשתמש נוסף בהצלחה');
+            showNotification('success', language !== "English" ? 'נוסף בהצלחה' : 'Added successfully');
             setUsers([data, ...users]);
           });
           } catch (error) {
             console.error(error);
-            showNotification('error', "שגיאה בהוספת משתמש "+error.message);
+            showNotification('error', (language !== "English" ? 'שגיאה בהוספת' : 'Error adding') + error.message);
           }
         }
       } catch (error) {
         console.error(error);
-        showNotification('error', "שגיאה בהוספת משתמש "+error.message);
+        showNotification('error', (language !== "English" ? 'שגיאה בהעלאת קובץ' : 'Error uploading file') + error.message);
       }
 
       handleClose(); // Close the dialog after the form is submitted

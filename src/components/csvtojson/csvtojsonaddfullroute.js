@@ -85,7 +85,12 @@ function CsvtojsonAddFullRoute(props) {
 
         for (const data of groupedData[key]) {
           // console.log("data", data);
-          const response = await insertTask(data.title, data.subtitle, [stationId.id], null, null, siteId.id, parseInt(data.estimatedTimeSeconds));
+          const response = await insertTask(data.title, data.subtitle, [stationId.id], null, null, siteId.id, parseInt(data.estimatedTimeSeconds), "{}", null, null, null, null,
+            [{
+              help_text: data.help,
+              UserID: "General"
+            }]
+          );
           // console.log(response);
           tasksIds.push(response.id);
         }

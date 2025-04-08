@@ -21,6 +21,7 @@
   position: fixed;
   width: 100vw;
   overflow-x: auto; /* Add this line to enable horizontal scrolling */
+  height: 100vw;
 }
 @media (max-height: 800px) {
   .Planner {

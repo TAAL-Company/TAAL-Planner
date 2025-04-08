@@ -183,26 +183,36 @@ const Dashboard = () => {
   const defaultdashboard = jwt ? JSON.parse(jwt)?.defaultdashboard : null;
 
   const leftElements = [
-    <div className='right'>
+    <div className='right' height="100%">
+      {(role === "ADMIN" || role === "EDITOR") ? (
+        <div className='cardsLine'>
+          <CardDash cards={cards[6]} />
+          <CardDash cards={cards[1]} />
+        </div>
+      ) : (<></>)}
       <div className='cardsLine'>
-        <CardDash cards={cards[6]} />
-        <CardDash cards={cards[1]} />
-      </div><div className='cardsLine'>
         <CardDash cards={cards[2]} />
         <CardDash cards={cards[8]} />
-      </div><div className='cardsLine'>
+      </div>
+      <div className='cardsLine'>
         <CardDash cards={cards[0]} />
         <CardDash cards={cards[5]} />
-      </div><div className='cardsLine'>
-        <CardDash cards={cards[3]} />
-        <CardDash cards={cards[4]} />
-      </div><div className='cardsLine'>
-        <CardDash cards={cards[7]} />
-        {role === "ADMIN" ? (
-          <CardDash cards={cards[9]} />
-        ) : (<></>)}
       </div>
-    </div>
+      <div className='cardsLine'>
+        {(role === "ADMIN" || role === "EDITOR") ? (
+          <CardDash cards={cards[3]} />
+        ) : (<></>)}
+        <CardDash cards={cards[4]} />
+      </div>
+      {(role === "ADMIN" || role === "EDITOR") ? (
+        <div className='cardsLine'>
+          <CardDash cards={cards[7]} />
+          {role === "ADMIN" ? (
+            <CardDash cards={cards[9]} />
+          ) : (<></>)}
+        </div>
+      ) : (<></>)}
+    </div >
 
   ]
 

@@ -108,11 +108,14 @@ export default function UserForm({
     // Reset form values when initialValues change
     useEffect(() => {
         setFormValues({ ...initialValues });
-        setPicture(initialValues.picture_url);
     }, [initialValues]);
 
     const handleChange = (field) => (event) => {
         setFormValues((prev) => ({ ...prev, [field]: event.target.value }));
+    };
+
+    const handleClose = () => {
+        setPicture(null);
     };
 
     const validate = () => {
@@ -167,11 +170,12 @@ export default function UserForm({
             showNotification('error', t("showNotification.Error_add_user") + error.message);
             // alert(error.message);
         }
+        setPicture(null);
         handleCloseDialog(); // Close the dialog
     };
 
     return (
-        <Dialog open={open} style={{ direction: t('Direction') }}  >
+        <Dialog open={open} onClose={() => { handleClose(); handleCloseDialog(); }} style={{ direction: t('Direction') }}  >
             <DialogTitle>{title}</DialogTitle>
             <DialogContent dir={t('Direction')} >
                 <TextField
@@ -245,26 +249,21 @@ export default function UserForm({
                     setFormValues={setFormValues}
                 />
                 <p>{t("Forms.SelectSitesText")}</p>
-                <FormControl fullWidth margin="normal">                    
-                    {picture && (
+                <FormControl fullWidth margin="normal">
+                    {formValues.picture_url && (
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            <img src={picture} alt="Uploaded Picture" style={{ width: '50%', height: '50%' }} />
+                            <img src={formValues.picture_url instanceof Blob ? URL.createObjectURL(formValues.picture_url) : formValues.picture_url} alt="Uploaded Picture" style={{ width: '50%', height: '50%' }} />
                         </div>
                     )}
                     <br />
                     <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
-                    <InputFileUpload setPicture={(newPicture) => setPicture(URL.createObjectURL(newPicture))} />
+                    <InputFileUpload
+                        setPicture={(newPicture) => {
+                            formValues.picture_url = newPicture
+                            setPicture(newPicture)
+                        }} />
                     <p>{t("Forms.UploadImageText")}</p>
                 </FormControl>
-                {/* Add the MultipleSelect for sites //TODO: ask marc about this
-                <FormControl fullWidth margin="normal">
-                    <MultipleSelect
-                        label="Select Sites"
-                        options={sites}
-                        selectedOptions={selectedSites}
-                        onChange={handleSitesChange}
-                    />
-                </FormControl> */}
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseDialog}>{t("Forms.Cancel")}</Button>

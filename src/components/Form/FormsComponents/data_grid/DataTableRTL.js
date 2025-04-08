@@ -377,12 +377,12 @@ const DataTableRTL = ({
             direction: 'rtl',
             '& .MuiDataGrid-virtualScroller': {
               overflow: 'unset !important',
-              mt: '0 !important',
+              
             },
 
             '& .MuiDataGrid-columnHeaders': {
               overflow: 'unset',
-              position: 'sticky',
+              // position: 'sticky',
               left: 1,
               zIndex: 1,
               bgcolor: '#114260',
@@ -428,7 +428,7 @@ const DataTableRTL = ({
           columns={columns}
           pageSize={100}
           // rowHeight={52}
-          getRowHeight={() => 'auto'}
+          // getRowHeight={() => 'auto'}
           // getEstimatedRowHeight={() => 150}
           rowsPerPageOptions={[10]}
           pagination

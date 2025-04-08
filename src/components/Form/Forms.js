@@ -815,7 +815,7 @@ function Forms() {
       align: 'left',
       type: 'actions',
       direction: 'rtl',
-      width: 470, //100%-100
+      width: 100, //100%-100
       editable: false,
       sortable: false,
       disableExport: true,
@@ -999,7 +999,7 @@ function Forms() {
       headerAlign: 'center',
       align: 'center',
       type: 'actions',
-      width: 80,
+      width: 100,
       editable: false,
       sortable: false,
       disableExport: true,

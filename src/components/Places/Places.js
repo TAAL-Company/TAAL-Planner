@@ -39,6 +39,7 @@ import CsvtojsonAddFullRoute from "../csvtojson/csvtojsonaddfullroute";
 import DescriptionIcon from '@mui/icons-material/Description';
 import PlacesDropdown from "./PlacesDropdown"
 import { useTranslator } from '../../Utility/TranslationProvider';
+import Sheettodata from '../csvtojson/sheettodata';
 
 let tasksOfRoutes = {};
 // let allRoutes = [];
@@ -133,7 +134,7 @@ const Places = (props) => {
     const translateRoutes = async () => {
       setLoading(true);
       console.log(translateData);
-      
+
       const translations = {};
       for (const route of filteredDataRoutes) {
         const translatedName = await translateRouteName(route.name.replace('&#8211;', '-').replace('&#8217;', "'"));
@@ -180,7 +181,7 @@ const Places = (props) => {
       try {
         insertRoute(newRouteObj).then(async (newaddedroute) => {
           // alert(props.language ? 'ההוראה הועתקה בהצלחה!' : 'The instruction was copied successfully!');
-          showNotification("success", props.language ? "ההוראה הועתקה בהצלחה!" : "The instruction was copied successfully!");
+          showNotification("success", props.language === "English" ? "ההוראה הועתקה בהצלחה!" : "The instruction was copied successfully!");
           setOpenThreeDotsVertical(-1);
           setRequestForEditing('');
           let newadded = await getingData_Routes().then(data => {
@@ -194,7 +195,7 @@ const Places = (props) => {
         })
       } catch (error) {
         console.log(error);
-        showNotification("error", props.language ? "ההוראה לא הועתקה!" : "The instruction was not copied!");
+        showNotification("error", props.language === "English" ? "ההוראה לא הועתקה!" : "The instruction was not copied!");
       }
 
 
@@ -228,7 +229,7 @@ const Places = (props) => {
 
       if (deleteRoutes.status === 200) {
         // alert(props.language ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
-        showNotification('success', props.language ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
+        showNotification('success', props.language === "English" ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
         const newRoutes = [...filteredDataRoutes];
         newRoutes.splice(routrForDelete, 1); // remove one element at index x
         setFilteredDataRoutes(newRoutes);
@@ -240,7 +241,7 @@ const Places = (props) => {
       setRequestForEditing('');
     } catch (error) {
       console.error(error);
-      showNotification('error', props.language ? 'המחיקה נכשלה!' : 'Deletion failed!');
+      showNotification('error', props.language === "English" ? 'המחיקה נכשלה!' : 'Deletion failed!');
     }
   };
   const [pastelColors, setPastelColors] = useState([
@@ -787,7 +788,7 @@ const Places = (props) => {
       .find((site) => site?.id === selectedSite?.id);
 
     if (!matchedSite) {
-      showNotification("warning", props.language ? 'לא נמצאו מקומות שונים!' : 'No different sites found!');
+      showNotification("warning", props.language === "English" ? 'לא נמצאו מקומות שונים!' : 'No different sites found!');
       console.warn("No matched site found.");
       return;
     }
@@ -1608,7 +1609,7 @@ const Places = (props) => {
                   ? "העלה מסלול עם תחנות ומשימות"
                   : "Upload Route with Stations and Tasks"}
               </Button>
-              <Button
+              {/* <Button
                 variant="contained"
                 color="primary"
                 size="small"
@@ -1617,15 +1618,15 @@ const Places = (props) => {
                 {props.language === "English"
                   ? "העלאת תחנות ומשימות"
                   : "Upload Stations and Tasks"}
-              </Button>
+              </Button> */}
             </DialogActions>
             <div style={{ margin: "20px", display: "flex", gap: "10px" }}>
               <Button
                 variant="contained"
                 color="success"
                 size="small"
-                href="/SpreadsheetTemplate/EN-Fill-In-Spreadsheet-Template.csv"
-                download="EN-Fill-In-Spreadsheet-Template.csv"
+                href="/SpreadsheetTemplate/EN-Fill-In-Spreadsheet-Template.xlsx"
+                download="EN-Fill-In-Spreadsheet-Template.xlsx"
               >
                 {props.language !== "English"
                   ? "Download English Template"
@@ -1635,8 +1636,8 @@ const Places = (props) => {
                 variant="contained"
                 color="success"
                 size="small"
-                href="/SpreadsheetTemplate/HE-Fill-In-Spreadsheet-Template.csv"
-                download="HE-Fill-In-Spreadsheet-Template.csv"
+                href="/SpreadsheetTemplate/HE-Fill-In-Spreadsheet-Template.xlsx"
+                download="HE-Fill-In-Spreadsheet-Template.xlsx"
               >
                 {props.language !== "English"
                   ? "Download Hebrew Template"
@@ -1645,7 +1646,7 @@ const Places = (props) => {
             </div>
           </DialogContent>
         ) : uploadOption === "CsvtojsonAddFullRoute" ? (
-          <CsvtojsonAddFullRoute
+          <Sheettodata
             selectedSite={selectedSite}
             language={props.language}
             handleCloseopenUpload={handleCloseopenUploadsheets}
@@ -1654,14 +1655,15 @@ const Places = (props) => {
             setLoading={setLoading}
           />
         ) : (
-          <ButtonToRunScript
-            selectedSite={selectedSite}
-            language={props.language}
-            handleCloseopenUpload={handleCloseopenUploadsheets}
-            reloadData={fetchALLData}
-            handleDeselectRoute={handleDeselectRoute}
-            setLoading={setLoading}
-          />
+          <></>
+          // <ButtonToRunScript
+          //   selectedSite={selectedSite}
+          //   language={props.language}
+          //   handleCloseopenUpload={handleCloseopenUploadsheets}
+          //   reloadData={fetchALLData}
+          //   handleDeselectRoute={handleDeselectRoute}
+          //   setLoading={setLoading}
+          // />
         )}
       </Dialog>
     </>

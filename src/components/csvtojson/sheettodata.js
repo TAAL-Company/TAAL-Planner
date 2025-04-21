@@ -9,9 +9,9 @@ function Sheettodata(props) {
     const [images, setImages] = useState([]);
     // const [file, setFile] = useState(null);
     const headerMapping = {
-        Task: ["Task", "כותרת"],
+        Task: ["Task", "משימה"],
         Station: ["Station", "תחנה"],
-        Subtitle: ["Subtitle", "כותרת משנה"],
+        Subtitle: ["Subtitle", "תת משימה"],
         Site: ["Site", "אתר"],
         "Estimated Time Seconds": ["Estimated Time Seconds", "שניות זמן משוערות"],
         Help: ["Help", "גלגל הצלה"],
@@ -167,7 +167,10 @@ function Sheettodata(props) {
                 for (const key of Object.keys(groupedDataNoDuplication)) {
                     let stationId = await insertStation(key, key, siteId, [], null, null);
                     for (const data of groupedDataNoDuplication[key]) {
-                        const taskimage = await uploadFiles(data.image, 'Task media/picture', siteId.nameInEnglish);
+                        let taskimage = null;
+                        if (data.image) {
+                            taskimage = await uploadFiles(data.image, 'Task media/picture', siteId.nameInEnglish);
+                        }
                         const response = await insertTask(data.Task, data.Subtitle, [stationId.id], taskimage, null, siteId.id, parseInt(data["Estimated Time Seconds"]), "{}", null, null, null, null,
                             [{
                                 help_text: data.Help,
@@ -228,6 +231,7 @@ function Sheettodata(props) {
             // props.setSelectedRoute(-1);
             props.handleCloseopenUpload(); // Close the modal
             props.handleDeselectRoute(); // Call handleDeselectRoute after processing
+            window.location.reload(); // Refresh the page
         }
     };
 

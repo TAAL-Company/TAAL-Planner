@@ -181,6 +181,7 @@ const Dashboard = () => {
   const role = jwt ? JSON.parse(jwt)?.role : null;
   const editorId = jwtEditor && jwtEditor !== "undefined" ? JSON.parse(jwtEditor)?.id : "ADMIN";
   const defaultdashboard = jwt ? JSON.parse(jwt)?.defaultdashboard : null;
+  const SiteIDs = JSON.parse(jwt)?.sites?.filter((site) =>site.id !== null).map((site) => site.id) || [];
 
   const leftElements = [
     <div className='right' height="100%">
@@ -221,7 +222,8 @@ const Dashboard = () => {
       <iframe
         width="100%"
         height="100%"
-        src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}`}
+        src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}`}
+        // src={`http://localhost:8501/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}`}
       ></iframe>
     } </div>
   ]

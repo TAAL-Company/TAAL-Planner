@@ -134,9 +134,26 @@ export default function DataGridDemo() {
       } else if (role === "EDITOR" && userId) {
         const filteredUsers = usersWithStatus.filter(user => user.coachId === userId && userId != null);
         setUsers(filteredUsers);
+
+        const filteredCoaches = coachesData.filter((coach) => coach.id == userId && userId != null)
+        setCoaches(filteredCoaches);
+
+        const filteredSites = sitesData.filter((site) => 
+          JSON.parse(jwt)?.sites?.some((siteId) => site.id === siteId.id)
+        );
+        setSites(filteredSites);
       } else if (role === "STUDENT" && userId) {
         const filteredUsers = usersWithStatus.filter(user => user.id === userId && userId != null);
         setUsers(filteredUsers);
+
+        const filteredCoaches = coachesData.filter((coach) => coach.id == JSON.parse(jwt).coachId && JSON.parse(jwt).id != null)
+        setCoaches(filteredCoaches);
+
+        const filteredSites = sitesData.filter((site) => 
+          JSON.parse(jwt)?.sites?.some((siteId) => site.id === siteId.id)
+        );
+        setSites(filteredSites);
+
       }
 
       setLoading(false);

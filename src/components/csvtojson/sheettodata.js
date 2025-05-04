@@ -65,35 +65,40 @@ function Sheettodata(props) {
                 }
             });
 
+            // Transform the data to match the desired structure
+
+            // const transformedRow = transformRow(rowData);
+            // debugger;
+            // console.log("rowData:", rowData);
+            // console.log("transformedRow:", transformedRow);
             json.push(rowData);
         });
 
+        console.log('Media in workbook:', workbook.model.media);
+
         // Step 3: Extract images and map to row positions
         const imagesInSheet = [];
-        worksheet.getImages().forEach(({ imageId, range }) => {
-            const image = workbook.model.media.find((m) => m.index === imageId);
-            if (image && image.buffer) {
-                const base64 = arrayBufferToBase64(image.buffer);
-                const dataUrl = `data:image/${image.extension};base64,${base64}`;
-                // Generate a filename like "image_row2_col3.png"
-                const filename = props.selectedSite.nameInEnglish + `image_row${range.tl.row}_col${range.tl.col}.${image.extension}`;
-                const file = dataURLtoFile(dataUrl, filename);
+        if (workbook.model.media) {
+            workbook.model.media.forEach((media, index) => {
+                if (media.type === 'image') {
+                    const base64 = arrayBufferToBase64(media.buffer);
+                    const dataUrl = `data:image/${media.extension};base64,${base64}`;
+                    const filename = `${props.selectedSite.nameInEnglish}_image_${index}.${media.extension}`;
+                    const file = dataURLtoFile(dataUrl, filename);
 
-                imagesInSheet.push({
-                    row: range.tl.row,
-                    col: range.tl.col,
-                    // dataUrl: `data:image/${image.extension};base64,${base64}`,
-                    file,
-                });
-            }
-        });
+                    imagesInSheet.push({
+                        index,
+                        file,
+                    });
+                }
+            });
+        }
 
         setImages(imagesInSheet);
 
-        // Step 4: Attach images to the correct rows (skip header)
+        // Step 4: Attach images to the correct rows
         const jsonWithImages = json.map((row, index) => {
-            const excelRow = index + 1; // Row 0 = header, data starts from 1
-            const matchedImage = imagesInSheet.find((img) => img.row === excelRow);
+            const matchedImage = imagesInSheet.find((img) => img.index === index);
             return {
                 ...row,
                 image: matchedImage?.file || null,
@@ -104,7 +109,20 @@ function Sheettodata(props) {
         setData(jsonWithImages);
     };
 
-    // Helper: Convert ArrayBuffer to base64
+    // Helper function to transform a row into the desired structure
+    const transformRow = (rowData) => {
+        return {
+            Route: rowData.Route || "Routes1",
+            Station: rowData.Station || "Station1",
+            Task: rowData.Task || "Task11",
+            Subtitle: rowData.Subtitle || "Subtitle11",
+            "Estimated Time Seconds": rowData["Estimated Time Seconds"] || 2,
+            Help: rowData.Help || "Help text",
+            Site: rowData.Site || "TAAL_QA",
+        };
+    };
+
+    // Convert ArrayBuffer to Base64
     const arrayBufferToBase64 = (buffer) => {
         let binary = "";
         const bytes = new Uint8Array(buffer);
@@ -112,6 +130,7 @@ function Sheettodata(props) {
         return window.btoa(binary);
     };
 
+    // Convert Data URL to File
     const dataURLtoFile = (dataUrl, filename) => {
         const arr = dataUrl.split(',');
         const mimeMatch = arr[0].match(/:(.*?);/);
@@ -196,11 +215,11 @@ function Sheettodata(props) {
                     const tasksIds = [];
                     for (const data of groupedDataByRoutesHeader[Route]) {
                         tasks.find((task) => {
-                            if (task.title.replace(/[\r\n]/g, "") === data.Task.replace(/[\r\n]/g, "") &&
-                                task.stations[0].title.replace(/[\r\n]/g, "") === data.Station.replace(/[\r\n]/g, "") &&
-                                task.subtitle.replace(/[\r\n]/g, "") === data.Subtitle.replace(/[\r\n]/g, "") &&
-                                task.sites[0].name.replace(/[\r\n]/g, "") === data.Site.replace(/[\r\n]/g, "") &&
-                                task.sites[0].name.replace(/[\r\n]/g, "") === props.selectedSite.name.replace(/[\r\n]/g, "")
+                            if (task?.title?.replace(/[\r\n]/g, "") === data?.Task?.replace(/[\r\n]/g, "") &&
+                                task?.stations[0]?.title.replace(/[\r\n]/g, "") === data?.Station?.replace(/[\r\n]/g, "") &&
+                                task?.subtitle?.replace(/[\r\n]/g, "") === data?.Subtitle?.replace(/[\r\n]/g, "") &&
+                                task?.sites[0]?.name.replace(/[\r\n]/g, "") === data?.Site?.replace(/[\r\n]/g, "") &&
+                                task?.sites[0]?.name.replace(/[\r\n]/g, "") === props?.selectedSite?.name.replace(/[\r\n]/g, "")
                             ) {
                                 tasksIds.push(task.id);
                             }
@@ -231,7 +250,7 @@ function Sheettodata(props) {
             // props.setSelectedRoute(-1);
             props.handleCloseopenUpload(); // Close the modal
             props.handleDeselectRoute(); // Call handleDeselectRoute after processing
-            window.location.reload(); // Refresh the page
+            // window.location.reload(); // Refresh the page
         }
     };
 

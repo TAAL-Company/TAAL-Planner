@@ -1,15 +1,9 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { DataGrid } from '@mui/x-data-grid';
 import { getingData_Users, getingData_coaches, getingData_Places, insertUser, deleteUser } from '../../api/api';
 import { useState, useEffect } from 'react';
-import { Button, MenuItem, IconButton, Menu } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { Button, MenuItem, Menu } from '@mui/material';
 import UserForm from './UserForm';
 import Toolbar from './Toolbar';
 import './StudentsCard.css';
@@ -21,6 +15,7 @@ import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Columns from './Columns';
+import Rows from './Rows';
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -35,8 +30,6 @@ const cacheLtr = createCache({
 });
 
 export default function DataGridDemo() {
-  const [users, setUsers] = useState([]);
-  const [UserAction, setUserAction] = useState('');
   const [expandedRows, setExpandedRows] = useState({});
   const [loading, setLoading] = useState(true);
   const [coaches, setCoaches] = useState([]);
@@ -59,6 +52,14 @@ export default function DataGridDemo() {
 
   const { showNotification } = useNotification();
   const { t } = useTranslation();
+
+  // User data
+  const [users, setUsers] = useState([]);
+
+  // grenal data
+  const [UserAction, setUserAction] = useState('');
+  
+
 
   const handleClickMenu = (event, user) => {
     setAnchorEl(event.currentTarget);
@@ -211,49 +212,12 @@ export default function DataGridDemo() {
     }
   };
 
-  // Expand toggle for rows
-  const handleRowExpandToggle = (id) => {
-    setExpandedRows(prev => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
-  };
 
-  // Get rows with additional route data when expanded
-  const getRowsWithRoutes = () => {
-    const rows = [];
-    users.forEach((user) => {
-      rows.push(user); // Push the main user row
-      if (expandedRows[user.id]) {
-        // Add routes as additional rows for expanded user
-        user.routes.forEach((route, index) => {
-          rows.push({
-            id: `${user.id}-${index}`, // Unique ID for the route row
-            user_name: '',
-            email: '',
-            name: '',
-            sites: [],
-            createdAt: user.createdAt,
-            lastLoginAt: user.lastLoginAt,
-            phone: '',
-            role: '',
-            cognitiveProfile: '',
-            coach: '',
-            picture_url: null,
-            routeName: route.name,
-            routeOnlyOnce: route.OnlyOnce ? 'Yes' : 'No',
-            isRoute: true, // Mark this row as a route row
-            menu: null, // Include placeholder for menu
-            expand: null, // Include placeholder for expand
-            active: null, // Placeholder for active
-          });
-        });
-      }
-    });
-    return rows;
-  };
+  // Function to get rows with routes
+  const { getRowsWithRoutes } = Rows({ users, expandedRows });
 
-  const { columns, customColumns } = Columns({ expandedRows, handleRowExpandToggle, handleClickMenu, coaches });
+  // Define columns and custom columns for the DataGrid
+  const { columns, customColumns } = Columns({ expandedRows,setExpandedRows, handleClickMenu, coaches });
 
   const existingTheme = useTheme();
 

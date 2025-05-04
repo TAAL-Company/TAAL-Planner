@@ -8,8 +8,15 @@ import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useTranslation } from 'react-i18next';
 
-const Columns = ({ expandedRows, handleRowExpandToggle, handleClickMenu, coaches }) => {
+const Columns = ({ expandedRows,setExpandedRows, handleClickMenu, coaches }) => {
   const { t } = useTranslation();
+    // Expand toggle for rows
+    const handleRowExpandToggle = (id) => {
+      setExpandedRows(prev => ({
+        ...prev,
+        [id]: !prev[id],
+      }));
+    };
 
   // Columns for the DataGrid
   const columns = [

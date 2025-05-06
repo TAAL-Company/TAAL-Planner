@@ -44,9 +44,10 @@
   /* margin: -0.5px; */
   padding-top: 1px;
   padding-bottom: 1px;
-  height: 345px;
+  height: 287px;
   overflow: auto;
-  width: 272px;
+  /* width: 272px; */
+  width: 300px;
   scrollbar-color: #bfc4ce #dadbe2 !important;
   scrollbar-width: thin !important;
   display: flex;
@@ -293,8 +294,11 @@ h3 {
   background-position: 202px 5px;
   padding: 12px 50px 12px 40px;
   font-size: 12px;
+  direction: rtl;
 }
-
+.searchButton.routes {
+  background-position: 230px 5px;
+}
 .force-overflow {
   min-height: 450px;
 }

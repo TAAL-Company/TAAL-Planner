@@ -14,7 +14,9 @@ import { RiAsterisk } from 'react-icons/ri';
 import stopIcon from '../../Pictures/stopIcon.svg';
 import Modal_no_site_selected from './Modal_no_site_selected';
 import { useNotification } from "../Notification/NotificationProvider";
-
+import Model_assigned_route_to_parent from './Model_assigned_route_to_parent';
+import Box from '@mui/material/Box';
+import { FormControlLabel, Radio } from '@mui/material';
 //--------------------------
 let myStudents = [];
 let myStudentsChoice = [];
@@ -34,7 +36,9 @@ function Modal({
   routeUUID,
   setNewRoute,
   requestForEditing,
+  setFilteredDataRoutes,
   newRoute,
+  filteredDataRoutes
 }) {
   const { showNotification } = useNotification();
   // let myStudentslist = [];
@@ -63,6 +67,9 @@ function Modal({
   const [myStudentsList, setMyStudentsList] = useState([]);
 
   const [searchStudent, setSearchStudent] = useState('');
+  const [openModalRouteChosen, setOpenModalRouteChosen] = useState(false);
+  const [searchRoute, setSearchRoute] = useState('');
+  const [selectedRoute, setSelectedRoute] = useState(filteredDataRoutes.filter((route) => route.id === routeUUID)[0]?.parentRouteId);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -116,84 +123,89 @@ function Modal({
   function Post_Route() {
     setFlagClickOK((flagClickOK = true));
     resultMyArrayStudent();
-    // if (setText === null || setText === "") {
-    //     alert('Please give the Route a title !')
-    //     return
-    // }
 
     if (JSON.parse(localStorage.getItem('New_Routes')) === null) {
-      showNotification("error", language === "English" ? "Route is empty !" : "הרשומה ריקה !");
-      // alert('Route is empty ! ');
-      return;
+        showNotification("error", language === "English" ? "Route is empty !" : "הרשומה ריקה !");
+        return;
     } else {
-      let taskIdList = [];
-      // setSite(JSON.parse(localStorage.getItem('New_Routes')));
-      tasksForNewRoute.map((task) => taskIdList.push(task.id));
-      let studentIdList = [];
-      myStudentsList.map((student) => studentIdList.push(student.id));//myStudents
-      let newRouteObj = {
-        name: routeTitle,
-        studentIds: studentIdList,
-        taskIds: taskIdList,
-        siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
-      };
-      // set_obj((obj.mySite = JSON.parse(localStorage.getItem("MySite"))));
+        let taskIdList = [];
+        tasksForNewRoute.map((task) => taskIdList.push(task.id));
+        let studentIdList = [];
+        myStudentsList.map((student) => studentIdList.push(student.id));
+        let newRouteObj = {
+            name: routeTitle,
+            studentIds: studentIdList,
+            taskIds: taskIdList,
+            siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
+            parentRouteId: selectedRoute,
+        };
 
-      console.log('newRouteObj', newRouteObj);
+        console.log('newRouteObj', newRouteObj);
 
-      try {
-      updateRoute(routeUUID, newRouteObj).then((data) => {
-        setDone(true);
-        setFlagClickOK((flagClickOK = false));
-        // window.location.replace("/forms");
-        setOpenModal(false);
-        showNotification("success", language !== "English" ? "route updated successfully" : "המסלול עודכן בהצלחה");
-      });
-      } catch (error) {
-        console.error(error.message);
-        showNotification("error", language !== "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
-      }
+        try {
+            updateRoute(routeUUID, newRouteObj).then((data) => {
+                setDone(true);
+                setFlagClickOK((flagClickOK = false));
+                setOpenModal(false);
+                setRouteTitle('');
+                showNotification("success", language !== "English" ? "route updated successfully" : "המסלול עודכן בהצלחה");
+
+                // Update filteredDataRoutes without reloading
+                setFilteredDataRoutes((prevRoutes) => {
+                    const updatedRoutes = prevRoutes.map((route) =>
+                        route.id === routeUUID ? { ...route, ...newRouteObj } : route
+                    );
+                    return updatedRoutes;
+                });
+            });
+        } catch (error) {
+            console.error(error.message);
+            showNotification("error", language !== "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+        }
     }
   }
 
   function Post_new_Route() {
-    let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    let today = new Date();
+    setOpenModalRouteChosen(true)
+    // let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    // let today = new Date();
 
-    setFlagClickOK((flagClickOK = true));
-    resultMyArrayStudent();
+    // setFlagClickOK((flagClickOK = true));
+    // resultMyArrayStudent();
 
-    if (JSON.parse(localStorage.getItem('New_Routes')) === null) {
-      // alert('Route is empty ! ');
-      showNotification("error", language === "English" ? "Route is empty !" : "הרשומה ריקה !");
-      return;
-    } else {
-      let taskIdList = [];
-      // setSite(JSON.parse(localStorage.getItem('New_Routes')));
-      tasksForNewRoute.map((task) => taskIdList.push(task.id));
-      let studentIdList = [];
-      myStudentsList.map((student) => studentIdList.push(student.id));//myStudents
-      let newRouteObj = {
-        name: routeTitle + "-" + (Math.floor((Math.random() * 100000))) + "-" + today.toLocaleDateString("en-US"),
-        studentIds: studentIdList,
-        taskIds: taskIdList,
-        siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
-      };
-      // set_obj((obj.mySite = JSON.parse(localStorage.getItem("MySite"))));
-      console.log(newRouteObj);
-      try {
-      insertRoute(newRouteObj).then((data) => {
-        setDone(true);
-        setFlagClickOK((flagClickOK = false));
-        // window.location.replace("/forms");
-      });
-      setOpenModal(false);
-      showNotification("success", language !== "English" ? "route created successfully" : "המסלול נוצר בהצלחה");
-      } catch (error) {
-        console.error(error.message);
-        showNotification("error", language !== "English" ? "Error Creating Route" : "שגיאה ביצירת המסלול");
-      }
-    }
+    // if (JSON.parse(localStorage.getItem('New_Routes')) === null) {
+    //   // alert('Route is empty ! ');
+    //   showNotification("error", language === "English" ? "Route is empty !" : "הרשומה ריקה !");
+    //   return;
+    // } else {
+    //   let taskIdList = [];
+    //   // setSite(JSON.parse(localStorage.getItem('New_Routes')));
+    //   tasksForNewRoute.map((task) => taskIdList.push(task.id));
+    //   let studentIdList = [];
+    //   myStudentsList.map((student) => studentIdList.push(student.id));//myStudents
+    //   let newRouteObj = {
+    //     name: routeTitle + "-" + " Child " + "-" + today.toLocaleDateString("en-US"),
+    //     studentIds: studentIdList,
+    //     taskIds: taskIdList,
+    //     siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
+    //     parentRouteId: routeUUID
+    //   };
+    //   // set_obj((obj.mySite = JSON.parse(localStorage.getItem("MySite"))));
+    //   console.log(newRouteObj);
+    //   try {
+    //     insertRoute(newRouteObj).then((data) => {
+    //       setDone(true);
+    //       setFlagClickOK((flagClickOK = false));
+    //       setFilteredDataRoutes((prevRoutes) => [...prevRoutes, data]); // Add this line
+    //       // window.location.replace("/forms");
+    //     });
+    //     setOpenModal(false);
+    //     showNotification("success", language !== "English" ? "route created successfully" : "המסלול נוצר בהצלחה");
+    //   } catch (error) {
+    //     console.error(error.message);
+    //     showNotification("error", language !== "English" ? "Error Creating Route" : "שגיאה ביצירת המסלול");
+    //   }
+    // }
   }
 
   const resultMyArrayStudent = () => {
@@ -230,30 +242,30 @@ function Modal({
     console.log(routeData);
 
     if (requestForEditing == 'edit' || requestForEditing == 'details') {
-      try{
+      try {
         await updateRoute(routeUUID, routeData).then((data) => {
-        setNewRoute(data);
-        // setNewTitleForRoute(data);
-        setRouteTitle('');
-        // setFlagStudent(false);
-        setOpenModal(false);
-      });
-      showNotification("success", language !== "English" ? "route updated successfully" : "המסלול עודכן בהצלחה");
-    }catch (error) {
+          setNewRoute(data);
+          // setNewTitleForRoute(data);
+          setRouteTitle('');
+          // setFlagStudent(false);
+          setOpenModal(false);
+        });
+        showNotification("success", language !== "English" ? "route updated successfully" : "המסלול עודכן בהצלחה");
+      } catch (error) {
         console.error(error.message);
         showNotification("error", language !== "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
       }
     } else {
       try {
-      await insertRoute(routeData).then((data) => {
-        setNewRoute(data);
-        setNewTitleForRoute(data);
-        setRouteTitle('');
-        setFlagStudent(false);
-        setOpenModal(false);
-      });
-      showNotification("success", language !== "English" ? "route created successfully" : "המסלול נוצר בהצלחה");
-    } catch (error) {
+        await insertRoute(routeData).then((data) => {
+          setNewRoute(data);
+          setNewTitleForRoute(data);
+          setRouteTitle('');
+          setFlagStudent(false);
+          setOpenModal(false);
+        });
+        showNotification("success", language !== "English" ? "route created successfully" : "המסלול נוצר בהצלחה");
+      } catch (error) {
         console.error(error.message);
         showNotification("error", language !== "English" ? "Error Creating Route" : "שגיאה ביצירת המסלול");
       }
@@ -446,7 +458,7 @@ function Modal({
                               language === 'English' ? 'right' : 'left',
                           }}
                         >
-                          {language !== 'English' ? 'New route' : 'מסלול חדש'}
+                          {language !== 'English' ? 'New route' : 'מסלול vחדש'}
                         </div>
                       </div>
                       <div className='newRouteBody'>
@@ -570,12 +582,45 @@ function Modal({
                             );
                           })}
                         </div>
+
+                        <Box>
+                          {language !== 'English' ? 'List of Route:' : 'רשימת מסלולים:'}
+                        </Box>
+                        <input
+                          type='text'
+                          style={{ paddingRight: language !== 'English' ? '' : '10px', paddingLeft: language !== 'English' ? '10px' : '', width: '100%' }}
+                          placeholder={language !== 'English' ? 'Search Route' : 'חיפוש מסלול'}
+                          value={searchRoute}
+                          onChange={(e) => setSearchRoute(e.target.value)}
+                        />
+                        <Box className='allStudent'>
+                          {filteredDataRoutes
+                            .filter((route) => route.parentRouteId === null)
+                            .filter((value) => value.name.toLowerCase().includes(searchRoute.toLowerCase()))
+                            .map((route) => (
+                              <Box key={route.id} className={`list-group-item ${language !== 'English' ? 'english' : ''}`}>
+                                <FormControlLabel
+                                  control={
+                                    <Radio
+                                      checked={selectedRoute === route.id}
+                                      onChange={(e) => setSelectedRoute(route.id)}
+                                      value={route.id}
+                                    />
+                                  }
+                                  label={route.name}
+                                />
+                              </Box>
+                            ))}
+                        </Box>
                       </div>
                       <div className='footer'>
                         <button className='continueBtn' onClick={Post_Route}>
                           {language !== 'English' ? 'Save route' : 'שמור מסלול'}
                         </button>
-                        <button className='continueBtn' onClick={Post_new_Route}>
+                        <button className='continueBtn' onClick={
+                          // setOpenModalRouteChosen(true)
+                          Post_new_Route
+                        }>
                           {language !== 'English' ? 'Save route' : 'שמור בשם'}
                         </button>
                         <button
@@ -594,6 +639,22 @@ function Modal({
                           <></>
                         )}
                       </div>
+                      {openModalRouteChosen && (
+                        <Box>
+                          <Model_assigned_route_to_parent
+                            setOpenModalRouteChosen={setOpenModalRouteChosen}
+                            language={language}
+                            routeName={routeTitle}
+                            tasksForNewRoute={tasksForNewRoute}
+                            myStudentsList={myStudentsList}
+                            routeUUID={routeUUID}
+                            setFilteredDataRoutes={setFilteredDataRoutes}
+                            setNewRoute={setNewRoute}
+                            routesList={filteredDataRoutes}
+                          />
+                        </Box>
+
+                      )}
                     </>
                   )}
                 </>

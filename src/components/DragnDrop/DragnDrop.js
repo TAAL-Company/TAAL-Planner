@@ -606,6 +606,8 @@ function DragnDrop(props) {
           routeName={props.tasksOfRoutes.name}
           routeUUID={props.tasksOfRoutes.id}
           tasksForNewRoute={board}
+          setFilteredDataRoutes={props.setFilteredDataRoutes}
+          filteredDataRoutes={props.filteredDataRoutes}
         />
       )}
       <>

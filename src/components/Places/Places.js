@@ -40,6 +40,7 @@ import DescriptionIcon from '@mui/icons-material/Description';
 import PlacesDropdown from "./PlacesDropdown"
 import { useTranslator } from '../../Utility/TranslationProvider';
 import Sheettodata from '../csvtojson/sheettodata';
+import BorderedTreeView from './BorderedTreeView';
 
 let tasksOfRoutes = {};
 // let allRoutes = [];
@@ -116,6 +117,7 @@ const Places = (props) => {
   const [uploadOption, setUploadOption] = useState(null);
   const [translateData, setTranslateData] = useState('original'); // 'original', 'translated', 'Mixed'
   const { translate } = useTranslator();
+  const [openThreeDots, setOpenThreeDots] = useState(-1);
 
   const translateRouteName = async (routeName) => {
     try {
@@ -149,6 +151,7 @@ const Places = (props) => {
   }, [filteredDataRoutes, translateData]);
 
   useEffect(() => {
+
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
       setModalOpen(true);
       setRouteName(filteredDataRoutes[openThreeDotsVertical].name);
@@ -171,6 +174,7 @@ const Places = (props) => {
         studentIds: studentIdList,
         taskIds: taskIdList,
         siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
+        // parentRouteId: newRoute.id
       };
 
       // delete newRouteObj.students;
@@ -183,6 +187,7 @@ const Places = (props) => {
           // alert(props.language ? 'ההוראה הועתקה בהצלחה!' : 'The instruction was copied successfully!');
           showNotification("success", props.language === "English" ? "ההוראה הועתקה בהצלחה!" : "The instruction was copied successfully!");
           setOpenThreeDotsVertical(-1);
+          setOpenThreeDots(-1);
           setRequestForEditing('');
           let newadded = await getingData_Routes().then(data => {
             return data.find(route => route.id === newaddedroute.id);
@@ -210,11 +215,13 @@ const Places = (props) => {
   const handleCloseRemove = () => {
     setOpenRemove(false);
     setOpenThreeDotsVertical(-1);
+    setOpenThreeDots(-1);
     setRequestForEditing('');
   };
   const handleCloseopenUpload = () => {
     setOpenUpload(false);
     setOpenThreeDotsVertical(-1);
+    setOpenThreeDots(-1);
     setRequestForEditing('');
   };
 
@@ -237,6 +244,7 @@ const Places = (props) => {
 
       setOpenRemove(false);
       setOpenThreeDotsVertical(-1);
+      setOpenThreeDots(-1);
       setRouteForDelete(-1);
       setRequestForEditing('');
     } catch (error) {
@@ -1267,7 +1275,7 @@ const Places = (props) => {
         {/* routes */}
 
         {/* modal for adding new route */}
-        {modalOpen && (
+        {modalOpen && ( ///
           <Modal
             routeName={routeName}
             requestForEditing={requestForEditing}
@@ -1279,6 +1287,8 @@ const Places = (props) => {
             siteSelected={siteSelected}
             language={props.language}
             routeUUID={routeUUID}
+            setFilteredDataRoutes={setFilteredDataRoutes}
+            filteredDataRoutes={filteredDataRoutes}
           />
         )}
         <div className='Cover_Places'>
@@ -1305,7 +1315,7 @@ const Places = (props) => {
             }}
           >
             <input
-              className={`searchButton ${props.language !== 'English' ? 'english' : ''}`}
+              className={`searchButton  ${props.language !== 'English' ? 'english' : 'routes'}`}
               dir='rtl'
               placeholder={
                 props.language === 'English' ? 'חפש מסלול' : 'search route'
@@ -1347,8 +1357,78 @@ const Places = (props) => {
               </div>
 
             ) : (
-              filteredDataRoutes.filter((route) => route.id).map((route, index) => {
-                return (
+              // filteredDataRoutes.filter((route) => route.id).map((route, index) => {
+              //   return (
+              //     <div
+              //       className='buttons'
+              //       style={{
+              //         border:
+              //           route.id === tasksOfRoutes.id
+              //             ? '1px solid #256fa1'
+              //             : '',
+              //         flexDirection:
+              //           props.language === 'English' ? 'row' : 'row-reverse',
+              //         textAlignLast:
+              //           props.language === 'English' ? 'end' : 'left',
+              //       }}
+              //       key={index}
+              //     >
+              //       <div className='dropdownThreeDots'>
+              //         <button
+              //           className='threeDotsVerticalEng'
+              //           onClick={() => {
+              //             clickOnhreeDotsVerticaIcont(index)
+              //             setSelectedRoute(route);
+              //           }}
+              //         >
+              //           <BsThreeDotsVertical />
+              //         </button>
+
+              //         {openThreeDotsVertical === index ? (
+              //           // <div ref={menuRef}>
+              //           <ModalDropdown
+              //             language={props.language}
+              //             setRequestForEditing={setRequestForEditing}
+              //             setOpenThreeDotsVertical={setOpenThreeDotsVertical}
+              //             editable={true}
+              //             Reproducible={true}
+              //             details={true}
+              //             erasable={true}
+              //             uploadfromsheet={true}
+              //           />
+              //         ) : (
+              //           // </div>
+              //           <></>
+              //         )}
+              //       </div>
+              //       <button
+              //         className='nameOfButton'
+              //         onClick={
+              //           () => {
+              //             setSelectedRoute(route);
+              //             // console.log(selectedRoute === null , selectedRoute.id !== route.id);
+              //             // console.log(selectedRoute , selectedRoute.id , route.id);
+
+              //             if (selectedRoute === null || selectedRoute.id !== route.id) {
+              //               displayStationsFromSelectedRoute(route);
+              //               DisplayTasks(route);
+              //             }
+              //           } //הצגת המסלול
+              //         }
+              //       >
+              //         {translateData === 'translated'
+              //           ? translatedRoutes[route.id] || route.name.replace('&#8211;', '-').replace('&#8217;', "'")
+              //           : translateData === 'Mixed'
+              //             ? `${route.name.replace('&#8211;', '-').replace('&#8217;', "'")} (${translatedRoutes[route.id] || route.name.replace('&#8211;', '-').replace('&#8217;', "'")})`
+              //             : route.name.replace('&#8211;', '-').replace('&#8217;', "'")}
+              //       </button>
+              //     </div>
+              //   );
+              // })
+              <BorderedTreeView
+                direction={props.language !== 'English' ? 'ltr' : 'rtl'}
+                filteredDataRoutes={filteredDataRoutes}
+                renderRoute={(route, index) => (
                   <div
                     className='buttons'
                     style={{
@@ -1356,8 +1436,7 @@ const Places = (props) => {
                         route.id === tasksOfRoutes.id
                           ? '1px solid #256fa1'
                           : '',
-                      flexDirection:
-                        props.language === 'English' ? 'row' : 'row-reverse',
+                      flexDirection: 'row-reverse',
                       textAlignLast:
                         props.language === 'English' ? 'end' : 'left',
                     }}
@@ -1367,15 +1446,20 @@ const Places = (props) => {
                       <button
                         className='threeDotsVerticalEng'
                         onClick={() => {
-                          clickOnhreeDotsVerticaIcont(index)
+                          // Find the actual index of the route in filteredDataRoutes
+                          const actualIndex = filteredDataRoutes.findIndex(
+                            (r) => r.id === route.id
+                          );
+                          console.log('actualIndex', actualIndex);
+                          console.log('openThreeDotsVertical', openThreeDotsVertical);
+                          clickOnhreeDotsVerticaIcont(actualIndex); // Pass the correct index
                           setSelectedRoute(route);
                         }}
                       >
                         <BsThreeDotsVertical />
                       </button>
 
-                      {openThreeDotsVertical === index ? (
-                        // <div ref={menuRef}>
+                      {openThreeDotsVertical === filteredDataRoutes.findIndex((r) => r.id === route.id) ? (
                         <ModalDropdown
                           language={props.language}
                           setRequestForEditing={setRequestForEditing}
@@ -1384,43 +1468,43 @@ const Places = (props) => {
                           Reproducible={true}
                           details={true}
                           erasable={true}
-                          uploadfromsheet={true}
+                          uploadfromsheet={false}
                         />
                       ) : (
-                        // </div>
                         <></>
                       )}
                     </div>
                     <button
-                      className='nameOfButton'
-                      onClick={
-                        () => {
-                          setSelectedRoute(route);
-                          // console.log(selectedRoute === null , selectedRoute.id !== route.id);
-                          // console.log(selectedRoute , selectedRoute.id , route.id);
-
-                          if (selectedRoute === null || selectedRoute.id !== route.id) {
-                            displayStationsFromSelectedRoute(route);
-                            DisplayTasks(route);
-                          }
-                        } //הצגת המסלול
-                      }
+                      className="nameOfButton"
+                      onClick={() => {
+                        setSelectedRoute(route);
+                        if (selectedRoute === null || selectedRoute.id !== route.id) {
+                          displayStationsFromSelectedRoute(route);
+                          DisplayTasks(route);
+                        }
+                      }}
                     >
                       {translateData === 'translated'
-                        ? translatedRoutes[route.id] || route.name.replace('&#8211;', '-').replace('&#8217;', "'")
+                        ? translatedRoutes[route.id] ||
+                        route.name.replace('&#8211;', '-').replace('&#8217;', "'")
                         : translateData === 'Mixed'
-                          ? `${route.name.replace('&#8211;', '-').replace('&#8217;', "'")} (${translatedRoutes[route.id] || route.name.replace('&#8211;', '-').replace('&#8217;', "'")})`
+                          ? `${route.name
+                            .replace('&#8211;', '-')
+                            .replace('&#8217;', "'")} (${translatedRoutes[route.id] ||
+                            route.name.replace('&#8211;', '-').replace('&#8217;', "'")})`
                           : route.name.replace('&#8211;', '-').replace('&#8217;', "'")}
                     </button>
                   </div>
-                );
-              })
+                )}
+              />
             )}
           </div>
           <div className='addPlaceCover'>
             <button
               className='AddButton'
               onClick={() => {
+                console.log('clicked', modalOpen);
+
                 setModalOpen(true);
                 setFlagStudent(true);
                 setClickAddRoute((clickAddRoute = true));
@@ -1432,6 +1516,8 @@ const Places = (props) => {
         </div>
         <DragDropContext onDragEnd={handleDragEnd}>
           <Stations
+            filteredDataRoutes={filteredDataRoutes}
+            setFilteredDataRoutes={setFilteredDataRoutes}
             setTranslateData={setTranslateData}
             setDropToBoard={setDropToBoard}
             dropToBoard={dropToBoard}

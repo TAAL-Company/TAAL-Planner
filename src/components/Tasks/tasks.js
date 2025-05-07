@@ -121,6 +121,7 @@ const Tasks = (props) => {
   useEffect(() => {
     if (openThreeDotsVertical !== -1) {
       if (requestForEditing === 'edit' || requestForEditing === 'details') {
+        debugger
         setOpenThreeDotsVertical(openThreeDotsVertical);
         setTaskUuidForEdit(openThreeDotsVertical);
         setModalOpen(true);

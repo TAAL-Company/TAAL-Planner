@@ -62,8 +62,10 @@ let myPlacesChoiceTemp = [];
 
 //--------------------------
 function Modal_Tasks(props) {
-  console.log('props:', props);
+  // console.log('props:', props);
+  console.log('props:', props.requestForEditing);
 
+  const [requestForEditing, setRequestForEditing] = useState(props.requestForEditing);
   const [, setDone] = useState(false);
   const [get_title, setTitle] = useState(props.title);
   const [getDescription, setDescription] = useState(props.subtitle);
@@ -161,15 +163,15 @@ function Modal_Tasks(props) {
 
   useEffect(() => {
     if (
-      (props.requestForEditing === 'edit' ||
-        props.requestForEditing === 'details') &&
+      (requestForEditing === 'edit' ||
+        requestForEditing === 'details') &&
       Array.isArray(props.stationOfTask) && props.stationOfTask.length > 0
-    ) {
+    ) { 
       props.stationOfTask.forEach((station) => {
         setMyPlacesChoice((prev) => [...prev, station.id]);
       });
     }
-  }, [props.requestForEditing, props.stationOfTask]);
+  }, [requestForEditing, props.stationOfTask]);
 
   const handleTitleInput = (e) => {
     setTitle(e.target.value);
@@ -179,6 +181,7 @@ function Modal_Tasks(props) {
   };
 
   const saveTask = async () => {
+    debugger;
     setFlagClickOK(true);
     console.log("additonalHelp", additonalHelp);
     console.log(mainadditonalHelp);
@@ -215,7 +218,7 @@ function Modal_Tasks(props) {
         audio_url = audio;
       }
 
-      if (props.requestForEditing === 'edit') {
+      if (requestForEditing === 'edit') {
         let newTask = {
           title: get_title,
           subtitle: getDescription,
@@ -359,7 +362,7 @@ function Modal_Tasks(props) {
           additonalHelpflat
         )
 
-        showNotification('success', props.language === 'English' ? 'Task added successfully' : 'המשימה נוספה בהצלחה');  
+        showNotification('success', props.language !== 'English' ? 'Task added successfully' : 'המשימה נוספה בהצלחה');  
 
         let color = props.allStations.find(
           (item) => item.id === myPlacesChoice[0]
@@ -489,8 +492,8 @@ function Modal_Tasks(props) {
   }
 
   useEffect(() => {
-    console.log("multi_language_description", multi_language_description);
-    console.log("data", data);
+    // console.log("multi_language_description", multi_language_description);
+    // console.log("data", data);
 
   }, [multi_language_description, data]);
 
@@ -526,7 +529,7 @@ function Modal_Tasks(props) {
                   </div>
                 </div>
                 <div
-                  className={`bodyNewTask ${props.requestForEditing === 'details' ? 'disabledModal' : ''
+                  className={`bodyNewTask ${requestForEditing === 'details' ? 'disabledModal' : ''
                     }`}
                 >
                   {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
@@ -919,7 +922,7 @@ function Modal_Tasks(props) {
                   }}
                   className='footerNewTasks'
                 >
-                  {props.requestForEditing === 'details' ? (
+                  {requestForEditing === 'details' ? (
                     <></>
                   ) : (
                     <input

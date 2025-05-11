@@ -181,7 +181,6 @@ function Modal_Tasks(props) {
   };
 
   const saveTask = async () => {
-    debugger;
     setFlagClickOK(true);
     console.log("additonalHelp", additonalHelp);
     console.log(mainadditonalHelp);
@@ -301,7 +300,7 @@ function Modal_Tasks(props) {
     try {
       const update = await updateTask(uuid, newTaskWithoutHelp);
       showNotification('success', props.language === "English" ? 'משימה עודכנה בהצלחה' : 'Task updated successfully');  
-
+      // debugger
       if (update.status === 200) {
         let indexStation = props.allStations.findIndex(
           (station) => station.id === props.myStation.id

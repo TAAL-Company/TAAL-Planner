@@ -155,7 +155,6 @@ export default function UserForm({
 
             } else {
                 try {
-                    debugger
                     await insertUser({ ...formValues }).then((response) => {
                         showNotification('success', t("showNotification.Success_add_user"));
                         // setUsers((prevUsers) => [...prevUsers, { ...response }]);

@@ -608,6 +608,7 @@ function DragnDrop(props) {
           tasksForNewRoute={board}
           setFilteredDataRoutes={props.setFilteredDataRoutes}
           filteredDataRoutes={props.filteredDataRoutes}
+          setRequestForEditing={setRequestForEditing}
         />
       )}
       <>

@@ -38,7 +38,8 @@ function Modal({
   requestForEditing,
   setFilteredDataRoutes,
   newRoute,
-  filteredDataRoutes
+  filteredDataRoutes,
+  setRequestForEditing,
 }) {
   const { showNotification } = useNotification();
   // let myStudentslist = [];
@@ -125,43 +126,65 @@ function Modal({
     resultMyArrayStudent();
 
     if (JSON.parse(localStorage.getItem('New_Routes')) === null) {
-        showNotification("error", language === "English" ? "Route is empty !" : "הרשומה ריקה !");
-        return;
+      showNotification("error", language === "English" ? "Route is empty !" : "הרשומה ריקה !");
+      return;
     } else {
-        let taskIdList = [];
-        tasksForNewRoute.map((task) => taskIdList.push(task.id));
-        let studentIdList = [];
-        myStudentsList.map((student) => studentIdList.push(student.id));
-        let newRouteObj = {
-            name: routeTitle,
-            studentIds: studentIdList,
-            taskIds: taskIdList,
-            siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
-            parentRouteId: selectedRoute,
-        };
+      let taskIdList = [];
+      tasksForNewRoute.map((task) => taskIdList.push(task.id));
+      let studentIdList = [];
+      myStudentsList.map((student) => studentIdList.push(student.id));
+      let newRouteObj = {
+        name: routeTitle,
+        studentIds: studentIdList,
+        taskIds: taskIdList,
+        siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
+        parentRouteId: selectedRoute,
+      };
 
-        console.log('newRouteObj', newRouteObj);
+      console.log('newRouteObj', newRouteObj);
 
-        try {
-            updateRoute(routeUUID, newRouteObj).then((data) => {
-                setDone(true);
-                setFlagClickOK((flagClickOK = false));
-                setOpenModal(false);
-                setRouteTitle('');
-                showNotification("success", language !== "English" ? "route updated successfully" : "המסלול עודכן בהצלחה");
-
-                // Update filteredDataRoutes without reloading
-                setFilteredDataRoutes((prevRoutes) => {
-                    const updatedRoutes = prevRoutes.map((route) =>
-                        route.id === routeUUID ? { ...route, ...newRouteObj } : route
-                    );
-                    return updatedRoutes;
-                });
+      try {
+        updateRoute(routeUUID, newRouteObj).then(async (updatedRoute) => {
+          try {
+            // Fetch the updated route from the server
+            let updatedRouteFromServer = await getingData_Routes().then((data) => {
+              return data.find((route) => route.id === updatedRoute.id);
             });
-        } catch (error) {
-            console.error(error.message);
-            showNotification("error", language !== "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
-        }
+
+            console.log(updatedRouteFromServer);
+
+            // Update `filteredDataRoutes` with the updated route
+            setFilteredDataRoutes((prevRoutes) => {
+              const updatedRoutes = prevRoutes.map((route) =>
+                route.id === routeUUID ? updatedRouteFromServer : route
+              );
+              return updatedRoutes;
+            });
+
+            setDone(true);
+            setFlagClickOK((flagClickOK = false));
+            setOpenModal(false);
+            setRouteTitle('');
+            showNotification(
+              "success",
+              language !== "English"
+                ? "route updated successfully"
+                : "המסלול עודכן בהצלחה"
+            );
+          } catch (error) {
+            console.error("Error fetching updated route:", error);
+            showNotification(
+              "error",
+              language !== "English"
+                ? "Error Updating Route"
+                : "שגיאה בעדכון המסלול"
+            );
+          }
+        });
+      } catch (error) {
+        console.error(error.message);
+        showNotification("error", language !== "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+      }
     }
   }
 

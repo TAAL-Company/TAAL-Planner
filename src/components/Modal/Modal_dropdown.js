@@ -12,7 +12,7 @@ function Modal_Dropdown(props) {
     function handleClickOutside(event) {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
         props.setOpenThreeDotsVertical(-1);
-        props.setRequestForEditing('');
+        // props.setRequestForEditing('');
       }
     }
 

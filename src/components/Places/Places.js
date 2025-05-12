@@ -1289,6 +1289,7 @@ const Places = (props) => {
             routeUUID={routeUUID}
             setFilteredDataRoutes={setFilteredDataRoutes}
             filteredDataRoutes={filteredDataRoutes}
+            setRequestForEditing={setRequestForEditing}
           />
         )}
         <div className='Cover_Places'>
@@ -1464,9 +1465,9 @@ const Places = (props) => {
                           language={props.language}
                           setRequestForEditing={setRequestForEditing}
                           setOpenThreeDotsVertical={setOpenThreeDotsVertical}
-                          editable={true}
+                          editable={false}
                           Reproducible={true}
-                          details={true}
+                          details={false}
                           erasable={true}
                           uploadfromsheet={false}
                         />

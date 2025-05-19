@@ -12,7 +12,10 @@ import Dashboard from './components/Dashboard/Dashboard';
 import GalleryPage from './components/Gallery/Gallerypage/gallery-page';
 import Cards from './components/Cards/Cards';
 import { Switch, Route } from 'react-router-loading';
-import PlacesCards from './components/placesCards/placesCards';
+// import PlacesCards from './components/placesCards/placesCards';
+import Sites from './components/placesCards/SitesTable';
+
+
 import Forms from './components/Form/Forms';
 // import Coaches from './components/Coaches/Coaches';
 import Coaches from './components/Coaches/CoachesTable';
@@ -53,7 +56,7 @@ function App() {
                   <Route path='/routes_cards' component={Cards}></Route>
                   <Route path='/Dashboard' component={Dashboard}></Route>
                   <Route path='/Gallery' component={GalleryPage}></Route>
-                  <Route path='/places' component={PlacesCards}></Route>
+                  <Route path='/places' component={Sites}></Route>
                   <Route path='/Forms' component={Forms}></Route>
                   <Route path='/coaches' component={Coaches}></Route>
                   <Route path='/community' component={Community}></Route>

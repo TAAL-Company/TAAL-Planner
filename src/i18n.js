@@ -39,6 +39,12 @@ const resources = {
         "Success_edit_coach": "Coach edited successfully",
         "Error_add_coach": "Error adding coach",
         "Success_add_coach": "Coach added successfully",
+        "Error_delete_site": "Error deleting site",
+        "Success_delete_site": "Site deleted successfully",
+        "Error_edit_site": "Error editing site",
+        "Success_edit_site": "Site edited successfully",
+        "Error_add_site": "Error adding site",
+        "Success_add_site": "Site added successfully",
       },
       UserPage: {
         "Avatar": "Avatar",
@@ -73,6 +79,19 @@ const resources = {
         "Edit": "Edit",
         "Delete": "Delete",
       },
+      SitePage: {
+        "Avatar": "Avatar",
+        "Name": "Name",
+        "Description": "Description",
+        "NameInEnglish": "Name in English",
+        "ADDANewSite": "Add a New Site",
+        "EditSiteInfo": "Edit Site Info",
+        "Edit": "Edit",
+        "Delete": "Delete",
+        "Duplicate": "Duplicate",
+        "DuplicateSuccess": "Site duplicated successfully",
+        "DuplicateError": "Error duplicating site"
+      },
       Forms: {
         "Name": "Name",
         "Username": "Username",
@@ -86,7 +105,9 @@ const resources = {
         "Cancel": "Cancel",
         "UploadImageText": "Upload an image",
         "SelectCoachText": "Please select a coach from the dropdown menu",
-        "SelectSitesText": "Please select sites from the dropdown menu"
+        "SelectSitesText": "Please select sites from the dropdown menu",
+        "Description": "Description",
+        "NameInEnglish": "Name in English",
       },
       FormsErrors: {
         "NameRequired": "Name is required",
@@ -94,6 +115,7 @@ const resources = {
         "PasswordRequired": "Password is required",
         "EmailRequired": "Email is required",
         "EmailFormat": "Invalid email format",
+        "DescriptionRequired": "Description is required",
       }
     },
   },
@@ -117,6 +139,12 @@ const resources = {
         "Success_edit_coach": "המאמן נערך בהצלחה",
         "Error_add_coach": "שגיאה בהוספת מאמן",
         "Success_add_coach": "המאמן נוסף בהצלחה",
+        "Error_delete_site": "שגיאה במחיקת אתר",
+        "Success_delete_site": "האתר נמחק בהצלחה",
+        "Error_edit_site": "שגיאה בעריכת אתר",
+        "Success_edit_site": "האתר נערך בהצלחה",
+        "Error_add_site": "שגיאה בהוספת אתר",
+        "Success_add_site": "האתר נוסף בהצלחה",
       },
       UserPage: {
         "Avatar": "תמונה",
@@ -151,6 +179,19 @@ const resources = {
         "Edit": "ערוך",
         "Delete": "מחק",
       },
+      SitePage: {
+        "Avatar": "תמונה",
+        "Name": "שם",
+        "Description": "תיאור",
+        "NameInEnglish": "שם באנגלית",
+        "ADDANewSite": "הוסף אתר חדש",
+        "EditSiteInfo": "ערוך אתר",
+        "Edit": "ערוך",
+        "Delete": "מחק",
+        "Duplicate": "שכפל",
+        "DuplicateSuccess": "האתר שוכפל בהצלחה",
+        "DuplicateError": "שגיאה בשכפול האתר"
+      },
       Forms: {
         "Name": "שם",
         "Username": "שם משתמש",
@@ -164,7 +205,9 @@ const resources = {
         "Cancel": "ביטול",
         "UploadImageText": "העלה תמונה",
         "SelectCoachText": "אנא בחר מדריך מהתפריט הנפתח",
-        "SelectSitesText": "אנא בחר אתרים מהתפריט הנפתח"
+        "SelectSitesText": "אנא בחר אתרים מהתפריט הנפתח",
+        "Description": "תיאור",
+        "NameInEnglish": "שם באנגלית",
       },
       FormsErrors: {
         "NameRequired": "שם חובה",
@@ -172,6 +215,7 @@ const resources = {
         "PasswordRequired": "סיסמה חובה",
         "EmailRequired": "מייל חובה",
         "EmailFormat": "פורמט מייל לא תקין",
+        "DescriptionRequired": "תיאור חובה",
       }
     }
   },
@@ -195,6 +239,12 @@ const resources = {
         "Success_edit_coach": "تم تعديل المدرب بنجاح",
         "Error_add_coach": "خطأ في إضافة المدرب",
         "Success_add_coach": "تم إضافة المدرب بنجاح",
+        "Error_delete_site": "خطأ في حذف الموقع",
+        "Success_delete_site": "تم حذف الموقع بنجاح",
+        "Error_edit_site": "خطأ في تعديل الموقع",
+        "Success_edit_site": "تم تعديل الموقع بنجاح",
+        "Error_add_site": "خطأ في إضافة الموقع",
+        "Success_add_site": "تم إضافة الموقع بنجاح",
       },
       UserPage: {
         "Avatar": "الصورة الرمزية",
@@ -229,6 +279,19 @@ const resources = {
         "Edit": "تعديل",
         "Delete": "حذف",
       },
+      SitePage: {
+        "Avatar": "الصورة",
+        "Name": "الاسم",
+        "Description": "الوصف",
+        "NameInEnglish": "الاسم بالإنجليزية",
+        "ADDANewSite": "إضافة موقع جديد",
+        "EditSiteInfo": "تعديل موقع",
+        "Edit": "تعديل",
+        "Delete": "حذف",
+        "Duplicate": "تكرار",
+        "DuplicateSuccess": "تم تكرار الموقع بنجاح",
+        "DuplicateError": "خطأ في تكرار الموقع"
+      },
       Forms: {
         "Name": "الاسم",
         "Username": "اسم المستخدم",
@@ -242,7 +305,9 @@ const resources = {
         "Cancel": "إلغاء",
         "UploadImageText": "تحميل صورة",
         "SelectCoachText": "يرجى اختيار مدرب من القائمة المنسدلة",
-        "SelectSitesText": "يرجى اختيار المواقع من القائمة المنسدلة"
+        "SelectSitesText": "يرجى اختيار المواقع من القائمة المنسدلة",
+        "Description": "الوصف",
+        "NameInEnglish": "الاسم بالإنجليزية",
       },
       FormsErrors: {
         "NameRequired": "الاسم مطلوب",
@@ -250,6 +315,7 @@ const resources = {
         "PasswordRequired": "كلمة المرور مطلوبة",
         "EmailRequired": "البريد الإلكتروني مطلوب",
         "EmailFormat": "تنسيق البريد الإلكتروني غير صالح",
+        "DescriptionRequired": "الوصف مطلوب",
       }
     }
   },
@@ -273,6 +339,12 @@ const resources = {
         "Success_edit_coach": "Тренер успешно отредактирован",
         "Error_add_coach": "Ошибка добавления тренера",
         "Success_add_coach": "Тренер успешно добавлен",
+        "Error_delete_site": "Ошибка удаления сайта",
+        "Success_delete_site": "Сайт успешно удалён",
+        "Error_edit_site": "Ошибка редактирования сайта",
+        "Success_edit_site": "Сайт успешно отредактирован",
+        "Error_add_site": "Ошибка добавления сайта",
+        "Success_add_site": "Сайт успешно добавлен",
       },
       UserPage: {
         "Avatar": "Аватар",
@@ -307,6 +379,19 @@ const resources = {
         "Edit": "Редактировать",
         "Delete": "Удалить",
       },
+      SitePage: {
+        "Avatar": "Аватар",
+        "Name": "Название",
+        "Description": "Описание",
+        "NameInEnglish": "Название на английском",
+        "ADDANewSite": "Добавить новый сайт",
+        "EditSiteInfo": "Редактировать сайт",
+        "Edit": "Редактировать",
+        "Delete": "Удалить",
+        "Duplicate": "Дублировать",
+        "DuplicateSuccess": "Сайт успешно продублирован",
+        "DuplicateError": "Ошибка дублирования сайта"
+      },
       Forms: {
         "Name": "Имя",
         "Username": "Имя пользователя",
@@ -320,7 +405,9 @@ const resources = {
         "Cancel": "Отмена",
         "UploadImageText": "Загрузить изображение",
         "SelectCoachText": "Пожалуйста, выберите тренера из выпадающего меню",
-        "SelectSitesText": "Пожалуйста, выберите сайты из выпадающего меню"
+        "SelectSitesText": "Пожалуйста, выберите сайты из выпадающего меню",
+        "Description": "Описание",
+        "NameInEnglish": "Название на английском",
       },
       FormsErrors: {
         "NameRequired": "Имя обязательно",
@@ -328,6 +415,7 @@ const resources = {
         "PasswordRequired": "Пароль обязателен",
         "EmailRequired": "Электронная почта обязательна",
         "EmailFormat": "Неверный формат электронной почты",
+        "DescriptionRequired": "Описание обязательно",
       }
     }
   }

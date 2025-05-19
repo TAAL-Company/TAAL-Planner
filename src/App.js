@@ -14,7 +14,9 @@ import Cards from './components/Cards/Cards';
 import { Switch, Route } from 'react-router-loading';
 import PlacesCards from './components/placesCards/placesCards';
 import Forms from './components/Form/Forms';
-import Coaches from './components/Coaches/Coaches';
+// import Coaches from './components/Coaches/Coaches';
+import Coaches from './components/Coaches/CoachesTable';
+
 import Editors from './components/Editor/Editors';
 import Community from './components/Community/community';
 import { DndProvider } from 'react-dnd';

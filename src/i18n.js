@@ -90,7 +90,12 @@ const resources = {
         "Delete": "Delete",
         "Duplicate": "Duplicate",
         "DuplicateSuccess": "Site duplicated successfully",
-        "DuplicateError": "Error duplicating site"
+        "DuplicateError": "Error duplicating site",
+        "Tasks": "Tasks",
+        "Routes": "Routes",
+        "Stations": "Stations",
+        "Users": "Users",
+        "Editors": "Editors",
       },
       Forms: {
         "Name": "Name",
@@ -116,6 +121,52 @@ const resources = {
         "EmailRequired": "Email is required",
         "EmailFormat": "Invalid email format",
         "DescriptionRequired": "Description is required",
+      },
+      Planner: {
+        Tasks: {
+          "Title": "Title",
+          "subtitle": "Sub Title",
+          "multi_language_description": "Multi Language Description",
+          "estimatedTimeSeconds": "Estimated Time Seconds",
+          "picture_url": "Picture URL",
+          "audio_url": "Audio URL",
+          "dataEntryLabel": "Data Entry Label",
+          "dataEntryType": "Data Entry Type",
+          "dataEntryValidation": "Data Entry Validation",
+          "taskType": "Task Type",
+          "stations": "Stations",
+          "alternativeTasks": "Alternative Tasks",
+          "tasksAlternativeTo": "Tasks Alternative To",
+          "subtasks": "Subtasks",
+          "parentTasks": "Parent Tasks",
+          "sites": "Sites",
+          "additonalHelp": "Additional Help"
+        }
+      },
+      Station: {
+        "title": "Title",
+        "subtitle": "Sub Title",
+        "tasks": "Tasks"
+      },
+      Task: {
+        "title": "Title",
+        "subtitle": "Sub Title",
+        "multi_language_description": "Multi Language Description",
+        "estimatedTimeSeconds": "Estimated Time Seconds",
+        "picture_url": "Picture URL",
+        "audio_url": "Audio URL",
+        "dataEntryLabel": "Data Entry Label",
+        "dataEntryType": "Data Entry Type",
+        "dataEntryValidation": "Data Entry Validation",
+        "taskType": "Task Type",
+        "additonalHelp": "Additional Help"
+      },
+      Route: {
+        "Name": "Route Name",
+        "OnlyOnce": "Only Once",
+        "multi_language_description": "Multi Language Description",
+        "ParentRouteId": "Parent Route Id",
+        "tasks": "Tasks"
       }
     },
   },
@@ -190,7 +241,12 @@ const resources = {
         "Delete": "מחק",
         "Duplicate": "שכפל",
         "DuplicateSuccess": "האתר שוכפל בהצלחה",
-        "DuplicateError": "שגיאה בשכפול האתר"
+        "DuplicateError": "שגיאה בשכפול האתר",
+        "Tasks": "משימות",
+        "Routes": "מסלולים",
+        "Stations": "תחנות",
+        "Users": "משתמשים",
+        "Editors": "עורכים",
       },
       Forms: {
         "Name": "שם",
@@ -216,6 +272,52 @@ const resources = {
         "EmailRequired": "מייל חובה",
         "EmailFormat": "פורמט מייל לא תקין",
         "DescriptionRequired": "תיאור חובה",
+      },
+      Planner: {
+        Tasks: {
+          "Title": "כותרת",
+          "subtitle": "כותרת משנה",
+          "multi_language_description": "תיאור רב-לשוני",
+          "estimatedTimeSeconds": "זמן משוער בשניות",
+          "picture_url": "כתובת תמונה",
+          "audio_url": "כתובת שמע",
+          "dataEntryLabel": "תווית להזנת נתונים",
+          "dataEntryType": "סוג הזנת נתונים",
+          "dataEntryValidation": "אימות הזנת נתונים",
+          "taskType": "סוג משימה",
+          "stations": "תחנות",
+          "alternativeTasks": "משימות חלופיות",
+          "tasksAlternativeTo": "משימות אלטרנטיביות ל",
+          "subtasks": "משימות משנה",
+          "parentTasks": "משימות אב",
+          "sites": "אתרים",
+          "additonalHelp": "עזרה נוספת"
+        }
+      },
+      Station: {
+        "title": "כותרת",
+        "subtitle": "כותרת משנה",
+        "tasks": "משימות"
+      },
+      Task: {
+        "title": "כותרת",
+        "subtitle": "כותרת משנה",
+        "multi_language_description": "תיאור רב-לשוני",
+        "estimatedTimeSeconds": "זמן משוער בשניות",
+        "picture_url": "כתובת תמונה",
+        "audio_url": "כתובת שמע",
+        "dataEntryLabel": "תווית להזנת נתונים",
+        "dataEntryType": "סוג הזנת נתונים",
+        "dataEntryValidation": "אימות הזנת נתונים",
+        "taskType": "סוג משימה",
+        "additonalHelp": "עזרה נוספת"
+      },
+      Route: {
+        "Name": "שם מסלול",
+        "OnlyOnce": "רק פעם אחת",
+        "multi_language_description": "תיאור רב-לשוני",
+        "ParentRouteId": "מסלול אב",
+        "tasks": "משימות"
       }
     }
   },
@@ -290,7 +392,12 @@ const resources = {
         "Delete": "حذف",
         "Duplicate": "تكرار",
         "DuplicateSuccess": "تم تكرار الموقع بنجاح",
-        "DuplicateError": "خطأ في تكرار الموقع"
+        "DuplicateError": "خطأ في تكرار الموقع",
+        "Tasks": "المهام",
+        "Routes": "المسارات",
+        "Stations": "المحطات",
+        "Users": "المستخدمون",
+        "Editors": "المحررون",
       },
       Forms: {
         "Name": "الاسم",
@@ -316,6 +423,52 @@ const resources = {
         "EmailRequired": "البريد الإلكتروني مطلوب",
         "EmailFormat": "تنسيق البريد الإلكتروني غير صالح",
         "DescriptionRequired": "الوصف مطلوب",
+      },
+      Planner: {
+        Tasks: {
+          "Title": "العنوان",
+          "subtitle": "العنوان الفرعي",
+          "multi_language_description": "الوصف متعدد اللغات",
+          "estimatedTimeSeconds": "الوقت المقدر بالثواني",
+          "picture_url": "رابط الصورة",
+          "audio_url": "رابط الصوت",
+          "dataEntryLabel": "تسمية إدخال البيانات",
+          "dataEntryType": "نوع إدخال البيانات",
+          "dataEntryValidation": "تحقق من إدخال البيانات",
+          "taskType": "نوع المهمة",
+          "stations": "محطات",
+          "alternativeTasks": "مهام بديلة",
+          "tasksAlternativeTo": "مهام بديلة لـ",
+          "subtasks": "مهام فرعية",
+          "parentTasks": "مهام رئيسية",
+          "sites": "مواقع",
+          "additonalHelp": "مساعدة إضافية"
+        }
+      },
+      Station: {
+        "title": "العنوان",
+        "subtitle": "العنوان الفرعي",
+        "tasks": "المهام"
+      },
+      Task: {
+        "title": "العنوان",
+        "subtitle": "العنوان الفرعي",
+        "multi_language_description": "الوصف متعدد اللغات",
+        "estimatedTimeSeconds": "الوقت المقدر بالثواني",
+        "picture_url": "رابط الصورة",
+        "audio_url": "رابط الصوت",
+        "dataEntryLabel": "تسمية إدخال البيانات",
+        "dataEntryType": "نوع إدخال البيانات",
+        "dataEntryValidation": "تحقق من إدخال البيانات",
+        "taskType": "نوع المهمة",
+        "additonalHelp": "مساعدة إضافية"
+      },
+      Route: {
+        "Name": "اسم المسار",
+        "OnlyOnce": "مرة واحدة فقط",
+        "multi_language_description": "الوصف متعدد اللغات",
+        "ParentRouteId": "معرف المسار الرئيسي",
+        "tasks": "المهام"
       }
     }
   },
@@ -390,7 +543,12 @@ const resources = {
         "Delete": "Удалить",
         "Duplicate": "Дублировать",
         "DuplicateSuccess": "Сайт успешно продублирован",
-        "DuplicateError": "Ошибка дублирования сайта"
+        "DuplicateError": "Ошибка дублирования сайта",
+        "Tasks": "Задачи",
+        "Routes": "Маршруты",
+        "Stations": "Станции",
+        "Users": "Пользователи",
+        "Editors": "Редакторы",
       },
       Forms: {
         "Name": "Имя",
@@ -416,6 +574,52 @@ const resources = {
         "EmailRequired": "Электронная почта обязательна",
         "EmailFormat": "Неверный формат электронной почты",
         "DescriptionRequired": "Описание обязательно",
+      },
+      Planner: {
+        Tasks: {
+          "Title": "Название",
+          "subtitle": "Подзаголовок",
+          "multi_language_description": "Многоязычное описание",
+          "estimatedTimeSeconds": "Оценочное время (сек)",
+          "picture_url": "URL изображения",
+          "audio_url": "URL аудио",
+          "dataEntryLabel": "Метка для ввода данных",
+          "dataEntryType": "Тип ввода данных",
+          "dataEntryValidation": "Валидация ввода данных",
+          "taskType": "Тип задачи",
+          "stations": "Станции",
+          "alternativeTasks": "Альтернативные задачи",
+          "tasksAlternativeTo": "Задачи-альтернативы",
+          "subtasks": "Подзадачи",
+          "parentTasks": "Родительские задачи",
+          "sites": "Сайты",
+          "additonalHelp": "Дополнительная помощь"
+        }
+      },
+      Station: {
+        "title": "Название",
+        "subtitle": "Подзаголовок",
+        "tasks": "Задачи"
+      },
+      Task: {
+        "title": "Название",
+        "subtitle": "Подзаголовок",
+        "multi_language_description": "Многоязычное описание",
+        "estimatedTimeSeconds": "Оценочное время (сек)",
+        "picture_url": "URL изображения",
+        "audio_url": "URL аудио",
+        "dataEntryLabel": "Метка для ввода данных",
+        "dataEntryType": "Тип ввода данных",
+        "dataEntryValidation": "Валидация ввода данных",
+        "taskType": "Тип задачи",
+        "additonalHelp": "Дополнительная помощь"
+      },
+      Route: {
+        "Name": "Название маршрута",
+        "OnlyOnce": "Только один раз",
+        "multi_language_description": "Многоязычное описание",
+        "ParentRouteId": "ID родительского маршрута",
+        "tasks": "Задачи"
       }
     }
   }

@@ -25,6 +25,7 @@ import { CacheProvider } from '@emotion/react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Rows from './Rows';
 import Columns from './Columns';
+import PopupTable from './popuptable';
 
 const cacheRtl = createCache({
     key: 'data-grid-rtl-demo',
@@ -37,6 +38,18 @@ const cacheLtr = createCache({
 
 export default function SitesTable() {
     const [expandedRows, setExpandedRows] = useState({});
+
+    // Helper to toggle expand for a section
+    const handleSectionExpandToggle = (siteId, section) => {
+        setExpandedRows(prev => ({
+            ...prev,
+            [siteId]: {
+                ...prev[siteId],
+                [section]: !prev[siteId]?.[section],
+            },
+        }));
+    };
+
     const [loading, setLoading] = useState(true);
     const [sites, setSites] = useState([]);
     const [newSite, setNewSite] = useState({
@@ -52,6 +65,10 @@ export default function SitesTable() {
     const [title, setTitle] = useState('');
     const { showNotification } = useNotification();
     const { t } = useTranslation();
+
+    const [popupOpen, setPopupOpen] = useState(false);
+    const [popupSection, setPopupSection] = useState('');
+    const [popupRow, setPopupRow] = useState(null);
 
     const handleClickMenu = (event, site) => {
         setAnchorEl(event.currentTarget);
@@ -222,7 +239,16 @@ export default function SitesTable() {
     };
 
     const { getRowsWithDetails } = Rows({ sites, expandedRows });
-    const { columns } = Columns({ handleClickMenu });
+    const columnsObj = Columns({
+        handleClickMenu,
+        expandedRows,
+        handleSectionExpandToggle: (siteId, section, row) => {
+            setPopupSection(section);
+            setPopupRow(row);
+            setPopupOpen(true);
+        }
+    });
+    const { columns, taskColumns, routeColumns, stationColumns, studentColumns, editorColumns } = columnsObj;
 
     const existingTheme = useTheme();
     const theme = React.useMemo(
@@ -266,6 +292,20 @@ export default function SitesTable() {
                             <MenuItem onClick={handleDuplicateSite}>{t('SitePage.Duplicate')}</MenuItem>
                             <MenuItem onClick={handleDeleteSite}>{t('SitePage.Delete')}</MenuItem>
                         </Menu>
+
+                        <PopupTable
+                            open={popupOpen}
+                            onClose={() => setPopupOpen(false)}
+                            section={popupSection}
+                            row={popupRow}
+                            columnsMap={{
+                                taskColumns,
+                                routeColumns,
+                                stationColumns,
+                                studentColumns,
+                                editorColumns
+                            }}
+                        />
 
                         <SiteForm
                             open={openDialog}

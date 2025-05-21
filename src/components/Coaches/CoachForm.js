@@ -11,6 +11,8 @@ import {
 
 import { insertCoach, updateCoach, uploadFiles } from '../../api/api';
 import InputFileUpload from '../InputFileUpload/InputFileUpload';
+import BasicSelect from '../Gallery/BasicSelect';
+import { getBlobsInContainer } from '../azureBlob';
 import { useNotification } from '../Notification/NotificationProvider';
 import { useTranslation } from "react-i18next";
 
@@ -25,8 +27,73 @@ export default function CoachForm({
     const [formValues, setFormValues] = useState({ ...initialValues });
     const [picture, setPicture] = useState(null);
     const [errors, setErrors] = useState({});
+    const [Foldersite, setFoldersite] = useState('general');
+    const [blobList, setBlobList] = useState([]);
+    const [sortedUrls, setSortedUrls] = useState({});
+    const [folderNames, setFolderNames] = useState([]);
     const { showNotification } = useNotification();
     const { t } = useTranslation();
+
+    // Fetch blob list on mount
+    useEffect(() => {
+        async function fetchBlobs() {
+            setBlobList(await getBlobsInContainer());
+        }
+        fetchBlobs();
+    }, []);
+
+    // Sort blob URLs and set folder names
+    useEffect(() => {
+        let sorted = {};
+        for (const key in blobList) {
+            const url = blobList[key];
+            const parts = url.split('/');
+            let folderName = 'general';
+
+            const imageIndex = parts.indexOf('images');
+            if (imageIndex !== -1 && imageIndex + 2 < parts.length) {
+                folderName = parts[imageIndex + 1];
+            }
+
+            let fileType = getFileType(url);
+            let fileTypeFolder = '';
+
+            if (['jpeg', 'png', 'jpg', 'webp'].includes(fileType)) {
+                fileTypeFolder = 'pictures';
+            } else if (['aac', 'mp3', 'wav'].includes(fileType)) {
+                fileTypeFolder = 'audio';
+            }
+
+            sorted[folderName] = sorted[folderName] || {};
+            sorted[folderName][fileTypeFolder] = sorted[folderName][fileTypeFolder] || {};
+            sorted[folderName][fileTypeFolder][key] = url;
+        }
+
+        setSortedUrls(sorted);
+
+        if (JSON.parse(sessionStorage.getItem('jwt'))?.role === "ADMIN") {
+            setFolderNames(Object.keys(sorted));
+        } else if (
+            JSON.parse(sessionStorage.getItem('jwt'))?.role === "STUDENT" ||
+            JSON.parse(sessionStorage.getItem('jwt'))?.role === "EDITOR"
+        ) {
+            const usersites = JSON.parse(sessionStorage.getItem('jwt')).sites;
+            const filteredSortedUrls = Object.keys(sorted).filter(url =>
+                usersites.some(site => site.nameInEnglish === url)
+            );
+            setFolderNames(filteredSortedUrls);
+        }
+    }, [blobList]);
+
+    function getFileType(url) {
+        if (typeof url === 'string') {
+            const parts = url.split('.');
+            const extension = parts[parts.length - 1];
+            return extension.toLowerCase();
+        } else {
+            return 'unknown';
+        }
+    }
 
     // Reset form values when initialValues change
     useEffect(() => {
@@ -57,7 +124,7 @@ export default function CoachForm({
 
         try {
             if (picture) {
-                formValues.picture_url = await uploadFiles(picture, 'Coach media/picture');
+                formValues.picture_url = await uploadFiles(picture, 'Coaches media/picture', Foldersite);
             }
             if (CoachAction === 'edit') {
                 try {
@@ -128,6 +195,8 @@ export default function CoachForm({
                             />
                         </div>
                     )}
+                    <br />
+                    <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} />
                     <InputFileUpload
                         setPicture={(newPicture) => {
                             formValues.picture_url = newPicture;

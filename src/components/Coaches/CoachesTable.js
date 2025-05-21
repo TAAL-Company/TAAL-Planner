@@ -83,11 +83,47 @@ export default function CoachesTable() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const coachesData = await getingData_coaches();
-      setCoaches(coachesData);
-      setLoading(false);
-    };
 
+      try {
+        const coachesData = await getingData_coaches();
+
+        const jwt = sessionStorage.getItem('jwt');
+        const jwtEditor = sessionStorage.getItem('jwt-EDITOR');
+
+        let role = null;
+        let userId = null;
+
+        if (jwt) {
+          try {
+            role = JSON.parse(jwt)?.role;
+          } catch (error) {
+            console.error("Failed to parse JWT:", error);
+          }
+        }
+
+        if (jwtEditor) {
+          try {
+            userId = JSON.parse(jwtEditor)?.id;
+          } catch (error) {
+            console.error("Failed to parse JWT-EDITOR:", error);
+          }
+        }
+
+        if (role === "ADMIN") {
+          setCoaches(coachesData);
+        } else if (role === "EDITOR" && userId) {
+          const filteredCoaches = coachesData.filter((coach) => coach.id == userId && userId != null);
+          setCoaches(filteredCoaches);
+        } else if (role === "STUDENT" && userId) {
+          const filteredCoaches = coachesData.filter((coach) => coach.id == JSON.parse(jwt).coachId && JSON.parse(jwt).id != null);
+          setCoaches(filteredCoaches);
+        }
+      } catch (error) {
+        console.error(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchData();
   }, []);
 

@@ -107,9 +107,35 @@ export default function SitesTable() {
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const sitesData = await getingData_Places();
-            setSites(sitesData);
-            setLoading(false);
+            try {
+                const sitesData = await getingData_Places();
+                const jwt = sessionStorage.getItem('jwt');
+                let role = null;
+                let userId = null;
+
+                if (jwt) {
+                    try {
+                        const parsedJwt = JSON.parse(jwt);
+                        role = parsedJwt?.role;
+                        userId = parsedJwt?.id;
+                    } catch (error) {
+                        console.error("Failed to parse JWT:", error);
+                    }
+                }
+
+                if (role === "ADMIN") {
+                    setSites(sitesData);
+                } else if ((role === "EDITOR" || role === "STUDENT") && userId) {
+                    const filteredSites = sitesData.filter(site =>
+                        site.editors.some(editor => editor.id === userId)
+                    );
+                    setSites(filteredSites);
+                }
+            } catch (error) {
+                console.error(error.message);
+            } finally {
+                setLoading(false);
+            }
         };
         fetchData();
     }, []);
@@ -227,7 +253,7 @@ export default function SitesTable() {
                 routeIds: newRoutesID,
             };
             await updateSite(siteInfo.id, updatedSite);
-            
+
             setSites((prev) => [siteToDuplicate, ...prev]);
             setLoading(false);
             showNotification('success', t('SitePage.DuplicateSuccess'));

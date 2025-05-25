@@ -619,6 +619,7 @@ function Modal({
                         <Box className='allStudent'>
                           {filteredDataRoutes
                             .filter((route) => route.parentRouteId === null)
+                            .filter((route) => route.id !== routeUUID)
                             .filter((value) => value.name.toLowerCase().includes(searchRoute.toLowerCase()))
                             .map((route) => (
                               <Box key={route.id} className={`list-group-item ${language !== 'English' ? 'english' : ''}`}>

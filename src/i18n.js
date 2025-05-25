@@ -45,6 +45,14 @@ const resources = {
         "Success_edit_site": "Site edited successfully",
         "Error_add_site": "Error adding site",
         "Success_add_site": "Site added successfully",
+
+        // Add these Route notifications:
+        "Error_delete_route": "Error deleting route",
+        "Success_delete_route": "Route deleted successfully",
+        "Error_add_route": "Error adding route",
+        "Success_add_route": "Route added successfully",
+        "Error_edit_route": "Error editing route",
+        "Success_edit_route": "Route updated successfully"
       },
       UserPage: {
         "Avatar": "Avatar",
@@ -166,7 +174,19 @@ const resources = {
         "OnlyOnce": "Only Once",
         "multi_language_description": "Multi Language Description",
         "ParentRouteId": "Parent Route Id",
-        "tasks": "Tasks"
+        "tasks": "Tasks",
+      },
+      RoutePage: {
+        "Name": "Route Name",
+        "OnlyOnce": "Only Once",
+        "multi_language_description": "Multi Language Description",
+        "ParentRouteId": "Parent Route Id",
+        "tasks": "Tasks",
+        "ADDANewRoute": "Add a New Route",
+        "EditRouteInfo": "Edit Route Info",
+        "Edit": "Edit",
+        "Delete": "Delete",
+        "sites": "Sites",
       }
     },
   },
@@ -196,6 +216,14 @@ const resources = {
         "Success_edit_site": "האתר נערך בהצלחה",
         "Error_add_site": "שגיאה בהוספת אתר",
         "Success_add_site": "האתר נוסף בהצלחה",
+
+        // Add these Route notifications:
+        "Error_delete_route": "שגיאה במחיקת מסלול",
+        "Success_delete_route": "המסלול נמחק בהצלחה",
+        "Error_add_route": "שגיאה בהוספת מסלול",
+        "Success_add_route": "המסלול נוסף בהצלחה",
+        "Error_edit_route": "שגיאה בעריכת מסלול",
+        "Success_edit_route": "המסלול עודכן בהצלחה"
       },
       UserPage: {
         "Avatar": "תמונה",
@@ -318,6 +346,18 @@ const resources = {
         "multi_language_description": "תיאור רב-לשוני",
         "ParentRouteId": "מסלול אב",
         "tasks": "משימות"
+      },
+      RoutePage: {
+        "Name": "שם מסלול",
+        "OnlyOnce": "רק פעם אחת",
+        "multi_language_description": "תיאור רב-לשוני",
+        "ParentRouteId": "מסלול אב",
+        "tasks": "משימות",
+        "ADDANewRoute": "הוסף מסלול חדש",
+        "EditRouteInfo": "ערוך מסלול",
+        "Edit": "ערוך",
+        "Delete": "מחק",
+        "sites": "אתרים",
       }
     }
   },
@@ -347,6 +387,14 @@ const resources = {
         "Success_edit_site": "تم تعديل الموقع بنجاح",
         "Error_add_site": "خطأ في إضافة الموقع",
         "Success_add_site": "تم إضافة الموقع بنجاح",
+
+        // Add these Route notifications:
+        "Error_delete_route": "خطأ في حذف المسار",
+        "Success_delete_route": "تم حذف المسار بنجاح",
+        "Error_add_route": "خطأ في إضافة المسار",
+        "Success_add_route": "تمت إضافة المسار بنجاح",
+        "Error_edit_route": "خطأ في تعديل المسار",
+        "Success_edit_route": "تم تحديث المسار بنجاح"
       },
       UserPage: {
         "Avatar": "الصورة الرمزية",
@@ -469,6 +517,18 @@ const resources = {
         "multi_language_description": "الوصف متعدد اللغات",
         "ParentRouteId": "معرف المسار الرئيسي",
         "tasks": "المهام"
+      },
+      RoutePage: {
+        "Name": "اسم المسار",
+        "OnlyOnce": "مرة واحدة فقط",
+        "multi_language_description": "الوصف متعدد اللغات",
+        "ParentRouteId": "معرف المسار الرئيسي",
+        "tasks": "المهام",
+        "ADDANewRoute": "إضافة مسار جديد",
+        "EditRouteInfo": "تعديل معلومات المسار",
+        "Edit": "تعديل",
+        "Delete": "حذف",
+        "sites": "المواقع",
       }
     }
   },
@@ -498,6 +558,14 @@ const resources = {
         "Success_edit_site": "Сайт успешно отредактирован",
         "Error_add_site": "Ошибка добавления сайта",
         "Success_add_site": "Сайт успешно добавлен",
+
+        // Add these Route notifications:
+        "Error_delete_route": "Ошибка удаления маршрута",
+        "Success_delete_route": "Маршрут успешно удалён",
+        "Error_add_route": "Ошибка добавления маршрута",
+        "Success_add_route": "Маршрут успешно добавлен",
+        "Error_edit_route": "Ошибка редактирования маршрута",
+        "Success_edit_route": "Маршрут успешно обновлён"
       },
       UserPage: {
         "Avatar": "Аватар",
@@ -620,6 +688,18 @@ const resources = {
         "multi_language_description": "Многоязычное описание",
         "ParentRouteId": "ID родительского маршрута",
         "tasks": "Задачи"
+      },
+      RoutePage: {
+        "Name": "Название маршрута",
+        "OnlyOnce": "Только один раз",
+        "multi_language_description": "Многоязычное описание",
+        "ParentRouteId": "ID родительского маршрута",
+        "tasks": "Задачи",
+        "ADDANewRoute": "Добавить новый маршрут",
+        "EditRouteInfo": "Редактировать маршрут",
+        "Edit": "Редактировать",
+        "Delete": "Удалить",
+        "sites": "Сайты",
       }
     }
   }

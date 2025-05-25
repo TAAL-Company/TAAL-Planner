@@ -10,7 +10,8 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import Dashboard from './components/Dashboard/Dashboard';
 import GalleryPage from './components/Gallery/Gallerypage/gallery-page';
-import Cards from './components/Cards/Cards';
+// import Cards from './components/Cards/Cards';
+import RouteTable from './components/Cards/RouteTable';
 import { Switch, Route } from 'react-router-loading';
 // import PlacesCards from './components/placesCards/placesCards';
 import Sites from './components/placesCards/SitesTable';
@@ -53,7 +54,7 @@ function App() {
                   <Route path='/planner' component={Planner}></Route>
                   <Route path='/student' component={Student}></Route>
                   <Route path='/Calculator' component={Calculator}></Route>
-                  <Route path='/routes_cards' component={Cards}></Route>
+                  <Route path='/routes_cards' component={RouteTable}></Route>
                   <Route path='/Dashboard' component={Dashboard}></Route>
                   <Route path='/Gallery' component={GalleryPage}></Route>
                   <Route path='/places' component={Sites}></Route>

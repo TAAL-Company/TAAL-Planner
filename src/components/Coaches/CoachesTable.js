@@ -161,44 +161,95 @@ export default function CoachesTable() {
   return (
     <CacheProvider value={cache}>
       <ThemeProvider theme={theme}>
-        <div dir={t('Direction')} style={{ textAlign: '-webkit-center' }}>
-          <Button
+        <div dir={t('Direction')} style={{ minHeight: '100vh', background: '#f5f6fa', padding: '32px 0' }}>
+          <div
+            className="headline"
             style={{
-              marginTop: '14px',
-              marginBottom: '14px',
+              fontSize: '2rem',
+              fontWeight: 'bold',
+              margin: '20px 0 8px 0',
+              textAlign: 'center',
+              letterSpacing: '0.5px',
             }}
-            variant="outlined"
-            onClick={handleClickOpenDialog}
           >
-            {t('CoachPage.ADDANewCoach')}
-          </Button>
-          <Box style={{ height: 600, width: '100%' }}>
-            <DataGrid
-              style={{ direction: t('Direction') }}
-              rows={getRowsWithDetails()}
-              columns={columns}
-              pageSize={12}
-              autoHeight={true}
-              rowsPerPageOptions={[12]}
-              loading={loading}
-              components={{
-                Toolbar: Toolbar,
-              }}
-            />
-            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-              <MenuItem onClick={handleClickOpenEditDialog}>{t('CoachPage.Edit')}</MenuItem>
-              <MenuItem onClick={handleDeleteCoach}>{t('CoachPage.Delete')}</MenuItem>
-            </Menu>
+            {t('CoachPage.Coaches')}
+          </div>
+          <div
+            style={{
+              width: '80%',
+              maxWidth: '1200px',
+              margin: '0 auto 24px auto',
+              borderBottom: '2px solid #e0e0e0',
+            }}
+          />
+          <div
+            className="table"
+            style={{
+              background: '#fff',
+              borderRadius: '12px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              padding: '32px 20px 24px 20px',
+              maxWidth: '1200px',
+              margin: '0 auto',
+              minHeight: '700px',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '18px' }}>
+              <Button
+                variant="outlined"
+                onClick={handleClickOpenDialog}
+                sx={{
+                  fontWeight: 'bold',
+                  borderRadius: '8px',
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                }}
+              >
+                {t('CoachPage.ADDANewCoach')}
+              </Button>
+            </div>
+            <div style={{ width: '100%' }}>
+              <DataGrid
+                style={{ direction: t('Direction') }}
+                rows={getRowsWithDetails()}
+                columns={columns}
+                pageSize={12}
+                rowsPerPageOptions={[12, 24, 50]}
+                autoHeight
+                loading={loading}
+                components={{
+                  Toolbar: Toolbar,
+                }}
+                sx={{
+                  background: '#fafbfc',
+                  borderRadius: 2,
+                  '& .MuiDataGrid-columnHeaders': {
+                    backgroundColor: 'rgb(0, 112, 166)',
+                    borderBottom: '1px solid rgb(224, 224, 224)',
+                    fontWeight: 'bold',
+                    fontSize: '1.1rem',
+                    color: '#fff',
+                  },
+                  '& .MuiDataGrid-cell': {
+                    fontSize: '1rem',
+                  },
+                }}
+              />
+              <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
+                <MenuItem onClick={handleClickOpenEditDialog}>{t('CoachPage.Edit')}</MenuItem>
+                <MenuItem onClick={handleDeleteCoach}>{t('CoachPage.Delete')}</MenuItem>
+              </Menu>
 
-            <CoachForm
-              open={openDialog}
-              handleCloseDialog={handleCloseDialog}
-              title={title}
-              initialValues={newCoach}
-              setCoaches={setCoaches}
-              CoachAction="add"
-            />
-          </Box>
+              <CoachForm
+                open={openDialog}
+                handleCloseDialog={handleCloseDialog}
+                title={title}
+                initialValues={newCoach}
+                setCoaches={setCoaches}
+                CoachAction="add"
+              />
+            </div>
+          </div>
         </div>
       </ThemeProvider>
     </CacheProvider>

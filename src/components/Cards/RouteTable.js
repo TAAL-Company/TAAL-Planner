@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, Menu, MenuItem, Toolbar } from '@mui/material';
+import { Button, Menu, MenuItem } from '@mui/material';
 import { useNotification } from '../Notification/NotificationProvider';
 import { useTranslation } from 'react-i18next';
 import { getingData_Routes, deleteRoute, getingData_Tasks, getingData_Places } from '../../api/api';
@@ -13,7 +13,11 @@ import rtlPlugin from 'stylis-plugin-rtl';
 import Columns from './Columns';
 import Rows from './Rows';
 import PopupTable from '../placesCards/popuptable';
-
+import { GridActionsCellItem } from '@mui/x-data-grid';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import "./style.css";
+import Toolbar from '../Student/Toolbar';
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -112,9 +116,9 @@ export default function RouteTable() {
           ...route,
           tasks: Array.isArray(route.tasks)
             ? route.tasks.map(t => ({
-                ...t,
-                ...tasksMap[t.taskId], // Merge task details by taskId
-              }))
+              ...t,
+              ...tasksMap[t.taskId], // Merge task details by taskId
+            }))
             : [],
         }));
 
@@ -189,59 +193,116 @@ export default function RouteTable() {
   const { columns, taskColumns, studentColumns } = columnsObj;
 
   const existingTheme = useTheme();
-  const theme = createTheme({
-    direction: t('Direction'),
-  });
 
+  const theme = React.useMemo(() =>
+    createTheme({}, t('localeText', { returnObjects: true }), existingTheme, { direction: t('Direction'), }),
+    [existingTheme],
+  );
+
+  // Determine the cache to use based on the direction
   const cache = t('Direction') === 'rtl' ? cacheRtl : cacheLtr;
 
   return (
     <CacheProvider value={cache}>
       <ThemeProvider theme={theme}>
-        <div dir={t('Direction')} style={{ textAlign: '-webkit-center' }}>
-          <Button
-            style={{ marginTop: '14px', marginBottom: '14px' }}
-            variant="outlined"
-            onClick={handleClickOpenDialog}
+        <div dir={t('Direction')} style={{ minHeight: '50vh', background: '#f5f6fa', padding: '32px 0' }}>
+          <div
+            className="headline"
+            style={{
+              fontSize: '2rem',
+              fontWeight: 'bold',
+              margin: '20px 0 8px 0',
+              textAlign: 'center',
+              letterSpacing: '0.5px',
+            }}
           >
-            {t('RoutePage.ADDANewRoute')}
-          </Button>
-          <div style={{ height: 600, width: '100%' }}>
-            <DataGrid
-              rows={getRowsWithDetails()}
-              columns={columns}
-              pageSize={12}
-              autoHeight
-              loading={loading}
-              components={{
-                Toolbar: Toolbar,
-              }}
-            />
-            <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-              {/* <MenuItem onClick={handleClickOpenEditDialog}>{t('RoutePage.Edit')}</MenuItem> */}
-              <MenuItem onClick={handleDeleteRoute}>{t('RoutePage.Delete')}</MenuItem>
-            </Menu>
+            {t('RoutePage.Routes')}
+          </div>
+          <div
+            style={{
+              width: '80%',
+              maxWidth: '1200px',
+              margin: '0 auto 24px auto',
+              borderBottom: '2px solid #e0e0e0',
+            }}
+          />
+          <div
+            className="table"
+            style={{
+              background: '#fff',
+              borderRadius: '12px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+              padding: '32px 20px 24px 20px',
+              maxWidth: '1200px',
+              margin: '0 auto',
+              minHeight: '700px',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '18px' }}>
+              <Button
+                variant="outlined"
+                onClick={handleClickOpenDialog}
+                sx={{
+                  fontWeight: 'bold',
+                  borderRadius: '8px',
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                }}
+              >
+                {t('RoutePage.ADDANewRoute')}
+              </Button>
+            </div>
+            <div style={{ width: '100%', minHeight: 100 }}>
+              <DataGrid
+                rows={getRowsWithDetails()}
+                columns={columns}
+                pageSize={7}
+                rowsPerPageOptions={[7, 14, 20]}
+                autoHeight
+                loading={loading}
+                sx={{
+                  background: '#fafbfc',
+                  borderRadius: 2,
+                  '& .MuiDataGrid-columnHeaders': {
+                    backgroundColor: 'rgb(0, 112, 166)',
+                    borderBottom: '1px solid rgb(224, 224, 224)',
+                    fontWeight: 'bold',
+                    fontSize: '1.1rem',
+                    color: '#fff',
+                  },
+                  '& .MuiDataGrid-cell': {
+                    fontSize: '1rem',
+                  },
+                }}
+                components={{
+                  Toolbar: Toolbar,
+                }}
+              />
+              <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
+                <MenuItem onClick={handleDeleteRoute}>{t('RoutePage.Delete')}</MenuItem>
+              </Menu>
 
-            <PopupTable
-              open={popupOpen}
-              onClose={() => setPopupOpen(false)}
-              section={popupSection}
-              row={popupRow}
-              columnsMap={{
-                taskColumns,
-                studentColumns,
-              }}
-            />
+              <PopupTable
+                open={popupOpen}
+                onClose={() => setPopupOpen(false)}
+                section={popupSection}
+                row={popupRow}
+                columnsMap={{
+                  taskColumns,
+                  studentColumns,
+                }}
+              />
 
-            <RouteForm
-              open={openDialog}
-              handleCloseDialog={handleCloseDialog}
-              title={title}
-              initialValues={selectedRoute}
-              setRoutes={setRoutes}
-              RouteAction={routeAction}
-              sites={sites}
-            />
+              <RouteForm
+                open={openDialog}
+                handleCloseDialog={handleCloseDialog}
+                title={title}
+                initialValues={selectedRoute}
+                setRoutes={setRoutes}
+                RouteAction={routeAction}
+                sites={sites}
+              />
+            </div>
           </div>
         </div>
       </ThemeProvider>

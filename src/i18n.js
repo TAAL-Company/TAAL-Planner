@@ -74,6 +74,7 @@ const resources = {
         "Edit": "Edit",
         "Delete": "Delete",
         "Duplicate": "Duplicate",
+        "Employees": "Employees",
       },
       CoachPage: {
         "Avatar": "Avatar",
@@ -86,6 +87,7 @@ const resources = {
         "EditCoachInfo": "Edit Coach Info",
         "Edit": "Edit",
         "Delete": "Delete",
+        "Coaches": "Coaches",
       },
       SitePage: {
         "Avatar": "Avatar",
@@ -104,6 +106,7 @@ const resources = {
         "Stations": "Stations",
         "Users": "Users",
         "Editors": "Editors",
+        "Sites": "Sites",
       },
       Forms: {
         "Name": "Name",
@@ -187,6 +190,7 @@ const resources = {
         "Edit": "Edit",
         "Delete": "Delete",
         "sites": "Sites",
+        "Routes": "Routes",
       }
     },
   },
@@ -245,6 +249,7 @@ const resources = {
         "Edit": "ערוך",
         "Delete": "מחק",
         "Duplicate": "העתק",
+        "Employees" : "עובדים",
       },
       CoachPage: {
         "Avatar": "תמונה",
@@ -257,6 +262,7 @@ const resources = {
         "EditCoachInfo": "ערוך מאמן",
         "Edit": "ערוך",
         "Delete": "מחק",
+        "Coaches": "מאמנים",
       },
       SitePage: {
         "Avatar": "תמונה",
@@ -275,6 +281,7 @@ const resources = {
         "Stations": "תחנות",
         "Users": "משתמשים",
         "Editors": "עורכים",
+        "Sites": "אתרים",
       },
       Forms: {
         "Name": "שם",
@@ -358,6 +365,7 @@ const resources = {
         "Edit": "ערוך",
         "Delete": "מחק",
         "sites": "אתרים",
+        "Routes": "מסלולים",
       }
     }
   },
@@ -416,6 +424,7 @@ const resources = {
         "Edit": "تعديل",
         "Delete": "حذف",
         "Duplicate": "تكرار",
+        "Employees": "الموظفون",
       },
       CoachPage: {
         "Avatar": "الصورة الرمزية",
@@ -428,6 +437,7 @@ const resources = {
         "EditCoachInfo": "تعديل مدرب",
         "Edit": "تعديل",
         "Delete": "حذف",
+        "Coaches": "المدربون",
       },
       SitePage: {
         "Avatar": "الصورة",
@@ -446,6 +456,7 @@ const resources = {
         "Stations": "المحطات",
         "Users": "المستخدمون",
         "Editors": "المحررون",
+        "Sites": "المواقع",
       },
       Forms: {
         "Name": "الاسم",
@@ -529,6 +540,7 @@ const resources = {
         "Edit": "تعديل",
         "Delete": "حذف",
         "sites": "المواقع",
+        "Routes": "المسارات",
       }
     }
   },
@@ -587,6 +599,7 @@ const resources = {
         "Edit": "Редактировать",
         "Delete": "Удалить",
         "Duplicate": "Дублировать",
+        "Employees": "Сотрудники",
       },
       CoachPage: {
         "Avatar": "Аватар",
@@ -599,6 +612,7 @@ const resources = {
         "EditCoachInfo": "Редактировать тренера",
         "Edit": "Редактировать",
         "Delete": "Удалить",
+        "Coaches": "Тренеры",
       },
       SitePage: {
         "Avatar": "Аватар",
@@ -617,6 +631,7 @@ const resources = {
         "Stations": "Станции",
         "Users": "Пользователи",
         "Editors": "Редакторы",
+        "Sites": "Сайты",
       },
       Forms: {
         "Name": "Имя",
@@ -700,6 +715,7 @@ const resources = {
         "Edit": "Редактировать",
         "Delete": "Удалить",
         "sites": "Сайты",
+        "Routes": "Маршруты",
       }
     }
   }

@@ -48,6 +48,11 @@ const PopupTable = ({
             cols = columnsMap.editorColumns;
             title = t('SitePage.Editors');
             break;
+        case 'sites':
+            rows = row.sites || [];
+            cols = columnsMap.siteColumns;
+            title = t('SitePage.Sites');
+            break;
         default:
             break;
     }

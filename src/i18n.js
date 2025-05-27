@@ -52,7 +52,14 @@ const resources = {
         "Error_add_route": "Error adding route",
         "Success_add_route": "Route added successfully",
         "Error_edit_route": "Error editing route",
-        "Success_edit_route": "Route updated successfully"
+        "Success_edit_route": "Route updated successfully",
+
+        "Success_add_editor": "Editor added successfully",
+        "Error_add_editor": "Error adding editor",
+        "Success_edit_editor": "Editor updated successfully",
+        "Error_edit_editor": "Error updating editor",
+        "Success_delete_editor": "Editor deleted successfully",
+        "Error_delete_editor": "Error deleting editor"
       },
       UserPage: {
         "Avatar": "Avatar",
@@ -108,6 +115,13 @@ const resources = {
         "Editors": "Editors",
         "Sites": "Sites",
       },
+      EditorPage: {
+        "ADDANewEditor": "Add a New Editor",
+        "EditCoachInfo": "Edit Editor",
+        "Edit": "Edit",
+        "Delete": "Delete",
+        "Editors": "Editors"
+      },
       Forms: {
         "Name": "Name",
         "Username": "Username",
@@ -124,6 +138,7 @@ const resources = {
         "SelectSitesText": "Please select sites from the dropdown menu",
         "Description": "Description",
         "NameInEnglish": "Name in English",
+        "DefaultDashboard": "Default Dashboard" // <-- Add this line
       },
       FormsErrors: {
         "NameRequired": "Name is required",
@@ -227,7 +242,14 @@ const resources = {
         "Error_add_route": "שגיאה בהוספת מסלול",
         "Success_add_route": "המסלול נוסף בהצלחה",
         "Error_edit_route": "שגיאה בעריכת מסלול",
-        "Success_edit_route": "המסלול עודכן בהצלחה"
+        "Success_edit_route": "המסלול עודכן בהצלחה",
+
+        "Success_add_editor": "העורך נוסף בהצלחה",
+        "Error_add_editor": "שגיאה בהוספת עורך",
+        "Success_edit_editor": "העורך עודכן בהצלחה",
+        "Error_edit_editor": "שגיאה בעדכון עורך",
+        "Success_delete_editor": "העורך נמחק בהצלחה",
+        "Error_delete_editor": "שגיאה במחיקת עורך"
       },
       UserPage: {
         "Avatar": "תמונה",
@@ -249,7 +271,7 @@ const resources = {
         "Edit": "ערוך",
         "Delete": "מחק",
         "Duplicate": "העתק",
-        "Employees" : "עובדים",
+        "Employees": "עובדים",
       },
       CoachPage: {
         "Avatar": "תמונה",
@@ -283,6 +305,13 @@ const resources = {
         "Editors": "עורכים",
         "Sites": "אתרים",
       },
+      EditorPage: {
+        "ADDANewEditor": "הוסף עורך חדש",
+        "EditCoachInfo": "ערוך עורך",
+        "Edit": "ערוך",
+        "Delete": "מחק",
+        "Editors": "עורכים"
+      },
       Forms: {
         "Name": "שם",
         "Username": "שם משתמש",
@@ -299,6 +328,7 @@ const resources = {
         "SelectSitesText": "אנא בחר אתרים מהתפריט הנפתח",
         "Description": "תיאור",
         "NameInEnglish": "שם באנגלית",
+        "DefaultDashboard": "דשבורד ברירת מחדל" // <-- Add this line
       },
       FormsErrors: {
         "NameRequired": "שם חובה",
@@ -402,7 +432,14 @@ const resources = {
         "Error_add_route": "خطأ في إضافة المسار",
         "Success_add_route": "تمت إضافة المسار بنجاح",
         "Error_edit_route": "خطأ في تعديل المسار",
-        "Success_edit_route": "تم تحديث المسار بنجاح"
+        "Success_edit_route": "تم تحديث المسار بنجاح",
+
+        "Success_add_editor": "تمت إضافة المحرر بنجاح",
+        "Error_add_editor": "حدث خطأ أثناء إضافة المحرر",
+        "Success_edit_editor": "تم تحديث المحرر بنجاح",
+        "Error_edit_editor": "حدث خطأ أثناء تحديث المحرر",
+        "Success_delete_editor": "تم حذف المحرر بنجاح",
+        "Error_delete_editor": "حدث خطأ أثناء حذف المحرر"
       },
       UserPage: {
         "Avatar": "الصورة الرمزية",
@@ -458,6 +495,13 @@ const resources = {
         "Editors": "المحررون",
         "Sites": "المواقع",
       },
+      EditorPage: {
+        "ADDANewEditor": "إضافة محرر جديد",
+        "EditCoachInfo": "تعديل المحرر",
+        "Edit": "تعديل",
+        "Delete": "حذف",
+        "Editors": "المحررون"
+      },
       Forms: {
         "Name": "الاسم",
         "Username": "اسم المستخدم",
@@ -474,6 +518,7 @@ const resources = {
         "SelectSitesText": "يرجى اختيار المواقع من القائمة المنسدلة",
         "Description": "الوصف",
         "NameInEnglish": "الاسم بالإنجليزية",
+        "DefaultDashboard": "لوحة التحكم الافتراضية" // <-- Add this line
       },
       FormsErrors: {
         "NameRequired": "الاسم مطلوب",
@@ -577,7 +622,14 @@ const resources = {
         "Error_add_route": "Ошибка добавления маршрута",
         "Success_add_route": "Маршрут успешно добавлен",
         "Error_edit_route": "Ошибка редактирования маршрута",
-        "Success_edit_route": "Маршрут успешно обновлён"
+        "Success_edit_route": "Маршрут успешно обновлён",
+
+        "Success_add_editor": "Редактор успешно добавлен",
+        "Error_add_editor": "Ошибка при добавлении редактора",
+        "Success_edit_editor": "Редактор успешно обновлен",
+        "Error_edit_editor": "Ошибка при обновлении редактора",
+        "Success_delete_editor": "Редактор успешно удален",
+        "Error_delete_editor": "Ошибка при удалении редактора"
       },
       UserPage: {
         "Avatar": "Аватар",
@@ -633,6 +685,13 @@ const resources = {
         "Editors": "Редакторы",
         "Sites": "Сайты",
       },
+      EditorPage: {
+        "ADDANewEditor": "Добавить нового редактора",
+        "EditCoachInfo": "Редактировать редактора",
+        "Edit": "Редактировать",
+        "Delete": "Удалить",
+        "Editors": "Редакторы"
+      },
       Forms: {
         "Name": "Имя",
         "Username": "Имя пользователя",
@@ -649,6 +708,7 @@ const resources = {
         "SelectSitesText": "Пожалуйста, выберите сайты из выпадающего меню",
         "Description": "Описание",
         "NameInEnglish": "Название на английском",
+        "DefaultDashboard": "Дашборд по умолчанию" // <-- Add this line
       },
       FormsErrors: {
         "NameRequired": "Имя обязательно",

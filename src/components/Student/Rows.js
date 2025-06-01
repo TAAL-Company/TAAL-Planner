@@ -5,7 +5,7 @@ const Rows = ({ users, expandedRows }) => {
   const { t } = useTranslation();
 
   // Function to generate rows with routes
-  const getRowsWithRoutes = () => {
+  const getRowsWithDetails = () => {
     const rows = [];
     users.forEach((user) => {
       rows.push(user); // Push the main user row
@@ -38,7 +38,7 @@ const Rows = ({ users, expandedRows }) => {
     return rows;
   };
 
-  return { getRowsWithRoutes };
+  return { getRowsWithDetails };
 };
 
 export default Rows;

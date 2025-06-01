@@ -77,36 +77,59 @@ function Sheettodata(props) {
         console.log('Media in workbook:', workbook.model.media);
 
         // Step 3: Extract images and map to row positions
-        const imagesInSheet = [];
-        if (workbook.model.media) {
-            workbook.model.media.forEach((media, index) => {
-                if (media.type === 'image') {
-                    const base64 = arrayBufferToBase64(media.buffer);
-                    const dataUrl = `data:image/${media.extension};base64,${base64}`;
-                    const filename = `${props.selectedSite.nameInEnglish}_image_${index}.${media.extension}`;
-                    const file = dataURLtoFile(dataUrl, filename);
+        let imagesInSheet = [];
 
-                    imagesInSheet.push({
-                        index,
-                        file,
-                    });
-                }
+        const getMappedImages = worksheet.getImages?.() || [];
+        const mediaImages = workbook.model.media?.filter(m => m.type === 'image') || [];
+
+        if (getMappedImages.length > 0) {
+            // Use mapped image ranges (reliable in Google Sheets exports)
+            imagesInSheet = getMappedImages.map((imgObj, idx) => {
+                const { imageId, range } = imgObj;
+                const media = mediaImages.find(m => m.index === imageId || m.imageId === imageId);
+                if (!media) return null;
+
+                const base64 = arrayBufferToBase64(media.buffer);
+                const dataUrl = `data:image/${media.extension};base64,${base64}`;
+                const filename = `${props.selectedSite.nameInEnglish}_image_${idx}.${media.extension}`;
+                const file = dataURLtoFile(dataUrl, filename);
+
+                return {
+                    row: range.tl.nativeRow + 1, // mapped to actual row
+                    file,
+                };
+            }).filter(Boolean);
+        } else {
+            // Fallback: map by order to rows (index-based)
+            console.warn('Fallback: Mapping images by order due to lack of position data');
+            imagesInSheet = mediaImages.map((media, idx) => {
+                const base64 = arrayBufferToBase64(media.buffer);
+                const dataUrl = `data:image/${media.extension};base64,${base64}`;
+                const filename = `${props.selectedSite.nameInEnglish}_image_${idx}.${media.extension}`;
+                const file = dataURLtoFile(dataUrl, filename);
+
+                return {
+                    row: idx + 2, // assume header is row 1, map image 0 to row 2
+                    file,
+                };
             });
         }
 
         setImages(imagesInSheet);
+        console.log('imagesInSheet:', imagesInSheet);
 
         // Step 4: Attach images to the correct rows
         const jsonWithImages = json.map((row, index) => {
-            const matchedImage = imagesInSheet.find((img) => img.index === index);
+            const matchedImage = imagesInSheet.find((img) => img.row === index + 2);
             return {
                 ...row,
                 image: matchedImage?.file || null,
-                // file: matchedImage?.dataUrl || null,
             };
         });
 
         setData(jsonWithImages);
+        console.log('jsonWithImages:', jsonWithImages);
+
     };
 
     // Helper function to transform a row into the desired structure
@@ -293,7 +316,66 @@ function Sheettodata(props) {
                         onClick={handleOnSubmit}
                     /> */}
                 </form>
-
+                {data.length > 0 && (
+                    <div style={{ maxHeight: 300, overflow: 'auto', margin: '20px 0' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr>
+                                    {Object.keys(data[0]).map((key) => (
+                                        <th key={key} style={{ border: '1px solid #ccc', padding: 4, background: '#f0f0f0' }}>{key}</th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {data.map((row, idx) => (
+                                    <tr key={idx}>
+                                        {Object.keys(data[0]).map((key) => (
+                                            <td key={key} style={{ border: '1px solid #ccc', padding: 4 }}>
+                                                {key === 'image' && row[key]
+                                                    ? (
+                                                        <img
+                                                            src={URL.createObjectURL(row[key])}
+                                                            alt="preview"
+                                                            style={{ width: 60, height: 60, objectFit: 'contain', borderRadius: 4 }}
+                                                        />
+                                                    )
+                                                    : (row[key] !== null && row[key] !== undefined ? row[key].toString() : '')}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+                {/* Show imagesInSheet table */}
+                {images.length > 0 && (
+                    <div style={{ maxHeight: 200, overflow: 'auto', margin: '20px 0' }}>
+                        <h4>Images In Sheet</h4>
+                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                            <thead>
+                                <tr>
+                                    <th style={{ border: '1px solid #ccc', padding: 4, background: '#f0f0f0' }}>Row</th>
+                                    <th style={{ border: '1px solid #ccc', padding: 4, background: '#f0f0f0' }}>Image</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {images.map((img, idx) => (
+                                    <tr key={idx}>
+                                        <td style={{ border: '1px solid #ccc', padding: 4 }}>{img.row}</td>
+                                        <td style={{ border: '1px solid #ccc', padding: 4 }}>
+                                            <img
+                                                src={URL.createObjectURL(img.file)}
+                                                alt={`img-${idx}`}
+                                                style={{ width: 60, height: 60, objectFit: 'contain', borderRadius: 4 }}
+                                            />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
             <div
                 style={{

@@ -76,6 +76,7 @@ const resources = {
         "Online": "Online",
         "RouteName": "Route Name",
         "RouteOnlyOnce": "Only Once",
+        "Routes": "Routes", // <-- Added
         "ADDANewEmployee": "ADD A New Employee",
         "EditEmployeeInfo": "Edit Employee",
         "Edit": "Edit",
@@ -266,6 +267,7 @@ const resources = {
         "Online": "מחובר",
         "RouteName": "שם רחוב",
         "RouteOnlyOnce": "רק פעם אחת",
+        "Routes": "מסלולים", // <-- Added
         "ADDANewEmployee": "הוסף עובד חדש",
         "EditEmployeeInfo": "ערוך עובד",
         "Edit": "ערוך",
@@ -456,6 +458,7 @@ const resources = {
         "Online": "متصل",
         "RouteName": "اسم الطريق",
         "RouteOnlyOnce": "مرة واحدة فقط",
+        "Routes": "المسارات", // <-- Added
         "ADDANewEmployee": "إضافة موظف جديد",
         "EditEmployeeInfo": "تعديل موظف",
         "Edit": "تعديل",
@@ -646,6 +649,7 @@ const resources = {
         "Online": "В сети",
         "RouteName": "Название маршрута",
         "RouteOnlyOnce": "Только один раз",
+        "Routes": "Маршруты", // <-- Added
         "ADDANewEmployee": "Добавить нового сотрудника",
         "EditEmployeeInfo": "Редактировать информацию сотрудника",
         "Edit": "Редактировать",

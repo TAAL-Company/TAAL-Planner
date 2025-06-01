@@ -16,6 +16,8 @@ import { CacheProvider } from '@emotion/react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Columns from './Columns';
 import Rows from './Rows';
+import { CssBaseline, Paper } from '@mui/material';
+import PopupTable from '../placesCards/popuptable'; // Add this import
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -49,6 +51,10 @@ export default function DataGridDemo() {
   const [openDialog, setOpenDialog] = useState(false);
   const [updateduplicateUser, setupdateduplicateUser] = useState(false);
   const [title, setTitle] = useState('');
+
+  const [popupOpen, setPopupOpen] = useState(false);
+  const [popupRow, setPopupRow] = useState(null);
+  const [popupSection, setPopupSection] = useState('');
 
   const { showNotification } = useNotification();
   const { t } = useTranslation();
@@ -212,12 +218,21 @@ export default function DataGridDemo() {
     }
   };
 
+  const handleSectionExpandToggle = (editorId, section, row) => {
+    setPopupSection(section);
+    setPopupRow(row);
+    setPopupOpen(true);
+  };
+
 
   // Function to get rows with routes
-  const { getRowsWithRoutes } = Rows({ users, expandedRows });
+  const { getRowsWithDetails } = Rows({ users, expandedRows });
 
-  // Define columns and custom columns for the DataGrid
-  const { columns, customColumns } = Columns({ expandedRows, setExpandedRows, handleClickMenu, coaches });
+  const { columns, routeColumns } = Columns({
+    handleClickMenu,
+    coaches,
+    handleSectionExpandToggle,
+  });
 
   const existingTheme = useTheme();
 
@@ -279,33 +294,36 @@ export default function DataGridDemo() {
                 {t('UserPage.ADDANewEmployee')}
               </Button>
             </div>
-            <div style={{ width: '100%' }}>
-              <DataGrid
-                style={{ direction: t('Direction') }}
-                rows={getRowsWithRoutes()}
-                columns={[...columns, ...customColumns]}
-                pageSize={12}
-                rowsPerPageOptions={[12, 24, 50]}
-                autoHeight
-                loading={loading}
-                components={{
-                  Toolbar: Toolbar,
-                }}
-                sx={{
-                  background: '#fafbfc',
-                  borderRadius: 2,
-                  '& .MuiDataGrid-columnHeaders': {
-                    backgroundColor: 'rgb(0, 112, 166)',
-                    borderBottom: '1px solid rgb(224, 224, 224)',
-                    fontWeight: 'bold',
-                    fontSize: '1.1rem',
-                    color: '#fff',
-                  },
-                  '& .MuiDataGrid-cell': {
-                    fontSize: '1rem',
-                  },
-                }}
-              />
+            <CssBaseline />
+            <div style={{ direction: t('Direction'), width: '100%', overflowX: 'auto' }}>
+              <Paper style={{ minWidth: 2000 }}>
+                <DataGrid
+                  style={{ direction: t('Direction') }}
+                  rows={getRowsWithDetails()}
+                  columns={columns}
+                  pageSize={12}
+                  rowsPerPageOptions={[12, 24, 50]}
+                  autoHeight
+                  loading={loading}
+                  components={{
+                    Toolbar: Toolbar,
+                  }}
+                  sx={{
+                    background: '#fafbfc',
+                    borderRadius: 2,
+                    '& .MuiDataGrid-columnHeaders': {
+                      backgroundColor: 'rgb(0, 112, 166)',
+                      borderBottom: '1px solid rgb(224, 224, 224)',
+                      fontWeight: 'bold',
+                      fontSize: '1.1rem',
+                      color: '#fff',
+                    },
+                    '& .MuiDataGrid-cell': {
+                      fontSize: '1rem',
+                    },
+                  }}
+                />
+              </Paper>
               <Menu
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
@@ -327,6 +345,16 @@ export default function DataGridDemo() {
                 UserAction={UserAction}
                 setupdateduplicateUser={setupdateduplicateUser}
                 updateduplicateUser={updateduplicateUser}
+              />
+
+              <PopupTable
+                open={popupOpen}
+                onClose={() => setPopupOpen(false)}
+                section={popupSection}
+                row={popupRow}
+                columnsMap={{
+                  routeColumns,
+                }}
               />
             </div>
           </div>

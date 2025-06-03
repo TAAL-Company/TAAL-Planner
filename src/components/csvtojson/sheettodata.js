@@ -7,7 +7,9 @@ import { RiAsterisk } from 'react-icons/ri';
 function Sheettodata(props) {
     const [data, setData] = useState([]);
     const [images, setImages] = useState([]);
-    // const [file, setFile] = useState(null);
+    const [draggedImage, setDraggedImage] = useState(null);
+    const [loadingData, setLoadingData] = useState(false); // NEW
+
     const headerMapping = {
         Task: ["Task", "משימה"],
         Station: ["Station", "תחנה"],
@@ -24,7 +26,7 @@ function Sheettodata(props) {
 
     const handleOnChange = (e) => {
         e.preventDefault();
-        // setFile(e);
+        setLoadingData(true); // Start loading
         csvFileToArray(e);
     };
 
@@ -75,6 +77,7 @@ function Sheettodata(props) {
         });
 
         console.log('Media in workbook:', workbook.model.media);
+        console.log('Media in workbook:', workbook);
 
         // Step 3: Extract images and map to row positions
         let imagesInSheet = [];
@@ -128,8 +131,8 @@ function Sheettodata(props) {
         });
 
         setData(jsonWithImages);
+        setLoadingData(false); // Stop loading
         console.log('jsonWithImages:', jsonWithImages);
-
     };
 
     // Helper function to transform a row into the desired structure
@@ -273,108 +276,452 @@ function Sheettodata(props) {
             // props.setSelectedRoute(-1);
             props.handleCloseopenUpload(); // Close the modal
             props.handleDeselectRoute(); // Call handleDeselectRoute after processing
-            // window.location.reload(); // Refresh the page
+            window.location.reload(); // Refresh the page
         }
     };
 
+    // Drag handlers
+    const handleDragStart = (img) => {
+        setDraggedImage(img);
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    };
+
+    const handleDrop = (rowIdx) => {
+        if (!draggedImage) return;
+        setData((prevData) => {
+            const newData = [...prevData];
+            newData[rowIdx] = { ...newData[rowIdx], image: draggedImage.file };
+            return newData;
+        });
+        setDraggedImage(null);
+    };
+
+    // Add this function inside your component
+    const handleRemoveImage = (rowIdx) => {
+        setData((prevData) => {
+            const newData = [...prevData];
+            newData[rowIdx] = { ...newData[rowIdx], image: null };
+            return newData;
+        });
+    };
+
+    const handleEditCell = (rowIdx, key, value) => {
+        setData((prevData) => {
+            const newData = [...prevData];
+            newData[rowIdx] = { ...newData[rowIdx], [key]: value };
+            return newData;
+        });
+    };
+
+    const handleUploadImage = (rowIdx, file) => {
+        setData((prevData) => {
+            const newData = [...prevData];
+            newData[rowIdx] = { ...newData[rowIdx], image: file };
+            return newData;
+        });
+    };
+
     return (
-        <div className='modalContainerTasks'
+        <div
+            className=""
             style={{
+                width: '100vw',
+                height: '100vh',
+                minHeight: '100vh',
+                minWidth: '100vw',
+                boxSizing: 'border-box',
+                display: 'flex',
+                flexDirection: 'column',
                 textAlign: props.language === 'English' ? 'right' : 'left',
                 direction: props.language !== 'English' ? 'rtl' : 'ltr',
+                background: '#f8f8f8',
+                overflow: 'auto',
             }}
         >
-            <div className='headerNewTask' style={{ backgroundColor: 'green' }}>
+            <div className='headerNewTask' style={{ backgroundColor: 'green', flex: '0 0 auto' }}>
                 <div className='NewTaskTitle'>
-                    {props.language !== 'English' ? `Selected Site : ${props.selectedSite.name}` : `${props.selectedSite.name} : אתר נבחר`}
+                    {props.language !== 'English'
+                        ? `Selected Site : ${props.selectedSite.name}`
+                        : `${props.selectedSite.name} : אתר נבחר`}
                 </div>
             </div>
-            <div className={`bodyNewTask ${props.requestForEditing === 'details' ? 'disabledModal' : ''}`} >
-                <form id='IPU' className='w3-container'>
-                    <h6>
+            <div
+                className={`bodyNewTask ${props.requestForEditing === 'details' ? 'disabledModal' : ''}`}
+                style={{
+                    flex: '1 1 auto',
+                    overflow: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: 24,
+                }}
+            >
+                <form id='IPU' className='w3-container' style={{ marginBottom: 24 }}>
+                    <h6 style={{
+                        fontWeight: 600,
+                        fontSize: 18,
+                        marginBottom: 8,
+                        color: '#256fa1',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        direction: props.language === 'English' ? 'rtl' : 'ltr',
+                        textAlign: props.language === 'English' ? 'right' : 'left'
+                    }}>
+                        <span role="img" aria-label="upload" style={{ fontSize: 22 }}>📤</span>
                         {props.language !== 'English' ? 'Upload a xlsx file' : ' העלה קובץ xlsx '}
                         <RiAsterisk style={{ color: 'red' }} />
                     </h6>
-                    <p>
+                    <div
+                        style={{
+                            border: '2px dashed #256fa1',
+                            borderRadius: 8,
+                            background: '#f8faff',
+                            padding: 10,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 16,
+                            cursor: 'pointer',
+                            transition: 'border 0.2s',
+                            direction: props.language === 'English' ? 'rtl' : 'ltr',
+                        }}
+                        onClick={() => document.getElementById('xlsx-upload-input').click()}
+                        tabIndex={0}
+                        onKeyPress={e => { if (e.key === 'Enter') document.getElementById('xlsx-upload-input').click(); }}
+                        title={props.language !== 'English'
+                            ? 'Click or drag a file here'
+                            : 'לחץ או גרור קובץ לכאן'}
+                    >
+                        <span role="img" aria-label="drag" style={{ fontSize: 32 }}>📂</span>
+                        <span style={{
+                            fontSize: 16,
+                            color: '#256fa1',
+                            fontWeight: 500
+                        }}>
+                            {props.language !== 'English'
+                                ? 'Click or drag your Excel file here'
+                                : 'לחץ או גרור את קובץ האקסל לכאן'}
+                        </span>
                         <input
+                            id="xlsx-upload-input"
                             type="file"
                             accept=".xlsx, .xls"
                             onChange={handleOnChange}
                             required={true}
-                            style={{
-                                width: '100%',
-                                height: '38px',
-                                paddingRight: '20px',
-                                direction: props.language === 'English' ? 'rtl' : 'ltr',
-                            }}
+                            style={{ display: 'none' }}
                         />
-                    </p>
-                    {/* <input
-                        type='submit'
-                        className='cancelTaskButton'
-                        value={props.language !== 'English' ? 'load csv' : 'טען קובץ'}
-                        onClick={handleOnSubmit}
-                    /> */}
+                    </div>
+                    <div style={{
+                        fontSize: 13,
+                        color: '#888',
+                        marginTop: 8,
+                        direction: props.language === 'English' ? 'rtl' : 'ltr',
+                        textAlign: props.language === 'English' ? 'right' : 'left'
+                    }}>
+                        {props.language !== 'English'
+                            ? 'Supported formats: .xlsx, .xls'
+                            : 'פורמטים נתמכים: .xlsx, .xls'}
+                    </div>
                 </form>
-                {data.length > 0 && (
-                    <div style={{ maxHeight: 300, overflow: 'auto', margin: '20px 0' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                            <thead>
-                                <tr>
-                                    {Object.keys(data[0]).map((key) => (
-                                        <th key={key} style={{ border: '1px solid #ccc', padding: 4, background: '#f0f0f0' }}>{key}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {data.map((row, idx) => (
-                                    <tr key={idx}>
-                                        {Object.keys(data[0]).map((key) => (
-                                            <td key={key} style={{ border: '1px solid #ccc', padding: 4 }}>
-                                                {key === 'image' && row[key]
-                                                    ? (
-                                                        <img
-                                                            src={URL.createObjectURL(row[key])}
-                                                            alt="preview"
-                                                            style={{ width: 60, height: 60, objectFit: 'contain', borderRadius: 4 }}
-                                                        />
-                                                    )
-                                                    : (row[key] !== null && row[key] !== undefined ? row[key].toString() : '')}
-                                            </td>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                {loadingData && (
+                    <div style={{ textAlign: "center", padding: "40px" }}>
+                        <span style={{ fontSize: 18, color: "#555" }}>{props.language !== 'English' ? 'Loading...' : '...טוען'}</span>
+                        <div className="loader" style={{
+                            margin: "20px auto",
+                            border: "6px solid #f3f3f3",
+                            borderTop: "6px solid #3498db",
+                            borderRadius: "50%",
+                            width: 40,
+                            height: 40,
+                            animation: "spin 1s linear infinite"
+                        }} />
+                        <style>
+                            {`@keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }`}
+                        </style>
                     </div>
                 )}
-                {/* Show imagesInSheet table */}
-                {images.length > 0 && (
-                    <div style={{ maxHeight: 200, overflow: 'auto', margin: '20px 0' }}>
-                        <h4>Images In Sheet</h4>
-                        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                            <thead>
-                                <tr>
-                                    <th style={{ border: '1px solid #ccc', padding: 4, background: '#f0f0f0' }}>Row</th>
-                                    <th style={{ border: '1px solid #ccc', padding: 4, background: '#f0f0f0' }}>Image</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {images.map((img, idx) => (
-                                    <tr key={idx}>
-                                        <td style={{ border: '1px solid #ccc', padding: 4 }}>{img.row}</td>
-                                        <td style={{ border: '1px solid #ccc', padding: 4 }}>
-                                            <img
-                                                src={URL.createObjectURL(img.file)}
-                                                alt={`img-${idx}`}
-                                                style={{ width: 60, height: 60, objectFit: 'contain', borderRadius: 4 }}
-                                            />
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                {!loadingData && data.length > 0 && (
+                    <>
+                        <div
+                            style={{
+                                margin: '0 0 12px 0',
+                                padding: '12px',
+                                background: '#e6f7ff',
+                                border: '1.5px dashed #256fa1',
+                                borderRadius: 8,
+                                color: '#256fa1',
+                                fontWeight: 500,
+                                fontSize: 16,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 12,
+                                direction: props.language === 'English' ? 'rtl' : 'ltr',
+                                textAlign: props.language === 'English' ? 'right' : 'left'
+                            }}
+                        >
+                            <span role="img" aria-label="drag">🖱️</span>
+                            {props.language === 'English'
+                                ? <>
+                                    גרור תמונה מתוך <b>תמונות בגיליון</b> ושחרר אותה בתא <b>תמונה</b> של השורה המתאימה למטה.
+                                  </>
+                                : <>
+                                    Drag an image from <b>Images In Sheet</b> and drop it into the <b>Image</b> cell of the relevant row below.
+                                  </>
+                            }
+                        </div>
+                        <div
+                            style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                gap: 24,
+                                width: '100%',
+                                height: '100%',
+                                margin: '20px 0',
+                                direction: props.language === 'English' ? 'rtl' : 'ltr'
+                            }}
+                        >
+                            {/* Data Table */}
+                            <div style={{ flex: 2, overflow: 'auto', minWidth: 0 }}>
+                                <table
+                                    style={{
+                                        width: '100%',
+                                        borderCollapse: 'collapse',
+                                        minWidth: 800,
+                                        direction: props.language === 'English' ? 'rtl' : 'ltr',
+                                        textAlign: props.language === 'English' ? 'right' : 'left'
+                                    }}
+                                >
+                                    <thead>
+                                        <tr>
+                                            {Object.keys(data[0])
+                                                .filter(key => key !== "Image" && key !== "Site")
+                                                .map((key) => (
+                                                    <th
+                                                        key={key}
+                                                        style={{
+                                                            border: '1px solid #ccc',
+                                                            padding: 8,
+                                                            background: '#f0f0f0',
+                                                            fontWeight: 600,
+                                                            direction: props.language === 'English' ? 'rtl' : 'ltr',
+                                                            textAlign: props.language === 'English' ? 'right' : 'left'
+                                                        }}
+                                                    >
+                                                        {key === 'image'
+                                                            ? (props.language === 'English' ? 'תמונה' : 'Image')
+                                                            : (props.language === 'English'
+                                                                ? (headerMapping[key]?.[1] || key)
+                                                                : key)
+                                                        }
+                                                    </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {data.map((row, idx) => (
+                                            <tr key={idx} style={{ transition: 'background 0.2s', cursor: 'pointer' }}>
+                                                {Object.keys(data[0])
+                                                    .filter(key => key !== "Image" && key !== "Site")
+                                                    .map((key) => (
+                                                        <td
+                                                            key={key}
+                                                            style={{
+                                                                border: '1px solid #ccc',
+                                                                padding: 8,
+                                                                position: 'relative',
+                                                                verticalAlign: 'middle',
+                                                                background:
+                                                                    key === 'image' && draggedImage
+                                                                        ? '#e6f7ff'
+                                                                        : undefined,
+                                                                outline:
+                                                                    key === 'image' && draggedImage
+                                                                        ? '2px dashed #256fa1'
+                                                                        : undefined,
+                                                                transition: 'background 0.2s, outline 0.2s',
+                                                                direction: props.language === 'English' ? 'rtl' : 'ltr',
+                                                                textAlign: props.language === 'English' ? 'right' : 'left'
+                                                            }}
+                                                            {...(key === 'image'
+                                                                ? {
+                                                                    onDragOver: handleDragOver,
+                                                                    onDrop: () => handleDrop(idx),
+                                                                }
+                                                                : {})}
+                                                        >
+                                                            {key === 'image' ? (
+                                                                <div style={{
+                                                                    position: 'relative',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    gap: 8,
+                                                                    minHeight: 40,
+                                                                    direction: props.language === 'English' ? 'rtl' : 'ltr'
+                                                                }}>
+                                                                    {row[key] && (
+                                                                        <>
+                                                                            <img
+                                                                                src={URL.createObjectURL(row[key])}
+                                                                                alt="preview"
+                                                                                style={{
+                                                                                    width: 150,
+                                                                                    height: 150,
+                                                                                    objectFit: 'contain',
+                                                                                    borderRadius: 4,
+                                                                                    border: '1px solid #ddd'
+                                                                                }}
+                                                                            />
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => handleRemoveImage(idx)}
+                                                                                style={{
+                                                                                    position: 'absolute',
+                                                                                    top: 2,
+                                                                                    right: 2,
+                                                                                    background: 'rgba(255,255,255,0.85)',
+                                                                                    border: 'none',
+                                                                                    borderRadius: '50%',
+                                                                                    cursor: 'pointer',
+                                                                                    width: 22,
+                                                                                    height: 22,
+                                                                                    display: 'flex',
+                                                                                    alignItems: 'center',
+                                                                                    justifyContent: 'center',
+                                                                                    fontWeight: 'bold',
+                                                                                    color: '#ca0a0a',
+                                                                                    boxShadow: '0 1px 4px rgba(0,0,0,0.08)'
+                                                                                }}
+                                                                                title={props.language === 'English' ? "הסר תמונה" : "Remove image"}
+                                                                            >×</button>
+                                                                        </>
+                                                                    )}
+                                                                    <label style={{
+                                                                        display: 'inline-block',
+                                                                        padding: '4px 10px',
+                                                                        background: '#eee',
+                                                                        borderRadius: 4,
+                                                                        border: '1px solid #ccc',
+                                                                        cursor: 'pointer',
+                                                                        fontSize: 12,
+                                                                        marginLeft: row[key] ? 8 : 0
+                                                                    }}>
+                                                                        {row[key]
+                                                                            ? (props.language === 'English' ? 'החלף' : 'Replace')
+                                                                            : (props.language === 'English' ? 'העלה' : 'Upload')}
+                                                                        <input
+                                                                            dir={props.language === 'English' ? 'rtl' : 'ltr'}
+                                                                            type="file"
+                                                                            accept="image/*"
+                                                                            style={{ display: 'none', direction: props.language === 'English' ? 'rtl' : 'ltr', }}
+                                                                            onChange={e => {
+                                                                                if (e.target.files && e.target.files[0]) {
+                                                                                    handleUploadImage(idx, e.target.files[0]);
+                                                                                }
+                                                                            }}
+                                                                        />
+                                                                    </label>
+                                                                    {!row[key] && (
+                                                                        <span style={{
+                                                                            color: '#aaa',
+                                                                            fontSize: 13,
+                                                                            marginLeft: 8
+                                                                        }}>
+                                                                            {props.language === 'English'
+                                                                                ? 'גרור תמונה לכאן'
+                                                                                : 'Drag image here'}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            ) : (
+                                                                <input
+                                                                    type="text"
+                                                                    value={row[key] ?? ''}
+                                                                    onChange={e => handleEditCell(idx, key, e.target.value)}
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        border: '1px solid #ddd',
+                                                                        borderRadius: 4,
+                                                                        background: '#fafafa',
+                                                                        padding: '4px 8px',
+                                                                        fontSize: 14,
+                                                                        direction: props.language === 'English' ? 'rtl' : 'ltr',
+                                                                        textAlign: props.language === 'English' ? 'right' : 'left'
+                                                                    }}
+                                                                />
+                                                            )}
+                                                        </td>
+                                                    ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {/* Images In Sheet Table */}
+                            {images.length > 0 && (
+                                <div style={{ flex: 0, overflow: 'auto', minWidth: 220 }}>
+                                    <h4 style={{
+                                        textAlign: props.language === 'English' ? 'right' : 'center',
+                                        direction: props.language === 'English' ? 'rtl' : 'ltr'
+                                    }}>
+                                        {props.language === 'English' ? 'תמונות בגיליון' : 'Images In Sheet'}
+                                    </h4>
+                                    <table style={{
+                                        width: '100%',
+                                        borderCollapse: 'collapse',
+                                        direction: props.language === 'English' ? 'rtl' : 'ltr'
+                                    }}>
+                                        <thead>
+                                            <tr>
+                                                <th style={{
+                                                    border: '1px solid #ccc',
+                                                    padding: 4,
+                                                    background: '#f0f0f0',
+                                                    direction: props.language === 'English' ? 'rtl' : 'ltr'
+                                                }}>
+                                                    {props.language === 'English' ? 'תמונה' : 'Image'}
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {images.map((img, idx) => (
+                                                <tr key={idx}>
+                                                    <td style={{
+                                                        border: '1px solid #ccc',
+                                                        padding: 4,
+                                                        direction: props.language === 'English' ? 'rtl' : 'ltr'
+                                                    }}>
+                                                        <img
+                                                            src={URL.createObjectURL(img.file)}
+                                                            alt={`img-${idx}`}
+                                                            style={{
+                                                                width: 150,
+                                                                height: 150,
+                                                                objectFit: 'contain',
+                                                                borderRadius: 4,
+                                                                cursor: 'grab',
+                                                                border: '2px dashed #256fa1',
+                                                                background: '#f8faff',
+                                                                marginRight: 8
+                                                            }}
+                                                            draggable
+                                                            onDragStart={() => handleDragStart(img)}
+                                                        />
+                                                        <span style={{
+                                                            fontSize: 18,
+                                                            color: '#256fa1',
+                                                            marginLeft: 4
+                                                        }}>⇨</span>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </div>
+                    </>
                 )}
             </div>
             <div
@@ -386,6 +733,7 @@ function Sheettodata(props) {
                     alignItems: 'center',
                     padding: '40px',
                     marginBottom: '20px',
+                    flex: '0 0 auto',
                 }}
                 className='footerNewTasks'
             >

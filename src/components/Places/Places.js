@@ -1674,6 +1674,9 @@ const Places = (props) => {
         onClose={handleCloseopenUploadsheets}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        PaperProps={uploadOption === "CsvtojsonAddFullRoute" ? {
+          className: 'fullScreenDialogPaper'
+        } : {}}
       >
         {!uploadOption ? (
           <DialogContent>

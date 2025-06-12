@@ -63,7 +63,9 @@ export default function RouteForm({
           );
         });
       } else if (RouteAction === 'add') {
-        await insertRoute({ ...formValues }).then((response) => {
+        formValues.siteIds = formValues.sites.map(site => site.id); // Ensure siteIds is set for the API call
+        delete formValues.sites; // Remove id for new route creation
+        await insertRoute(formValues).then((response) => {
           showNotification('success', t("showNotification.Success_add_route") || "Route added successfully");
           setRoutes((prevRoutes) => [...prevRoutes, { ...response }]);
         });

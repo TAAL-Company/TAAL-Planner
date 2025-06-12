@@ -120,8 +120,8 @@ export default function EditorForm({
     }, [formValues.role, users, coaches]);
 
     // Update filtered routes when siteIds change
-    useEffect(() => {  
-        if (formValues.sites && formValues.sites.length > 0 ) {
+    useEffect(() => {
+        if (formValues.sites && formValues.sites.length > 0) {
             // Filter sites based on selected siteIds
             const selectedSites = sites.filter(site => formValues.sites.map(s => s.id).includes(site.id));
             // Flatten the routes from selected sites
@@ -176,9 +176,13 @@ export default function EditorForm({
             if (EditorAction === 'edit') {
                 try {
                     await updateEditor(formValues.id, formValues).then((response) => {
-                        showNotification('success', t("showNotification.Success_edit_editor") || "Editor updated successfully");
+                        showNotification('success', t("showNotification.Success_edit_editor"));
                         setEditors((prevEditors) =>
-                            prevEditors.map(editor => editor.id === formValues.id ? { ...response.data } : editor)
+                            prevEditors.map(editor =>
+                                editor.id === formValues.id
+                                    ? { ...editor, ...response.data, id: editor.id }
+                                    : editor
+                            )
                         );
                     });
                 } catch (error) {
@@ -186,8 +190,10 @@ export default function EditorForm({
                 }
             } else {
                 try {
+                    formValues.siteIds = formValues.sites.map(site => site.id);
                     await insertEditor({ ...formValues }).then((response) => {
-                        showNotification('success', t("showNotification.Success_add_editor") || "Editor added successfully");
+                        showNotification('success', t("showNotification.Success_add_editor"));
+                        response.sites = formValues.sites;
                         setEditors((prevEditors) => [...prevEditors, { ...response }]);
                     });
                 } catch (error) {

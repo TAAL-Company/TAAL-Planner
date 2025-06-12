@@ -95,6 +95,7 @@ const resources = {
         "EditCoachInfo": "Edit Coach Info",
         "Edit": "Edit",
         "Delete": "Delete",
+        "Duplicate": "Duplicate", // <-- Add this line
         "Coaches": "Coaches",
       },
       SitePage: {
@@ -286,6 +287,7 @@ const resources = {
         "EditCoachInfo": "ערוך מאמן",
         "Edit": "ערוך",
         "Delete": "מחק",
+        "Duplicate": "שכפל", // <-- Add this line
         "Coaches": "מאמנים",
       },
       SitePage: {
@@ -477,6 +479,7 @@ const resources = {
         "EditCoachInfo": "تعديل مدرب",
         "Edit": "تعديل",
         "Delete": "حذف",
+        "Duplicate": "تكرار", // <-- Add this line
         "Coaches": "المدربون",
       },
       SitePage: {
@@ -668,6 +671,7 @@ const resources = {
         "EditCoachInfo": "Редактировать тренера",
         "Edit": "Редактировать",
         "Delete": "Удалить",
+        "Duplicate": "Дублировать", // <-- Add this line
         "Coaches": "Тренеры",
       },
       SitePage: {

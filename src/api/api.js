@@ -632,7 +632,6 @@ export const insertEditor = async (user) => {
       body: JSON.stringify({
         email: user.email,
         name: user.name,
-        googleID: user.googleID,
         siteIds: user.siteIds,
         role: user.role,
         phone: user.phone,

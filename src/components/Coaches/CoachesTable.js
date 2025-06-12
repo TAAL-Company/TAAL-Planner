@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-import { getingData_coaches, deleteCoach } from '../../api/api';
+import { getingData_coaches, deleteCoach, insertCoach } from '../../api/api'; // Make sure insertCoach is imported
 import { useState, useEffect } from 'react';
 import { Button, MenuItem, Menu } from '@mui/material';
 import CoachForm from './CoachForm';
@@ -43,6 +43,7 @@ export default function CoachesTable() {
   const [selectedCoach, setSelectedCoach] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [title, setTitle] = useState('');
+  const [coachAction, setCoachAction] = useState('add'); // NEW STATE
   const { showNotification } = useNotification();
   const { t } = useTranslation();
 
@@ -72,12 +73,14 @@ export default function CoachesTable() {
     setOpenDialog(true);
     setNewCoach(newCoach);
     setTitle(t('CoachPage.ADDANewCoach'));
+    setCoachAction('add'); // Set action to add
   };
 
   const handleClickOpenEditDialog = () => {
     setOpenDialog(true);
     setNewCoach(selectedCoach);
     setTitle(t('CoachPage.EditCoachInfo'));
+    setCoachAction('edit'); // Set action to edit
   };
 
   useEffect(() => {
@@ -137,6 +140,25 @@ export default function CoachesTable() {
     } catch (error) {
       console.error(error.message);
       showNotification('error', t('Error_delete_coach'));
+    }
+  };
+
+  const handleDuplicateCoach = async () => {
+    if (!selectedCoach) return;
+    try {
+      // Prepare the duplicated coach data (remove id, maybe tweak name/email)
+      const duplicatedCoach = {
+        ...selectedCoach,
+        name: selectedCoach.name + ' (Duplicate)',
+      };
+      delete duplicatedCoach.id;
+
+      const response = await insertCoach(duplicatedCoach);
+      setCoaches(prev => [response, ...prev]);
+      showNotification('success', t('Success_duplicate_coach'));
+      handleCloseMenu();
+    } catch (error) {
+      showNotification('error', t('Error_duplicate_coach'));
     }
   };
 
@@ -238,6 +260,7 @@ export default function CoachesTable() {
               <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
                 <MenuItem onClick={handleClickOpenEditDialog}>{t('CoachPage.Edit')}</MenuItem>
                 <MenuItem onClick={handleDeleteCoach}>{t('CoachPage.Delete')}</MenuItem>
+                <MenuItem onClick={handleDuplicateCoach}>{t('CoachPage.Duplicate')}</MenuItem>
               </Menu>
 
               <CoachForm
@@ -246,7 +269,7 @@ export default function CoachesTable() {
                 title={title}
                 initialValues={newCoach}
                 setCoaches={setCoaches}
-                CoachAction="add"
+                CoachAction={coachAction} // Pass the correct action
               />
             </div>
           </div>

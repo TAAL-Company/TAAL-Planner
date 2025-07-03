@@ -1392,3 +1392,82 @@ export const updateAdditonalHelp = async (id, additonalHelp) => {
     throw error;
   }
 };
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  Packs  ~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+// Get all packs
+export const getingData_Packs = async () => {
+  let allPacks;
+  await get(`${baseUrl}/packs`, {
+    params: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+    },
+  }).then((res) => {
+    allPacks = res.data;
+  });
+  console.log('allPacks', allPacks);
+  return allPacks;
+};
+
+// Get pack by ID
+export const getPackById = async (packId) => {
+  let pack;
+  await get(`${baseUrl}/packs/${packId}`, {
+    params: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+    },
+  }).then((res) => {
+    pack = res.data;
+  });
+  return pack;
+};
+
+// Get packs by IDs (array)
+export const getPacksByIds = async (ids) => {
+  let packs;
+  await post(`${baseUrl}/packs/ids`, ids, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+    },
+  }).then((res) => {
+    packs = res.data;
+  });
+  return packs;
+};
+
+// Insert a new pack
+export const insertPack = async (packData) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    accept: 'application/json',
+  };
+  return await post(`${baseUrl}/packs`, packData, {
+    headers: headers,
+  }).then((response) => response.data);
+};
+
+// Update a pack
+export const updatePack = async (packId, packData) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    accept: 'application/json',
+  };
+  return await patch(`${baseUrl}/packs/${packId}`, packData, headers)
+    .then((response) => response.data);
+};
+
+// Delete a pack
+export const deletePack = async (packId) => {
+  let confirm;
+  await fetch(`${baseUrl}/packs/${packId}`, { method: 'DELETE' }).then(
+    (res) => {
+      confirm = res;
+    }
+  );
+  return confirm;
+};

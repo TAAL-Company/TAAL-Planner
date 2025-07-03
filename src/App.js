@@ -28,6 +28,8 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import './i18n'; // Import the i18n configuration
 
+import Plannerpage from './planner/plannerpage';
+
 import { NotificationProvider } from "./components/Notification/NotificationProvider";
 import { TranslationProvider } from './Utility/TranslationProvider';
 
@@ -40,35 +42,36 @@ function App() {
     <>
       <div>
         <TranslationProvider>
-        <NotificationProvider>
-        <DndProvider backend={HTML5Backend}>
-          <Provider store={store}>
-            <Router>
-              <div>
-                {sessionStorage.logged_in == 1 ? (
-                  <>
-                    <Nav />
-                  </>
-                ) : null}
-                <Switch>
-                  <Route path='/' exact component={Home}></Route>
-                  <Route path='/planner' component={Planner}></Route>
-                  <Route path='/student' component={Student}></Route>
-                  <Route path='/Calculator' component={Calculator}></Route>
-                  <Route path='/routes_cards' component={RouteTable}></Route>
-                  <Route path='/Dashboard' component={Dashboard}></Route>
-                  <Route path='/Gallery' component={GalleryPage}></Route>
-                  <Route path='/places' component={Sites}></Route>
-                  <Route path='/Forms' component={Forms}></Route>
-                  <Route path='/coaches' component={Coaches}></Route>
-                  <Route path='/community' component={Community}></Route>
-                  <Route path='/editor' component={Editors}></Route>
-                </Switch>
-              </div>
-            </Router>
-          </Provider>
-        </DndProvider>
-        </NotificationProvider>
+          <NotificationProvider>
+            <DndProvider backend={HTML5Backend}>
+              <Provider store={store}>
+                <Router>
+                  <div>
+                    {sessionStorage.logged_in == 1 ? (
+                      <>
+                        <Nav />
+                      </>
+                    ) : null}
+                    <Switch>
+                      <Route path='/' exact component={Home}></Route>
+                      <Route path='/planner' component={Planner}></Route>
+                      <Route path='/student' component={Student}></Route>
+                      <Route path='/Calculator' component={Calculator}></Route>
+                      <Route path='/routes_cards' component={RouteTable}></Route>
+                      <Route path='/Dashboard' component={Dashboard}></Route>
+                      <Route path='/Gallery' component={GalleryPage}></Route>
+                      <Route path='/places' component={Sites}></Route>
+                      <Route path='/Forms' component={Forms}></Route>
+                      <Route path='/coaches' component={Coaches}></Route>
+                      <Route path='/community' component={Community}></Route>
+                      <Route path='/editor' component={Editors}></Route>
+                      <Route path='/dev' component={Plannerpage}></Route>
+                    </Switch>
+                  </div>
+                </Router>
+              </Provider>
+            </DndProvider>
+          </NotificationProvider>
         </TranslationProvider>
       </div>
     </>

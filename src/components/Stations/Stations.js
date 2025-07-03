@@ -392,6 +392,8 @@ const Stations = (props) => {
             english={props.english}
             Hebrew={props.Hebrew}
             stationColor={dpcolor}
+            Packs={props.Packs}  // Make sure this is passed
+            selectedPack={props.selectedPack} // Make sure this is passed
           />
           {/* </DndProvider> */}
         </>

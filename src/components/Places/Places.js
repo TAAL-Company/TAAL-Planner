@@ -8,7 +8,10 @@ import {
   deleteRoute,
   updateRoute,
   getingData_Editors,
-  insertRoute
+  insertRoute,
+  getingData_Packs,
+  insertPack,
+  deletePack
 } from '../../api/api';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -26,7 +29,7 @@ import { CgSearch } from 'react-icons/cg';
 import textArea from '../../Pictures/textArea.svg';
 import ModalRouteChosen from '../Modal/Modal_route_chosen';
 import ModalSiteChosen from '../Modal/Modal_site_chosen';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import stopIcon from '../../Pictures/stopIcon.svg';
 import '../Modal/Modal.css';
 import './style.css';
@@ -42,10 +45,12 @@ import { useTranslator } from '../../Utility/TranslationProvider';
 import Sheettodata from '../csvtojson/sheettodata';
 import BorderedTreeView from './BorderedTreeView';
 
+import ModalPack from '../Modal/ModalPack';
+
 let tasksOfRoutes = {};
 // let allRoutes = [];
 let allPlaces = [];
-// let places = [];
+// let places [];
 // let myRoutes = [];
 let Places_and_their_stations = [];
 let thisIdTask = 0;
@@ -119,6 +124,123 @@ const Places = (props) => {
   const { translate } = useTranslator();
   const [openThreeDots, setOpenThreeDots] = useState(-1);
 
+  const [allPacks, setallPacks] = useState([]); // All packs
+  const [selectedPack, setSelectedPack] = useState(null); // Currently selected pack
+  const [filteredpacksbysite, setFilteredPacksBySite] = useState([]); // Routes for selected pack
+
+  const [modalOpenPack, setModalOpenPack] = useState(false);
+  const [packName, setPackName] = useState('');
+  const [packUUID, setPackUUID] = useState('');
+  const [newPack, setNewPack] = useState({});
+  const [newTitleForPack, setNewTitleForPack] = useState({});
+
+  // Add this near your other state declarations
+  const [openThreeDotsVerticalPacks, setOpenThreeDotsVerticalPacks] = useState(-1);
+  const [allEditors, setAllEditors] = useState([]); // All editors
+
+  // Filter packs by selected site
+  useEffect(() => {
+    if (selectedSite && allPacks && allPacks.length > 0) { // Added null check for allPacks
+      setFilteredPacksBySite(
+        allPacks.filter(pack =>
+          pack && pack.sites && pack.sites.some(site => site && site.id === selectedSite.id)
+        )
+      );
+    } else {
+      setFilteredPacksBySite([]);
+    }
+  }, [selectedSite, allPacks]);
+
+  // When a pack is selected, filter routes by pack and update filteredDataRoutes
+  useEffect(() => {
+    if (selectedPack && allRoutes.length > 0) {
+      // Extract route IDs from the selected pack
+      const packRouteIds = selectedPack.routes.map(routeItem => routeItem.routeId);
+
+      // Filter all routes to only show those that belong to the selected pack
+      setFilteredDataRoutes(
+        allRoutes.filter(route => packRouteIds.includes(route.id))
+      );
+    }
+  }, [selectedPack, allRoutes]);
+
+  // Handler for selecting a pack
+  const handleSelectPack = (pack) => {
+    setSelectedPack(pack);
+
+    // If there are routes in the pack, display them in the board
+    if (pack && pack.routes && pack.routes.length > 0) {
+      // Create a representation of pack routes for the board view
+      const packRouteItems = pack.routes.map(packRoute => {
+        const route = allRoutes.find(r => r.id === packRoute.routeId);
+        if (route) {
+          return {
+            id: route.id,
+            title: route.name.replace('&#8211;', '-').replace('&#8217;', "' "),
+            itemType: 'route',
+            mySite: mySite,
+            myStation: 'Pack Route',
+            nameStation: `${pack.name}`,
+            color: '#256FA1', // Use pack color
+            width: '-13px',
+            height: '70px',
+            bottom: '-27px',
+            kavTopWidth: '25px',
+            newkavTaskTop: '0px',
+            kavTaskTopMarginTop: '-7px',
+            borderLeft: '0x solid #c2bfbf'
+          };
+        }
+        return null;
+      }).filter(item => item !== null);
+
+      // Update the board with these routes
+      setBoardArrayDND(packRouteItems);
+
+      // Set a flag to indicate we're showing routes from a pack
+      localStorage.setItem('showingPackRoutes', 'true');
+    }
+  };
+
+  // This existing code in Places.js will handle adding the new pack to the list
+  useEffect(() => {
+    //after adding new packs
+    if (Object.keys(newPack)?.length > 0) {
+      // If the pack exists in filteredPacksBySite, update it
+      const packIndex = filteredpacksbysite.findIndex(pack => pack.id === newPack.id);
+      if (packIndex !== -1) {
+        const updatedPacks = [...filteredpacksbysite];
+        updatedPacks[packIndex] = newPack;
+        setFilteredPacksBySite(updatedPacks);
+      } else {
+        // Otherwise add it
+        setFilteredPacksBySite([...filteredpacksbysite, newPack]);
+      }
+      setNewPack({});
+    }
+  }, [newPack]);
+
+  // Add this handler for the Add Pack button
+  const handleAddPack = () => {
+    if (!siteSelected) {
+      showNotification("error", props.language === "English" ? "יש לבחור אתר תחילה" : "Please select a site first");
+      return;
+    }
+    setRequestForEditing('');
+    setPackName('');
+    setPackUUID('');
+    setModalOpenPack(true);
+    setFlagStudent(true);
+  };
+
+  // Add handler for edit pack
+  const handleEditPack = (pack) => {
+    setRequestForEditing('edit');
+    setPackName(pack.name);
+    setPackUUID(pack.id);
+    setModalOpenPack(true);
+  };
+
   const translateRouteName = async (routeName) => {
     try {
       return await translate(routeName, props.language);
@@ -153,63 +275,110 @@ const Places = (props) => {
   useEffect(() => {
 
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
-      setModalOpen(true);
-      setRouteName(filteredDataRoutes[openThreeDotsVertical].name);
-      setRouteUUID(filteredDataRoutes[openThreeDotsVertical].id);
-    } else if (requestForEditing == 'duplication') {
-      console.log(filteredDataRoutes[openThreeDotsVertical]);
-      let newRoute = filteredDataRoutes[openThreeDotsVertical];
-
-      let today = new Date();
-
-      let taskIdList = [];
-      filteredDataRoutes[openThreeDotsVertical].tasks.map((task) => taskIdList.push(task.taskId));
-
-      let studentIdList = [];
-      filteredDataRoutes[openThreeDotsVertical].students.map((student) => studentIdList.push(student.id));
-
-      let newRouteObj = {
-        // ...newRoute,
-        name: newRoute.name + "-" + (Math.floor((Math.random() * 100000))) + "-" + today.toLocaleDateString("en-US"),
-        studentIds: studentIdList,
-        taskIds: taskIdList,
-        siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
-        // parentRouteId: newRoute.id
-      };
-
-      // delete newRouteObj.students;
-      // delete newRouteObj.tasks;
-      // delete newRouteObj.sites;
-
-      // console.log(newRouteObj);
-      try {
-        insertRoute(newRouteObj).then(async (newaddedroute) => {
-          // alert(props.language ? 'ההוראה הועתקה בהצלחה!' : 'The instruction was copied successfully!');
-          showNotification("success", props.language === "English" ? "ההוראה הועתקה בהצלחה!" : "The instruction was copied successfully!");
-          setOpenThreeDotsVertical(-1);
-          setOpenThreeDots(-1);
-          setRequestForEditing('');
-          let newadded = await getingData_Routes().then(data => {
-            return data.find(route => route.id === newaddedroute.id);
-          })
-          console.log(newadded);
-
-          const newRoutes = [...filteredDataRoutes];
-          newRoutes.push(newadded);
-          setFilteredDataRoutes(newRoutes);
-        })
-      } catch (error) {
-        console.log(error);
-        showNotification("error", props.language === "English" ? "ההוראה לא הועתקה!" : "The instruction was not copied!");
+      // If we're dealing with a pack edit
+      if (selectedPack && openThreeDotsVerticalPacks >= 0 && openThreeDotsVerticalPacks < filteredpacksbysite.length) {
+        setModalOpenPack(true);
+        setPackName(filteredpacksbysite[openThreeDotsVerticalPacks].name);
+        setPackUUID(filteredpacksbysite[openThreeDotsVerticalPacks].id);
       }
+      // Existing route editing code
+      else if (openThreeDotsVertical >= 0 && openThreeDotsVertical < filteredDataRoutes.length) {
+        setModalOpen(true);
+        setRouteName(filteredDataRoutes[openThreeDotsVertical].name);
+        setRouteUUID(filteredDataRoutes[openThreeDotsVertical].id);
+      }
+    } else if (requestForEditing == 'duplication') {
+      // Handle pack duplication if needed
+      if (selectedPack && openThreeDotsVerticalPacks >= 0 && openThreeDotsVerticalPacks < filteredpacksbysite.length) {
+        let newPack = filteredpacksbysite[openThreeDotsVerticalPacks];
+        let today = new Date();
+
+        let newPackObj = {
+          name: newPack.name + "-" + (Math.floor((Math.random() * 100000))) + "-" + today.toLocaleDateString("en-US"),
+          siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
+        };
+
+        try {
+          insertPack(newPackObj).then(async (newaddedpack) => {
+            setOpenThreeDotsVertical(-1);
+            setOpenThreeDots(-1);
+            setRequestForEditing('');
+            let newadded = await getingData_Packs().then(data => {
+              return data.find(pack => pack.id === newaddedpack.id);
+            });
+            console.log(newadded);
+
+            const newPacks = [...filteredpacksbysite];
+            newPacks.push(newadded);
+            setFilteredPacksBySite(newPacks);
+            showNotification("success", props.language === "English" ? "האריזה הועתקה בהצלחה!" : "The pack was copied successfully!");
+          });
+        } catch (error) {
+          console.log(error);
+          showNotification("error", props.language === "English" ? "האריזה לא הועתקה!" : "The pack was not copied!");
+        }
+      }
+      // Existing route duplication code
+      else if (requestForEditing == 'duplication') {
+        console.log(filteredDataRoutes[openThreeDotsVertical]);
+        let newRoute = filteredDataRoutes[openThreeDotsVertical];
+
+        let today = new Date();
+
+        let taskIdList = [];
+        filteredDataRoutes[openThreeDotsVertical].tasks.map((task) => taskIdList.push(task.taskId));
+
+        let studentIdList = [];
+        filteredDataRoutes[openThreeDotsVertical].students.map((student) => studentIdList.push(student.id));
+
+        let newRouteObj = {
+          // ...newRoute,
+          name: newRoute.name + "-" + (Math.floor((Math.random() * 100000))) + "-" + today.toLocaleDateString("en-US"),
+          studentIds: studentIdList,
+          taskIds: taskIdList,
+          siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
+          // parentRouteId: newRoute.id
+        };
+
+        // delete newRouteObj.students;
+        // delete newRouteObj.tasks;
+        // delete newRouteObj.sites;
+
+        // console.log(newRouteObj);
+        try {
+          insertRoute(newRouteObj).then(async (newaddedroute) => {
+            // alert(props.language ? 'ההוראה הועתקה בהצלחה!' : 'The instruction was copied successfully!');
+            setOpenThreeDotsVertical(-1);
+            setOpenThreeDots(-1);
+            setRequestForEditing('');
+            let newadded = await getingData_Routes().then(data => {
+              return data.find(route => route.id === newaddedroute.id);
+            })
+            console.log(newadded);
+
+            const newRoutes = [...filteredDataRoutes];
+            newRoutes.push(newadded);
+            setFilteredDataRoutes(newRoutes);
+            showNotification("success", props.language === "English" ? "ההוראה הועתקה בהצלחה!" : "The instruction was copied successfully!");
+          })
+        } catch (error) {
+          console.log(error);
+          showNotification("error", props.language === "English" ? "ההוראה לא הועתקה!" : "The instruction was not copied!");
+        }
 
 
-    } else if (requestForEditing === 'delete') {
-      setOpenRemove(true);
-      setRouteForDelete(openThreeDotsVertical);
-    } else if (requestForEditing === 'uploadfromsheet') {
-      setOpenUpload(true);
+      } else if (requestForEditing === 'delete') {
+        // Handle pack deletion if needed
+        if (selectedPack) {
+          setOpenRemove(true);
+          setRouteForDelete(openThreeDotsVertical);
+        } else {
+          setOpenRemove(true);
+          setRouteForDelete(openThreeDotsVertical);
+        }
+      }
     }
+    // Other existing conditions...
   }, [requestForEditing]);
 
   const handleCloseRemove = () => {
@@ -232,19 +401,32 @@ const Places = (props) => {
 
   const handleCloseRemoveConfirm = async () => {
     try {
-      let deleteRoutes = await deleteRoute(filteredDataRoutes[routrForDelete].id);
+      // Handle pack deletion
+      if (selectedPack) {
+        let deletePacks = await deletePack(filteredpacksbysite[routrForDelete].id);
 
-      if (deleteRoutes.status === 200) {
-        // alert(props.language ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
-        showNotification('success', props.language === "English" ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
-        const newRoutes = [...filteredDataRoutes];
-        newRoutes.splice(routrForDelete, 1); // remove one element at index x
-        setFilteredDataRoutes(newRoutes);
+        if (deletePacks.status === 200) {
+          showNotification('success', props.language === "English" ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
+          const newPacks = [...filteredpacksbysite];
+          newPacks.splice(routrForDelete, 1); // remove one element at index x
+          setFilteredPacksBySite(newPacks);
+        }
+      }
+      // Handle route deletion (existing code)
+      else {
+        let deleteRoutes = await deleteRoute(filteredDataRoutes[routrForDelete].id);
+
+        if (deleteRoutes.status === 200) {
+          showNotification('success', props.language === "English" ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
+          const newRoutes = [...filteredDataRoutes];
+          newRoutes.splice(routrForDelete, 1); // remove one element at index x
+          setFilteredDataRoutes(newRoutes);
+        }
       }
 
       setOpenRemove(false);
       setOpenThreeDotsVertical(-1);
-      setOpenThreeDots(-1);
+      setOpenThreeDotsVerticalPacks(-1); // Reset both dropdown states
       setRouteForDelete(-1);
       setRequestForEditing('');
     } catch (error) {
@@ -302,6 +484,8 @@ const Places = (props) => {
       setAllRoutes(await getingData_Routes()); //get request for routes
       setOnlyAllStation(await getingDataStation()); //get request for station
       setAllUsers(await getingData_Users()); //get request for Users
+      setallPacks(await getingData_Packs());
+      setAllEditors(await getingData_Editors()); //get request for Editors
     } catch (error) {
       console.error(error.message);
     }
@@ -675,31 +859,162 @@ const Places = (props) => {
       console.log('uniqueWorkers: ', uniqueWorkers);
 
       setAllWorkersForSite(uniqueWorkers); // Update state with unique workers
+      // console.log('allWorkersForSite: ', allWorkersForSite);
     }
   }, [allRoutes, selectedSite]);
-
-  const handleSiteSelectChange = useCallback(
-    (event) => {
-      const selectedSiteValue = JSON.parse(event.target.value);
+  const handleSiteSelect = useCallback(async (selectedSiteValue) => {
+    setLoading(true);
+    try {
+      // Set the site in state
       setTempSelectedSite(selectedSiteValue);
 
       if (!siteSelected && !replaceSiteFlag) {
+        // First time selection or clean selection
         tasksOfRoutes = {};
         setTasksOfChosenStation([]);
         setReplaceSite(selectedSiteValue);
-        Display_The_Stations(selectedSiteValue);
         setSiteSelected(true);
         setReplaceSiteFlag(true);
         setOpenModalSiteChosen(false);
         setSelectedSite(selectedSiteValue);
+
+        // Load all data for this site in parallel
+        await Promise.all([
+          // 1. Load station data
+          loadStationsForSite(selectedSiteValue),
+
+          // 2. Load workers for the site
+          loadWorkersForSite(selectedSiteValue),
+
+          // 3. Load packs for the site
+          loadPacksForSite(selectedSiteValue),
+
+          // 4. Load routes for the site
+          loadRoutesForSite(selectedSiteValue)
+        ]);
+
       } else {
+        // User is trying to change sites
         setReplaceSiteFlag(false);
         setOpenModalSiteChosen(true);
         setRouteFlags(false);
       }
-    },
-    [allRoutes, siteSelected, replaceSiteFlag]
-  );
+    } catch (error) {
+      console.error("Error loading site data:", error);
+      showNotification("error", props.language === "English" ?
+        "שגיאה בטעינת נתונים" : "Error loading data");
+    } finally {
+      setLoading(false);
+    }
+  }, [siteSelected, replaceSiteFlag]);
+
+  const handleSiteSelectChange = useCallback((event) => {
+    try {
+      const selectedSiteValue = JSON.parse(event.target.value);
+      handleSiteSelect(selectedSiteValue);
+    } catch (error) {
+      console.error("Error parsing site selection:", error);
+      showNotification("error", props.language === "English" ?
+        "שגיאה בבחירת אתר" : "Error selecting site");
+    }
+  }, [handleSiteSelect]);
+
+
+
+  // Load stations for a site
+  const loadStationsForSite = async (site) => {
+    try {
+      // Set site data
+      mySite.name = site.name;
+      mySite.id = site.id;
+      mySite.nameInEnglish = site.nameInEnglish;
+
+      // Get stations for the site
+      const stations = onlyAllStation.filter(item => item.parentSiteId === site.id);
+
+      // Add colors to stations
+      const stationsWithColors = stations.map((item, index) => ({
+        ...item,
+        color: pastelColors[index % pastelColors.length]
+      }));
+
+      setStationArray(stationsWithColors);
+
+      // Get tasks for the site
+      const tasksOfTheSite = allTasks.filter(task =>
+        task.sites.find(siteItem => siteItem.id === site.id)
+      );
+
+      setTasksLength(tasksOfTheSite.length);
+      setAllTasksOfTheSite(tasksOfTheSite);
+
+      // Save site in local storage
+      localStorage.setItem('MySite', JSON.stringify(mySite));
+
+      return stationsWithColors;
+    } catch (error) {
+      console.error("Error loading stations:", error);
+      throw error;
+    }
+  };
+
+  // Load workers for a site
+  const loadWorkersForSite = async (site) => {
+    try {
+      const workers = allRoutes
+        .filter(route => route.sites.some(siteItem => siteItem.id === site.id))
+        .flatMap(route => route.students);
+
+      // Remove duplicates
+      const uniqueWorkers = Array.from(
+        new Set(workers.map(worker => worker.id))
+      ).map(id => workers.find(worker => worker.id === id));
+
+      setAllWorkersForSite(uniqueWorkers);
+      return uniqueWorkers;
+    } catch (error) {
+      console.error("Error loading workers:", error);
+      throw error;
+    }
+  };
+
+  // Load packs for a site
+  const loadPacksForSite = async (site) => {
+    try {
+      if (allPacks && allPacks.length > 0) {
+        const filteredPacks = allPacks.filter(pack =>
+          pack && pack.sites && pack.sites.some(packSite =>
+            packSite && packSite.id === site.id
+          )
+        );
+
+        setFilteredPacksBySite(filteredPacks);
+        return filteredPacks;
+      } else {
+        setFilteredPacksBySite([]);
+        return [];
+      }
+    } catch (error) {
+      console.error("Error loading packs:", error);
+      throw error;
+    }
+  };
+
+  // Load routes for a site
+  const loadRoutesForSite = async (site) => {
+    try {
+      const filteredRoutes = allRoutes.filter(route =>
+        route.sites.some(routeSite => routeSite.id === site.id)
+      );
+
+      setRoutes(filteredRoutes);
+      setFilteredDataRoutes(filteredRoutes);
+      return filteredRoutes;
+    } catch (error) {
+      console.error("Error loading routes:", error);
+      throw error;
+    }
+  };
 
   const handleWorkerSelectChange = (event) => {
     const answer = window.confirm(props.language !== "English" ? "האם ברצונך לבצע פעולה זו?" : "Are you sure you want to do this?");
@@ -735,14 +1050,38 @@ const Places = (props) => {
 
   useEffect(() => {
     if (!openModalSiteChosen && replaceSiteFlag) {
-      setReplaceSite(selectedSite);
-      Display_The_Stations(selectedSite);
-      setTasksLength(0);
-      setTasksOfChosenStation([]);
-      setSelectedSite(tempSelectedSite);
-      setSelectedWorker(null);
-      // setOpenModalRouteChosen(true);
-      // setReplaceRouteFlag(true);
+      // User confirmed site change
+      setLoading(true);
+      try {
+        // Apply the new site
+        const newSite = tempSelectedSite;
+
+        // Reset current state
+        setReplaceSite(selectedSite);
+        setTasksLength(0);
+        setTasksOfChosenStation([]);
+        setSelectedWorker(null);
+        setSelectedPack(null);
+
+        // Load all data for the new site
+        Promise.all([
+          loadStationsForSite(newSite),
+          loadWorkersForSite(newSite),
+          loadPacksForSite(newSite),
+          loadRoutesForSite(newSite)
+        ]).then(() => {
+          // Update the selected site last to trigger any dependent effects
+          setSelectedSite(newSite);
+          Display_The_Stations(newSite);
+        }).catch(error => {
+          console.error("Error during site replacement:", error);
+        }).finally(() => {
+          setLoading(false);
+        });
+      } catch (error) {
+        console.error("Error in site replacement:", error);
+        setLoading(false);
+      }
     }
   }, [openModalSiteChosen, replaceSiteFlag, selectedSite, tempSelectedSite]);
 
@@ -948,9 +1287,19 @@ const Places = (props) => {
     }
   }, [allTasksOfTheSite]);
 
-  const clickOnhreeDotsVerticaIcont = (value) => {
-    if (openThreeDotsVertical === value) setOpenThreeDotsVertical(-1);
-    else setOpenThreeDotsVertical(value);
+  // const clickOnhreeDotsVerticaIcont = (value) => {
+  const clickOnThreeDotsVerticalIcon = (value, type) => {
+    if (type === 'pack') {
+      if (openThreeDotsVerticalPacks === value)
+        setOpenThreeDotsVerticalPacks(-1);
+      else
+        setOpenThreeDotsVerticalPacks(value);
+    } else {
+      if (openThreeDotsVertical === value)
+        setOpenThreeDotsVertical(-1);
+      else
+        setOpenThreeDotsVertical(value);
+    }
   };
 
   useEffect(() => {
@@ -1148,16 +1497,37 @@ const Places = (props) => {
   // };
 
   function handleDragEnd(result) {
-    if (result.source.droppableId == "tasks-droppable") {
+    const { source, destination, draggableId } = result;
+
+    // Return early if there's no destination
+    if (!destination) return;
+
+    // Handle tasks being dragged
+    if (source.droppableId === "tasks-droppable") {
       setDropToBoard(result);
     }
 
-    if (result.source.droppableId == "stationArray") {
+    // Handle stations being dragged
+    if (source.droppableId === "stationArray") {
       setDropToBoard(result);
       const stationId = result.draggableId;
       const station = stationArray.find((station) => station.id === stationId);
       setTasksOfChosenStation(station.tasks);
-      // DisplayTasksfordragStation(result.draggableId);
+    }
+
+    // Handle routes being dragged
+    if (source.droppableId === "routes-droppable") {
+      // Set the drop to board result so the board component can handle it
+      setDropToBoard(result);
+
+      // You might want to select the route that was dragged
+      const route = filteredDataRoutes.find(r => r.id === draggableId);
+      if (route) {
+        setSelectedRoute(route);
+        // Only display tasks/stations if desired when dragging
+        // displayStationsFromSelectedRoute(route);
+        // DisplayTasks(route);
+      }
     }
   }
 
@@ -1166,6 +1536,7 @@ const Places = (props) => {
     setTasksOfChosenStation([]);
     setTasksLength(0);
     setSelectedWorker(null);
+    // setSelectedPack(null);
     Display_The_Stations(selectedSite);
   };
 
@@ -1272,70 +1643,87 @@ const Places = (props) => {
         className={`mainRectangles ${props.language !== 'English' ? 'english' : ''
           }`}
       >
-        {/* routes */}
+        <DragDropContext onDragEnd={handleDragEnd}>
+          {/* routes */}
 
-        {/* modal for adding new route */}
-        {modalOpen && ( ///
-          <Modal
-            routeName={routeName}
-            requestForEditing={requestForEditing}
-            setNewTitleForRoute={setNewTitleForRoute}
-            setNewRoute={setNewRoute}
-            setOpenModal={setModalOpen}
-            setFlagStudent={setFlagStudent}
-            flagTest={flagTest}
-            siteSelected={siteSelected}
-            language={props.language}
-            routeUUID={routeUUID}
-            setFilteredDataRoutes={setFilteredDataRoutes}
-            filteredDataRoutes={filteredDataRoutes}
-            setRequestForEditing={setRequestForEditing}
-          />
-        )}
-        <div className='Cover_Places'>
-          <>
-            <div className='TitlePlacesCover'>
-              <div className='TitlePlaces'>
-                <div
-                  className={`MyTitle text ${props.language !== 'English' ? 'english' : ''
-                    }`}
-                >
-                  {props.language === 'English' ? 'מסלולים' : 'Routes'}
+          {/* modal for adding new route */}
+          {modalOpen && ( ///
+            <Modal
+              routeName={routeName}
+              requestForEditing={requestForEditing}
+              setNewTitleForRoute={setNewTitleForRoute}
+              setNewRoute={setNewRoute}
+              setOpenModal={setModalOpen}
+              setFlagStudent={setFlagStudent}
+              flagTest={flagTest}
+              siteSelected={siteSelected}
+              language={props.language}
+              routeUUID={routeUUID}
+              setFilteredDataRoutes={setFilteredDataRoutes}
+              filteredDataRoutes={filteredDataRoutes}
+              setRequestForEditing={setRequestForEditing}
+            />
+          )}
+          {/* // In the JSX part, add the ModalPack component just after the existing Modal component: */}
+          {modalOpenPack && (
+            <ModalPack
+              packName={packName}
+              requestForEditing={requestForEditing}
+              setNewTitleForPack={setNewTitleForPack}
+              setNewPack={setNewPack}
+              setOpenModalPack={setModalOpenPack}
+              setFlagStudent={setFlagStudent}
+              flagTest={flagTest}
+              siteSelected={siteSelected}
+              language={props.language}
+              packUUID={packUUID}
+              setFilteredPacksBySite={setFilteredPacksBySite}
+              filteredPacksBysite={filteredpacksbysite}
+              setRequestForEditing={setRequestForEditing}
+              allroutes={allRoutes}
+              alleditors={allEditors}
+              allUsers={allWorkersForSite}
+            />
+          )}
+          {/* //////////////////////////////////////////////////////////////////////////////////////////// */}
+          <div className='Cover_Places'>
+            <>
+              <div className='TitlePlacesCover' style={{ backgroundColor: '#ba11b0' }}>
+                <div className='TitlePlaces'>
+                  <div
+                    className={`MyTitle text ${props.language !== 'English' ? 'english' : ''
+                      }`}
+                  >
+                    {props.language === 'English' ? 'אריזות' : 'Packs'}
+                  </div>
                 </div>
               </div>
-            </div>
-          </>
+            </>
 
-          <div
+            <div
+              className='search'
+              style={{
+                backgroundColor: '#F5F5F5',
+              }}
+            >
+              <input
+                className={`searchButton  ${props.language !== 'English' ? 'english' : 'routes'}`}
+                dir='rtl'
+                placeholder={
+                  props.language === 'English' ? 'חפש אריזות' : 'search packs'
+                }
+                label={
+                  <CgSearch
+                    style={{ fontSize: 'x-large', textAlign: '-webkit-center' }}
+                  />
+                }
+              // onChange={inputHandlerPacks}
+              ></input>
+            </div>
+            {/* <div
             className='search'
             style={{
               backgroundColor: '#F5F5F5',
-              // borderStyle: "none none solid none",
-              // borderColor: "#fff",
-              // borderWidth: "5px",
-            }}
-          >
-            <input
-              className={`searchButton  ${props.language !== 'English' ? 'english' : 'routes'}`}
-              dir='rtl'
-              placeholder={
-                props.language === 'English' ? 'חפש מסלול' : 'search route'
-              }
-              label={
-                <CgSearch
-                  style={{ fontSize: 'x-large', textAlign: '-webkit-center' }}
-                />
-              }
-              onChange={inputHandlerRoutes}
-            ></input>
-          </div>
-          <div
-            className='search'
-            style={{
-              backgroundColor: '#F5F5F5',
-              // borderStyle: "none none solid none",
-              // borderColor: "#fff",
-              // borderWidth: "5px",
             }}
           >
             <button
@@ -1344,100 +1732,29 @@ const Places = (props) => {
             >
               {props.language === "English" ? "הצג את כל התחנות" : "show all Stations"}
             </button>
-          </div>
-          <div className='routs'>
-            {filteredDataRoutes.length === 0 ? (
-              <div
-                className={`textBeforeStation ${props.language !== 'English' ? 'english' : ''}`}
-                style={{ backgroundImage: `url(${textArea})` }}
-              >
+          </div> */}
+            <div className='routs'>
+              {filteredpacksbysite.length === 0 ? (
                 <div
-                  className={`textBeforeStationtext ${props.language !== 'English' ? 'english' : ''}`}>
-                  {props.routesBeforeChoosingSite}
+                  className={`textBeforeStation ${props.language !== 'English' ? 'english' : ''}`}
+                  style={{ backgroundImage: `url(${textArea})` }}
+                >
+                  <div
+                    className={`textBeforeStationtext ${props.language !== 'English' ? 'english' : ''}`}>
+                    {props.routesBeforeChoosingSite}
+                  </div>
                 </div>
-              </div>
 
-            ) : (
-              // filteredDataRoutes.filter((route) => route.id).map((route, index) => {
-              //   return (
-              //     <div
-              //       className='buttons'
-              //       style={{
-              //         border:
-              //           route.id === tasksOfRoutes.id
-              //             ? '1px solid #256fa1'
-              //             : '',
-              //         flexDirection:
-              //           props.language === 'English' ? 'row' : 'row-reverse',
-              //         textAlignLast:
-              //           props.language === 'English' ? 'end' : 'left',
-              //       }}
-              //       key={index}
-              //     >
-              //       <div className='dropdownThreeDots'>
-              //         <button
-              //           className='threeDotsVerticalEng'
-              //           onClick={() => {
-              //             clickOnhreeDotsVerticaIcont(index)
-              //             setSelectedRoute(route);
-              //           }}
-              //         >
-              //           <BsThreeDotsVertical />
-              //         </button>
-
-              //         {openThreeDotsVertical === index ? (
-              //           // <div ref={menuRef}>
-              //           <ModalDropdown
-              //             language={props.language}
-              //             setRequestForEditing={setRequestForEditing}
-              //             setOpenThreeDotsVertical={setOpenThreeDotsVertical}
-              //             editable={true}
-              //             Reproducible={true}
-              //             details={true}
-              //             erasable={true}
-              //             uploadfromsheet={true}
-              //           />
-              //         ) : (
-              //           // </div>
-              //           <></>
-              //         )}
-              //       </div>
-              //       <button
-              //         className='nameOfButton'
-              //         onClick={
-              //           () => {
-              //             setSelectedRoute(route);
-              //             // console.log(selectedRoute === null , selectedRoute.id !== route.id);
-              //             // console.log(selectedRoute , selectedRoute.id , route.id);
-
-              //             if (selectedRoute === null || selectedRoute.id !== route.id) {
-              //               displayStationsFromSelectedRoute(route);
-              //               DisplayTasks(route);
-              //             }
-              //           } //הצגת המסלול
-              //         }
-              //       >
-              //         {translateData === 'translated'
-              //           ? translatedRoutes[route.id] || route.name.replace('&#8211;', '-').replace('&#8217;', "'")
-              //           : translateData === 'Mixed'
-              //             ? `${route.name.replace('&#8211;', '-').replace('&#8217;', "'")} (${translatedRoutes[route.id] || route.name.replace('&#8211;', '-').replace('&#8217;', "'")})`
-              //             : route.name.replace('&#8211;', '-').replace('&#8217;', "'")}
-              //       </button>
-              //     </div>
-              //   );
-              // })
-              <BorderedTreeView
-                direction={props.language !== 'English' ? 'ltr' : 'rtl'}
-                filteredDataRoutes={filteredDataRoutes}
-                renderRoute={(route, index) => (
+              ) : (
+                filteredpacksbysite.map((pack, index) => (
                   <div
                     className='buttons'
                     style={{
                       border:
-                        route.id === tasksOfRoutes.id
-                          ? '1px solid #256fa1'
+                        pack.id === selectedPack?.id
+                          ? '1px solid rgb(173, 16, 212)'
                           : '',
-                      flexDirection: 'row-reverse',
+                      flexDirection: props.language === 'English' ? 'row' : 'row-reverse',
                       textAlignLast:
                         props.language === 'English' ? 'end' : 'left',
                     }}
@@ -1447,25 +1764,26 @@ const Places = (props) => {
                       <button
                         className='threeDotsVerticalEng'
                         onClick={() => {
-                          // Find the actual index of the route in filteredDataRoutes
-                          const actualIndex = filteredDataRoutes.findIndex(
-                            (r) => r.id === route.id
+                          // Find the actual index of the pack in filteredpacksbysite
+                          const actualIndex = filteredpacksbysite.findIndex(
+                            (r) => r.id === pack.id
                           );
                           console.log('actualIndex', actualIndex);
-                          console.log('openThreeDotsVertical', openThreeDotsVertical);
-                          clickOnhreeDotsVerticaIcont(actualIndex); // Pass the correct index
-                          setSelectedRoute(route);
+                          console.log('openThreeDotsVerticalPacks', openThreeDotsVerticalPacks);
+                          clickOnThreeDotsVerticalIcon(actualIndex, 'pack'); // Pass the correct index and type
+                          setSelectedPack(pack);
+                          setRequestForEditing('');
                         }}
                       >
                         <BsThreeDotsVertical />
                       </button>
 
-                      {openThreeDotsVertical === filteredDataRoutes.findIndex((r) => r.id === route.id) ? (
+                      {openThreeDotsVerticalPacks === filteredpacksbysite.findIndex((r) => r.id === pack.id) ? (
                         <ModalDropdown
                           language={props.language}
                           setRequestForEditing={setRequestForEditing}
-                          setOpenThreeDotsVertical={setOpenThreeDotsVertical}
-                          editable={false}
+                          setOpenThreeDotsVertical={setOpenThreeDotsVerticalPacks} // Use the pack-specific setter
+                          editable={true}
                           Reproducible={true}
                           details={false}
                           erasable={true}
@@ -1478,44 +1796,210 @@ const Places = (props) => {
                     <button
                       className="nameOfButton"
                       onClick={() => {
-                        setSelectedRoute(route);
-                        if (selectedRoute === null || selectedRoute.id !== route.id) {
-                          displayStationsFromSelectedRoute(route);
-                          DisplayTasks(route);
-                        }
+                        setSelectedPack(pack);
+                        console.log('pack', pack);
+
+                        // Call the function to handle pack selection and display routes
+                        handleSelectPack(pack);
+
+                        // Create a simulated drop event to make the board view show pack routes
+                        const simulatedDropEvent = {
+                          source: { droppableId: 'Packs' },
+                          destination: { droppableId: 'board-droppable' },
+                          draggableId: pack.id
+                        };
+                        setDropToBoard(simulatedDropEvent);
                       }}
                     >
                       {translateData === 'translated'
-                        ? translatedRoutes[route.id] ||
-                        route.name.replace('&#8211;', '-').replace('&#8217;', "'")
+                        ? translatedRoutes[pack.id] ||
+                        pack.name.replace('&#8211;', '-').replace('&#8217;', "'")
                         : translateData === 'Mixed'
-                          ? `${route.name
+                          ? `${pack.name
                             .replace('&#8211;', '-')
-                            .replace('&#8217;', "'")} (${translatedRoutes[route.id] ||
-                            route.name.replace('&#8211;', '-').replace('&#8217;', "'")})`
-                          : route.name.replace('&#8211;', '-').replace('&#8217;', "'")}
+                            .replace('&#8217;', "'")} (${translatedRoutes[pack.id] ||
+                            pack.name.replace('&#8211;', '-').replace('&#8217;', "'")})`
+                          : pack.name.replace('&#8211;', '-').replace('&#8217;', "'")}
                     </button>
                   </div>
-                )}
-              />
-            )}
+                ))
+              )}
+            </div>
+            <div className='addPlaceCover'>
+              <button
+                className='AddButton'
+                onClick={handleAddPack}
+              >
+                <AiOutlinePlus className='plus' />
+              </button>
+            </div>
           </div>
-          <div className='addPlaceCover'>
-            <button
-              className='AddButton'
-              onClick={() => {
-                console.log('clicked', modalOpen);
+          {/* //////////////////////////////////////////////////////////////////////////////////////////// */}
+          <div className='Cover_Places'>
+            <>
+              <div className='TitlePlacesCover'>
+                <div className='TitlePlaces'>
+                  <div
+                    className={`MyTitle text ${props.language !== 'English' ? 'english' : ''}`}
+                  >
+                    {props.language === 'English' ? 'מסלולים' : 'Routes'}
+                  </div>
+                </div>
+              </div>
+            </>
 
-                setModalOpen(true);
-                setFlagStudent(true);
-                setClickAddRoute((clickAddRoute = true));
+            <div
+              className='search'
+              style={{
+                backgroundColor: '#F5F5F5',
               }}
             >
-              <AiOutlinePlus className='plus' />
-            </button>
+              <input
+                className={`searchButton  ${props.language !== 'English' ? 'english' : 'routes'}`}
+                dir='rtl'
+                placeholder={
+                  props.language === 'English' ? 'חפש מסלול' : 'search route'
+                }
+                label={
+                  <CgSearch
+                    style={{ fontSize: 'x-large', textAlign: '-webkit-center' }}
+                  />
+                }
+                onChange={inputHandlerRoutes}
+              ></input>
+            </div>
+            <div
+              className='search'
+              style={{
+                backgroundColor: '#F5F5F5',
+              }}
+            >
+              <button
+                className="deselect-button"
+                onClick={handleDeselectRoute}
+              >
+                {props.language === "English" ? "הצג את כל התחנות" : "show all Stations"}
+              </button>
+            </div>
+
+            <Droppable droppableId="routes-droppable">
+              {(provided, snapshot) => (
+                <div
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                  className='routs'
+                  style={{
+                    backgroundColor: snapshot.isDraggingOver ? '#eeeee4' : '#F5F5F5',
+                  }}
+                >
+                  {filteredDataRoutes.length === 0 ? (
+                    <div
+                      className={`textBeforeStation ${props.language !== 'English' ? 'english' : ''}`}
+                      style={{ backgroundImage: `url(${textArea})` }}
+                    >
+                      <div
+                        className={`textBeforeStationtext ${props.language !== 'English' ? 'english' : ''}`}>
+                        {props.routesBeforeChoosingSite}
+                      </div>
+                    </div>
+                  ) : (
+                    <BorderedTreeView
+                      direction={props.language !== 'English' ? 'ltr' : 'rtl'}
+                      filteredDataRoutes={filteredDataRoutes}
+                      renderRoute={(route, index) => (
+                        <Draggable key={route.id} draggableId={route.id} index={index}>
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              className='buttons'
+                              style={{
+                                ...provided.draggableProps.style,
+                                border: route.id === tasksOfRoutes.id ? '1px solid #256fa1' : '',
+                                flexDirection: 'row-reverse',
+                                textAlignLast: props.language === 'English' ? 'end' : 'left',
+                              }}
+                            >
+                              <div className='dropdownThreeDots'>
+                                <button
+                                  className='threeDotsVerticalEng'
+                                  onClick={(e) => {
+                                    e.stopPropagation(); // Prevent drag from starting
+                                    // Find the actual index of the route in filteredDataRoutes
+                                    const actualIndex = filteredDataRoutes.findIndex(
+                                      (r) => r.id === route.id
+                                    );
+                                    console.log('actualIndex', actualIndex);
+                                    console.log('openThreeDotsVertical', openThreeDotsVertical);
+                                    clickOnThreeDotsVerticalIcon(actualIndex, 'route');
+                                    setSelectedRoute(route);
+                                  }}
+                                >
+                                  <BsThreeDotsVertical />
+                                </button>
+
+                                {selectedRoute?.id === route.id && openThreeDotsVertical === filteredDataRoutes.findIndex((r) => r.id === route.id) ? (
+                                  <ModalDropdown
+                                    language={props.language}
+                                    setRequestForEditing={setRequestForEditing}
+                                    setOpenThreeDotsVertical={setOpenThreeDotsVertical}
+                                    editable={false}
+                                    Reproducible={true}
+                                    details={false}
+                                    erasable={true}
+                                    uploadfromsheet={false}
+                                  />
+                                ) : (
+                                  <></>
+                                )}
+                              </div>
+                              <div
+                                className="nameOfButton"
+                                onClick={() => {
+                                  setSelectedRoute(route);
+                                  if (selectedRoute === null || selectedRoute.id !== route.id) {
+                                    displayStationsFromSelectedRoute(route);
+                                    DisplayTasks(route);
+                                  }
+                                }}
+                              >
+                                {translateData === 'translated'
+                                  ? translatedRoutes[route.id] ||
+                                  route.name.replace('&#8211;', '-').replace('&#8217;', "'")
+                                  : translateData === 'Mixed'
+                                    ? `${route.name
+                                      .replace('&#8211;', '-')
+                                      .replace('&#8217;', "'")} (${translatedRoutes[route.id] ||
+                                      route.name.replace('&#8211;', '-').replace('&#8217;', "'")})`
+                                    : route.name.replace('&#8211;', '-').replace('&#8217;', "'")}
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      )}
+                    />
+                  )}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+
+            <div className='addPlaceCover'>
+              <button
+                className='AddButton'
+                onClick={() => {
+                  console.log('clicked', modalOpen);
+                  setModalOpen(true);
+                  setFlagStudent(true);
+                  setClickAddRoute((clickAddRoute = true));
+                }}
+              >
+                <AiOutlinePlus className='plus' />
+              </button>
+            </div>
           </div>
-        </div>
-        <DragDropContext onDragEnd={handleDragEnd}>
+          {/* //////////////////////////////////////////////////////////////////////////////////////////// */}
           <Stations
             filteredDataRoutes={filteredDataRoutes}
             setFilteredDataRoutes={setFilteredDataRoutes}
@@ -1563,6 +2047,8 @@ const Places = (props) => {
             setChosenStation={setChosenStation}
             chosenStation={chosenStation}
             settaskcolor={handleColor}
+            Packs={filteredpacksbysite}  // Make sure to pass the packs data 
+            selectedPack={selectedPack}
           />
           <Tasks
             allUsers={allUsers}

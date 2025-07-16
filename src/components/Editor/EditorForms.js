@@ -175,7 +175,9 @@ export default function EditorForm({
             }
             if (EditorAction === 'edit') {
                 try {
-                    await updateEditor(formValues.id, formValues).then((response) => {
+                    formValues.siteIds = formValues.sites.map(site => site.id);
+                    const response = await updateEditor(formValues.id, formValues);
+                    if (response && response.data) {
                         showNotification('success', t("showNotification.Success_edit_editor"));
                         setEditors((prevEditors) =>
                             prevEditors.map(editor =>
@@ -184,18 +186,23 @@ export default function EditorForm({
                                     : editor
                             )
                         );
-                    });
+                    } else {
+                        throw new Error('Invalid API response');
+                    }
                 } catch (error) {
                     showNotification('error', t("showNotification.Error_edit_editor") + error.message);
                 }
             } else {
                 try {
                     formValues.siteIds = formValues.sites.map(site => site.id);
-                    await insertEditor({ ...formValues }).then((response) => {
+                    const response = await insertEditor({ ...formValues });
+                    if (response && response.data) {
                         showNotification('success', t("showNotification.Success_add_editor"));
                         response.sites = formValues.sites;
-                        setEditors((prevEditors) => [...prevEditors, { ...response }]);
-                    });
+                        setEditors((prevEditors) => [...prevEditors, { ...response.data }]);
+                    } else {
+                        throw new Error('Invalid API response' + JSON.stringify(response));
+                    }
                 } catch (error) {
                     showNotification('error', t("showNotification.Error_add_editor") + error.message);
                 }

@@ -66,6 +66,7 @@ function App() {
                       <Route path='/community' component={Community}></Route>
                       <Route path='/editor' component={Editors}></Route>
                       <Route path='/dev' component={Plannerpage}></Route>
+                      <Route path='/subjects' component={Community}></Route>
                     </Switch>
                   </div>
                 </Router>

@@ -223,8 +223,8 @@ const Dashboard = () => {
       <iframe
         width="100%"
         height="100%"
-        // src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&URL=${baseUrl}`}
-        src={`http://localhost:8501/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&env=${baseUrl === "https://stg-web-app0da5905.azurewebsites.net" ? "sta" : "prod"}`}
+        src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&env=${baseUrl === "https://stg-web-app0da5905.azurewebsites.net" ? "stg" : "prod"}`}
+        // src={`http://localhost:8501/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&env=${baseUrl === "https://stg-web-app0da5905.azurewebsites.net" ? "stg" : "prod"}`}
       ></iframe>
     } </div>
   ]

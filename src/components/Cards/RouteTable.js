@@ -153,8 +153,9 @@ export default function RouteTable() {
           );
           setRoutes(filteredRoutes);
         } else if (role === "STUDENT" && userId) {
+          // Filter routes where the student is included in the students array
           const filteredRoutes = routesWithTaskDetails.filter(route =>
-            Array.isArray(route.studentIds) && route.studentIds.includes(userId)
+            Array.isArray(route.students) && route.students.some(student => student.id === userId)
           );
           setRoutes(filteredRoutes);
         } else {

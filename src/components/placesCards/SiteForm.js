@@ -7,6 +7,8 @@ import {
     TextField,
     Button,
     FormControl,
+    CircularProgress,
+    Typography,
 } from '@mui/material';
 import { insertSite, updateSite, uploadFiles } from '../../api/api';
 import InputFileUpload from '../InputFileUpload/InputFileUpload';
@@ -24,6 +26,8 @@ export default function SiteForm({
     const [formValues, setFormValues] = useState({ ...initialValues });
     const [picture, setPicture] = useState(null);
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false); // Loading state
+    const [error, setError] = useState(null); // Error state
     const { showNotification } = useNotification();
     const { t } = useTranslation();
 
@@ -47,26 +51,32 @@ export default function SiteForm({
     const handleSubmit = async () => {
         if (!validate()) return;
 
+        setLoading(true); // Start loading
+        setError(null); // Reset error state
+
         try {
             if (picture) {
                 formValues.picture_url = await uploadFiles(picture, 'Site media/picture', formValues.nameInEnglish);
             }
             if (SiteAction === 'edit') {
-                await updateSite(formValues.id, formValues).then((response) => {
-                    showNotification('success', t("showNotification.Success_edit_site"));
-                    setSites((prevSites) =>
-                        prevSites.map(site => site.id === formValues.id ? { ...response.data } : site)
-                    );
-                });
+                const response = await updateSite(formValues.id, formValues);
+                showNotification('success', t("showNotification.Success_edit_site"));
+                setSites((prevSites) =>
+                    prevSites.map(site => site.id === formValues.id ? { ...response.data } : site)
+                );
             } else {
-                await insertSite({ ...formValues }).then((response) => {
-                    showNotification('success', t("showNotification.Success_add_site"));
-                    setSites((prevSites) => [...prevSites, { ...response }]);
-                });
+                const response = await insertSite({ ...formValues });
+                showNotification('success', t("showNotification.Success_add_site"));
+                setSites((prevSites) => [...prevSites, { ...response }]);
             }
         } catch (error) {
+            console.error('Error:', error);
+            setError(error.message || t("showNotification.Error_add_site"));
             showNotification('error', t("showNotification.Error_add_site") + error.message);
+        } finally {
+            setLoading(false); // Stop loading
         }
+
         setPicture(null);
         handleCloseDialog();
     };
@@ -75,6 +85,16 @@ export default function SiteForm({
         <Dialog open={open} onClose={handleCloseDialog} style={{ direction: t('Direction') }}>
             <DialogTitle>{title}</DialogTitle>
             <DialogContent dir={t('Direction')}>
+                {loading && (
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
+                        <CircularProgress />
+                    </div>
+                )}
+                {error && (
+                    <Typography color="error" style={{ marginBottom: '16px', textAlign: 'center' }}>
+                        {error}
+                    </Typography>
+                )}
                 <TextField
                     required
                     label={t("Forms.Name")}
@@ -101,6 +121,7 @@ export default function SiteForm({
                     value={formValues.nameInEnglish}
                     onChange={handleChange('nameInEnglish')}
                     margin="normal"
+                    disabled={SiteAction === 'edit'} // Disable if SiteAction is 'edit'
                 />
                 <FormControl fullWidth margin="normal">
                     {formValues.picture_url && (
@@ -122,8 +143,12 @@ export default function SiteForm({
                 </FormControl>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseDialog}>{t("Forms.Cancel")}</Button>
-                <Button onClick={handleSubmit}>{t("Forms.Submit")}</Button>
+                <Button onClick={handleCloseDialog} disabled={loading}>
+                    {t("Forms.Cancel")}
+                </Button>
+                <Button onClick={handleSubmit} disabled={loading}>
+                    {t("Forms.Submit")}
+                </Button>
             </DialogActions>
         </Dialog>
     );

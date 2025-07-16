@@ -52,7 +52,7 @@ function Modal({
   const [site, setSite] = useState(localStorage.getItem('MySite'));
 
   const [, setDone] = useState(false);
-  const [, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [student, setStudent] = useState([]);
   const [, setMyStudents] = useState([]);
 
@@ -73,7 +73,7 @@ function Modal({
   const [selectedRoute, setSelectedRoute] = useState(filteredDataRoutes.filter((route) => route.id === routeUUID)[0]?.parentRouteId);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchUsers = async () => {
       setLoading(true);
       try {
         const usersData = await getingData_Users();
@@ -92,20 +92,22 @@ function Modal({
       }
       setLoading(false);
     };
-    fetchData();
+    fetchUsers();
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchRoutes = async () => {
       setLoading(true);
       try {
-        setRoutes(await getingData_Routes());
+        const routesData = await getingData_Routes();
+        setRoutes(routesData);
       } catch (error) {
         console.error(error.message);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-    fetchData();
+    fetchRoutes();
   }, []);
 
   useEffect(() => {
@@ -143,6 +145,7 @@ function Modal({
 
       console.log('newRouteObj', newRouteObj);
 
+      setLoading(true);
       try {
         updateRoute(routeUUID, newRouteObj).then(async (updatedRoute) => {
           try {
@@ -184,6 +187,8 @@ function Modal({
       } catch (error) {
         console.error(error.message);
         showNotification("error", language !== "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+      } finally {
+        setLoading(false);
       }
     }
   }
@@ -255,6 +260,7 @@ function Modal({
   };
   const handleSubmitRouteTitle = async (event) => {
     event.preventDefault();
+    setLoading(true); // Start loading
 
     setNewTitleForRoute(routeTitle);
 
@@ -277,6 +283,8 @@ function Modal({
       } catch (error) {
         console.error(error.message);
         showNotification("error", language !== "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+      } finally {
+        setLoading(false); // Stop loading
       }
     } else {
       try {
@@ -291,9 +299,11 @@ function Modal({
       } catch (error) {
         console.error(error.message);
         showNotification("error", language !== "English" ? "Error Creating Route" : "שגיאה ביצירת המסלול");
+      } finally {
+        setLoading(false); // Stop loading
       }
     }
-  };
+  }
 
   return (
     <>
@@ -481,7 +491,7 @@ function Modal({
                               language === 'English' ? 'right' : 'left',
                           }}
                         >
-                          {language !== 'English' ? 'New route' : 'מסלול vחדש'}
+                          {language !== 'English' ? 'New route' : 'מסלול חדש'}
                         </div>
                       </div>
                       <div className='newRouteBody'>
@@ -510,13 +520,13 @@ function Modal({
                               // onChange={getName}
                               value={routeTitle}
                               onChange={(e) => setRouteTitle(e.target.value)}
-                            ></input>
+                            />
                           </p>
 
-                          <button type='submit' className='saveAs'>
+                          <button type='submit' className='saveAs' disabled={loading}>
                             {/* onClick={() => saveData()}> */}
-                            <div style={{ color: 'white' }}>
-                              {language !== 'English' ? 'Save' : 'שמור'}
+                            <div style={{ color: 'white' }} disabled={loading} >
+                              {loading ? (language !== 'English' ? 'Loading...' : 'טוען...') : (language !== 'English' ? 'Save' : 'שמור')}
                             </div>
                           </button>
 

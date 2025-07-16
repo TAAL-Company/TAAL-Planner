@@ -273,6 +273,8 @@ const Places = (props) => {
   }, [filteredDataRoutes, translateData]);
 
   useEffect(() => {
+    console.log("Request for editing:", requestForEditing);
+
 
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
       // If we're dealing with a pack edit
@@ -299,6 +301,7 @@ const Places = (props) => {
         };
 
         try {
+          setLoading(true); // Start loading
           insertPack(newPackObj).then(async (newaddedpack) => {
             setOpenThreeDotsVertical(-1);
             setOpenThreeDots(-1);
@@ -316,6 +319,8 @@ const Places = (props) => {
         } catch (error) {
           console.log(error);
           showNotification("error", props.language === "English" ? "האריזה לא הועתקה!" : "The pack was not copied!");
+        } finally {
+          setLoading(false); // Stop loading
         }
       }
       // Existing route duplication code
@@ -346,6 +351,7 @@ const Places = (props) => {
 
         // console.log(newRouteObj);
         try {
+          setLoading(true);
           insertRoute(newRouteObj).then(async (newaddedroute) => {
             // alert(props.language ? 'ההוראה הועתקה בהצלחה!' : 'The instruction was copied successfully!');
             setOpenThreeDotsVertical(-1);
@@ -364,18 +370,23 @@ const Places = (props) => {
         } catch (error) {
           console.log(error);
           showNotification("error", props.language === "English" ? "ההוראה לא הועתקה!" : "The instruction was not copied!");
+        } finally {
+          setLoading(false); // Stop loading
         }
 
 
-      } else if (requestForEditing === 'delete') {
-        // Handle pack deletion if needed
-        if (selectedPack) {
-          setOpenRemove(true);
-          setRouteForDelete(openThreeDotsVertical);
-        } else {
-          setOpenRemove(true);
-          setRouteForDelete(openThreeDotsVertical);
-        }
+      }
+    } else if (requestForEditing === 'delete') {
+      // Handle pack deletion if needed
+      console.log(filteredDataRoutes[openThreeDotsVertical]);
+      if (selectedPack) {
+        setOpenRemove(true);
+        setRouteForDelete(filteredpacksbysite[openThreeDotsVerticalPacks].id);
+      } else {
+
+        console.log(filteredDataRoutes[openThreeDotsVertical]);
+        setOpenRemove(true);
+        setRouteForDelete(openThreeDotsVertical);
       }
     }
     // Other existing conditions...
@@ -402,14 +413,16 @@ const Places = (props) => {
   const handleCloseRemoveConfirm = async () => {
     try {
       // Handle pack deletion
+      setLoading(true);
       if (selectedPack) {
-        let deletePacks = await deletePack(filteredpacksbysite[routrForDelete].id);
+        let deletePacks = await deletePack(routrForDelete);
 
         if (deletePacks.status === 200) {
           showNotification('success', props.language === "English" ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
-          const newPacks = [...filteredpacksbysite];
-          newPacks.splice(routrForDelete, 1); // remove one element at index x
-          setFilteredPacksBySite(newPacks);
+          const newPacks = filteredpacksbysite.filter(
+            (pack, index) => index !== routrForDelete
+          );
+          setFilteredPacksBySite([...newPacks]); // Ensure a new reference
         }
       }
       // Handle route deletion (existing code)
@@ -432,6 +445,8 @@ const Places = (props) => {
     } catch (error) {
       console.error(error);
       showNotification('error', props.language === "English" ? 'המחיקה נכשלה!' : 'Deletion failed!');
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
   const [pastelColors, setPastelColors] = useState([
@@ -1315,11 +1330,14 @@ const Places = (props) => {
 
         setTimeout(() => {
           try {
+            setLoading(true); // Start loading
             updateRoute(uuidRoute, { siteIds: mySite.id });
             showNotification("success", props.language === "English" ? "Route Updated Successfully" : "המסלול עודכן בהצלחה");
           } catch (error) {
             console.error(error);
             showNotification("error", props.language === "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+          } finally {
+            setLoading(false); // Stop loading
           }
         }, 60000);
       }
@@ -1532,12 +1550,15 @@ const Places = (props) => {
   }
 
   const handleDeselectRoute = () => {
+    setLoading(true); // Start loading
     setAllTasksOfTheSite([]);
     setTasksOfChosenStation([]);
     setTasksLength(0);
     setSelectedWorker(null);
     // setSelectedPack(null);
-    Display_The_Stations(selectedSite);
+    Display_The_Stations(selectedSite).finally(() => {
+      setLoading(false); // Stop loading after the operation is complete
+    });
   };
 
   const handleSelectOption = (option) => {
@@ -1919,6 +1940,13 @@ const Places = (props) => {
                                 border: route.id === tasksOfRoutes.id ? '1px solid #256fa1' : '',
                                 flexDirection: 'row-reverse',
                                 textAlignLast: props.language === 'English' ? 'end' : 'left',
+                              }}
+                              onClick={() => {
+                                setSelectedRoute(route);
+                                if (selectedRoute === null || selectedRoute.id !== route.id) {
+                                  displayStationsFromSelectedRoute(route);
+                                  DisplayTasks(route);
+                                }
                               }}
                             >
                               <div className='dropdownThreeDots'>

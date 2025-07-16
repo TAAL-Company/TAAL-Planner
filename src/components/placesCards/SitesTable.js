@@ -66,6 +66,9 @@ export default function SitesTable() {
     const { showNotification } = useNotification();
     const { t } = useTranslation();
 
+    // General data
+    const [SiteAction, setSiteAction] = useState(''); // Added SiteAction state
+
     const [popupOpen, setPopupOpen] = useState(false);
     const [popupSection, setPopupSection] = useState('');
     const [popupRow, setPopupRow] = useState(null);
@@ -90,16 +93,19 @@ export default function SitesTable() {
         });
         setSelectedSite(null);
         setAnchorEl(null);
+        setSiteAction(''); // Reset SiteAction
     };
 
     const handleClickOpenDialog = () => {
         setOpenDialog(true);
+        setSiteAction('add'); // Set SiteAction to 'add'
         setNewSite(newSite);
         setTitle(t('SitePage.ADDANewSite'));
     };
 
     const handleClickOpenEditDialog = () => {
         setOpenDialog(true);
+        setSiteAction('edit'); // Set SiteAction to 'edit'
         setNewSite(selectedSite);
         setTitle(t('SitePage.EditSiteInfo'));
     };
@@ -389,7 +395,7 @@ export default function SitesTable() {
                                 title={title}
                                 initialValues={newSite}
                                 setSites={setSites}
-                                SiteAction="add"
+                                SiteAction={SiteAction} // Pass SiteAction to SiteForm
                             />
                         </div>
                     </div>

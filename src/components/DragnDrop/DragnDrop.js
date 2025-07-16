@@ -557,7 +557,8 @@ function DragnDrop(props) {
                     kavTopWidth: '25px',
                     newkavTaskTop: '0px',
                     kavTaskTopMarginTop: '-7px',
-                    borderLeft: '0x solid #c2bfbf'
+                    borderLeft: '0x solid #c2bfbf',
+                    pack: pack.name // Include pack information
                   };
 
                   setBoard(currentBoard => [...currentBoard, routeItem]);
@@ -894,9 +895,9 @@ function DragnDrop(props) {
                             }`}
                         >
                           {/* Show pack name if showing pack routes */}
-                          {board[0].itemType === 'route' && board[0].myStation === 'Pack Route' ? (
+                          {board[0].itemType === 'route'? (
                             <span style={{ color: '#ba11b0' }}>
-                              {board[0].nameStation.split(' > ')[0]} {props.language === 'English' ? 'Routes' : 'מסלולים'}
+                              {board[0].pack ? board[0].pack : 'Pack Routes'}
                             </span>
                           ) : props.tasksOfRoutes && props.tasksOfRoutes.name ? (
                             props.tasksOfRoutes.name

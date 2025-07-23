@@ -4,7 +4,7 @@ import View from './Components-planner/view';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import CircularProgress from '@mui/material/CircularProgress';
-import { getingData_Places, getingData_Users, getingData_Tasks, getingData_Routes, getingDataStation } from '../api/api'
+import { getingData_Places, getingData_Users, getingData_Tasks, getingData_Routes, getingDataStation, getingData_Packs } from '../api/api'
 import PlacesDropdown from './Components-planner/PlacesDropdown';
 import { DragDropContext } from 'react-beautiful-dnd'; // Add this import
 
@@ -77,7 +77,7 @@ export default function Plannerpage() {
         const siteTasksids = site.tasks.map((task) => task.id);
         const siteStationsids = site.stations.map((station) => station.id);
         const siteRoutesids = site.routes.map((route) => route.id);
-        const sitePacksids = site?.packs?.map((pack) => pack.id);
+        const sitePacksids = site.packs.map((pack) => pack.id);
 
         const fullUserListformsite = users.filter((user) => siteUsersids.includes(user.id));
         setSelectedUserfromsite(fullUserListformsite);
@@ -141,40 +141,74 @@ export default function Plannerpage() {
         setSelectedTaskfromstation([]);
     };
 
+    const handleTaskClick = (task) => {
+        console.log("Selected task:", task);
+    };
+
+    const handlePackClick = (pack) => {
+        console.log("Selected pack:", pack);
+    };
+    
     const onDragEnd = (result) => {
-        const { source, destination } = result;
+        const { source, destination, type } = result;
         if (!destination) return;
 
-        // Example: handle drag to routeView
-        if (destination.droppableId === 'routeview') {
-            if (source.droppableId === 'stations') {
-                const station = selectedStationfromsite[source.index];
-                if (!routeViewData.some(s => s.id === station.id)) {
-                    setRouteViewData([...routeViewData, { ...station, tasks: station.tasks || [] }]);
-                }
-            }
-            if (source.droppableId === 'tasks') {
-                const task = selectedTaskfromstation[source.index];
-                // Find station for this task
-                const station = selectedStationfromsite.find(s => s.tasks?.some(t => t.id === task.id));
-                if (station) {
-                    let updated = [...routeViewData];
-                    let stationIdx = updated.findIndex(s => s.id === station.id);
-                    if (stationIdx === -1) {
-                        updated.push({ ...station, tasks: [task] });
-                    } else {
-                        if (!updated[stationIdx].tasks.some(t => t.id === task.id)) {
-                            updated[stationIdx].tasks.push(task);
-                        }
-                    }
-                    setRouteViewData(updated);
-                }
-            }
+        if (type === 'station') {
+            console.log("Dragging station:", result);
+            
+            const updated = Array.from(routeViewData);
+            const [movedStation] = updated.splice(source.index, 1);
+            updated.splice(destination.index, 0, movedStation);
+            setRouteViewData(updated);
             return;
         }
 
-        // ...existing drag logic for other columns...
+        if (type === 'task') {
+            const sourceStationId = source.droppableId.replace('routeview-station-', '');
+            const destinationStationId = destination.droppableId.replace('routeview-station-', '');
+
+            setRouteViewData(prev => {
+                const updated = [...prev];
+                const sourceStationIndex = updated.findIndex(s => s.id === sourceStationId);
+                const destinationStationIndex = updated.findIndex(s => s.id === destinationStationId);
+                if (sourceStationIndex === -1 || destinationStationIndex === -1) return prev;
+
+                const sourceTasks = Array.from(updated[sourceStationIndex].tasks);
+                const [movedTask] = sourceTasks.splice(source.index, 1);
+
+                if (sourceStationId === destinationStationId) {
+                    sourceTasks.splice(destination.index, 0, movedTask);
+                    updated[sourceStationIndex].tasks = sourceTasks;
+                } else {
+                    const destTasks = Array.from(updated[destinationStationIndex].tasks);
+                    destTasks.splice(destination.index, 0, movedTask);
+                    updated[sourceStationIndex].tasks = sourceTasks;
+                    updated[destinationStationIndex].tasks = destTasks;
+                }
+
+                return updated;
+            });
+            return;
+        }
+
+        // Handle adding from external sources into routeViewData
+        if (destination.droppableId === 'routeview') {
+            if (source.droppableId === 'stations') {
+                const station = selectedStationfromsite[source.index];
+                setRouteViewData(prev => [...prev, { ...station, tasks: station.tasks || [] }]);
+                return;
+            }
+
+            if (source.droppableId === 'tasks') {
+                const task = selectedTaskfromstation[source.index];
+                const station = selectedStationfromsite.find(s => s.tasks?.some(t => t.id === task.id));
+                if (!station) return;
+                setRouteViewData(prev => [...prev, { ...station, tasks: [task] }]);
+                return;
+            }
+        }
     };
+
 
     useEffect(() => {
         console.log("Selected Site:", selectedSite);
@@ -211,6 +245,12 @@ export default function Plannerpage() {
             try {
                 const stations = await getingDataStation();
                 setStations(stations);
+            } catch (error) {
+                console.log(error);
+            }
+            try {
+                const packs = await getingData_Packs();
+                setPacks(packs);
             } catch (error) {
                 console.log(error);
             }
@@ -278,6 +318,8 @@ export default function Plannerpage() {
                             setPacks={setPacks}
                             onStationClick={handleStationClick}
                             onRouteClick={handleRouteClick}
+                            onTaskClick={handleTaskClick}
+                            onPackClick={handlePackClick}
                         />
                     </Grid>
                     <Grid item xs={12} md={3}>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import boot from './boot.module.css';
 import './style.css';
 // import { AiFillCheckCircle } from "react-icons/ai";
 // import { MdHelpOutline } from "react-icons/md";
@@ -167,7 +168,7 @@ const Planner = () => {
         <div style={{ color: 'white' }}>Please connect properly !</div>
       ) : (
         <>
-          <div className='Planner'>
+          <div className={boot.Planner} >
             {loading && <div>Loading</div>}
             {!loading && (
               <>

@@ -80,21 +80,31 @@ export default function View({ routeViewData }) {
                             defaultCollapseIcon={<ExpandMoreIcon />}
                             defaultExpandIcon={<ChevronRightIcon />}
                         >
-                            {routeViewData.map((station) => (
-                                <StyledTreeItem
-                                    key={station.id}
-                                    nodeId={String(station.id)}
-                                    label={<Frame text={station.title || station.name} color={station.color} id={station.id} />}
-                                    rootNode
+                            {routeViewData.map((station, stationIndex) => (
+                                <Droppable
+                                    key={`routeview-station-${station.id}`}
+                                    droppableId={`routeview-station-${station.id}`}
+                                    type="station"
                                 >
-                                    {station.tasks && station.tasks.length > 0 && station.tasks.map((task) => (
+                                    {(provided) => (
                                         <StyledTreeItem
-                                            key={task.id}
-                                            nodeId={`task-${task.id}`}
-                                            label={<Frame text={task.title} color={station.color} id={task.id} />}
-                                        />
-                                    ))}
-                                </StyledTreeItem>
+                                            ref={provided.innerRef}
+                                            {...provided.droppableProps}
+                                            key={`${station.id}-${stationIndex}`}
+                                            nodeId={String(station.id)}
+                                            label={<Frame text={station.title || station.name} color={station.color} id={station.id} />}
+                                            rootNode
+                                        >
+                                            {station.tasks && station.tasks.map((task, taskIndex) => (
+                                                <StyledTreeItem
+                                                    key={`task-${task.id}-${taskIndex}`}
+                                                    nodeId={`task-${task.id}`}
+                                                    label={<Frame text={task.title} color={station.color} id={task.id} />}
+                                                />
+                                            ))}
+                                        </StyledTreeItem>
+                                    )}
+                                </Droppable>
                             ))}
                         </TreeView>
                     ) : (

@@ -14,6 +14,7 @@ import communityImage from '../../Pictures/community.png';
 // import Barchart from '../charts/Barchart';
 // import Piechart from '../charts/Piechart';
 import { baseUrl } from '../../config';
+import Charts from '../charts/Charts';
 
 const Dashboard = () => {
 
@@ -220,6 +221,7 @@ const Dashboard = () => {
 
   const rightElements = [
     <div className='left'> {
+      // <Charts />
       <iframe
         width="100%"
         height="100%"

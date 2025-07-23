@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { DragDropContext } from 'react-beautiful-dnd';
 import { Plannerbox } from './Components-planner/Plannerbox';
 import { Frame } from './Components-planner/tag';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import BorderedTreeView from '../components/Places/BorderedTreeView';
 
-export default function PlannerMap({ stations, setStations, tasks, setTasks, route, setRoute, Packs, setPacks, onStationClick, onRouteClick }) {
+export default function PlannerMap({ stations, setStations, tasks, setTasks, route, setRoute, Packs, setPacks, onStationClick, onRouteClick , onTaskClick , onPackClick }) {
   return (
       <Box sx={{ flexGrow: 1, p: 2 }}>
         <Grid container spacing={2}>
@@ -14,7 +13,11 @@ export default function PlannerMap({ stations, setStations, tasks, setTasks, rou
             <Plannerbox
               droppableId="Packs"
               data={Packs}
-              renderItem={(item) => <Frame text={item.title} color={item.color} />}
+              renderItem={(item) => (
+                <div onClick={() => onPackClick && onPackClick(item)}>
+                  <Frame id={item.id} text={item.name} color={item.color} />
+                </div>
+              )}
               color="#ba11b0"
               title="אריזות"
               icontext="לאחר בחירת התחנות והמשימות, בעמודה זו יופיעו האריזות שנוצרו."
@@ -62,7 +65,11 @@ export default function PlannerMap({ stations, setStations, tasks, setTasks, rou
             <Plannerbox
               droppableId="tasks"
               data={tasks}
-              renderItem={(item) => <Frame id={item.id} text={item.title} color={item.color} />}
+              renderItem={(item) => (
+                <div onClick={() => onTaskClick && onTaskClick(item)}>
+                  <Frame id={item.id} text={item.title} color={item.color} />
+                </div>
+              )}
               color="#e8b221"
               title="משימות"
               icontext="אחרי בחירת התחנה, בעמודה זו יופיעו המשימות הקיימות בה."

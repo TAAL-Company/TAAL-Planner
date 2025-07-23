@@ -19,10 +19,17 @@ const GalleryPage = (props) => {
 
   useEffect(() => {
     const fetchBlobs = async () => {
-      console.log('fetching blobs');
-      setLoading(true);
-      setBlobList(await getBlobsInContainer());
-      setLoading(false);
+      try {
+        console.log('fetching blobs');
+        setLoading(true);
+        setBlobList(await getBlobsInContainer());
+      } catch (error) {
+        console.error('Error fetching blobs:', error);
+        // Optionally set an error state or show a notification
+        setBlobList({});
+      } finally {
+        setLoading(false);
+      }
     };
     fetchBlobs();
   }, [reload]);
@@ -110,13 +117,13 @@ const GalleryPage = (props) => {
         showimage={props.showimage}
       />
       <Box sx={{ flexGrow: 1, p: 3, overflowY: 'scroll' }}>
-      <Button onClick={() => {
-        props.sethandleClose(false)
-      }}>Close</Button>
+        <Button onClick={() => {
+          props.sethandleClose(false)
+        }}>Close</Button>
         {/* <UploadZone onFileUpload={handleFileUpload} /> */}
         <SearchBar onSearch={handleSearch} />
         {selectedType === 'pictures' ? (
-          <ImageGrid images={getFilteredItems()} setReload={setReload} setLoading={setLoading} folderNames={folderNames} setPicture={props.setPicture} sethandleClose={props.sethandleClose}/>
+          <ImageGrid images={getFilteredItems()} setReload={setReload} setLoading={setLoading} folderNames={folderNames} setPicture={props.setPicture} sethandleClose={props.sethandleClose} />
         ) : (
           <AudioList audios={getFilteredItems()} setReload={setReload} setLoading={setLoading} folderNames={folderNames} setAudio={props.setPicture} sethandleClose={props.sethandleClose} />
         )}

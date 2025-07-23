@@ -3,12 +3,20 @@ import ExcelJS from "exceljs";
 import { getingData_Tasks, insertRoute, insertStation, insertTask, uploadFiles } from "../../api/api";
 import { useNotification } from "../Notification/NotificationProvider";
 import { RiAsterisk } from 'react-icons/ri';
+import { Modal, Box, Button } from '@mui/material'; // Add these imports
+import Gallery2 from '../Gallery/Gallery2'; // Add this import
 
 function Sheettodata(props) {
     const [data, setData] = useState([]);
     const [images, setImages] = useState([]);
+    const [audios, setAudios] = useState([]);
     const [draggedImage, setDraggedImage] = useState(null);
-    const [loadingData, setLoadingData] = useState(false); // NEW
+    const [draggedAudio, setDraggedAudio] = useState(null);
+    const [loadingData, setLoadingData] = useState(false);
+
+    // Add these new states for gallery modal
+    const [openAudioGallery, setOpenAudioGallery] = useState(false);
+    const [selectedRowForAudio, setSelectedRowForAudio] = useState(null);
 
     const headerMapping = {
         Task: ["Task", "משימה"],
@@ -19,7 +27,7 @@ function Sheettodata(props) {
         Help: ["Help", "גלגל הצלה"],
         Image: ["Image", "תמונה"],
         Route: ["Route", "מסלול"],
-        Vioces: ["Voices", "קולות"],
+        Voices: ["Voices", "קולות", "Audio", "אודיו"], // Added audio alternatives
     };
 
     const { showNotification } = useNotification();
@@ -35,6 +43,32 @@ function Sheettodata(props) {
             if (aliases.includes(header)) return key;
         }
         return header; // fallback to original if no match
+    };
+
+    // Add audio drag handlers
+    const handleAudioDragStart = (audio) => {
+        setDraggedAudio(audio);
+    };
+
+    const handleAudioDrop = (rowIdx) => {
+        if (draggedAudio) {
+            const updatedData = [...data];
+            updatedData[rowIdx].audio = draggedAudio.file;
+            setData(updatedData);
+            setDraggedAudio(null);
+        }
+    };
+
+    const handleRemoveAudio = (rowIdx) => {
+        const updatedData = [...data];
+        updatedData[rowIdx].audio = null;
+        setData(updatedData);
+    };
+
+    const handleUploadAudio = (rowIdx, file) => {
+        const updatedData = [...data];
+        updatedData[rowIdx].audio = file;
+        setData(updatedData);
     };
 
 
@@ -122,17 +156,18 @@ function Sheettodata(props) {
         console.log('imagesInSheet:', imagesInSheet);
 
         // Step 4: Attach images to the correct rows
-        const jsonWithImages = json.map((row, index) => {
-            const matchedImage = imagesInSheet.find((img) => img.row === index + 2);
+        const jsonWithImagesAndAudio = json.map((row, index) => {
+            const matchedImage = imagesInSheet.find(img => img.row === index + 2);
             return {
                 ...row,
                 image: matchedImage?.file || null,
+                audio: null, // Initialize audio as null since it's not from sheet
             };
         });
 
-        setData(jsonWithImages);
-        setLoadingData(false); // Stop loading
-        console.log('jsonWithImages:', jsonWithImages);
+        setData(jsonWithImagesAndAudio);
+        setLoadingData(false);
+        console.log('jsonWithImagesAndAudio:', jsonWithImagesAndAudio);
     };
 
     // Helper function to transform a row into the desired structure
@@ -203,7 +238,7 @@ function Sheettodata(props) {
         props.setLoading(true);
         try {
             const siteId = props.selectedSite; // { id: "Site1", name: "Site1" };
-
+            const tasksIdsfromsheet = [];
             //groupBy Station--------------------------------------------------------------------------
             try {
                 const groupedData = groupBy(data, "Station");
@@ -213,15 +248,42 @@ function Sheettodata(props) {
                     let stationId = await insertStation(key, key, siteId, [], null, null);
                     for (const data of groupedDataNoDuplication[key]) {
                         let taskimage = null;
+                        let taskaudio = null; // Add audio variable
+
                         if (data.image) {
                             taskimage = await uploadFiles(data.image, 'Task media/picture', siteId.nameInEnglish);
                         }
-                        const response = await insertTask(data.Task, data.Subtitle, [stationId.id], taskimage, null, siteId.id, parseInt(data["Estimated Time Seconds"]), "{}", null, null, null, null,
+
+                        if (data.audio) {
+                            // Handle both file objects and URLs
+                            if (typeof data.audio === 'string') {
+                                // If it's a URL from gallery, use it directly
+                                taskaudio = data.audio;
+                            } else {
+                                // If it's a file object, upload it
+                                taskaudio = await uploadFiles(data.audio, 'Task media/audio', siteId.nameInEnglish);
+                            }
+                        }
+
+                        const response = await insertTask(
+                            data.Task,
+                            data.Subtitle,
+                            [stationId.id],
+                            taskimage,
+                            taskaudio, // Pass audio to insertTask
+                            siteId.id,
+                            parseInt(data["Estimated Time Seconds"]),
+                            "{}",
+                            null,
+                            null,
+                            null,
+                            null,
                             [{
                                 help_text: data.Help,
                                 UserID: "General"
                             }]
                         );
+                        tasksIdsfromsheet.push(response.id);
                     }
                 }
                 showNotification('success', props.language === "English" ? 'התחנות והמשימות הוזנו בהצלחה' : 'Stations and tasks inserted successfully');
@@ -234,29 +296,39 @@ function Sheettodata(props) {
             //groupBy RouteHeader--------------------------------------------------------------------------
 
             try {
+                const normalize = (str) => (str || "").trim().replace(/[\r\n]/g, "");
                 const RouteHeader = Object.keys(data[0])[0]; // Or use: headers.find(h => !!h)
                 const groupedDataByRoutesHeader = groupBy(data, RouteHeader);
                 const tasks = await getingData_Tasks();
                 for (const Route of Object.keys(groupedDataByRoutesHeader)) {
                     const tasksIds = [];
-                    for (const data of groupedDataByRoutesHeader[Route]) {
-                        tasks.find((task) => {
-                            if (task?.title?.replace(/[\r\n]/g, "") === data?.Task?.replace(/[\r\n]/g, "") &&
-                                task?.stations[0]?.title.replace(/[\r\n]/g, "") === data?.Station?.replace(/[\r\n]/g, "") &&
-                                task?.subtitle?.replace(/[\r\n]/g, "") === data?.Subtitle?.replace(/[\r\n]/g, "") &&
-                                task?.sites[0]?.name.replace(/[\r\n]/g, "") === data?.Site?.replace(/[\r\n]/g, "") &&
-                                task?.sites[0]?.name.replace(/[\r\n]/g, "") === props?.selectedSite?.name.replace(/[\r\n]/g, "")
-                            ) {
+
+                    groupedDataByRoutesHeader[Route].forEach((dataRow, idx) => {
+                        tasks.forEach((task) => {
+                            const match =
+                                normalize(task?.title) === normalize(dataRow?.Task) &&
+                                normalize(task?.stations?.[0]?.title) === normalize(dataRow?.Station) &&
+                                normalize(task?.subtitle) === normalize(dataRow?.Subtitle) &&
+                                (//normalize(task?.sites?.[0]?.name) === normalize(dataRow?.Site) ||
+                                    normalize(task?.sites?.[0]?.name) === normalize(props?.selectedSite?.name));
+                            if (match) {
                                 tasksIds.push(task.id);
+                                // console.log(`✅ Match [${idx}] - Task ID: ${task.id}`);
                             }
                         });
+                    });
+
+                    if (tasksIds.length === 0) {
+                        console.warn(`⚠️ No tasks matched for route: ${Route}`);
                     }
-                    let route = {
+
+                    const route = {
                         name: Route,
                         studentIds: [],
                         taskIds: tasksIds,
                         siteIds: [siteId.id],
                     };
+                    console.log("📦 Inserting route:", route);
                     await insertRoute(route);
                 }
                 showNotification('success', props.language === "English" ? 'המסלול הוזן בהצלחה' : 'Route inserted successfully');
@@ -322,6 +394,50 @@ function Sheettodata(props) {
             newData[rowIdx] = { ...newData[rowIdx], image: file };
             return newData;
         });
+    };
+
+    // Modal style for gallery
+    const style2 = {
+        position: 'absolute',
+        top: '5%',
+        left: '5%',
+        width: '90%',
+        height: '90%',
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+    };
+
+    // Gallery modal handlers
+    const handleOpenAudioGallery = (rowIdx) => {
+        setSelectedRowForAudio(rowIdx);
+        setOpenAudioGallery(true);
+    };
+
+    const handleCloseAudioGallery = () => {
+        setOpenAudioGallery(false);
+        setSelectedRowForAudio(null);
+    };
+
+    const handleSelectAudioFromGallery = (audioUrl) => {
+        if (selectedRowForAudio !== null) {
+            // Convert URL to file object (you might need to fetch the file)
+            fetch(audioUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const fileName = audioUrl.split('/').pop();
+                    const file = new File([blob], fileName, { type: blob.type });
+                    handleUploadAudio(selectedRowForAudio, file);
+                })
+                .catch(error => {
+                    console.error('Error converting audio URL to file:', error);
+                    // Fallback: store URL directly if file conversion fails
+                    const updatedData = [...data];
+                    updatedData[selectedRowForAudio].audio = audioUrl;
+                    setData(updatedData);
+                });
+            handleCloseAudioGallery();
+        }
     };
 
     return (
@@ -464,11 +580,13 @@ function Sheettodata(props) {
                             <span role="img" aria-label="drag">🖱️</span>
                             {props.language === 'English'
                                 ? <>
-                                    גרור תמונה מתוך <b>תמונות בגיליון</b> ושחרר אותה בתא <b>תמונה</b> של השורה המתאימה למטה.
-                                  </>
+                                    גרור תמונה מתוך <b>תמונות בגיליון</b> ושחרר אותה בתא <b>תמונה</b> של השורה המתאימה למטה. <br />
+                                    ניתן גם להעלות <b>קבצי אודיו</b> ישירות לכל משימה.
+                                </>
                                 : <>
-                                    Drag an image from <b>Images In Sheet</b> and drop it into the <b>Image</b> cell of the relevant row below.
-                                  </>
+                                    Drag an image from <b>Images In Sheet</b> and drop it into the <b>Image</b> cell of the relevant row below. <br />
+                                    You can also upload <b>audio files</b> directly to each task.
+                                </>
                             }
                         </div>
                         <div
@@ -511,12 +629,14 @@ function Sheettodata(props) {
                                                     >
                                                         {key === 'image'
                                                             ? (props.language === 'English' ? 'תמונה' : 'Image')
-                                                            : (props.language === 'English'
-                                                                ? (headerMapping[key]?.[1] || key)
-                                                                : key)
+                                                            : key === 'audio'
+                                                                ? (props.language === 'English' ? 'אודיו' : 'Audio')
+                                                                : (props.language === 'English'
+                                                                    ? (headerMapping[key]?.[1] || key)
+                                                                    : key)
                                                         }
                                                     </th>
-                                            ))}
+                                                ))}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -533,11 +653,11 @@ function Sheettodata(props) {
                                                                 position: 'relative',
                                                                 verticalAlign: 'middle',
                                                                 background:
-                                                                    key === 'image' && draggedImage
+                                                                    (key === 'image' && draggedImage) || (key === 'audio' && draggedAudio)
                                                                         ? '#e6f7ff'
                                                                         : undefined,
                                                                 outline:
-                                                                    key === 'image' && draggedImage
+                                                                    (key === 'image' && draggedImage) || (key === 'audio' && draggedAudio)
                                                                         ? '2px dashed #256fa1'
                                                                         : undefined,
                                                                 transition: 'background 0.2s, outline 0.2s',
@@ -549,7 +669,12 @@ function Sheettodata(props) {
                                                                     onDragOver: handleDragOver,
                                                                     onDrop: () => handleDrop(idx),
                                                                 }
-                                                                : {})}
+                                                                : key === 'audio'
+                                                                    ? {
+                                                                        onDragOver: handleDragOver,
+                                                                        onDrop: () => handleAudioDrop(idx),
+                                                                    }
+                                                                    : {})}
                                                         >
                                                             {key === 'image' ? (
                                                                 <div style={{
@@ -631,6 +756,115 @@ function Sheettodata(props) {
                                                                             {props.language === 'English'
                                                                                 ? 'גרור תמונה לכאן'
                                                                                 : 'Drag image here'}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            ) : key === 'audio' ? (
+                                                                <div style={{
+                                                                    position: 'relative',
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    gap: 8,
+                                                                    minHeight: 40,
+                                                                    direction: props.language === 'English' ? 'rtl' : 'ltr'
+                                                                }}>
+                                                                    {row[key] && (
+                                                                        <>
+                                                                            <div style={{
+                                                                                display: 'flex',
+                                                                                flexDirection: 'column',
+                                                                                alignItems: 'center',
+                                                                                gap: 4
+                                                                            }}>
+                                                                                <audio controls style={{ width: '200px', height: '30px' }}>
+                                                                                    <source src={typeof row[key] === 'string' ? row[key] : URL.createObjectURL(row[key])} type="audio/mpeg" />
+                                                                                    Your browser does not support the audio element.
+                                                                                </audio>
+                                                                                <span style={{
+                                                                                    fontSize: 12,
+                                                                                    color: '#666',
+                                                                                    maxWidth: '200px',
+                                                                                    overflow: 'hidden',
+                                                                                    textOverflow: 'ellipsis',
+                                                                                    whiteSpace: 'nowrap'
+                                                                                }}>
+                                                                                    {typeof row[key] === 'string'
+                                                                                        ? row[key].split('/').pop()
+                                                                                        : row[key].name}
+                                                                                </span>
+                                                                            </div>
+                                                                            <button
+                                                                                type="button"
+                                                                                onClick={() => handleRemoveAudio(idx)}
+                                                                                style={{
+                                                                                    position: 'absolute',
+                                                                                    top: 2,
+                                                                                    right: 2,
+                                                                                    background: 'rgba(255,255,255,0.85)',
+                                                                                    border: 'none',
+                                                                                    borderRadius: '50%',
+                                                                                    cursor: 'pointer',
+                                                                                    width: 22,
+                                                                                    height: 22,
+                                                                                    display: 'flex',
+                                                                                    alignItems: 'center',
+                                                                                    justifyContent: 'center',
+                                                                                    fontWeight: 'bold',
+                                                                                    color: '#ca0a0a',
+                                                                                    boxShadow: '0 1px 4px rgba(0,0,0,0.08)'
+                                                                                }}
+                                                                                title={props.language === 'English' ? "הסר אודיו" : "Remove audio"}
+                                                                            >×</button>
+                                                                        </>
+                                                                    )}
+                                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                                                                        <label style={{
+                                                                            display: 'inline-block',
+                                                                            padding: '4px 10px',
+                                                                            background: '#eee',
+                                                                            borderRadius: 4,
+                                                                            border: '1px solid #ccc',
+                                                                            cursor: 'pointer',
+                                                                            fontSize: 12,
+                                                                            textAlign: 'center'
+                                                                        }}>
+                                                                            {row[key]
+                                                                                ? (props.language === 'English' ? 'החלף' : 'Replace')
+                                                                                : (props.language === 'English' ? 'העלה אודיו' : 'Upload Audio')}
+                                                                            <input
+                                                                                dir={props.language === 'English' ? 'rtl' : 'ltr'}
+                                                                                type="file"
+                                                                                accept="audio/*"
+                                                                                style={{ display: 'none', direction: props.language === 'English' ? 'rtl' : 'ltr', }}
+                                                                                onChange={e => {
+                                                                                    if (e.target.files && e.target.files[0]) {
+                                                                                        handleUploadAudio(idx, e.target.files[0]);
+                                                                                    }
+                                                                                }}
+                                                                            />
+                                                                        </label>
+                                                                        <Button
+                                                                            variant="outlined"
+                                                                            size="small"
+                                                                            onClick={() => handleOpenAudioGallery(idx)}
+                                                                            style={{
+                                                                                fontSize: 10,
+                                                                                padding: '2px 8px',
+                                                                                minWidth: 'auto'
+                                                                            }}
+                                                                        >
+                                                                            {props.language === 'English' ? 'גלריה' : 'Gallery'}
+                                                                        </Button>
+                                                                    </div>
+                                                                    {!row[key] && (
+                                                                        <span style={{
+                                                                            color: '#aaa',
+                                                                            fontSize: 13,
+                                                                            marginLeft: 8
+                                                                        }}>
+                                                                            {props.language === 'English'
+                                                                                ? 'העלה קובץ אודיו'
+                                                                                : 'Upload audio file'}
                                                                         </span>
                                                                     )}
                                                                 </div>
@@ -720,6 +954,58 @@ function Sheettodata(props) {
                                     </table>
                                 </div>
                             )}
+                            {/* Audio Gallery Section - Add this for drag and drop audio */}
+                            {audios.length > 0 && (
+                                <div style={{ flex: 0, overflow: 'auto', minWidth: 220 }}>
+                                    <h4 style={{
+                                        textAlign: props.language === 'English' ? 'right' : 'center',
+                                        direction: props.language === 'English' ? 'rtl' : 'ltr'
+                                    }}>
+                                        {props.language === 'English' ? 'קבצי אודיו' : 'Audio Files'}
+                                    </h4>
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 8,
+                                        direction: props.language === 'English' ? 'rtl' : 'ltr'
+                                    }}>
+                                        {audios.map((audio, idx) => (
+                                            <div
+                                                key={idx}
+                                                style={{
+                                                    padding: 8,
+                                                    border: '2px dashed #256fa1',
+                                                    borderRadius: 4,
+                                                    background: '#f8faff',
+                                                    cursor: 'grab',
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    alignItems: 'center',
+                                                    gap: 4
+                                                }}
+                                                draggable
+                                                onDragStart={() => handleAudioDragStart(audio)}
+                                            >
+                                                <audio controls style={{ width: '100%', height: '30px' }}>
+                                                    <source src={audio.url} type="audio/mpeg" />
+                                                </audio>
+                                                <span style={{
+                                                    fontSize: 12,
+                                                    color: '#256fa1',
+                                                    textAlign: 'center',
+                                                    wordBreak: 'break-word'
+                                                }}>
+                                                    {audio.name}
+                                                </span>
+                                                <span style={{
+                                                    fontSize: 14,
+                                                    color: '#256fa1'
+                                                }}>⇨</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </>
                 )}
@@ -756,6 +1042,23 @@ function Sheettodata(props) {
                     onClick={props.handleCloseopenUpload}
                 />
             </div>
+
+            {/* Audio Gallery Modal */}
+            <Modal
+                open={openAudioGallery}
+                onClose={handleCloseAudioGallery}
+                aria-labelledby="audio-gallery-modal-title"
+                aria-describedby="audio-gallery-modal-description"
+            >
+                <Box sx={style2}>
+                    <Gallery2
+                        sethandleClose={handleCloseAudioGallery}
+                        setPicture={handleSelectAudioFromGallery}
+                        showaudio={true}
+                        showimage={false}
+                    />
+                </Box>
+            </Modal>
         </div>
     );
 }

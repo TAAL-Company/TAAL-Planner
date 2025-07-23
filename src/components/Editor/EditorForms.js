@@ -178,7 +178,6 @@ export default function EditorForm({
                     formValues.siteIds = formValues.sites.map(site => site.id);
                     const response = await updateEditor(formValues.id, formValues);
                     if (response && response.data) {
-                        showNotification('success', t("showNotification.Success_edit_editor"));
                         setEditors((prevEditors) =>
                             prevEditors.map(editor =>
                                 editor.id === formValues.id
@@ -186,20 +185,21 @@ export default function EditorForm({
                                     : editor
                             )
                         );
+                        showNotification('success', t("showNotification.Success_edit_editor"));
                     } else {
                         throw new Error('Invalid API response');
                     }
                 } catch (error) {
                     showNotification('error', t("showNotification.Error_edit_editor") + error.message);
                 }
-            } else {
+            } else if (EditorAction === 'add')  {
                 try {
                     formValues.siteIds = formValues.sites.map(site => site.id);
                     const response = await insertEditor({ ...formValues });
-                    if (response && response.data) {
-                        showNotification('success', t("showNotification.Success_add_editor"));
+                    if (response) {
                         response.sites = formValues.sites;
-                        setEditors((prevEditors) => [...prevEditors, { ...response.data }]);
+                        setEditors((prevEditors) => [...prevEditors, { ...response }]);
+                        showNotification('success', t("showNotification.Success_add_editor"));
                     } else {
                         throw new Error('Invalid API response' + JSON.stringify(response));
                     }

@@ -41,6 +41,7 @@ export default function UserForm({
     const [sortedUrls, setSortedUrls] = useState({});
     const [folderNames, setFolderNames] = useState([]);
     const [picture, setPicture] = useState(null);
+    const [loading, setLoading] = useState(false); // Add loading state
 
     const [errors, setErrors] = useState({});
     const { showNotification } = useNotification();
@@ -144,30 +145,44 @@ export default function UserForm({
                 formValues.picture_url = await uploadFiles(picture, 'Worker media/picture', Foldersite);
             }
             if (UserAction === 'edit') {
+                setLoading(true); // Start loading
                 try {
-                    await updateUser(formValues.id, formValues).then((response) => {
+                    const response = await updateUser(formValues.id, formValues);
+                    console.log('API Response:', response); // Debugging
+                    if (response && response.data) {
                         showNotification('success', t("showNotification.Success_edit_user"));
-                        setUsers((prevUsers) => prevUsers.map(user => user.id === formValues.id ? { ...response.data } : user));
-                    });
+                        setUsers((prevUsers) =>
+                            prevUsers.map(user =>
+                                user.id === formValues.id ? { ...response.data } : user
+                            )
+                        );
+                    } else {
+                        throw new Error('Invalid API response');
+                    }
                 } catch (error) {
+                    console.error('Error updating user:', error);
                     showNotification('error', t("showNotification.Error_edit_user") + error.message);
+                } finally {
+                    setLoading(false); // Stop loading
                 }
-
             } else {
                 try {
-                    await insertUser({ ...formValues }).then((response) => {
+                    const response = await insertUser({ ...formValues });
+                    console.log('API Response:', response); // Debugging
+                    if (response) {
                         showNotification('success', t("showNotification.Success_add_user"));
-                        // setUsers((prevUsers) => [...prevUsers, { ...response }]);
                         setupdateduplicateUser(!updateduplicateUser);
-                    });
+                    } else {
+                        throw new Error('Invalid API response');
+                    }
                 } catch (error) {
+                    console.error('Error adding user:', error);
                     showNotification('error', t("showNotification.Error_add_user") + error.message);
                 }
             }
-
         } catch (error) {
+            console.error('Error in handleSubmit:', error);
             showNotification('error', t("showNotification.Error_add_user") + error.message);
-            // alert(error.message);
         }
         setPicture(null);
         handleCloseDialog(); // Close the dialog
@@ -266,7 +281,9 @@ export default function UserForm({
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleCloseDialog}>{t("Forms.Cancel")}</Button>
-                <Button onClick={handleSubmit}>{t("Forms.Submit")}</Button>
+                <Button onClick={handleSubmit} disabled={loading}>
+                    {loading ? t("Forms.Loading") : t("Forms.Submit")}
+                </Button>
             </DialogActions>
         </Dialog>
     );

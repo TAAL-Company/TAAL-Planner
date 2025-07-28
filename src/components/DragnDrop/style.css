@@ -297,6 +297,16 @@
   border: 2px solid #256fa1;
 }
 
+.AddPack {
+  background: #ba11b0;
+  margin-top: 20px;
+  border-radius: 4px;
+  color: white;
+  font-size: 18px;
+  box-shadow: 0px 3px 6px #0000004d;
+  border: 2px solid #ba11b0;
+}
+
 .AddTasks:hover {
   background-color: #fbfbfb;
 }

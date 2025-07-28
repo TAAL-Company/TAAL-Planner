@@ -24,7 +24,7 @@ import taskpic from './FormsComponents/PicturesForms/taskpic.png';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Select } from '@mui/material';
+import { Backdrop, Select } from '@mui/material';
 // import "flag-icon-css/css/flag-icon.min.css";
 import {
   Button,
@@ -39,6 +39,8 @@ import { id } from 'date-fns/locale';
 import predictions from './predictions.json';
 // import TaskAbility2 from './FormsComponents/data_grid/Taskability2';
 import DataTableRTL2 from './FormsComponents/data_grid/DataTableRTL2';
+import CircularProgress from '@mui/material/CircularProgress'; // Import a spinner component
+import Box from '@mui/material/Box'; // For centering the spinner
 
 function Forms() {
   const [explainationError, setExplainationError] = useState('');
@@ -123,8 +125,11 @@ function Forms() {
   // ToDo - A function that calculates the width each column needs according to the number of characters (length)
 
   const [rowsTaskabilityHE, setRowsTaskabilityHE] = useState([]);
+  const [loading, setLoading] = useState(false); // Add a loading state
+
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true); // Start loading
       try {
         setAllUsers(await getingData_Users()); //get request for Users
         setAllTasks(await getingData_Tasks());
@@ -132,6 +137,8 @@ function Forms() {
         setCognitiveAbillities(await getCognitiveAbillities());
       } catch (error) {
         console.error(error.message);
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
     fetchData();
@@ -267,6 +274,7 @@ function Forms() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true); // Start loading
       try {
         await getCognitiveProfile(worker.id).then((res) => {
           setCognitiveProfileValues(res.value);
@@ -278,6 +286,8 @@ function Forms() {
         setUpdateProfile("");
         setSaveProfileChanges(true);
         setCognitiveProfileValues(new Array(242).fill(0));
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
     if (worker.length !== 0) {
@@ -358,32 +368,34 @@ function Forms() {
   };
 
   const handleChangeRouteFlags = async (event, value) => {
-    setTaskAbilityList([]);
-    setAllFlags([]);
-    setRowsFlagsHE([]);
-    setRroutenewName(value.name);
+    setLoading(true); // Start loading
+    try {
+      setTaskAbilityList([]);
+      setAllFlags([]);
+      setRowsFlagsHE([]);
+      setRroutenewName(value.name);
 
-    const route = allRoutes.find((route) => route.id === value.id);
-    setRoutesOfFlags(route);
+      const route = allRoutes.find((route) => route.id === value.id);
+      setRoutesOfFlags(route);
 
-    const taskIds = route.tasks?.map((task) => task.taskId);
-    const studentIds = [worker.id];
-    console.log('studentIds:', studentIds, 'taskIds:', taskIds);
-    // const previousPromise = Promise.resolve()
-    // const algoResult = await previousPromise.then(() => postEvaluation(studentIds, taskIds))
-    const algoResult = await postEvaluation(studentIds, taskIds)
-    setTaskAbilityList(algoResult);
+      const taskIds = route.tasks?.map((task) => task.taskId);
+      const studentIds = [worker.id];
+      console.log('studentIds:', studentIds, 'taskIds:', taskIds);
+      // const previousPromise = Promise.resolve()
+      // const algoResult = await previousPromise.then(() => postEvaluation(studentIds, taskIds))
+      const algoResult = await postEvaluation(studentIds, taskIds)
+      setTaskAbilityList(algoResult);
 
-    const flagsData = await getingDataFlags();
+      const flagsData = await getingDataFlags();
 
-    // Check if there are any matching task IDs in flagsData
-    // const hasMatchingTask = taskIds.every((taskId) => {
-    //   return flagsData.some(
-    //     (flag) => flag.taskId === taskId && flag.studentId === worker.id
-    //   );
-    // });
-    // console.log("algoResult:", algoResult);
-    // if (!hasMatchingTask) {
+      // Check if there are any matching task IDs in flagsData
+      // const hasMatchingTask = taskIds.every((taskId) => {
+      //   return flagsData.some(
+      //     (flag) => flag.taskId === taskId && flag.studentId === worker.id
+      //   );
+      // });
+      // console.log("algoResult:", algoResult);
+      // if (!hasMatchingTask) {
       // If there are no matching task IDs, run the function
       // taskIds.map(async (task) => {
       //   try {
@@ -406,8 +418,13 @@ function Forms() {
       //   }
       // }, Promise.resolve());
 
-    // } else 
-    setAllFlags(flagsData);
+      // } else 
+      setAllFlags(flagsData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false); // Stop loading
+    }
   };
 
   useEffect(() => {
@@ -1849,6 +1866,12 @@ function Forms() {
 
   return (
     <div className='Forms'>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={loading}
+      >
+        <CircularProgress size="10rem" color="info" />
+      </Backdrop>
       <div style={{ width: '100%' }}>
         <div>
           <button

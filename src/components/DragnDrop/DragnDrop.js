@@ -7,13 +7,15 @@ import Tablet from '../Tablet/Tablet';
 import ReorderBoard from '../ReorderBoard/ReorderBoard';
 import ProgressBar from '../ProgressBar/ProgressBar';
 import ModalDelete from '../Modal/Modal_Delete';
-import { deleteTask } from '../../api/api.js';
+import { deleteTask, updatePack } from '../../api/api.js';
 import { Droppable } from 'react-beautiful-dnd';
 import './style.css';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import GTranslateIcon from '@mui/icons-material/GTranslate';
 import TextSnippetIcon from '@mui/icons-material/TextSnippet';
+import ViewRoutesModal from './ViewRoutesModal.js';
+import { useNotification } from "../Notification/NotificationProvider";
 
 let Route = [];
 let dndArray = [];
@@ -42,6 +44,7 @@ function DragnDrop(props) {
   const [, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalOpenAddRoute, setModalOpenAddRoute] = useState(false);
+  const [modalOpenAddPack, setModalOpenAddPack] = useState(false);
   const [, setModalFlagTablet] = useState(false);
   const [boardName, setBoardName] = useState('');
   const [, setCount] = useState(0);
@@ -69,12 +72,14 @@ function DragnDrop(props) {
   const [openThreeDotsVerticalBoard, setOpenThreeDotsVerticalBoard] = useState(-1);
   const [location, setLocation] = useState(-1);
   const [alignment, setAlignment] = useState('original');
-  
+  const [modalOpenViewRoutes, setModalOpenViewRoutes] = useState(false);
+  const { showNotification } = useNotification();
 
-  const handleChange = (event,newAlignment) => {
+
+  const handleChange = (event, newAlignment) => {
     console.log("newAlignment", newAlignment);
     props.setTranslateData(newAlignment);
-    
+
     setAlignment(newAlignment);
   };
 
@@ -451,44 +456,144 @@ function DragnDrop(props) {
       if (
         props.dropToBoard.destination !== undefined &&
         props.dropToBoard.destination !== null &&
-        props.dropToBoard.destination.droppableId === 'board-droppable' &&
-        props.dropToBoard.source.droppableId !== "stationArray"
+        props.dropToBoard.destination.droppableId === 'board-droppable'
       ) {
-        addImageToBoard(props.dropToBoard.draggableId, 'tasks');
-        setBoardName('tasks');
-        localStorage.setItem('changetasksRoutes', true);
-      }
-      // props.setDropToBoard({});
-    }
-  }, [props.dropToBoard]);
-
-  useEffect(() => {
-    if (Object.keys(props.dropToBoard).length > 0) {
-      if (
-        props.dropToBoard.destination !== undefined &&
-        props.dropToBoard.destination !== null &&
-        props.dropToBoard.destination.droppableId === 'board-droppable' &&
-        props.dropToBoard.source.droppableId == "stationArray"
-      ) {
-        const stationId = props.dropToBoard.draggableId;
-        const station = props.stationArray.find((station) => station.id === stationId);
-
-        dndArray.forEach(async (task) => {
-          task.color = station.color;
-          task.data = station.data;
-          task.myStation = station.title;
-          task.nameStation = station.title;
-          task.theStation = station;
-        });
-
-        if (station) {
-          const tasks = dndArray; // assuming tasks is an array of task objects
-          tasks.forEach(async (task) => {
-            await addImageToBoard(task.id, 'tasks');
-            setBoardName('tasks');
-            localStorage.setItem('changetasksRoutes', true);
-          });
+        // Handle tasks dragged from tasks list
+        if (props.dropToBoard.source.droppableId === 'tasks-droppable') {
+          addImageToBoard(props.dropToBoard.draggableId, 'tasks');
+          setBoardName('tasks');
           localStorage.setItem('changetasksRoutes', true);
+        }
+        // Handle stations dragged from station list
+        else if (props.dropToBoard.source.droppableId === "stationArray") {
+          const stationId = props.dropToBoard.draggableId;
+          const station = props.stationArray?.find((station) => station.id === stationId);
+
+          if (station) {
+            dndArray.forEach(async (task) => {
+              task.color = station.color;
+              task.data = station.data;
+              task.myStation = station.title;
+              task.nameStation = station.title;
+              task.theStation = station;
+            });
+
+            const tasks = dndArray;
+            tasks.forEach(async (task) => {
+              await addImageToBoard(task.id, 'tasks');
+              setBoardName('tasks');
+              localStorage.setItem('changetasksRoutes', true);
+            });
+            localStorage.setItem('changetasksRoutes', true);
+          }
+        }
+        // Handle routes dragged from routes list
+        else if (props.dropToBoard.source.droppableId === 'routes-droppable') {
+          const routeId = props.dropToBoard.draggableId;
+          const route = props.filteredDataRoutes?.find(route => route.id === routeId);
+
+          if (route) {
+            // Create a representation of the route in the board
+            const routeItem = {
+              id: route.id,
+              title: route.name.replace('&#8211;', '-').replace('&#8217;', "' "),
+              itemType: 'route',
+              mySite: props.mySite,
+              myStation: 'Route',
+              nameStation: `${route.name}`,
+              color: '#256FA1', // Set a distinct color for routes
+              width: '-13px',
+              height: '70px',
+              bottom: '-27px',
+              kavTopWidth: '25px',
+              newkavTaskTop: '0px',
+              kavTaskTopMarginTop: '-7px',
+              borderLeft: '0x solid #c2bfbf'
+            };
+
+            setBoard(currentBoard => [...currentBoard, routeItem]);
+            setFlagTree(true);
+            localStorage.setItem('changetasksRoutes', true);
+          }
+        }
+        // Handle packs dragged from packs list
+        else if (props.dropToBoard.source.droppableId === 'Packs') {
+          try {
+            const packId = props.dropToBoard.draggableId;
+
+            // Safely check if props.Packs exists and is an array
+            if (!props.Packs || !Array.isArray(props.Packs)) {
+              console.error("props.Packs is undefined or not an array");
+              return;
+            }
+
+            const pack = props.Packs.find(pack => pack.id === packId);
+
+            if (pack && pack.routes && Array.isArray(pack.routes) && pack.routes.length > 0) {
+              // Clear the current board to show only this pack's routes
+              setBoard([]);
+
+              // Find all routes in this pack and add them to the board
+              pack.routes.forEach(packRoute => {
+                // Safely check if props.filteredDataRoutes exists
+                if (!props.filteredDataRoutes || !Array.isArray(props.filteredDataRoutes)) {
+                  console.error("props.filteredDataRoutes is undefined or not an array");
+                  return;
+                }
+
+                const route = props.filteredDataRoutes.find(r => r.id === packRoute.routeId);
+                if (route) {
+                  const routeItem = {
+                    id: route.id,
+                    title: route.name.replace('&#8211;', '-').replace('&#8217;', "' "),
+                    itemType: 'route',
+                    mySite: props.mySite,
+                    myStation: 'Route',
+                    nameStation: `${route.name}`,
+                    color: '#256FA1', // Use pack color
+                    width: '-13px',
+                    height: '70px',
+                    bottom: '-27px',
+                    kavTopWidth: '25px',
+                    newkavTaskTop: '0px',
+                    kavTaskTopMarginTop: '-7px',
+                    borderLeft: '0x solid #c2bfbf',
+                    pack: pack.name // Include pack information
+                  };
+
+                  setBoard(currentBoard => [...currentBoard, routeItem]);
+                }
+              });
+
+              setFlagTree(true);
+              localStorage.setItem('changetasksRoutes', true);
+            } else if (pack) {
+              // // If the pack has no routes, show a message
+              // const emptyPackItem = {
+              //   id: `pack-${pack.id}`,
+              //   title: `${pack.name} (No routes)`,
+              //   itemType: 'pack',
+              //   mySite: props.mySite,
+              //   myStation: 'Pack',
+              //   nameStation: pack.name,
+              //   color: '#ba11b0',
+              //   width: '-13px',
+              //   height: '70px',
+              //   bottom: '-27px',
+              //   kavTopWidth: '25px',
+              //   newkavTaskTop: '0px',
+              //   kavTaskTopMarginTop: '-7px',
+              //   borderLeft: '0x solid #c2bfbf'
+              // };
+
+              // setBoard(currentBoard => [...currentBoard, emptyPackItem]);
+              // setFlagTree(true);
+            } else {
+              console.error("Pack not found with ID:", packId);
+            }
+          } catch (error) {
+            console.error("Error handling pack drop:", error);
+          }
         }
       }
     }
@@ -594,6 +699,54 @@ function DragnDrop(props) {
       };
     }
   }, [myTasksContainer]);
+
+
+  const handleSaveRoutesForPack = async () => {
+    if (!props.selectedPack) {
+      // showNotification("error", props.language === "English" ? "No pack selected!" : "לא נבחרה חבילה!");
+      console.log("No pack selected!");
+
+      return;
+    }
+
+    try {
+      const packRoutes = board.map(route => ({
+        routeId: route.id,
+        name: route.title,
+      }));
+      
+
+      const updatedPack = {
+        ...props.selectedPack,
+        routeIds: packRoutes.map(route => route.routeId),
+        siteIds: props.selectedPack.sites.map(site => site.id),
+        editorIds: props.selectedPack.editors.map(editor => editor.id),
+        userIds: props.selectedPack.students.map(student => student.id),
+      };
+      delete updatedPack.routes; // Remove the old routes array if it exists
+      delete updatedPack.sites; // Remove the old sites array if it exists
+      delete updatedPack.editors; // Remove the old editors array if it exists
+      delete updatedPack.students; // Remove the old students array if it exists
+      delete updatedPack.id; // Remove the old id to avoid conflicts
+      delete updatedPack.createdAt; // Remove the createdAt field if it exists
+      delete updatedPack.updatedAt; // Remove the updatedAt field if it exists
+      delete updatedPack.picture_url; // Remove the picture_url field if it exists
+      delete updatedPack.name; // Remove the name field if it exists
+      delete updatedPack.description; // Remove the description field if it exists
+      // delete updatedPack.routeIds; // Remove the routeIds field if it exists
+      delete updatedPack.siteIds; // Remove the siteIds field if it exists
+      delete updatedPack.editorIds; // Remove the editorIds field if it exists
+      delete updatedPack.userIds; // Remove the userIds field if it exists
+
+      console.log("Updated Pack:", updatedPack);
+
+      await updatePack(props.selectedPack.id, updatedPack);
+      showNotification("success", props.language !== "English" ? "Routes saved successfully!" : "המסלולים נשמרו בהצלחה!");
+    } catch (error) {
+      console.error("Error saving routes for pack:", error);
+      showNotification("error", props.language !== "English" ? "Failed to save routes!" : "שמירת המסלולים נכשלה!");
+    }
+  };
   //---------------------------------------------------------
   return (
     <>
@@ -611,6 +764,17 @@ function DragnDrop(props) {
           setRequestForEditing={setRequestForEditing}
         />
       )}
+
+      {modalOpenViewRoutes && (
+        <ViewRoutesModal
+          open={modalOpenViewRoutes}
+          onClose={() => setModalOpenViewRoutes(false)}
+          routes={board.map(route => ({
+            routeId: route.id,
+            name: route.title,
+          }))}
+          onSave={handleSaveRoutesForPack}
+        />)}
       <>
         <div
           className={`Board ${props.language !== 'English' ? 'english' : ''}`}
@@ -625,6 +789,14 @@ function DragnDrop(props) {
               }}
             >
               {props.saveButton}
+            </button>
+
+            <button
+              className='AddPack'
+              type='submit'
+              onClick={() => setModalOpenViewRoutes(true)}
+            >
+              {props.language !== 'English' ? 'Add Pack' : 'הוספת חבילה'}
             </button>
             {/* כפתור שפות */}
             {/* <button
@@ -722,7 +894,12 @@ function DragnDrop(props) {
                           className={`mySiteChois ${props.language !== 'English' ? 'english' : ''
                             }`}
                         >
-                          {props.tasksOfRoutes && props.tasksOfRoutes.name ? (
+                          {/* Show pack name if showing pack routes */}
+                          {board[0].itemType === 'route'? (
+                            <span style={{ color: '#ba11b0' }}>
+                              {board[0].pack ? board[0].pack : 'Pack Routes'}
+                            </span>
+                          ) : props.tasksOfRoutes && props.tasksOfRoutes.name ? (
                             props.tasksOfRoutes.name
                           ) : (
                             <></>

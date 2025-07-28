@@ -10,16 +10,25 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import Dashboard from './components/Dashboard/Dashboard';
 import GalleryPage from './components/Gallery/Gallerypage/gallery-page';
-import Cards from './components/Cards/Cards';
+// import Cards from './components/Cards/Cards';
+import RouteTable from './components/Cards/RouteTable';
 import { Switch, Route } from 'react-router-loading';
-import PlacesCards from './components/placesCards/placesCards';
+// import PlacesCards from './components/placesCards/placesCards';
+import Sites from './components/placesCards/SitesTable';
+
+
 import Forms from './components/Form/Forms';
-import Coaches from './components/Coaches/Coaches';
-import Editors from './components/Editor/Editors';
+// import Coaches from './components/Coaches/Coaches';
+import Coaches from './components/Coaches/CoachesTable';
+
+// import Editors from './components/Editor/Editors';
+import Editors from './components/Editor/EditorTable';
 import Community from './components/Community/community';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import './i18n'; // Import the i18n configuration
+
+import Plannerpage from './planner/plannerpage';
 
 import { NotificationProvider } from "./components/Notification/NotificationProvider";
 import { TranslationProvider } from './Utility/TranslationProvider';
@@ -33,35 +42,37 @@ function App() {
     <>
       <div>
         <TranslationProvider>
-        <NotificationProvider>
-        <DndProvider backend={HTML5Backend}>
-          <Provider store={store}>
-            <Router>
-              <div>
-                {sessionStorage.logged_in == 1 ? (
-                  <>
-                    <Nav />
-                  </>
-                ) : null}
-                <Switch>
-                  <Route path='/' exact component={Home}></Route>
-                  <Route path='/planner' component={Planner}></Route>
-                  <Route path='/student' component={Student}></Route>
-                  <Route path='/Calculator' component={Calculator}></Route>
-                  <Route path='/routes_cards' component={Cards}></Route>
-                  <Route path='/Dashboard' component={Dashboard}></Route>
-                  <Route path='/Gallery' component={GalleryPage}></Route>
-                  <Route path='/places' component={PlacesCards}></Route>
-                  <Route path='/Forms' component={Forms}></Route>
-                  <Route path='/coaches' component={Coaches}></Route>
-                  <Route path='/community' component={Community}></Route>
-                  <Route path='/editor' component={Editors}></Route>
-                </Switch>
-              </div>
-            </Router>
-          </Provider>
-        </DndProvider>
-        </NotificationProvider>
+          <NotificationProvider>
+            <DndProvider backend={HTML5Backend}>
+              <Provider store={store}>
+                <Router>
+                  <div>
+                    {sessionStorage.logged_in == 1 ? (
+                      <>
+                        <Nav />
+                      </>
+                    ) : null}
+                    <Switch>
+                      <Route path='/' exact component={Home}></Route>
+                      <Route path='/planner' component={Planner}></Route>
+                      <Route path='/student' component={Student}></Route>
+                      <Route path='/Calculator' component={Calculator}></Route>
+                      <Route path='/routes_cards' component={RouteTable}></Route>
+                      <Route path='/Dashboard' component={Dashboard}></Route>
+                      <Route path='/Gallery' component={GalleryPage}></Route>
+                      <Route path='/places' component={Sites}></Route>
+                      <Route path='/Forms' component={Forms}></Route>
+                      <Route path='/coaches' component={Coaches}></Route>
+                      <Route path='/community' component={Community}></Route>
+                      <Route path='/editor' component={Editors}></Route>
+                      <Route path='/dev' component={Plannerpage}></Route>
+                      <Route path='/subjects' component={Community}></Route>
+                    </Switch>
+                  </div>
+                </Router>
+              </Provider>
+            </DndProvider>
+          </NotificationProvider>
         </TranslationProvider>
       </div>
     </>

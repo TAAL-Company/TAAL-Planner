@@ -2,25 +2,16 @@ import React from 'react';
 import Avatar from '@mui/material/Avatar';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Button from '@mui/material/Button'; // Add this import
 import { useTranslation } from 'react-i18next';
+import TableViewIcon from '@mui/icons-material/TableView';
 
-const Columns = ({ expandedRows,setExpandedRows, handleClickMenu, coaches }) => {
+const Columns = ({ handleClickMenu, coaches, handleSectionExpandToggle }) => {
   const { t } = useTranslation();
-    // Expand toggle for rows
-    const handleRowExpandToggle = (id) => {
-      setExpandedRows(prev => ({
-        ...prev,
-        [id]: !prev[id],
-      }));
-    };
 
-  // Columns for the DataGrid
   const columns = [
-    // { field: 'id', headerName: 'ID', width: 300 },
     {
       field: 'picture_url',
       headerName: t('UserPage.Avatar'),
@@ -35,7 +26,6 @@ const Columns = ({ expandedRows,setExpandedRows, handleClickMenu, coaches }) => 
     { field: 'email', headerName: t('UserPage.Email'), width: 200, editable: true },
     { field: 'phone', headerName: t('UserPage.Phone'), width: 150, editable: true },
     { field: 'role', headerName: t('UserPage.Role'), width: 120 },
-    // { field: 'cognitiveProfile', headerName: t('UserPage.cognitive_profile'), width: 200 },
     {
       field: 'coach',
       headerName: t('UserPage.CoachName'),
@@ -79,7 +69,6 @@ const Columns = ({ expandedRows,setExpandedRows, handleClickMenu, coaches }) => 
       headerName: t('UserPage.Online'),
       width: 120,
       renderCell: (params) => {
-        if (params.row.isRoute) return null; // Skip active status for route rows
         return params.value ? (
           <CheckCircleIcon style={{ color: 'green' }} />
         ) : (
@@ -88,23 +77,15 @@ const Columns = ({ expandedRows,setExpandedRows, handleClickMenu, coaches }) => 
       },
     },
     {
-      field: 'expand',
-      headerName: '',
-      width: 50,
+      field: 'viewRoutes',
+      headerName: t('UserPage.Routes'),
+      width: 100,
       renderCell: (params) => {
-        if (params.row.isRoute) return null; // Skip expand icon for route rows
-        const hasRoutes = params.row.routes && params.row.routes.length > 0;
+        const hasRoute = params.row.routes && params.row.routes.length > 0;
+        if (!hasRoute) return null;
         return (
-          <div onClick={() => handleRowExpandToggle(params.id)}>
-            {hasRoutes ? (
-              expandedRows[params.id] ? (
-                <ExpandLessIcon style={{ color: 'blue' }} />
-              ) : (
-                <ExpandMoreIcon style={{ color: 'blue' }} />
-              )
-            ) : (
-              <></>
-            )}
+          <div onClick={() => handleSectionExpandToggle(params.row.id, 'routes', params.row)}>
+            <TableViewIcon style={{ color: 'teal', cursor: 'pointer' }} />
           </div>
         );
       },
@@ -113,24 +94,23 @@ const Columns = ({ expandedRows,setExpandedRows, handleClickMenu, coaches }) => 
       field: 'menu',
       headerName: '',
       width: 50,
-      renderCell: (params) => {
-        if (params.row.isRoute) return null; // Skip menu for route rows
-        return (
-          <IconButton onClick={(e) => handleClickMenu(e, params.row)}>
-            <MoreVertIcon />
-          </IconButton>
-        );
-      },
+      renderCell: (params) => (
+        <IconButton onClick={(e) => handleClickMenu(e, params.row)}>
+          <MoreVertIcon />
+        </IconButton>
+      ),
     },
   ];
 
-  // Custom columns for route data
-  const customColumns = [
-    { field: 'routeName', headerName: t('UserPage.RouteName'), width: 200 },
-    // { field: 'routeOnlyOnce', headerName: t('UserPage.RouteOnlyOnce'), width: 100 },
+  // Custom columns for routes
+    const routeColumns = [
+    { field: 'name', headerName: t('Route.Name'), width: 180 },
+    { field: 'OnlyOnce', headerName: t('Route.OnlyOnce'), width: 100, type: 'boolean' },
+    // { field: 'parentRouteId', headerName: t('Route.ParentRouteId'), width: 220 },
   ];
 
-  return { columns, customColumns };
+  // No need for customColumns for routes now
+  return { columns, routeColumns };
 };
 
 export default Columns;

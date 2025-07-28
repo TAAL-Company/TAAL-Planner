@@ -13,6 +13,8 @@ import communityImage from '../../Pictures/community.png';
 // import pic from '../../Pictures/defualtSiteImg.svg';
 // import Barchart from '../charts/Barchart';
 // import Piechart from '../charts/Piechart';
+import { baseUrl } from '../../config';
+import Charts from '../charts/Charts';
 
 const Dashboard = () => {
 
@@ -219,11 +221,12 @@ const Dashboard = () => {
 
   const rightElements = [
     <div className='left'> {
+      // <Charts />
       <iframe
         width="100%"
         height="100%"
-        src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}`}
-        // src={`http://localhost:8501/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}`}
+        src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&env=${baseUrl === "https://stg-web-app0da5905.azurewebsites.net" ? "stg" : "prod"}`}
+        // src={`http://localhost:8501/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&env=${baseUrl === "https://stg-web-app0da5905.azurewebsites.net" ? "stg" : "prod"}`}
       ></iframe>
     } </div>
   ]

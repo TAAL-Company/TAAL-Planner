@@ -36,6 +36,7 @@
     "chart.js": "^4.4.1",
     "csvtojson": "^2.0.10",
     "date-fns": "^2.29.3",
+    "dotenv": "^17.2.1",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "flag-icon-css": "^4.1.7",
@@ -87,8 +88,17 @@
   "scripts": {
     "prestart": "node set-env.js",
     "prebuild": "node set-env.js",
+
     "start": "cross-env react-scripts start",
+
+    "start:development": "cross-env NODE_ENV=development react-scripts start",
+    "start:staging": "cross-env NODE_ENV=staging npm start",
+    "start:production": "cross-env NODE_ENV=production react-scripts start",
+    
+
+    "build:staging": "cross-env NODE_ENV=staging react-scripts build",
     "build": "cross-env react-scripts build",
+
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

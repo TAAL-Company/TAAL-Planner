@@ -91,12 +91,12 @@
 
     "start": "cross-env react-scripts start",
 
-    "start:development": "cross-env NODE_ENV=development react-scripts start",
+    "start:dev": "cross-env NODE_ENV=dev npm start",
     "start:staging": "cross-env NODE_ENV=staging npm start",
-    "start:production": "cross-env NODE_ENV=production react-scripts start",
+    "start:production": "cross-env NODE_ENV=production npm start",
     
 
-    "build:staging": "cross-env NODE_ENV=staging react-scripts build",
+    "build:staging": "cross-env NODE_ENV=staging npm build",
     "build": "cross-env react-scripts build",
 
     "test": "react-scripts test",

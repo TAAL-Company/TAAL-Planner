@@ -1,7 +1,7 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import Nav from './components/Nav/Nav';
 import Planner from './components/Planner/Planner';
-import Calculator from './components/Calculator/Calculator';
+import Calculator from './components/junk/Calculator/Calculator';
 import Student from './components/Student/UsersTable';
 // import Student from '/components/Student/Student';
 import './App.css';
@@ -11,7 +11,7 @@ import store from './redux/store';
 import Dashboard from './components/Dashboard/Dashboard';
 import GalleryPage from './components/Gallery/Gallerypage/gallery-page';
 // import Cards from './components/Cards/Cards';
-import RouteTable from './components/Cards/RouteTable';
+import RouteTable from './Pages/RoutePage/RouteTable';
 import { Switch, Route } from 'react-router-loading';
 // import PlacesCards from './components/placesCards/placesCards';
 import Sites from './components/placesCards/SitesTable';

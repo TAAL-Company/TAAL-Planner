@@ -3,7 +3,7 @@ const Rows = ({ routes }) => {
     return routes.map((route) => ({
       id: route.id,
       name: route.name,
-      sites: route.sites, // <-- Add this line
+      sites: route.sites,
       picture_url: route.picture_url,
       OnlyOnce: route.OnlyOnce,
       multi_language_description: route.multi_language_description,

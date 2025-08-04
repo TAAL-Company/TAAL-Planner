@@ -15,8 +15,8 @@ import {
 } from '@mui/material';
 import { useTranslation } from "react-i18next";
 import { insertRoute, updateRoute } from '../../api/api';
-import { useNotification } from '../Notification/NotificationProvider';
-import MultipleSelect from '../Student/MultipleSelectCheckmarks';
+import { useNotification } from '../../components/Notification/NotificationProvider';
+import MultipleSelect from '../../components/Student/MultipleSelectCheckmarks';
 
 export default function RouteForm({
   open,
@@ -25,7 +25,8 @@ export default function RouteForm({
   title,
   setRoutes,
   RouteAction,
-  sites, 
+  sites,
+  routes,
 }) {
   const [formValues, setFormValues] = useState({ ...initialValues });
   const [errors, setErrors] = useState({});
@@ -44,7 +45,7 @@ export default function RouteForm({
 
   const validate = () => {
     let tempErrors = {};
-    if (!formValues.name) tempErrors.name = t("FormsErrors.nameRequired") || "Name is required";
+    if (!formValues.name) tempErrors.name = t("FormsErrors.nameRequired");
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
@@ -57,7 +58,7 @@ export default function RouteForm({
         formValues.studentIds = formValues.students.map(student => student.id); // Ensure studentIds is set for the API call
         formValues.taskIds = formValues.tasks.map(task => task.id); // Ensure taskIds is set for the API call
         await updateRoute(formValues.id, formValues).then((response) => {
-          showNotification('success', t("showNotification.Success_edit_route") || "Route updated successfully");
+          showNotification('success', t("showNotification.Success_edit_route"));
           setRoutes((prevRoutes) =>
             prevRoutes.map(route => route.id === formValues.id ? { ...response } : route)
           );
@@ -66,12 +67,12 @@ export default function RouteForm({
         formValues.siteIds = formValues.sites.map(site => site.id); // Ensure siteIds is set for the API call
         delete formValues.sites; // Remove id for new route creation
         await insertRoute(formValues).then((response) => {
-          showNotification('success', t("showNotification.Success_add_route") || "Route added successfully");
+          showNotification('success', t("showNotification.Success_add_route"));
           setRoutes((prevRoutes) => [...prevRoutes, { ...response }]);
         });
       }
     } catch (error) {
-      showNotification('error', t("showNotification.Error_route") + (error.message || ""));
+      showNotification('error', t("showNotification.Error_route") + (error.message));
     }
     handleCloseDialog();
   };
@@ -82,28 +83,34 @@ export default function RouteForm({
       <DialogContent dir={t('Direction')}>
         <TextField
           required
-          label={t("Route.Name") || "Route Name"}
+          label={t("Route.Name")}
           fullWidth
-          value={formValues.name || ''}
+          value={formValues.name}
           onChange={handleChange('name')}
           margin="normal"
-          error={!!errors.name}
+          error={errors.name}
           helperText={errors.name}
         />
         <TextField
-          label={t("Route.multi_language_description") || "Description"}
+          label={t("Route.multi_language_description")}
           fullWidth
-          value={formValues.multi_language_description || ''}
+          value={formValues.multi_language_description}
           onChange={handleChange('multi_language_description')}
           margin="normal"
         />
-        <TextField
-          label={t("Route.ParentRouteId") || "Parent Route Id"}
-          fullWidth
-          value={formValues.parentRouteId || ''}
-          onChange={handleChange('parentRouteId')}
-          margin="normal"
-        />
+        <FormControl fullWidth margin="normal">
+          <InputLabel>{t("Route.ParentRouteId")}</InputLabel>
+          <Select
+            value={formValues.parentRouteId}
+            onChange={handleChange('parentRouteId')}
+          >
+            {routes.map(route => (
+              <MenuItem key={route.id} value={route.id}>
+                {route.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <MultipleSelect
           label={t("Forms.Select_Sites")}
           formValues={formValues}
@@ -114,11 +121,11 @@ export default function RouteForm({
         <FormControlLabel
           control={
             <Checkbox
-              checked={!!formValues.OnlyOnce}
+              checked={formValues.OnlyOnce}
               onChange={handleChange('OnlyOnce')}
             />
           }
-          label={t("Route.OnlyOnce") || "Only Once"}
+          label={t("Route.OnlyOnce")}
         />
       </DialogContent>
       <DialogActions>

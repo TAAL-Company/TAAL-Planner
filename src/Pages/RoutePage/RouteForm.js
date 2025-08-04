@@ -16,7 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { insertRoute, updateRoute } from '../../api/api';
 import { useNotification } from '../../components/Notification/NotificationProvider';
-import MultipleSelect from '../../components/Student/MultipleSelectCheckmarks';
+import MultipleSelect from '../../components/MultipleSelectCheckmarks/MultipleSelectCheckmarks';
 
 export default function RouteForm({
   open,

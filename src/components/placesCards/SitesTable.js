@@ -15,7 +15,7 @@ import {
 import { useState, useEffect } from 'react';
 import { Button, MenuItem, Menu } from '@mui/material';
 import SiteForm from './SiteForm';
-import Toolbar from '../Student/Toolbar';
+import Toolbar from '../Toolbar/Toolbar';
 import { useNotification } from "../Notification/NotificationProvider";
 import { useTranslation } from "react-i18next";
 import { prefixer } from 'stylis';

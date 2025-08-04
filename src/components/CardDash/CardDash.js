@@ -18,7 +18,7 @@ const CardDash = (props) => {
     if (id === 1) {
       history.replace('/places');
     } else if (id === 2) {
-      history.replace('/student');
+      history.replace('/Users');
     } else if (id === 3) {
       history.replace('/planner');
     } else if (id === 4) {
@@ -30,7 +30,7 @@ const CardDash = (props) => {
     if (id === 1) {
       history.replace('/places');
     } else if (id === 2) {
-      history.replace('/student');
+      history.replace('/Users');
     } else if (id === 3) {
       history.replace('/routes_cards');
     } else if (id === 4) {

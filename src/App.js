@@ -2,7 +2,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import Nav from './components/Nav/Nav';
 import Planner from './components/Planner/Planner';
 import Calculator from './components/Calculator/Calculator';
-import Student from './components/Student/UsersTable';
+import UsersTable from './Pages/UserPage/UsersTable';
 // import Student from '/components/Student/Student';
 import './App.css';
 import Login from './components/Login/Login';
@@ -55,7 +55,7 @@ function App() {
                     <Switch>
                       <Route path='/' exact component={Home}></Route>
                       <Route path='/planner' component={Planner}></Route>
-                      <Route path='/student' component={Student}></Route>
+                      <Route path='/Users' component={UsersTable}></Route>
                       <Route path='/Calculator' component={Calculator}></Route>
                       <Route path='/routes_cards' component={RouteTable}></Route>
                       <Route path='/Dashboard' component={Dashboard}></Route>

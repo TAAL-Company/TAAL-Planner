@@ -13,12 +13,12 @@ import {
 } from '@mui/material';
 
 import { insertUser, uploadFiles, updateUser } from '../../api/api';
-import MultipleSelect from './MultipleSelectCheckmarks';
-import BasicSelect from '../Gallery/BasicSelect';
-import InputFileUpload from '../InputFileUpload/InputFileUpload';
-import { getBlobsInContainer } from '../azureBlob';
+import MultipleSelect from '../../components/MultipleSelectCheckmarks/MultipleSelectCheckmarks';
+import BasicSelect from '../../components/Gallery/BasicSelect';
+import InputFileUpload from '../../components/InputFileUpload/InputFileUpload';
+import { getBlobsInContainer } from '../../components/azureBlob';
 
-import { useNotification } from '../Notification/NotificationProvider';
+import { useNotification } from '../../components/Notification/NotificationProvider';
 
 import { useTranslation } from "react-i18next";
 

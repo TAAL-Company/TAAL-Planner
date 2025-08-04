@@ -17,7 +17,7 @@ import { GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import "./style.css";
-import Toolbar from '../../components/Student/Toolbar';
+import Toolbar from '../../components/Toolbar/Toolbar';
 
 // Create rtl cache
 const cacheRtl = createCache({

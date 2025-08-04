@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 
 import { insertEditor, updateEditor, uploadFiles } from '../../api/api';
-import MultipleSelect from '../Student/MultipleSelectCheckmarks';
+import MultipleSelect from '../MultipleSelectCheckmarks/MultipleSelectCheckmarks';
 import BasicSelect from '../Gallery/BasicSelect';
 import InputFileUpload from '../InputFileUpload/InputFileUpload';
 import { getBlobsInContainer } from '../azureBlob';

@@ -5,9 +5,9 @@ import { getingData_Users, getingData_coaches, getingData_Places, insertUser, de
 import { useState, useEffect } from 'react';
 import { Button, MenuItem, Menu } from '@mui/material';
 import UserForm from './UserForm';
-import Toolbar from './Toolbar';
-import './StudentsCard.css';
-import { useNotification } from "../Notification/NotificationProvider";
+import Toolbar from '../../components/Toolbar/Toolbar';
+import './style.css';
+import { useNotification } from "../../components/Notification/NotificationProvider";
 import { useTranslation } from "react-i18next";
 import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';
@@ -17,7 +17,7 @@ import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Columns from './Columns';
 import Rows from './Rows';
 import { CssBaseline, Paper } from '@mui/material';
-import PopupTable from '../placesCards/popuptable'; // Add this import
+import PopupTable from '../../components/placesCards/popuptable'; // Add this import
 
 // Create rtl cache
 const cacheRtl = createCache({

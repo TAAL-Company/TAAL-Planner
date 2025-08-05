@@ -5,8 +5,8 @@ import { getingData_Editors, deleteEditor, getingData_Places, getingData_Users, 
 import { useState, useEffect } from 'react';
 import { Button, MenuItem, Menu } from '@mui/material';
 import EditorForm from './EditorForms';
-import Toolbar from '../Toolbar/Toolbar';
-import { useNotification } from "../Notification/NotificationProvider";
+import Toolbar from '../../components/Toolbar/Toolbar';
+import { useNotification } from "../../components/Notification/NotificationProvider";
 import { useTranslation } from "react-i18next";
 import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';
@@ -15,7 +15,7 @@ import { CacheProvider } from '@emotion/react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Rows from './Rows';
 import Columns from './Columns'; 
-import PopupTable from '../PopupTable/popuptable'; 
+import PopupTable from '../../components/PopupTable/popuptable'; 
 
 // Create rtl cache
 const cacheRtl = createCache({

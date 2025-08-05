@@ -22,7 +22,7 @@ import Forms from './components/Form/Forms';
 import Coaches from './Pages/CoachePage/CoachesTable';
 
 // import Editors from './components/Editor/Editors';
-import Editors from './components/Editor/EditorTable';
+import Editors from './Pages/EditorsPage/EditorTable';
 import Community from './components/Community/community';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';

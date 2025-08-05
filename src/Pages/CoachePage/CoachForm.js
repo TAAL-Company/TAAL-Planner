@@ -10,10 +10,10 @@ import {
 } from '@mui/material';
 
 import { insertCoach, updateCoach, uploadFiles } from '../../api/api';
-import InputFileUpload from '../InputFileUpload/InputFileUpload';
-import BasicSelect from '../Gallery/BasicSelect';
-import { getBlobsInContainer } from '../azureBlob';
-import { useNotification } from '../Notification/NotificationProvider';
+import InputFileUpload from '../../components/InputFileUpload/InputFileUpload';
+import BasicSelect from '../../components/Gallery/BasicSelect';
+import { getBlobsInContainer } from '../../components/azureBlob';
+import { useNotification } from '../../components/Notification/NotificationProvider';
 import { useTranslation } from "react-i18next";
 
 export default function CoachForm({

@@ -19,7 +19,7 @@ import Sites from './Pages/SitePage/SitesTable';
 
 import Forms from './components/Form/Forms';
 // import Coaches from './components/Coaches/Coaches';
-import Coaches from './components/Coaches/CoachesTable';
+import Coaches from './Pages/CoachePage/CoachesTable';
 
 // import Editors from './components/Editor/Editors';
 import Editors from './components/Editor/EditorTable';

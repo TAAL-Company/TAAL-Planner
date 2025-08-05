@@ -5,8 +5,8 @@ import { getingData_coaches, deleteCoach, insertCoach } from '../../api/api'; //
 import { useState, useEffect } from 'react';
 import { Button, MenuItem, Menu } from '@mui/material';
 import CoachForm from './CoachForm';
-import Toolbar from '../Toolbar/Toolbar';
-import { useNotification } from "../Notification/NotificationProvider";
+import Toolbar from '../../components/Toolbar/Toolbar';
+import { useNotification } from "../../components/Notification/NotificationProvider";
 import { useTranslation } from "react-i18next";
 import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';

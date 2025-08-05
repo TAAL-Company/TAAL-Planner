@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { get } from "../../api/api";
-import "../../../node_modules/bootstrap/dist/css/bootstrap.css";
+import { get } from "../../../api/api";
+import "../../../../node_modules/bootstrap/dist/css/bootstrap.css";
 import "./style.css";
-import Modal_Calculator from "../Modal/Modal_Calculator";
-import View_my_tasks from "../View_my_tasks/View_my_tasks";
-import Modal_Loading from "../Modal/Modal_Loading";
-import { baseUrl } from "../../config";
+import Modal_Calculator from "../../Modal/Modal_Calculator";
+import View_my_tasks from "../../View_my_tasks/View_my_tasks";
+import Modal_Loading from "../../Modal/Modal_Loading";
+import { baseUrl } from "../../../config";
 import TextField from "@mui/material/TextField";
 import { FcSearch } from "react-icons/fc";
 
@@ -32,7 +32,13 @@ let student = "";
 let filteredData = [];
 let inputText = "";
 
+
+
 const Calculator = () => {
+  const headers = {
+    'Content-Type': 'application/json',
+    accept: 'application/json',
+  };
   const [get_logged_in, setLogged_in] = useState(false);
   const [done, setDone] = useState(false);
   const [, setLoading] = useState(false);
@@ -122,30 +128,32 @@ const Calculator = () => {
     fetchData();
   }, []);
 
-  const getData = () => {
+  const getData = async () => {
+    const headers = {
+      'Content-Type': 'application/json',
+      accept: 'application/json',
+    };
     // https://s83.bfa.myftpupload.com/wp-json/wp/v2/routes/
     // https://taal.tech/wp-json/wp/v2/routes/
     if (flag_show_page === true) setDone(true);
     if (flag_show_page === false)
-      get(`https://taal.tech/wp-json/wp/v2/routes/`, {
-        params: {
-          per_page: 99,
-          "Cache-Control": "no-cache",
-        },
+      await get(baseUrl + '/routes', {
+        headers: headers,
       }).then((res) => {
+        
         setDone(true);
         size = res.data.length / number;
 
         setDataCards(
           (dataCards = res.data.map((value) => {
             return {
-              myUsers: value.acf.users,
-              myTitle: value.title.rendered
+              myUsers: value.students,
+              myTitle: value.name
                 .replace("&#8211;", "-")
                 .replace("&#8217;", "'"),
-              myTasks: value.acf.tasks,
+              myTasks: value.tasks,
               myId: value.id,
-              myACF: value.acf,
+              myACF: value,
             };
           }))
         );
@@ -189,15 +197,8 @@ const Calculator = () => {
         size = (dataCards.length - sizeMod) / number;
       });
 
-    get(`https://taal.tech/wp-json/wp/v2/users/`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
-      },
-      params: {
-        per_page: 99,
-        "Cache-Control": "no-cache",
-      },
+    await get(baseUrl + '/tasks', {
+      headers: headers,
     }).then((res) => {
       setStudent(
         (student = res.data.filter((item) => item.description !== ""))

@@ -14,11 +14,13 @@ function View_my_tasks({ prop }) {
   const [, setDataTask] = useState([]);
   const clickTask = async (e) => {
     setIdTask((IdTask = e.ID));
-    await get(`https://taal.tech/wp-json/wp/v2/tasks/`, {
-      params: {
-        per_page: 99,
-        "Cache-Control": "no-cache",
-      },
+    const headers = {
+      'Content-Type': 'application/json',
+      accept: 'application/json',
+    };
+
+    await get(baseUrl + '/tasks', {
+      headers: headers,
     }).then((res) => {
       setDataTask((MyTasks = res.data.filter((item) => item.id === e.ID)));
     });
@@ -26,7 +28,7 @@ function View_my_tasks({ prop }) {
   return (
     <>
       <div className="image" style={{}}>
-        <Images id={IdTask} url={MyTasks.acf.image.url} />
+        <Images id={IdTask} url={MyTasks.picture_url} />
       </div>
       <br></br>
       <br></br>

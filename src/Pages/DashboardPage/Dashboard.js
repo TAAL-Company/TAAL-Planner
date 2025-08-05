@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './style.css';
 // import Navbar from "../Navbar/Navbar";
-import CardDash from '../CardDash/CardDash';
+import CardDash from '../../components/CardDash/CardDash';
 import location from '../../Pictures/location.svg';
 import route from '../../Pictures/route.svg';
 import group from '../../Pictures/Group.svg';
@@ -14,13 +14,35 @@ import communityImage from '../../Pictures/community.png';
 // import Barchart from '../charts/Barchart';
 // import Piechart from '../charts/Piechart';
 import { baseUrl } from '../../config';
-import Charts from '../charts/Charts';
+import Charts from '../../components/charts/Charts';
+import { Grid, Card, CardContent, CardMedia, Typography, Button } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles({
+  card: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '16px',
+    textAlign: 'center',
+    height: '100%',
+    backgroundColor: (props) => props.color,
+    color: '#fff',
+  },
+  media: {
+    height: 100,
+    width: 100,
+    marginBottom: '16px',
+  },
+  gridContainer: {
+    padding: '16px',
+  },
+});
 
 const Dashboard = () => {
 
-
-
-  const currentLanguage = sessionStorage.getItem('language');
+  const currentLanguage = sessionStorage.getItem('language')
 
 
   const cardsHebrew = [

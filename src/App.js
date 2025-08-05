@@ -8,7 +8,7 @@ import './App.css';
 import Login from './components/Login/Login';
 import { Provider } from 'react-redux';
 import store from './redux/store';
-import Dashboard from './components/Dashboard/Dashboard';
+import Dashboard from './Pages/DashboardPage/Dashboard';
 import GalleryPage from './components/Gallery/Gallerypage/gallery-page';
 // import Cards from './components/Cards/Cards';
 import RouteTable from './Pages/RoutePage/RouteTable';

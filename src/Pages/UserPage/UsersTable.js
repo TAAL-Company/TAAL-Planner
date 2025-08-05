@@ -17,7 +17,7 @@ import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Columns from './Columns';
 import Rows from './Rows';
 import { CssBaseline, Paper } from '@mui/material';
-import PopupTable from '../../components/placesCards/popuptable'; // Add this import
+import PopupTable from '../../components/PopupTable/popuptable'; // Add this import
 
 // Create rtl cache
 const cacheRtl = createCache({

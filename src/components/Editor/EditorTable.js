@@ -15,7 +15,7 @@ import { CacheProvider } from '@emotion/react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Rows from './Rows';
 import Columns from './Columns'; 
-import PopupTable from '../placesCards/popuptable'; 
+import PopupTable from '../PopupTable/popuptable'; 
 
 // Create rtl cache
 const cacheRtl = createCache({

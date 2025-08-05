@@ -12,7 +12,7 @@ import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';
 import Columns from './Columns';
 import Rows from './Rows';
-import PopupTable from '../../components/placesCards/popuptable';
+import PopupTable from '../../components/PopupTable/popuptable';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';

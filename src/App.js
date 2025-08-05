@@ -14,7 +14,7 @@ import GalleryPage from './components/Gallery/Gallerypage/gallery-page';
 import RouteTable from './Pages/RoutePage/RouteTable';
 import { Switch, Route } from 'react-router-loading';
 // import PlacesCards from './components/placesCards/placesCards';
-import Sites from './components/placesCards/SitesTable';
+import Sites from './Pages/SitePage/SitesTable';
 
 
 import Forms from './components/Form/Forms';

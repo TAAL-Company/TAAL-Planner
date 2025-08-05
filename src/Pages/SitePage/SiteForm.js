@@ -11,8 +11,8 @@ import {
     Typography,
 } from '@mui/material';
 import { insertSite, updateSite, uploadFiles } from '../../api/api';
-import InputFileUpload from '../InputFileUpload/InputFileUpload';
-import { useNotification } from '../Notification/NotificationProvider';
+import InputFileUpload from '../../components/InputFileUpload/InputFileUpload';
+import { useNotification } from '../../components/Notification/NotificationProvider';
 import { useTranslation } from "react-i18next";
 
 export default function SiteForm({

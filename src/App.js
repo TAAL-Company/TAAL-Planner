@@ -5,7 +5,7 @@ import Calculator from './components/junk/Calculator/Calculator';
 import UsersTable from './Pages/UserPage/UsersTable';
 // import Student from '/components/Student/Student';
 import './App.css';
-import Login from './components/Login/Login';
+import Login from './Pages/Loginpage/Login';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import Dashboard from './Pages/DashboardPage/Dashboard';

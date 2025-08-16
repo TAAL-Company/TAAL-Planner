@@ -3,11 +3,11 @@
 // import './style.css';
 // import '../../../node_modules/bootstrap/dist/css/bootstrap.css';
 // import { Card } from 'react-bootstrap';
-// import img1 from '../../Pictures/img1.png';
-// import img2 from '../../Pictures/img2.png';
-// import img3 from '../../Pictures/img3.png';
-// import img4 from '../../Pictures/img6.png';
-// import logo from '../../Pictures/logo.jpeg';
+// import img1 from '../../../Pictures/img1.png';
+// import img2 from '../../../Pictures/img2.png';
+// import img3 from '../../../Pictures/img3.png';
+// import img4 from '../../../Pictures/img6.png';
+// import logo from '../../../Pictures/logo.jpeg';
 // import Modal_Cards from '../Modal/Model_Cards';
 // import { GrDuplicate } from 'react-icons/gr';
 // import { FcSearch } from 'react-icons/fc';

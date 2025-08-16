@@ -2,7 +2,7 @@
 // import { FcMultipleInputs } from 'react-icons/fc';
 // import { RiAsterisk } from 'react-icons/ri';
 // import Modal_Loading from './Modal_Loading';
-// import stopIcon from '../../Pictures/stopIcon.svg';
+// import stopIcon from '../../../Pictures/stopIcon.svg';
 // import { uploadFile, insertStation } from '../../../api/api';
 // import './Modal.css';
 

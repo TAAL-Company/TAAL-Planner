@@ -1,20 +1,25 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FcPlus, FcCalculator } from 'react-icons/fc';
-
-import { RiHome4Line } from 'react-icons/ri';
-
-import './style.css';
-import { FaUser, FaAddressCard, FaRoute } from 'react-icons/fa';
-import { useState } from 'react';
-import { baseUrl } from '../../config';
-import TranslateIcon from '@mui/icons-material/Translate';
-
-let flag_token = false;
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 
 const Nav = () => {
-  const [, login_token] = useState('');
-  const [complete_name, setcomplete_name] = useState('');
+  const [completeName, setCompleteName] = useState('');
+
+  useEffect(() => {
+    try {
+      const jwtData = sessionStorage.getItem('jwt');
+      if (jwtData) {
+        const parsed = JSON.parse(jwtData);
+        if (parsed?.name) {
+          setCompleteName(parsed.name);
+        }
+      }
+    } catch (err) {
+      console.error('Invalid JWT in sessionStorage:', err);
+    }
+  }, []);
 
   const logout = () => {
     sessionStorage.removeItem('jwt');
@@ -26,74 +31,100 @@ const Nav = () => {
     localStorage.removeItem('New_Routes');
     localStorage.removeItem('myLastStation');
 
-
     window.location.replace('/');
-  }
-  useEffect(() => {
-    // const url2 = `https://taal.tech/wp-json/wp/v2/users/me/`;
-    // fetch(url2, {
-    //   method: 'GET',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     accept: 'application/json',
-    //     Authorization: 'Bearer' + sessionStorage.jwt,
-    //   },
-    // })
-    //   .then((response) => response.json())
-    //   .then(function (user) {
-    //     if (!flag_token) {
-    //       login_token((flag_token = true));
-    //       setcomplete_name(user.name);
-    //     }
-    //   });
-    setcomplete_name(JSON.parse(sessionStorage.getItem('jwt')).name);
-  });
+  };
+
+  const toggleLanguage = () => {
+    const currentLanguage = sessionStorage.getItem('language');
+    const newLanguage = currentLanguage === 'English' ? 'Hebrew' : 'English';
+    sessionStorage.setItem('language', newLanguage);
+    window.location.reload();
+  };
+
   return (
-    <div className='nav'>
-      <ul className='nav-links'>
-        {/* <Link to="/Calculator" className="link">
-          <li>
-            <FcCalculator style={{ fontSize: "24px" }} />
-            &nbsp;&nbsp; פעולות נוספות
-          </li>
-        </Link>
-        <Link to="/student" className="link">
-          <li>
-            <FaAddressCard style={{ fontSize: "24px" }} />
-            &nbsp;&nbsp;עובדים{" "}
-          </li>
-        </Link>
-        <Link to="/routes_cards" className="link">
-          <li>
-            <FaRoute style={{ fontSize: "24px" }} />
-            &nbsp;&nbsp;מסלולים{" "}
-          </li>
-        </Link>
-        <Link to="/planner" className="link">
-          <li>
-            <FcPlus style={{ fontSize: "24px" }} /> &nbsp;&nbsp;הוסף מסלול{" "}
-          </li>
-        </Link> */}
-        <Link to='/Dashboard'>
-          <div className='home'></div>
+    <Box
+      component="nav"
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        height: '74px',
+        backgroundColor: '#0d4264',
+        color: 'white',
+        px: 2,
+      }}
+    >
+      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+        <Link to="/Dashboard">
+          <IconButton
+            sx={{
+              width: 51,
+              height: 45,
+              backgroundImage: "url('../../Pictures/ic_home.svg')",
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              borderRadius: 0,
+            }}
+          />
         </Link>
         <Link to="/Forms">
-          <div className="forms"></div>
+          <IconButton
+            sx={{
+              width: 51,
+              height: 45,
+              backgroundImage: "url('../../Pictures/ic_forms.svg')",
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              borderRadius: 0,
+            }}
+          />
         </Link>
-        <div className="languageicon" onClick={() => {
-          const currentLanguage = sessionStorage.getItem('language');
-          const newLanguage = currentLanguage === 'English' ? 'Hebrew' : 'English';
-          sessionStorage.setItem('language', newLanguage);
-          window.location.reload();
-        }}></div>
-        <Link to="/">
-          <div onClick={logout} className="logout"></div>
-        </Link>
-      </ul>
-      <div className='userName'>{complete_name}</div>
-      <div className='myUser'></div>
-    </div>
+        <IconButton
+          onClick={toggleLanguage}
+          sx={{
+            width: 51,
+            height: 45,
+            backgroundImage: "url('../../Pictures/language.svg')",
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            borderRadius: 0,
+          }}
+        />
+        <IconButton
+          onClick={logout}
+          sx={{
+            width: 51,
+            height: 45,
+            backgroundImage: "url('../../Pictures/logout-svgrepo-com.svg')",
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            borderRadius: 0,
+          }}
+        />
+      </Box>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Typography sx={{ whiteSpace: 'nowrap', fontSize: '16px' }}>
+          {completeName}
+        </Typography>
+        <Box
+          sx={{
+            width: 50,
+            height: 106,
+            backgroundImage: "url('../../Pictures/logo_Taal.svg')",
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            borderRadius: 0,
+          }}
+        />
+      </Box>
+    </Box>
   );
 };
+
 export default Nav;
-//----------------------------------------

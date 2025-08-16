@@ -687,6 +687,22 @@ export const updateEditor = async (userId, user) => {
   return await patch(url, body, headers);
 };
 
+export const loginEditor = async (name, password) => {
+  // const url = baseUrl + '/editor/login';
+
+  // const headers = {
+  //   'Content-Type': 'application/json',
+  //   accept: 'application/json',
+  // };
+
+  // const body = JSON.stringify({
+  //   name: name,
+  //   password: password,
+  // });
+
+  // return await post(url, body, headers);
+};
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*~~~~~~~~~~~~~~~~~  Cognitive Profile  ~~~~~~~~~~~~~~*/
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -1348,7 +1364,7 @@ export const getingTask_Performance = async (
 
 export const postAdditonalHelp = async (additonalHelp) => {
   try {
-    const response = await post (baseUrl + '/additonal-help', additonalHelp, {
+    const response = await post(baseUrl + '/additonal-help', additonalHelp, {
       headers: {
         'Content-Type': 'application/json',
         // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
@@ -1369,16 +1385,16 @@ export const getAdditonalHelp = async () => {
   } catch (error) {
     throw error;
   }
-};  
+};
 
 export const updateAdditonalHelp = async (id, additonalHelp) => {
   try {
     const body = {
-        help_text: additonalHelp.help_text,
-        picture_url: additonalHelp.picture_url,
-        audio_url: additonalHelp.audio_url,
-        video_url: additonalHelp.video_url,
-        UserID: additonalHelp.UserID
+      help_text: additonalHelp.help_text,
+      picture_url: additonalHelp.picture_url,
+      audio_url: additonalHelp.audio_url,
+      video_url: additonalHelp.video_url,
+      UserID: additonalHelp.UserID
     };
     const response = await patch(baseUrl + '/additonal-help/' + id, body, {
       headers: {

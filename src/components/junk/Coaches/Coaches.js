@@ -1,6 +1,6 @@
 // import React, { useState, useEffect } from 'react';
 // import './Coaches.css';
-// import defualtSiteImg from '../../Pictures/defualtSiteImg.svg';
+// import defualtSiteImg from '../../../Pictures/defualtSiteImg.svg';
 // import {
 //   getingData_coaches,
 //   deleteCoach,

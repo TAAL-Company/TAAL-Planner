@@ -3,7 +3,7 @@ import { Plannerbox } from './Components-planner/Plannerbox';
 import { Frame } from './Components-planner/tag';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import BorderedTreeView from '../components/Places/BorderedTreeView';
+import BorderedTreeView from '../Pages/PlannerPage/Places/BorderedTreeView';
 
 export default function PlannerMap({ stations, setStations, tasks, setTasks, route, setRoute, Packs, setPacks, onStationClick, onRouteClick , onTaskClick , onPackClick }) {
   return (

@@ -1,15 +1,15 @@
 import { BrowserRouter as Router } from 'react-router-dom';
 import Nav from './components/Nav/Nav';
-import Planner from './components/Planner/Planner';
+import Planner from './Pages/PlannerPage/Planner/Planner';
 import Calculator from './components/junk/Calculator/Calculator';
 import UsersTable from './Pages/UserPage/UsersTable';
 // import Student from '/components/Student/Student';
 import './App.css';
-import Login from './Pages/Loginpage/Login';
+import Login from './Pages/LoginPage/Login';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import Dashboard from './Pages/DashboardPage/Dashboard';
-import GalleryPage from './components/Gallery/Gallerypage/gallery-page';
+import GalleryPage from './Pages/GalleryPage/Gallery/Gallerypage/gallery-page';
 // import Cards from './components/Cards/Cards';
 import RouteTable from './Pages/RoutePage/RouteTable';
 import { Switch, Route } from 'react-router-loading';
@@ -17,13 +17,13 @@ import { Switch, Route } from 'react-router-loading';
 import Sites from './Pages/SitePage/SitesTable';
 
 
-import Forms from './components/Form/Forms';
+import Forms from './Pages/FormPage/Form/Forms';
 // import Coaches from './components/Coaches/Coaches';
 import Coaches from './Pages/CoachePage/CoachesTable';
 
 // import Editors from './components/Editor/Editors';
 import Editors from './Pages/EditorsPage/EditorTable';
-import Community from './components/Community/community';
+import Community from './Pages/CommunityPage/community';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import './i18n'; // Import the i18n configuration

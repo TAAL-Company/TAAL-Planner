@@ -1,6 +1,6 @@
 // import React, { useState, useEffect } from 'react';
 // import './Editors.css';
-// import defualtSiteImg from '../../Pictures/defualtSiteImg.svg';
+// import defualtSiteImg from '../../../Pictures/defualtSiteImg.svg';
 // import {
 //   getingData_Editors,
 //   deleteEditor,

@@ -11,7 +11,7 @@ import {
 
 import { insertCoach, updateCoach, uploadFiles } from '../../api/api';
 import InputFileUpload from '../../components/InputFileUpload/InputFileUpload';
-import BasicSelect from '../../components/Gallery/BasicSelect';
+import BasicSelect from '../../components/BasicSelect/BasicSelect';
 import { getBlobsInContainer } from '../../components/azureBlob';
 import { useNotification } from '../../components/Notification/NotificationProvider';
 import { useTranslation } from "react-i18next";

@@ -14,7 +14,7 @@ import communityImage from '../../Pictures/community.png';
 // import Barchart from '../charts/Barchart';
 // import Piechart from '../charts/Piechart';
 import { baseUrl } from '../../config';
-import Charts from '../../components/charts/Charts';
+// import Charts from '../../components/charts/Charts';
 import { Grid, Card, CardContent, CardMedia, Typography, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 

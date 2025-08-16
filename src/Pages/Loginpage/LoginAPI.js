@@ -76,11 +76,11 @@ function LoginAPI({
 
   if (getFlagLoading) {
     return (
-      <Box mt={4} display="flex" flexDirection="column" alignItems="center">
+      <Box mt={3} display="flex" flexDirection="column" alignItems="center">
         <Typography variant="h6" color="white" gutterBottom>
           Loading...
         </Typography>
-        <CircularProgress size={50} style={{ color: '#b4afc7' }} />
+        <CircularProgress size={50} style={{ color: '#0d4264' }} />
       </Box>
     );
   }

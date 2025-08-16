@@ -14,7 +14,7 @@ import {
 
 import { insertEditor, updateEditor, uploadFiles } from '../../api/api';
 import MultipleSelect from '../../components/MultipleSelectCheckmarks/MultipleSelectCheckmarks';
-import BasicSelect from '../../components/Gallery/BasicSelect';
+import BasicSelect from '../../components/BasicSelect/BasicSelect';
 import InputFileUpload from '../../components/InputFileUpload/InputFileUpload';
 import { getBlobsInContainer } from '../../components/azureBlob';
 import { useNotification } from '../../components/Notification/NotificationProvider';

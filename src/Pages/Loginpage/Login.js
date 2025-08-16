@@ -16,6 +16,7 @@ import logo from '../../Pictures/loginLogoTaal.svg';
 import userLogo from '../../Pictures/user-logo.png';
 import lockLogo from '../../Pictures/lock-logo.png';
 import LoginAPI from './LoginAPI';
+import { useNotification } from '../../components/Notification/NotificationProvider';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   backgroundColor: '#0d4264',
@@ -60,19 +61,19 @@ const InputWrapper = styled(Box)(({ language }) => ({
 
 const SubmitButton = styled(Button)({
   backgroundColor: '#0d4264',
-  color: 'white',
+  // color: 'white',
   fontWeight: 600,
   fontSize: '1.2rem',
   height: '56px',
   marginTop: '1rem',
   '&:hover': {
-    boxShadow: '2px 5px 20px #00000080',
+    boxShadow: '2px 5px 20px #0d4364',
   },
 });
 
 const ForgetPassword = styled(Typography)(({ language }) => ({
   textAlign: 'center',
-  color: '#9b9b9b',
+  color: '#0d4364d0',
   direction: language === 'English' ? 'ltr' : 'rtl',
   fontSize: '18px',
   marginTop: '0.5rem',
@@ -85,6 +86,8 @@ function Login(props) {
   const [submit, setSubmit] = useState(false);
   const [flagLoading, setFlagLoading] = useState(false);
   const [apiDetailsLogin, setApiDetailsLogin] = useState({ user: '', pass: '' });
+
+  const { showNotification } = useNotification();
 
   const languages = {
     Hebrew: { username: 'שם משתמש', password: 'סיסמה', dir: 'rtl', login: 'התחברות', forget: 'שכחת סיסמה?' },
@@ -106,6 +109,10 @@ function Login(props) {
   };
 
   const handleSubmit = () => {
+    if (!loginDetails.user || !loginDetails.pass) {
+      showNotification('error', 'Please fill in all required fields.');
+      return;
+    }
     setSubmit(true);
     setApiDetailsLogin({ ...loginDetails });
     setFlagLoading(true);
@@ -153,6 +160,7 @@ function Login(props) {
               onChange={handleChange}
               inputProps={{ dir: lang.dir }}
               sx={{ backgroundColor: '#efefef', borderRadius: 0 }}
+              required
             />
           </InputWrapper>
 
@@ -170,6 +178,7 @@ function Login(props) {
               onChange={handleChange}
               inputProps={{ dir: lang.dir }}
               sx={{ backgroundColor: '#efefef', borderRadius: 0 }}
+              required
             />
             <Box
               onClick={togglePasswordVisibility}
@@ -183,6 +192,7 @@ function Login(props) {
                 cursor: 'pointer',
                 color: 'white',
                 borderRadius: isEnglish ? '0 5px 5px 0' : '5px 0 0 5px',
+                
               }}
             >
               {showPassword ? <RiEyeOffLine /> : <RiEyeLine />}

@@ -38,7 +38,7 @@ let myStation = '';
 let countTemp = 0;
 //-------------------------
 function DragnDrop(props) {
-  const [board, setBoard] = useState([]);
+  // const [props.board, props.setBoard] = useState([]);
   const [, setReorderBoardFlag] = useState(true);
   const [openRemove, setOpenRemove] = useState(false);
   const [, setLoading] = useState(false);
@@ -96,7 +96,7 @@ function DragnDrop(props) {
       setBoardArrayDND(props.boardArrayDND);
     }
 
-    if (board.length > 0 && boardName !== '') {
+    if (props.board.length > 0 && boardName !== '') {
       let taskMap;
       // Create a map for faster lookup
       if (boardName === 'routes') {
@@ -107,11 +107,11 @@ function DragnDrop(props) {
         );
       }
 
-      for (let index = 0; index < board.length; index++) {
-        const updatedTask = taskMap.get(board[index].id);
+      for (let index = 0; index < props.board.length; index++) {
+        const updatedTask = taskMap.get(props.board[index].id);
 
         if (updatedTask) {
-          Object.assign(board[index], {
+          Object.assign(props.board[index], {
             title: updatedTask.title,
             subtitle: updatedTask.subtitle,
             estimatedTimeSeconds: updatedTask.estimatedTimeSeconds,
@@ -127,7 +127,7 @@ function DragnDrop(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    board,
+    props.board,
     boardName,
     props.boardArrayDND,
     props.tasksOfChosenStation,
@@ -184,12 +184,12 @@ function DragnDrop(props) {
       let indexStation = props.allStations.findIndex(
         (station) =>
           station.id ===
-          board.find((b) => b.id === taskForEdit.id).theStation.id
+          props.board.find((b) => b.id === taskForEdit.id).theStation.id
       );
       const updatedTasksBoardArrayDND = updateTask(taskForEdit, boardArrayDND);
       const newTasksBoardArrayDND = updateTaskDetails(
         updatedTasksBoardArrayDND,
-        board
+        props.board
       );
       setBoardArrayDND(updatedTasksBoardArrayDND);
 
@@ -221,7 +221,7 @@ function DragnDrop(props) {
         taskForEdit,
         props.tasksOfChosenStation
       );
-      const newBoard = updateTaskDetails(updatedTasksOfChosenStation, board);
+      const newBoard = updateTaskDetails(updatedTasksOfChosenStation, props.board);
       (() => {
         // props.setTasksOfChosenStation(updatedTasksOfChosenStation);
         props.allStations[indexStation].tasks = updatedTasksOfChosenStation;
@@ -229,15 +229,15 @@ function DragnDrop(props) {
       updatedTask = newBoard.find((task) => task.id === taskForEdit.id);
     }
 
-    // updatedTask = updateTask(taskForEdit, board)
-    // updatedTask = updateTaskDetails(updatedTask, board)
+    // updatedTask = updateTask(taskForEdit, props.board)
+    // updatedTask = updateTaskDetails(updatedTask, props.board)
 
     if (updatedTask) {
-      let existingTaskIndex = board.findIndex(
+      let existingTaskIndex = props.board.findIndex(
         (task) => task.id === updatedTask.id
       );
       if (existingTaskIndex !== -1) {
-        board[existingTaskIndex] = updatedTask;
+        props.board[existingTaskIndex] = updatedTask;
       }
     }
     setTaskForEdit('');
@@ -250,17 +250,17 @@ function DragnDrop(props) {
     setOpenRemove(false);
   };
   const handleCloseRemoveConfirm = async () => {
-    // board={board}
-    // setBoard={setBoard}
+    // props.board={props.board}
+    // props.setBoard={props.setBoard}
 
-    console.log("board", board);
+    console.log("props.board", props.board);
     console.log("openThreeDotsVerticalBoard", openThreeDotsVerticalBoard);
     console.log("location", location);
 
-    const items = Array.from(board);
+    const items = Array.from(props.board);
     const filteredItems = items.filter((item, index) => index !== parseInt(location, 10));
     console.log('filteredItems', filteredItems);
-    setBoard(filteredItems);
+    props.setBoard(filteredItems);
 
 
 
@@ -275,10 +275,10 @@ function DragnDrop(props) {
     //   newTasks.splice(indexaTask, 1); // remove one element at index x
     //   props.setTasksOfChosenStation(newTasks);
 
-    //   // const indexBoardTask = board.findIndex(
+    //   // const indexBoardTask = props.board.findIndex(
     //   //   (task) => task.id === openThreeDotsVerticalBoard
     //   // );
-    //   // board.splice(indexBoardTask, 1); // remove one element at index x
+    //   // props.board.splice(indexBoardTask, 1); // remove one element at index x
 
     //   let indexStation = props.stationArray.findIndex(
     //     (station) => station.id === props.myStation.id
@@ -294,13 +294,13 @@ function DragnDrop(props) {
 
   useEffect(() => {
     if (props.replaceRouteFlag) {
-      setBoard([]);
+      props.setBoard([]);
     }
   }, [props.replaceRouteFlag]);
 
   useEffect(() => {
     if (props.replaceSiteFlag) {
-      setBoard([]);
+      props.setBoard([]);
       dndArray = [];
     }
   }, [props.replaceSiteFlag]);
@@ -380,7 +380,7 @@ function DragnDrop(props) {
   //   accept: "image",
   //   drop(item, monitor) {
   //     const itemData = monitor.getItem();
-  //     // const board = itemData.boardName
+  //     // const props.board = itemData.boardName
   //     // const id = itemData.id
   //     addImageToBoard(itemData.id, itemData.boardName);
   //   },
@@ -422,12 +422,12 @@ function DragnDrop(props) {
       if (boardName === 'routes' && props.boardArrayDND.length > 0) {
         Route = await props.boardArrayDND?.find((tag) => id === tag.id);
 
-        setBoard((board) => [...board, Route]);
+        props.setBoard((board) => [...board, Route]);
         setFlagTree(true);
       } else {
         Route = await dndArray?.find((tag) => id === tag.id);
 
-        setBoard((board) => [...board, Route]);
+        props.setBoard((board) => [...board, Route]);
         setFlagTree(true);
       }
       thisIdArray.push(Route.id);
@@ -439,8 +439,8 @@ function DragnDrop(props) {
 
   const getValueForProperty = (property, fallbackValue) => {
     if (openThreeDotsVerticalBoard !== -1) {
-      if (board.length > 0) {
-        const task = board.find(
+      if (props.board.length > 0) {
+        const task = props.board.find(
           (task) => task.id === openThreeDotsVerticalBoard
         );
         if (task && task[property] !== undefined) {
@@ -493,7 +493,7 @@ function DragnDrop(props) {
           const route = props.filteredDataRoutes?.find(route => route.id === routeId);
 
           if (route) {
-            // Create a representation of the route in the board
+            // Create a representation of the route in the props.board
             const routeItem = {
               id: route.id,
               title: route.name.replace('&#8211;', '-').replace('&#8217;', "' "),
@@ -511,7 +511,7 @@ function DragnDrop(props) {
               borderLeft: '0x solid #c2bfbf'
             };
 
-            setBoard(currentBoard => [...currentBoard, routeItem]);
+            props.setBoard(currentBoard => [...currentBoard, routeItem]);
             setFlagTree(true);
             localStorage.setItem('changetasksRoutes', true);
           }
@@ -530,10 +530,10 @@ function DragnDrop(props) {
             const pack = props.Packs.find(pack => pack.id === packId);
 
             if (pack && pack.routes && Array.isArray(pack.routes) && pack.routes.length > 0) {
-              // Clear the current board to show only this pack's routes
-              setBoard([]);
+              // Clear the current props.board to show only this pack's routes
+              props.setBoard([]);
 
-              // Find all routes in this pack and add them to the board
+              // Find all routes in this pack and add them to the props.board
               pack.routes.forEach(packRoute => {
                 // Safely check if props.filteredDataRoutes exists
                 if (!props.filteredDataRoutes || !Array.isArray(props.filteredDataRoutes)) {
@@ -561,7 +561,7 @@ function DragnDrop(props) {
                     pack: pack.name // Include pack information
                   };
 
-                  setBoard(currentBoard => [...currentBoard, routeItem]);
+                  props.setBoard(currentBoard => [...currentBoard, routeItem]);
                 }
               });
 
@@ -586,7 +586,7 @@ function DragnDrop(props) {
               //   borderLeft: '0x solid #c2bfbf'
               // };
 
-              // setBoard(currentBoard => [...currentBoard, emptyPackItem]);
+              // props.setBoard(currentBoard => [...currentBoard, emptyPackItem]);
               // setFlagTree(true);
             } else {
               console.error("Pack not found with ID:", packId);
@@ -645,43 +645,43 @@ function DragnDrop(props) {
     setActiveButton(e.currentTarget.className);
   };
   useEffect(() => {
-    if (flagTree && board) {
-      for (let i = 0; i < board.length; i++) {
-        if (board[i].nameStation === '') {
+    if (flagTree && props.board) {
+      for (let i = 0; i < props.board.length; i++) {
+        if (props.board[i].nameStation === '') {
           if (i === 0) {
-            board[i].nameStation = board[i].myStation;
-            board[i].borderLeft = '0x solid #c2bfbf';
-            board[i].width = '-13px';
-            board[i].height = '70px';
-            board[i].bottom = '-27px';
-            board[i].kavTopWidth = '25px';
-            board[i].newkavTaskTop = '0px';
-            board[i].kavTaskTopMarginTop = '-7px';
-          } else if (board[i].myStation !== board[i - 1].myStation) {
-            board[i].nameStation = board[i].myStation;
-            board[i].borderLeft = '0x solid #c2bfbf';
-            board[i].width = '-13px';
-            board[i].height = '70px';
-            board[i].bottom = '-27px';
-            board[i].kavTopWidth = '25px';
-            board[i].newkavTaskTop = '0px';
-            board[i].kavTaskTopMarginTop = '-7px';
+            props.board[i].nameStation = props.board[i].myStation;
+            props.board[i].borderLeft = '0x solid #c2bfbf';
+            props.board[i].width = '-13px';
+            props.board[i].height = '70px';
+            props.board[i].bottom = '-27px';
+            props.board[i].kavTopWidth = '25px';
+            props.board[i].newkavTaskTop = '0px';
+            props.board[i].kavTaskTopMarginTop = '-7px';
+          } else if (props.board[i].myStation !== props.board[i - 1].myStation) {
+            props.board[i].nameStation = props.board[i].myStation;
+            props.board[i].borderLeft = '0x solid #c2bfbf';
+            props.board[i].width = '-13px';
+            props.board[i].height = '70px';
+            props.board[i].bottom = '-27px';
+            props.board[i].kavTopWidth = '25px';
+            props.board[i].newkavTaskTop = '0px';
+            props.board[i].kavTaskTopMarginTop = '-7px';
           }
         } else {
-          if (i !== 0 && board[i].myStation === board[i - 1].myStation) {
-            board[i].nameStation = '';
-            board[i].width = '-84px';
-            board[i].borderLeft = '2x solid #c2bfbf';
-            board[i].height = '86px';
-            board[i].bottom = '45px';
-            board[i].kavTopWidth = '0px';
-            board[i].newkavTaskTop = '100px';
-            board[i].kavTaskTopMarginTop = '-27px';
+          if (i !== 0 && props.board[i].myStation === props.board[i - 1].myStation) {
+            props.board[i].nameStation = '';
+            props.board[i].width = '-84px';
+            props.board[i].borderLeft = '2x solid #c2bfbf';
+            props.board[i].height = '86px';
+            props.board[i].bottom = '45px';
+            props.board[i].kavTopWidth = '0px';
+            props.board[i].newkavTaskTop = '100px';
+            props.board[i].kavTaskTopMarginTop = '-27px';
           }
         }
       }
     }
-  }, [board, flagTree]);
+  }, [props.board, flagTree]);
 
   const myTasksContainer = document.querySelector('.MyTasks');
 
@@ -710,7 +710,7 @@ function DragnDrop(props) {
     }
 
     try {
-      const packRoutes = board.map(route => ({
+      const packRoutes = props.board.map(route => ({
         routeId: route.id,
         name: route.title,
       }));
@@ -758,7 +758,7 @@ function DragnDrop(props) {
           setText={get_Name}
           routeName={props.tasksOfRoutes.name}
           routeUUID={props.tasksOfRoutes.id}
-          tasksForNewRoute={board}
+          tasksForNewRoute={props.board}
           setFilteredDataRoutes={props.setFilteredDataRoutes}
           filteredDataRoutes={props.filteredDataRoutes}
           setRequestForEditing={setRequestForEditing}
@@ -769,7 +769,7 @@ function DragnDrop(props) {
         <ViewRoutesModal
           open={modalOpenViewRoutes}
           onClose={() => setModalOpenViewRoutes(false)}
-          routes={board.map(route => ({
+          routes={props.board.map(route => ({
             routeId: route.id,
             name: route.title,
           }))}
@@ -884,7 +884,7 @@ function DragnDrop(props) {
                 {/* flagTree   */}
                 {flagTree ? (
                   <>
-                    {board[0] !== undefined && board.length !== 0 ? (
+                    {props.board[0] !== undefined && props.board.length !== 0 ? (
                       <>
                         <div
                           className={`kavT ${props.language !== 'English' ? 'english' : ''
@@ -895,9 +895,9 @@ function DragnDrop(props) {
                             }`}
                         >
                           {/* Show pack name if showing pack routes */}
-                          {board[0].itemType === 'route'? (
+                          {props.board[0].itemType === 'route'? (
                             <span style={{ color: '#ba11b0' }}>
-                              {board[0].pack ? board[0].pack : 'Pack Routes'}
+                              {props.board[0].pack ? props.board[0].pack : 'Pack Routes'}
                             </span>
                           ) : props.tasksOfRoutes && props.tasksOfRoutes.name ? (
                             props.tasksOfRoutes.name
@@ -909,10 +909,10 @@ function DragnDrop(props) {
                     ) : (
                       <></>
                     )}
-                    {board[0] === undefined && board.length === 0 ? (
+                    {props.board[0] === undefined && props.board.length === 0 ? (
                       <div></div>
                     ) : (
-                      board.map((tag, keyCount) => {
+                      props.board.map((tag, keyCount) => {
                         if (tag !== undefined) {
                           // console.log(keyCount, tag);
                           return (saveTag = (
@@ -986,7 +986,7 @@ function DragnDrop(props) {
                         <Phone
                           modalFlagTablet={modalFlagTablet}
                           flagPhone={flagPhone}
-                          board={board}
+                          board={props.board}
                           saveTag={saveTag}
                           count={count}
                           myStation={props.myStation}
@@ -1003,7 +1003,7 @@ function DragnDrop(props) {
                             <Tablet
                               modalFlagTablet={modalFlagTablet}
                               flagPhone={flagPhone}
-                              board={board}
+                              board={props.board}
                               saveTag={saveTag}
                               count={count}
                               myStation={props.myStation}
@@ -1014,11 +1014,11 @@ function DragnDrop(props) {
                             />
                           </>
                         ) : (
-                          // (board[0] !== undefined) ? (<>
+                          // (props.board[0] !== undefined) ? (<>
 
                           <ReorderBoard
-                            board={board}
-                            setBoard={setBoard}
+                            board={props.board}
+                            setBoard={props.setBoard}
                             language={props.language}
                           />
                           // </>) : <>error</>

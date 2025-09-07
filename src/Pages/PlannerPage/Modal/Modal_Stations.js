@@ -209,7 +209,7 @@ const Modal_Stations = (props) => {
                   textAlign: props.language === 'English' ? 'right' : 'left',
                 }}
               >
-                {props.language !== 'English' ? 'New staition' : 'תחנה חדשה'}
+                {props.language !== 'English' ? (props.requestForEditing ? 'Edit station' : 'New station') : (props.requestForEditing ? 'עריכת תחנה' : 'תחנה חדשה')}
               </div>
             </div>
             <div

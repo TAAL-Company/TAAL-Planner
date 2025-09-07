@@ -165,7 +165,7 @@ function Modal_Tasks(props) {
       (requestForEditing === 'edit' ||
         requestForEditing === 'details') &&
       Array.isArray(props.stationOfTask) && props.stationOfTask.length > 0
-    ) { 
+    ) {
       props.stationOfTask.forEach((station) => {
         setMyPlacesChoice((prev) => [...prev, station.id]);
       });
@@ -184,13 +184,13 @@ function Modal_Tasks(props) {
     console.log("additonalHelp", additonalHelp);
     console.log(mainadditonalHelp);
     console.log(Foldersite);
-    
+
 
 
     if (get_title === '' || getDescription === '') {
-      
+
       // alert(props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
-      showNotification('error',props.language === "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields' );
+      showNotification('error', props.language === "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
       setDone(false);
       setFlagClickOK(false);
       props.setModalOpen(true);
@@ -253,17 +253,17 @@ function Modal_Tasks(props) {
               additonalHelp[i][j].taskId = uuid;
               delete additonalHelp[i][j].id;
               try {
-              await postAdditonalHelp(additonalHelp[i][j]);
-              showNotification('success', props.language === "English" ? 'עזרה נוספת נוספה בהצלחה' : 'Additional help added successfully');
+                await postAdditonalHelp(additonalHelp[i][j]);
+                showNotification('success', props.language === "English" ? 'עזרה נוספת נוספה בהצלחה' : 'Additional help added successfully');
               } catch (error) {
-                showNotification('error',props.language === "English" ? ' שגיאה בהוספת עזרה' :  'Error adding additional help');
+                showNotification('error', props.language === "English" ? ' שגיאה בהוספת עזרה' : 'Error adding additional help');
               }
             } else {
               try {
-              await updateAdditonalHelp(additonalHelp[i][j].id, additonalHelp[i][j]);
-              showNotification('success', props.language === "English" ? 'עזרה עודכנה בהצלחה' : 'Additional help updated successfully');
+                await updateAdditonalHelp(additonalHelp[i][j].id, additonalHelp[i][j]);
+                showNotification('success', props.language === "English" ? 'עזרה עודכנה בהצלחה' : 'Additional help updated successfully');
               } catch (error) {
-                showNotification('error', props.language === "English" ? ' שגיאה בעדכונה עזרה' :  'Error updating additional help');
+                showNotification('error', props.language === "English" ? ' שגיאה בעדכונה עזרה' : 'Error updating additional help');
               }
             }
           }
@@ -272,24 +272,24 @@ function Modal_Tasks(props) {
             additonalHelp[i].taskId = uuid;
             delete additonalHelp[i].id;
             try {
-            await postAdditonalHelp(additonalHelp[i]);
-            showNotification('success', props.language === "English" ? 'עזרה נוספת נוספה בהצלחה' : 'Additional help added successfully');
+              await postAdditonalHelp(additonalHelp[i]);
+              showNotification('success', props.language === "English" ? 'עזרה נוספת נוספה בהצלחה' : 'Additional help added successfully');
             } catch (error) {
-              showNotification('error', props.language === "English" ? ' שגיאה בהוספת עזרה' :  'Error adding additional help');
+              showNotification('error', props.language === "English" ? ' שגיאה בהוספת עזרה' : 'Error adding additional help');
             }
           } else {
             try {
-            await updateAdditonalHelp(additonalHelp[i].id, additonalHelp[i]);
-            showNotification('success', props.language === "English" ? 'עזרה עודכנה בהצלחה' : 'Additional help updated successfully');
+              await updateAdditonalHelp(additonalHelp[i].id, additonalHelp[i]);
+              showNotification('success', props.language === "English" ? 'עזרה עודכנה בהצלחה' : 'Additional help updated successfully');
             } catch (error) {
-              showNotification('error', props.language === "English" ? ' שגיאה בעדכונה עזרה' :  'Error updating additional help');
+              showNotification('error', props.language === "English" ? ' שגיאה בעדכונה עזרה' : 'Error updating additional help');
             }
           }
         }
       }
     } catch (error) {
       // console.error(error);
-      showNotification('error', props.language === "English" ? ' שגיאה בעדכונה עזרה' :  'Error updating additional help');
+      showNotification('error', props.language === "English" ? ' שגיאה בעדכונה עזרה' : 'Error updating additional help');
     }
 
     // Create a copy of newTask without additonalHelp
@@ -298,7 +298,7 @@ function Modal_Tasks(props) {
 
     try {
       const update = await updateTask(uuid, newTaskWithoutHelp);
-      showNotification('success', props.language === "English" ? 'משימה עודכנה בהצלחה' : 'Task updated successfully');  
+      showNotification('success', props.language === "English" ? 'משימה עודכנה בהצלחה' : 'Task updated successfully');
       // debugger
       if (update.status === 200) {
         let indexStation = props.allStations.findIndex(
@@ -325,14 +325,14 @@ function Modal_Tasks(props) {
       }
     } catch (error) {
       console.error(error);
-      showNotification('error', props.language === "English" ? ' שגיאה בעדכונה משימה' :  'Error updating task');
+      showNotification('error', props.language === "English" ? ' שגיאה בעדכונה משימה' : 'Error updating task');
     }
   };
   const Post_Task = async (picture_url, audio_url) => {
     // resultMyPlacesChoice();
     let additonalHelpflat = [];
     console.log("mainadditonalHelp", mainadditonalHelp);
-    
+
     if (mainadditonalHelp.length > 0) {
       additonalHelpflat = mainadditonalHelp.flat(Infinity);
       additonalHelpflat.forEach(item => {
@@ -360,7 +360,7 @@ function Modal_Tasks(props) {
           additonalHelpflat
         )
 
-        showNotification('success', props.language !== 'English' ? 'Task added successfully' : 'המשימה נוספה בהצלחה');  
+        showNotification('success', props.language !== 'English' ? 'Task added successfully' : 'המשימה נוספה בהצלחה');
 
         let color = props.allStations.find(
           (item) => item.id === myPlacesChoice[0]
@@ -376,7 +376,7 @@ function Modal_Tasks(props) {
         props.setModalOpen(false);
       } catch (error) {
         console.error(error);
-        showNotification('error', props.language === "English" ? ' שגיאה בהוספת משימה' :  'Error adding task');
+        showNotification('error', props.language === "English" ? ' שגיאה בהוספת משימה' : 'Error adding task');
       }
     } else {
       setDone(false);
@@ -667,8 +667,8 @@ function Modal_Tasks(props) {
                   )}
                   <h6>
                     {props.language !== 'English'
-                      ? "Site where the image / voice will be save : "+ props.mySite.nameInEnglish
-                      :   props.mySite.nameInEnglish +' : nאתר בו יישמרו התמונה/הקול'}
+                      ? "Site where the image / voice will be save : " + props.mySite.nameInEnglish
+                      : props.mySite.nameInEnglish + ' : nאתר בו יישמרו התמונה/הקול'}
                     <FcMultipleInputs />
                   </h6>
                   {/* <h6>
@@ -698,7 +698,7 @@ function Modal_Tasks(props) {
                         aria-describedby="modal-modal-description"
                       >
                         <Box sx={style2}>
-                          <Gallery2 sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true}/>
+                          <Gallery2 sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true} />
                         </Box>
                       </Modal>
                       {picture ? (
@@ -710,13 +710,20 @@ function Modal_Tasks(props) {
                               : picture?.name}
                           </div>
                           <div className='thumbnailtask'>
-                            {typeof picture === 'string' && (
+                            {typeof picture === 'string' ? (
                               <img
                                 src={picture}
-                                className={`thumbnailImgtask ${props.language !== 'English' ? 'english' : '' }`}
+                                className={`thumbnailImgtask ${props.language !== 'English' ? 'english' : ''}`}
                                 alt=''
                               />
-                            )}
+                            ) : picture instanceof File ? (
+                              // If the picture is a file, use FileReader to display it
+                              <img
+                                src={URL.createObjectURL(picture)}
+                                className={`thumbnailImgtask ${props.language !== 'English' ? 'english' : ''}`}
+                                alt='Uploaded Task'
+                              />
+                            ) : null}
                           </div>
                         </div>
                       ) : (
@@ -747,8 +754,8 @@ function Modal_Tasks(props) {
                       aria-describedby="modal-modal-description"
                     >
                       <Box sx={style2}>
-                          <Gallery2 sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false}/>
-                        </Box>
+                        <Gallery2 sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false} />
+                      </Box>
                     </Modal>
                   </form>
                   {audio ? (

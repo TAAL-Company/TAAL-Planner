@@ -96,7 +96,7 @@
     "start:production": "cross-env NODE_ENV=production npm start",
     
 
-    "build:staging": "cross-env NODE_ENV=staging npm build",
+    "build:staging": "cross-env NODE_ENV=staging npm run build",
     "build": "cross-env react-scripts build",
 
     "test": "react-scripts test",

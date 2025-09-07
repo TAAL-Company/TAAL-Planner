@@ -55,7 +55,7 @@ const CustomToolbar = ({
   SaveProfileChanges,
 }) => {
   // const [prevSelected, setPrevSelected] = useState([]);
-  useEffect(() => {}, [prevSelectedWorker]);
+  useEffect(() => { }, [prevSelectedWorker]);
 
   const saveProfileChanges = (e) => {
     if (tableType === 'CognitiveProfileHE') {
@@ -65,7 +65,7 @@ const CustomToolbar = ({
       newTaskCognitiveRequirements.forEach((element) => {
         try {
           let post = postTaskCognitiveRequirements(element);
-        } catch (error) {}
+        } catch (error) { }
 
         alert('המידע נשמר !');
       });
@@ -80,8 +80,8 @@ const CustomToolbar = ({
   };
   const handleChangeRoute = (event) => {
     const selectedValue = JSON.parse(event.target.value);
-    console.log("selectedValue",selectedValue);
-    
+    console.log("selectedValue", selectedValue);
+
 
     setRouteForTasksAbility(selectedValue);
     // setRoutesOfFlags(selectedValue);
@@ -104,15 +104,14 @@ const CustomToolbar = ({
           <GridToolbarDensitySelector style={{ color: 'black' }} />
           <GridToolbarExport
             csvOptions={{
-              fileName: `${
-                tableType === 'TaskabilityHE'
-                  ? 'Taskability'
-                  : tableType === 'CognitiveProfileHE'
+              fileName: `${tableType === 'TaskabilityHE'
+                ? 'Taskability'
+                : tableType === 'CognitiveProfileHE'
                   ? 'CognitiveProfile'
                   : "TA'AL EDITOR"
-              }_${new Date()
-                .toLocaleDateString('en-GB')
-                .replace(/\//g, '-')}.csv`,
+                }_${new Date()
+                  .toLocaleDateString('en-GB')
+                  .replace(/\//g, '-')}.csv`,
             }}
             style={{ color: 'black' }}
           />
@@ -170,14 +169,14 @@ const CustomToolbar = ({
                     {...params}
                     label={
                       Object.keys(worker).length !== 0 &&
-                      worker.routes.length !== 0
+                        worker.routes.length !== 0
                         ? RroutenewName
                         : Object.keys(worker).length !== 0 &&
                           worker.routes.length === 0
-                        ? 'אין מסלולים עבור העובד'
-                        : Object.keys(worker).length === 0
-                        ? 'בחר מסלול'
-                        : 'X'
+                          ? 'אין מסלולים עבור העובד'
+                          : Object.keys(worker).length === 0
+                            ? 'בחר מסלול'
+                            : 'X'
                     }
                     InputProps={{
                       ...params.InputProps,
@@ -294,6 +293,77 @@ const CustomToolbar = ({
 
         <div>
           <InputAdornment position='start'>
+            {tableType === 'TaskabilityHE' && selectedRows?.length >= 2 ? (
+              <>
+                <div
+                  className='buttonaNavbarForms'
+                  style={{ display: 'flex', right: 0, paddingBottom: '10px' }}
+                >
+                  <div style={{ marginLeft: '10px' }}>
+                    <MultipleEdit
+                      textButton={'עריכה קבוצתית'}
+                      selectedRows={selectedRows}
+                      fieldsCount={columns?.length}
+                      columns={columns}
+                    />{' '}
+                  </div>
+                  <AddColumn columns={columns} setColumns={setColumns}></AddColumn>
+                  {/* {selectedRows.map((item) => item.tasks)} */}
+                </div>
+              </>
+            ) : tableType === 'TaskabilityHE' ? (
+              <>
+                <div
+                  className='buttonaNavbarForms'
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    paddingBottom: '10px',
+                  }}
+                >
+                  {' '}
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Button
+                      variant='outlined'
+                      disabled
+                      style={{ marginLeft: '10px' }}
+                    >
+                      עריכה קבוצתית
+                    </Button>
+                    <AddColumn columns={columns} setColumns={setColumns}></AddColumn>
+                  </div>
+                  <div style={{ display: 'flex' }}>
+                    <SaveIcon
+                      fontSize='large'
+                      color='primary'
+                      style={{ zIndex: '5' }}
+                      onClick={saveProfileChanges}
+                    />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div
+                  className='buttonaNavbarForms'
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    paddingBottom: '10px',
+                  }}
+                >
+                  <AddColumn columns={columns} setColumns={setColumns}></AddColumn>
+                  <div style={{ display: 'flex', right: 0 }}>
+                    <SaveIcon
+                      fontSize='large'
+                      color='primary'
+                      style={{ zIndex: '5' }}
+                      onClick={saveProfileChanges}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
             <GridToolbarQuickFilter
               InputProps={{ disableUnderline: true }}
               placeholder='חיפוש'
@@ -324,77 +394,6 @@ const CustomToolbar = ({
         </div>
       </GridToolbarContainer>
 
-      {tableType === 'TaskabilityHE' && selectedRows?.length >= 2 ? (
-        <>
-          <div
-            className='buttonaNavbarForms'
-            style={{ display: 'flex', right: 0, paddingBottom: '10px' }}
-          >
-            <div style={{ marginLeft: '10px' }}>
-              <MultipleEdit
-                textButton={'עריכה קבוצתית'}
-                selectedRows={selectedRows}
-                fieldsCount={columns?.length}
-                columns={columns}
-              />{' '}
-            </div>
-            <AddColumn columns={columns} setColumns={setColumns}></AddColumn>
-            {/* {selectedRows.map((item) => item.tasks)} */}
-          </div>
-        </>
-      ) : tableType === 'TaskabilityHE' ? (
-        <>
-          <div
-            className='buttonaNavbarForms'
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              paddingBottom: '10px',
-            }}
-          >
-            {' '}
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              <Button
-                variant='outlined'
-                disabled
-                style={{ marginLeft: '10px' }}
-              >
-                עריכה קבוצתית
-              </Button>
-              <AddColumn columns={columns} setColumns={setColumns}></AddColumn>
-            </div>
-            <div style={{ display: 'flex' }}>
-              <SaveIcon
-                fontSize='large'
-                color='primary'
-                style={{ zIndex: '5' }}
-                onClick={saveProfileChanges}
-              />
-            </div>
-          </div>
-        </>
-      ) : (
-        <>
-          <div
-            className='buttonaNavbarForms'
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              paddingBottom: '10px',
-            }}
-          >
-            <AddColumn columns={columns} setColumns={setColumns}></AddColumn>
-            <div style={{ display: 'flex', right: 0 }}>
-              <SaveIcon
-                fontSize='large'
-                color='primary'
-                style={{ zIndex: '5' }}
-                onClick={saveProfileChanges}
-              />
-            </div>
-          </div>
-        </>
-      )}
     </div>
   );
 };

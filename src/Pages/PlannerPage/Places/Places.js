@@ -47,6 +47,7 @@ import BorderedTreeView from './BorderedTreeView';
 
 import ModalPack from '../Modal/ModalPack';
 import SpreadsheetPopup from '../../../components/SpreadsheetPopup/SpreadsheetPopup';
+import RouteTablePopUp from '../../../components/RouteTablePopUp/RouteTablePopUp';
 
 let tasksOfRoutes = {};
 // let allRoutes = [];
@@ -138,6 +139,138 @@ const Places = (props) => {
   // Add this near your other state declarations
   const [openThreeDotsVerticalPacks, setOpenThreeDotsVerticalPacks] = useState(-1);
   const [allEditors, setAllEditors] = useState([]); // All editors
+
+  const [board, setBoard] = useState([]);
+
+  const handleDeselectSelectedRoute = () => {
+    setLoading(true); // Start loading indicator
+
+    // Reset all relevant states
+    setSelectedRoute(null); // Deselect the current route
+    setAllTasksOfTheSite([]); // Clear tasks of the site
+    setTasksOfChosenStation([]); // Clear tasks of the chosen station
+    setTasksLength(0); // Reset task length
+    setSelectedWorker(null); // Deselect the worker
+    setBoardArrayDND([]); // Clear the drag-and-drop board
+    setStationArray([]); // Clear the station array
+    setFilteredDataRoutes([]); // Clear filtered routes
+    setReplaceRoute([]); // Reset the replace route state
+    setReplaceRouteFlag(false); // Reset the replace route flag
+    setBoard([]); // Clear the board state
+
+    // Reload stations for the selected site
+    Display_The_Stations(selectedSite)
+      .then(() => {
+        showNotification(
+          "success",
+          props.language === "English"
+            ? "Route deselected successfully!"
+            : "המסלול בוטל בהצלחה!"
+        );
+      })
+      .catch((error) => {
+        console.error("Error deselecting route:", error);
+        showNotification(
+          "error",
+          props.language === "English"
+            ? "Error deselecting route!"
+            : "שגיאה בביטול המסלול!"
+        );
+      })
+      .finally(() => {
+        setLoading(false); // Stop loading indicator
+      });
+  };
+
+  const reloadData = async () => {
+    const keepRouteId = selectedRoute?.id; // preserve current route id
+    handleDeselectSelectedRoute();
+    try {
+      setLoading(true); // Show loading indicator
+
+      // Fetch the latest data (include tasks so station mapping is up to date)
+      const [newStations, newRoutes, newWorkers, newPacks, newTasks] = await Promise.all([
+        getingDataStation(), // Fetch stations
+        getingData_Routes(), // Fetch routes
+        getingData_Users(),  // Fetch workers
+        getingData_Packs(),  // Fetch packs
+        getingData_Tasks()   // Fetch tasks
+      ]);
+
+      // Make sure allTasks is fresh before mapping
+      setAllTasks(newTasks);
+
+      // Filter stations based on the selected site
+      const filteredStations = newStations.filter(
+        (station) => station.parentSiteId === selectedSite?.id
+      );
+
+      // Filter routes based on the selected site
+      const filteredRoutes = newRoutes.filter((route) =>
+        route.sites.some((site) => site.id === selectedSite?.id)
+      );
+
+      // Filter workers based on the selected site
+      const filteredWorkers = newRoutes
+        .filter((route) => route.sites.some((site) => site.id === selectedSite?.id))
+        .flatMap((route) => route.students);
+
+      // Remove duplicate workers
+      const uniqueWorkers = Array.from(
+        new Set(filteredWorkers.map((worker) => worker.id))
+      ).map((id) => filteredWorkers.find((worker) => worker.id === id));
+
+      // Filter packs based on the selected site
+      const filteredPacks = newPacks.filter((pack) =>
+        pack.sites.some((site) => site.id === selectedSite?.id)
+      );
+
+      // Update the state with the filtered data
+      setStationArray(
+        filteredStations.map((station, index) => ({
+          ...station,
+          color: pastelColors[index % pastelColors.length], // Assign colors
+        }))
+      );
+      setRoutes(filteredRoutes);
+      setAllWorkersForSite(uniqueWorkers);
+      setFilteredPacksBySite(filteredPacks);
+
+      setOnlyAllStation(filteredStations);
+
+      // Reselect and re-map the previously selected route (if any)
+      if (keepRouteId) {
+        const updatedSelectedRoute = filteredRoutes.find(r => r.id === keepRouteId);
+        if (updatedSelectedRoute) {
+          // Build tasksOfTheRoute so DisplayTasks can resolve taskTemp
+          const tasksOfTheRoute = newTasks.filter((task) =>
+            updatedSelectedRoute.tasks?.some((routeTask) => routeTask.taskId === task.id)
+          );
+          setAllTasksOfTheSite(tasksOfTheRoute);
+          setSelectedRoute(updatedSelectedRoute);
+          displayStationsFromSelectedRoute(updatedSelectedRoute);
+          DisplayTasks(updatedSelectedRoute);
+        }
+      }
+
+      showNotification(
+        "success",
+        props.language === "English"
+          ? "Data reloaded successfully!"
+          : "הנתונים נטענו מחדש בהצלחה!"
+      );
+    } catch (error) {
+      console.error("Error reloading data:", error);
+      showNotification(
+        "error",
+        props.language === "English"
+          ? "Error reloading data!"
+          : "שגיאה בטעינת הנתונים!"
+      );
+    } finally {
+      setLoading(false); // Hide loading indicator
+    }
+  };
 
   // Filter packs by selected site
   useEffect(() => {
@@ -389,7 +522,11 @@ const Places = (props) => {
         setOpenRemove(true);
         setRouteForDelete(openThreeDotsVertical);
       }
+    } else if (requestForEditing === 'uploadfromsheet') {
+      setOpenUpload(true);
+      setUploadOption('fromSheet');
     }
+
     // Other existing conditions...
   }, [requestForEditing]);
 
@@ -404,6 +541,7 @@ const Places = (props) => {
     setOpenThreeDotsVertical(-1);
     setOpenThreeDots(-1);
     setRequestForEditing('');
+    setUploadOption(null);
   };
 
   const handleCloseopenUploadsheets = () => {
@@ -719,9 +857,9 @@ const Places = (props) => {
             (percentProgressBar) => percentProgressBar + percentTemp
           );
           //allTasksOfTheSite
-          let taskTemp = allTasksOfTheSite?.find(
-            (item) => item.id === element.taskId
-          );
+          let taskTemp =
+            allTasksOfTheSite?.find((item) => item.id === element.taskId) ||
+            allTasks?.find((item) => item.id === element.taskId);
 
           //allTasksOfTheSite - allTasksOfTheSite
           // let taskTemp = allTasks?.find((item) => item.id === element.taskId);
@@ -762,7 +900,8 @@ const Places = (props) => {
           if (stationID !== undefined) {
             stationName = stationID.title;
             theStation = stationID;
-            color = stationArray.find((item) => item.id === stationID.id).color;
+            const colorEntry = stationArray.find((item) => item.id === stationID.id);
+            color = colorEntry ? colorEntry.color : '#CCCCCC';
           } else {
             // stationName = "כללי";
             // color = stationArray.find((item) => item.id === 0).color;
@@ -1102,41 +1241,50 @@ const Places = (props) => {
   }, [openModalSiteChosen, replaceSiteFlag, selectedSite, tempSelectedSite]);
 
   const Display_The_Stations = async (selectedValue) => {
-    const newallRoutes = await getingData_Routes();
-    const onlyAllStation = await getingDataStation();
+    try {
+      setLoading(true);
+      const newallRoutes = await getingData_Routes();
+      const onlyAllStation = await getingDataStation();
+      const allTasks = await getingData_Tasks();
 
-    setThisIdTask((thisIdTask = selectedValue.id));
 
-    if (stationArray.length > 0) setStationArray([]);
+      setThisIdTask((thisIdTask = selectedValue.id));
 
-    mySite.name = selectedValue.name;
-    mySite.id = selectedValue.id;
-    mySite.nameInEnglish = selectedValue.nameInEnglish;
+      if (stationArray.length > 0) setStationArray([]);
 
-    const tasksOfTheSite = allTasks.filter((task) =>
-      task.sites.find((site) => site.id === mySite.id)
-    );
+      mySite.name = selectedValue.name;
+      mySite.id = selectedValue.id;
+      mySite.nameInEnglish = selectedValue.nameInEnglish;
 
-    setTasksLength(tasksOfTheSite.length);
-    setAllTasksOfTheSite((prev) => [...prev, ...tasksOfTheSite]);
+      const tasksOfTheSite = allTasks.filter((task) =>
+        task.sites.find((site) => site.id === mySite.id)
+      );
 
-    localStorage.setItem('MySite', JSON.stringify(mySite));
+      setTasksLength(tasksOfTheSite.length);
+      setAllTasksOfTheSite((prev) => [...prev, ...tasksOfTheSite]);
 
-    setStationArray(
-      onlyAllStation
-        .filter((item) => item.parentSiteId === selectedValue.id)
-        .map((item, index) => ({
-          ...item,
-          color: pastelColors[index % pastelColors.length],
-        }))
-    );
-    //myRoutes saves only the routes that belong to the site that choosen
-    if (myRoutes.length > 0) setRoutes([]);
-    setRoutes(
-      newallRoutes.filter((route) =>
-        route.sites.some((site) => site.id === mySite.id)
-      )
-    );
+      localStorage.setItem('MySite', JSON.stringify(mySite));
+
+      setStationArray(
+        onlyAllStation
+          .filter((item) => item.parentSiteId === selectedValue.id)
+          .map((item, index) => ({
+            ...item,
+            color: pastelColors[index % pastelColors.length],
+          }))
+      );
+      //myRoutes saves only the routes that belong to the site that choosen
+      if (myRoutes.length > 0) setRoutes([]);
+      setRoutes(
+        newallRoutes.filter((route) =>
+          route.sites.some((site) => site.id === mySite.id)
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const displayRoutesFromSelectedWorker = async (selectedWorker) => {
@@ -1195,42 +1343,41 @@ const Places = (props) => {
 
   };
 
+  // ...existing code...
   const displayStationsFromSelectedRoute = async (selectedRoute) => {
+    if (!selectedRoute) return; // guard
+
     setAllTasksOfTheSite([]);
     setTasksOfChosenStation([]);
     setTasksLength(0);
 
-    // Step 1: Filter stations under the selected route
     const stationsArray = onlyAllStation?.filter(
       (station) => station.parentSiteId === selectedRoute.sites[0].id
     );
 
-    // Step 2: Filter tasks assigned to the selected route
     const tasksOfTheRoute = allTasks.filter((task) =>
-      selectedRoute.tasks.some((routeTask) => routeTask.taskId === task.id)
+      selectedRoute.tasks?.some((routeTask) => routeTask.taskId === task.id)
     );
 
-    // Step 3: Match stations to route tasks
     const matchedStations = stationsArray.filter((station) =>
       tasksOfTheRoute.some((task) =>
         task.stations.some((taskStation) => taskStation.id === station.id)
       )
     );
 
-    // Step 4: Prepare station data with tasks and colors
     const stationsWithDetails = matchedStations.map((station, index) => ({
       ...station,
       tasks: station.tasks.filter((task) =>
         tasksOfTheRoute.some((t) => task.id === t.id)
       ),
-      color: pastelColors[index % pastelColors.length] || "#CCCCCC", // Fallback color
+      color: pastelColors[index % pastelColors.length] || "#CCCCCC",
     }));
 
-    // Step 5: Update state
     setTasksLength(tasksOfTheRoute.length);
     setAllTasksOfTheSite(tasksOfTheRoute);
     setStationArray(stationsWithDetails);
   };
+  // ...existing code...
 
   useEffect(() => {
     if (allTasksOfTheSite.length > 0) {
@@ -1580,6 +1727,15 @@ const Places = (props) => {
       <div
         className={`Places ${props.language !== 'English' ? 'english' : ''}`}
       >
+        {/* <button onClick={reloadData}>
+          {props.language === "English" ? "Reload Data" : "טען מחדש נתונים"}
+        </button> */}
+        {/* <button
+          className="deselect-button"
+          onClick={handleDeselectSelectedRoute}
+        >
+          {props.language === "English" ? "Deselect Route" : "בטל מסלול"}
+        </button> */}
         {/* <div>
           <div className='placesTitle'>{props.siteQuestionLanguage}</div>
           <select
@@ -1977,7 +2133,7 @@ const Places = (props) => {
                                     Reproducible={true}
                                     details={false}
                                     erasable={true}
-                                    uploadfromsheet={false}
+                                    uploadfromsheet={true}
                                   />
                                 ) : (
                                   <></>
@@ -2030,6 +2186,8 @@ const Places = (props) => {
           </div>
           {/* //////////////////////////////////////////////////////////////////////////////////////////// */}
           <Stations
+            board={board}
+            setBoard={setBoard}
             filteredDataRoutes={filteredDataRoutes}
             setFilteredDataRoutes={setFilteredDataRoutes}
             setTranslateData={setTranslateData}
@@ -2181,7 +2339,30 @@ const Places = (props) => {
         aria-labelledby='alert-dialog-title'
         aria-describedby='alert-dialog-description'
       >
-        <CsvtojsonRouteAdd selectedSite={selectedSite} setSelectedRoute={setSelectedRoute} selectedRoute={selectedRoute} language={props.language} handleCloseopenUpload={handleCloseopenUpload} reloadData={fetchALLData} handleDeselectRoute={handleDeselectRoute} setLoading={setLoading} />
+        {selectedRoute ? (
+          selectedRoute?.tasks?.length > 0 ? (
+            <RouteTablePopUp
+              open={openUpload}
+              onClose={handleCloseopenUpload}
+              route={selectedRoute}
+              setSelectedRoute={setSelectedRoute}
+              stations={stationArray}
+              tasks={allTasks}
+              language={props.language}
+              reload={reloadData}
+              selectedSite={selectedSite}
+            />
+          ) : (
+            <DialogContent>
+              <DialogContentText style={{ textAlign: 'center', color: 'red' }}>
+                {props.language !== "English"
+                  ? "The selected route has no tasks."
+                  : {uploadOption,selectedRoute,openUpload}+"למסלול שנבחר אין משימות."}
+              </DialogContentText>
+            </DialogContent>
+          )
+        ) : <></>}
+        {/* <CsvtojsonRouteAdd selectedSite={selectedSite} setSelectedRoute={setSelectedRoute} selectedRoute={selectedRoute} language={props.language} handleCloseopenUpload={handleCloseopenUpload} reloadData={fetchALLData} handleDeselectRoute={handleDeselectRoute} setLoading={setLoading} /> */}
       </Dialog>
       {/* </div> */}
       <Dialog

@@ -263,7 +263,7 @@ export default function DataGridDemo() {
           <div
             style={{
               width: '80%',
-              maxWidth: '1200px',
+              maxWidth: '1810px',
               margin: '0 auto 24px auto',
               borderBottom: '2px solid #e0e0e0',
             }}
@@ -275,7 +275,7 @@ export default function DataGridDemo() {
               borderRadius: '12px',
               boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
               padding: '32px 20px 24px 20px',
-              maxWidth: '1200px',
+              maxWidth: '1810px',
               margin: '0 auto',
               minHeight: '700px',
             }}
@@ -296,7 +296,7 @@ export default function DataGridDemo() {
             </div>
             <CssBaseline />
             <div style={{ direction: t('Direction'), width: '100%', overflowX: 'auto' }}>
-              <Paper style={{ minWidth: 2000 }}>
+              <Paper style={{ minWidth: 1800 }}>
                 <DataGrid
                   style={{ direction: t('Direction') }}
                   rows={getRowsWithDetails()}

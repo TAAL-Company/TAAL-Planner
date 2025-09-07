@@ -56,6 +56,9 @@ const Stations = (props) => {
       setStationForDelete(openThreeDotsVertical);
       setOpenRemove(true);
     }
+    else if (requestForEditing === 'loop') {
+
+    }
   }, [requestForEditing]);
 
   const handleCloseRemove = () => {
@@ -303,6 +306,7 @@ const Stations = (props) => {
                                             Reproducible={true}
                                             details={true}
                                             erasable={true}
+                                            loop={true}
                                           />
                                         ) : (
                                           <></>
@@ -353,6 +357,8 @@ const Stations = (props) => {
           </div>
           {/* <DndProvider backend={HTML5Backend}> */}
           <DragnDrop
+            board={props.board}
+            setBoard={props.setBoard}
             filteredDataRoutes={props.filteredDataRoutes}
             setFilteredDataRoutes={props.setFilteredDataRoutes}
             setTranslateData={props.setTranslateData}

@@ -33,8 +33,12 @@ import Plannerpage from './planner/plannerpage';
 import { NotificationProvider } from "./components/Notification/NotificationProvider";
 import { TranslationProvider } from './Utility/TranslationProvider';
 
-console.log("Version", process.env.REACT_APP_VERSION);
-console.log("Version", process.env);
+console.warn("TAAL DEV INFO", {
+  "Version": process.env.REACT_APP_VERSION,
+  "Base URL": process.env.REACT_APP_BASE_URL,
+  "Node Environment": process.env.NODE_ENV,
+  "Storage Resource Name": process.env.REACT_APP_STORAGE_CONTAINER_NAME
+});
 
 // import CallState from "./components/CallState/CallState";
 function App() {

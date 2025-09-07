@@ -58,7 +58,14 @@ function Modal_Dropdown(props) {
         )}
         {props.uploadfromsheet ? (
           <Link onClick={() => props.setRequestForEditing('uploadfromsheet')}>
-            {props.language !== 'English' ? 'Upload sheet' : 'העלאה מקובץ'}
+            {props.language !== 'English' ? 'Sheet Edit' : 'עריכת גיליון'}
+          </Link>
+        ) : (
+          <></>
+        )}
+        {props.loop ? (
+          <Link onClick={() => props.setRequestForEditing('loop')}>
+            {props.language !== 'English' ? 'loop' : 'לולאה'}
           </Link>
         ) : (
           <></>

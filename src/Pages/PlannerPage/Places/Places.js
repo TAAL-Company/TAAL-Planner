@@ -49,6 +49,9 @@ import ModalPack from '../Modal/ModalPack';
 import SpreadsheetPopup from '../../../components/SpreadsheetPopup/SpreadsheetPopup';
 import RouteTablePopUp from '../../../components/RouteTablePopUp/RouteTablePopUp';
 
+import { FaRobot } from 'react-icons/fa';
+import { Icon } from '@mui/material';
+
 let tasksOfRoutes = {};
 // let allRoutes = [];
 let allPlaces = [];
@@ -1816,6 +1819,31 @@ const Places = (props) => {
             {props.language !== 'English' ? "upload sheet" : " העלה גיליון"}
           </button>
         </div>
+        <div style={{ margin: '20px' }}>
+          <button 
+            className="deselect-button" 
+            style={{ 
+              backgroundColor: "darkblue",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px"
+            }} 
+            onClick={() => window.location.href = '/TAAL_Ai'}
+          >
+            <Icon
+              sx={{
+                width: "50px",
+                height: "50px",
+                backgroundImage: "url('../../Pictures/logo_Taal_Ai.svg')",
+                backgroundSize: "contain",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                borderRadius: 1,
+              }}
+            />
+            {props.language !== 'English' ? "TAAL AI" : "טאל AI"}
+          </button>
+        </div>
       </div>
       <div
         className={`mainRectangles ${props.language !== 'English' ? 'english' : ''
@@ -2357,7 +2385,7 @@ const Places = (props) => {
               <DialogContentText style={{ textAlign: 'center', color: 'red' }}>
                 {props.language !== "English"
                   ? "The selected route has no tasks."
-                  : {uploadOption,selectedRoute,openUpload}+"למסלול שנבחר אין משימות."}
+                  : { uploadOption, selectedRoute, openUpload } + "למסלול שנבחר אין משימות."}
               </DialogContentText>
             </DialogContent>
           )

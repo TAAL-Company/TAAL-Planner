@@ -20,8 +20,7 @@ import Sites from './Pages/SitePage/SitesTable';
 import Forms from './Pages/FormPage/Form/Forms';
 // import Coaches from './components/Coaches/Coaches';
 import Coaches from './Pages/CoachePage/CoachesTable';
-
-// import Editors from './components/Editor/Editors';
+import TaalAI from './Pages/TaalAiPage/TaalAiPage';
 import Editors from './Pages/EditorsPage/EditorTable';
 import Community from './Pages/CommunityPage/community';
 import { DndProvider } from 'react-dnd';
@@ -33,7 +32,14 @@ import Plannerpage from './planner/plannerpage';
 import { NotificationProvider } from "./components/Notification/NotificationProvider";
 import { TranslationProvider } from './Utility/TranslationProvider';
 
-console.warn("TAAL DEV INFO", {
+console.warn(`
+████████  █████   █████  ██          ██████  ███████ ██    ██ 
+   ██    ██   ██ ██   ██ ██          ██   ██ ██      ██    ██ 
+   ██    ███████ ███████ ██          ██   ██ █████   ██    ██ 
+   ██    ██   ██ ██   ██ ██          ██   ██ ██       ██  ██  
+   ██    ██   ██ ██   ██ ███████     ██████  ███████   ████   
+   
+TAAL DEV INFO:`, {
   "Version": process.env.REACT_APP_VERSION,
   "Base URL": process.env.REACT_APP_BASE_URL,
   "Node Environment": process.env.NODE_ENV,
@@ -71,6 +77,7 @@ function App() {
                       <Route path='/editor' component={Editors}></Route>
                       <Route path='/dev' component={Plannerpage}></Route>
                       <Route path='/subjects' component={Community}></Route>
+                      <Route path='/TAAL_Ai' component={TaalAI}></Route>
                     </Switch>
                   </div>
                 </Router>

@@ -1,5 +1,3 @@
-Searched codebase for "make documentation on the project ", 31 results
-
 # TAAL Planner - Project Documentation
 
 ## Overview

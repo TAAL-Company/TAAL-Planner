@@ -4,6 +4,7 @@ const Rows = ({ routes }) => {
       id: route.id,
       name: route.name,
       sites: route.sites,
+      createdAt: route.createdAt,
       picture_url: route.picture_url,
       OnlyOnce: route.OnlyOnce,
       multi_language_description: route.multi_language_description,

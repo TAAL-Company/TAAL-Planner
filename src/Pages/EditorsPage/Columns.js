@@ -21,6 +21,15 @@ const Columns = ({ handleClickMenu, handleSectionExpandToggle }) => {
         { field: 'phone', headerName: t('UserPage.Phone'), width: 120 },
         { field: 'role', headerName: t('UserPage.Role'), width: 120 },
         {
+            field: 'created_at',
+            headerName: t('Route.CreatedAt'),
+            width: 150,
+            valueGetter: (params) => {
+                const createdAt = params.row.createdAt;
+                return createdAt ? new Date(createdAt).toLocaleString() : '';
+            },
+        },
+        {
             field: 'sites',
             headerName: t('SitePage.Sites'),
             width: 100,

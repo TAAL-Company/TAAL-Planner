@@ -13,6 +13,15 @@ const Columns = ({ handleClickMenu, handlePopupOpen }) => {
     { field: 'OnlyOnce', headerName: t('Route.OnlyOnce'), width: 100, type: 'boolean', },
     { field: 'parentRouteId', headerName: t('Route.ParentRouteId'), width: 220, },
     {
+      field: 'created_at',
+      headerName: t('Route.CreatedAt'),
+      width: 150,
+      valueGetter: (params) => {
+        const createdAt = params.row.createdAt;
+        return createdAt ? new Date(createdAt).toLocaleString() : '';
+      },
+    },
+    {
       field: 'tasks',
       headerName: t('Route.tasks'),
       width: 100,

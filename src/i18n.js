@@ -103,6 +103,7 @@ const resources = {
         "Name": "Name",
         "Description": "Description",
         "NameInEnglish": "Name in English",
+        "CreatedAt": "Created At", // <-- Add this line
         "ADDANewSite": "Add a New Site",
         "EditSiteInfo": "Edit Site Info",
         "Edit": "Edit",
@@ -195,6 +196,7 @@ const resources = {
         "multi_language_description": "Multi Language Description",
         "ParentRouteId": "Parent Route Id",
         "tasks": "Tasks",
+        "CreatedAt": "Created At", // <-- Add this line
       },
       RoutePage: {
         "Name": "Route Name",
@@ -202,6 +204,7 @@ const resources = {
         "multi_language_description": "Multi Language Description",
         "ParentRouteId": "Parent Route Id",
         "tasks": "Tasks",
+        "CreatedAt": "Created At", // <-- Add this line
         "ADDANewRoute": "Add a New Route",
         "EditRouteInfo": "Edit Route Info",
         "Edit": "Edit",
@@ -348,6 +351,7 @@ const resources = {
         "Name": "שם",
         "Description": "תיאור",
         "NameInEnglish": "שם באנגלית",
+        "CreatedAt": "נוצר ב", // <-- Add this line
         "ADDANewSite": "הוסף אתר חדש",
         "EditSiteInfo": "ערוך אתר",
         "Edit": "ערוך",
@@ -439,7 +443,8 @@ const resources = {
         "OnlyOnce": "רק פעם אחת",
         "multi_language_description": "תיאור רב-לשוני",
         "ParentRouteId": "מסלול אב",
-        "tasks": "משימות"
+        "tasks": "משימות",
+        "CreatedAt": "נוצר ב", // <-- Add this line
       },
       RoutePage: {
         "Name": "שם מסלול",
@@ -447,6 +452,7 @@ const resources = {
         "multi_language_description": "תיאור רב-לשוני",
         "ParentRouteId": "מסלול אב",
         "tasks": "משימות",
+        "CreatedAt": "נוצר ב", // <-- Add this line
         "ADDANewRoute": "הוסף מסלול חדש",
         "EditRouteInfo": "ערוך מסלול",
         "Edit": "ערוך",
@@ -593,6 +599,7 @@ const resources = {
         "Name": "الاسم",
         "Description": "الوصف",
         "NameInEnglish": "الاسم بالإنجليزية",
+        "CreatedAt": "تاريخ الإنشاء", // <-- Add this line
         "ADDANewSite": "إضافة موقع جديد",
         "EditSiteInfo": "تعديل موقع",
         "Edit": "تعديل",
@@ -684,7 +691,8 @@ const resources = {
         "OnlyOnce": "مرة واحدة فقط",
         "multi_language_description": "الوصف متعدد اللغات",
         "ParentRouteId": "معرف المسار الرئيسي",
-        "tasks": "المهام"
+        "tasks": "المهام",
+        "CreatedAt": "تاريخ الإنشاء", // <-- Add this line
       },
       RoutePage: {
         "Name": "اسم المسار",
@@ -692,6 +700,7 @@ const resources = {
         "multi_language_description": "الوصف متعدد اللغات",
         "ParentRouteId": "معرف المسار الرئيسي",
         "tasks": "المهام",
+        "CreatedAt": "تاريخ الإنشاء", // <-- Add this line
         "ADDANewRoute": "إضافة مسار جديد",
         "EditRouteInfo": "تعديل معلومات المسار",
         "Edit": "تعديل",
@@ -838,6 +847,7 @@ const resources = {
         "Name": "Название",
         "Description": "Описание",
         "NameInEnglish": "Название на английском",
+        "CreatedAt": "Создано", // <-- Add this line
         "ADDANewSite": "Добавить новый сайт",
         "EditSiteInfo": "Редактировать сайт",
         "Edit": "Редактировать",
@@ -929,7 +939,8 @@ const resources = {
         "OnlyOnce": "Только один раз",
         "multi_language_description": "Многоязычное описание",
         "ParentRouteId": "ID родительского маршрута",
-        "tasks": "Задачи"
+        "tasks": "Задачи",
+        "CreatedAt": "Создано", // <-- Add this line
       },
       RoutePage: {
         "Name": "Название маршрута",
@@ -937,6 +948,7 @@ const resources = {
         "multi_language_description": "Многоязычное описание",
         "ParentRouteId": "ID родительского маршрута",
         "tasks": "Задачи",
+        "CreatedAt": "Создано", // <-- Add this line
         "ADDANewRoute": "Добавить новый маршрут",
         "EditRouteInfo": "Редактировать маршрут",
         "Edit": "Редактировать",

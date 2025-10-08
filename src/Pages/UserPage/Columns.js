@@ -68,7 +68,9 @@ const Columns = ({ handleClickMenu, coaches, handleSectionExpandToggle }) => {
       field: 'active',
       headerName: t('UserPage.Online'),
       width: 120,
+      type: 'boolean',
       renderCell: (params) => {
+        if (params.row.isRoute) return null; // Skip rendering for route rows
         return params.value ? (
           <CheckCircleIcon style={{ color: 'green' }} />
         ) : (

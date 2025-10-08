@@ -199,7 +199,7 @@ export default function CoachesTable() {
           <div
             style={{
               width: '80%',
-              maxWidth: '1200px',
+              maxWidth: '1400px',
               margin: '0 auto 24px auto',
               borderBottom: '2px solid #e0e0e0',
             }}
@@ -211,7 +211,7 @@ export default function CoachesTable() {
               borderRadius: '12px',
               boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
               padding: '32px 20px 24px 20px',
-              maxWidth: '1200px',
+              maxWidth: '1400px',
               margin: '0 auto',
               minHeight: '700px',
             }}

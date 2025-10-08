@@ -89,6 +89,15 @@ const Columns = ({ handleClickMenu, expandedRows, handleSectionExpandToggle }) =
       },
     },
     {
+      field: 'created_at',
+      headerName: t('SitePage.CreatedAt'),
+      width: 150,
+      valueGetter: (params) => {
+        const createdAt = params.row.createdAt;
+        return createdAt ? new Date(createdAt).toLocaleString() : '';
+      },
+    },
+    {
       field: 'menu',
       headerName: '',
       width: 50,

@@ -5,6 +5,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import Images from '../Images/Images';
 import Audios from '../../../components/junk/Audios/Audios';
 import Modal_dropdown from '../Modal/Modal_dropdown';
+import Badge from '@mui/material/Badge';
 
 function Tag({
   keyCount,
@@ -35,6 +36,7 @@ function Tag({
   setRequestForEditing,
   openThreeDotsVerticalBoard,
   setOpenThreeDotsVerticalBoard,
+  Station
 }) {
   localStorage.setItem('myLastStation', JSON.stringify(myLastStation));
   const [idListen, setIdListen] = useState(0);
@@ -100,7 +102,50 @@ function Tag({
             ></div>
             <div className={`nameStationBoard ${language !== 'English' ? 'english' : ''}`}>
               {nameStation}
+              {/* {console.log("Station", Station)} */}
+              {/* {console.log("Station in tag", Station?.data.find((item) => item.id === Station.id)?.loopSettings)} */}
+              {/* {console.log("Station in tag", Station?.data)} */}
+              {nameStation !== ''
+                && Station.loopSettings
+                // && Station?.data?.find((item) => item.id === Station.id)?.loopSettings
+                && (
+                  <span style={{
+                    marginLeft: language === 'English' ? '10px' : '0px',
+                    marginRight: language !== 'English' ? '10px' : '0px',
+                    fontSize: '12px',
+                    color: '#666',
+                    fontStyle: 'italic'
+                  }}>
+                    <strong>Loop:</strong> {`Duration ${Station.loopSettings.duration}, End Time ${Station.loopSettings.endTime}, Iterations ${Station.loopSettings.iterations}`}
+                    {/* (Loop: {`Duration ${Station?.data.find((item) => item.id === Station.id)?.loopSettings.duration}, End Time ${Station?.data.find((item) => item.id === Station.id)?.loopSettings.endTime}, Iterations ${Station?.data.find((item) => item.id === Station.id)?.loopSettings.iterations}`}) */}
+                  </span>
+                )}
             </div>
+            {/* 
+            {console.log("Station in tag", Station?.data.find((item) => item.id === Station.id)?.loopSettings)}
+            {console.log("Station in tag", Station?.data)}
+            {nameStation !== '' && Station?.data.length > 0 ? (
+              <>
+                <Badge
+                  badgeContent={Station?.data.find((item) => item.id === Station.id)?.loopSettings?.duration}
+                  color="success"
+                  overlap="circular"
+                  anchorOrigin={{ vertical: 'top', horizontal: language === 'English' ? 'right' : 'left' }} >
+                </Badge>
+                <Badge
+                  badgeContent={Station?.data.find((item) => item.id === Station.id)?.loopSettings?.endTime}
+                  color="warning"
+                  overlap="circular"
+                  anchorOrigin={{ vertical: 'top', horizontal: language === 'English' ? 'right' : 'left' }} >
+                </Badge>
+                <Badge
+                  badgeContent={Station?.data.find((item) => item.id === Station.id)?.loopSettings?.iterations}
+                  color="secondary"
+                  overlap="circular"
+                  anchorOrigin={{ vertical: 'top', horizontal: language === 'English' ? 'right' : 'left' }} >
+                </Badge>
+              </>
+            ) : (<></>)} */}
           </div>
         </>
       ) : (

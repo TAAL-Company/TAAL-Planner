@@ -14,6 +14,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import DragnDrop from '../DragnDrop/DragnDrop';
 import { useNotification } from "../../../components/Notification/NotificationProvider";
+import LoopPopUpInput from './../../../components/LoopPopUpInputs/LoopPopUpInput';
 
 //-----------------------
 // let allTasks = [];
@@ -42,10 +43,13 @@ const Stations = (props) => {
   const [stationForDelete, setStationForDelete] = useState('');
   const [stationForEdit, setStationForEdit] = useState('');
   const [dpcolor, setdpcolor] = useState('');
+  const [isLoopPopupOpen, setIsLoopPopupOpen] = useState(false);
 
   const { showNotification } = useNotification();
 
   useEffect(() => {
+    // console.log('Opening loop popup for station index:', openThreeDotsVertical);
+    // console.log('Station details:', requestForEditing);
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
       setStationForEdit(openThreeDotsVertical);
       setModalOpen(true);
@@ -57,7 +61,11 @@ const Stations = (props) => {
       setOpenRemove(true);
     }
     else if (requestForEditing === 'loop') {
+      // console.log('Opening loop popup for station index:', openThreeDotsVertical);
+      // console.log('Station details:', requestForEditing);
 
+      setStationForEdit(openThreeDotsVertical);
+      setIsLoopPopupOpen(true);
     }
   }, [requestForEditing]);
 
@@ -169,6 +177,71 @@ const Stations = (props) => {
       }))
     );
     setStateTask({ data: props.tasksOfChosenStation }); //Updating the state
+  };
+
+  const handleLoopClick = () => {
+    setIsLoopPopupOpen(true);
+  };
+
+  const handleCloseLoop = () => {
+    setIsLoopPopupOpen(false);
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing('');
+    setStationForEdit(-1);
+  };
+
+  const handleLoopSubmit = (data) => {
+    // console.log('Loop data:', data);
+    // console.log('props.board:', props.board);
+    // console.log('Station for loop index:', stationForEdit);
+    // console.log('Station for loop:', props.stationArray[stationForEdit]);
+    
+    // Add loop data to the station
+    const updatedStations = [...props.stationArray];
+    updatedStations[stationForEdit] = {
+      ...updatedStations[stationForEdit],
+      loopSettings: {
+        duration: data.duration,
+        endTime: data.endTime,
+        iterations: data.iterations,
+      }
+    };
+    
+    // Update the station array
+    props.setStationArray(updatedStations);
+
+    // Update the board with the new station data
+    const updatedBoard = props.board.map(tag => {
+      if (
+        // tag.theStation.id === updatedStations[stationForEdit].id
+        // &&
+        tag.theStation.id === props.stationArray[stationForEdit].id
+      ) {
+        return {
+          ...tag,
+          theStation: {
+            ...tag.theStation,
+            loopSettings: {
+              duration: data.duration,
+              endTime: data.endTime,
+              iterations: data.iterations,
+            }
+          }
+        };
+      }
+      return tag;
+    });
+    props.setBoard(updatedBoard);
+    // Show success notification
+    showNotification('success', props.language === "English" ? 'הגדרות לולאה נשמרו בהצלחה' : 'Loop settings saved successfully');
+    localStorage.setItem('loopSettings', JSON.stringify(props.stationArray[stationForEdit]));
+
+    
+    // Close the popup
+    setIsLoopPopupOpen(false);
+    setOpenThreeDotsVertical(-1);
+    setRequestForEditing('');
+    setStationForEdit(-1);
   };
 
   //----------------------------------------------------------
@@ -412,6 +485,11 @@ const Stations = (props) => {
         DialogTitle={props.language !== 'English' ? 'Delete Station' : 'מחיקת תחנה'}
         DialogContent={props.language !== 'English' ? 'Are you sure you want to delete this station?' : 'האם אתה בטוח שברצונך למחוק את התחנה?'}
         handleCloseRemoveConfirm={handleCloseRemoveConfirm}
+      />
+      <LoopPopUpInput
+        isOpen={isLoopPopupOpen}
+        onClose={handleCloseLoop}
+        onSubmit={handleLoopSubmit}
       />
     </>
   );

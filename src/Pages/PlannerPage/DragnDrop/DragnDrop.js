@@ -914,9 +914,10 @@ function DragnDrop(props) {
                     ) : (
                       props.board.map((tag, keyCount) => {
                         if (tag !== undefined) {
-                          // console.log(keyCount, tag);
+                          // console.log("data",keyCount, tag);
                           return (saveTag = (
                             <Tag
+                              Station={tag.theStation}
                               keyCount={keyCount}
                               setLocation={setLocation}
                               location={location}

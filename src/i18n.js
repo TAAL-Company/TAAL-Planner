@@ -264,6 +264,18 @@ const resources = {
         flux: "Flux",
         turbo: "Turbo",
         midjourney: "Midjourney"
+      },
+
+      // Add LoopPopup translations
+      LoopPopup: {
+        title: "Loop Configuration",
+        duration: "Loop for (minutes)",
+        endTime: "Loop until time",
+        iterations: "Loop number of times",
+        durationPlaceholder: "Enter duration in minutes (e.g. 10)",
+        endTimePlaceholder: "Select end time (e.g. 1:00 PM)",
+        iterationsPlaceholder: "Enter number of iterations (e.g. 10)",
+        apply: "Apply"
       }
     },
   },
@@ -512,6 +524,18 @@ const resources = {
         flux: "Flux",
         turbo: "Turbo", 
         midjourney: "Midjourney"
+      },
+
+      // Add LoopPopup translations (Hebrew)
+      LoopPopup: {
+        title: "הגדרות לולאה",
+        duration: "לולאה למשך (דקות)",
+        endTime: "לולאה עד השעה",
+        iterations: "לולאה מספר פעמים",
+        durationPlaceholder: "הכנס משך זמן בדקות (למשל 10)",
+        endTimePlaceholder: "בחר שעת סיום (למשל 13:00)",
+        iterationsPlaceholder: "הכנס מספר חזרות (למשל 10)",
+        apply: "החל"
       }
     }
   },
@@ -760,6 +784,18 @@ const resources = {
         flux: "Flux",
         turbo: "Turbo",
         midjourney: "Midjourney"
+      },
+
+      // Add LoopPopup translations (Arabic)
+      LoopPopup: {
+        title: "إعداد الحلقة",
+        duration: "حلقة لمدة (دقائق)",
+        endTime: "حلقة حتى الوقت",
+        iterations: "حلقة عدد من المرات",
+        durationPlaceholder: "أدخل المدة بالدقائق (مثال 10)",
+        endTimePlaceholder: "اختر وقت الانتهاء (مثال 1:00 مساءً)",
+        iterationsPlaceholder: "أدخل عدد التكرارات (مثال 10)",
+        apply: "تطبيق"
       }
     }
   },
@@ -1008,6 +1044,18 @@ const resources = {
         flux: "Flux",
         turbo: "Turbo",
         midjourney: "Midjourney"
+      },
+
+      // Add LoopPopup translations (Russian)
+      LoopPopup: {
+        title: "Настройка цикла",
+        duration: "Цикл в течение (минут)",
+        endTime: "Цикл до времени",
+        iterations: "Цикл количество раз",
+        durationPlaceholder: "Введите продолжительность в минутах (например, 10)",
+        endTimePlaceholder: "Выберите время окончания (например, 13:00)",
+        iterationsPlaceholder: "Введите количество итераций (например, 10)",
+        apply: "Применить"
       }
     }
   }

@@ -79,6 +79,7 @@ const Places = (props) => {
   const [allWorkersForSite, setAllWorkersForSite] = useState([]);
   const [done, setDone] = useState(false);
   const [Loading, setLoading] = useState(true);
+  const [smallLoading, setSmallLoading] = useState(false);
   const [, setStateStation] = useState([]);
   const [stationArray, setStationArray] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -1245,10 +1246,10 @@ const Places = (props) => {
 
   const Display_The_Stations = async (selectedValue) => {
     try {
-      setLoading(true);
-      const newallRoutes = await getingData_Routes();
-      const onlyAllStation = await getingDataStation();
-      const allTasks = await getingData_Tasks();
+      setSmallLoading(true);
+      const newallRoutes = await getingData_Routes();//
+      const onlyAllStation = await getingDataStation();//
+      const allTasks = await getingData_Tasks();//
 
 
       setThisIdTask((thisIdTask = selectedValue.id));
@@ -1286,7 +1287,7 @@ const Places = (props) => {
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setSmallLoading(false);
     }
   };
 
@@ -1722,6 +1723,14 @@ const Places = (props) => {
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={Loading}
+        >
+          <CircularProgress size="10rem" color="info" />
+        </Backdrop>
+      </div>
+      <div>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={smallLoading}
         >
           <CircularProgress size="10rem" color="info" />
         </Backdrop>

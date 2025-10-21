@@ -276,6 +276,30 @@ const resources = {
         endTimePlaceholder: "Select end time (e.g. 1:00 PM)",
         iterationsPlaceholder: "Enter number of iterations (e.g. 10)",
         apply: "Apply"
+      },
+
+      PushToPlannerPopup: {
+        pushToPlanner: "Push to Planner",
+        uploadSummary: "Upload Summary", 
+        totalTasks: "Total Tasks",
+        estimatedTime: "Estimated Time",
+        complexity: "Complexity",
+        selectSiteToUploadMessage: "Select a site to upload your AI-generated tasks and create a new route in the planner.",
+        uploadNote: "Note: This will create a new station and route with all your tasks.",
+        cancel: "Cancel",
+        selectSiteAndUpload: "Select Site & Upload",
+        uploading: "Uploading...",
+        selectSite: "Select Site",
+        noSitesFound: "No sites found",
+        errorLoadingSites: "Error loading sites",
+        noSiteSelected: "No site selected",
+        noTasksToUpload: "No tasks to upload",
+        tasksUploadedSuccessfully: "Tasks uploaded successfully",
+        errorUploadingTasks: "Error uploading tasks",
+        routeCreatedSuccessfully: "Route created successfully",
+        errorCreatingRoute: "Error creating route",
+        allDataUploadedSuccessfully: "All data uploaded successfully",
+        errorProcessingTasks: "Error processing tasks"
       }
     },
   },
@@ -536,6 +560,30 @@ const resources = {
         endTimePlaceholder: "בחר שעת סיום (למשל 13:00)",
         iterationsPlaceholder: "הכנס מספר חזרות (למשל 10)",
         apply: "החל"
+      },
+
+      PushToPlannerPopup: {
+        pushToPlanner: "העבר לתכנון",
+        uploadSummary: "סיכום העלאה",
+        totalTasks: "סה״כ משימות",
+        estimatedTime: "זמן משוער",
+        complexity: "מורכבות",
+        selectSiteToUploadMessage: "בחר אתר להעלאת המשימות שנוצרו על ידי בינה מלאכותית וליצירת מסלול חדש במתכנן.",
+        uploadNote: "הערה: פעולה זו תיצור תחנה ומסלול חדשים עם כל המשימות שלך.",
+        cancel: "ביטול",
+        selectSiteAndUpload: "בחר אתר והעלה",
+        uploading: "מעלה...",
+        selectSite: "בחר אתר",
+        noSitesFound: "לא נמצאו אתרים",
+        errorLoadingSites: "שגיאה בטעינת אתרים",
+        noSiteSelected: "לא נבחר אתר",
+        noTasksToUpload: "אין משימות להעלאה",
+        tasksUploadedSuccessfully: "המשימות הועלו בהצלחה",
+        errorUploadingTasks: "שגיאה בהעלאת משימות",
+        routeCreatedSuccessfully: "המסלול נוצר בהצלחה",
+        errorCreatingRoute: "שגיאה ביצירת מסלול",
+        allDataUploadedSuccessfully: "כל הנתונים הועלו בהצלחה",
+        errorProcessingTasks: "שגיאה בעיבוד משימות"
       }
     }
   },
@@ -796,6 +844,30 @@ const resources = {
         endTimePlaceholder: "اختر وقت الانتهاء (مثال 1:00 مساءً)",
         iterationsPlaceholder: "أدخل عدد التكرارات (مثال 10)",
         apply: "تطبيق"
+      },
+
+      PushToPlannerPopup: {
+        pushToPlanner: "إرسال إلى المخطط",
+        uploadSummary: "ملخص الرفع",
+        totalTasks: "إجمالي المهام",
+        estimatedTime: "الوقت المقدر",
+        complexity: "التعقيد",
+        selectSiteToUploadMessage: "اختر موقعًا لرفع المهام المُنشأة بالذكاء الاصطناعي وإنشاء مسار جديد في المخطط.",
+        uploadNote: "ملاحظة: سيؤدي هذا إلى إنشاء محطة ومسار جديدين مع جميع مهامك.",
+        cancel: "إلغاء",
+        selectSiteAndUpload: "اختر الموقع والرفع",
+        uploading: "جاري الرفع...",
+        selectSite: "اختر الموقع",
+        noSitesFound: "لم يتم العثور على مواقع",
+        errorLoadingSites: "خطأ في تحميل المواقع",
+        noSiteSelected: "لم يتم اختيار موقع",
+        noTasksToUpload: "لا توجد مهام للرفع",
+        tasksUploadedSuccessfully: "تم رفع المهام بنجاح",
+        errorUploadingTasks: "خطأ في رفع المهام",
+        routeCreatedSuccessfully: "تم إنشاء المسار بنجاح",
+        errorCreatingRoute: "خطأ في إنشاء المسار",
+        allDataUploadedSuccessfully: "تم رفع جميع البيانات بنجاح",
+        errorProcessingTasks: "خطأ في معالجة المهام"
       }
     }
   },
@@ -1056,6 +1128,30 @@ const resources = {
         endTimePlaceholder: "Выберите время окончания (например, 13:00)",
         iterationsPlaceholder: "Введите количество итераций (например, 10)",
         apply: "Применить"
+      },
+
+      PushToPlannerPopup: {
+        pushToPlanner: "Отправить в планировщик",
+        uploadSummary: "Сводка загрузки",
+        totalTasks: "Всего задач",
+        estimatedTime: "Расчетное время",
+        complexity: "Сложность",
+        selectSiteToUploadMessage: "Выберите сайт для загрузки ваших задач, созданных ИИ, и создания нового маршрута в планировщике.",
+        uploadNote: "Примечание: Это создаст новую станцию и маршрут со всеми вашими задачами.",
+        cancel: "Отмена",
+        selectSiteAndUpload: "Выбрать сайт и загрузить",
+        uploading: "Загрузка...",
+        selectSite: "Выбрать сайт",
+        noSitesFound: "Сайты не найдены",
+        errorLoadingSites: "Ошибка загрузки сайтов",
+        noSiteSelected: "Сайт не выбран",
+        noTasksToUpload: "Нет задач для загрузки",
+        tasksUploadedSuccessfully: "Задачи успешно загружены",
+        errorUploadingTasks: "Ошибка загрузки задач",
+        routeCreatedSuccessfully: "Маршрут успешно создан",
+        errorCreatingRoute: "Ошибка создания маршрута",
+        allDataUploadedSuccessfully: "Все данные успешно загружены",
+        errorProcessingTasks: "Ошибка обработки задач"
       }
     }
   }

@@ -330,7 +330,7 @@ function DragnDrop(props) {
       // props.setProgressBarFlag(true)
       if (
         props.tasksOfRoutes.tasks.length > 0 &&
-        props.boardArrayDND.length > 0
+        Array.isArray(props.boardArrayDND) && props.boardArrayDND.length > 0
       ) {
         props.tasksOfRoutes.tasks.forEach(async (element) => {
           await addImageToBoard(element.taskId, 'routes');
@@ -915,9 +915,13 @@ function DragnDrop(props) {
                       props.board.map((tag, keyCount) => {
                         if (tag !== undefined) {
                           // console.log("data",keyCount, tag);
+                          const stationdata = props.stationArray.find((station) => station?.id === tag?.theStation?.id);
+                          // {console.log("Station data", tag?.data,tag?.theStation)}
+                          // {console.log("Station loops",  stationdata)}
                           return (saveTag = (
                             <Tag
-                              Station={tag.theStation}
+                              selectedRoute={props.selectedRoute}
+                              Station={stationdata}
                               keyCount={keyCount}
                               setLocation={setLocation}
                               location={location}

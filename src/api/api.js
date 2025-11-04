@@ -1487,3 +1487,80 @@ export const deletePack = async (packId) => {
   );
   return confirm;
 };
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  LOOPS  ~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+export const updateLoop = async (loopId, loopData) => {
+  const url = baseUrl + '/loops/' + loopId;
+    const body = {
+    routeId: loopData?.routeId,
+    stationId: loopData?.stationId,
+    taskIds: loopData?.taskIds,
+    startingTaskIndex: loopData?.startingTaskIndex,
+    endingTaskIndex: loopData?.endingTaskIndex,
+    loopIteration: loopData?.loopIteration,
+    loopUntil: loopData?.loopUntil,
+    loopDuration: loopData?.loopDuration,
+  };
+  return await patch(url, body, {
+    'Content-Type': 'application/json',
+    Accept: '*/*',
+  });
+};
+
+export const insertLoop = async (loopData) => {
+  const url = baseUrl + '/loops';
+      const body = {
+    routeId: loopData?.routeId,
+    stationId: loopData?.stationId,
+    taskIds: loopData?.taskIds,
+    startingTaskIndex: loopData?.startingTaskIndex,
+    endingTaskIndex: loopData?.endingTaskIndex,
+    loopIteration: loopData?.loopIteration,
+    loopUntil: loopData?.loopUntil,
+    loopDuration: loopData?.loopDuration,
+  };
+  return await post(url, body, {
+    'Content-Type': 'application/json',
+    Accept: '*/*',
+  });
+};
+
+export const getingData_Loops = async () => {
+  let allLoops;
+  await get(`${baseUrl}/loops`, {
+    params: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+    },
+  }).then((res) => {
+    allLoops = res.data;
+  });
+  console.log('allLoops', allLoops);
+  return allLoops;
+};
+
+export const getLoopById = async (loopId) => {
+  let loop;
+  await get(`${baseUrl}/loops/${loopId}`, {
+    params: {
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+    },
+  }).then((res) => {
+    loop = res.data;
+  });
+  return loop;
+};
+
+export const deleteLoop = async (loopId) => {
+  let confirm;
+  await fetch(`${baseUrl}/loops/${loopId}`, { method: 'DELETE' }).then(
+    (res) => {
+      confirm = res;
+    }
+  );
+  return confirm;
+};

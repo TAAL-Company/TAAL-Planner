@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getingDataTasks, deleteStation } from '../../../api/api';
+import { getingDataTasks, deleteStation, insertLoop,updateLoop } from '../../../api/api';
 import './style.css';
 import ModalStations from '../Modal/Modal_Stations';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -189,61 +189,162 @@ const Stations = (props) => {
     setRequestForEditing('');
     setStationForEdit(-1);
   };
-
-  const handleLoopSubmit = (data) => {
-    // console.log('Loop data:', data);
-    // console.log('props.board:', props.board);
-    // console.log('Station for loop index:', stationForEdit);
-    // console.log('Station for loop:', props.stationArray[stationForEdit]);
-    
     // Add loop data to the station
-    const updatedStations = [...props.stationArray];
-    updatedStations[stationForEdit] = {
-      ...updatedStations[stationForEdit],
-      loopSettings: {
-        duration: data.duration,
-        endTime: data.endTime,
-        iterations: data.iterations,
-      }
-    };
-    
-    // Update the station array
-    props.setStationArray(updatedStations);
+    // const updatedStations = [...props.stationArray];
+    // updatedStations[stationForEdit] = {
+    //   ...updatedStations[stationForEdit],
+    //   loops: updatedStations[stationForEdit].loops.map(loop => {
+    //     if (loop.routeId === props.selectedRoute) {
+    //       return {
+    //         ...loop,
+    //         duration: Number.parseInt(data.duration),
+    //         endTime: data.endTime,//from string to date new Date
+    //         iterations: Number.parseInt(data.iterations),
+    //       };
+    //     }
+    //     return loop;
+    //   })
+    // };
 
-    // Update the board with the new station data
-    const updatedBoard = props.board.map(tag => {
-      if (
-        // tag.theStation.id === updatedStations[stationForEdit].id
-        // &&
-        tag.theStation.id === props.stationArray[stationForEdit].id
-      ) {
-        return {
-          ...tag,
-          theStation: {
-            ...tag.theStation,
-            loopSettings: {
-              duration: data.duration,
-              endTime: data.endTime,
-              iterations: data.iterations,
-            }
-          }
+    // // Update the station array
+    // props.setStationArray(updatedStations);
+
+    // // Update the board with the new station data
+    // const updatedBoard = props.board.map(tag => {
+    //   if (
+    //     // tag.theStation.id === updatedStations[stationForEdit].id
+    //     // &&
+    //     tag.theStation.id === props.stationArray[stationForEdit].id
+    //   ) {
+    //     return {
+    //       ...tag,
+    //       theStation: {
+    //         ...tag.theStation,
+    //         loops: {
+    //           duration: Number.parseInt(data.duration),
+    //           endTime: data.endTime,
+    //           iterations: Number.parseInt(data.iterations),
+    //         }
+    //       }
+    //     };
+    //   }
+    //   return tag;
+    // });
+    // props.setBoard(updatedBoard);
+  const handleLoopSubmit = async (data) => {
+    // Update selectedRoute.loops immutably
+    const stationId = props.stationArray[stationForEdit]?.id;
+
+    if (props.selectedRoute && stationId) {
+      // Absolute order across the entire board
+      const globalOrder = (props.board ?? []).map(item => item?.id).filter(Boolean);
+
+      const stationTasks = props.stationArray[stationForEdit]?.tasks ?? [];
+      const getPos = (id) => {
+        const idx = globalOrder.indexOf(id);
+        return idx === -1 ? Number.MAX_SAFE_INTEGER : idx;
+      };
+
+      // Order station tasks by absolute position on the board
+      const orderedTaskIds = stationTasks
+        .slice()
+        .sort((a, b) => getPos(a.id ?? a.taskId) - getPos(b.id ?? b.taskId))
+        .map(t => t.id ?? t.taskId)
+        .filter(id => globalOrder.includes(id)); // only tasks that exist on the board
+
+      // Compute start/end indices in props.board (0-based)
+      let startingTaskIndex = 0;
+      let endingTaskIndex = 0;
+
+      if (orderedTaskIds.length > 0) {
+        const firstIndices = orderedTaskIds.map(id => globalOrder.indexOf(id));
+        startingTaskIndex = Math.min(...firstIndices);
+        // defensive: if duplicates ever appear on the board
+        endingTaskIndex = Math.max(...orderedTaskIds.map(id => globalOrder.lastIndexOf(id)));
+      }
+
+      const currentLoops = Array.isArray(props.selectedRoute.loops)
+        ? [...props.selectedRoute.loops]
+        : [];
+
+      // Support both 'stationid' and 'stationId'
+      const idx = currentLoops.findIndex(l => (l.stationid ?? l.stationId) === stationId);
+
+      const newLoop = {
+        routeId: props.selectedRoute.id,
+        stationid: stationId, // keep local shape consistent with your UI usage
+        loopDuration: parseInt(data.duration, 10),
+        loopUntil: data.endTime,
+        loopIteration: parseInt(data.iterations, 10),
+        startingTaskIndex,
+        endingTaskIndex,
+      };
+
+      const updatedLoops = idx >= 0
+        ? currentLoops.map((l, i) => (i === idx ? { ...l, ...newLoop } : l))
+        : [...currentLoops, newLoop];
+
+      const updatedRoute = { ...props.selectedRoute, loops: updatedLoops };
+
+      if (typeof props.setSelectedRoute === 'function') {
+        props.setSelectedRoute(updatedRoute);
+      }
+
+      if (typeof props.setBoard === 'function') {
+        props.setBoard(prev =>
+          prev.map(tag => {
+            const routeId = tag?.route?.id ?? tag?.routeId;
+            return routeId === updatedRoute.id ? { ...tag, route: updatedRoute } : tag;
+          })
+        );
+      }
+
+      // Persist to server: insert or update
+      try {
+        const body = {
+          routeId: props.selectedRoute?.id,
+          stationId,
+          taskIds: orderedTaskIds,
+          loopIteration: parseInt(data?.iterations, 10),
+          loopUntil: data?.endTime,
+          loopDuration: parseInt(data?.duration, 10),
+          startingTaskIndex,
+          endingTaskIndex,
         };
-      }
-      return tag;
-    });
-    props.setBoard(updatedBoard);
-    // Show success notification
-    showNotification('success', props.language === "English" ? 'הגדרות לולאה נשמרו בהצלחה' : 'Loop settings saved successfully');
-    localStorage.setItem('loopSettings', JSON.stringify(props.stationArray[stationForEdit]));
 
-    
-    // Close the popup
+        let res;
+        // Try to get an existing loop id (could be 'id' or 'loopId')
+        const existingLoopId = idx >= 0 ? (currentLoops[idx]?.id ?? currentLoops[idx]?.loopId) : undefined;
+
+        if (idx >= 0 && existingLoopId) {
+          // Correct: updateLoop(loopId, loopData)
+          res = await updateLoop(existingLoopId, body);
+        } else {
+          res = await insertLoop(body);
+        }
+
+        if (res?.status >= 200 && res?.status < 300) {
+          showNotification(
+            'success',
+            props.language === 'English' ? 'Loop settings saved successfully' : 'הגדרות לולאה נשמרו בהצלחה'
+          );
+        } else {
+          throw new Error(`HTTP ${res?.status}`);
+        }
+      } catch (e) {
+        console.error(e);
+        showNotification(
+          'error',
+          props.language === 'English' ? 'Error saving loop settings' : 'שגיאה בשמירת הגדרות הלולאה'
+        );
+      }
+    }
+
     setIsLoopPopupOpen(false);
     setOpenThreeDotsVertical(-1);
     setRequestForEditing('');
     setStationForEdit(-1);
   };
-
   //----------------------------------------------------------
   return (
     <>
@@ -430,6 +531,7 @@ const Stations = (props) => {
           </div>
           {/* <DndProvider backend={HTML5Backend}> */}
           <DragnDrop
+            selectedRoute={props.selectedRoute}
             board={props.board}
             setBoard={props.setBoard}
             filteredDataRoutes={props.filteredDataRoutes}
@@ -490,6 +592,8 @@ const Stations = (props) => {
         isOpen={isLoopPopupOpen}
         onClose={handleCloseLoop}
         onSubmit={handleLoopSubmit}
+        station={props.stationArray[stationForEdit]}
+        selectedRoute={props.selectedRoute}
       />
     </>
   );

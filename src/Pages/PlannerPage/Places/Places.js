@@ -2223,6 +2223,8 @@ const Places = (props) => {
           </div>
           {/* //////////////////////////////////////////////////////////////////////////////////////////// */}
           <Stations
+            selectedRoute={selectedRoute}
+            setSelectedRoute={setSelectedRoute}
             board={board}
             setBoard={setBoard}
             filteredDataRoutes={filteredDataRoutes}
@@ -2276,7 +2278,7 @@ const Places = (props) => {
           />
           <Tasks
             allUsers={allUsers}
-            boardArrayDND={boardArrayDND}
+            boardArrayDND={Array.isArray(boardArrayDND) ? boardArrayDND : []}
             setBoardArrayDND={setBoardArrayDND}
             allTasks={allTasks}
             setAllTasks={setAllTasks}

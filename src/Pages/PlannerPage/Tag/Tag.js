@@ -36,7 +36,8 @@ function Tag({
   setRequestForEditing,
   openThreeDotsVerticalBoard,
   setOpenThreeDotsVerticalBoard,
-  Station
+  Station,
+  selectedRoute,
 }) {
   localStorage.setItem('myLastStation', JSON.stringify(myLastStation));
   const [idListen, setIdListen] = useState(0);
@@ -102,12 +103,13 @@ function Tag({
             ></div>
             <div className={`nameStationBoard ${language !== 'English' ? 'english' : ''}`}>
               {nameStation}
-              {/* {console.log("Station", Station)} */}
-              {/* {console.log("Station in tag", Station?.data.find((item) => item.id === Station.id)?.loopSettings)} */}
-              {/* {console.log("Station in tag", Station?.data)} */}
-              {nameStation !== ''
-                && Station.loopSettings
-                // && Station?.data?.find((item) => item.id === Station.id)?.loopSettings
+              {console.log("Station", Station)} 
+              {console.log("selectedRoute", selectedRoute)}
+              {
+                nameStation !== ''
+                && selectedRoute?.loops?.length > 0
+                && selectedRoute?.loops?.find((loop) => Station?.id === loop?.stationid)
+                // && Station?.data?.find((item) => item.id === Station.id)?.loops
                 && (
                   <span style={{
                     marginLeft: language === 'English' ? '10px' : '0px',
@@ -116,30 +118,32 @@ function Tag({
                     color: '#666',
                     fontStyle: 'italic'
                   }}>
-                    <strong>Loop:</strong> {`Duration ${Station.loopSettings.duration}, End Time ${Station.loopSettings.endTime}, Iterations ${Station.loopSettings.iterations}`}
-                    {/* (Loop: {`Duration ${Station?.data.find((item) => item.id === Station.id)?.loopSettings.duration}, End Time ${Station?.data.find((item) => item.id === Station.id)?.loopSettings.endTime}, Iterations ${Station?.data.find((item) => item.id === Station.id)?.loopSettings.iterations}`}) */}
+                    <strong>Loop:</strong> 
+                    {`Duration ${selectedRoute.loops.find((loop) => Station.id === loop.stationid)?.loopDuration},
+                      End Time ${selectedRoute.loops.find((loop) => Station.id === loop.stationid)?.loopUntil}, 
+                      Iterations ${selectedRoute.loops.find((loop) => Station.id === loop.stationid)?.loopIteration}`}
                   </span>
                 )}
             </div>
             {/* 
-            {console.log("Station in tag", Station?.data.find((item) => item.id === Station.id)?.loopSettings)}
+            {console.log("Station in tag", Station?.data.find((item) => item.id === Station.id)?.loops)}
             {console.log("Station in tag", Station?.data)}
             {nameStation !== '' && Station?.data.length > 0 ? (
               <>
                 <Badge
-                  badgeContent={Station?.data.find((item) => item.id === Station.id)?.loopSettings?.duration}
+                  badgeContent={Station?.data.find((item) => item.id === Station.id)?.loops?.duration}
                   color="success"
                   overlap="circular"
                   anchorOrigin={{ vertical: 'top', horizontal: language === 'English' ? 'right' : 'left' }} >
                 </Badge>
                 <Badge
-                  badgeContent={Station?.data.find((item) => item.id === Station.id)?.loopSettings?.endTime}
+                  badgeContent={Station?.data.find((item) => item.id === Station.id)?.loops?.endTime}
                   color="warning"
                   overlap="circular"
                   anchorOrigin={{ vertical: 'top', horizontal: language === 'English' ? 'right' : 'left' }} >
                 </Badge>
                 <Badge
-                  badgeContent={Station?.data.find((item) => item.id === Station.id)?.loopSettings?.iterations}
+                  badgeContent={Station?.data.find((item) => item.id === Station.id)?.loops?.iterations}
                   color="secondary"
                   overlap="circular"
                   anchorOrigin={{ vertical: 'top', horizontal: language === 'English' ? 'right' : 'left' }} >

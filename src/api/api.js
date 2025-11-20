@@ -1564,3 +1564,32 @@ export const deleteLoop = async (loopId) => {
   );
   return confirm;
 };
+
+export const getAllCognitiveProfiles = async () => {
+  let cognitiveProfiles;
+
+  await get(
+    "https://prod-web-app0da5905.azurewebsites.net/cognitive-profiles"
+  ).then((res) => {
+    cognitiveProfiles = res.data;
+  });
+  console.log("res getAllCognitiveProfiles: ", cognitiveProfiles);
+
+  return cognitiveProfiles;
+};
+
+export const getAllTaskCognitiveRequirements = async () => {
+  let allTaskRequirements;
+
+  await get(
+    "https://prod-web-app0da5905.azurewebsites.net/task-cognitive-requirements"
+  ).then((res) => {
+    allTaskRequirements = res.data;
+  });
+  console.log(
+    "res getAllTaskCognitiveRequirements: ",
+    allTaskRequirements
+  );
+
+  return allTaskRequirements;
+};

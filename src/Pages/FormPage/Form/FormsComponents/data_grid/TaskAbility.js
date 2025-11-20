@@ -54,6 +54,7 @@ const TaskAbility = ({
   setWorker,
   worker,
   allUsers,
+  allSites,
   setChangeUser,
   setChangeRoute,
   setRows,
@@ -336,6 +337,7 @@ const TaskAbility = ({
           components={{
             Toolbar: () => (
               <CustomToolbar
+                allSites={allSites}
                 allRoutes={allRoutes}
                 setSaveProfileChanges={setSaveProfileChanges}
                 setChangeUser={setChangeUser}

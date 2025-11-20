@@ -53,8 +53,11 @@ const CustomToolbar = ({
   setRroutenewName,
   setUpdateProfile,
   SaveProfileChanges,
+  allSites,
 }) => {
   // const [prevSelected, setPrevSelected] = useState([]);
+  const [selectedSite, setSelectedSite] = useState(null);
+
   useEffect(() => { }, [prevSelectedWorker]);
 
   const saveProfileChanges = (e) => {
@@ -87,6 +90,65 @@ const CustomToolbar = ({
     // setRoutesOfFlags(selectedValue);
     setChangeRoute(true);
   };
+
+  const USER_COLOR = '#1e88e5';
+  const ROUTE_COLOR = '#fb8c00';
+
+  const indicatorStyle = (isActive, color) => ({
+    width: 10,
+    height: 10,
+    borderRadius: '50%',
+    marginInlineEnd: 8,
+    marginInlineStart: 8,
+    backgroundColor: isActive ? color : '#d0d0d0',
+  });
+
+  const renderUserOption = (props, option) => (
+    <li
+      {...props}
+      className='workerName-autoComplete'
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        color: option.hasCognitiveProfile ? USER_COLOR : '#333',
+      }}
+    >
+      <span style={indicatorStyle(option.hasCognitiveProfile, USER_COLOR)} />
+      <span>{option.name}</span>
+    </li>
+  );
+
+  const renderRouteOption = (props, option) => (
+    <li
+      {...props}
+      className='workerName-autoComplete'
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        color: option.hasTaskCognitiveRequirements ? ROUTE_COLOR : '#333',
+      }}
+    >
+      <span
+        style={indicatorStyle(
+          option.hasTaskCognitiveRequirements,
+          ROUTE_COLOR
+        )}
+      />
+      <span>{option.name}</span>
+    </li>
+  );
+
+  function formatRouteLabel(route) {
+    if (!route?.name) return '';
+    const cleanName = route.name.replace('&#8211;', '-').replace('&#8217;', "'");
+    return `${route.hasTaskCognitiveRequirements ? '🟠 ' : ''}${cleanName}`;
+  }
+
+  const filteredRoutes = selectedSite
+    ? allRoutes.filter((route) =>
+      selectedSite.routes.some((r) => r.id === route.id)
+    )
+    : allRoutes;
 
   return (
     <div>
@@ -123,21 +185,13 @@ const CustomToolbar = ({
               שם עובד:
               <Autocomplete
                 freeSolo
-                value={worker}
+                value={worker?.id ? worker : null}
                 onChange={handleChangeUserFlags}
                 id='free-solo-2-demo'
                 disableClearable
                 options={allUsers || []}
                 getOptionLabel={(option) => option.name || ''}
-                renderOption={(props, option) => (
-                  <div
-                    className='workerName-autoComplete'
-                    key={option.id}
-                    onClick={() => handleChangeUserFlags(null, option)}
-                  >
-                    {option.name}
-                  </div>
-                )}
+                renderOption={renderUserOption}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -145,6 +199,11 @@ const CustomToolbar = ({
                     InputProps={{
                       ...params.InputProps,
                       type: 'search',
+                      style: {
+                        color: worker?.hasCognitiveProfile
+                          ? USER_COLOR
+                          : undefined,
+                      },
                     }}
                   />
                 )}
@@ -155,8 +214,13 @@ const CustomToolbar = ({
               <Autocomplete
                 freeSolo
                 style={{ width: '250px' }}
-                value={routesOfFlags || ''}
+                value={
+                  routesOfFlags && !Array.isArray(routesOfFlags)
+                    ? routesOfFlags
+                    : null
+                }
                 onChange={(event, value) => {
+                  if (!value) return;
                   setRroutenewName(value.name);
                   handleChangeRouteFlags(null, value);
                 }}
@@ -164,6 +228,7 @@ const CustomToolbar = ({
                 disableClearable
                 options={worker.routes || []}
                 getOptionLabel={(option) => option.name || ''}
+                renderOption={renderRouteOption}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -181,6 +246,11 @@ const CustomToolbar = ({
                     InputProps={{
                       ...params.InputProps,
                       type: 'search',
+                      style: {
+                        color: routesOfFlags?.hasTaskCognitiveRequirements
+                          ? ROUTE_COLOR
+                          : undefined,
+                      },
                     }}
                   />
                 )}
@@ -192,24 +262,58 @@ const CustomToolbar = ({
           <div className='infoForms'>
             <div className='workerNameForms'>
               <InputLabel id='demo-simple-select-label-forms'>
+                בחירת אתר:
+              </InputLabel>
+              <select
+                className='selectUserForms'
+                value={selectedSite ? JSON.stringify(selectedSite) : 'DEFAULT'}
+                onChange={(event) => {
+                  const selectedValue = JSON.parse(event.target.value);
+                  setSelectedSite(selectedValue);
+                }
+                }
+              >
+                <option value='DEFAULT' disabled>
+                  {selectedSite ? selectedSite.name.replace('&#8211;', '-').replace('&#8217;', "'") : 'בחירת אתר'}
+                </option>
+                {allSites?.map((site, index) => (
+                  <option key={index} value={JSON.stringify(site)}>
+                    {site.name.replace('&#8211;', '-').replace('&#8217;', "'")}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className='workerRouteForms'>
+              <InputLabel id='demo-simple-select-label-forms'>
                 בחירת מסלול:
               </InputLabel>
               <select
                 className='selectUserForms'
+                style={{
+                  color: routeForTasksAbility?.hasTaskCognitiveRequirements
+                    ? ROUTE_COLOR
+                    : undefined,
+                }}
                 value={'DEFAULT'}
                 onChange={handleChangeRoute}
               >
                 <option value='DEFAULT' disabled>
                   {routeForTasksAbility?.length === 0
                     ? 'בחירת מסלול'
-                    : routeForTasksAbility?.name}
+                    : formatRouteLabel(routeForTasksAbility)}
                 </option>
-                {allRoutes.map((value, index) => {
+                {filteredRoutes.map((value, index) => {
                   return (
-                    <option key={index} value={JSON.stringify(value)}>
-                      {value.name
-                        .replace('&#8211;', '-')
-                        .replace('&#8217;', "'")}
+                    <option
+                      key={index}
+                      value={JSON.stringify(value)}
+                      style={{
+                        color: value.hasTaskCognitiveRequirements
+                          ? ROUTE_COLOR
+                          : '#333',
+                      }}
+                    >
+                      {formatRouteLabel(value)}
                     </option>
                   );
                 })}
@@ -244,22 +348,21 @@ const CustomToolbar = ({
                 autoHighlight
                 onChange={handleChangeUser}
                 id='free-solo-2-demo'
-                // disableClearable
                 options={allUsers}
                 getOptionLabel={(option) => option.name}
-                renderOption={(props, option) => (
-                  <div
-                    className='workerName-autoComplete'
-                    key={option.id}
-                    onClick={() => handleChangeUser(null, option)}
-                  >
-                    {option.name}
-                  </div>
-                )}
+                renderOption={renderUserOption}
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     label={worker.name ? worker.name : 'שם העובד'}
+                    InputProps={{
+                      ...params.InputProps,
+                      style: {
+                        color: worker?.hasCognitiveProfile
+                          ? USER_COLOR
+                          : undefined,
+                      },
+                    }}
                   />
                 )}
                 label={worker.name}

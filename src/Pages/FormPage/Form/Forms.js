@@ -19,6 +19,9 @@ import {
   getingDataFlags,
   postEvaluation,
   postEvaluationEvents,
+  getAllCognitiveProfiles,
+  getAllTaskCognitiveRequirements,
+  getingData_Places,
 } from '../../../api/api';
 import taskpic from './FormsComponents/PicturesForms/taskpic.png';
 import { GridActionsCellItem } from '@mui/x-data-grid';
@@ -126,19 +129,84 @@ function Forms() {
 
   const [rowsTaskabilityHE, setRowsTaskabilityHE] = useState([]);
   const [loading, setLoading] = useState(false); // Add a loading state
+  const [sites, setSites] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true); // Start loading
+      setLoading(true);
       try {
-        setAllUsers(await getingData_Users()); //get request for Users
-        setAllTasks(await getingData_Tasks());
-        setAllRoutes(await getingData_Routes());
-        setCognitiveAbillities(await getCognitiveAbillities());
+        const [
+          users,
+          tasks,
+          routes,
+          abilities,
+          cognitiveProfiles,
+          taskRequirements,
+          sites,
+        ] = await Promise.all([
+          getingData_Users(),
+          getingData_Tasks(),
+          getingData_Routes(),
+          getCognitiveAbillities(),
+          getAllCognitiveProfiles(),
+          getAllTaskCognitiveRequirements(),
+          getingData_Places(),
+        ]);
+
+        const profileIds = new Set(
+          (cognitiveProfiles || []).map((profile) => profile.studentId)
+        );
+
+        const requirementIds = new Set(
+          (taskRequirements || []).map((req) => req.taskId)
+        );
+
+        const markedTasks = (tasks || []).map((task) => ({
+          ...task,
+          hasTaskCognitiveRequirements: requirementIds.has(task.id),
+        }));
+
+        const markedRoutes = (routes || []).map((route) => {
+          const mappedTasks = (route.tasks || []).map((task) => {
+            const taskIdentifier = task.taskId ?? task.id;
+            return {
+              ...task,
+              hasTaskCognitiveRequirements: requirementIds.has(
+                taskIdentifier
+              ),
+            };
+          });
+
+          return {
+            ...route,
+            tasks: mappedTasks,
+            hasTaskCognitiveRequirements: mappedTasks.some(
+              (task) => task.hasTaskCognitiveRequirements
+            ),
+          };
+        });
+
+        const routesById = new Map(
+          (markedRoutes || []).map((route) => [route.id, route])
+        );
+
+        const markedUsers = (users || []).map((user) => ({
+          ...user,
+          hasCognitiveProfile: profileIds.has(user.id),
+          routes: (user.routes || []).map(
+            (route) => routesById.get(route.id) ?? route
+          ),
+        }));
+
+        setAllUsers(markedUsers);
+        setAllTasks(markedTasks);
+        setAllRoutes(markedRoutes);
+        setCognitiveAbillities(abilities || []);
+        setSites(sites || []);
       } catch (error) {
         console.error(error.message);
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
     fetchData();
@@ -2364,6 +2432,7 @@ function Forms() {
                     setChangeRoute={setChangeRoute}
                     allUsers={allUsers}
                     allRoutes={allRoutes}
+                    allSites={sites}
                     tableType={'TaskabilityHE'}
                     columns={columnsTaskabilityHE}
                     setColumns={setColumnsTaskabilityHE}

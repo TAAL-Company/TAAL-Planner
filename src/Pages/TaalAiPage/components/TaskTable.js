@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import { Box, Typography, TextField, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Divider, Chip, Tooltip, Button } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import TaskIcon from '@mui/icons-material/Task';
@@ -9,6 +9,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import ImageIcon from '@mui/icons-material/Image'; // added
 import { useTranslation } from "react-i18next";
 import TaskImage from "./imageGenerate";
 import PushToPlannerPopup from './pushtoplannerpopup';
@@ -36,6 +37,8 @@ export default function TaskTable({
   
   // Add missing state variables for upload functionality
   const [pushToPlannerOpen, setPushToPlannerOpen] = useState(false);
+  const [bulkImageTrigger, setBulkImageTrigger] = useState(0); // ensures TaskImage runs automatically
+  const lastBulkTimeRef = useRef(0); // throttle to avoid too many bursts
 
   const formatTime = (minutes) => {
     if (minutes < 60) {
@@ -51,6 +54,12 @@ export default function TaskTable({
   const handleOpenSitePopup = () => {
     setPushToPlannerOpen(true);
   };
+
+  // // added: bulk generate missing images
+  // const handleGenerateMissingImages = () => {
+  //   if (tasks.length === 0) return;
+  //   setBulkImageTrigger(prev => prev + 1);
+  // };
 
   const startEditingTask = (taskIndex) => {
     const task = tasks[taskIndex];
@@ -133,6 +142,21 @@ export default function TaskTable({
 
   const totalTime = tasks.reduce((sum, task) => sum + task.estimatedTimeMinutes, 0);
 
+  // Automatically trigger image generation for any tasks missing an image
+  useEffect(() => {
+    if (!isOpen) return;
+    if (!tasks || tasks.length === 0) return;
+
+    const hasMissing = tasks.some(t => !t?.picture_url);
+    if (!hasMissing) return;
+
+    const now = Date.now();
+    if (now - lastBulkTimeRef.current < 600) return; // small throttle
+    lastBulkTimeRef.current = now;
+
+    setBulkImageTrigger(prev => prev + 1);
+  }, [isOpen, tasks]);
+
   if (!isOpen) return null;
 
   return (
@@ -158,6 +182,21 @@ export default function TaskTable({
             <Typography variant="h6">{t('TextGenerative.taskBreakdown')}</Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            {/* <Tooltip title={t('TextGenerative.generateMissingImages') || 'Generate missing images'}>
+              <Button
+                variant="outlined"
+                startIcon={<ImageIcon />}
+                onClick={handleGenerateMissingImages}
+                disabled={tasks.length === 0}
+                sx={{
+                  color: "#4a9eff",
+                  borderColor: "#4a9eff",
+                  "&:hover": { bgcolor: "rgba(74, 158, 255, 0.1)" }
+                }}
+              >
+                {t('TextGenerative.generateMissingImages') || 'Generate missing images'}
+              </Button>
+            </Tooltip> */}
             <Tooltip title={t('TextGenerative.addNewTask')}>
               <IconButton
                 onClick={addNewTask}
@@ -235,7 +274,8 @@ export default function TaskTable({
                         imageHeight={imageHeight}
                         imageModel={imageModel}
                         imageNoLogo={imageNoLogo}
-                        imageSeed={imageSeed} // Pass imageSeed
+                        imageSeed={imageSeed}
+                        trigger={bulkImageTrigger} // auto fire for rows without images
                       />
                     </TableCell>
 

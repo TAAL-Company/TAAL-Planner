@@ -293,6 +293,13 @@ function DragnDrop(props) {
   useEffect(() => { }, [props.percentProgressBar]);
 
   useEffect(() => {
+    if (!props.replaceRouteFlag) return;
+
+    treeFunction({ currentTarget: { className: 'tree' } });
+
+    if (typeof props.setReplaceRouteFlag === 'function') {
+      props.setReplaceRouteFlag(false);
+    }
     if (props.replaceRouteFlag) {
       props.setBoard([]);
     }
@@ -714,7 +721,7 @@ function DragnDrop(props) {
         routeId: route.id,
         name: route.title,
       }));
-      
+
 
       const updatedPack = {
         ...props.selectedPack,
@@ -895,7 +902,7 @@ function DragnDrop(props) {
                             }`}
                         >
                           {/* Show pack name if showing pack routes */}
-                          {props.board[0].itemType === 'route'? (
+                          {props.board[0].itemType === 'route' ? (
                             <span style={{ color: '#ba11b0' }}>
                               {props.board[0].pack ? props.board[0].pack : 'Pack Routes'}
                             </span>

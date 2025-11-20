@@ -81,6 +81,21 @@ const Nav = () => {
             }}
           />
         </Link>
+
+        <Link to="/TAAL_Ai">
+          <IconButton
+            sx={{
+              width: 51,
+              height: 45,
+              backgroundImage: "url('../../Pictures/logo_Taal_Ai.svg')",
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              backgroundPosition: 'center',
+              borderRadius: 1,
+            }}
+          />
+        </Link>
+
         <IconButton
           onClick={toggleLanguage}
           sx={{

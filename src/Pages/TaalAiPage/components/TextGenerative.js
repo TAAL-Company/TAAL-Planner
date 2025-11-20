@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {Box,Typography,Icon,Button,Chip,Dialog,DialogTitle,DialogContent,DialogActions,Fab,Alert,Paper,TextField,Divider } from "@mui/material";
-import SettingsIcon from '@mui/icons-material/Settings';
-import SaveIcon from '@mui/icons-material/Save';
+import { Box, Typography, Icon, Button, Chip } from "@mui/material";
 import TaskIcon from '@mui/icons-material/Task';
 import { useTranslation } from "react-i18next";
 import { usePollinationsChat } from '@pollinations/react';
 import TaskTable from './TaskTable';
 import ChatContainer from './ChatContainer';
 import InputContainer from './InputContainer';
+import SettingsDialog from './SettingsDialog';
 import "../../../i18n";
 
 export default function SearchUI() {
@@ -18,18 +17,21 @@ export default function SearchUI() {
   const [complexity, setComplexity] = useState('');
   const [selectedComplexity, setSelectedComplexity] = useState('Medium');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [customSystemPrompt, setCustomSystemPrompt] = useState('');
   const [loading, setLoading] = useState(false);
   const [hasTasksReady, setHasTasksReady] = useState(false);
 
   // Add seed to image generation settings state
-  const [imagePromptPrefix, setImagePromptPrefix] = useState('Professional illustration of: ');
-  const [imagePromptSuffix, setImagePromptSuffix] = useState(' Clean, modern, task-oriented visual representation. No text in image.');
+  const [imagePromptPrefix, setImagePromptPrefix] = useState(
+    'A highly realistic photo of a person performing the task:'
+  );
+  const [imagePromptSuffix, setImagePromptSuffix] = useState(
+    'The scene should look natural and immersive, fitting the task context (e.g., office, workshop, or classroom). Use natural lighting, realistic details, and authentic atmosphere. Ultra-realistic, cinematic composition, shallow depth of field, detailed textures, and no visible text or written words.'
+  );
   const [imageWidth, setImageWidth] = useState(400);
   const [imageHeight, setImageHeight] = useState(300);
   const [imageModel, setImageModel] = useState('flux');
   const [imageNoLogo, setImageNoLogo] = useState(true);
-  const [imageSeed, setImageSeed] = useState(42); // Add seed setting
+  const [imageSeed, setImageSeed] = useState(23297);
 
   // Get direction for RTL/LTR support
   const direction = t('Direction');
@@ -37,68 +39,54 @@ export default function SearchUI() {
 
   // Default editable part of system prompt
   const defaultEditablePrompt = `
-You are TAAL's internal AI Route Builder. Your task is to take either a free-text description (Hebrew or English) or a structured Excel input and generate a production-ready route for the TAAL platform.
+TAAL Internal AI Route Builder — System Message
 
-Core Instructions
+Role:
+You are TAAL's Internal AI Route Builder, an expert system that converts job descriptions or structured Excel inputs into production-ready task breakdowns for the TAAL platform.
 
 Input
+Input may be a free-text job description (Hebrew or English) or a structured Excel sheet.
+Always answer in the same language as the input.
 
-The user may write the job description in Hebrew or English.
+Output
+No explanations, no markdown. JSON only.
+Each task represents a single clear action.
 
-Regardless of input language, always generate output with Hebrew first and English fallback.
+Task Generation Guidelines
+Short and action-oriented (≤ 12 words).
+Use simple, direct, step-by-step language.
+Break down the input into single, clear actions.
+Each task line must contain only one simple instruction (no commas, no multi-actions).
+Keep language simple, pre-school level, accessible to everyone.
+Complexity Definition (TAAL-specific)
 
-Route Structure
+Basic (בסיסי) — Very detailed
+Break every job step into very small, simple, explicit actions.
+Use clear everyday words.
+Each task describes one physical or mental action only.
+Example: "Pick up the box." → "Put it on the shelf."
 
-A route consists of Stations → Tasks.
+Medium (בינוני) — Balanced
+Group related actions that naturally flow together.
+Tasks may include short, simple sequences that make sense together.
+Example: "Collect papers and put them in the folder."
 
-Default stations (if not otherwise specified):
-
-Preparation Station – setup, workspace readiness.
-
-Work Station – main job execution (must contain the central part of the work).
-
-Finishing Station – cleanup, organization, shutdown.
-
-Additional stations may be added depending on the description.
-
-Tasks
-
-Each station should contain as many tasks as needed to fully complete it.
-
-No fixed limit:
-
-Preparation/Finishing usually fewer tasks.
-
-Work Station may have many tasks (10–15 or more for complex jobs).
-
-Tasks must be short, precise, and action-oriented (≤12 words).
-
-Always provide both Hebrew and English text.
-
-Difficulty Levels
-
-User chooses: Basic / Medium / High.
-
-Basic: simpler, fewer tasks.
-
-Medium: moderate detail.
-
-High: more tasks, detailed and structured.
-
-All levels must achieve the same end-goal.
+High (גבוה) — Overview
+Write a few broad, outcome-focused tasks.
+Describe the end goals or results in very simple language.
+Avoid micro-steps, but keep tasks clear and measurable.
+**Language must stay simple.
+The worker is fully independent.**
 
 Monotone / Quantity Work
+If the job involves repetitive or quantity-based work (e.g., assembly, packaging, cleaning multiple items):
+Structure Work Station tasks so they could repeat naturally.
+Do not implement explicit loops — just make them flow logically.
 
-If the description implies repetitive or quantity-based work (e.g., producing multiple items), design the Work Station tasks so they are naturally suitable for looping later (last task can flow back to the first).
-
-Do not implement the loop directly; only structure tasks clearly.
-
-Accessibility
-
-Always adapt language for employees with cognitive disabilities: simple, direct, step-by-step.
-
-Avoid idioms and abstract terms
-  `;
+Accessibility Requirements
+Use clear, simple, direct language.
+Write tasks so they can be understood by workers with varied cognitive abilities.
+`;
 
   // Fixed JSON structure part
   const fixedJsonStructure = `Always output tasks as JSON with this structure:
@@ -107,13 +95,15 @@ Avoid idioms and abstract terms
   "tasks": [
     {
       "title": "Short and clear task title",
-      "subtitle": "Optional plain-language instruction",
+      "subtitle": "Optional plain-language instruction or clarification",
       "estimatedTimeMinutes": number,
       "picture_url": ""
     }
   ]
 }`;
 
+  // Initialize custom prompt with default
+  const [customSystemPrompt, setCustomSystemPrompt] = useState(defaultEditablePrompt);
   // Initialize custom prompt with default
   useEffect(() => {
     if (!customSystemPrompt) {
@@ -122,7 +112,7 @@ Avoid idioms and abstract terms
   }, []);
 
   // Complete system prompt combining custom and fixed parts
-  const systemPrompt = `${customSystemPrompt}\n\n${fixedJsonStructure}`;
+  const systemPrompt = `${customSystemPrompt} ${fixedJsonStructure}`;
 
   const { sendUserMessage, messages, loading: hookLoading } = usePollinationsChat([
     { role: "system", content: systemPrompt }
@@ -130,6 +120,9 @@ Avoid idioms and abstract terms
     seed: 42,
     model: 'openai'
   });
+
+  // Add state to track original user inputs
+  const [userInputs, setUserInputs] = useState([]);
 
   // Sync our loading state with the hook's loading state
   useEffect(() => {
@@ -176,9 +169,6 @@ Avoid idioms and abstract terms
     }
   }, [messages, loading]);
 
-  // Function to trigger image generation for a specific task
-  // const imagePromptSuffix = ` Clean, modern, task-oriented visual representation. No text in image.`;
-
   const getComplexityColor = (complexity) => {
     if (complexity.includes('Basic') || complexity.includes('בסיסי')) return 'success';
     if (complexity.includes('Medium') || complexity.includes('בינוני')) return 'warning';
@@ -190,15 +180,25 @@ Avoid idioms and abstract terms
     if (input.trim() && !loading) {
       try {
         setLoading(true);
-        setHasTasksReady(false); // Reset tasks ready state
-        setIsTableOpen(false); // Close table if open
+        setHasTasksReady(false);
+        setIsTableOpen(false);
+
         const complexityOptions = [
-          { value: 'Basic', label: `${t('TextGenerative.basic')} (${isRTL ? 'בסיסי' : 'Basic'})` },
-          { value: 'Medium', label: `${t('TextGenerative.medium')} (${isRTL ? 'בינוני' : 'Medium'})` },
-          { value: 'High', label: `${t('TextGenerative.high')} (${isRTL ? 'גבוה' : 'High'})` }
+          { value: 'Basic', label: `${t('TextGenerative.basic')}` },
+          { value: 'Medium', label: `${t('TextGenerative.medium')}` },
+          { value: 'High', label: `${t('TextGenerative.high')}` }
         ];
         const complexityInfo = complexityOptions.find(opt => opt.value === selectedComplexity);
-        const messageWithComplexity = `${input}\n\nPlease create a task breakdown with ${complexityInfo.label} complexity level.`;
+
+        // Store the original user input
+        const originalInput = input;
+
+        // Create enhanced message for AI
+        const messageWithComplexity = `Input:\n${input}\n\nInstruction: Create a clear, pre-school level task breakdown with ${complexityInfo.label} complexity level.`;
+
+        // Track original inputs to filter them in ChatContainer
+        setUserInputs(prev => [...prev, originalInput]);
+
         await sendUserMessage(messageWithComplexity);
         setInput('');
       } catch (error) {
@@ -229,30 +229,6 @@ Avoid idioms and abstract terms
     setIsTableOpen(!isTableOpen);
   };
 
-  const handleSettingsOpen = () => {
-    setIsSettingsOpen(true);
-  };
-
-  const handleSettingsClose = () => {
-    setIsSettingsOpen(false);
-  };
-
-  const handleSaveSettings = () => {
-    setIsSettingsOpen(false);
-  };
-
-  const handleResetToDefault = () => {
-    setCustomSystemPrompt(defaultEditablePrompt);
-    // Reset image settings to default
-    setImagePromptPrefix('Professional illustration of: ');
-    setImagePromptSuffix(' Clean, modern, task-oriented visual representation. No text in image.');
-    setImageWidth(400);
-    setImageHeight(300);
-    setImageModel('flux');
-    setImageNoLogo(true);
-    setImageSeed(42); // Reset seed to default
-  };
-
   return (
     <Box
       sx={{
@@ -270,309 +246,31 @@ Avoid idioms and abstract terms
         direction: direction,
       }}
     >
-      {/* Settings FAB */}
-      <Fab
-        color="primary"
-        size="small"
-        onClick={handleSettingsOpen}
-        sx={{
-          position: "absolute",
-          top: 16,
-          [isRTL ? 'left' : 'right']: 16,
-          bgcolor: "#4a9eff",
-          "&:hover": { bgcolor: "#3a8eef" },
-          zIndex: 1000,
-        }}
-      >
-        <SettingsIcon />
-      </Fab>
-
-      {/* Settings Dialog */}
-      <Dialog
-        open={isSettingsOpen}
-        onClose={handleSettingsClose}
-        maxWidth="md"
-        fullWidth
-        PaperProps={{
-          sx: {
-            bgcolor: "#2b2b2b",
-            color: "white",
-            direction: direction,
-            maxHeight: "90vh",
-          },
-        }}
-      >
-        <DialogTitle sx={{
-          color: "white",
-          display: "flex",
-          alignItems: "center",
-          gap: 1,
-          direction: direction,
-        }}>
-          <SettingsIcon sx={{ color: "#4a9eff" }} />
-          {t('TextGenerative.systemPromptSettings')}
-        </DialogTitle>
-        <DialogContent sx={{ direction: direction, overflow: "auto" }}>
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" sx={{ mb: 2, color: "#4a9eff" }}>
-              {t('TextGenerative.editableInstructions')}
-            </Typography>
-            <TextField
-              fullWidth
-              multiline
-              rows={8}
-              value={customSystemPrompt}
-              onChange={(e) => setCustomSystemPrompt(e.target.value)}
-              variant="outlined"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  bgcolor: "#3a3a3a",
-                  color: "white",
-                  direction: "ltr",
-                  "& fieldset": { borderColor: "#4a4a4a" },
-                  "&:hover fieldset": { borderColor: "#6a6a6a" },
-                  "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
-                },
-              }}
-            />
-          </Box>
-
-          <Divider sx={{ bgcolor: "#4a4a4a", my: 2 }} />
-
-          {/* Image Generation Settings */}
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" sx={{ mb: 2, color: "#ff6b35" }}>
-              {t('TextGenerative.imageGenerationSettings')}
-            </Typography>
-            
-            {/* Image Prompt Settings */}
-            <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1, color: "#ccc" }}>
-                {t('TextGenerative.imagePromptPrefix')}:
-              </Typography>
-              <TextField
-                fullWidth
-                value={imagePromptPrefix}
-                onChange={(e) => setImagePromptPrefix(e.target.value)}
-                variant="outlined"
-                size="small"
-                sx={{
-                  mb: 2,
-                  "& .MuiOutlinedInput-root": {
-                    bgcolor: "#3a3a3a",
-                    color: "white",
-                    "& fieldset": { borderColor: "#4a4a4a" },
-                    "&:hover fieldset": { borderColor: "#6a6a6a" },
-                    "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
-                  },
-                }}
-              />
-              <Typography variant="subtitle2" sx={{ mb: 1, color: "#ccc" }}>
-                {t('TextGenerative.imagePromptSuffix')}:
-              </Typography>
-              <TextField
-                fullWidth
-                value={imagePromptSuffix}
-                onChange={(e) => setImagePromptSuffix(e.target.value)}
-                variant="outlined"
-                size="small"
-                sx={{
-                  mb: 2,
-                  "& .MuiOutlinedInput-root": {
-                    bgcolor: "#3a3a3a",
-                    color: "white",
-                    "& fieldset": { borderColor: "#4a4a4a" },
-                    "&:hover fieldset": { borderColor: "#6a6a6a" },
-                    "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
-                  },
-                }}
-              />
-            </Box>
-
-            {/* Image Dimensions */}
-            <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-              <TextField
-                label={t('TextGenerative.width')}
-                type="number"
-                value={imageWidth}
-                onChange={(e) => setImageWidth(parseInt(e.target.value) || 400)}
-                variant="outlined"
-                size="small"
-                inputProps={{ min: 100, max: 1024 }}
-                sx={{
-                  flex: 1,
-                  "& .MuiOutlinedInput-root": {
-                    bgcolor: "#3a3a3a",
-                    color: "white",
-                    "& fieldset": { borderColor: "#4a4a4a" },
-                    "&:hover fieldset": { borderColor: "#6a6a6a" },
-                    "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "#ccc",
-                    "&.Mui-focused": { color: "#4a9eff" },
-                  },
-                }}
-              />
-              <TextField
-                label={t('TextGenerative.height')}
-                type="number"
-                value={imageHeight}
-                onChange={(e) => setImageHeight(parseInt(e.target.value) || 300)}
-                variant="outlined"
-                size="small"
-                inputProps={{ min: 100, max: 1024 }}
-                sx={{
-                  flex: 1,
-                  "& .MuiOutlinedInput-root": {
-                    bgcolor: "#3a3a3a",
-                    color: "white",
-                    "& fieldset": { borderColor: "#4a4a4a" },
-                    "&:hover fieldset": { borderColor: "#6a6a6a" },
-                    "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "#ccc",
-                    "&.Mui-focused": { color: "#4a9eff" },
-                  },
-                }}
-              />
-              <TextField
-                label={t('TextGenerative.seed')}
-                type="number"
-                value={imageSeed}
-                onChange={(e) => setImageSeed(parseInt(e.target.value) || 42)}
-                variant="outlined"
-                size="small"
-                inputProps={{ min: 1, max: 1000000 }}
-                sx={{
-                  flex: 1,
-                  "& .MuiOutlinedInput-root": {
-                    bgcolor: "#3a3a3a",
-                    color: "white",
-                    "& fieldset": { borderColor: "#4a4a4a" },
-                    "&:hover fieldset": { borderColor: "#6a6a6a" },
-                    "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "#ccc",
-                    "&.Mui-focused": { color: "#4a9eff" },
-                  },
-                }}
-              />
-            </Box>
-
-            {/* Model Selection */}
-            <Box sx={{ display: "flex", gap: 2, mb: 2, alignItems: "center" }}>
-              <TextField
-                select
-                label={t('TextGenerative.model')}
-                value={imageModel}
-                onChange={(e) => setImageModel(e.target.value)}
-                variant="outlined"
-                size="small"
-                sx={{
-                  minWidth: 120,
-                  "& .MuiOutlinedInput-root": {
-                    bgcolor: "#3a3a3a",
-                    color: "white",
-                    "& fieldset": { borderColor: "#4a4a4a" },
-                    "&:hover fieldset": { borderColor: "#6a6a6a" },
-                    "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
-                  },
-                  "& .MuiInputLabel-root": {
-                    color: "#ccc",
-                    "&.Mui-focused": { color: "#4a9eff" },
-                  },
-                }}
-                SelectProps={{
-                  sx: {
-                    "& .MuiMenuItem-root": {
-                      bgcolor: "#3a3a3a",
-                      color: "white",
-                      "&:hover": { bgcolor: "#4a4a4a" },
-                    },
-                  },
-                }}
-              >
-                <option value="flux">{t('TextGenerative.flux')}</option>
-                <option value="turbo">{t('TextGenerative.turbo')}</option>
-                <option value="midjourney">{t('TextGenerative.midjourney')}</option>
-              </TextField>
-              
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <input
-                  type="checkbox"
-                  id="nologo-checkbox"
-                  checked={imageNoLogo}
-                  onChange={(e) => setImageNoLogo(e.target.checked)}
-                  style={{ 
-                    accentColor: "#4a9eff",
-                    transform: "scale(1.2)"
-                  }}
-                />
-                <label htmlFor="nologo-checkbox" style={{ color: "#ccc", cursor: "pointer" }}>
-                  {t('TextGenerative.noLogo')}
-                </label>
-              </Box>
-            </Box>
-          </Box>
-
-          <Divider sx={{ bgcolor: "#4a4a4a", my: 2 }} />
-
-          <Box>
-            <Typography variant="h6" sx={{ mb: 2, color: "#ff6b35" }}>
-              {t('TextGenerative.fixedJsonStructure')}
-            </Typography>
-            <Alert
-              severity="info"
-              sx={{
-                mb: 2,
-                bgcolor: "#1a3a5c",
-                color: "white",
-                direction: direction,
-                "& .MuiAlert-icon": {
-                  color: "#4a9eff",
-                },
-              }}
-            >
-              {t('TextGenerative.fixedJsonDescription')}
-            </Alert>
-            <Paper
-              sx={{
-                bgcolor: "#1a1a1a",
-                color: "#ccc",
-                p: 2,
-                borderRadius: 1,
-                fontFamily: "monospace",
-                fontSize: "0.9rem",
-                border: "1px solid #4a4a4a",
-                direction: "ltr",
-              }}
-            >
-              <pre style={{ margin: 0, whiteSpace: "pre-wrap" }}>
-                {fixedJsonStructure}
-              </pre>
-            </Paper>
-          </Box>
-        </DialogContent>
-        <DialogActions sx={{ p: 3, gap: 1, direction: direction }}>
-          <Button onClick={handleResetToDefault} variant="outlined">
-            {t('TextGenerative.resetToDefault')}
-          </Button>
-          <Button onClick={handleSettingsClose} variant="outlined">
-            {t('TextGenerative.cancel')}
-          </Button>
-          <Button
-            onClick={handleSaveSettings}
-            variant="contained"
-            startIcon={<SaveIcon />}
-            sx={{ bgcolor: "#4a9eff", "&:hover": { bgcolor: "#3a8eef" } }}
-          >
-            {t('TextGenerative.saveSettings')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* Settings Component */}
+      <SettingsDialog
+        isOpen={isSettingsOpen}
+        onClose={(shouldOpen) => setIsSettingsOpen(shouldOpen === true ? true : false)}
+        customSystemPrompt={customSystemPrompt}
+        setCustomSystemPrompt={setCustomSystemPrompt}
+        imagePromptPrefix={imagePromptPrefix}
+        setImagePromptPrefix={setImagePromptPrefix}
+        imagePromptSuffix={imagePromptSuffix}
+        setImagePromptSuffix={setImagePromptSuffix}
+        imageWidth={imageWidth}
+        setImageWidth={setImageWidth}
+        imageHeight={imageHeight}
+        setImageHeight={setImageHeight}
+        imageModel={imageModel}
+        setImageModel={setImageModel}
+        imageNoLogo={imageNoLogo}
+        setImageNoLogo={setImageNoLogo}
+        imageSeed={imageSeed}
+        setImageSeed={setImageSeed}
+        defaultEditablePrompt={defaultEditablePrompt}
+        fixedJsonStructure={fixedJsonStructure}
+        direction={direction}
+        isRTL={isRTL}
+      />
 
       {/* Title and Input Container - Centered when chat hasn't started */}
       {!hasChatStarted && (
@@ -716,13 +414,12 @@ Avoid idioms and abstract terms
           }}>
             <ChatContainer
               messages={messages}
+              userInputs={userInputs}
               loading={loading}
               direction={direction}
               isRTL={isRTL}
               isTableOpen={isTableOpen}
               onShowTasks={handleShowTasks}
-              tasksCount={tasks.length}
-              complexity={complexity}
               getComplexityColor={getComplexityColor}
             />
 

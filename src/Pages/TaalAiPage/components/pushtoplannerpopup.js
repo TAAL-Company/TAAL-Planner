@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Box,
   Typography,
@@ -14,11 +14,15 @@ import {
   Avatar,
   CircularProgress,
   IconButton,
-  Paper
+  Paper,
+  TextField,
+  InputAdornment
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import BusinessIcon from '@mui/icons-material/Business';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
 import { useTranslation } from "react-i18next";
 import { useNotification } from "../../../components/Notification/NotificationProvider";
 // Import API functions
@@ -41,6 +45,27 @@ export default function PushToPlannerPopup({
   const [selectedSite, setSelectedSite] = useState(null);
   const [loadingSites, setLoadingSites] = useState(false);
 
+  // NEW: Route name state (required)
+  const [routeName, setRouteName] = useState("");
+  const suggestedRouteName = useMemo(
+    () => `AI Route - ${new Date().toLocaleString()}`,
+    []
+  );
+  const isRouteNameValid = routeName.trim().length > 0;
+
+  // NEW: search state
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // NEW: memoized filtered sites
+  const filteredSites = useMemo(() => {
+    if (!searchTerm?.trim()) return sites;
+    const q = searchTerm.trim().toLowerCase();
+    return sites.filter((s) => {
+      const hay = `${s?.name || ""} ${s?.description || ""} ${s?.nameInEnglish || ""}`.toLowerCase();
+      return hay.includes(q);
+    });
+  }, [sites, searchTerm]);
+
   // Load sites when popup opens
   const loadSites = async () => {
     setLoadingSites(true);
@@ -57,7 +82,13 @@ export default function PushToPlannerPopup({
 
   // Open site selection popup
   const handleOpenSitePopup = () => {
+    // Require route name before continuing
+    if (!routeName.trim()) {
+      showNotification('error', t('PushToPlannerPopup.routeNameRequired') || 'Please enter a route name');
+      return;
+    }
     setSitePopupOpen(true);
+    setSearchTerm(""); // reset search each time
     loadSites();
   };
 
@@ -211,6 +242,40 @@ export default function PushToPlannerPopup({
     });
   };
 
+  // NEW: Derive a station name from AI tasks (with sane fallbacks)
+  const getAiStationName = (aiTasks, routeNameInput, complexityInput) => {
+    const candidates = [];
+
+    for (const t of aiTasks || []) {
+      // common possible keys from AI output
+      if (t.stationName) candidates.push(t.stationName);
+      if (t.station) candidates.push(t.station);
+      if (t.location) candidates.push(t.location);
+      if (t.topic) candidates.push(`${t.topic} Station`);
+    }
+
+    const normalized = candidates
+      .map((s) => (s || "").toString().trim())
+      .filter(Boolean);
+
+    if (normalized.length) {
+      // pick the most frequent candidate
+      const counts = normalized.reduce((acc, s) => {
+        acc[s] = (acc[s] || 0) + 1;
+        return acc;
+      }, {});
+      const top = normalized.sort((a, b) => {
+        const diff = counts[b] - counts[a];
+        return diff !== 0 ? diff : a.length - b.length;
+      })[0];
+      return top;
+    }
+
+    if (routeNameInput?.trim()) return `${routeNameInput.trim()} - Station`;
+    if (complexityInput?.trim()) return `${complexityInput.trim()} Station`;
+    return "AI Generated Station";
+  };
+
   // Process tasks to API with enhanced image handling
   const processTasksToAPI = async (site) => {
     if (!site) {
@@ -223,14 +288,20 @@ export default function PushToPlannerPopup({
       return;
     }
 
+    const finalRouteName = routeName.trim();
+    if (!finalRouteName) {
+      showNotification('error', t('PushToPlannerPopup.routeNameRequired') || 'Please enter a route name');
+      return;
+    }
+
     setIsUploading(true);
     
     try {
       const siteId = site;
       const tasksIdsfromAI = [];
       
-      // Create stations based on task complexity or default station
-      const stationName = complexity ? `${complexity} Station` : 'AI Generated Station';
+      // Create stations based on AI-derived name (with fallbacks)
+      const stationName = getAiStationName(tasks, finalRouteName, complexity);
       let stationId;
       
       try {
@@ -293,7 +364,7 @@ export default function PushToPlannerPopup({
           console.log(`✅ Task "${task.title}" created with ID: ${response.id}`);
         }
 
-        showNotification('success', t('PushToPlannerPopup.tasksUploadedSuccessfully') || 'Tasks uploaded successfully');
+        // showNotification('success', t('PushToPlannerPopup.tasksUploadedSuccessfully') || 'Tasks uploaded successfully');
       } catch (error) {
         console.error("Error inserting station or tasks:", error);
         showNotification('error', t('PushToPlannerPopup.errorUploadingTasks') || 'Error uploading tasks');
@@ -302,10 +373,9 @@ export default function PushToPlannerPopup({
 
       // Create route with uploaded tasks
       try {
-        const routeName = `AI Route - ${new Date().toLocaleString()}`;
-        
+        // Use user-provided route name
         const route = {
-          name: routeName,
+          name: finalRouteName,
           studentIds: [],
           taskIds: tasksIdsfromAI,
           siteIds: [siteId.id],
@@ -314,7 +384,7 @@ export default function PushToPlannerPopup({
         console.log("📦 Inserting AI route:", route);
         await insertRoute(route);
         
-        showNotification('success', t('PushToPlannerPopup.routeCreatedSuccessfully') || 'Route created successfully');
+        // showNotification('success', t('PushToPlannerPopup.routeCreatedSuccessfully') || 'Route created successfully');
       } catch (error) {
         console.error("Error inserting route:", error);
         showNotification('error', t('PushToPlannerPopup.errorCreatingRoute') || 'Error creating route');
@@ -426,6 +496,35 @@ export default function PushToPlannerPopup({
             </Paper>
           </Box>
 
+          {/* NEW: Route Name input */}
+          <Box sx={{ mb: 2 }}>
+            <TextField
+              fullWidth
+              required
+              label={t('PushToPlannerPopup.routeName') || 'Route Name'}
+              placeholder={t('PushToPlannerPopup.routeNamePlaceholder') || suggestedRouteName}
+              value={routeName}
+              onChange={(e) => setRouteName(e.target.value)}
+              InputLabelProps={{ sx: { color: "#ccc" } }}
+              inputProps={{ maxLength: 100 }}
+              sx={{
+                bgcolor: "#3a3a3a",
+                borderRadius: 1,
+                "& .MuiOutlinedInput-root": {
+                  color: "white",
+                  "& fieldset": { borderColor: "#4a4a4a" },
+                  "&:hover fieldset": { borderColor: "#6a6a6a" },
+                }
+              }}
+              helperText={
+                !isRouteNameValid
+                  ? (t('PushToPlannerPopup.routeNameRequired') || 'Please enter a route name')
+                  : " "
+              }
+              FormHelperTextProps={{ sx: { color: !isRouteNameValid ? "#ff6b35" : "#2b2b2b" } }}
+            />
+          </Box>
+
           <Typography variant="body2" sx={{ color: "#ccc", mb: 2, textAlign: "center" }}>
             {t('PushToPlannerPopup.selectSiteToUploadMessage') || 'Select a site to upload your AI-generated tasks and create a new route in the planner.'}
           </Typography>
@@ -447,7 +546,7 @@ export default function PushToPlannerPopup({
             variant="contained"
             startIcon={isUploading ? <CircularProgress size={16} color="inherit" /> : <CloudUploadIcon />}
             onClick={handleOpenSitePopup}
-            disabled={isUploading || tasks.length === 0}
+            disabled={isUploading || tasks.length === 0 || !isRouteNameValid}
             sx={{
               bgcolor: "#4a9eff",
               "&:hover": { bgcolor: "#3a8eef" },
@@ -500,6 +599,43 @@ export default function PushToPlannerPopup({
         </DialogTitle>
         
         <DialogContent sx={{ p: 0 }}>
+          {/* Search bar */}
+          <Box sx={{ p: 2, borderBottom: "1px solid #4a4a4a", position: "sticky", top: 0, bgcolor: "#2b2b2b", zIndex: 1 }}>
+            <TextField
+              fullWidth
+              size="small"
+              placeholder={t('PushToPlannerPopup.searchSites') || 'Search sites'}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon sx={{ color: "#aaa" }} />
+                  </InputAdornment>
+                ),
+                endAdornment: searchTerm ? (
+                  <InputAdornment position="end">
+                    <IconButton size="small" onClick={() => setSearchTerm("")}>
+                      <ClearIcon sx={{ color: "#aaa" }} />
+                    </IconButton>
+                  </InputAdornment>
+                ) : null
+              }}
+              sx={{
+                bgcolor: "#3a3a3a",
+                input: { color: "white" },
+                "& .MuiOutlinedInput-notchedOutline": { borderColor: "#4a4a4a" },
+                "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#6a6a6a" }
+              }}
+            />
+            <Typography variant="caption" sx={{ color: "#aaa", mt: 1, display: "block" }}>
+              {loadingSites
+                ? (t('PushToPlannerPopup.loadingSites') || 'Loading sites...')
+                : `${filteredSites.length} ${(t('PushToPlannerPopup.results') || 'results')}`
+              }
+            </Typography>
+          </Box>
+
           {loadingSites ? (
             <Box sx={{ 
               display: "flex", 
@@ -511,7 +647,7 @@ export default function PushToPlannerPopup({
             </Box>
           ) : (
             <List>
-              {sites.length === 0 ? (
+              {filteredSites.length === 0 ? (
                 <ListItem>
                   <ListItemText 
                     primary={t('PushToPlannerPopup.noSitesFound') || 'No sites found'}
@@ -519,40 +655,42 @@ export default function PushToPlannerPopup({
                   />
                 </ListItem>
               ) : (
-                sites.map((site) => (
-                  <ListItemButton
-                    key={site.id}
-                    onClick={() => handleSelectSite(site)}
-                    sx={{
-                      "&:hover": { bgcolor: "#3a3a3a" },
-                      borderBottom: "1px solid #4a4a4a"
-                    }}
-                  >
-                    <Avatar 
-                      src={site.picture_url} 
-                      sx={{ 
-                        width: 40, 
-                        height: 40, 
-                        mr: 2,
-                        bgcolor: "#4a9eff"
+                filteredSites.map((site) => {
+                  return (
+                    <ListItemButton
+                      key={site.id}
+                      onClick={() => handleSelectSite(site)}
+                      sx={{
+                        "&:hover": { bgcolor: "#3a3a3a" },
+                        borderBottom: "1px solid #4a4a4a"
                       }}
                     >
-                      <BusinessIcon />
-                    </Avatar>
-                    <ListItemText
-                      primary={
-                        <Typography sx={{ color: "white", fontWeight: "bold" }}>
-                          {site.name}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography sx={{ color: "#ccc", fontSize: "0.85rem" }}>
-                          {site.description || site.nameInEnglish}
-                        </Typography>
-                      }
-                    />
-                  </ListItemButton>
-                ))
+                      <Avatar 
+                        src={site.picture_url} 
+                        sx={{ 
+                          width: 40, 
+                          height: 40, 
+                          mr: 2,
+                          bgcolor: "#4a9eff"
+                        }}
+                      >
+                        <BusinessIcon />
+                      </Avatar>
+                      <ListItemText
+                        primary={
+                          <Typography sx={{ color: "white", fontWeight: "bold" }}>
+                            {site.name}
+                          </Typography>
+                        }
+                        secondary={
+                          <Typography sx={{ color: "#ccc", fontSize: "0.85rem" }}>
+                            {site.description || site.nameInEnglish}
+                          </Typography>
+                        }
+                      />
+                    </ListItemButton>
+                  );
+                })
               )}
             </List>
           )}

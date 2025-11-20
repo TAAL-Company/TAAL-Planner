@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Box, IconButton, CircularProgress, Tooltip } from "@mui/material";
-import RefreshIcon from '@mui/icons-material/Refresh';
-import ImageIcon from '@mui/icons-material/Image';
+import RefreshIcon from "@mui/icons-material/Refresh";
+import ImageIcon from "@mui/icons-material/Image";
 import { useTranslation } from "react-i18next";
-import { usePollinationsImage } from '@pollinations/react';
+import { useTranslator } from "../../../Utility/TranslationProvider";
 
-export default function TaskImage({ 
-  tasks, 
+export default function TaskImage({
+  tasks,
   setTasks,
   task,
   taskIndex,
@@ -14,56 +14,63 @@ export default function TaskImage({
   imagePromptSuffix,
   imageWidth = 400,
   imageHeight = 300,
-  imageModel = 'flux',
+  imageModel = "flux",
   imageNoLogo = true,
-  imageSeed = 42 // Add imageSeed prop with default
+  imageSeed = 42,
+  trigger = 0, // new: parent can trigger generation
 }) {
   const { t } = useTranslation();
+  const { translate } = useTranslator();
 
-  // Local state for this task only
   const [isGenerating, setIsGenerating] = useState(false);
-  const [imagePrompt, setImagePrompt] = useState(null);
-  const [seed, setSeed] = useState(imageSeed); // Initialize with configurable seed
+  const [seed, setSeed] = useState(imageSeed);
 
-  // Call the hook at the top level
-  const imageUrl = usePollinationsImage(
-    imagePrompt,
-    imagePrompt
-      ? {
-        width: imageWidth,
-        height: imageHeight,
-        seed: seed, // Use dynamic seed
-        model: imageModel,
-        nologo: imageNoLogo
-      }
-      : undefined
-  );
-
-  // Effect to update the task with the generated image
-  useEffect(() => {
-    if (imageUrl && isGenerating) {
-      const updatedTasks = [...tasks];
-      updatedTasks[taskIndex].picture_url = imageUrl;
-      setTasks(updatedTasks);
-      setIsGenerating(false);
-      setImagePrompt(null);
-    }
-    // eslint-disable-next-line
-  }, [imageUrl]);
-
-  // Function to trigger image generation for this task
-  const GenerateTaskImage = () => {
-    const prompt = `${imagePromptPrefix}${task.title}. ${task.subtitle || ''}.${imagePromptSuffix}`;
-    
-    // Generate a new random seed for regeneration, but start from the configured seed
-    const newSeed = Math.floor(Math.random() * 1000000) + imageSeed;
-    setSeed(newSeed);
-    
-    setImagePrompt(prompt);
+  // Main image generation logic (Postman-like)
+  const GenerateTaskImage = async () => {
     setIsGenerating(true);
+
+    let title = task?.title || "";
+    let subtitle = task?.subtitle || "";
+
+    try {
+      const tTitle = await translate(title, "en");
+      const tSubtitle = await translate(subtitle, "en");
+      title = tTitle || title;
+      subtitle = tSubtitle || subtitle;
+    } catch (e) {
+      console.error("Translation error:", e);
+    }
+
+    // Construct the prompt
+    const prompt = `${imagePromptPrefix}: ${title}. ${subtitle}.${imagePromptSuffix}`;
+    const encodedPrompt = encodeURIComponent(prompt);
+
+    // Increase seed slightly for regeneration
+    const newSeed = seed + 1;
+    setSeed(newSeed);
+
+    // Construct direct image URL (fast — same as Postman)
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${imageWidth}&height=${imageHeight}&model=${imageModel}&nologo=${imageNoLogo}&seed=${newSeed}`;
+
+    console.log("Generated image URL:", imageUrl);
+
+    // Update the task immediately
+    const updatedTasks = [...tasks];
+    updatedTasks[taskIndex].picture_url = imageUrl;
+    setTasks(updatedTasks);
+
+    setIsGenerating(false);
   };
 
-  const hasImage = task.picture_url;
+  const hasImage = !!task.picture_url;
+
+  // Only generate on trigger if the task is missing an image
+  useEffect(() => {
+    if (trigger > 0 && !task?.picture_url && !isGenerating) {
+      GenerateTaskImage();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [trigger]);
 
   return (
     <Box
@@ -91,7 +98,7 @@ export default function TaskImage({
               height: "100%",
               objectFit: "cover",
               borderRadius: "4px",
-              filter: isGenerating ? "blur(2px)" : "none"
+              filter: isGenerating ? "blur(2px)" : "none",
             }}
           />
           <Box
@@ -109,28 +116,24 @@ export default function TaskImage({
               transition: "opacity 0.2s",
               cursor: "pointer",
               zIndex: 2,
-              "&:hover": {
-                opacity: 1,
-              }
+              "&:hover": { opacity: 1 },
             }}
             onClick={GenerateTaskImage}
           >
-            <Tooltip title={t('TextGenerative.regenerate_image')}>
-              <RefreshIcon 
-                sx={{ 
-                  color: "white", 
+            <Tooltip title={t("TextGenerative.regenerate_image")}>
+              <RefreshIcon
+                sx={{
+                  color: "white",
                   fontSize: 24,
-                  "&:hover": {
-                    transform: "scale(1.1)",
-                  },
-                  transition: "transform 0.2s ease"
-                }} 
+                  "&:hover": { transform: "scale(1.1)" },
+                  transition: "transform 0.2s ease",
+                }}
               />
             </Tooltip>
           </Box>
         </Box>
       ) : (
-        <Tooltip title={t('TextGenerative.generate_image')}>
+        <Tooltip title={t("TextGenerative.generate_image")}>
           <IconButton
             size="small"
             onClick={GenerateTaskImage}
@@ -141,9 +144,7 @@ export default function TaskImage({
                 bgcolor: "rgba(74, 158, 255, 0.1)",
                 transform: "scale(1.1)",
               },
-              "&:disabled": {
-                color: "#666",
-              },
+              "&:disabled": { color: "#666" },
               transition: "all 0.2s ease",
             }}
           >
@@ -151,7 +152,7 @@ export default function TaskImage({
           </IconButton>
         </Tooltip>
       )}
-      
+
       {isGenerating && (
         <Box
           sx={{
@@ -173,10 +174,7 @@ export default function TaskImage({
             },
           }}
         >
-          <CircularProgress 
-            size={20} 
-            sx={{ color: "#4a9eff" }} 
-          />
+          <CircularProgress size={20} sx={{ color: "#4a9eff" }} />
         </Box>
       )}
     </Box>

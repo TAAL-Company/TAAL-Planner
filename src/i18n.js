@@ -299,7 +299,14 @@ const resources = {
         routeCreatedSuccessfully: "Route created successfully",
         errorCreatingRoute: "Error creating route",
         allDataUploadedSuccessfully: "All data uploaded successfully",
-        errorProcessingTasks: "Error processing tasks"
+        errorProcessingTasks: "Error processing tasks",
+        loadingSites: "Loading sites...",
+        searchSites: "Search sites",
+        results: "results",
+        // NEW:
+        routeName: "Route Name",
+        routeNamePlaceholder: "e.g., Morning chores route",
+        routeNameRequired: "Please enter a route name"
       }
     },
   },
@@ -583,7 +590,14 @@ const resources = {
         routeCreatedSuccessfully: "המסלול נוצר בהצלחה",
         errorCreatingRoute: "שגיאה ביצירת מסלול",
         allDataUploadedSuccessfully: "כל הנתונים הועלו בהצלחה",
-        errorProcessingTasks: "שגיאה בעיבוד משימות"
+        errorProcessingTasks: "שגיאה בעיבוד משימות",
+        loadingSites: "טוען אתרים...",
+        searchSites: "חפש אתרים",
+        results: "תוצאות",
+        // NEW:
+        routeName: "שם מסלול",
+        routeNamePlaceholder: "לדוגמה, מסלול מטלות הבוקר",
+        routeNameRequired: "נא להכניס שם למסלול"
       }
     }
   },
@@ -867,7 +881,14 @@ const resources = {
         routeCreatedSuccessfully: "تم إنشاء المسار بنجاح",
         errorCreatingRoute: "خطأ في إنشاء المسار",
         allDataUploadedSuccessfully: "تم رفع جميع البيانات بنجاح",
-        errorProcessingTasks: "خطأ في معالجة المهام"
+        errorProcessingTasks: "خطأ في معالجة المهام",
+        loadingSites: "جارٍ تحميل المواقع...",
+        searchSites: "ابحث عن مواقع",
+        results: "نتائج",
+        // NEW:
+        routeName: "اسم المسار",
+        routeNamePlaceholder: "مثال: مسار مهام الصباح",
+        routeNameRequired: "يرجى إدخال اسم المسار"
       }
     }
   },
@@ -1151,7 +1172,14 @@ const resources = {
         routeCreatedSuccessfully: "Маршрут успешно создан",
         errorCreatingRoute: "Ошибка создания маршрута",
         allDataUploadedSuccessfully: "Все данные успешно загружены",
-        errorProcessingTasks: "Ошибка обработки задач"
+        errorProcessingTasks: "Ошибка обработки задач",
+        loadingSites: "Загрузка сайтов...",
+        searchSites: "Поиск сайтов",
+        results: "результатов",
+        // NEW:
+        routeName: "Название маршрута",
+        routeNamePlaceholder: "например, маршрут утренних дел",
+        routeNameRequired: "Пожалуйста, введите название маршрута"
       }
     }
   }

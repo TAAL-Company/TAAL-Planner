@@ -5,7 +5,8 @@ import LoadingSkeleton from './LoadingSkeleton';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import { useTranslation } from 'react-i18next';
 
-export default function ChatContainer({ messages, loading, direction, isRTL, isTableOpen, onShowTasks, tasksCount, complexity, getComplexityColor }) {
+// Add userInputs prop
+export default function ChatContainer({ messages, userInputs = [], loading, direction, isRTL, isTableOpen, onShowTasks, getComplexityColor }) {
   const { t } = useTranslation();
   const chatContainerRef = useRef(null);
 
@@ -60,6 +61,19 @@ export default function ChatContainer({ messages, loading, direction, isRTL, isT
     }
   };
 
+  // Function to extract original input from enhanced message
+  const extractOriginalInput = (message, index) => {
+    // If we have the original input stored, use it
+    const userInputIndex = Math.floor(index / 2); // Every 2 messages (user + assistant) = 1 input
+    if (userInputs[userInputIndex]) {
+      return userInputs[userInputIndex];
+    }
+    
+    // Fallback: extract from "Input:" prefix if present
+    const match = message.match(/Input:\n([\s\S]*?)\n\nInstruction:/);
+    return match ? match[1] : message;
+  };
+  
   return (
     <Paper
       ref={chatContainerRef}
@@ -169,7 +183,16 @@ export default function ChatContainer({ messages, loading, direction, isRTL, isT
                 ) : (
                   /* Show regular message content for non-task messages */
                   <Box className="markdown-content">
-                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    {/* When rendering user messages: */}
+                    {msg.role === 'user' ? (
+                      <Box sx={{ /* existing styles */ }}>
+                        <Typography sx={{ /* existing styles */ }}>
+                          {extractOriginalInput(msg.content, index)}
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    )}
                   </Box>
                 )}
               </Paper>

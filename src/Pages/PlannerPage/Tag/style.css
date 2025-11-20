@@ -157,7 +157,8 @@
   text-align-last: end;
 }
 .nameStationBoard.english {
-  color: #ffffff00;
+  text-align-last : left;
+  right: -26px;
 }
 
 .nameStationBoardPhone {

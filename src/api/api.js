@@ -772,6 +772,20 @@ export const updateDataCognitiveProfile = async (
 
 };
 
+export const getAllCognitiveProfiles = async () => {
+  let cognitiveProfiles;
+
+  await get(
+    "https://prod-web-app0da5905.azurewebsites.net/cognitive-profiles"
+  ).then((res) => {
+    cognitiveProfiles = res.data;
+  });
+  console.log("res getAllCognitiveProfiles: ", cognitiveProfiles);
+
+  return cognitiveProfiles;
+};
+
+
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*~~~~~~~~~~~~~~~~~  Cognitive Requirements  ~~~~~~~~~*/
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -820,6 +834,22 @@ export function postTaskCognitiveRequirements(data) {
       // Handle errors
     });
 }
+
+export const getAllTaskCognitiveRequirements = async () => {
+  let allTaskRequirements;
+
+  await get(
+    "https://prod-web-app0da5905.azurewebsites.net/task-cognitive-requirements"
+  ).then((res) => {
+    allTaskRequirements = res.data;
+  });
+  console.log(
+    "res getAllTaskCognitiveRequirements: ",
+    allTaskRequirements
+  );
+
+  return allTaskRequirements;
+};
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*~~~~~~~~~~~~~~~~~  cognitive abillities  ~~~~~~~~*/
@@ -1565,31 +1595,58 @@ export const deleteLoop = async (loopId) => {
   return confirm;
 };
 
-export const getAllCognitiveProfiles = async () => {
-  let cognitiveProfiles;
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  Azure AI  ~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-  await get(
-    "https://prod-web-app0da5905.azurewebsites.net/cognitive-profiles"
-  ).then((res) => {
-    cognitiveProfiles = res.data;
+
+export const sendAzureChatMessage = async (messages) => {
+  const response = await axios.post(`${baseUrl}/api/azure-chat`, {
+    messages,
   });
-  console.log("res getAllCognitiveProfiles: ", cognitiveProfiles);
 
-  return cognitiveProfiles;
+  return response.data;
 };
 
-export const getAllTaskCognitiveRequirements = async () => {
-  let allTaskRequirements;
 
-  await get(
-    "https://prod-web-app0da5905.azurewebsites.net/task-cognitive-requirements"
-  ).then((res) => {
-    allTaskRequirements = res.data;
+const endpoint = process.env.REACT_APP_AZURE_OPENAI_ENDPOINT;
+const apiKey = process.env.REACT_APP_AZURE_OPENAI_API_KEY;
+const apiVersion = process.env.REACT_APP_AZURE_OPENAI_API_VERSION;
+const deployment = process.env.REACT_APP_AZURE_OPENAI_DEPLOYMENT;
+
+const buildUrl = () => {
+  if (!endpoint || !apiKey || !apiVersion || !deployment) {
+    throw new Error('Missing Azure OpenAI configuration');
+  }
+
+  const normalizedEndpoint = endpoint.endsWith('/')
+    ? endpoint.slice(0, -1)
+    : endpoint;
+
+  return `${normalizedEndpoint}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
+};
+
+export const createChatCompletion = async (messages, options = {}) => {
+  const response = await fetch(buildUrl(), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': apiKey,
+    },
+    body: JSON.stringify({
+      messages,
+      // temperature: options.temperature ?? 0.7,
+      // max_completion_tokens: options.maxTokens ?? 800,
+      // top_p: options.topP ?? 0.95,
+      // frequency_penalty: options.frequencyPenalty ?? 0,
+      // presence_penalty: options.presencePenalty ?? 0,
+    }),
   });
-  console.log(
-    "res getAllTaskCognitiveRequirements: ",
-    allTaskRequirements
-  );
 
-  return allTaskRequirements;
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Azure OpenAI error: ${response.status} ${text}`);
+  }
+
+  return response.json();
 };

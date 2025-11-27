@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Box, Typography, Icon, Button, Chip } from "@mui/material";
 import TaskIcon from '@mui/icons-material/Task';
 import { useTranslation } from "react-i18next";
-import { usePollinationsChat } from '@pollinations/react';
+// import { usePollinationsChat } from '@pollinations/react';
 import TaskTable from './TaskTable';
 import ChatContainer from './ChatContainer';
 import InputContainer from './InputContainer';
 import SettingsDialog from './SettingsDialog';
 import "../../../i18n";
+import { createChatCompletion } from "../../../api/api";
 
 export default function SearchUI() {
   const { t } = useTranslation();
@@ -29,7 +30,7 @@ export default function SearchUI() {
   );
   const [imageWidth, setImageWidth] = useState(400);
   const [imageHeight, setImageHeight] = useState(300);
-  const [imageModel, setImageModel] = useState('flux');
+  const [imageModel, setImageModel] = useState('turbo');
   const [imageNoLogo, setImageNoLogo] = useState(true);
   const [imageSeed, setImageSeed] = useState(23297);
 
@@ -114,23 +115,50 @@ Write tasks so they can be understood by workers with varied cognitive abilities
   // Complete system prompt combining custom and fixed parts
   const systemPrompt = `${customSystemPrompt} ${fixedJsonStructure}`;
 
-  const { sendUserMessage, messages, loading: hookLoading } = usePollinationsChat([
-    { role: "system", content: systemPrompt }
-  ], {
-    seed: 42,
-    model: 'openai'
-  });
+  const [messages, setMessages] = useState([{ role: "system", content: systemPrompt }]);
+  const messagesRef = useRef(messages);
+
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
+
+  useEffect(() => {
+    setMessages((prev) => {
+      const rest = prev[0]?.role === "system" ? prev.slice(1) : prev;
+      return [{ role: "system", content: systemPrompt }, ...rest];
+    });
+  }, [systemPrompt]);
 
   // Add state to track original user inputs
   const [userInputs, setUserInputs] = useState([]);
 
-  // Sync our loading state with the hook's loading state
-  useEffect(() => {
-    if (hookLoading !== undefined) {
-      setLoading(hookLoading);
-      console.log("Hook loading state:", hookLoading);
+  const sendMessageToAzure = async (content) => {
+    const userMessage = { role: "user", content };
+    const updatedMessages = [...messagesRef.current, userMessage];
+    setMessages(updatedMessages);
+    setLoading(true);
+
+    try {
+      const response = await createChatCompletion(updatedMessages, { maxTokens: 800 });
+      const assistantMessage = response?.choices?.[0]?.message;
+
+      if (assistantMessage) {
+        setMessages((prev) => [...prev, assistantMessage]);
+      }
+    } catch (error) {
+      console.error('Azure OpenAI request failed:', error);
+    } finally {
+      setLoading(false);
     }
-  }, [hookLoading]);
+  };
+
+  // // Sync our loading state with the hook's loading state
+  // useEffect(() => {
+  //   if (hookLoading !== undefined) {
+  //     setLoading(hookLoading);
+  //     console.log("Hook loading state:", hookLoading);
+  //   }
+  // }, [hookLoading]);
 
   useEffect(() => {
     if (messages[messages.length - 1]?.role === 'assistant') {
@@ -199,7 +227,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
         // Track original inputs to filter them in ChatContainer
         setUserInputs(prev => [...prev, originalInput]);
 
-        await sendUserMessage(messageWithComplexity);
+        await sendMessageToAzure(messageWithComplexity);
         setInput('');
       } catch (error) {
         console.error('Error sending message:', error);

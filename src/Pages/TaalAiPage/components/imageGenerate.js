@@ -14,7 +14,7 @@ export default function TaskImage({
   imagePromptSuffix,
   imageWidth = 400,
   imageHeight = 300,
-  imageModel = "flux",
+  imageModel = "turbo",
   imageNoLogo = true,
   imageSeed = 42,
   trigger = 0, // new: parent can trigger generation
@@ -50,7 +50,7 @@ export default function TaskImage({
     setSeed(newSeed);
 
     // Construct direct image URL (fast — same as Postman)
-    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=${imageWidth}&height=${imageHeight}&model=${imageModel}&nologo=${imageNoLogo}&seed=${newSeed}`;
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?token=${process.env.REACT_APP_POLLINATIONS}&width=${imageWidth}&height=${imageHeight}&model=${imageModel}&nologo=${imageNoLogo}&seed=${newSeed}`;
 
     console.log("Generated image URL:", imageUrl);
 

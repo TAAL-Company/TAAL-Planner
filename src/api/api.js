@@ -1614,6 +1614,11 @@ const apiKey = process.env.REACT_APP_AZURE_OPENAI_API_KEY;
 const apiVersion = process.env.REACT_APP_AZURE_OPENAI_API_VERSION;
 const deployment = process.env.REACT_APP_AZURE_OPENAI_DEPLOYMENT;
 
+const endpointimage = process.env.REACT_APP_AZURE_OPENAI_IMAGE_ENDPOINT;
+const deploymentimage = process.env.REACT_APP_AZURE_OPENAI_IMAGE_DEPLOYMENT;
+const apikeyimage = process.env.REACT_APP_AZURE_OPENAI_IMAGE_API_KEY;
+const apiVersionimage = process.env.REACT_APP_AZURE_OPENAI_IMAGE_API_VERSION;
+
 const buildUrl = () => {
   if (!endpoint || !apiKey || !apiVersion || !deployment) {
     throw new Error('Missing Azure OpenAI configuration');
@@ -1624,6 +1629,18 @@ const buildUrl = () => {
     : endpoint;
 
   return `${normalizedEndpoint}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
+};
+
+const buildImageUrl = () => {
+  if (!endpointimage || !apikeyimage || !apiVersionimage || !deploymentimage) {
+    throw new Error('Missing Azure OpenAI image configuration');
+  }
+
+  const normalizedEndpoint = endpointimage.endsWith('/')
+    ? endpointimage.slice(0, -1)
+    : endpointimage;
+
+  return `${normalizedEndpoint}/openai/deployments/${deploymentimage}/images/generations?api-version=${apiVersionimage}`;
 };
 
 export const createChatCompletion = async (messages, options = {}) => {
@@ -1649,4 +1666,39 @@ export const createChatCompletion = async (messages, options = {}) => {
   }
 
   return response.json();
+};
+
+export const generateAzureImage = async (
+  prompt,
+  { size = '1024x1024', quality = 'standard', style = 'vivid', n = 1 } = {}
+) => {
+  const response = await fetch(buildImageUrl(), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'api-key': apikeyimage,
+    },
+    body: JSON.stringify({
+      prompt,
+      size,
+      quality,
+      style,
+      n,
+      response_format: 'url',
+    }),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Azure OpenAI image error: ${response.status} ${errText}`);
+  }
+
+  const data = await response.json();
+  const imageUrl = data?.data?.[0]?.url;
+
+  if (!imageUrl) {
+    throw new Error('Azure OpenAI image response missing URL');
+  }
+
+  return imageUrl;
 };

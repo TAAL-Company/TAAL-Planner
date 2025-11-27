@@ -4,6 +4,7 @@ import RefreshIcon from "@mui/icons-material/Refresh";
 import ImageIcon from "@mui/icons-material/Image";
 import { useTranslation } from "react-i18next";
 import { useTranslator } from "../../../Utility/TranslationProvider";
+import { generateAzureImage } from "../../../api/api";
 
 export default function TaskImage({
   tasks,
@@ -41,25 +42,31 @@ export default function TaskImage({
       console.error("Translation error:", e);
     }
 
-    // Construct the prompt
     const prompt = `${imagePromptPrefix}: ${title}. ${subtitle}.${imagePromptSuffix}`;
-    const encodedPrompt = encodeURIComponent(prompt);
 
-    // Increase seed slightly for regeneration
-    const newSeed = seed + 1;
-    setSeed(newSeed);
+    // Azure DALL·E only supports square presets (256/512/1024), clamp requested size accordingly
+    const targetSize = `${Math.min(Math.max(imageWidth, 256), 1024)}x${Math.min(
+      Math.max(imageHeight, 256),
+      1024
+    )}`;
 
-    // Construct direct image URL (fast — same as Postman)
-    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?token=${process.env.REACT_APP_POLLINATIONS}&width=${imageWidth}&height=${imageHeight}&model=${imageModel}&nologo=${imageNoLogo}&seed=${newSeed}`;
+    try {
+      const imageUrl = await generateAzureImage(prompt, {
+        size: "1024x1024",
+        style: "natural",
+        quality: "standard",
+      });
 
-    console.log("Generated image URL:", imageUrl);
+      console.log("Generated Azure image URL:", imageUrl);
 
-    // Update the task immediately
-    const updatedTasks = [...tasks];
-    updatedTasks[taskIndex].picture_url = imageUrl;
-    setTasks(updatedTasks);
-
-    setIsGenerating(false);
+      const updatedTasks = [...tasks];
+      updatedTasks[taskIndex].picture_url = imageUrl;
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error("Azure image generation failed:", error);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const hasImage = !!task.picture_url;

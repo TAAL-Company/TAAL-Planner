@@ -13,11 +13,11 @@ export default function TaskImage({
   taskIndex,
   imagePromptPrefix,
   imagePromptSuffix,
-  imageWidth = 400,
-  imageHeight = 300,
-  imageModel = "turbo",
-  imageNoLogo = true,
-  imageSeed = 42,
+  imageWidth,
+  imageHeight,
+  imageModel,
+  imageNoLogo ,
+  imageSeed ,
   trigger = 0, // new: parent can trigger generation
 }) {
   const { t } = useTranslation();
@@ -45,16 +45,14 @@ export default function TaskImage({
     const prompt = `${imagePromptPrefix}: ${title}. ${subtitle}.${imagePromptSuffix}`;
 
     // Azure DALL·E only supports square presets (256/512/1024), clamp requested size accordingly
-    const targetSize = `${Math.min(Math.max(imageWidth, 256), 1024)}x${Math.min(
-      Math.max(imageHeight, 256),
-      1024
-    )}`;
+    const targetSize = `${imageWidth}x${imageHeight}`;
 
     try {
       const imageUrl = await generateAzureImage(prompt, {
-        size: "1024x1024",
-        style: "natural",
+        size: targetSize,
+        style: imageModel,
         quality: "standard",
+        n: imageSeed,
       });
 
       console.log("Generated Azure image URL:", imageUrl);

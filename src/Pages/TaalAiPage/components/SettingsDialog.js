@@ -51,9 +51,9 @@ export default function SettingsDialog({
     setCustomSystemPrompt(defaultEditablePrompt);
     setImagePromptPrefix('A highly realistic photo of a person performing the task:');
     setImagePromptSuffix('The scene should look natural and immersive, fitting the task context (e.g., office, workshop, or classroom). Use natural lighting, realistic details, and authentic atmosphere. Ultra-realistic, cinematic composition, shallow depth of field, detailed textures, and no visible text or written words.');
-    setImageWidth(400);
-    setImageHeight(300);
-    setImageModel('flux');
+    setImageWidth(1024);
+    setImageHeight(1024);
+    setImageModel("natural");
     setImageNoLogo(true);
     setImageSeed(432);
   };
@@ -185,10 +185,10 @@ export default function SettingsDialog({
                 label={t('TextGenerative.width')}
                 type="number"
                 value={imageWidth}
-                onChange={(e) => setImageWidth(parseInt(e.target.value) || 400)}
+                onChange={(e) => setImageWidth((e.target.value))}
                 variant="outlined"
                 size="small"
-                inputProps={{ min: 100, max: 1024 }}
+                // inputProps={{ min: 100, max: 1024 }}
                 sx={{
                   flex: 1,
                   "& .MuiOutlinedInput-root": {
@@ -208,10 +208,10 @@ export default function SettingsDialog({
                 label={t('TextGenerative.height')}
                 type="number"
                 value={imageHeight}
-                onChange={(e) => setImageHeight(parseInt(e.target.value) || 300)}
+                onChange={(e) => setImageHeight((e.target.value))}
                 variant="outlined"
                 size="small"
-                inputProps={{ min: 100, max: 1024 }}
+                // inputProps={{ min: 100, max: 1024 }}
                 sx={{
                   flex: 1,
                   "& .MuiOutlinedInput-root": {
@@ -231,7 +231,7 @@ export default function SettingsDialog({
                 label={t('TextGenerative.seed')}
                 type="number"
                 value={imageSeed}
-                onChange={(e) => setImageSeed(parseInt(e.target.value) || 42)}
+                onChange={(e) => setImageSeed(parseInt(e.target.value))}
                 variant="outlined"
                 size="small"
                 inputProps={{ min: 1, max: 1000000 }}
@@ -285,12 +285,12 @@ export default function SettingsDialog({
                   },
                 }}
               >
-                <option value="flux">{t('TextGenerative.flux')}</option>
-                <option value="turbo">{t('TextGenerative.turbo')}</option>
-                <option value="midjourney">{t('TextGenerative.midjourney')}</option>
+                <option value="natural">{('natural')}</option>
+                <option value="vivid">{t('vivid')}</option>
+                {/* <option value="midjourney">{t('TextGenerative.midjourney')}</option> */}
               </TextField>
 
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <input
                   type="checkbox"
                   id="nologo-checkbox"
@@ -304,7 +304,7 @@ export default function SettingsDialog({
                 <label htmlFor="nologo-checkbox" style={{ color: "#ccc", cursor: "pointer" }}>
                   {t('TextGenerative.noLogo')}
                 </label>
-              </Box>
+              </Box> */}
             </Box>
           </Box>
 

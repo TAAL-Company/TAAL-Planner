@@ -28,19 +28,18 @@ export default function SearchUI() {
   const [imagePromptSuffix, setImagePromptSuffix] = useState(
     'The scene should look natural and immersive, fitting the task context (e.g., office, workshop, or classroom). Use natural lighting, realistic details, and authentic atmosphere. Ultra-realistic, cinematic composition, shallow depth of field, detailed textures, and no visible text or written words.'
   );
-  const [imageWidth, setImageWidth] = useState(400);
-  const [imageHeight, setImageHeight] = useState(300);
-  const [imageModel, setImageModel] = useState('turbo');
+  const [imageWidth, setImageWidth] = useState(1024);
+  const [imageHeight, setImageHeight] = useState(1024);
+  const [imageModel, setImageModel] = useState('natural');
   const [imageNoLogo, setImageNoLogo] = useState(true);
-  const [imageSeed, setImageSeed] = useState(23297);
+  const [imageSeed, setImageSeed] = useState(1);
 
   // Get direction for RTL/LTR support
   const direction = t('Direction');
   const isRTL = direction === 'rtl';
 
   // Default editable part of system prompt
-  const defaultEditablePrompt = `
-TAAL Internal AI Route Builder — System Message
+  const defaultEditablePrompt = `TAAL Internal AI Route Builder — System Message
 
 Role:
 You are TAAL's Internal AI Route Builder, an expert system that converts job descriptions or structured Excel inputs into production-ready task breakdowns for the TAAL platform.

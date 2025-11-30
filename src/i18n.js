@@ -261,9 +261,6 @@ const resources = {
         seed: "Seed",
         model: "Model",
         noLogo: "No Logo",
-        flux: "Flux",
-        turbo: "Turbo",
-        midjourney: "Midjourney"
       },
 
       // Add LoopPopup translations
@@ -843,9 +840,6 @@ const resources = {
         seed: "البذور",
         model: "النموذج",
         noLogo: "بدون شعار",
-        flux: "Flux",
-        turbo: "Turbo",
-        midjourney: "Midjourney"
       },
 
       // Add LoopPopup translations (Arabic)
@@ -1134,9 +1128,6 @@ const resources = {
         seed: "Зерно",
         model: "Модель", 
         noLogo: "Без логотипа",
-        flux: "Flux",
-        turbo: "Turbo",
-        midjourney: "Midjourney"
       },
 
       // Add LoopPopup translations (Russian)

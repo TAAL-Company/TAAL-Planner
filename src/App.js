@@ -31,6 +31,7 @@ import Plannerpage from './planner/plannerpage';
 
 import { NotificationProvider } from "./components/Notification/NotificationProvider";
 import { TranslationProvider } from './Utility/TranslationProvider';
+import { FormsPage } from './Pages/FormsPage';
 
 console.warn(`
 ████████  █████   █████  ██          ██████  ███████ ██    ██ 
@@ -78,6 +79,7 @@ function App() {
                       <Route path='/dev' component={Plannerpage}></Route>
                       <Route path='/subjects' component={Community}></Route>
                       <Route path='/TAAL_Ai' component={TaalAI}></Route>
+                      <Route path='/FormsPage' component={FormsPage}></Route>
                     </Switch>
                   </div>
                 </Router>

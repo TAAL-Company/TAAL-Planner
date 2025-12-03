@@ -81,7 +81,7 @@ const DataTableRTL = ({
   const [updateTaskCognitiveRequirements, setUpdateTaskCognitiveRequirements] =
     React.useState([]);
 
-  useEffect(() => {}, [columns, rows]);
+  useEffect(() => { }, [columns, rows]);
 
   const [openDialogTrueFalse, setOpenDialogTrueFalse] = React.useState(false);
   const [groupName, setGroupName] = React.useState('');
@@ -324,14 +324,11 @@ const DataTableRTL = ({
             borderRadius: '6px',
             border: "1px solid gray"
           },
-          "& .MuiDataGrid-cell": {
-             border:'solid grey 1px',
-            },
           '& .MuiDataGrid-cellContent': {
             fontFamily: 'Gotham Black, sans-serif',
             fontSize: 'medium',
-            marginRight:'10px',
-            margin:'10px',
+            marginRight: '10px',
+            margin: '10px',
           },
 
           '& .MuiButton-startIcon': {
@@ -346,14 +343,14 @@ const DataTableRTL = ({
           //           "& .css-1e2bxag-MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer":
 
           '& .MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer':
-            {
-              borderBottom: 'solid white 3px',
-              justifyContent: 'center',
-              
-            },
-            '& .css-lm239v-MuiDataGrid-root .MuiDataGrid-columnHeader, .css-lm239v-MuiDataGrid-root .MuiDataGrid-cell': {
-              padding: '5px',
-            }
+          {
+            borderBottom: 'solid white 3px',
+            justifyContent: 'center',
+
+          },
+          '& .css-lm239v-MuiDataGrid-root .MuiDataGrid-columnHeader, .css-lm239v-MuiDataGrid-root .MuiDataGrid-cell': {
+            padding: '5px',
+          }
 
           // .css-1e2bxag-MuiDataGrid-root .MuiDataGrid-columnHeader--filledGroup .MuiDataGrid-columnHeaderTitleContainer
           // border-bottom: solid #1976d2 1px;
@@ -377,7 +374,7 @@ const DataTableRTL = ({
             direction: 'rtl',
             '& .MuiDataGrid-virtualScroller': {
               overflow: 'unset !important',
-              
+
             },
 
             '& .MuiDataGrid-columnHeaders': {
@@ -416,10 +413,17 @@ const DataTableRTL = ({
               color: 'white',
             },
             '& .MuiDataGrid-menuIconButton > .MuiSvgIcon-root , .MuiDataGrid-sortIcon':
-              {
-                color: 'white !important',
-                opacity: 1,
-              },
+            {
+              color: 'white !important',
+              opacity: 1,
+            },
+            "& .MuiDataGrid-cell": {
+              border: "solid grey 1px",
+              minWidth: "auto",
+              maxWidth: "none",
+              minHeight: "auto",
+              maxHeight: "none",
+            }
           }}
           experimentalFeatures={
             ({ newEditingApi: true }, { columnGrouping: true })

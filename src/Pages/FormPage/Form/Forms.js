@@ -750,7 +750,7 @@ function Forms() {
     {
       field: 'task',
       headerName: 'משימה',
-      width: 150,
+      width: 200,
       editable: false,
       headerAlign: 'center',
       align: 'left',
@@ -809,90 +809,90 @@ function Forms() {
         </div>
       ),
     },
-    {
-      field: 'intervention',
-      headerName: 'התאמה',
-      width: 180,
-      editable: true,
-      headerAlign: 'center',
-      align: 'left',
-      renderCell: (params) => {
-        const handleEdit = (newValue) => {
-          // Step 3: Handle the editing logic
-          const data = params.api.getRow(params.id);
-          data.intervention = newValue;
-          params.api.updateRow(data);
-        };
+    // {
+    //   field: 'intervention',
+    //   headerName: 'התאמה',
+    //   width: 180,
+    //   editable: true,
+    //   headerAlign: 'center',
+    //   align: 'left',
+    //   renderCell: (params) => {
+    //     const handleEdit = (newValue) => {
+    //       // Step 3: Handle the editing logic
+    //       const data = params.api.getRow(params.id);
+    //       data.intervention = newValue;
+    //       params.api.updateRow(data);
+    //     };
 
-        if (params.editing) {
-          // Show this when the cell is being edited
-          return (
-            <input
-              type='text'
-              value={params.row.intervention}
-              onChange={(e) => handleEdit(e.target.value)}
-            />
-          );
-        }
-        if (params.row.intervention === ' ') {
-          return (
-            <div
-              style={{
-                background: 'rgb(220,220,220,0.7)',
-                width: '100%',
-                height: '100%',
-              }}
-            ></div>
-          );
-        } else {
-          return (
-            <div style={{ textAlign: 'right', fontSize: '1rem' }}>
-              {params.row.intervention}
-            </div>
-          );
-        }
-      },
-    },
-    {
-      field: 'Alternatives',
-      headerName: 'חלופה',
-      width: 250,
-      editable: true,
-      headerAlign: 'center',
-      align: 'left',
-      renderCell: (params) => {
-        if (params.row.Alternatives === ' ') {
-          return (
-            <div
-              style={{
-                background: 'rgb(220,220,220,0.7)',
-                width: '100%',
-                height: '100%',
-              }}
-            ></div>
-          );
-        } else {
-          return (
-            <div style={{ textAlign: 'right', fontSize: '1rem' }}>
-              {params.row.Alternatives}
-            </div>
-          );
-        }
-      },
-    },
-    {
-      field: 'explaination',
-      headerName: 'הסבר',
-      width: 250,
-      editable: false,
-      headerAlign: 'center',
-      align: 'left',
-      renderCell: (params) => (
-        <div style={{ textAlign: 'right', fontSize: '1rem' }}>
-          {params.row.explaination}
-        </div>
-      ),
-    },
+    //     if (params.editing) {
+    //       // Show this when the cell is being edited
+    //       return (
+    //         <input
+    //           type='text'
+    //           value={params.row.intervention}
+    //           onChange={(e) => handleEdit(e.target.value)}
+    //         />
+    //       );
+    //     }
+    //     if (params.row.intervention === ' ') {
+    //       return (
+    //         <div
+    //           style={{
+    //             background: 'rgb(220,220,220,0.7)',
+    //             width: '100%',
+    //             height: '100%',
+    //           }}
+    //         ></div>
+    //       );
+    //     } else {
+    //       return (
+    //         <div style={{ textAlign: 'right', fontSize: '1rem' }}>
+    //           {params.row.intervention}
+    //         </div>
+    //       );
+    //     }
+    //   },
+    // },
+    // {
+    //   field: 'Alternatives',
+    //   headerName: 'חלופה',
+    //   width: 250,
+    //   editable: true,
+    //   headerAlign: 'center',
+    //   align: 'left',
+    //   renderCell: (params) => {
+    //     if (params.row.Alternatives === ' ') {
+    //       return (
+    //         <div
+    //           style={{
+    //             background: 'rgb(220,220,220,0.7)',
+    //             width: '100%',
+    //             height: '100%',
+    //           }}
+    //         ></div>
+    //       );
+    //     } else {
+    //       return (
+    //         <div style={{ textAlign: 'right', fontSize: '1rem' }}>
+    //           {params.row.Alternatives}
+    //         </div>
+    //       );
+    //     }
+    //   },
+    // },
+    // {
+    //   field: 'explaination',
+    //   headerName: 'הסבר',
+    //   width: 250,
+    //   editable: false,
+    //   headerAlign: 'center',
+    //   align: 'left',
+    //   renderCell: (params) => (
+    //     <div style={{ textAlign: 'right', fontSize: '1rem' }}>
+    //       {params.row.explaination}
+    //     </div>
+    //   ),
+    // },
     {
       field: 'actions',
       headerName: 'אפשרויות',
@@ -900,7 +900,7 @@ function Forms() {
       align: 'left',
       type: 'actions',
       direction: 'rtl',
-      width: 100, //100%-100
+      width: 90, //100%-100
       editable: false,
       sortable: false,
       disableExport: true,

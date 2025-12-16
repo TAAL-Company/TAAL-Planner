@@ -30,7 +30,7 @@ const Planner = () => {
   const [siteLanguage, setSiteLanguage] = useState('Site');
   const [workerLanguage, setWorkerLanguage] = useState('Worker');
   const [siteQuestionLanguage, setSiteQuestionLanguage] = useState(
-    'Which site do you want to build a route on?'
+    'select site to build route on?'
   );
   const [SiteStudentQuestionLanguage, setSiteStudentQuestionLanguage] = useState(
     'For which student do you want to build a track?'
@@ -109,8 +109,8 @@ const Planner = () => {
     setAddSite('Add sites');
     setAddStation('add stations');
     setAddTask('Add tasks');
-    setSiteQuestionLanguage('Which site do you want to build a route on?');
-    setSiteStudentQuestionLanguage('For which student do you want to build a track?');
+    setSiteQuestionLanguage('select Site?');
+    setSiteStudentQuestionLanguage('select Worker ?');
     setSiteLanguage('Site');
     setWorkerLanguage('Worker');
     setRoutesBeforeChoosingSite(

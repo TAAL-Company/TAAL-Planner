@@ -1,38 +1,125 @@
 .Places {
-  padding-top: 1px;
-  padding-bottom: 1px;
-  height: 100px;
+  padding: 1px 22px 1px 10px;
+  /* Combined padding properties */
+  height: auto;
+  /* Changed from fixed height to auto */
+  min-height: 80px;
+  /* Minimum height to prevent squishing */
   text-align: right;
   overflow: auto;
   direction: rtl;
-  padding-right: 22px;
   display: flex;
   justify-content: flex-start;
   flex-direction: row;
+  flex-wrap: wrap;
+  /* Allow items to wrap on smaller screens */
+  align-items: center;
+  gap: 10px;
+  /* Space between items */
+}
+
+/* @media only screen and (max-width: 1300px) {
+  .routs {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  height: 287px;
+  overflow: auto;
+  width: 270px;
+  scrollbar-color: #bfc4ce #dadbe2 !important;
+  scrollbar-width: thin !important;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   align-items: center;
 }
 
+.mainRectangles {
+  display: flex;
+  margin-right: -130px;
+  padding-left: 40px;
+  flex-direction: row-reverse;
+  gap: 1%;
+  margin-top: -45px;
+  scale: 0.8;
+}
+} */
 .deselect-button {
-    background: #256fa1;
-    border-radius: 4px;
-    color: white;
-    font-size: 18px;
-    box-shadow: 0px 3px 6px #0000004d;
-    border: 2px solid #256fa1;
+  background: #256fa1;
+  border-radius: 4px;
+  color: white;
+  font-size: 18px;
+  box-shadow: 0px 3px 6px #0000004d;
+  border: 2px solid #256fa1;
 }
 
 .Places.english {
   padding-left: 40px;
   direction: ltr;
-  text-align:left;
+  text-align: left;
 }
 
 .selectPlace {
-  width: 350px;
-  padding-right: 10px;
-  padding-left: 10px;
+  width: 100%;
+  /* Full width on mobile */
+  max-width: 350px;
+  /* Maximum width */
+  padding: 8px 10px;
   border: 1px black solid;
+  box-sizing: border-box;
+  /* Include padding in width calculation */
 }
+
+/* Tablet and smaller */
+@media (max-width: 1024px) {
+  .selectPlace {
+    max-width: 280px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .Places {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .selectPlace {
+    max-width: 100%;
+    /* Full width on small screens */
+    padding: 6px 8px;
+    font-size: 14px;
+    /* Slightly smaller text on mobile */
+  }
+
+  .deselect-button {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+}
+
+/* Very small devices */
+@media (max-width: 480px) {
+  .Places {
+    flex-direction: column;
+    /* Stack items vertically on very small screens */
+    align-items: stretch;
+  }
+
+  .selectPlace {
+    width: 100%;
+  }
+}
+
+@media (max-width: 1200px) {
+  .selectPlace {
+    width: 224px;
+  }
+
+  .topButtons {
+    transform: scale(0.8);
+  }
+}
+
 
 .disabledWorker {
   pointer-events: none;
@@ -81,8 +168,7 @@
 .eyeIcon {
   width: 66px;
   height: 24px;
-  background: transparent url('../../../Pictures/ic_duplicate.svg') 0% 0% no-repeat
-    padding-box;
+  background: transparent url('../../../Pictures/ic_duplicate.svg') 0% 0% no-repeat padding-box;
   opacity: 1;
   position: relative;
   top: 2px;
@@ -103,7 +189,7 @@
   align-content: center;
 }
 
-.threeDotsVerticalEng:hover + .ModalIcons {
+.threeDotsVerticalEng:hover+.ModalIcons {
   display: block;
 }
 
@@ -143,6 +229,14 @@
   flex-direction: revert;
   justify-content: start;
   direction: ltr;
+}
+
+.mainRectangles.english {
+  flex-direction: revert;
+  justify-content: start;
+  direction: ltr;
+  padding-left: 0px;
+  margin-right: -50px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -296,9 +390,11 @@ h3 {
   font-size: 12px;
   direction: rtl;
 }
+
 .searchButton.routes {
   background-position: 230px 5px;
 }
+
 .force-overflow {
   min-height: 450px;
 }
@@ -343,99 +439,487 @@ h3 {
   background-color: #bfc4ce;
   border: 1px solid rgb(235, 235, 235);
 }
+
 .topButtons {
   display: flex;
   gap: 2%;
 }
+
+
+
+
+/* ================= 1620xp ================= */
+@media screen and (max-width: 1620px) {
+  .Board {
+    left: -85px;
+    width: 400px;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -90px;
+    position: absolute;
+    padding-left: 50px;
+    padding-right: 25px;
+  }
+
+  .mainRectangles {
+    display: flex;
+    margin-right: -22px;
+    padding-left: 40px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -30px;
+    scale: 0.95;
+  }
+}
+
+/* ================= 1440px ================= */
+@media screen and (max-width: 1440px) {
+  .Board {
+    left: -118px;
+    width: 400px;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -115px;
+    position: absolute;
+    padding-left: 56px;
+    padding-right: 25px;
+  }
+
+  .mainRectangles {
+    display: flex;
+    margin-right: -52px;
+    padding-left: 40px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -30px;
+    scale: 0.9;
+  }
+
+  .mainRectangles.english {
+    display: flex;
+    margin-right: -90px;
+    padding-right: 40px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -30px;
+    scale: 0.9;
+    padding-left: 0px;
+    margin-left: -53px;
+    flex-direction: revert;
+  }
+
+  .Board.english {
+    right: -35px;
+    left: auto;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -115px;
+    position: absolute;
+    padding-left: 23px;
+    padding-right: 65px;
+  }
+}
+
+/* ================= 1366px ================= */
+@media screen and (max-width: 1366px) {
+  .Board {
+    left: -155px;
+    width: 400px;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -115px;
+    position: absolute;
+    padding-left: 60px;
+    padding-right: 26px;
+  }
+
+  .mainRectangles {
+    display: flex;
+    margin-right: -80px;
+    padding-left: 40px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -30px;
+    scale: 0.87;
+  }
+
+  .mainRectangles.english {
+    display: flex;
+    margin-right: -118px;
+    padding-right: 40px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -30px;
+    scale: 0.87;
+    padding-left: 0px;
+    margin-left: -75px;
+    flex-direction: revert;
+  }
+
+  .Board.english {
+    right: -46px;
+    left: auto;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -128px;
+    position: absolute;
+    padding-left: 15px;
+    padding-right: 80px;
+  }
+
+  .Places.english {
+    padding-left: 24px;
+    direction: ltr;
+    text-align: left;
+  }
+}
+
+/* ================= 1336px ================= */
+@media screen and (max-width: 1336px) {
+  .Board {
+    left: -172px;
+    width: 400px;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -115px;
+    position: absolute;
+    padding-left: 60px;
+    padding-right: 26px;
+  }
+
+  .mainRectangles {
+    display: flex;
+    margin-right: -96px;
+    padding-left: 40px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -30px;
+    scale: 0.85;
+  }
+
+  .mainRectangles.english {
+    display: flex;
+    margin-right: -131px;
+    padding-right: 40px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -30px;
+    scale: 0.85;
+    padding-left: 0px;
+    margin-left: -97px;
+    flex-direction: revert;
+  }
+
+  .Board.english {
+    right: -45px;
+    left: auto;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -133px;
+    position: absolute;
+    padding-left: 14px;
+    padding-right: 81px;
+  }
+
+  .Places.english {
+    padding-left: 19px;
+    direction: ltr;
+    text-align: left;
+    gap: 0px;
+  }
+}
+
+/* ================= 1280px ================= */
+@media screen and (max-width: 1280px) {
+  .Board {
+    left: -215px;
+    width: 400px;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -115px;
+    position: absolute;
+    padding-left: 71px;
+    padding-right: 26px;
+  }
+
+  .mainRectangles {
+    display: flex;
+    margin-right: -120px;
+    padding-left: 40px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -53px;
+    scale: 0.81;
+  }
+
+  /* .Board {
+    left: -175px;
+    width: 400px;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -115px;
+    position: absolute;
+    padding-left: 71px;
+    padding-right: 26px;
+  }
+
+  .mainRectangles {
+    display: flex;
+    margin-right: -80px;
+    padding-left: 40px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -43px;
+    scale: 0.84;
+  } */
+
+  .Places {
+    scale: 0.9;
+    padding: 1px 0px 1px 10px;
+    height: auto;
+    min-height: 80px;
+    text-align: right;
+    overflow: auto;
+    direction: rtl;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .Places.english {
+    padding-left: 0px;
+    direction: ltr;
+    text-align: left;
+    gap: 0px;
+  }
+
+  .mainRectangles.english {
+    display: flex;
+    margin-right: -131px;
+    padding-right: 40px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -30px;
+    scale: 0.81;
+    padding-left: 0px;
+    margin-left: -126px;
+    flex-direction: revert;
+  }
+
+  .Board.english {
+    right: -73px;
+    left: auto;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -133px;
+    position: absolute;
+    padding-left: 20px;
+    padding-right: 71px;
+  }
+}
+
+/* ================= 1200px ================= */
 @media (max-width: 1200px) {
   .Cover_Places {
-    width: 22%;
+    width: 18%;
   }
+
   .Cover_Stations {
-    width: 22%;
+    width: 18%;
   }
+
   .Cover_Tasks {
-    width: 22%;
+    width: 18%;
   }
+
   .TasksCover {
     width: 100% !important;
     height: 40vh !important;
   }
+
   .buttons {
-    width: 90%;
+    width: 79%;
   }
 
   .routs {
     width: 100%;
     height: 40vh;
   }
+
   .Stations {
     width: 100% !important;
     height: 40vh !important;
   }
+
   .addTaskCover {
     text-align: center;
     width: 100%;
   }
+
   .AddButton {
     width: 90%;
     left: unset;
   }
+
   .addStationCover {
     text-align: center;
   }
+
   .addPlaceCover {
     text-align: center;
   }
+
   .draggableItems {
     width: 100%;
     text-align: -webkit-center;
   }
+
   .textBeforeStation {
     width: 100%;
     background-size: 100% !important;
     background-position: center !important;
     padding-top: 50px !important;
+    font-size: small;
   }
+
+  .mainRectangles {
+    display: flex;
+    margin-right: -100px;
+    padding-left: 40px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -53px;
+    scale: 0.81;
+  }
+
   .Board {
-    width: 25% !important;
+    left: -201px;
+    width: 400px;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -115px;
+    position: absolute;
+    padding-left: 71px;
+    padding-right: 26px;
   }
 
-  .MyTasks {
-    width: 100% !important;
-    height: 60vh !important;
+  .mainRectangles.english {
+    display: flex;
+    margin-right: -29px;
+    padding-right: 16px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -30px;
+    scale: 0.81;
+    padding-left: 0px;
+    margin-left: -109px;
+    flex-direction: revert;
   }
 
-  .my_Buttons_icons {
-    width: 100% !important;
+  .Board.english {
+    right: -109px;
+    left: auto;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -159px;
+    position: absolute;
+    padding-left: 27px;
+    padding-right: 0px;
+    width: 357px;
+  }
+}
+
+/* ================= 1024px ================= */
+@media screen and (max-width: 1024px) {
+
+  .Cover_Places {
+    width: 20%;
   }
 
-  .txt {
-    width: 100% !important;
-  }
-  .kavT {
-    left: 202px !important;
+  .Cover_Stations {
+    width: 20%;
   }
 
-  .nameStationBoard {
-    /* width: 100%; */
-    text-align-last: right !important;
+  .Cover_Tasks {
+    width: 20%;
   }
 
-  .kavTop {
-    left: 187px !important;
+  .mainRectangles {
+    display: flex;
+    margin-right: -100px;
+    padding-left: 40px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -53px;
+    scale: 0.81;
   }
 
-  .kavTask2 {
-    left: 9px !important;
+  .Board {
+    left: -201px;
+    width: 400px;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -115px;
+    position: absolute;
+    padding-left: 71px;
+    padding-right: 26px;
   }
 
-  .kavTaskTop {
-    left: -17px !important;
-    width: 25px !important;
+  .mainRectangles.english {
+    display: flex;
+    margin-right: -29px;
+    padding-right: 16px;
+    flex-direction: row-reverse;
+    gap: 1%;
+    margin-top: -30px;
+    scale: 0.78;
+    padding-left: 0px;
+    margin-left: -109px;
+    flex-direction: revert;
   }
 
-  .kav {
-    left: 210px !important;
+  .Board.english {
+    right: -127px;
+    left: auto;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -174px;
+    position: absolute;
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 324px;
+  }
+
+  .Places {
+    scale: 0.8;
+    padding: 1px 0px 1px 10px;
+    height: auto;
+    min-height: 80px;
+    text-align: right;
+    overflow: auto;
+    direction: rtl;
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0px;
   }
 }

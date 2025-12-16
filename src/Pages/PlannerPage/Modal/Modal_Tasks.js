@@ -510,7 +510,7 @@ function Modal_Tasks(props) {
       )}
       {!props.help && props.siteSelected ? (
         <>
-          <Draggable>
+          <div>
             <div
               className='BackgroundTasks'
               style={{
@@ -959,7 +959,7 @@ function Modal_Tasks(props) {
                 )}
               </div>
             </div>
-          </Draggable>
+          </div>
         </>
       ) : (
         <></>

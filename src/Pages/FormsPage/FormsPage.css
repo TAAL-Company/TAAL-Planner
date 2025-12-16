@@ -88,6 +88,7 @@
 
 .tableForms {
   padding: 0 20px 40px 20px;
+  overflow-x: auto;
 }
 
 .firstRowForms {

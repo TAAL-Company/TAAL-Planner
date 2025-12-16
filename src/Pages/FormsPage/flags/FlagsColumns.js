@@ -86,13 +86,14 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
       align: 'center',
       renderCell: (params) => (
         <div style={{ textAlign: 'right', fontSize: '1rem' }}>
-          {params.row.classification === 'green' ? (
+          {params.row.classification === 'GREEN' ? (
             <></>
           ) : (
             <select
               id='combo-box-demo'
               style={{ width: 300, height: 50 }}
               value='DEFAULT'
+              readOnly
             >
               <option value='DEFAULT' disabled>
                 {t('taskAbilityListPlaceholder')}
@@ -129,7 +130,7 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
       getActions: (params) => {
         let actions = [];
 
-        if (params.row.classification !== 'green') {
+        if (params.row.classification !== 'GREEN') {
           actions.push(
             <GridActionsCellItem
               icon={<EditIcon style={{ fill: 'gray' }} />}

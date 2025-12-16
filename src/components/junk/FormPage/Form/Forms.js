@@ -1123,7 +1123,13 @@ function Forms() {
   const [initialValuesRow, setInitialValuesRow] = useState({});
 
   const [slide, setSlide] = React.useState(false);
-  const [language, setLanguage] = useState('hebrew');
+  const [language, setLanguage] = useState(sessionStorage.getItem('language').toLowerCase());
+
+  useEffect(() => {
+    console.log('language changed to:', language);
+    setLanguage(sessionStorage.getItem('language').toLowerCase());
+    // setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
+  }, []);
 
   const [rowsFlagsHE, setRowsFlagsHE] = useState([
     // {
@@ -1941,7 +1947,7 @@ function Forms() {
         <CircularProgress size="10rem" color="info" />
       </Backdrop>
       <div style={{ width: '100%' }}>
-        <div>
+        {/* <div>
           <button
             className={`switch-button-forms ${language === 'hebrew' ? 'hebrew' : 'english'
               }`}
@@ -1949,7 +1955,7 @@ function Forms() {
               setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
             }
           >
-            {/* {language === "hebrew" ? "HE" : "EN"} */}
+            
             {language === 'hebrew' ? (
               <>
                 <i className='flag-icon flag-icon-il'></i>
@@ -1962,7 +1968,7 @@ function Forms() {
               </>
             )}
           </button>
-        </div>
+        </div> */}
 
         {language === 'hebrew' ? (
           <>

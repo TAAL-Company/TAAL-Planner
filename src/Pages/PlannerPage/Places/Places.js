@@ -1850,7 +1850,8 @@ const Places = (props) => {
                 borderRadius: 1,
               }}
             />
-            {props.language !== 'English' ? "TAAL AI" : "טאל AI"}
+             {"TAAL AI"}
+            {/* {props.language !== 'English' ? "TAAL AI" : "טאל AI"} */}
           </button>
         </div>
       </div>

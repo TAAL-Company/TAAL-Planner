@@ -27,7 +27,11 @@ const FormsPage = () => {
   const [worker, setWorker] = useState([]);
   const [taskAbilityLists, setTaskAbilityList] = useState([]);
   const [selectedTable, setSelectedTable] = useState('flags');
-  const [language, setLanguage] = useState('hebrew');
+  const [language, setLanguage] = useState(sessionStorage.getItem('language').toLowerCase());
+
+  useEffect(() => {
+    setLanguage(sessionStorage.getItem('language').toLowerCase());
+  }, []);
 
   const t = (key) => getTranslation(key, language === 'hebrew' ? 'he' : 'en');
 
@@ -124,28 +128,6 @@ const FormsPage = () => {
       </Backdrop>
 
       <div style={{ width: '100%' }}>
-        <div>
-          <button
-            className={`switch-button-forms ${
-              language === 'hebrew' ? 'hebrew' : 'english'
-            }`}
-            onClick={() =>
-              setLanguage(language === 'hebrew' ? 'english' : 'hebrew')
-            }
-          >
-            {language === 'hebrew' ? (
-              <>
-                <i className='flag-icon flag-icon-il'></i>
-                <h4 style={{ marginLeft: 'd' }}>EN</h4>
-              </>
-            ) : (
-              <>
-                <i className='flag-icon flag-icon-us'></i>
-                <h4 style={{ marginLeft: 'd' }}>HE</h4>
-              </>
-            )}
-          </button>
-        </div>
 
         <div
           className='NavbarForms'
@@ -239,6 +221,7 @@ const FormsPage = () => {
                 allRoutes={allRoutes}
                 allTasks={allTasks}
                 cognitiveAbilities={cognitiveAbillities}
+                sites={sites}
               />
             </div>
           </div>

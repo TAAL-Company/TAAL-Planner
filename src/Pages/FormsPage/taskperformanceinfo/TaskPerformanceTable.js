@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Button, CircularProgress, Backdrop } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Box, Button, CircularProgress, Backdrop, Paper } from '@mui/material';
+import { DataGrid, heIL } from '@mui/x-data-grid';
 import TaskPerformanceColumns from './TaskPerformanceColumns';
 import TaskPerformanceRows from './TaskPerformanceRows';
 import CustomToolbar from '../components/CustomToolbar';
@@ -10,6 +10,23 @@ import {
   postDataCognitiveProfile,
   updateDataCognitiveProfile,
 } from '../../../api/api';
+import { prefixer } from 'stylis';
+import rtlPlugin from 'stylis-plugin-rtl';
+import createCache from '@emotion/cache';
+import { CacheProvider } from '@emotion/react';
+import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
+
+// Create rtl cache
+const cacheRtl = createCache({
+  key: 'taskperformance-table-rtl',
+  stylisPlugins: [prefixer, rtlPlugin],
+});
+
+// Create ltr cache
+const cacheLtr = createCache({
+  key: 'taskperformance-table-ltr',
+  stylisPlugins: [prefixer],
+});
 
 const TaskPerformanceTable = ({
   language,
@@ -23,6 +40,7 @@ const TaskPerformanceTable = ({
   const [cognitiveProfileValues, setCognitiveProfileValues] = useState([]);
   const [saveProfileChanges, setSaveProfileChanges] = useState(false);
   const [updateProfile, setUpdateProfile] = useState('');
+  const [pageSize, setPageSize] = useState(10);
 
   const t = (key) => getTranslation(key, language);
 
@@ -52,14 +70,45 @@ const TaskPerformanceTable = ({
   };
 
   const handleCellEdit = (params) => {
-    const newValue = params.value;
-    const rowIndex = params.id;
-    
-    setCognitiveProfileValues((prev) => {
-      const newValues = [...prev];
-      newValues[rowIndex] = newValue;
-      return newValues;
+    const updatedRows = rows.map((row) => {
+      if (row.id === params.id) {
+        return {
+          ...row,
+          [params.field]: params.value,
+        };
+      } else {
+        return row;
+      }
     });
+
+    setRows(updatedRows);
+
+    const valueMap = {
+      A: 5,
+      B: 3,
+      C: 2,
+      D: 1,
+      a: 5,
+      b: 3,
+      c: 2,
+      d: 1,
+    };
+
+    // Convert input value to its corresponding numerical value
+    let outputValue = 0;
+    if (valueMap.hasOwnProperty(params.value)) {
+      outputValue = valueMap[params.value];
+    }
+
+    setCognitiveProfileValues(
+      cognitiveProfileValues.map((cog, index) => {
+        if (index === params.id) {
+          return outputValue;
+        } else {
+          return cog;
+        }
+      })
+    );
   };
 
   useEffect(() => {
@@ -93,13 +142,30 @@ const TaskPerformanceTable = ({
     setRows(generateRows());
   }, [cognitiveAbilities, cognitiveProfileValues]);
 
-  const { columns } = TaskPerformanceColumns({
+  const { columns: baseColumns } = TaskPerformanceColumns({
     language,
     handleEdit,
   });
 
+  // Reverse columns for RTL (Hebrew) mode
+  const columns = useMemo(() => {
+    return language === 'he' ? [...baseColumns].reverse() : baseColumns;
+  }, [baseColumns, language]);
+
+  const existingTheme = useTheme();
+  const direction = language === 'he' ? 'rtl' : 'ltr';
+
+  const theme = useMemo(() =>
+    createTheme({}, existingTheme, { direction }),
+    [existingTheme, direction],
+  );
+
+  const cache = direction === 'rtl' ? cacheRtl : cacheLtr;
+
   return (
-    <div>
+    <CacheProvider value={cache}>
+    <ThemeProvider theme={theme}>
+    <div dir={direction}>
       <Backdrop
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
@@ -136,8 +202,11 @@ const TaskPerformanceTable = ({
           },
         }}
       >
+        <div style={{ direction, width: '100%', overflowX: 'auto' }}>
+        <Paper style={{ minWidth: 1200 }}>
         <DataGrid
           autoHeight
+          style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}
           sortModel={[
             {
               field: 'id',
@@ -146,23 +215,26 @@ const TaskPerformanceTable = ({
           ]}
           onCellEditCommit={handleCellEdit}
           sx={{
-            direction: language === 'he' ? 'rtl' : 'ltr',
             '& .MuiDataGrid-virtualScroller': {
-              overflow: 'unset !important',
               mt: '0 !important',
             },
-            '& .MuiDataGrid-columnHeaders': {
-              overflow: 'unset',
-              position: 'sticky',
-              left: 1,
-              zIndex: 1,
-              bgcolor: '#114260',
-            },
-            '& .MuiDataGrid-columnHeadersInner > div': {
-              direction: language === 'he' ? 'rtl !important' : 'ltr !important',
-            },
             '& .MuiDataGrid-main': {
-              overflow: 'auto',
+              direction: language === 'he' ? 'rtl' : 'ltr',
+            },
+            '& .MuiDataGrid-columnHeaders': {
+              bgcolor: '#114260',
+              borderBottom: '1px solid rgba(224, 224, 224, 1)',
+              fontWeight: 'bold',
+              color: '#fff',
+              position: 'relative',
+              zIndex: 1,
+              direction: language === 'he' ? 'rtl' : 'ltr',
+            },
+            '& .MuiDataGrid-columnHeadersInner': {
+              direction: language === 'he' ? 'rtl' : 'ltr',
+            },
+            '& .MuiDataGrid-virtualScrollerContent': {
+              direction: language === 'he' ? 'rtl' : 'ltr',
             },
             '& .MuiTablePagination-actions': {
               direction: 'ltr',
@@ -172,10 +244,6 @@ const TaskPerformanceTable = ({
             },
             '& .MuiButton-textSizeSmall': {
               color: 'rgb(8,8,137)',
-            },
-            '& .MuiDataGrid-columnHeadersInner': {
-              borderBottom: '1px solid rgba(224, 224, 224, 1)',
-              bgcolor: '#114260',
             },
             '& .MuiDataGrid-columnHeaderTitle': {
               color: 'white',
@@ -191,11 +259,17 @@ const TaskPerformanceTable = ({
           }}
           rows={rows}
           columns={columns}
-          pageSize={100}
+          pageSize={pageSize}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           getRowHeight={() => 'auto'}
-          rowsPerPageOptions={[10]}
+          rowsPerPageOptions={[10, 25, 50, 100]}
           pagination
           disableSelectionOnClick
+          localeText={
+            language === 'he'
+              ? heIL.components.MuiDataGrid.defaultProps.localeText
+              : undefined
+          }
           components={{
             Toolbar: () => (
               <CustomToolbar
@@ -212,18 +286,12 @@ const TaskPerformanceTable = ({
             ),
           }}
         />
-
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: 2 }}>
-          <Button
-            variant='contained'
-            color='primary'
-            onClick={SaveProfileChanges}
-          >
-            {t('save')}
-          </Button>
-        </Box>
+        </Paper>
+        </div>
       </Box>
     </div>
+    </ThemeProvider>
+    </CacheProvider>
   );
 };
 

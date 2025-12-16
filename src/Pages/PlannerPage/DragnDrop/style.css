@@ -292,7 +292,7 @@
   margin-top: 20px;
   border-radius: 4px;
   color: white;
-  font-size: 18px;
+  font-size: 13px;
   box-shadow: 0px 3px 6px #0000004d;
   border: 2px solid #256fa1;
 }
@@ -302,7 +302,7 @@
   margin-top: 20px;
   border-radius: 4px;
   color: white;
-  font-size: 18px;
+  font-size: 13px;
   box-shadow: 0px 3px 6px #0000004d;
   border: 2px solid #ba11b0;
 }
@@ -562,4 +562,113 @@
   background-color: #bfc4ce;
   border: 1px solid rgb(235, 235, 235);
   direction: rtl;
+}
+
+/* @media only screen and (max-width: 1300px) {
+
+  .Board {
+  left: -190px;
+  width: 350px;
+  height: 1000px;
+  background: #f5f5f5 0% 0% no-repeat padding-box;
+  opacity: 1;
+  top: -120px;
+  position: absolute;
+  padding-left: 25px;
+  padding-right: 25px;
+}
+  .AddRoute {
+  background: #256fa1;
+  margin-top: 20px;
+  border-radius: 4px;
+  color: white;
+  font-size: 13px;
+  box-shadow: 0px 3px 6px #0000004d;
+  border: 2px solid #256fa1;
+}
+
+.AddPack {
+  background: #ba11b0;
+  margin-top: 20px;
+  border-radius: 4px;
+  color: white;
+  font-size: 13px;
+  box-shadow: 0px 3px 6px #0000004d;
+  border: 2px solid #ba11b0;
+}
+} */
+
+/* ================= 1440px ================= */
+@media screen and (max-width: 1440px) {
+  .Board {
+    left: -118px;
+    width: 400px;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -115px;
+    position: absolute;
+    padding-left: 56px;
+    padding-right: 25px;
+  }
+
+}
+/* ================= 1366px ================= */
+@media screen and (max-width: 1366px) {
+  .Board {
+    left: -155px;
+    width: 400px;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -115px;
+    position: absolute;
+    padding-left: 60px;
+    padding-right: 26px;
+  }
+}
+
+/* ================= 1336px ================= */
+@media screen and (max-width: 1336px) {
+  .Board {
+    left: -172px;
+    width: 400px;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -115px;
+    position: absolute;
+    padding-left: 60px;
+    padding-right: 26px;
+  }
+}
+
+/* ================= 1280px ================= */
+@media screen and (max-width: 1280px) {
+  .Board {
+    left: -195px;
+    width: 400px;
+    height: 1000px;
+    background: #f5f5f5 0% 0% no-repeat padding-box;
+    opacity: 1;
+    top: -115px;
+    position: absolute;
+    padding-left: 71px;
+    padding-right: 26px;
+  }
+}
+
+/* ================= 1024px ================= */
+@media screen and (max-width: 1024px) {
+  .Board {
+        left: -146px;
+        width: 304px;
+        height: 1000px;
+        background: #f5f5f5 0% 0% no-repeat padding-box;
+        opacity: 1;
+        top: -154px;
+        position: absolute;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
 }

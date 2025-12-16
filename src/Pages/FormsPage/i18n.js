@@ -165,6 +165,18 @@ export const formsTranslations = {
     english: 'אנגלית',
     understandSpoken: 'הבנת דיבור',
     understandWritten: 'הבנת כתוב',
+    
+    // Toolbar
+    toolbarWorkerLabel: 'שם עובד:',
+    toolbarWorkerInputLabel: 'שם העובד',
+    toolbarRouteLabel: 'שם מסלול:',
+    toolbarSiteLabel: 'אתר:',
+    selectSite: 'בחר אתר',
+    allSites: 'כל האתרים',
+    toolbarNoRoutesForWorker: 'אין מסלולים עבור העובד',
+    toolbarNoRoutesForSite: 'אין מסלולים עבור האתר',
+    toolbarUnknownRoute: 'X',
+    toolbarSearchPlaceholder: 'חיפוש',
   },
   en: {
     // Navigation and Page Titles
@@ -332,6 +344,18 @@ export const formsTranslations = {
     english: 'English',
     understandSpoken: 'Understand Spoken',
     understandWritten: 'Understand Written',
+    
+    // Toolbar
+    toolbarWorkerLabel: 'Employee name:',
+    toolbarWorkerInputLabel: 'Employee name',
+    toolbarRouteLabel: 'Route name:',
+    toolbarSiteLabel: 'Site:',
+    selectSite: 'Select Site',
+    allSites: 'All Sites',
+    toolbarNoRoutesForWorker: 'No routes for this employee',
+    toolbarNoRoutesForSite: 'No routes for this site',
+    toolbarUnknownRoute: 'Not available',
+    toolbarSearchPlaceholder: 'Search',
   }
 };
 

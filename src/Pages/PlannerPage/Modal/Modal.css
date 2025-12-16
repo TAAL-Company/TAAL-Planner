@@ -825,7 +825,11 @@ input.newStationButton {
   padding-right: 40px;
   gap: 10px;
 }
-
+@media screen and (max-height: 800px) {
+  .modal_route_chosen {
+    top: 25%;
+  }
+}
 /*  3 dots */
 .button-dropdown-content {
   /* display: none; */

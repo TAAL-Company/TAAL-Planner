@@ -15,9 +15,6 @@ import RouteTable from './Pages/RoutePage/RouteTable';
 import { Switch, Route } from 'react-router-loading';
 // import PlacesCards from './components/placesCards/placesCards';
 import Sites from './Pages/SitePage/SitesTable';
-
-
-import Forms from './Pages/FormPage/Form/Forms';
 // import Coaches from './components/Coaches/Coaches';
 import Coaches from './Pages/CoachePage/CoachesTable';
 import TaalAI from './Pages/TaalAiPage/TaalAiPage';
@@ -31,7 +28,8 @@ import Plannerpage from './planner/plannerpage';
 
 import { NotificationProvider } from "./components/Notification/NotificationProvider";
 import { TranslationProvider } from './Utility/TranslationProvider';
-import { FormsPage } from './Pages/FormsPage';
+import FormsPage from './Pages/FormsPage/FormsPage';
+import GenerateTaskImagesPage from './dev.js'; 
 
 console.warn(`
 ████████  █████   █████  ██          ██████  ███████ ██    ██ 
@@ -72,14 +70,14 @@ function App() {
                       <Route path='/Dashboard' component={Dashboard}></Route>
                       <Route path='/Gallery' component={GalleryPage}></Route>
                       <Route path='/places' component={Sites}></Route>
-                      <Route path='/Forms' component={Forms}></Route>
+                      <Route path='/Forms' component={FormsPage}></Route>
                       <Route path='/coaches' component={Coaches}></Route>
                       <Route path='/community' component={Community}></Route>
                       <Route path='/editor' component={Editors}></Route>
                       <Route path='/dev' component={Plannerpage}></Route>
                       <Route path='/subjects' component={Community}></Route>
                       <Route path='/TAAL_Ai' component={TaalAI}></Route>
-                      <Route path='/FormsPage' component={FormsPage}></Route>
+                      <Route path='/devpage' component={GenerateTaskImagesPage}></Route>
                     </Switch>
                   </div>
                 </Router>

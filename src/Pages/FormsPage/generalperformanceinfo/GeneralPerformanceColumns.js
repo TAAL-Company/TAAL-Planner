@@ -1,13 +1,13 @@
 import React from 'react';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const GeneralPerformanceColumns = ({ language }) => {
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   const columns = [
     {
       field: 'id',
-      headerName: t('id'),
+      headerName: t('FormsPage.id'),
       filterable: false,
       renderCell: (index) => index.api.getRowIndex(index.row.id) + 1,
     },
@@ -17,27 +17,27 @@ const GeneralPerformanceColumns = ({ language }) => {
     },
     { 
       field: 'trait', 
-      headerName: t('trait'), 
+      headerName: t('FormsPage.trait'), 
       flex: 1 
     },
     { 
       field: 'requiredField', 
-      headerName: t('requiredField'), 
+      headerName: t('FormsPage.requiredField'), 
       flex: 1 
     },
     { 
       field: 'category', 
-      headerName: t('category'), 
+      headerName: t('FormsPage.category'), 
       flex: 1 
     },
     { 
       field: 'score', 
-      headerName: t('score'), 
+      headerName: t('FormsPage.score'), 
       flex: 1 
     },
     { 
       field: 'ML', 
-      headerName: t('ml') 
+      headerName: t('FormsPage.ml') 
     },
   ];
 

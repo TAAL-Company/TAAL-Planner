@@ -1,15 +1,15 @@
 import React from 'react';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const PersonalInfoColumns = ({ language, handleEdit }) => {
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   const columns = [
     {
       field: 'id',
-      headerName: t('id'),
+      headerName: t('FormsPage.id'),
       width: 90,
       editable: false,
       headerAlign: 'center',
@@ -17,7 +17,7 @@ const PersonalInfoColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'fieldHEPrivateCard',
-      headerName: t('fieldHE'),
+      headerName: t('FormsPage.fieldHE'),
       width: 120,
       editable: false,
       headerAlign: 'center',
@@ -25,7 +25,7 @@ const PersonalInfoColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'xPrivateCard',
-      headerName: t('xField'),
+      headerName: t('FormsPage.xField'),
       width: 90,
       editable: false,
       headerAlign: 'center',
@@ -33,7 +33,7 @@ const PersonalInfoColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'yPrivateCard',
-      headerName: t('yField'),
+      headerName: t('FormsPage.yField'),
       width: 90,
       editable: false,
       headerAlign: 'center',
@@ -41,7 +41,7 @@ const PersonalInfoColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'fieldENPrivateCard',
-      headerName: t('fieldEN'),
+      headerName: t('FormsPage.fieldEN'),
       width: 150,
       editable: false,
       headerAlign: 'center',
@@ -49,7 +49,7 @@ const PersonalInfoColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'classificationHEPrivateCard',
-      headerName: t('classificationHE'),
+      headerName: t('FormsPage.classificationHE'),
       width: 90,
       editable: false,
       headerAlign: 'center',
@@ -57,7 +57,7 @@ const PersonalInfoColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'beginningOfWorkPrivateCard',
-      headerName: t('beginningOfWork'),
+      headerName: t('FormsPage.beginningOfWork'),
       width: 150,
       editable: false,
       headerAlign: 'center',
@@ -65,7 +65,7 @@ const PersonalInfoColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'employersPrivateCard',
-      headerName: t('employers'),
+      headerName: t('FormsPage.employers'),
       width: 120,
       editable: false,
       headerAlign: 'center',
@@ -73,7 +73,7 @@ const PersonalInfoColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'reportsPrivateCard',
-      headerName: t('reports'),
+      headerName: t('FormsPage.reports'),
       width: 90,
       editable: false,
       headerAlign: 'center',
@@ -81,7 +81,7 @@ const PersonalInfoColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'improvementPrivateCard',
-      headerName: t('improvement'),
+      headerName: t('FormsPage.improvement'),
       width: 90,
       editable: false,
       headerAlign: 'center',
@@ -89,7 +89,7 @@ const PersonalInfoColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'Remarks',
-      headerName: t('remarks'),
+      headerName: t('FormsPage.remarks'),
       width: 250,
       editable: false,
       headerAlign: 'center',
@@ -102,7 +102,7 @@ const PersonalInfoColumns = ({ language, handleEdit }) => {
       getActions: (params) => [
         <GridActionsCellItem
           icon={<EditIcon style={{ fill: 'gray' }} />}
-          label={t('edit')}
+          label={t('FormsPage.edit')}
           onClick={() => handleEdit(params.row)}
           showInMenu
         />,

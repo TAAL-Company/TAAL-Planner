@@ -5,7 +5,8 @@ import PersonalInfoTable from './personalinfo/PersonalInfoTable';
 import TaskPerformanceTable from './taskperformanceinfo/TaskPerformanceTable';
 import TaskAbilityTable from './taskability/TaskAbilityTable';
 import GeneralPerformanceTable from './generalperformanceinfo/GeneralPerformanceTable';
-import { getTranslation } from './i18n';
+// import { getTranslation } from './i18n';
+import { useTranslation } from "react-i18next";
 import './FormsPage.css';
 import {
   getingData_Users,
@@ -33,7 +34,8 @@ const FormsPage = () => {
     setLanguage(sessionStorage.getItem('language').toLowerCase());
   }, []);
 
-  const t = (key) => getTranslation(key, language === 'hebrew' ? 'he' : 'en');
+  // const t = (key) => getTranslation(key, language === 'hebrew' ? 'he' : 'en');
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,45 +133,45 @@ const FormsPage = () => {
 
         <div
           className='NavbarForms'
-          style={{ direction: language === 'hebrew' ? 'rtl' : 'ltr' }}
+          style={{ direction: t('Direction') }}
         >
           <nav>
             <button
               className='btn_nav_forms'
               onClick={() => handleSelectTable('flags')}
             >
-              {t('flags')}
+              {t('FormsPage.flags')}
             </button>
             <button
               className='btn_nav_forms'
               onClick={() => handleSelectTable('personalInfo')}
             >
-              {t('personalInfo')}
+              {t('FormsPage.personalInfo')}
             </button>
             <button
               className='btn_nav_forms'
               onClick={() => handleSelectTable('taskPerformanceInfo')}
             >
-              {t('taskPerformanceInfo')}
+              {t('FormsPage.taskPerformanceInfo')}
             </button>
             <button
               className='btn_nav_forms'
               onClick={() => handleSelectTable('taskability')}
             >
-              {t('taskability')}
+              {t('FormsPage.taskability')}
             </button>
             <button
               className='btn_nav_forms'
               onClick={() => handleSelectTable('generalPerformanceInfo')}
             >
-              {t('generalPerformanceInfo')}
+              {t('FormsPage.generalPerformanceInfo')}
             </button>
           </nav>
         </div>
 
         {selectedTable === 'flags' && (
           <div>
-            <div className='headlineForms'>{t('flagsTitle')}</div>
+            <div className='headlineForms'>{t('FormsPage.flagsTitle')}</div>
             <div className='tableForms'>
               <FlagsTable
                 language={language === 'hebrew' ? 'he' : 'en'}
@@ -187,7 +189,7 @@ const FormsPage = () => {
 
         {selectedTable === 'personalInfo' && (
           <div>
-            <div className='headlineForms'>{t('personalInfoTitle')}</div>
+            <div className='headlineForms'>{t('FormsPage.personalInfoTitle')}</div>
             <div className='tableForms'>
               <PersonalInfoTable
                 language={language === 'hebrew' ? 'he' : 'en'}
@@ -199,7 +201,7 @@ const FormsPage = () => {
 
         {selectedTable === 'taskPerformanceInfo' && (
           <div>
-            <div className='headlineForms'>{t('taskPerformanceTitle')}</div>
+            <div className='headlineForms'>{t('FormsPage.taskPerformanceTitle')}</div>
             <div className='tableForms'>
               <TaskPerformanceTable
                 language={language === 'hebrew' ? 'he' : 'en'}
@@ -214,7 +216,7 @@ const FormsPage = () => {
 
         {selectedTable === 'taskability' && (
           <div>
-            <div className='headlineForms'>{t('taskabilityTitle')}</div>
+            <div className='headlineForms'>{t('FormsPage.taskabilityTitle')}</div>
             <div className='tableForms'>
               <TaskAbilityTable
                 language={language === 'hebrew' ? 'he' : 'en'}
@@ -229,7 +231,7 @@ const FormsPage = () => {
 
         {selectedTable === 'generalPerformanceInfo' && (
           <div>
-            <div className='headlineForms'>{t('generalPerformanceTitle')}</div>
+            <div className='headlineForms'>{t('FormsPage.generalPerformanceTitle')}</div>
             <div className='tableForms'>
               <GeneralPerformanceTable
                 language={language === 'hebrew' ? 'he' : 'en'}

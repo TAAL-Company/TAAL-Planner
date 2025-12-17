@@ -2,17 +2,17 @@ import React from 'react';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import { GridToolbarQuickFilter } from '@mui/x-data-grid';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const ToolbarSearch = ({ language }) => {
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   return (
     <div>
       <InputAdornment position="start">
         <GridToolbarQuickFilter
           InputProps={{ disableUnderline: true }}
-          placeholder={t('toolbarSearchPlaceholder')}
+          placeholder={t('FormsPage.toolbarSearchPlaceholder')}
           style={{
             paddingRight: '10px',
             width: '250px',

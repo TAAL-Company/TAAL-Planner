@@ -1,7 +1,7 @@
 import React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const ROUTE_COLOR = '#fb8c00';
 
@@ -64,12 +64,12 @@ const TaskAbilityToolbar = ({
   selectedSite,
   handleChangeSite,
 }) => {
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   return (
     <div className="infoForms">
       <div className="workerRouteForms">
-        {t('toolbarSiteLabel')}
+        {t('FormsPage.toolbarSiteLabel')}
         <Autocomplete
           freeSolo
           style={{ width: 200, marginInlineEnd: 16 }}
@@ -81,7 +81,7 @@ const TaskAbilityToolbar = ({
           renderInput={(params) => (
             <TextField
               {...params}
-              label={selectedSite?.name || t('selectSite')}
+              label={selectedSite?.name || t('FormsPage.selectSite')}
               InputProps={{
                 ...params.InputProps,
                 type: 'search',
@@ -95,7 +95,7 @@ const TaskAbilityToolbar = ({
         />
       </div>
       <div className="workerRouteForms">
-        {t('toolbarRouteLabel')}
+        {t('FormsPage.toolbarRouteLabel')}
         <Autocomplete
           freeSolo
           style={{ width: 250 }}
@@ -105,11 +105,11 @@ const TaskAbilityToolbar = ({
           options={allRoutes || []}
           getOptionLabel={(option) => option.name || ''}
           renderOption={renderRouteOption}
-          noOptionsText={selectedSite ? t('toolbarNoRoutesForSite') : t('selectRoute')}
+          noOptionsText={selectedSite ? t('FormsPage.toolbarNoRoutesForSite') : t('FormsPage.selectRoute')}
           renderInput={(params) => (
             <TextField
               {...params}
-              label={routeForTasksAbility?.name || t('selectRoute')}
+              label={routeForTasksAbility?.name || t('FormsPage.selectRoute')}
               InputProps={{
                 ...params.InputProps,
                 type: 'search',

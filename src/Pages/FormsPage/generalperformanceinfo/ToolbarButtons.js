@@ -5,24 +5,24 @@ import {
   GridToolbarDensitySelector,
   GridToolbarExport,
 } from '@mui/x-data-grid';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const ToolbarButtons = ({ language, tableType }) => {
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   let filePrefix;
   switch (tableType) {
     case 'Flags':
-      filePrefix = t('flagsTitle');
+      filePrefix = t('FormsPage.flagsTitle');
       break;
     case 'TaskPerformance':
-      filePrefix = t('taskPerformanceTitle');
+      filePrefix = t('FormsPage.taskPerformanceTitle');
       break;
     case 'TaskAbility':
-      filePrefix = t('taskabilityTitle');
+      filePrefix = t('FormsPage.taskabilityTitle');
       break;
     default:
-      filePrefix = t('generalPerformanceTitle');
+      filePrefix = t('FormsPage.generalPerformanceTitle');
   }
 
   const fileName = `${filePrefix}_${new Date()

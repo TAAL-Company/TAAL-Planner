@@ -1,7 +1,7 @@
 import React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 import { Box, Button } from '@mui/material';
 
 
@@ -42,7 +42,7 @@ const TaskPerformanceToolbar = ({
   handleChangeUser,
   SaveProfileChanges
 }) => {
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   return (
     <div className="infoForms">
@@ -57,7 +57,7 @@ const TaskPerformanceToolbar = ({
           renderInput={(params) => (
             <TextField
               {...params}
-              label={worker?.name || t('toolbarWorkerInputLabel')}
+              label={worker?.name || t('FormsPage.toolbarWorkerInputLabel')}
               InputProps={{
                 ...params.InputProps,
                 style: {
@@ -75,7 +75,7 @@ const TaskPerformanceToolbar = ({
           color='primary'
           onClick={SaveProfileChanges}
         >
-          {t('save')}
+          {t('FormsPage.save')}
         </Button>
       </Box>
     </div>

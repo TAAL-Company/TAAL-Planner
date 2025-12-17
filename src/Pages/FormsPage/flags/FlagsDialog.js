@@ -8,7 +8,7 @@ import {
   Button,
   Select,
 } from '@mui/material';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const FlagsDialog = ({
   open,
@@ -23,7 +23,7 @@ const FlagsDialog = ({
   const [explainationBorderColor, setExplainationBorderColor] = useState('initial');
   const [interventionBorderColor, setInterventionBorderColor] = useState('initial');
 
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   // Reset form values when initialValues change
   useEffect(() => {
@@ -32,7 +32,7 @@ const FlagsDialog = ({
 
   const validateExplaination = (value) => {
     if (value.length > 100) {
-      setExplainationError(t('maxLengthError'));
+      setExplainationError(t('FormsPage.maxLengthError'));
       setExplainationBorderColor('red');
     } else {
       setExplainationError('');
@@ -42,10 +42,10 @@ const FlagsDialog = ({
 
   const validateIntervention = (value) => {
     if (!value) {
-      setInterventionError(t('requiredFieldError'));
+      setInterventionError(t('FormsPage.requiredFieldError'));
       setInterventionBorderColor('red');
     } else if (value.length > 100) {
-      setInterventionError(t('maxLengthError'));
+      setInterventionError(t('FormsPage.maxLengthError'));
       setInterventionBorderColor('red');
     } else {
       setInterventionError('');
@@ -77,11 +77,11 @@ const FlagsDialog = ({
             <DialogActions style={{ direction: 'rtl', flexGrow: 1 }}>
               <Button onClick={handleClose}>X</Button>
             </DialogActions>
-            <DialogTitle id='flag-dialog-title'>{t('editTask')}</DialogTitle>
+            <DialogTitle id='flag-dialog-title'>{t('FormsPage.editTask')}</DialogTitle>
           </>
         ) : (
           <>
-            <DialogTitle id='flag-dialog-title'>{t('editTask')}</DialogTitle>
+            <DialogTitle id='flag-dialog-title'>{t('FormsPage.editTask')}</DialogTitle>
             <DialogActions style={{ direction: 'ltr', flexGrow: 1 }}>
               <Button onClick={handleClose}>X</Button>
             </DialogActions>
@@ -102,7 +102,7 @@ const FlagsDialog = ({
             autoFocus
             margin='dense'
             id='task'
-            label={t('task')}
+            label={t('FormsPage.task')}
             type='text'
             value={formValues.task}
             onChange={(e) =>
@@ -127,7 +127,7 @@ const FlagsDialog = ({
         <TextField
           margin='dense'
           id='classification'
-          label={t('classification')}
+          label={t('FormsPage.classification')}
           type='text'
           value={formValues.classification}
           onChange={(e) =>
@@ -144,7 +144,7 @@ const FlagsDialog = ({
           <TextField
             margin='dense'
             id='intervention'
-            label={t('intervention')}
+            label={t('FormsPage.intervention')}
             type='text'
             value={formValues.intervention}
             onChange={(e) => {
@@ -165,9 +165,9 @@ const FlagsDialog = ({
           <TextField
             margin='dense'
             id='intervention'
-            label={t('intervention')}
+            label={t('FormsPage.intervention')}
             type='text'
-            value={t('fieldAvailableYellowOnly')}
+            value={t('FormsPage.fieldAvailableYellowOnly')}
             style={{
               borderColor: interventionBorderColor,
             }}
@@ -179,15 +179,15 @@ const FlagsDialog = ({
         {formValues.Alternatives === ' ' && (
           <Select
             native
-            value={t('fieldAvailableRedOnly')}
+            value={t('FormsPage.fieldAvailableRedOnly')}
             id='select-Alternatives'
-            label={t('alternatives')}
+            label={t('FormsPage.alternatives')}
             fullWidth
             style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}
             disabled
           >
-            <option value={t('fieldAvailableRedOnly')}>
-              {t('fieldAvailableRedOnly')}
+            <option value={t('FormsPage.fieldAvailableRedOnly')}>
+              {t('FormsPage.fieldAvailableRedOnly')}
             </option>
           </Select>
         )}
@@ -197,7 +197,7 @@ const FlagsDialog = ({
             native
             value={formValues?.Alternatives?.toString()}
             id='select-Alternatives'
-            label={t('alternatives')}
+            label={t('FormsPage.alternatives')}
             fullWidth
             onChange={(e) =>
               setFormValues({
@@ -207,87 +207,87 @@ const FlagsDialog = ({
             }
             style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}
           >
-            <optgroup label={t('writingUnfamiliarWords')}>
-              <option value={t('readyStickers')}>{t('readyStickers')}</option>
-              <option value={t('card')}>{t('card')}</option>
-              <option value={t('shapes')}>{t('shapes')}</option>
+            <optgroup label={t('FormsPage.writingUnfamiliarWords')}>
+              <option value={t('FormsPage.readyStickers')}>{t('FormsPage.readyStickers')}</option>
+              <option value={t('FormsPage.card')}>{t('FormsPage.card')}</option>
+              <option value={t('FormsPage.shapes')}>{t('FormsPage.shapes')}</option>
             </optgroup>
-            <optgroup label={t('hypersensitivityTouch')}>
-              <option value={t('glove')}>{t('glove')}</option>
-              <option value={t('cloth')}>{t('cloth')}</option>
+            <optgroup label={t('FormsPage.hypersensitivityTouch')}>
+              <option value={t('FormsPage.glove')}>{t('FormsPage.glove')}</option>
+              <option value={t('FormsPage.cloth')}>{t('FormsPage.cloth')}</option>
             </optgroup>
-            <optgroup label={t('complexColorIdentification')}>
-              <option value={t('drawing')}>{t('drawing')}</option>
-              <option value={t('symbolization')}>{t('symbolization')}</option>
-              <option value={t('voiceExplanation')}>{t('voiceExplanation')}</option>
+            <optgroup label={t('FormsPage.complexColorIdentification')}>
+              <option value={t('FormsPage.drawing')}>{t('FormsPage.drawing')}</option>
+              <option value={t('FormsPage.symbolization')}>{t('FormsPage.symbolization')}</option>
+              <option value={t('FormsPage.voiceExplanation')}>{t('FormsPage.voiceExplanation')}</option>
             </optgroup>
-            <optgroup label={t('complexShapeIdentification')}>
-              <option value={t('drawing')}>{t('drawing')}</option>
-              <option value={t('symbolization')}>{t('symbolization')}</option>
-              <option value={t('voiceExplanation')}>{t('voiceExplanation')}</option>
+            <optgroup label={t('FormsPage.complexShapeIdentification')}>
+              <option value={t('FormsPage.drawing')}>{t('FormsPage.drawing')}</option>
+              <option value={t('FormsPage.symbolization')}>{t('FormsPage.symbolization')}</option>
+              <option value={t('FormsPage.voiceExplanation')}>{t('FormsPage.voiceExplanation')}</option>
             </optgroup>
-            <optgroup label={t('attentionDivision')}>
-              <option value={t('quietRoom')}>{t('quietRoom')}</option>
-              <option value={t('break')}>{t('break')}</option>
+            <optgroup label={t('FormsPage.attentionDivision')}>
+              <option value={t('FormsPage.quietRoom')}>{t('FormsPage.quietRoom')}</option>
+              <option value={t('FormsPage.break')}>{t('FormsPage.break')}</option>
             </optgroup>
-            <optgroup label={t('shortTermMemory')}>
-              <option value={t('taskRepetition')}>{t('taskRepetition')}</option>
-              <option value={t('appReminders')}>{t('appReminders')}</option>
-              <option value={t('printedList')}>{t('printedList')}</option>
+            <optgroup label={t('FormsPage.shortTermMemory')}>
+              <option value={t('FormsPage.taskRepetition')}>{t('FormsPage.taskRepetition')}</option>
+              <option value={t('FormsPage.appReminders')}>{t('FormsPage.appReminders')}</option>
+              <option value={t('FormsPage.printedList')}>{t('FormsPage.printedList')}</option>
             </optgroup>
-            <optgroup label={t('shapeIdentification2D')}>
-              <option value={t('drawing')}>{t('drawing')}</option>
-              <option value={t('symbolization')}>{t('symbolization')}</option>
-              <option value={t('voiceExplanation')}>{t('voiceExplanation')}</option>
+            <optgroup label={t('FormsPage.shapeIdentification2D')}>
+              <option value={t('FormsPage.drawing')}>{t('FormsPage.drawing')}</option>
+              <option value={t('FormsPage.symbolization')}>{t('FormsPage.symbolization')}</option>
+              <option value={t('FormsPage.voiceExplanation')}>{t('FormsPage.voiceExplanation')}</option>
             </optgroup>
-            <optgroup label={t('peopleIdentification')}>
-              <option value={t('photography')}>{t('photography')}</option>
-              <option value={t('printedCard')}>{t('printedCard')}</option>
+            <optgroup label={t('FormsPage.peopleIdentification')}>
+              <option value={t('FormsPage.photography')}>{t('FormsPage.photography')}</option>
+              <option value={t('FormsPage.printedCard')}>{t('FormsPage.printedCard')}</option>
             </optgroup>
-            <optgroup label={t('imageIdentification')}>
-              <option value={t('drawing')}>{t('drawing')}</option>
-              <option value={t('symbolization')}>{t('symbolization')}</option>
-              <option value={t('voiceExplanation')}>{t('voiceExplanation')}</option>
+            <optgroup label={t('FormsPage.imageIdentification')}>
+              <option value={t('FormsPage.drawing')}>{t('FormsPage.drawing')}</option>
+              <option value={t('FormsPage.symbolization')}>{t('FormsPage.symbolization')}</option>
+              <option value={t('FormsPage.voiceExplanation')}>{t('FormsPage.voiceExplanation')}</option>
             </optgroup>
-            <optgroup label={t('simpleGraphicSymbols')}>
-              <option value={t('drawing')}>{t('drawing')}</option>
-              <option value={t('symbolization')}>{t('symbolization')}</option>
-              <option value={t('voiceExplanation')}>{t('voiceExplanation')}</option>
+            <optgroup label={t('FormsPage.simpleGraphicSymbols')}>
+              <option value={t('FormsPage.drawing')}>{t('FormsPage.drawing')}</option>
+              <option value={t('FormsPage.symbolization')}>{t('FormsPage.symbolization')}</option>
+              <option value={t('FormsPage.voiceExplanation')}>{t('FormsPage.voiceExplanation')}</option>
             </optgroup>
-            <optgroup label={t('iconIdentification')}>
-              <option value={t('drawing')}>{t('drawing')}</option>
-              <option value={t('symbolization')}>{t('symbolization')}</option>
-              <option value={t('voiceExplanation')}>{t('voiceExplanation')}</option>
+            <optgroup label={t('FormsPage.iconIdentification')}>
+              <option value={t('FormsPage.drawing')}>{t('FormsPage.drawing')}</option>
+              <option value={t('FormsPage.symbolization')}>{t('FormsPage.symbolization')}</option>
+              <option value={t('FormsPage.voiceExplanation')}>{t('FormsPage.voiceExplanation')}</option>
             </optgroup>
-            <optgroup label={t('dangerousMaterialsCaution')}>
-              <option value={t('addProtection')}>{t('addProtection')}</option>
-              <option value={t('removal')}>{t('removal')}</option>
-              <option value={t('addWarning')}>{t('addWarning')}</option>
+            <optgroup label={t('FormsPage.dangerousMaterialsCaution')}>
+              <option value={t('FormsPage.addProtection')}>{t('FormsPage.addProtection')}</option>
+              <option value={t('FormsPage.removal')}>{t('FormsPage.removal')}</option>
+              <option value={t('FormsPage.addWarning')}>{t('FormsPage.addWarning')}</option>
             </optgroup>
-            <optgroup label={t('sharpObjectsCaution')}>
-              <option value={t('addProtection')}>{t('addProtection')}</option>
-              <option value={t('removal')}>{t('removal')}</option>
-              <option value={t('addWarning')}>{t('addWarning')}</option>
+            <optgroup label={t('FormsPage.sharpObjectsCaution')}>
+              <option value={t('FormsPage.addProtection')}>{t('FormsPage.addProtection')}</option>
+              <option value={t('FormsPage.removal')}>{t('FormsPage.removal')}</option>
+              <option value={t('FormsPage.addWarning')}>{t('FormsPage.addWarning')}</option>
             </optgroup>
-            <optgroup label={t('electricalAppliancesCaution')}>
-              <option value={t('addProtection')}>{t('addProtection')}</option>
-              <option value={t('removal')}>{t('removal')}</option>
-              <option value={t('addWarning')}>{t('addWarning')}</option>
+            <optgroup label={t('FormsPage.electricalAppliancesCaution')}>
+              <option value={t('FormsPage.addProtection')}>{t('FormsPage.addProtection')}</option>
+              <option value={t('FormsPage.removal')}>{t('FormsPage.removal')}</option>
+              <option value={t('FormsPage.addWarning')}>{t('FormsPage.addWarning')}</option>
             </optgroup>
-            <optgroup label={t('prolongedStanding')}>
-              <option value={t('sitOnChair')}>{t('sitOnChair')}</option>
-              <option value={t('breaks10Minutes')}>{t('breaks10Minutes')}</option>
-              <option value={t('changePosture')}>{t('changePosture')}</option>
+            <optgroup label={t('FormsPage.prolongedStanding')}>
+              <option value={t('FormsPage.sitOnChair')}>{t('FormsPage.sitOnChair')}</option>
+              <option value={t('FormsPage.breaks10Minutes')}>{t('FormsPage.breaks10Minutes')}</option>
+              <option value={t('FormsPage.changePosture')}>{t('FormsPage.changePosture')}</option>
             </optgroup>
-            <optgroup label={t('placeIdentificationSpatial')}>
-              <option value={t('signsWithText')}>{t('signsWithText')}</option>
-              <option value={t('images')}>{t('images')}</option>
-              <option value={t('voiceExplanation')}>{t('voiceExplanation')}</option>
+            <optgroup label={t('FormsPage.placeIdentificationSpatial')}>
+              <option value={t('FormsPage.signsWithText')}>{t('FormsPage.signsWithText')}</option>
+              <option value={t('FormsPage.images')}>{t('FormsPage.images')}</option>
+              <option value={t('FormsPage.voiceExplanation')}>{t('FormsPage.voiceExplanation')}</option>
             </optgroup>
-            <optgroup label={t('colorBlindness')}>
-              <option value={t('differentSortingMethod')}>{t('differentSortingMethod')}</option>
-              <option value={t('voiceExplanation')}>{t('voiceExplanation')}</option>
-              <option value={t('externalControl')}>{t('externalControl')}</option>
+            <optgroup label={t('FormsPage.colorBlindness')}>
+              <option value={t('FormsPage.differentSortingMethod')}>{t('FormsPage.differentSortingMethod')}</option>
+              <option value={t('FormsPage.voiceExplanation')}>{t('FormsPage.voiceExplanation')}</option>
+              <option value={t('FormsPage.externalControl')}>{t('FormsPage.externalControl')}</option>
             </optgroup>
           </Select>
         )}
@@ -295,7 +295,7 @@ const FlagsDialog = ({
         <TextField
           margin='dense'
           id='explaination'
-          label={t('explanation')}
+          label={t('FormsPage.explanation')}
           type='text'
           value={formValues.explaination}
           onChange={(e) => {
@@ -313,8 +313,8 @@ const FlagsDialog = ({
       </DialogContent>
 
       <DialogActions style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}>
-        <Button onClick={handleReset}>{t('reset')}</Button>
-        <Button onClick={handleSave}>{t('save')}</Button>
+        <Button onClick={handleReset}>{t('FormsPage.reset')}</Button>
+        <Button onClick={handleSave}>{t('FormsPage.save')}</Button>
       </DialogActions>
     </Dialog>
   );

@@ -4,7 +4,7 @@ import { DataGrid, heIL } from '@mui/x-data-grid';
 import TaskAbilityColumns from './TaskAbilityColumns';
 import TaskAbilityRows from './TaskAbilityRows';
 import CustomToolbar from '../components/CustomToolbar';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 import {
   gettaskCognitiveRequirements,
   getAllTaskCognitiveRequirements,
@@ -65,7 +65,7 @@ const TaskAbilityTable = ({
     setSelectedSite(value);
   };
 
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   const handleChangeRoute = async (event, value) => {
     setLoading(true);

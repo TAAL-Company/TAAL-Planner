@@ -3,7 +3,7 @@ import { Box, Paper } from '@mui/material';
 import { DataGrid, heIL } from '@mui/x-data-grid';
 import PersonalInfoColumns from './PersonalInfoColumns';
 import PersonalInfoRows from './PersonalInfoRows';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';
 import createCache from '@emotion/cache';
@@ -25,7 +25,7 @@ const cacheLtr = createCache({
 const PersonalInfoTable = ({ language, worker }) => {
   const [rows, setRows] = useState([]);
   const [pageSize, setPageSize] = useState(10);
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   const { getInitialRows } = PersonalInfoRows({ language });
 

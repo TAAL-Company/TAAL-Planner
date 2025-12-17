@@ -1,13 +1,13 @@
 import React from 'react';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const TaskAbilityColumns = ({ language, cognitiveAbilities }) => {
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   const baseColumns = [
     {
       field: 'id',
-      headerName: t('id'),
+      headerName: t('FormsPage.id'),
       width: 90,
       editable: false,
       headerAlign: 'center',
@@ -20,7 +20,7 @@ const TaskAbilityColumns = ({ language, cognitiveAbilities }) => {
     },
     {
       field: 'taskTaskabilityHE',
-      headerName: t('task'),
+      headerName: t('FormsPage.task'),
       width: 180,
       editable: false,
       headerAlign: 'center',
@@ -28,7 +28,7 @@ const TaskAbilityColumns = ({ language, cognitiveAbilities }) => {
     },
     {
       field: 'routeTaskabilityHE',
-      headerName: t('route'),
+      headerName: t('FormsPage.route'),
       width: 180,
       editable: false,
       headerAlign: 'center',

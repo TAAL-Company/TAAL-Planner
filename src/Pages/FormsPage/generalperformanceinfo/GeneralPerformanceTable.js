@@ -3,7 +3,7 @@ import { Box, Paper } from '@mui/material';
 import { DataGrid, heIL } from '@mui/x-data-grid';
 import GeneralPerformanceColumns from './GeneralPerformanceColumns';
 import GeneralPerformanceRows from './GeneralPerformanceRows';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 import { getCognitiveAbillities } from '../../../api/api';
 import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';
@@ -28,7 +28,7 @@ const GeneralPerformanceTable = ({ language }) => {
   const [rows, setRows] = useState([]);
   const [pageSize, setPageSize] = useState(10);
 
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,148 +47,127 @@ const GeneralPerformanceTable = ({ language }) => {
     setRows(generateRows());
   }, [cognitiveList]);
 
-  const { columns: baseColumns } = GeneralPerformanceColumns({ language });
-
-  // Reverse columns for RTL (Hebrew) mode
-  const columns = useMemo(() => {
-    return language === 'he' ? [...baseColumns].reverse() : baseColumns;
-  }, [baseColumns, language]);
+  const { columns } = GeneralPerformanceColumns({ language });
 
   const existingTheme = useTheme();
-  const direction = language === 'he' ? 'rtl' : 'ltr';
 
   const theme = useMemo(() =>
-    createTheme({}, existingTheme, { direction }),
-    [existingTheme, direction],
+    createTheme({}, t('localeText', { returnObjects: true }), existingTheme, { direction: t('Direction'), }),
+    [existingTheme],
   );
 
-  const cache = direction === 'rtl' ? cacheRtl : cacheLtr;
+    // Determine the cache to use based on the direction
+  const cache = t('Direction') === 'rtl' ? cacheRtl : cacheLtr;
 
   return (
     <CacheProvider value={cache}>
-    <ThemeProvider theme={theme}>
-    <div dir={direction}>
-      <Box
-        sx={{
-          width: '100%',
-          direction: language === 'he' ? 'rtl' : 'ltr',
-          background: '#F5F5F5',
-          mb: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          '& .MuiDataGrid-root': {
-            marginRight: '25px',
-            marginLeft: '25px',
-            border: 0,
-          },
-          '& .MuiDataGrid-columnHeaderTitle': {
-            fontSize: 'Medium',
-            fontWeight: 'bold',
-          },
-          '& .MuiDataGrid-row': {
-            backgroundColor: 'white',
-            marginTop: '5px',
-            marginBottom: '0px',
-            borderRadius: '6px',
-          },
-          '& .MuiDataGrid-cellContent': {
-            fontFamily: 'Gotham Black, sans-serif',
-            fontSize: 'medium',
-          },
-        }}
-      >
-        <div style={{ direction, width: '100%', overflowX: 'auto' }}>
-        <Paper style={{ minWidth: 1200 }}>
-        <DataGrid
-          autoHeight
-          style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}
-          columnTypes={{
-            string: {
-              autoWidth: true,
-            },
-          }}
-          sortModel={[
-            {
-              field: 'id',
-              sort: 'asc',
-            },
-          ]}
-          sx={{
-            '& .MuiDataGrid-virtualScroller': {
-              mt: '0 !important',
-            },
-            '& .MuiDataGrid-main': {
-              direction: language === 'he' ? 'rtl' : 'ltr',
-            },
-            '& .MuiDataGrid-columnHeaders': {
-              bgcolor: '#114260',
-              borderBottom: '1px solid rgba(224, 224, 224, 1)',
-              fontWeight: 'bold',
-              color: '#fff',
-              position: 'relative',
-              zIndex: 1,
-              direction: language === 'he' ? 'rtl' : 'ltr',
-            },
-            '& .MuiDataGrid-columnHeadersInner': {
-              direction: language === 'he' ? 'rtl' : 'ltr',
-            },
-            '& .MuiDataGrid-virtualScrollerContent': {
-              direction: language === 'he' ? 'rtl' : 'ltr',
-            },
-            '& .MuiTablePagination-actions': {
-              direction: 'ltr',
-            },
-            '& .MuiDataGrid-row:hover': {
-              backgroundColor: '#EDF3F8',
-            },
-            '& .MuiButton-textSizeSmall': {
-              color: 'rgb(8,8,137)',
-            },
-            '& .MuiDataGrid-columnHeaderTitle': {
-              color: 'white',
-            },
-            '& .MuiDataGrid-iconSeparator': {
-              color: 'white',
-            },
-            '& .MuiDataGrid-menuIconButton > .MuiSvgIcon-root , .MuiDataGrid-sortIcon':
-              {
-                color: 'white !important',
-                opacity: 1,
+      <ThemeProvider theme={theme}>
+        <div dir={t('Direction')}>
+          <Box
+            sx={{
+              width: '100%',
+              direction: t('Direction'),
+              background: '#F5F5F5',
+              mb: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              '& .MuiDataGrid-root': {
+                marginRight: '25px',
+                marginLeft: '25px',
+                border: 0,
               },
-          }}
-          experimentalFeatures={
-            ({ newEditingApi: true }, { columnGrouping: true })
-          }
-          rows={rows}
-          columns={columns}
-          pageSize={pageSize}
-          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          getRowHeight={() => 'auto'}
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          pagination
-          checkboxSelection
-          disableSelectionOnClick
-          localeText={
-            language === 'he'
-              ? heIL.components.MuiDataGrid.defaultProps.localeText
-              : undefined
-          }
-          disableVirtualization
-          componentsProps={{
-            toolbar: {
-              utf8WithBom: true,
-              showQuickFilter: false,
-              quickFilterProps: {
-                debounceMs: 500,
+              '& .MuiDataGrid-columnHeaderTitle': {
+                fontSize: 'Medium',
+                fontWeight: 'bold',
               },
-            },
-          }}
-        />
-        </Paper>
+              '& .MuiDataGrid-row': {
+                backgroundColor: 'white',
+                marginTop: '5px',
+                marginBottom: '0px',
+                borderRadius: '6px',
+              },
+              '& .MuiDataGrid-cellContent': {
+                fontFamily: 'Gotham Black, sans-serif',
+                fontSize: 'medium',
+              },
+            }}
+          >
+            <div style={{ direction: t('Direction'), width: '100%', overflowX: 'auto' }}>
+              <Paper style={{ minWidth: 1200 }}>
+                <DataGrid
+                  autoHeight
+                  style={{ direction: t('Direction') }}
+                  columnTypes={{
+                    string: {
+                      autoWidth: true,
+                    },
+                  }}
+                  sortModel={[
+                    {
+                      field: 'id',
+                      sort: 'asc',
+                    },
+                  ]}
+                  sx={{
+                    '& .MuiDataGrid-virtualScroller': {
+                      mt: '0 !important',
+                    },
+                    '& .MuiDataGrid-columnHeaders': {
+                      bgcolor: '#114260',
+                      borderBottom: '1px solid rgba(224, 224, 224, 1)',
+                      fontWeight: 'bold',
+                      color: '#fff',
+                      position: 'relative',
+                      zIndex: 1,
+                    },
+                    '& .MuiDataGrid-row:hover': {
+                      backgroundColor: '#EDF3F8',
+                    },
+                    '& .MuiButton-textSizeSmall': {
+                      color: 'rgb(8,8,137)',
+                    },
+                    '& .MuiDataGrid-columnHeaderTitle': {
+                      color: 'white',
+                    },
+                    '& .MuiDataGrid-iconSeparator': {
+                      color: 'white',
+                    },
+                    '& .MuiDataGrid-menuIconButton > .MuiSvgIcon-root , .MuiDataGrid-sortIcon':
+                    {
+                      color: 'white !important',
+                      opacity: 1,
+                    },
+                  }}
+                  rows={rows}
+                  columns={columns}
+                  pageSize={pageSize}
+                  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                  getRowHeight={() => 'auto'}
+                  rowsPerPageOptions={[10, 25, 50, 100]}
+                  pagination
+                  checkboxSelection
+                  disableSelectionOnClick
+                  localeText={
+                    language === 'he'
+                      ? heIL.components.MuiDataGrid.defaultProps.localeText
+                      : undefined
+                  }
+                  disableVirtualization
+                  componentsProps={{
+                    toolbar: {
+                      utf8WithBom: true,
+                      showQuickFilter: false,
+                      quickFilterProps: {
+                        debounceMs: 500,
+                      },
+                    },
+                  }}
+                />
+              </Paper>
+            </div>
+          </Box>
         </div>
-      </Box>
-    </div>
-    </ThemeProvider>
+      </ThemeProvider>
     </CacheProvider>
   );
 };

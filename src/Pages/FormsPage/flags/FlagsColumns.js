@@ -6,15 +6,15 @@ import { GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Status from './Status';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   const columns = [
     {
       field: 'id',
-      headerName: t('id'),
+      headerName: t('FormsPage.id'),
       width: 90,
       editable: false,
       headerAlign: 'center',
@@ -27,7 +27,7 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
     },
     {
       field: 'image',
-      headerName: t('image'),
+      headerName: t('FormsPage.image'),
       headerAlign: 'center',
       width: 100,
       editable: false,
@@ -55,7 +55,7 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
     },
     {
       field: 'task',
-      headerName: t('task'),
+      headerName: t('FormsPage.task'),
       width: 200,
       editable: false,
       headerAlign: 'center',
@@ -68,7 +68,7 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
     },
     {
       field: 'classification',
-      headerName: t('classification'),
+      headerName: t('FormsPage.classification'),
       width: language === 'he' ? 140 : 160,
       editable: false,
       renderCell: (params) => (
@@ -79,7 +79,7 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
     },
     {
       field: 'taskAbilityField',
-      headerName: t('taskAbility'),
+      headerName: t('FormsPage.taskAbility'),
       width: 300,
       editable: false,
       headerAlign: 'center',
@@ -96,7 +96,7 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
               readOnly
             >
               <option value='DEFAULT' disabled>
-                {t('taskAbilityListPlaceholder')}
+                {t('FormsPage.taskAbilityListPlaceholder')}
               </option>
 
               {params.row.TaskAbilitylist?.map((option, index) => (
@@ -118,7 +118,7 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
     },
     {
       field: 'actions',
-      headerName: t('actions'),
+      headerName: t('FormsPage.actions'),
       headerAlign: language === 'he' ? 'left' : 'center',
       align: language === 'he' ? 'left' : 'center',
       type: 'actions',
@@ -134,7 +134,7 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
           actions.push(
             <GridActionsCellItem
               icon={<EditIcon style={{ fill: 'gray' }} />}
-              label={t('edit')}
+              label={t('FormsPage.edit')}
               onClick={() => handleEdit(params.row)}
               showInMenu
             />
@@ -144,7 +144,7 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
         actions.push(
           <GridActionsCellItem
             icon={<DeleteIcon style={{ fill: 'gray' }} />}
-            label={t('delete')}
+            label={t('FormsPage.delete')}
             onClick={() => handleDelete(params.id)}
             showInMenu
           />

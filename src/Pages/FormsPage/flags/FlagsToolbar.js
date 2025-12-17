@@ -1,7 +1,7 @@
 import React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const USER_COLOR = '#1e88e5';
 const ROUTE_COLOR = '#fb8c00';
@@ -65,12 +65,12 @@ const FlagsToolbar = ({
   handleChangeUserFlags,
   handleChangeRouteFlags,
 }) => {
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   return (
     <div className="infoForms">
       <div className="workerNameForms">
-        {t('toolbarWorkerLabel')}
+        {t('FormsPage.toolbarWorkerLabel')}
         <Autocomplete
           freeSolo
           value={worker?.id ? worker : null}
@@ -83,7 +83,7 @@ const FlagsToolbar = ({
           renderInput={(params) => (
             <TextField
               {...params}
-              label={t('toolbarWorkerInputLabel')}
+              label={t('FormsPage.toolbarWorkerInputLabel')}
               InputProps={{
                 ...params.InputProps,
                 type: 'search',
@@ -98,7 +98,7 @@ const FlagsToolbar = ({
       </div>
 
       <div className="workerRouteForms">
-        {t('toolbarRouteLabel')}
+        {t('FormsPage.toolbarRouteLabel')}
         <Autocomplete
           freeSolo
           style={{ width: 250 }}
@@ -133,10 +133,10 @@ const FlagsToolbar = ({
                   : Object.keys(worker || {}).length !== 0 &&
                     worker.routes &&
                     worker.routes.length === 0
-                  ? t('toolbarNoRoutesForWorker')
+                  ? t('FormsPage.toolbarNoRoutesForWorker')
                   : Object.keys(worker || {}).length === 0
-                  ? t('selectRoute')
-                  : t('toolbarUnknownRoute')
+                  ? t('FormsPage.selectRoute')
+                  : t('FormsPage.toolbarUnknownRoute')
               }
               InputProps={{
                 ...params.InputProps,

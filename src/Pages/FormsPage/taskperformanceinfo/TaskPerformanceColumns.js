@@ -1,15 +1,15 @@
 import React from 'react';
 import { GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const TaskPerformanceColumns = ({ language, handleEdit }) => {
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   const columns = [
     {
       field: 'id',
-      headerName: t('id'),
+      headerName: t('FormsPage.id'),
       width: 90,
       editable: false,
       headerAlign: 'center',
@@ -22,7 +22,7 @@ const TaskPerformanceColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'fieldHE',
-      headerName: t('fieldHE'),
+      headerName: t('FormsPage.fieldHE'),
       width: 200,
       editable: false,
       headerAlign: 'center',
@@ -30,7 +30,7 @@ const TaskPerformanceColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'mustField',
-      headerName: t('mustField'),
+      headerName: t('FormsPage.mustField'),
       width: 150,
       editable: false,
       headerAlign: 'center',
@@ -38,7 +38,7 @@ const TaskPerformanceColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'subfield',
-      headerName: t('subfield'),
+      headerName: t('FormsPage.subfield'),
       width: 120,
       editable: false,
       headerAlign: 'center',
@@ -46,7 +46,7 @@ const TaskPerformanceColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'grade',
-      headerName: t('grade'),
+      headerName: t('FormsPage.grade'),
       width: 150,
       editable: true,
       headerAlign: 'center',
@@ -56,7 +56,7 @@ const TaskPerformanceColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'fieldEN',
-      headerName: t('fieldEN'),
+      headerName: t('FormsPage.fieldEN'),
       width: 160,
       editable: false,
       headerAlign: 'center',
@@ -64,7 +64,7 @@ const TaskPerformanceColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'classificationHE',
-      headerName: t('classificationHE'),
+      headerName: t('FormsPage.classificationHE'),
       width: 200,
       editable: false,
       headerAlign: 'center',
@@ -80,7 +80,7 @@ const TaskPerformanceColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'MLFactor',
-      headerName: t('mlFactor'),
+      headerName: t('FormsPage.mlFactor'),
       width: 120,
       editable: false,
       headerAlign: 'center',
@@ -88,7 +88,7 @@ const TaskPerformanceColumns = ({ language, handleEdit }) => {
     },
     {
       field: 'Remarks',
-      headerName: t('remarks'),
+      headerName: t('FormsPage.remarks'),
       width: 250,
       editable: false,
       headerAlign: 'center',
@@ -101,7 +101,7 @@ const TaskPerformanceColumns = ({ language, handleEdit }) => {
       getActions: (params) => [
         <GridActionsCellItem
           icon={<EditIcon style={{ fill: 'gray' }} />}
-          label={t('edit')}
+          label={t('FormsPage.edit')}
           onClick={() => handleEdit(params.row)}
           showInMenu
         />,

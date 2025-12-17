@@ -5,7 +5,7 @@ import FlagsColumns from './FlagsColumns';
 import FlagsRows from './FlagsRows';
 import FlagsDialog from './FlagsDialog';
 import CustomToolbar from '../components/CustomToolbar';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 import {
   getingData_Tasks,
   getingData_Routes,
@@ -54,7 +54,7 @@ const FlagsTable = ({
   const [initialValuesRow, setInitialValuesRow] = useState({});
   const [routeName, setRouteName] = useState('');
 
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   const handleEdit = (row) => {
     setIsDialogOpen(true);
@@ -81,7 +81,7 @@ const FlagsTable = ({
   };
 
   const handleChangeUserFlags = (event, values) => {
-    setRouteName(t('selectRoute'));
+    setRouteName(t('FormsPage.selectRoute'));
     setWorker(values);
   };
 
@@ -177,7 +177,7 @@ const FlagsTable = ({
   });
 
   const existingTheme = useTheme();
-  const direction = language === 'he' ? 'rtl' : 'ltr';
+  const direction = t('Direction');
 
   const theme = useMemo(() =>
     createTheme({}, existingTheme, { direction }),
@@ -200,7 +200,7 @@ const FlagsTable = ({
           <Box
             sx={{
               width: '100%',
-              direction: language === 'he' ? 'rtl' : 'ltr',
+              direction: t('Direction'),
               background: '#F5F5F5',
               mb: 2,
               display: 'flex',
@@ -240,7 +240,7 @@ const FlagsTable = ({
               <Paper style={{ minWidth: 1200 }}>
                 <DataGrid
                   autoHeight
-                  style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}
+                  style={{ direction: t('Direction') }}
                   sortModel={[
                     {
                       field: 'id',
@@ -258,9 +258,6 @@ const FlagsTable = ({
                       color: '#fff',
                       position: 'relative',
                       zIndex: 1,
-                    },
-                    '& .MuiTablePagination-actions': {
-                      direction: 'ltr',
                     },
                     '& .MuiDataGrid-row:hover': {
                       backgroundColor: '#EDF3F8',

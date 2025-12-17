@@ -4,7 +4,7 @@ import { DataGrid, heIL } from '@mui/x-data-grid';
 import TaskPerformanceColumns from './TaskPerformanceColumns';
 import TaskPerformanceRows from './TaskPerformanceRows';
 import CustomToolbar from '../components/CustomToolbar';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 import {
   getCognitiveProfile,
   postDataCognitiveProfile,
@@ -42,7 +42,7 @@ const TaskPerformanceTable = ({
   const [updateProfile, setUpdateProfile] = useState('');
   const [pageSize, setPageSize] = useState(10);
 
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   const handleEdit = (row) => {
     console.log('Edit row:', row);
@@ -58,14 +58,14 @@ const TaskPerformanceTable = ({
       if (worker.length !== 0) {
         try {
           await postDataCognitiveProfile(worker.id, cognitiveProfileValues);
-          alert(t('dataSavedSuccess'));
+          alert(t('FormsPage.dataSavedSuccess'));
         } catch (error) {
           console.error(error.message);
         }
       }
     } else if (updateProfile !== '') {
       await updateDataCognitiveProfile(cognitiveProfileValues, worker.id);
-      alert(t('dataSavedSuccess'));
+      alert(t('FormsPage.dataSavedSuccess'));
     }
   };
 

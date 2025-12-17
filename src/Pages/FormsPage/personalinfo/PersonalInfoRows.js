@@ -1,14 +1,14 @@
 import React from 'react';
-import { getTranslation } from '../i18n';
+import { useTranslation } from 'react-i18next';
 
 const PersonalInfoRows = ({ language }) => {
-  const t = (key) => getTranslation(key, language);
+  const { t } = useTranslation();
 
   const getInitialRows = () => [
     {
       id: 1,
-      fieldHEPrivateCard: t('firstName'),
-      xPrivateCard: t('fromSystem'),
+      fieldHEPrivateCard: t('FormsPage.firstName'),
+      xPrivateCard: t('FormsPage.fromSystem'),
       yPrivateCard: '',
       fieldENPrivateCard: '',
       classificationHEPrivateCard: '',
@@ -19,8 +19,8 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 2,
-      fieldHEPrivateCard: t('lastName'),
-      xPrivateCard: t('fromSystem'),
+      fieldHEPrivateCard: t('FormsPage.lastName'),
+      xPrivateCard: t('FormsPage.fromSystem'),
       yPrivateCard: '',
       fieldENPrivateCard: '',
       classificationHEPrivateCard: '',
@@ -31,8 +31,8 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 3,
-      fieldHEPrivateCard: t('picture'),
-      xPrivateCard: t('fromSystem'),
+      fieldHEPrivateCard: t('FormsPage.picture'),
+      xPrivateCard: t('FormsPage.fromSystem'),
       yPrivateCard: '',
       fieldENPrivateCard: '',
       classificationHEPrivateCard: '',
@@ -43,8 +43,8 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 4,
-      fieldHEPrivateCard: t('gender'),
-      xPrivateCard: t('fromSystem'),
+      fieldHEPrivateCard: t('FormsPage.gender'),
+      xPrivateCard: t('FormsPage.fromSystem'),
       yPrivateCard: '',
       fieldENPrivateCard: 'gender',
       classificationHEPrivateCard: '',
@@ -55,8 +55,8 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 5,
-      fieldHEPrivateCard: t('birthDate'),
-      xPrivateCard: t('fromSystem'),
+      fieldHEPrivateCard: t('FormsPage.birthDate'),
+      xPrivateCard: t('FormsPage.fromSystem'),
       yPrivateCard: '',
       fieldENPrivateCard: '',
       classificationHEPrivateCard: '',
@@ -67,8 +67,8 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 6,
-      fieldHEPrivateCard: t('residence'),
-      xPrivateCard: t('fromSystem'),
+      fieldHEPrivateCard: t('FormsPage.residence'),
+      xPrivateCard: t('FormsPage.fromSystem'),
       yPrivateCard: '',
       fieldENPrivateCard: '',
       classificationHEPrivateCard: '',
@@ -79,8 +79,8 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 7,
-      fieldHEPrivateCard: t('personalPhone'),
-      xPrivateCard: t('fromSystem'),
+      fieldHEPrivateCard: t('FormsPage.personalPhone'),
+      xPrivateCard: t('FormsPage.fromSystem'),
       yPrivateCard: '',
       fieldENPrivateCard: '',
       classificationHEPrivateCard: '',
@@ -91,8 +91,8 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 8,
-      fieldHEPrivateCard: t('emergencyPhone'),
-      xPrivateCard: t('fromSystem'),
+      fieldHEPrivateCard: t('FormsPage.emergencyPhone'),
+      xPrivateCard: t('FormsPage.fromSystem'),
       yPrivateCard: '',
       fieldENPrivateCard: '',
       classificationHEPrivateCard: '',
@@ -103,8 +103,8 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 9,
-      fieldHEPrivateCard: t('additionalPhone'),
-      xPrivateCard: t('fromSystem'),
+      fieldHEPrivateCard: t('FormsPage.additionalPhone'),
+      xPrivateCard: t('FormsPage.fromSystem'),
       yPrivateCard: '',
       fieldENPrivateCard: '',
       classificationHEPrivateCard: '',
@@ -115,8 +115,8 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 10,
-      fieldHEPrivateCard: t('serviceOrganization'),
-      xPrivateCard: t('fromSystem'),
+      fieldHEPrivateCard: t('FormsPage.serviceOrganization'),
+      xPrivateCard: t('FormsPage.fromSystem'),
       yPrivateCard: '',
       fieldENPrivateCard: '',
       classificationHEPrivateCard: '',
@@ -127,7 +127,7 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 11,
-      fieldHEPrivateCard: t('previousWorkplace'),
+      fieldHEPrivateCard: t('FormsPage.previousWorkplace'),
       xPrivateCard: '',
       yPrivateCard: '',
       fieldENPrivateCard: '',
@@ -139,7 +139,7 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 12,
-      fieldHEPrivateCard: t('previousJobRole'),
+      fieldHEPrivateCard: t('FormsPage.previousJobRole'),
       xPrivateCard: '',
       yPrivateCard: '',
       fieldENPrivateCard: '',
@@ -151,7 +151,7 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 13,
-      fieldHEPrivateCard: t('yearOfEmployment'),
+      fieldHEPrivateCard: t('FormsPage.yearOfEmployment'),
       xPrivateCard: '',
       yPrivateCard: '',
       fieldENPrivateCard: '',
@@ -163,7 +163,7 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 14,
-      fieldHEPrivateCard: t('timeSinceEmployment'),
+      fieldHEPrivateCard: t('FormsPage.timeSinceEmployment'),
       xPrivateCard: '',
       yPrivateCard: '',
       fieldENPrivateCard: '',
@@ -175,7 +175,7 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 15,
-      fieldHEPrivateCard: t('performanceLevelPrevJob'),
+      fieldHEPrivateCard: t('FormsPage.performanceLevelPrevJob'),
       xPrivateCard: '',
       yPrivateCard: '',
       fieldENPrivateCard: '',
@@ -187,7 +187,7 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 16,
-      fieldHEPrivateCard: t('previousTraining'),
+      fieldHEPrivateCard: t('FormsPage.previousTraining'),
       xPrivateCard: '',
       yPrivateCard: '',
       fieldENPrivateCard: '',
@@ -199,7 +199,7 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 17,
-      fieldHEPrivateCard: t('trainingDuration'),
+      fieldHEPrivateCard: t('FormsPage.trainingDuration'),
       xPrivateCard: '',
       yPrivateCard: '',
       fieldENPrivateCard: '',
@@ -211,7 +211,7 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 18,
-      fieldHEPrivateCard: t('timeSinceTraining'),
+      fieldHEPrivateCard: t('FormsPage.timeSinceTraining'),
       xPrivateCard: '',
       yPrivateCard: '',
       fieldENPrivateCard: '',
@@ -223,7 +223,7 @@ const PersonalInfoRows = ({ language }) => {
     },
     {
       id: 19,
-      fieldHEPrivateCard: t('trainingSuccessLevel'),
+      fieldHEPrivateCard: t('FormsPage.trainingSuccessLevel'),
       xPrivateCard: '',
       yPrivateCard: '',
       fieldENPrivateCard: '',

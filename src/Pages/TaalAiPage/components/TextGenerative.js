@@ -1,17 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Typography, Icon, Button, Chip } from "@mui/material";
+import { Box, Typography, Icon, Button, Chip, IconButton, Tooltip } from "@mui/material";
 import TaskIcon from '@mui/icons-material/Task';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { useTranslation } from "react-i18next";
 // import { usePollinationsChat } from '@pollinations/react';
 import TaskTable from './TaskTable';
 import ChatContainer from './ChatContainer';
 import InputContainer from './InputContainer';
 import SettingsDialog from './SettingsDialog';
+import { TaalAiThemeProvider, useTaalAiTheme } from './ThemeContext';
 import "../../../i18n";
 import { createChatCompletion } from "../../../api/api";
 
-export default function SearchUI() {
+// Inner component that uses the theme
+function SearchUIContent() {
   const { t } = useTranslation();
+  const { theme, isDarkMode, toggleTheme } = useTaalAiTheme();
   const [input, setInput] = useState('');
   const [isTableOpen, setIsTableOpen] = useState(false);
   const [tasks, setTasks] = useState([]);
@@ -259,20 +264,38 @@ Write tasks so they can be understood by workers with varied cognitive abilities
   return (
     <Box
       sx={{
-        bgcolor: "#1e1e1e",
+        bgcolor: theme.background,
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: hasChatStarted ? "flex-start" : "center",
-        color: "white",
+        color: theme.text,
         padding: 2,
         paddingBottom: hasChatStarted ? "120px" : 2,
         position: "relative",
-        transition: "justify-content 0.5s ease",
+        transition: "all 0.3s ease",
         direction: direction,
       }}
     >
+      {/* Theme Toggle Button */}
+      <Tooltip title={isDarkMode ? t('TextGenerative.lightMode') || 'Light Mode' : t('TextGenerative.darkMode') || 'Dark Mode'}>
+        <IconButton
+          onClick={toggleTheme}
+          sx={{
+            position: "absolute",
+            top: 16,
+            [isRTL ? 'left' : 'right']: 70,
+            bgcolor: theme.backgroundSecondary,
+            color: theme.primary,
+            "&:hover": { bgcolor: theme.backgroundTertiary },
+            zIndex: 1000,
+          }}
+        >
+          {isDarkMode ? <LightModeIcon /> : <DarkModeIcon />}
+        </IconButton>
+      </Tooltip>
+
       {/* Settings Component */}
       <SettingsDialog
         isOpen={isSettingsOpen}
@@ -297,6 +320,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
         fixedJsonStructure={fixedJsonStructure}
         direction={direction}
         isRTL={isRTL}
+        theme={theme}
       />
 
       {/* Title and Input Container - Centered when chat hasn't started */}
@@ -326,11 +350,12 @@ Write tasks so they can be understood by workers with varied cognitive abilities
                 backgroundPosition: "center",
                 borderRadius: 1,
                 transform: isRTL ? "none" : "scaleX(-1)",
+                filter: theme.mode === 'light' ? 'invert(1)' : 'none',
               }}
             />
             <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <Typography variant="h5">{t("TextGenerative.title")}</Typography>
-              <Typography variant="body2" sx={{ color: "gray" }}>
+              <Typography variant="body2" sx={{ color: theme.textMuted }}>
                 {t("TextGenerative.subtitle")}
               </Typography>
             </Box>
@@ -348,6 +373,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
             hasChatStarted={hasChatStarted}
             direction={direction}
             isRTL={isRTL}
+            theme={theme}
           />
         </Box>
       )}
@@ -374,11 +400,12 @@ Write tasks so they can be understood by workers with varied cognitive abilities
                 backgroundPosition: "center",
                 borderRadius: 1,
                 transform: isRTL ? "none" : "scaleX(-1)",
+                filter: theme.mode === 'light' ? 'invert(1)' : 'none',
               }}
             />
             <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <Typography variant="h5">{t("TextGenerative.title")}</Typography>
-              <Typography variant="body2" sx={{ color: "gray" }}>
+              <Typography variant="body2" sx={{ color: theme.textMuted }}>
                 {t("TextGenerative.subtitle")}
               </Typography>
             </Box>
@@ -403,15 +430,15 @@ Write tasks so they can be understood by workers with varied cognitive abilities
               onClick={toggleTable}
               disabled={!hasTasksReady}
               sx={{
-                color: isTableOpen ? "white" : "#4a9eff",
-                borderColor: "#4a9eff",
-                bgcolor: isTableOpen ? "#4a9eff" : "transparent",
+                color: isTableOpen ? "white" : theme.primary,
+                borderColor: theme.primary,
+                bgcolor: isTableOpen ? theme.primary : "transparent",
                 "&:hover": {
-                  bgcolor: isTableOpen ? "#3a8eef" : "rgba(74, 158, 255, 0.1)",
+                  bgcolor: isTableOpen ? theme.primaryHover : `${theme.primary}1A`,
                 },
                 "&:disabled": {
-                  color: "gray",
-                  borderColor: "gray",
+                  color: theme.textMuted,
+                  borderColor: theme.textMuted,
                 },
               }}
             >
@@ -448,6 +475,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
               isTableOpen={isTableOpen}
               onShowTasks={handleShowTasks}
               getComplexityColor={getComplexityColor}
+              theme={theme}
             />
 
             <TaskTable
@@ -466,6 +494,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
               direction={direction}
               isRTL={isRTL}
               getComplexityColor={getComplexityColor}
+              theme={theme}
             />
           </Box>
 
@@ -481,9 +510,19 @@ Write tasks so they can be understood by workers with varied cognitive abilities
             hasChatStarted={hasChatStarted}
             direction={direction}
             isRTL={isRTL}
+            theme={theme}
           />
         </>
       )}
     </Box>
+  );
+}
+
+// Main export with theme provider wrapper
+export default function SearchUI() {
+  return (
+    <TaalAiThemeProvider>
+      <SearchUIContent />
+    </TaalAiThemeProvider>
   );
 }

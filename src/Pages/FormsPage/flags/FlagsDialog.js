@@ -14,7 +14,6 @@ const FlagsDialog = ({
   open,
   handleClose,
   initialValues,
-  language,
   onSave,
 }) => {
   const [formValues, setFormValues] = useState({ ...initialValues });
@@ -72,7 +71,7 @@ const FlagsDialog = ({
       disableEscapeKeyDown
     >
       <div style={{ display: 'flex' }}>
-        {language === 'he' ? (
+        {t('Direction') === 'rtl' ? (
           <>
             <DialogActions style={{ direction: 'rtl', flexGrow: 1 }}>
               <Button onClick={handleClose}>X</Button>
@@ -183,7 +182,7 @@ const FlagsDialog = ({
             id='select-Alternatives'
             label={t('FormsPage.alternatives')}
             fullWidth
-            style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}
+            style={{ direction: t('Direction') }}
             disabled
           >
             <option value={t('FormsPage.fieldAvailableRedOnly')}>
@@ -205,7 +204,7 @@ const FlagsDialog = ({
                 Alternatives: e.target.value,
               })
             }
-            style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}
+            style={{ direction: t('Direction') }}
           >
             <optgroup label={t('FormsPage.writingUnfamiliarWords')}>
               <option value={t('FormsPage.readyStickers')}>{t('FormsPage.readyStickers')}</option>
@@ -312,7 +311,7 @@ const FlagsDialog = ({
         />
       </DialogContent>
 
-      <DialogActions style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}>
+      <DialogActions style={{ direction: t('Direction') }}>
         <Button onClick={handleReset}>{t('FormsPage.reset')}</Button>
         <Button onClick={handleSave}>{t('FormsPage.save')}</Button>
       </DialogActions>

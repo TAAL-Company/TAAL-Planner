@@ -27,8 +27,23 @@ export default function InputContainer({
   hasChatStarted,
   direction,
   isRTL,
+  theme,
 }) {
   const { t } = useTranslation();
+
+  // Default theme if not provided
+  const colors = theme || {
+    background: '#1e1e1e',
+    backgroundSecondary: '#2b2b2b',
+    backgroundTertiary: '#3a3a3a',
+    text: '#ffffff',
+    textMuted: 'gray',
+    border: '#4a4a4a',
+    borderHover: '#6a6a6a',
+    primary: '#4a9eff',
+    primaryHover: '#3a8eef',
+    shadow: 'rgba(0,0,0,0.3)',
+  };
 
   // Complexity options with i18n support
   const complexityOptions = [
@@ -58,10 +73,10 @@ export default function InputContainer({
     margin: "0 auto",
     transition: "all 0.5s ease",
     direction: direction,
-    bgcolor: "#1e1e1e",
+    bgcolor: colors.background,
     padding: "16px",
     borderRadius: "12px 12px 0 0",
-    boxShadow: "0 -4px 20px rgba(0,0,0,0.3)",
+    boxShadow: `0 -4px 20px ${colors.shadow}`,
     zIndex: 1000,
   } : {
     display: "flex",
@@ -86,7 +101,7 @@ export default function InputContainer({
           startAdornment: (
             <InputAdornment position={isRTL ? "end" : "start"}>
               <IconButton disabled={loading}>
-                <AddIcon sx={{ color: loading ? "#666" : "gray", fontSize: "18px" }} />
+                <AddIcon sx={{ color: loading ? colors.border : colors.textMuted, fontSize: "18px" }} />
               </IconButton>
             </InputAdornment>
           ),
@@ -100,41 +115,41 @@ export default function InputContainer({
                   disabled={loading}
                   startAdornment={
                     <InputAdornment position="start">
-                      <TuneIcon sx={{ color: loading ? "#666" : "#4a9eff", fontSize: "18px", mr: 0.5 }} />
+                      <TuneIcon sx={{ color: loading ? colors.border : colors.primary, fontSize: "18px", mr: 0.5 }} />
                     </InputAdornment>
                   }
                   sx={{
-                    bgcolor: "#2b2b2b",
-                    color: "white",
+                    bgcolor: colors.backgroundSecondary,
+                    color: colors.text,
                     borderRadius: "25px",
                     height: "50px",
                     "& .MuiOutlinedInput-notchedOutline": {
-                      borderColor: loading ? "#666" : "#4a4a4a",
+                      borderColor: loading ? colors.border : colors.border,
                     },
                     "&:hover .MuiOutlinedInput-notchedOutline": {
-                      borderColor: loading ? "#666" : "#6a6a6a",
+                      borderColor: loading ? colors.border : colors.borderHover,
                     },
                     "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: loading ? "#666" : "#4a9eff",
+                      borderColor: loading ? colors.border : colors.primary,
                     },
                     "& .MuiSelect-icon": {
-                      color: loading ? "#666" : "#4a9eff",
+                      color: loading ? colors.border : colors.primary,
                     },
                     "&.Mui-disabled": {
-                      color: "#888",
+                      color: colors.textMuted,
                     },
                   }}
                   MenuProps={{
                     PaperProps: {
                       sx: {
-                        bgcolor: "#2b2b2b",
-                        color: "white",
+                        bgcolor: colors.backgroundSecondary,
+                        color: colors.text,
                         "& .MuiMenuItem-root": {
                           direction: direction,
-                          "&:hover": { bgcolor: "#3a3a3a" },
+                          "&:hover": { bgcolor: colors.backgroundTertiary },
                           "&.Mui-selected": {
-                            bgcolor: "#4a9eff",
-                            "&:hover": { bgcolor: "#3a8eef" },
+                            bgcolor: colors.primary,
+                            "&:hover": { bgcolor: colors.primaryHover },
                           },
                         },
                       },
@@ -160,7 +175,7 @@ export default function InputContainer({
               </FormControl>
               <IconButton
                 sx={{
-                  color: (input.trim() && !loading) ? "#4a9eff" : "gray",
+                  color: (input.trim() && !loading) ? colors.primary : colors.textMuted,
                   position: "relative",
                 }}
                 onClick={onSend}
@@ -170,7 +185,7 @@ export default function InputContainer({
                   <CircularProgress
                     size={20}
                     sx={{
-                      color: "#4a9eff",
+                      color: colors.primary,
                       position: "absolute",
                     }}
                   />
@@ -184,21 +199,21 @@ export default function InputContainer({
           ),
           sx: {
             borderRadius: "30px",
-            bgcolor: "#2b2b2b",
-            color: "white",
+            bgcolor: colors.backgroundSecondary,
+            color: colors.text,
             minHeight: "50px",
             direction: direction,
             "& .MuiOutlinedInput-notchedOutline": {
-              borderColor: loading ? "#666" : "#4a4a4a",
+              borderColor: loading ? colors.border : colors.border,
             },
             "&:hover .MuiOutlinedInput-notchedOutline": {
-              borderColor: loading ? "#666" : "#6a6a6a",
+              borderColor: loading ? colors.border : colors.borderHover,
             },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-              borderColor: loading ? "#666" : "#4a9eff",
+              borderColor: loading ? colors.border : colors.primary,
             },
             "&.Mui-disabled": {
-              color: "#888",
+              color: colors.textMuted,
             },
           },
         }}

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './style.css';
 // import Navbar from "../Navbar/Navbar";
 import CardDash from '../../components/CardDash/CardDash';
@@ -41,164 +42,82 @@ const useStyles = makeStyles({
 });
 
 const Dashboard = () => {
+  const { t } = useTranslation();
+  const currentLanguage = sessionStorage.getItem('language');
 
-  const currentLanguage = sessionStorage.getItem('language')
-
-
-  const cardsHebrew = [
+  // Cards using i18n translations
+  const cards = [
     {
       id: 1,
-      headline: 'אתרים',
-      addLabel: 'הוספת אתר',
+      headline: t('Dashboard.sites'),
+      addLabel: t('Dashboard.addSite'),
       image: location,
       color: '#f29d38'
     },
     {
       id: 2,
-      headline: 'עובדים',
-      addLabel: 'הוספת עובד',
+      headline: t('Dashboard.employees'),
+      addLabel: t('Dashboard.addEmployee'),
       image: group,
       color: '#b1cdf9'
     },
     {
       id: 3,
-      headline: 'מסלולים',
+      headline: t('Dashboard.routes'),
       addLabel: '',
       image: route,
       color: '#5bcfd0'
     },
     {
       id: 4,
-      headline: 'מקצועות',
-      addLabel: 'הוספת מקצוע',
+      headline: t('Dashboard.professions'),
+      addLabel: t('Dashboard.addProfession'),
       image: Professions,
       color: '#f191c2'
     },
     {
       id: 5,
-      headline: 'גלריה',
-      addLabel: 'הוספת תמונה',
+      headline: t('Dashboard.gallery'),
+      addLabel: t('Dashboard.addImage'),
       image: galleryImage,
       color: '#c5d1da'
     },
     {
       id: 6,
-      headline: 'מדריכים',
-      addLabel: 'הוספת מדריך',
+      headline: t('Dashboard.coaches'),
+      addLabel: t('Dashboard.addCoach'),
       image: coachImage,
       color: '#3eacec'
     },
     {
       id: 7,
-      headline: 'הכשרות',
-      addLabel: 'הוספת הכשרה',
+      headline: t('Dashboard.health'),
+      addLabel: t('Dashboard.addHealth'),
       image: kashrut,
       color: '#57c47d'
     },
     {
       id: 8,
-      headline: 'קהילה',
-      addLabel: 'הוספת הודעה',
+      headline: t('Dashboard.community'),
+      addLabel: t('Dashboard.addCommunity'),
       image: communityImage,
       color: '#65befc'
     },
     {
       id: 9,
-      headline: 'הוספת תכנֵון',
+      headline: t('Dashboard.addRoute'),
       addLabel: '',
       image: route,
       color: '#57c8ca'
     },
     {
       id: 10,
-      headline: 'עורך',
-      addLabel: 'עורך',
+      headline: t('Dashboard.editor'),
+      addLabel: t('Dashboard.addEditor'),
       image: coachImage,
       color: '#57c8ca'
     },
-  ]
-
-  const cardsEnglish = [
-    {
-      id: 1,
-      headline: 'Sites',
-      addLabel: 'Add Site',
-      image: location,
-      color: '#f29d38'
-    },
-    {
-      id: 2,
-      headline: 'Employees',
-      addLabel: 'Add Employees',
-      image: group,
-      color: '#b1cdf9'
-    },
-    {
-      id: 3,
-      headline: 'Routes',
-      addLabel: '',
-      image: route,
-      color: '#5bcfd0'
-    },
-    {
-      id: 4,
-      headline: 'Professions',
-      addLabel: 'Add Profession',
-      image: Professions,
-      color: '#f191c2'
-    },
-    {
-      id: 5,
-      headline: 'Gallery',
-      addLabel: 'Add Image',
-      image: galleryImage,
-      color: '#c5d1da'
-    },
-    {
-      id: 6,
-      headline: 'Coaches',
-      addLabel: 'Add Coach',
-      image: coachImage,
-      color: '#3eacec'
-    },
-    {
-      id: 7,
-      headline: 'Health',
-      addLabel: 'Add Health',
-      image: kashrut,
-      color: '#57c47d'
-    },
-    {
-      id: 8,
-      headline: 'Community',
-      addLabel: 'Add Community',
-      image: communityImage,
-      color: '#65befc'
-    },
-    {
-      id: 9,
-      headline: 'Add Route',
-      addLabel: '',
-      image: route,
-      color: '#57c8ca'
-    },
-    {
-      id: 10,
-      headline: 'Editor',
-      addLabel: 'Add Editor',
-      image: coachImage,
-      color: '#57c8ca'
-    },
-  ]
-
-  const selectedCards = {
-    "English": cardsEnglish,
-    "Hebrew": cardsHebrew,
-    // "Arabic": cardsArabic,
-    // Add more languages as needed
-  };
-
-  const cards = selectedCards[currentLanguage] || cardsEnglish;
+  ];
 
   const jwt = sessionStorage.getItem('jwt');
   const jwtEditor = sessionStorage.getItem('jwt-EDITOR');

@@ -36,7 +36,6 @@ const renderUserOption = (props, option) => {
 };
 
 const TaskPerformanceToolbar = ({
-  language,
   worker,
   allUsers,
   handleChangeUser,

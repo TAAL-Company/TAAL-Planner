@@ -39,9 +39,23 @@ export default function SettingsDialog({
   defaultEditablePrompt,
   fixedJsonStructure,
   direction,
-  isRTL
+  isRTL,
+  theme
 }) {
   const { t } = useTranslation();
+
+  // Default theme if not provided
+  const colors = theme || {
+    backgroundSecondary: '#2b2b2b',
+    backgroundTertiary: '#3a3a3a',
+    text: '#ffffff',
+    textSecondary: '#cccccc',
+    border: '#4a4a4a',
+    borderHover: '#6a6a6a',
+    primary: '#4a9eff',
+    primaryHover: '#3a8eef',
+    accent: '#ff6b35',
+  };
 
   const handleSave = () => {
     onClose();
@@ -69,8 +83,8 @@ export default function SettingsDialog({
           position: "absolute",
           top: 16,
           [isRTL ? 'left' : 'right']: 16,
-          bgcolor: "#4a9eff",
-          "&:hover": { bgcolor: "#3a8eef" },
+          bgcolor: colors.primary,
+          "&:hover": { bgcolor: colors.primaryHover },
           zIndex: 1000,
         }}
       >
@@ -85,26 +99,26 @@ export default function SettingsDialog({
         fullWidth
         PaperProps={{
           sx: {
-            bgcolor: "#2b2b2b",
-            color: "white",
+            bgcolor: colors.backgroundSecondary,
+            color: colors.text,
             direction: direction,
             maxHeight: "90vh",
           },
         }}
       >
         <DialogTitle sx={{
-          color: "white",
+          color: colors.text,
           display: "flex",
           alignItems: "center",
           gap: 1,
           direction: direction,
         }}>
-          <SettingsIcon sx={{ color: "#4a9eff" }} />
+          <SettingsIcon sx={{ color: colors.primary }} />
           {t('TextGenerative.systemPromptSettings')}
         </DialogTitle>
         <DialogContent sx={{ direction: direction, overflow: "auto" }}>
           <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" sx={{ mb: 2, color: "#4a9eff" }}>
+            <Typography variant="h6" sx={{ mb: 2, color: colors.primary }}>
               {t('TextGenerative.editableInstructions')}
             </Typography>
             <TextField
@@ -116,28 +130,28 @@ export default function SettingsDialog({
               variant="outlined"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  bgcolor: "#3a3a3a",
-                  color: "white",
+                  bgcolor: colors.backgroundTertiary,
+                  color: colors.text,
                   direction: "ltr",
-                  "& fieldset": { borderColor: "#4a4a4a" },
-                  "&:hover fieldset": { borderColor: "#6a6a6a" },
-                  "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
+                  "& fieldset": { borderColor: colors.border },
+                  "&:hover fieldset": { borderColor: colors.borderHover },
+                  "&.Mui-focused fieldset": { borderColor: colors.primary },
                 },
               }}
             />
           </Box>
 
-          <Divider sx={{ bgcolor: "#4a4a4a", my: 2 }} />
+          <Divider sx={{ bgcolor: colors.border, my: 2 }} />
 
           {/* Image Generation Settings */}
           <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" sx={{ mb: 2, color: "#ff6b35" }}>
+            <Typography variant="h6" sx={{ mb: 2, color: colors.accent }}>
               {t('TextGenerative.imageGenerationSettings')}
             </Typography>
 
             {/* Image Prompt Settings */}
             <Box sx={{ mb: 2 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1, color: "#ccc" }}>
+              <Typography variant="subtitle2" sx={{ mb: 1, color: colors.textSecondary }}>
                 {t('TextGenerative.imagePromptPrefix')}:
               </Typography>
               <TextField
@@ -149,15 +163,15 @@ export default function SettingsDialog({
                 sx={{
                   mb: 2,
                   "& .MuiOutlinedInput-root": {
-                    bgcolor: "#3a3a3a",
-                    color: "white",
-                    "& fieldset": { borderColor: "#4a4a4a" },
-                    "&:hover fieldset": { borderColor: "#6a6a6a" },
-                    "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
+                    bgcolor: colors.backgroundTertiary,
+                    color: colors.text,
+                    "& fieldset": { borderColor: colors.border },
+                    "&:hover fieldset": { borderColor: colors.borderHover },
+                    "&.Mui-focused fieldset": { borderColor: colors.primary },
                   },
                 }}
               />
-              <Typography variant="subtitle2" sx={{ mb: 1, color: "#ccc" }}>
+              <Typography variant="subtitle2" sx={{ mb: 1, color: colors.textSecondary }}>
                 {t('TextGenerative.imagePromptSuffix')}:
               </Typography>
               <TextField
@@ -169,11 +183,11 @@ export default function SettingsDialog({
                 sx={{
                   mb: 2,
                   "& .MuiOutlinedInput-root": {
-                    bgcolor: "#3a3a3a",
-                    color: "white",
-                    "& fieldset": { borderColor: "#4a4a4a" },
-                    "&:hover fieldset": { borderColor: "#6a6a6a" },
-                    "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
+                    bgcolor: colors.backgroundTertiary,
+                    color: colors.text,
+                    "& fieldset": { borderColor: colors.border },
+                    "&:hover fieldset": { borderColor: colors.borderHover },
+                    "&.Mui-focused fieldset": { borderColor: colors.primary },
                   },
                 }}
               />
@@ -192,15 +206,15 @@ export default function SettingsDialog({
                 sx={{
                   flex: 1,
                   "& .MuiOutlinedInput-root": {
-                    bgcolor: "#3a3a3a",
-                    color: "white",
-                    "& fieldset": { borderColor: "#4a4a4a" },
-                    "&:hover fieldset": { borderColor: "#6a6a6a" },
-                    "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
+                    bgcolor: colors.backgroundTertiary,
+                    color: colors.text,
+                    "& fieldset": { borderColor: colors.border },
+                    "&:hover fieldset": { borderColor: colors.borderHover },
+                    "&.Mui-focused fieldset": { borderColor: colors.primary },
                   },
                   "& .MuiInputLabel-root": {
-                    color: "#ccc",
-                    "&.Mui-focused": { color: "#4a9eff" },
+                    color: colors.textSecondary,
+                    "&.Mui-focused": { color: colors.primary },
                   },
                 }}
               />
@@ -215,15 +229,15 @@ export default function SettingsDialog({
                 sx={{
                   flex: 1,
                   "& .MuiOutlinedInput-root": {
-                    bgcolor: "#3a3a3a",
-                    color: "white",
-                    "& fieldset": { borderColor: "#4a4a4a" },
-                    "&:hover fieldset": { borderColor: "#6a6a6a" },
-                    "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
+                    bgcolor: colors.backgroundTertiary,
+                    color: colors.text,
+                    "& fieldset": { borderColor: colors.border },
+                    "&:hover fieldset": { borderColor: colors.borderHover },
+                    "&.Mui-focused fieldset": { borderColor: colors.primary },
                   },
                   "& .MuiInputLabel-root": {
-                    color: "#ccc",
-                    "&.Mui-focused": { color: "#4a9eff" },
+                    color: colors.textSecondary,
+                    "&.Mui-focused": { color: colors.primary },
                   },
                 }}
               />
@@ -238,15 +252,15 @@ export default function SettingsDialog({
                 sx={{
                   flex: 1,
                   "& .MuiOutlinedInput-root": {
-                    bgcolor: "#3a3a3a",
-                    color: "white",
-                    "& fieldset": { borderColor: "#4a4a4a" },
-                    "&:hover fieldset": { borderColor: "#6a6a6a" },
-                    "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
+                    bgcolor: colors.backgroundTertiary,
+                    color: colors.text,
+                    "& fieldset": { borderColor: colors.border },
+                    "&:hover fieldset": { borderColor: colors.borderHover },
+                    "&.Mui-focused fieldset": { borderColor: colors.primary },
                   },
                   "& .MuiInputLabel-root": {
-                    color: "#ccc",
-                    "&.Mui-focused": { color: "#4a9eff" },
+                    color: colors.textSecondary,
+                    "&.Mui-focused": { color: colors.primary },
                   },
                 }}
               />
@@ -264,23 +278,23 @@ export default function SettingsDialog({
                 sx={{
                   minWidth: 120,
                   "& .MuiOutlinedInput-root": {
-                    bgcolor: "#3a3a3a",
-                    color: "white",
-                    "& fieldset": { borderColor: "#4a4a4a" },
-                    "&:hover fieldset": { borderColor: "#6a6a6a" },
-                    "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
+                    bgcolor: colors.backgroundTertiary,
+                    color: colors.text,
+                    "& fieldset": { borderColor: colors.border },
+                    "&:hover fieldset": { borderColor: colors.borderHover },
+                    "&.Mui-focused fieldset": { borderColor: colors.primary },
                   },
                   "& .MuiInputLabel-root": {
-                    color: "#ccc",
-                    "&.Mui-focused": { color: "#4a9eff" },
+                    color: colors.textSecondary,
+                    "&.Mui-focused": { color: colors.primary },
                   },
                 }}
                 SelectProps={{
                   sx: {
                     "& .MuiMenuItem-root": {
-                      bgcolor: "#3a3a3a",
-                      color: "white",
-                      "&:hover": { bgcolor: "#4a4a4a" },
+                      bgcolor: colors.backgroundTertiary,
+                      color: colors.text,
+                      "&:hover": { bgcolor: colors.border },
                     },
                   },
                 }}
@@ -297,32 +311,32 @@ export default function SettingsDialog({
                   checked={imageNoLogo}
                   onChange={(e) => setImageNoLogo(e.target.checked)}
                   style={{
-                    accentColor: "#4a9eff",
+                    accentColor: colors.primary,
                     transform: "scale(1.2)"
                   }}
                 />
-                <label htmlFor="nologo-checkbox" style={{ color: "#ccc", cursor: "pointer" }}>
+                <label htmlFor="nologo-checkbox" style={{ color: colors.textSecondary, cursor: "pointer" }}>
                   {t('TextGenerative.noLogo')}
                 </label>
               </Box> */}
             </Box>
           </Box>
 
-          <Divider sx={{ bgcolor: "#4a4a4a", my: 2 }} />
+          <Divider sx={{ bgcolor: colors.border, my: 2 }} />
 
           <Box>
-            <Typography variant="h6" sx={{ mb: 2, color: "#ff6b35" }}>
+            <Typography variant="h6" sx={{ mb: 2, color: colors.accent }}>
               {t('TextGenerative.fixedJsonStructure')}
             </Typography>
             <Alert
               severity="info"
               sx={{
                 mb: 2,
-                bgcolor: "#1a3a5c",
-                color: "white",
+                bgcolor: colors.mode === 'light' ? '#e3f2fd' : "#1a3a5c",
+                color: colors.text,
                 direction: direction,
                 "& .MuiAlert-icon": {
-                  color: "#4a9eff",
+                  color: colors.primary,
                 },
               }}
             >
@@ -330,13 +344,13 @@ export default function SettingsDialog({
             </Alert>
             <Paper
               sx={{
-                bgcolor: "#1a1a1a",
-                color: "#ccc",
+                bgcolor: colors.mode === 'light' ? '#f5f5f5' : "#1a1a1a",
+                color: colors.textSecondary,
                 p: 2,
                 borderRadius: 1,
                 fontFamily: "monospace",
                 fontSize: "0.9rem",
-                border: "1px solid #4a4a4a",
+                border: `1px solid ${colors.border}`,
                 direction: "ltr",
               }}
             >
@@ -357,7 +371,7 @@ export default function SettingsDialog({
             onClick={handleSave}
             variant="contained"
             startIcon={<SaveIcon />}
-            sx={{ bgcolor: "#4a9eff", "&:hover": { bgcolor: "#3a8eef" } }}
+            sx={{ bgcolor: colors.primary, "&:hover": { bgcolor: colors.primaryHover } }}
           >
             {t('TextGenerative.saveSettings')}
           </Button>

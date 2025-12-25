@@ -33,7 +33,6 @@ const cacheLtr = createCache({
 });
 
 const FlagsTable = ({
-  language,
   allUsers,
   allRoutes,
   worker,
@@ -41,13 +40,14 @@ const FlagsTable = ({
   cognitiveList,
   taskAbilityLists,
   setTaskAbilityList,
+  allTasks,
 }) => {
   const [expandedRows, setExpandedRows] = useState({});
   const [loading, setLoading] = useState(false);
   const [flags, setFlags] = useState([]);
   const [pageSize, setPageSize] = useState(10);
   const [allFlags, setAllFlags] = useState([]);
-  const [allTasks, setAllTasks] = useState([]);
+  // const [allTasks, setAllTasks] = useState(allTasks || []);
   const [routesOfFlags, setRoutesOfFlags] = useState({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currRow, setCurrRow] = useState({});
@@ -111,17 +111,17 @@ const FlagsTable = ({
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const tasks = await getingData_Tasks();
-        setAllTasks(tasks || []);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const tasks = await getingData_Tasks();
+  //       setAllTasks(tasks || []);
+  //     } catch (error) {
+  //       console.error(error.message);
+  //     }
+  //   };
+  //   fetchData();
+  // }, []);
 
   useEffect(() => {
     if (Object.keys(routesOfFlags).length > 0 && allFlags.length > 0) {
@@ -171,7 +171,6 @@ const FlagsTable = ({
   }, [allFlags, allTasks, cognitiveList, routesOfFlags, taskAbilityLists, worker.id]);
 
   const { columns } = FlagsColumns({
-    language,
     handleEdit,
     handleDelete,
   });
@@ -180,11 +179,11 @@ const FlagsTable = ({
   const direction = t('Direction');
 
   const theme = useMemo(() =>
-    createTheme({}, existingTheme, { direction }),
+      createTheme({}, t('localeText', { returnObjects: true }), existingTheme, {direction}),
     [existingTheme, direction],
   );
 
-  const cache = direction === 'rtl' ? cacheRtl : cacheLtr;
+  const cache = t('Direction') === 'rtl' ? cacheRtl : cacheLtr;
 
   return (
     <CacheProvider value={cache}>
@@ -231,7 +230,6 @@ const FlagsTable = ({
                 open={isDialogOpen}
                 handleClose={handleClose}
                 initialValues={currRow}
-                language={language}
                 onSave={handleSave}
               />
             )}
@@ -286,11 +284,6 @@ const FlagsTable = ({
                   pagination
                   checkboxSelection
                   disableSelectionOnClick
-                  localeText={
-                    language === 'he'
-                      ? heIL.components.MuiDataGrid.defaultProps.localeText
-                      : undefined
-                  }
                   components={{
                     Toolbar: () => (
                       <CustomToolbar
@@ -307,7 +300,7 @@ const FlagsTable = ({
                         routesOfFlags={routesOfFlags}
                         RroutenewName={routeName}
                         setRroutenewName={setRouteName}
-                        language={language}
+                        allTasks={allTasks}
                       />
                     ),
                   }}

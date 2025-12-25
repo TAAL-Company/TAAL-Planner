@@ -143,6 +143,23 @@
   align-items: center;
 }
 
+.packs{
+  background-color: rgb(245 245 245);
+  /* margin: -0.5px; */
+  padding-top: 1px;
+  padding-bottom: 1px;
+  height: 345px;
+  overflow: auto;
+  /* width: 272px; */
+  width: 300px;
+  scrollbar-color: #bfc4ce #dadbe2 !important;
+  scrollbar-width: thin !important;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
 .text {
   font: normal normal bold 26px/34px Assistant;
   /* color: #505050; */
@@ -755,6 +772,11 @@ h3 {
   }
 
   .routs {
+    width: 100%;
+    height: 40vh;
+  }
+
+  .packs {
     width: 100%;
     height: 40vh;
   }

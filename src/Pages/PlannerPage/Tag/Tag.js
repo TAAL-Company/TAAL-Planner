@@ -103,8 +103,6 @@ function Tag({
             ></div>
             <div className={`nameStationBoard ${language !== 'English' ? 'english' : ''}`}>
               {nameStation}
-              {console.log("Station", Station)} 
-              {console.log("selectedRoute", selectedRoute)}
               {
                 nameStation !== ''
                 && selectedRoute?.loops?.length > 0
@@ -230,7 +228,7 @@ function Tag({
                   <button
                     className='threeDotsVerticalEng'
                     onClick={() => {
-                      console.log('id', id);
+                      // console.log('id', id);
 
                       dragFromCover === 'TasksNew'
                         ? clickOnThreeDotsVerticaIcont(id)

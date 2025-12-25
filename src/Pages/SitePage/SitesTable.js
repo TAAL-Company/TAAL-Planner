@@ -169,7 +169,7 @@ export default function SitesTable() {
         let siteToDuplicate = {
             id: null,
             name: selectedSite.name + ' (Copy)',
-            nameInEnglish: selectedSite.nameInEnglish,
+            nameInEnglish: selectedSite.nameInEnglish + ' (Copy)',
             description: selectedSite.description,
             picture_url: selectedSite.picture_url,
             studentIds: [],

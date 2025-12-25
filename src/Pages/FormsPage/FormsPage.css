@@ -51,6 +51,10 @@
   gap: 10px;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 20px;
 }
 
 .btn_nav_forms {

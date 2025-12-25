@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { CircularProgress, Backdrop } from '@mui/material';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { CircularProgress, Backdrop, IconButton, Tooltip, Fab, Box, Typography } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
 import FlagsTable from './flags/FlagsTable';
 import PersonalInfoTable from './personalinfo/PersonalInfoTable';
 import TaskPerformanceTable from './taskperformanceinfo/TaskPerformanceTable';
 import TaskAbilityTable from './taskability/TaskAbilityTable';
 import GeneralPerformanceTable from './generalperformanceinfo/GeneralPerformanceTable';
-// import { getTranslation } from './i18n';
+import SettingsDialog from './components/SettingsDialog';
 import { useTranslation } from "react-i18next";
+import { useTranslator } from '../../Utility/TranslationProvider';
 import './FormsPage.css';
 import {
   getingData_Users,
@@ -28,35 +30,37 @@ const FormsPage = () => {
   const [worker, setWorker] = useState([]);
   const [taskAbilityLists, setTaskAbilityList] = useState([]);
   const [selectedTable, setSelectedTable] = useState('flags');
-  const [language, setLanguage] = useState(sessionStorage.getItem('language').toLowerCase());
 
-  useEffect(() => {
-    setLanguage(sessionStorage.getItem('language').toLowerCase());
-  }, []);
+  // Settings and translation state
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [isTranslated, setIsTranslated] = useState(false);
+  const [currentTranslationLang, setCurrentTranslationLang] = useState('');
 
-  // const t = (key) => getTranslation(key, language === 'hebrew' ? 'he' : 'en');
+  // Original data refs (to restore from)
+  const originalDataRef = useRef({
+    users: [],
+    tasks: [],
+    routes: [],
+    abilities: [],
+    sites: [],
+  });
+
   const { t } = useTranslation();
+  const { translateArrayOfObjects } = useTranslator();
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const [
-          users,
-          tasks,
-          routes,
-          abilities,
-          cognitiveProfiles,
-          taskRequirements,
-          sitesData,
-        ] = await Promise.all([
+        const [users, tasks, routes, abilities, cognitiveProfiles, taskRequirements, sitesData] = await Promise.all([
           getingData_Users(),
           getingData_Tasks(),
           getingData_Routes(),
           getCognitiveAbillities(),
           getAllCognitiveProfiles(),
           getAllTaskCognitiveRequirements(),
-          getingData_Places(),
+          getingData_Places()
         ]);
 
         const profileIds = new Set(
@@ -102,11 +106,49 @@ const FormsPage = () => {
           ),
         }));
 
+        const markedSites = (sitesData || []).map((site) => {
+          const siteRouteIds = site.routes.map((route) => route.id);
+          const siteRoutes = markedRoutes.filter((route) =>
+            siteRouteIds.includes(route.id)
+          );
+          return {
+            ...site,
+            routes: siteRoutes,
+            hasTaskCognitiveRequirements: siteRoutes.some(
+              (route) => route.hasTaskCognitiveRequirements
+            ),
+          };
+        });
+
         setAllUsers(markedUsers);
         setAllTasks(markedTasks);
         setAllRoutes(markedRoutes);
         setCognitiveAbillities(abilities || []);
-        setSites(sitesData || []);
+        setSites(markedSites || []);
+
+        // Store original data for restore functionality
+        originalDataRef.current = {
+          users: markedUsers,
+          tasks: markedTasks,
+          routes: markedRoutes,
+          abilities: abilities || [],
+          sites: markedSites || [],
+        };
+
+        // --- Automatic translation based on login language ---
+        // Map sessionStorage language to translation code
+        const langMap = {
+          Hebrew: 'he',
+          English: 'en',
+          Arabic: 'ar',
+          Russian: 'ru',
+        };
+        const loginLang = sessionStorage.getItem('language');
+        const code = langMap[loginLang];
+        // Only auto-translate if not Hebrew (original data)
+        if (code && code !== 'original') {
+          await handleTranslateData(code);
+        }
       } catch (error) {
         console.error(error.message);
       } finally {
@@ -114,11 +156,84 @@ const FormsPage = () => {
       }
     };
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSelectTable = (table) => {
     setSelectedTable(table);
   };
+
+  // Handle translating all API data
+  const handleTranslateData = useCallback(async (targetLang) => {
+    setIsTranslating(true);
+    try {
+      const original = originalDataRef.current;
+
+      // Translate all data in parallel using efficient batch translation
+      const [
+        translatedUsers,
+        translatedTasks,
+        translatedRoutes,
+        translatedAbilities,
+        translatedSites,
+      ] = await Promise.all([
+        // Translate users (name fields , role fields)
+        translateArrayOfObjects(original.users, targetLang, ['name', 'role']),
+        // Translate tasks (title, subtitle fields)
+        translateArrayOfObjects(original.tasks, targetLang, ['title', 'subtitle']),
+        // Translate routes (name fields)
+        translateArrayOfObjects(original.routes, targetLang, ['name']),
+        // Translate cognitive abilities (category, trait fields)
+        translateArrayOfObjects(original.abilities, targetLang, ['category', 'trait']),
+        // Translate sites (name, description fields)
+        translateArrayOfObjects(original.sites, targetLang, ['name', 'description']),
+      ]);
+
+      console.log("Translation complete:", {
+        users: translatedUsers,
+        tasks: translatedTasks,
+        routes: translatedRoutes,
+        abilities: translatedAbilities,
+        sites: translatedSites,
+      });
+
+      const translatedRoutesById = new Map(
+        translatedRoutes.map(route => [route.id, route])
+      );
+
+      const translatedUsersWithRoutesNames = translatedUsers.map(user => ({
+        ...user,
+        routes: (user.routes || []).map(route =>
+          translatedRoutesById.get(route.id) ?? route
+        )
+      }));
+
+      setAllUsers(translatedUsersWithRoutesNames);
+      setAllTasks(translatedTasks);
+      setAllRoutes(translatedRoutes);
+      setCognitiveAbillities(translatedAbilities);
+      setSites(translatedSites);
+
+      setIsTranslated(true);
+      setCurrentTranslationLang(targetLang);
+    } catch (error) {
+      console.error('Translation error:', error);
+    } finally {
+      setIsTranslating(false);
+    }
+  }, [translateArrayOfObjects]);
+
+  // Handle restoring original data
+  const handleRestoreOriginal = useCallback(() => {
+    const original = originalDataRef.current;
+    setAllUsers(original.users);
+    setAllTasks(original.tasks);
+    setAllRoutes(original.routes);
+    setCognitiveAbillities(original.abilities);
+    setSites(original.sites);
+    setIsTranslated(false);
+    setCurrentTranslationLang('');
+  }, []);
 
   return (
     <div className='Forms'>
@@ -126,11 +241,33 @@ const FormsPage = () => {
         sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
       >
-        <CircularProgress size='10rem' color='info' />
+        <Box style={{ display: 'flex', alignItems: 'center' }}>
+          <CircularProgress size='10rem' color={isTranslating ? 'secondary' : 'primary'} />
+          {isTranslating && (
+            <Typography position='absolute'>
+              <span style={{ marginTop: 24, fontSize: 28 }}>{t('FormsPage.translating')}</span>
+            </Typography>
+          )}
+        </Box>
       </Backdrop>
 
       <div style={{ width: '100%' }}>
-
+        <Fab
+          title={t('FormsPage.settings') || 'Settings'}
+          color="primary"
+          size="small"
+          onClick={() => setSettingsOpen(true)}
+          sx={{
+            position: "absolute",
+            top: 80,
+            [t('Direction') === 'rtl' ? 'left' : 'right']: 16,
+            bgcolor: "#114260",
+            "&:hover": { bgcolor: "#0d324d" },
+            zIndex: 1000,
+          }}
+        >
+          <SettingsIcon />
+        </Fab>
         <div
           className='NavbarForms'
           style={{ direction: t('Direction') }}
@@ -169,12 +306,21 @@ const FormsPage = () => {
           </nav>
         </div>
 
+        <SettingsDialog
+          open={settingsOpen}
+          onClose={() => setSettingsOpen(false)}
+          onTranslate={handleTranslateData}
+          onRestore={handleRestoreOriginal}
+          isTranslating={isTranslating}
+          isTranslated={isTranslated}
+          currentTranslationLang={currentTranslationLang}
+        />
+
         {selectedTable === 'flags' && (
           <div>
             <div className='headlineForms'>{t('FormsPage.flagsTitle')}</div>
             <div className='tableForms'>
               <FlagsTable
-                language={language === 'hebrew' ? 'he' : 'en'}
                 allUsers={allUsers}
                 allRoutes={allRoutes}
                 worker={worker}
@@ -182,6 +328,7 @@ const FormsPage = () => {
                 cognitiveList={cognitiveAbillities}
                 taskAbilityLists={taskAbilityLists}
                 setTaskAbilityList={setTaskAbilityList}
+                allTasks={allTasks}
               />
             </div>
           </div>
@@ -192,7 +339,6 @@ const FormsPage = () => {
             <div className='headlineForms'>{t('FormsPage.personalInfoTitle')}</div>
             <div className='tableForms'>
               <PersonalInfoTable
-                language={language === 'hebrew' ? 'he' : 'en'}
                 worker={worker}
               />
             </div>
@@ -204,7 +350,6 @@ const FormsPage = () => {
             <div className='headlineForms'>{t('FormsPage.taskPerformanceTitle')}</div>
             <div className='tableForms'>
               <TaskPerformanceTable
-                language={language === 'hebrew' ? 'he' : 'en'}
                 allUsers={allUsers}
                 worker={worker}
                 setWorker={setWorker}
@@ -219,7 +364,6 @@ const FormsPage = () => {
             <div className='headlineForms'>{t('FormsPage.taskabilityTitle')}</div>
             <div className='tableForms'>
               <TaskAbilityTable
-                language={language === 'hebrew' ? 'he' : 'en'}
                 allRoutes={allRoutes}
                 allTasks={allTasks}
                 cognitiveAbilities={cognitiveAbillities}
@@ -233,9 +377,7 @@ const FormsPage = () => {
           <div>
             <div className='headlineForms'>{t('FormsPage.generalPerformanceTitle')}</div>
             <div className='tableForms'>
-              <GeneralPerformanceTable
-                language={language === 'hebrew' ? 'he' : 'en'}
-              />
+              <GeneralPerformanceTable cognitiveList={cognitiveAbillities} />
             </div>
           </div>
         )}

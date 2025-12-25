@@ -29,9 +29,23 @@ export default function TaskTable({
   imageSeed, // Add imageSeed prop
   direction,
   isRTL,
-  getComplexityColor
+  getComplexityColor,
+  theme
 }) {
   const { t } = useTranslation();
+
+  // Default theme if not provided
+  const colors = theme || {
+    backgroundSecondary: '#2b2b2b',
+    backgroundTertiary: '#3a3a3a',
+    text: '#ffffff',
+    textSecondary: '#cccccc',
+    textMuted: 'gray',
+    border: '#4a4a4a',
+    primary: '#4a9eff',
+    primaryHover: '#3a8eef',
+    accent: '#ff6b35',
+  };
   const [editingTask, setEditingTask] = useState(null);
   const [editFormData, setEditFormData] = useState({ title: '', subtitle: '', estimatedTimeMinutes: 0 });
   
@@ -165,8 +179,8 @@ export default function TaskTable({
         sx={{
           flex: 4,
           maxWidth: "1000px",
-          bgcolor: "#2b2b2b",
-          color: "white",
+          bgcolor: colors.backgroundSecondary,
+          color: colors.text,
           borderRadius: "15px",
           display: "flex",
           flexDirection: "column",
@@ -178,7 +192,7 @@ export default function TaskTable({
         {/* Table Header */}
         <Box sx={{ p: 2, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <TaskIcon sx={{ color: "#4a9eff" }} />
+            <TaskIcon sx={{ color: colors.primary }} />
             <Typography variant="h6">{t('TextGenerative.taskBreakdown')}</Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -189,9 +203,9 @@ export default function TaskTable({
                 onClick={handleGenerateMissingImages}
                 disabled={tasks.length === 0}
                 sx={{
-                  color: "#4a9eff",
-                  borderColor: "#4a9eff",
-                  "&:hover": { bgcolor: "rgba(74, 158, 255, 0.1)" }
+                  color: colors.primary,
+                  borderColor: colors.primary,
+                  "&:hover": { bgcolor: `${colors.primary}1A` }
                 }}
               >
                 {t('TextGenerative.generateMissingImages') || 'Generate missing images'}
@@ -201,25 +215,25 @@ export default function TaskTable({
               <IconButton
                 onClick={addNewTask}
                 sx={{
-                  color: "#4a9eff",
-                  "&:hover": { bgcolor: "rgba(74, 158, 255, 0.1)" }
+                  color: colors.primary,
+                  "&:hover": { bgcolor: `${colors.primary}1A` }
                 }}
               >
                 <AddCircleIcon />
               </IconButton>
             </Tooltip>
-            <IconButton onClick={onClose} sx={{ color: "gray" }}>
+            <IconButton onClick={onClose} sx={{ color: colors.textMuted }}>
               <CloseIcon />
             </IconButton>
           </Box>
         </Box>
 
-        <Divider sx={{ borderColor: "#4a4a4a" }} />
+        <Divider sx={{ borderColor: colors.border }} />
 
         {/* Complexity Badge */}
         {complexity && (
           <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
-            <Typography variant="body2" sx={{ color: "gray" }}>{t('TextGenerative.complexity')}:</Typography>
+            <Typography variant="body2" sx={{ color: colors.textMuted }}>{t('TextGenerative.complexity')}:</Typography>
             <Chip
               label={complexity}
               color={getComplexityColor(complexity)}
@@ -234,19 +248,19 @@ export default function TaskTable({
             <Table size="small" stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ bgcolor: "#3a3a3a", color: "white", fontWeight: "bold", width: "15%" }}>
+                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "15%" }}>
                     {t('TextGenerative.image')}
                   </TableCell>
-                  <TableCell sx={{ bgcolor: "#3a3a3a", color: "white", fontWeight: "bold", width: "35%" }}>
+                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "35%" }}>
                     {t('TextGenerative.title_table')}
                   </TableCell>
-                  <TableCell sx={{ bgcolor: "#3a3a3a", color: "white", fontWeight: "bold", width: "35%" }}>
+                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "35%" }}>
                     {t('TextGenerative.subtitle_table')}
                   </TableCell>
-                  <TableCell sx={{ bgcolor: "#3a3a3a", color: "white", fontWeight: "bold", width: "10%" }}>
+                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "10%" }}>
                     {t('TextGenerative.time')}
                   </TableCell>
-                  <TableCell sx={{ bgcolor: "#3a3a3a", color: "white", fontWeight: "bold", width: "5%" }}>
+                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "5%" }}>
                     {t('TextGenerative.actions')}
                   </TableCell>
                 </TableRow>
@@ -256,9 +270,9 @@ export default function TaskTable({
                   <TableRow
                     key={index}
                     sx={{
-                      "&:hover": { bgcolor: "#3a3a3a" },
-                      "& td": { borderColor: "#4a4a4a" },
-                      bgcolor: editingTask === index ? "rgba(74, 158, 255, 0.1)" : "transparent",
+                      "&:hover": { bgcolor: colors.backgroundTertiary },
+                      "& td": { borderColor: colors.border },
+                      bgcolor: editingTask === index ? `${colors.primary}1A` : "transparent",
                     }}
                   >
                     {/* Image Cell */}
@@ -280,7 +294,7 @@ export default function TaskTable({
                     </TableCell>
 
                     {/* Title Cell */}
-                    <TableCell sx={{ color: "white", fontSize: "0.8rem", fontWeight: "bold" }}>
+                    <TableCell sx={{ color: colors.text, fontSize: "0.8rem", fontWeight: "bold" }}>
                       {editingTask === index ? (
                         <TextField
                           fullWidth
@@ -290,12 +304,12 @@ export default function TaskTable({
                           size="small"
                           sx={{
                             "& .MuiOutlinedInput-root": {
-                              bgcolor: "#4a4a4a",
-                              color: "white",
+                              bgcolor: colors.border,
+                              color: colors.text,
                               fontSize: "0.8rem",
-                              "& fieldset": { borderColor: "#6a6a6a" },
-                              "&:hover fieldset": { borderColor: "#8a8a8a" },
-                              "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
+                              "& fieldset": { borderColor: colors.borderHover || colors.border },
+                              "&:hover fieldset": { borderColor: colors.textMuted },
+                              "&.Mui-focused fieldset": { borderColor: colors.primary },
                             },
                           }}
                         />
@@ -305,7 +319,7 @@ export default function TaskTable({
                     </TableCell>
 
                     {/* Subtitle Cell */}
-                    <TableCell sx={{ color: "#ccc", fontSize: "0.75rem", fontStyle: "italic" }}>
+                    <TableCell sx={{ color: colors.textSecondary, fontSize: "0.75rem", fontStyle: "italic" }}>
                       {editingTask === index ? (
                         <TextField
                           fullWidth
@@ -316,12 +330,12 @@ export default function TaskTable({
                           placeholder="Task description"
                           sx={{
                             "& .MuiOutlinedInput-root": {
-                              bgcolor: "#4a4a4a",
-                              color: "white",
+                              bgcolor: colors.border,
+                              color: colors.text,
                               fontSize: "0.75rem",
-                              "& fieldset": { borderColor: "#6a6a6a" },
-                              "&:hover fieldset": { borderColor: "#8a8a8a" },
-                              "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
+                              "& fieldset": { borderColor: colors.borderHover || colors.border },
+                              "&:hover fieldset": { borderColor: colors.textMuted },
+                              "&.Mui-focused fieldset": { borderColor: colors.primary },
                             },
                           }}
                         />
@@ -343,12 +357,12 @@ export default function TaskTable({
                           sx={{
                             width: "80px",
                             "& .MuiOutlinedInput-root": {
-                              bgcolor: "#4a4a4a",
-                              color: "white",
+                              bgcolor: colors.border,
+                              color: colors.text,
                               fontSize: "0.7rem",
-                              "& fieldset": { borderColor: "#6a6a6a" },
-                              "&:hover fieldset": { borderColor: "#8a8a8a" },
-                              "&.Mui-focused fieldset": { borderColor: "#4a9eff" },
+                              "& fieldset": { borderColor: colors.borderHover || colors.border },
+                              "&:hover fieldset": { borderColor: colors.textMuted },
+                              "&.Mui-focused fieldset": { borderColor: colors.primary },
                             },
                           }}
                         />
@@ -360,8 +374,8 @@ export default function TaskTable({
                           sx={{
                             fontSize: "0.7rem",
                             height: "20px",
-                            color: "#4a9eff",
-                            borderColor: "#4a9eff"
+                            color: colors.primary,
+                            borderColor: colors.primary
                           }}
                         />
                       )}
@@ -378,8 +392,8 @@ export default function TaskTable({
                                   size="small"
                                   onClick={saveEditedTask}
                                   sx={{
-                                    color: "#4a9eff",
-                                    "&:hover": { bgcolor: "rgba(74, 158, 255, 0.1)" }
+                                    color: colors.primary,
+                                    "&:hover": { bgcolor: `${colors.primary}1A` }
                                   }}
                                 >
                                   <CheckIcon sx={{ fontSize: 16 }} />
@@ -390,7 +404,7 @@ export default function TaskTable({
                                   size="small"
                                   onClick={cancelEditingTask}
                                   sx={{
-                                    color: "gray",
+                                    color: colors.textMuted,
                                     "&:hover": { bgcolor: "rgba(128, 128, 128, 0.1)" }
                                   }}
                                 >
@@ -405,8 +419,8 @@ export default function TaskTable({
                                   size="small"
                                   onClick={() => startEditingTask(index)}
                                   sx={{
-                                    color: "#4a9eff",
-                                    "&:hover": { bgcolor: "rgba(74, 158, 255, 0.1)" }
+                                    color: colors.primary,
+                                    "&:hover": { bgcolor: `${colors.primary}1A` }
                                   }}
                                 >
                                   <EditIcon sx={{ fontSize: 16 }} />
@@ -417,8 +431,8 @@ export default function TaskTable({
                                   size="small"
                                   onClick={() => deleteTask(index)}
                                   sx={{
-                                    color: "#ff6b35",
-                                    "&:hover": { bgcolor: "rgba(255, 107, 53, 0.1)" }
+                                    color: colors.accent,
+                                    "&:hover": { bgcolor: `${colors.accent}1A` }
                                   }}
                                 >
                                   <DeleteIcon sx={{ fontSize: 16 }} />
@@ -451,13 +465,13 @@ export default function TaskTable({
           </TableContainer>
 
           {/* Table Footer */}
-          <Box sx={{ p: 2, borderTop: "1px solid #4a4a4a" }}>
+          <Box sx={{ p: 2, borderTop: `1px solid ${colors.border}` }}>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 2 }}>
               <Box>
-                <Typography variant="body2" sx={{ color: "gray", mb: 1 }}>
+                <Typography variant="body2" sx={{ color: colors.textMuted, mb: 1 }}>
                   {t('TextGenerative.total')}: {tasks.length} {t('TextGenerative.tasks')}
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#4a9eff", fontWeight: "bold" }}>
+                <Typography variant="body2" sx={{ color: colors.primary, fontWeight: "bold" }}>
                   {t('TextGenerative.estimatedTime')}: {formatTime(totalTime)}
                 </Typography>
               </Box>
@@ -469,11 +483,11 @@ export default function TaskTable({
                 onClick={handleOpenSitePopup}
                 disabled={tasks.length === 0}
                 sx={{
-                  bgcolor: "#4a9eff",
-                  "&:hover": { bgcolor: "#3a8eef" },
+                  bgcolor: colors.primary,
+                  "&:hover": { bgcolor: colors.primaryHover },
                   "&:disabled": {
-                    bgcolor: "#555",
-                    color: "#999"
+                    bgcolor: colors.border,
+                    color: colors.textMuted
                   },
                   minWidth: "160px"
                 }}

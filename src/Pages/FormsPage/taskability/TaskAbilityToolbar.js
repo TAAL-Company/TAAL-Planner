@@ -3,58 +3,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { useTranslation } from 'react-i18next';
 
-const ROUTE_COLOR = '#fb8c00';
-
-const indicatorStyle = (isActive, color) => ({
-  width: 10,
-  height: 10,
-  borderRadius: '50%',
-  marginInlineEnd: 8,
-  marginInlineStart: 8,
-  backgroundColor: isActive ? color : '#d0d0d0',
-});
-
-const renderRouteOption = (props, option) => {
-  const { key, ...restProps } = props;
-  return (
-    <li
-      key={option.id ?? key}
-      {...restProps}
-      className="workerName-autoComplete"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        color: option.hasTaskCognitiveRequirements ? ROUTE_COLOR : '#333',
-      }}
-    >
-      <span
-        style={indicatorStyle(option.hasTaskCognitiveRequirements, ROUTE_COLOR)}
-      />
-      <span>{option.name}</span>
-    </li>
-  );
-};
-
-const SITE_COLOR = '#1976d2';
-
-const renderSiteOption = (props, option) => {
-  const { key, ...restProps } = props;
-  return (
-    <li
-      key={option.id ?? key}
-      {...restProps}
-      className="workerName-autoComplete"
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        color: '#333',
-      }}
-    >
-      <span>{option.name}</span>
-    </li>
-  );
-};
-
 const TaskAbilityToolbar = ({
   language,
   allRoutes,
@@ -65,6 +13,69 @@ const TaskAbilityToolbar = ({
   handleChangeSite,
 }) => {
   const { t } = useTranslation();
+  const ROUTE_COLOR = '#fb8c00';
+
+  const oneRouteHasTaskCognitiveRequirements = (routes) => {
+    //find roues in allRoutes that match routes ids
+    const route = allRoutes.filter((r) =>
+      routes.some((route) => route.id === r.id)
+    );
+    return route.some((route) => route.hasTaskCognitiveRequirements);
+  }
+
+  const indicatorStyle = (isActive, color) => ({
+    width: 10,
+    height: 10,
+    borderRadius: '50%',
+    marginInlineEnd: 8,
+    marginInlineStart: 8,
+    backgroundColor: isActive ? color : '#d0d0d0',
+  });
+
+  const renderRouteOption = (props, option) => {
+    const { key, ...restProps } = props;
+    return (
+      <li
+        key={option.id ?? key}
+        {...restProps}
+        className="workerName-autoComplete"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          color: option.hasTaskCognitiveRequirements ? ROUTE_COLOR : '#333',
+        }}
+      >
+        <span
+          style={indicatorStyle(option.hasTaskCognitiveRequirements, ROUTE_COLOR)}
+        />
+        <span>{option.name}</span>
+      </li>
+    );
+  };
+
+  const SITE_COLOR = '#1976d2';
+
+  const renderSiteOption = (props, option) => {
+    const { key, ...restProps } = props;
+    return (
+      <li
+        key={option.id ?? key}
+        {...restProps}
+        className="workerName-autoComplete"
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          color: option.hasTaskCognitiveRequirements ? SITE_COLOR : '#333',
+        }}
+      >
+        <span
+          style={indicatorStyle(option.hasTaskCognitiveRequirements, SITE_COLOR)}
+        />
+        <span>{option.name}</span>
+      </li>
+    );
+  };
+
 
   return (
     <div className="infoForms">

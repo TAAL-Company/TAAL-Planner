@@ -17,6 +17,7 @@ import userLogo from '../../Pictures/user-logo.png';
 import lockLogo from '../../Pictures/lock-logo.png';
 import LoginAPI from './LoginAPI';
 import { useNotification } from '../../components/Notification/NotificationProvider';
+import { useTranslator } from '../../Utility/TranslationProvider';
 
 const StyledBox = styled(Box)(({ theme }) => ({
   backgroundColor: '#0d4264',
@@ -88,15 +89,18 @@ function Login(props) {
   const [apiDetailsLogin, setApiDetailsLogin] = useState({ user: '', pass: '' });
 
   const { showNotification } = useNotification();
+  const { setLanguage: setGlobalLanguage } = useTranslator();
 
   const languages = {
     Hebrew: { username: 'שם משתמש', password: 'סיסמה', dir: 'rtl', login: 'התחברות', forget: 'שכחת סיסמה?' },
     English: { username: 'Username', password: 'Password', dir: 'ltr', login: 'Login', forget: 'Forget Password?' },
+    Arabic: { username: 'اسم المستخدم', password: 'كلمة المرور', dir: 'rtl', login: 'تسجيل الدخول', forget: 'نسيت كلمة المرور؟' },
   };
 
   const [checked, setChecked] = useState({
     Hebrew: true,
     English: false,
+    Arabic: false,
   });
 
   useEffect(() => {
@@ -123,8 +127,10 @@ function Login(props) {
     setChecked({
       Hebrew: lang === 'Hebrew',
       English: lang === 'English',
+      Arabic: lang === 'Arabic',
     });
     setLanguage(lang);
+    setGlobalLanguage(lang); // Update global language for entire app translation
     sessionStorage.setItem('language', lang);
   };
 
@@ -192,7 +198,7 @@ function Login(props) {
                 cursor: 'pointer',
                 color: 'white',
                 borderRadius: isEnglish ? '0 5px 5px 0' : '5px 0 0 5px',
-                
+
               }}
             >
               {showPassword ? <RiEyeOffLine /> : <RiEyeLine />}
@@ -208,7 +214,7 @@ function Login(props) {
                   name="Hebrew"
                 />
               }
-              label="Hebrew"
+              label="עברית"
             />
             <FormControlLabel
               control={
@@ -219,6 +225,16 @@ function Login(props) {
                 />
               }
               label="English"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={checked.Arabic}
+                  onClick={handleLanguageChange}
+                  name="Arabic"
+                />
+              }
+              label="العربية"
             />
           </Box>
 

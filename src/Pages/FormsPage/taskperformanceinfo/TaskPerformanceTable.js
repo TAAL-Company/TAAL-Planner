@@ -142,25 +142,19 @@ const TaskPerformanceTable = ({
     setRows(generateRows());
   }, [cognitiveAbilities, cognitiveProfileValues]);
 
-  const { columns: baseColumns } = TaskPerformanceColumns({
-    language,
+  const { columns } = TaskPerformanceColumns({
     handleEdit,
   });
 
-  // Reverse columns for RTL (Hebrew) mode
-  const columns = useMemo(() => {
-    return language === 'he' ? [...baseColumns].reverse() : baseColumns;
-  }, [baseColumns, language]);
-
   const existingTheme = useTheme();
-  const direction = language === 'he' ? 'rtl' : 'ltr';
+  const direction = t('Direction');
 
   const theme = useMemo(() =>
-    createTheme({}, existingTheme, { direction }),
+    createTheme({}, t('localeText', { returnObjects: true }), existingTheme, {direction}),
     [existingTheme, direction],
   );
 
-  const cache = direction === 'rtl' ? cacheRtl : cacheLtr;
+  const cache = t('Direction') === 'rtl' ? cacheRtl : cacheLtr;
 
   return (
     <CacheProvider value={cache}>
@@ -176,7 +170,7 @@ const TaskPerformanceTable = ({
       <Box
         sx={{
           width: '100%',
-          direction: language === 'he' ? 'rtl' : 'ltr',
+          direction: direction,
           background: '#F5F5F5',
           mb: 2,
           display: 'flex',
@@ -206,7 +200,7 @@ const TaskPerformanceTable = ({
         <Paper style={{ minWidth: 1200 }}>
         <DataGrid
           autoHeight
-          style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}
+          style={{ direction: direction }}
           sortModel={[
             {
               field: 'id',
@@ -218,9 +212,6 @@ const TaskPerformanceTable = ({
             '& .MuiDataGrid-virtualScroller': {
               mt: '0 !important',
             },
-            '& .MuiDataGrid-main': {
-              direction: language === 'he' ? 'rtl' : 'ltr',
-            },
             '& .MuiDataGrid-columnHeaders': {
               bgcolor: '#114260',
               borderBottom: '1px solid rgba(224, 224, 224, 1)',
@@ -228,16 +219,6 @@ const TaskPerformanceTable = ({
               color: '#fff',
               position: 'relative',
               zIndex: 1,
-              direction: language === 'he' ? 'rtl' : 'ltr',
-            },
-            '& .MuiDataGrid-columnHeadersInner': {
-              direction: language === 'he' ? 'rtl' : 'ltr',
-            },
-            '& .MuiDataGrid-virtualScrollerContent': {
-              direction: language === 'he' ? 'rtl' : 'ltr',
-            },
-            '& .MuiTablePagination-actions': {
-              direction: 'ltr',
             },
             '& .MuiDataGrid-row:hover': {
               backgroundColor: '#EDF3F8',
@@ -265,11 +246,6 @@ const TaskPerformanceTable = ({
           rowsPerPageOptions={[10, 25, 50, 100]}
           pagination
           disableSelectionOnClick
-          localeText={
-            language === 'he'
-              ? heIL.components.MuiDataGrid.defaultProps.localeText
-              : undefined
-          }
           components={{
             Toolbar: () => (
               <CustomToolbar

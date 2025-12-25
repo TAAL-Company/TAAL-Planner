@@ -32,17 +32,17 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
   // Translate title and subtitle to English before generating image
   useEffect(() => {
     if (!shouldGenerate) return;
-    
+
     const buildPrompt = async () => {
       try {
         const translatedTitle = await translate(task.title, "en");
         const translatedSubtitle = await translate(task.subtitle, "en");
         const title = translatedTitle || task.title;
         const subtitle = translatedSubtitle || task.subtitle;
-        
+
         setTTitle(title);
         setTSubtitle(subtitle);
-        
+
         const prompt = `${imagePromptPrefix}: ${title}. ${subtitle}.${imagePromptSuffix}`;
         setTranslatedPrompt(prompt);
         setEditablePrompt(prompt); // Initialize editable prompt
@@ -102,11 +102,11 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
       // Use CORS proxy to fetch the image
       const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
       const response = await fetch(proxyUrl);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       const blob = await response.blob();
       return new File([blob], filename, { type: blob.type || 'image/png' });
     } catch (error) {
@@ -118,46 +118,46 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
   // Upload image to Azure and update task
   const handleUploadToAzure = async () => {
     if (!imageUrl || !selectedSite) return;
-    
+
     setIsUploading(true);
-    
+
     try {
       // Convert the generated image URL to a File
       const translatedTitle = await translate(task.title, "en");
       const imageFile = await urlToFile(imageUrl, `ai_generated_image_${translatedTitle}.png`);
-      
+
       if (!imageFile) {
         console.error('Failed to convert image URL to file');
         alert('Failed to process image. Please try again.');
         setIsUploading(false);
         return;
       }
-      
+
       console.log('📦 Uploading image to Azure:', imageFile.name, imageFile.size);
-      
+
       // Upload to Azure Blob Storage (using site's nameInEnglish as folder structure)
       const azureImageUrl = await uploadFiles(imageFile, 'Task media/picture', selectedSite.nameInEnglish);
-      
+
       console.log('✅ Image uploaded to Azure:', azureImageUrl);
-      
+
       // Update the task with the new image URL
       const updatedTask = {
         picture_url: azureImageUrl
       };
-      
+
       await updateTask(task.id, updatedTask);
-      
+
       console.log('✅ Task updated with new image');
-      
+
       setHasUploadedNewImage(true);
-      
+
       // Notify parent component if callback provided
       if (onTaskUpdated) {
         onTaskUpdated(task.id, azureImageUrl);
       }
-      
+
       alert('Image uploaded and task updated successfully!');
-      
+
     } catch (error) {
       console.error('❌ Error uploading image:', error);
       alert('Failed to upload image. Please try again.');
@@ -177,7 +177,7 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
     >
       <h3 style={{ margin: "0 0 8px 0" }}>{index + 1}. {task.title} - {tTitle}</h3>
       <p style={{ margin: "0 0 12px 0", color: "#666" }}>{task.subtitle} - {tSubtitle}</p>
-      
+
       {!shouldGenerate ? (
         <button
           onClick={handleGenerate}
@@ -264,7 +264,7 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
                   </p>
                 )}
               </div>
-              
+
               <img
                 src={imageUrl}
                 alt={task.title}
@@ -383,3 +383,75 @@ export default function GenerateTaskImagesPage() {
     </div>
   );
 }
+// import React, { useEffect, useState } from "react";
+// import {
+//   getingData_Places,
+//   uploadFiles,
+//   updateTask,
+// } from './api/api';
+// import { useTranslator } from './Utility/TranslationProvider';
+
+// function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
+
+//   const handleGenerate = async () => {
+//     const { translate } = useTranslator();
+//     const translatedTitle = await translate(task.title, "en");
+//     const translatedSubtitle = await translate(task.subtitle, "en");
+//   };
+
+//   return (
+//     <div
+//       style={{
+//         background: "#fff",
+//         borderRadius: 16,
+//         padding: 16,
+//         boxShadow: "0 6px 18px rgba(0,0,0,0.1)",
+//       }}
+//     >
+//       <h3 style={{ margin: "0 0 8px 0" }}>{index + 1}. {task.title} - {tTitle}</h3>
+//       <p style={{ margin: "0 0 12px 0", color: "#666" }}>{task.subtitle} - {tSubtitle}</p>
+//     </div>
+//   );
+// }
+
+// export default function getJson() {
+//   const [sites, setSites] = useState([]);
+//   const [selectedSite, setSelectedSite] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     getingData_Places()  // Use directly - it already returns parsed data
+//       .then(setSites)
+//       .catch(console.error)
+//       .finally(() => setLoading(false));
+//   }, []);
+
+//   if (loading) return <p>Loading sites...</p>;
+
+//   return (
+//     <div style={{ padding: 24 }}>
+//       {/* Site Selector */}
+//       <select
+//         style={{ padding: 10, marginBottom: 24, width: 320 }}
+//         value={selectedSite?.id || ""}
+//         onChange={(e) =>
+//           setSelectedSite(
+//             sites.find((s) => s.id === e.target.value)
+//           )
+//         }
+//       >
+//         <option value="">Select a site</option>
+//         {sites.map((site) => (
+//           <option key={site.id} value={site.id}>
+//             {site.name}
+//           </option>
+//         ))}
+//       </select>
+
+//       {/* Task Images */}
+//       {selectedSite && (
+//         <>  </>
+//       )}
+//     </div>
+//   );
+// }

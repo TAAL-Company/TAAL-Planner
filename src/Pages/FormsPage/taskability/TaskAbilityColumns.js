@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-const TaskAbilityColumns = ({ language, cognitiveAbilities }) => {
+const TaskAbilityColumns = ({ cognitiveAbilities }) => {
   const { t } = useTranslation();
 
   const baseColumns = [
@@ -13,7 +13,7 @@ const TaskAbilityColumns = ({ language, cognitiveAbilities }) => {
       headerAlign: 'center',
       align: 'center',
       renderCell: (params) => (
-        <div style={{ textAlign: 'right', fontSize: '1rem' }}>
+        <div style={{ textAlign: 'center', fontSize: '1rem' }}>
           {params.row.id + 1}
         </div>
       ),

@@ -3,7 +3,7 @@ import { GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 
-const PersonalInfoColumns = ({ language, handleEdit }) => {
+const PersonalInfoColumns = ({  handleEdit }) => {
   const { t } = useTranslation();
 
   const columns = [

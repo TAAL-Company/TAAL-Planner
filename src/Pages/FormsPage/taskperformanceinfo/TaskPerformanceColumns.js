@@ -3,7 +3,7 @@ import { GridActionsCellItem } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 
-const TaskPerformanceColumns = ({ language, handleEdit }) => {
+const TaskPerformanceColumns = ({ handleEdit }) => {
   const { t } = useTranslation();
 
   const columns = [
@@ -15,7 +15,7 @@ const TaskPerformanceColumns = ({ language, handleEdit }) => {
       headerAlign: 'center',
       align: 'center',
       renderCell: (params) => (
-        <div style={{ textAlign: 'right', fontSize: '1rem' }}>
+        <div style={{ textAlign: 'center', fontSize: '1rem' }}>
           {params.row.id + 1}
         </div>
       ),

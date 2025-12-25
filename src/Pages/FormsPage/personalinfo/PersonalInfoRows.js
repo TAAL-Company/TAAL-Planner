@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-const PersonalInfoRows = ({ language }) => {
+const PersonalInfoRows = () => {
   const { t } = useTranslation();
 
   const getInitialRows = () => [

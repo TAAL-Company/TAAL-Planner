@@ -5,8 +5,8 @@ import LoadingSkeleton from './LoadingSkeleton';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import { useTranslation } from 'react-i18next';
 
-// Add userInputs prop
-export default function ChatContainer({ messages, userInputs = [], loading, direction, isRTL, isTableOpen, onShowTasks, getComplexityColor }) {
+// Add userInputs prop and theme prop
+export default function ChatContainer({ messages, userInputs = [], loading, direction, isRTL, isTableOpen, onShowTasks, getComplexityColor, theme }) {
   const { t } = useTranslation();
   const chatContainerRef = useRef(null);
 
@@ -73,13 +73,27 @@ export default function ChatContainer({ messages, userInputs = [], loading, dire
     const match = message.match(/Input:\n([\s\S]*?)\n\nInstruction:/);
     return match ? match[1] : message;
   };
+
+  // Default theme if not provided
+  const colors = theme || {
+    backgroundSecondary: '#2b2b2b',
+    backgroundTertiary: '#3a3a3a',
+    text: '#ffffff',
+    textSecondary: '#cccccc',
+    primary: '#4a9eff',
+    primaryHover: '#3a8eef',
+    accent: '#ff6b35',
+    codeBackground: '#1a1a1a',
+    userMessage: '#4a9eff',
+    assistantMessage: '#3a3a3a',
+  };
   
   return (
     <Paper
       ref={chatContainerRef}
       sx={{
         flex: isTableOpen ? 2 : 1,
-        bgcolor: "#2b2b2b",
+        bgcolor: colors.backgroundSecondary,
         overflowY: "auto",
         p: 2,
         borderRadius: "15px",
@@ -117,7 +131,7 @@ export default function ChatContainer({ messages, userInputs = [], loading, dire
             >
               <Avatar
                 sx={{
-                  bgcolor: msg.role === 'user' ? "#4a9eff" : "#ff6b35",
+                  bgcolor: msg.role === 'user' ? colors.primary : colors.accent,
                   width: 32,
                   height: 32,
                   fontSize: "14px",
@@ -128,21 +142,21 @@ export default function ChatContainer({ messages, userInputs = [], loading, dire
               <Paper
                 sx={{
                   p: 2,
-                  bgcolor: msg.role === 'user' ? "#4a9eff" : "#3a3a3a",
-                  color: "white",
+                  bgcolor: msg.role === 'user' ? colors.userMessage : colors.assistantMessage,
+                  color: colors.mode === 'light' && msg.role !== 'user' ? colors.text : 'white',
                   borderRadius: "15px",
                   direction: direction,
                   "& .markdown-content": {
                     "& p": { margin: 0 },
                     "& pre": {
-                      bgcolor: "#1a1a1a",
+                      bgcolor: colors.codeBackground,
                       p: 1,
                       borderRadius: 1,
                       overflow: "auto",
                       direction: "ltr",
                     },
                     "& code": {
-                      bgcolor: "#1a1a1a",
+                      bgcolor: colors.codeBackground,
                       px: 0.5,
                       borderRadius: 0.5,
                     },
@@ -152,7 +166,7 @@ export default function ChatContainer({ messages, userInputs = [], loading, dire
                 {/* Show button for assistant messages with task data */}
                 {isAssistantWithTasks ? (
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    <Typography variant="body2" sx={{ color: '#ccc', mb: 1 }}>
+                    <Typography variant="body2" sx={{ color: colors.textSecondary, mb: 1 }}>
                       {t('TextGenerative.taskGenerationCompleted')}
                     </Typography>
                     <Button
@@ -160,8 +174,8 @@ export default function ChatContainer({ messages, userInputs = [], loading, dire
                       startIcon={<ViewListIcon />}
                       onClick={() => handleShowTasksFromMessage(msg.content)}
                       sx={{
-                        bgcolor: "#4a9eff",
-                        "&:hover": { bgcolor: "#3a8eef" },
+                        bgcolor: colors.primary,
+                        "&:hover": { bgcolor: colors.primaryHover },
                         borderRadius: "20px",
                         textTransform: "none",
                         px: 3,
@@ -202,7 +216,7 @@ export default function ChatContainer({ messages, userInputs = [], loading, dire
       })}
       
       {/* Show loading skeleton when AI is responding */}
-      {loading && <LoadingSkeleton direction={direction} isRTL={isRTL} />}
+      {loading && <LoadingSkeleton direction={direction} isRTL={isRTL} theme={theme} />}
     </Paper>
   );
 }

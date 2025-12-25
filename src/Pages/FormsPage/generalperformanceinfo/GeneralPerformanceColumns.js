@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-const GeneralPerformanceColumns = ({ language }) => {
+const GeneralPerformanceColumns = () => {
   const { t } = useTranslation();
 
   const columns = [

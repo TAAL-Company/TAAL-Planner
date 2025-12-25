@@ -1949,7 +1949,7 @@ const Places = (props) => {
               {props.language === "English" ? "הצג את כל התחנות" : "show all Stations"}
             </button>
           </div> */}
-            <div className='routs'>
+            <div className='packs'>
               {filteredpacksbysite.length === 0 ? (
                 <div
                   className={`textBeforeStation ${props.language !== 'English' ? 'english' : ''}`}

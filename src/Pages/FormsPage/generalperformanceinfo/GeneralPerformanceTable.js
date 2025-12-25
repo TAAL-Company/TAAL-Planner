@@ -23,31 +23,18 @@ const cacheLtr = createCache({
   stylisPlugins: [prefixer],
 });
 
-const GeneralPerformanceTable = ({ language }) => {
-  const [cognitiveList, setCognitiveList] = useState([]);
+const GeneralPerformanceTable = ({cognitiveList}) => {
   const [rows, setRows] = useState([]);
   const [pageSize, setPageSize] = useState(10);
 
   const { t } = useTranslation();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getCognitiveAbillities();
-        setCognitiveList(data || []);
-      } catch (error) {
-        console.error('Error fetching cognitive abilities:', error);
-      }
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
     const { generateRows } = GeneralPerformanceRows({ cognitiveList });
     setRows(generateRows());
   }, [cognitiveList]);
 
-  const { columns } = GeneralPerformanceColumns({ language });
+  const { columns } = GeneralPerformanceColumns();
 
   const existingTheme = useTheme();
 
@@ -147,11 +134,6 @@ const GeneralPerformanceTable = ({ language }) => {
                   pagination
                   checkboxSelection
                   disableSelectionOnClick
-                  localeText={
-                    language === 'he'
-                      ? heIL.components.MuiDataGrid.defaultProps.localeText
-                      : undefined
-                  }
                   disableVirtualization
                   componentsProps={{
                     toolbar: {

@@ -56,7 +56,6 @@ const renderRouteOption = (props, option) => {
 };
 
 const FlagsToolbar = ({
-  language,
   worker,
   allUsers,
   routesOfFlags,

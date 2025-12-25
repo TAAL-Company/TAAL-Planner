@@ -8,7 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Status from './Status';
 import { useTranslation } from 'react-i18next';
 
-const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
+const FlagsColumns = ({ handleEdit, handleDelete }) => {
   const { t } = useTranslation();
 
   const columns = [
@@ -59,9 +59,9 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
       width: 200,
       editable: false,
       headerAlign: 'center',
-      align: language === 'he' ? 'left' : 'left',
+      align: 'center',
       renderCell: (params) => (
-        <div style={{ textAlign: language === 'he' ? 'right' : 'left', fontSize: '1rem' }}>
+        <div style={{  fontSize: '1rem' }}>
           {params.row.task}
         </div>
       ),
@@ -69,10 +69,10 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
     {
       field: 'classification',
       headerName: t('FormsPage.classification'),
-      width: language === 'he' ? 140 : 160,
+      width: 160,
       editable: false,
       renderCell: (params) => (
-        <Status classification={params.row.classification} language={language} />
+        <Status classification={params.row.classification} />
       ),
       headerAlign: 'center',
       align: 'center',
@@ -119,10 +119,10 @@ const FlagsColumns = ({ language, handleEdit, handleDelete }) => {
     {
       field: 'actions',
       headerName: t('FormsPage.actions'),
-      headerAlign: language === 'he' ? 'left' : 'center',
-      align: language === 'he' ? 'left' : 'center',
+      headerAlign:  'center',
+      align:  'center',
       type: 'actions',
-      direction: language === 'he' ? 'rtl' : 'ltr',
+      direction: t('Direction') ,
       width: 90,
       editable: false,
       sortable: false,

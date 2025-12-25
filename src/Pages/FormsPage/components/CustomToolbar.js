@@ -1,13 +1,17 @@
 import React from 'react';
 import '../../../components/junk/FormPage/Form/FormsComponents/data_grid/DataTableRTL.css';
 import '../../../components/junk/FormPage/Form/FormsComponents/data_grid/CustomToolbar.css';
-import { GridToolbarContainer } from '@mui/x-data-grid';
+// import { GridToolbarContainer } from '@mui/x-data-grid';
 
 import FlagsToolbar from '../flags/FlagsToolbar';
 import TaskPerformanceToolbar from '../taskperformanceinfo/TaskPerformanceToolbar';
 import TaskAbilityToolbar from '../taskability/TaskAbilityToolbar';
-import ToolbarButtons from '../generalperformanceinfo/ToolbarButtons';
-import ToolbarSearch from '../generalperformanceinfo/ToolbarSearch';
+import Toolbar from '../../../components/Toolbar/Toolbar';
+
+// import ToolbarButtons from '../generalperformanceinfo/ToolbarButtons';
+// import ToolbarSearch from '../generalperformanceinfo/ToolbarSearch';
+
+import { useTranslation } from 'react-i18next';
 
 const CustomToolbar = (props) => {
   const {
@@ -30,22 +34,22 @@ const CustomToolbar = (props) => {
     selectedSite,
     handleChangeSite,
   } = props;
+  const { t } = useTranslation();
 
   return (
     <div>
-      <GridToolbarContainer
+      <div
         style={{
           paddingTop: '20px',
           paddingBottom: '15px',
-          direction: language === 'he' ? 'rtl' : 'ltr',
+          direction: t('Direction'),
           justifyContent: 'space-between',
         }}
       >
-        <ToolbarButtons language={language} tableType={tableType} />
+        {/* <ToolbarButtons tableType={tableType} /> */}
 
         {tableType === 'Flags' && (
           <FlagsToolbar
-            language={language}
             worker={worker}
             allUsers={allUsers}
             routesOfFlags={routesOfFlags}
@@ -78,9 +82,9 @@ const CustomToolbar = (props) => {
             handleChangeSite={handleChangeSite}
           />
         )}
-
-        <ToolbarSearch language={language} />
-      </GridToolbarContainer>
+        <Toolbar />
+        {/* <ToolbarSearch /> */}
+      </div>
     </div>
   );
 };

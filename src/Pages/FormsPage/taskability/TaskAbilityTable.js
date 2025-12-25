@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Box, CircularProgress, Backdrop, Paper } from '@mui/material';
-import { DataGrid, heIL } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import TaskAbilityColumns from './TaskAbilityColumns';
 import TaskAbilityRows from './TaskAbilityRows';
 import CustomToolbar from '../components/CustomToolbar';
@@ -28,7 +28,6 @@ const cacheLtr = createCache({
 });
 
 const TaskAbilityTable = ({
-  language,
   allRoutes,
   allTasks,
   cognitiveAbilities,
@@ -112,24 +111,23 @@ const TaskAbilityTable = ({
   }, [tasksOfChosenRoute, routeForTasksAbility, cognitiveRequirements]);
 
   const { columns: baseColumns } = TaskAbilityColumns({
-    language,
     cognitiveAbilities,
   });
 
   // Reverse columns for RTL (Hebrew) mode
   const columns = useMemo(() => {
-    return language === 'he' ? [...baseColumns].reverse() : baseColumns;
-  }, [baseColumns, language]);
+    return t('Direction') === 'rtl' ? [...baseColumns].reverse() : baseColumns;
+  }, [baseColumns]);
 
   const existingTheme = useTheme();
-  const direction = language === 'he' ? 'rtl' : 'ltr';
+  const direction = t('Direction');
 
   const theme = useMemo(() =>
-    createTheme({}, existingTheme, { direction }),
+    createTheme({}, t('localeText', { returnObjects: true }), existingTheme, {direction}),
     [existingTheme, direction],
   );
 
-  const cache = direction === 'rtl' ? cacheRtl : cacheLtr;
+  const cache = t('Direction') === 'rtl' ? cacheRtl : cacheLtr;
 
   return (
     <CacheProvider value={cache}>
@@ -145,7 +143,7 @@ const TaskAbilityTable = ({
       <Box
         sx={{
           width: '100%',
-          direction: language === 'he' ? 'rtl' : 'ltr',
+          direction: t('Direction'),
           background: '#F5F5F5',
           mb: 2,
           display: 'flex',
@@ -172,10 +170,10 @@ const TaskAbilityTable = ({
         }}
       >
         <div style={{ direction, width: '100%', overflowX: 'auto' }}>
-        <Paper style={{ minWidth: 1200 }}>
+        <Paper style={{ }}>
         <DataGrid
           autoHeight
-          style={{ direction: language === 'he' ? 'rtl' : 'ltr' }}
+          style={{ direction:t('Direction') }}
           sortModel={[
             {
               field: 'id',
@@ -187,7 +185,7 @@ const TaskAbilityTable = ({
               mt: '0 !important',
             },
             '& .MuiDataGrid-main': {
-              direction: language === 'he' ? 'rtl' : 'ltr',
+              direction: t('Direction'),
             },
             '& .MuiDataGrid-columnHeaders': {
               bgcolor: '#114260',
@@ -196,16 +194,13 @@ const TaskAbilityTable = ({
               color: '#fff',
               position: 'relative',
               zIndex: 1,
-              direction: language === 'he' ? 'rtl' : 'ltr',
+              direction: t('Direction'),
             },
             '& .MuiDataGrid-columnHeadersInner': {
-              direction: language === 'he' ? 'rtl' : 'ltr',
+              direction: t('Direction'),
             },
             '& .MuiDataGrid-virtualScrollerContent': {
-              direction: language === 'he' ? 'rtl' : 'ltr',
-            },
-            '& .MuiTablePagination-actions': {
-              direction: 'ltr',
+              direction: t('Direction'),
             },
             '& .MuiDataGrid-row:hover': {
               backgroundColor: '#EDF3F8',
@@ -233,11 +228,6 @@ const TaskAbilityTable = ({
           rowsPerPageOptions={[10, 25, 50, 100]}
           pagination
           disableSelectionOnClick
-          localeText={
-            language === 'he'
-              ? heIL.components.MuiDataGrid.defaultProps.localeText
-              : undefined
-          }
           components={{
             Toolbar: () => (
               <CustomToolbar
@@ -248,7 +238,6 @@ const TaskAbilityTable = ({
                 isInfoUserSite={false}
                 routeForTasksAbility={routeForTasksAbility}
                 setRouteForTasksAbility={setRouteForTasksAbility}
-                language={language}
                 sites={sites}
                 selectedSite={selectedSite}
                 handleChangeSite={handleChangeSite}

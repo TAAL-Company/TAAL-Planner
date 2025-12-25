@@ -1,7 +1,9 @@
 import React from 'react';
 import './Status.css';
+import { useTranslation } from 'react-i18next';
 
-const Status = ({ classification, language = 'he' }) => {
+const Status = ({ classification }) => {
+  const { t } = useTranslation();
   const flagColor = classification;
 
   if (flagColor === 'red' || flagColor === 'RED') {
@@ -35,7 +37,7 @@ const Status = ({ classification, language = 'he' }) => {
             </g>
           </svg>
           <div className='textStatusForms' style={{ color: 'white' }}>
-            {language === 'he' ? 'לא תקין' : 'Invalid'}
+            {t('FormsPage.statusInvalid')}
           </div>
         </div>
       </div>
@@ -76,7 +78,7 @@ const Status = ({ classification, language = 'he' }) => {
             </g>
           </svg>
           <div className='textStatusForms' style={{ color: 'white' }}>
-            {language === 'he' ? 'להתאמה' : 'Adjustment'}
+            {t('FormsPage.statusAdjustment')}
           </div>
         </div>
       </div>
@@ -115,7 +117,7 @@ const Status = ({ classification, language = 'he' }) => {
             </g>
           </svg>
           <div className='textStatusForms' style={{ color: 'white' }}>
-            {language === 'he' ? 'תקין' : 'Valid'}
+            {t('FormsPage.statusValid')}
           </div>
         </div>
       </div>

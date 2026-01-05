@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { get } from '../../api/api';
 import './Modal.css';
 import img1 from '../../../Pictures/img1.png';
@@ -30,6 +31,7 @@ function Modal_Cards({
   thisGetMyUsers,
   thisFlagUsers,
 }) {
+  const { t } = useTranslation();
   const [, setDone] = useState(false);
   const [, setProfileStudent] = useState(0);
   const [, setMyOriginalTasks] = useState([]);
@@ -78,11 +80,11 @@ function Modal_Cards({
   function Post_Route() {
     setFlagClickOK((flagClickOK = true));
     if (setText === null || setText === '') {
-      alert('Please give the Route a title !');
+      alert(t('plannerPage.Please_give_the_Route_a_title'));
       return;
     }
     if (JSON.parse(localStorage.getItem('New_Routes')) === null) {
-      alert('Route is empty ! ');
+      alert(t('plannerPage.Route_is_empty'));
       return;
     } else {
       let url_post = `https://taal.tech/wp-json/wp/v2/routes/`;
@@ -152,7 +154,7 @@ function Modal_Cards({
                 alt='Logo'
                 style={{ width: '220px', height: '180px', marginLeft: '110px' }}
               />
-              ;<h3 style={{ color: 'red' }}>:רשימת המשימות</h3>
+              ;<h3 style={{ color: 'red' }}>{t('plannerPage.Task_List')}</h3>
               <br></br>
               <h5 className='bodyTasks'>
                 {thisGetMyTasks && !myOriginalTasksFlag ? (
@@ -207,7 +209,7 @@ function Modal_Cards({
                       </>
                     ) : (
                       <>
-                        <h3 style={{ color: 'red' }}>לא קיימים משימות</h3>
+                        <h3 style={{ color: 'red' }}>{t('plannerPage.No_tasks_exist')}</h3>
                       </>
                     )}
                   </>
@@ -235,7 +237,7 @@ function Modal_Cards({
                 alt='Logo'
                 style={{ width: '220px', height: '180px', marginLeft: '110px' }}
               />
-              ;<h3 style={{ color: 'red' }}>:החניכים</h3>
+              ;<h3 style={{ color: 'red' }}>{t('plannerPage.workers')}</h3>
               <br></br>
               <h5 className='bodyTasks'>
                 {thisGetMyUsers ? (
@@ -262,7 +264,7 @@ function Modal_Cards({
                 ) : (
                   <>
                     <h6 style={{ color: 'red' }}>
-                      אין חניכים המשוייכים למסלול זה
+                      {t('plannerPage.No_workers_are_assigned_to_this_route')}
                     </h6>
                   </>
                 )}
@@ -282,12 +284,10 @@ function Modal_Cards({
                 X
               </button>
             </div>
-            <h1>שכפול מסלול</h1>
+            <h1>{t('plannerPage.Duplicate_Route')}</h1>
             <div className='body'>
               <h5>
-                {' '}
-                :האם את/ה מעוניין בשכפול המסלול{' '}
-                <div style={{ color: 'red' }}>?{thisMyRoute.myTitle}</div>
+                {t('plannerPage.Do_you_want_to_duplicate_the_route')} <div style={{ color: 'red' }}>?{thisMyRoute.myTitle}</div>
               </h5>
             </div>
             <div className='footer'>
@@ -297,13 +297,12 @@ function Modal_Cards({
                   setOpenModal(false);
                 }}
               >
-                ביטול
+                {t('plannerPage.Cancel')}
               </button>
               &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
               &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
               <button className='continueBtn' onClick={Post_Route}>
-                {' '}
-                אישור
+                {t('plannerPage.Confirm')}
               </button>
               {flagClickOK ? (
                 <>

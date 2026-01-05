@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getingDataTasks, deleteStation, insertLoop,updateLoop } from '../../../api/api';
 import './style.css';
 import ModalStations from '../Modal/Modal_Stations';
@@ -26,6 +27,7 @@ let myStation = { name: '', id: '', flag: true, data: [] };
 let myCategory = 'stationCategory';
 //-----------------------
 const Stations = (props) => {
+  const { t } = useTranslation();
   const [, setStateTask] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -82,7 +84,7 @@ const Stations = (props) => {
 
       if (deleteStationTemp.status === 200) {
         // alert('המחיקה בוצעה בהצלחה!');
-        showNotification('success', 'המחיקה בוצעה בהצלחה!');
+        showNotification('success', t('plannerPage.Station_deleted_successfully'));
         const newStations = [...props.stationArray];
         newStations.splice(stationForDelete, 1);
         props.setStationArray(newStations);
@@ -93,7 +95,7 @@ const Stations = (props) => {
       setRequestForEditing('');
     } catch (error) {
       console.error(error);
-      showNotification('error', 'שגיאה במחיקת תחנה' + error);
+      showNotification('error', t('plannerPage.Error_deleting_station') + error);
     }
   };
 
@@ -326,7 +328,7 @@ const Stations = (props) => {
         if (res?.status >= 200 && res?.status < 300) {
           showNotification(
             'success',
-            props.language === 'English' ? 'Loop settings saved successfully' : 'הגדרות לולאה נשמרו בהצלחה'
+           t('plannerPage.Loop_settings_saved_successfully')
           );
         } else {
           throw new Error(`HTTP ${res?.status}`);
@@ -335,7 +337,7 @@ const Stations = (props) => {
         console.error(e);
         showNotification(
           'error',
-          props.language === 'English' ? 'Error saving loop settings' : 'שגיאה בשמירת הגדרות הלולאה'
+          t('plannerPage.Error_saving_loop_settings')
         );
       }
     }
@@ -394,7 +396,7 @@ const Stations = (props) => {
                 className={`searchButton ${props.language !== 'English' ? 'english' : ''}`}
                 dir='rtl'
                 placeholder={
-                  props.language === 'English' ? 'חפש תחנה' : 'search station'
+                  t('plannerPage.Search_station')
                 }
                 label={<CgSearch style={{ fontSize: 'x-large' }} />}
                 onChange={inputHandler}
@@ -584,8 +586,8 @@ const Stations = (props) => {
         language={props.language}
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
-        DialogTitle={props.language !== 'English' ? 'Delete Station' : 'מחיקת תחנה'}
-        DialogContent={props.language !== 'English' ? 'Are you sure you want to delete this station?' : 'האם אתה בטוח שברצונך למחוק את התחנה?'}
+        DialogTitle={t('plannerPage.Delete_Station')}
+        DialogContent={t('plannerPage.Are_you_sure_you_want_to_delete_this_station')}
         handleCloseRemoveConfirm={handleCloseRemoveConfirm}
       />
       <LoopPopUpInput

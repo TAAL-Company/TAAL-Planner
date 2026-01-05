@@ -33,6 +33,7 @@ const cacheLtr = createCache({
 
 export default function DataGridDemo() {
   const [expandedRows, setExpandedRows] = useState({});
+  const [pageSize, setPageSize] = useState(10);
   const [loading, setLoading] = useState(true);
   const [coaches, setCoaches] = useState([]);
   const [sites, setSites] = useState([]);
@@ -301,8 +302,9 @@ export default function DataGridDemo() {
                   style={{ direction: t('Direction') }}
                   rows={getRowsWithDetails()}
                   columns={columns}
-                  pageSize={12}
-                  rowsPerPageOptions={[12, 24, 50]}
+                  pageSize={pageSize}
+                  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                  rowsPerPageOptions={[10, 25, 50, 100]}
                   autoHeight
                   loading={loading}
                   components={{

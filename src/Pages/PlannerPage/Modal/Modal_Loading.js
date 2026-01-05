@@ -1,14 +1,17 @@
+
 import "./Modal.css";
 import ReactLoading from "react-loading";
 import CircularProgressWithLabel from "./progressbar";
+import { useTranslation } from 'react-i18next';
 
 const Modal_Loading = (props) => {
+  const { t } = useTranslation();
   return (
     <>
       {props.props === false ? (
         <>
           <div className="modalContainerLittleLoading">
-            <h2 style={{ color: "white" }}>Loading</h2>
+            <h2 style={{ color: "white" }}>{t('plannerPage.Loading')}</h2>
             <ReactLoading />
           </div>
         </>
@@ -16,7 +19,7 @@ const Modal_Loading = (props) => {
         <>
           <div className="modalContainerLoading">
             <div>
-              <h1 style={{ color: "" }}>Loading</h1>
+              <h1 style={{ color: "" }}>{t('plannerPage.Loading')}</h1>
               <ReactLoading
                 type={"bars"}
                 className="loading"

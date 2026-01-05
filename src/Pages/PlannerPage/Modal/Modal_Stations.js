@@ -14,6 +14,7 @@ import {
   uploadFiles,
 } from '../../../api/api';
 import { useNotification } from "../../../components/Notification/NotificationProvider";
+import { useTranslation } from 'react-i18next';
 
 
 //--------------------------
@@ -33,6 +34,7 @@ const Modal_Stations = (props) => {
   const [stationUUId, setStationUUId] = useState('');
 
   const { showNotification } = useNotification();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (
@@ -71,7 +73,7 @@ const Modal_Stations = (props) => {
     if (get_title === '' || getDescription === '') {
       setFlagClickOK((flagClickOK = false));
       setDone(false);
-      showNotification('error', props.language === "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
+      showNotification('error',  t('plannerPage.Please_fill_in_the_required_fields'));
       // alert( props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
 
     } else if (props.requestForEditing === 'edit' || props.requestForEditing === 'details') {
@@ -84,7 +86,7 @@ const Modal_Stations = (props) => {
       );
       if (response.status === 200) {
         // alert('התחנה עודכנה');
-        showNotification('success', props.language !== "English" ? 'The station has been updated' : 'התחנה עודכנה');
+        showNotification('success', t('plannerPage.The_station_has_been_updated'));
         setFlagClickOK((flagClickOK = false));
         props.setOpenModalPlaces(false);
         let station = props.stationArray.find(
@@ -99,7 +101,7 @@ const Modal_Stations = (props) => {
       }
     } catch (error) {
       // alert('שם התחנה כבר קיים - בחר שם אחר');
-      showNotification('error', props.language !== "English" ? 'The station name already exists - choose another name' : 'שם התחנה כבר קיים - בחר שם אחר');
+      showNotification('error', t('plannerPage.The_station_name_already_exists_choose_another_name'));
       console.error(error);
     }
     } else if (props.requestForEditing === 'duplication') {
@@ -121,7 +123,7 @@ const Modal_Stations = (props) => {
           props.mySite,
           stationtasksIds
         );//, imageData, audioData);
-        showNotification('success', props.language !== "English" ? 'The station has been duplicated' : 'התחנה הועתקה');
+        showNotification('success', t('plannerPage.The_station_has_been_duplicated'));
 
         setDone(true);
         setFlagClickOK((flagClickOK = false));
@@ -133,7 +135,7 @@ const Modal_Stations = (props) => {
         await props.setStationArray((stations) => [...stations, post]);
       } catch (error) {
         // alert('שם התחנה כבר קיים - בחר שם אחר');
-        showNotification('error', props.language !== "English" ? 'The station name already exists - choose another name' : 'שם התחנה כבר קיים - בחר שם אחר');
+        showNotification('error', t('plannerPage.The_station_name_already_exists_choose_another_name'));
         console.error(error);
       }
     } else {
@@ -157,7 +159,7 @@ const Modal_Stations = (props) => {
           getDescription,
           props.mySite
         ); //, imageData, audioData);
-        showNotification('success', props.language !== "English" ? 'The station has been saved' : 'התחנה נשמרה');
+        showNotification('success', t('plannerPage.The_station_has_been_saved'));
         setDone(true);
         setFlagClickOK((flagClickOK = false));
 
@@ -168,7 +170,7 @@ const Modal_Stations = (props) => {
         await props.setStationArray((stations) => [...stations, post]);
       } catch (error) {
         // alert( props.language !== "English" ? 'שם התחנה כבר קיים - בחר שם אחר' : 'The station name already exists - choose another name');
-        showNotification('error', props.language !== "English" ? 'The station name already exists - choose another name' : 'שם התחנה כבר קיים - בחר שם אחר');
+        showNotification('error', t('plannerPage.The_station_name_already_exists_choose_another_name'));
         console.error(error);
       }
     }
@@ -184,7 +186,7 @@ const Modal_Stations = (props) => {
               <img src={stopIcon} alt='logo'></img>
             </div>
             <div className='body' style={{ textAlign: 'center' }}>
-              <h4> {props.language !== 'English' ? 'You must first select a site, then associate a station with it' :' עליך לבחור ראשית אתר, ואז לשייך אליו תחנה '}</h4>
+              <h4> {t('plannerPage.You_must_first_select_a_site_then_associate_a_station_with_it')}</h4>
             </div>
             <div className='footer'>
               <button
@@ -193,7 +195,7 @@ const Modal_Stations = (props) => {
                   props.setOpenModalPlaces(false);
                 }}
               >
-                {props.language !== 'English' ? 'Close' : 'סגור'}
+                {t('Close')}
               </button>
             </div>
           </div>
@@ -209,7 +211,7 @@ const Modal_Stations = (props) => {
                   textAlign: props.language === 'English' ? 'right' : 'left',
                 }}
               >
-                {props.language !== 'English' ? (props.requestForEditing ? 'Edit station' : 'New station') : (props.requestForEditing ? 'עריכת תחנה' : 'תחנה חדשה')}
+                {props.requestForEditing ? t('plannerPage.Edit_station') : t('plannerPage.New_station')}
               </div>
             </div>
             <div
@@ -220,9 +222,7 @@ const Modal_Stations = (props) => {
             >
               <form id='IPU' className='w3-container'>
                 <h6>
-                  {props.language !== 'English'
-                    ? 'Write the station name:'
-                    : ':רשום את שם התחנה'}
+                  {t('plannerPage.Write_the_station_name')}
                   <RiAsterisk style={{ color: 'red' }} />
                 </h6>
                 <p>
@@ -242,9 +242,7 @@ const Modal_Stations = (props) => {
               </form>
               <form id='IPU' className='w3-container'>
                 <h6>
-                  {props.language !== 'English'
-                    ? 'Describe the station:'
-                    : ':תאר במשפט את תחנה'}
+                  {t('plannerPage.Describe_the_station')}
                   <RiAsterisk style={{ color: 'red' }} />
                 </h6>
                 <p>
@@ -320,15 +318,13 @@ const Modal_Stations = (props) => {
               <input
                 type='submit'
                 className='newStationButton'
-                value={
-                  props.language !== 'English' ? 'Save station' : 'שמור תחנה'
-                }
+                value={t('plannerPage.Save')}
                 onClick={Post_Station}
               />
               <input
                 type='submit'
                 className='newStationButton'
-                value={props.language !== 'English' ? 'Cancel' : 'ביטול'}
+                value={t('plannerPage.Cancel')}
                 onClick={() => {
                   props.setOpenModalPlaces(false);
                   props.setRequestForEditing('');

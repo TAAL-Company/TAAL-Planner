@@ -17,6 +17,7 @@ import { useNotification } from "../../../components/Notification/NotificationPr
 import Model_assigned_route_to_parent from './Model_assigned_route_to_parent';
 import Box from '@mui/material/Box';
 import { FormControlLabel, Radio } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 //--------------------------
 let myStudents = [];
 let myStudentsChoice = [];
@@ -41,6 +42,8 @@ function Modal({
   filteredDataRoutes,
   setRequestForEditing,
 }) {
+  const { t } = useTranslation();
+
   const { showNotification } = useNotification();
   // let myStudentslist = [];
   const [obj, set_obj] = useState({
@@ -128,7 +131,7 @@ function Modal({
     resultMyArrayStudent();
 
     if (JSON.parse(localStorage.getItem('New_Routes')) === null) {
-      showNotification("error", language === "English" ? "Route is empty !" : "הרשומה ריקה !");
+      showNotification("error", t("plannerPage.Route_is_empty"));
       return;
     } else {
       let taskIdList = [];
@@ -143,7 +146,7 @@ function Modal({
         parentRouteId: selectedRoute,
       };
 
-      console.log('newRouteObj', newRouteObj);
+      // console.log('newRouteObj', newRouteObj);
 
       setLoading(true);
       try {
@@ -170,23 +173,19 @@ function Modal({
             setRouteTitle('');
             showNotification(
               "success",
-              language !== "English"
-                ? "route updated successfully"
-                : "המסלול עודכן בהצלחה"
+              t("plannerPage.route_updated_successfully")
             );
           } catch (error) {
             console.error("Error fetching updated route:", error);
             showNotification(
               "error",
-              language !== "English"
-                ? "Error Updating Route"
-                : "שגיאה בעדכון המסלול"
+              t("plannerPage.Error_Updating_Route")
             );
           }
         });
       } catch (error) {
         console.error(error.message);
-        showNotification("error", language !== "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+        showNotification("error", t("plannerPage.Error_Updating_Route"));
       } finally {
         setLoading(false);
       }
@@ -279,10 +278,10 @@ function Modal({
           // setFlagStudent(false);
           setOpenModal(false);
         });
-        showNotification("success", language !== "English" ? "route updated successfully" : "המסלול עודכן בהצלחה");
+        showNotification("success", t("plannerPage.route_updated_successfully"));
       } catch (error) {
         console.error(error.message);
-        showNotification("error", language !== "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+        showNotification("error", t("plannerPage.Error_Updating_Route"));
       } finally {
         setLoading(false); // Stop loading
       }
@@ -295,10 +294,10 @@ function Modal({
           setFlagStudent(false);
           setOpenModal(false);
         });
-        showNotification("success", language !== "English" ? "route created successfully" : "המסלול נוצר בהצלחה");
+        showNotification("success", t("plannerPage.route_created_successfully"));
       } catch (error) {
         console.error(error.message);
-        showNotification("error", language !== "English" ? "Error Creating Route" : "שגיאה ביצירת המסלול");
+        showNotification("error", t("plannerPage.Error_Creating_Route"));
       } finally {
         setLoading(false); // Stop loading
       }
@@ -324,7 +323,7 @@ function Modal({
                     </button>
                   </div>
                   <div className='title'>
-                    <h3> Please type in the route name</h3>
+                    <h3> {t("plannerPage.Please_type_in_the_route_name")}</h3>
                     <BsExclamationLg
                       style={{ color: 'red', fontSize: '80px' }}
                     />
@@ -337,7 +336,7 @@ function Modal({
                         setOpenModal(false);
                       }}
                     >
-                      closed
+                      {t("plannerPage.Close")}
                     </button>
                   </div>
                 </div>
@@ -349,7 +348,7 @@ function Modal({
                 {setFlagStudent ? (
                   <>
                     <div className='headerNewRoute'>
-                      <div className='newRoutTitle'> שייך מסלול לעובד </div>
+                      <div className='newRoutTitle'> {t("plannerPage.Assign_route_to_employee")} </div>
                     </div>
 
                     <div className='AddStudentTitle'>
@@ -391,11 +390,11 @@ function Modal({
                       })}
                     </div>
                     <button className='saveAs' onClick={() => saveData()}>
-                      <div style={{ color: 'white' }}>שייך</div>
+                      <div style={{ color: 'white' }}>{t("plannerPage.Assign")}</div>
                     </button>
 
                     <button className='cancelSaveAs' onClick={() => saveData()}>
-                      {language !== 'English' ? 'Cancel' : 'ביטול'}
+                      {t("plannerPage.Cancel")}
                     </button>
                   </>
                 ) : (
@@ -403,12 +402,12 @@ function Modal({
                     {' '}
                     <div className='body'>
                       <h5>
-                        {language !== 'English' ? 'Save route' : 'שמירת מסלול'}
+                        {t("plannerPage.Save_route")}
                       </h5>
                     </div>
                     <div className='footer'>
                       <button className='continueBtn' onClick={Post_Route}>
-                        {language !== 'English' ? 'Save route' : 'שמירת מסלול'}
+                        {t("plannerPage.Save_route")}
                       </button>
                       &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
                       &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -418,7 +417,7 @@ function Modal({
                           setOpenModal(false);
                         }}
                       >
-                        {language !== 'English' ? 'Cancel' : 'ביטול'}
+                        {t("plannerPage.Cancel")}
                       </button>
                       {flagClickOK ? (
                         <>
@@ -451,7 +450,7 @@ function Modal({
                     </button>
                   </div>
                   <div className='title'>
-                    <h3> Please type in the route name</h3>
+                    <h3> {t("plannerPage.Please_type_in_the_route_name")}</h3>
                     <BsExclamationLg
                       style={{ color: 'red', fontSize: '80px' }}
                     />
@@ -464,7 +463,7 @@ function Modal({
                         setOpenModal(false);
                       }}
                     >
-                      closed
+                      {t("plannerPage.Close")}
                     </button>
                   </div>
                 </div>
@@ -491,7 +490,7 @@ function Modal({
                               language === 'English' ? 'right' : 'left',
                           }}
                         >
-                          {language !== 'English' ? 'New route' : 'מסלול חדש'}
+                          {t("plannerPage.New_route")}
                         </div>
                       </div>
                       <div className='newRouteBody'>
@@ -507,9 +506,7 @@ function Modal({
                                 language === 'English' ? 'right' : 'left',
                             }}
                           >
-                            {language !== 'English'
-                              ? 'route name:'
-                              : ':שם המסלול'}
+                            {t("plannerPage.route_name")}
                           </div>
                           <p>
                             <input
@@ -526,7 +523,7 @@ function Modal({
                           <button type='submit' className='saveAs' disabled={loading}>
                             {/* onClick={() => saveData()}> */}
                             <div style={{ color: 'white' }} disabled={loading} >
-                              {loading ? (language !== 'English' ? 'Loading...' : 'טוען...') : (language !== 'English' ? 'Save' : 'שמור')}
+                              {loading ? (t("plannerPage.Loading")) : (t("plannerPage.Save"))}
                             </div>
                           </button>
 
@@ -534,7 +531,7 @@ function Modal({
                             className='cancelSaveAs'
                             onClick={() => saveData()}
                           >
-                            {language !== 'English' ? 'Cancel' : 'ביטול'}
+                            {t("plannerPage.Cancel")}
                           </button>
                         </form>
                       </div>
@@ -545,9 +542,7 @@ function Modal({
                       <div className='headerNewRoute'
                         dir={language === 'English' ? 'ltr' : 'rtl'} >
                         <div className='newRoutTitle'>
-                          {language !== 'English'
-                            ? 'Save Route'
-                            : 'שמירת מסלול'}
+                          {t("plannerPage.Save_route")}
                         </div>
                       </div>
                       <div className='bodySaveRoute'
@@ -557,7 +552,7 @@ function Modal({
                         }}
                       >
                         <div>
-                          {language !== 'English' ? 'Name of the route :' : 'שם המסלול :'}
+                          {t("plannerPage.Name_of_the_route")}
                         </div>
                         <input
                           // dir={language !== 'English' ? 'ltr' : 'rtl'}
@@ -570,12 +565,12 @@ function Modal({
                           onChange={(e) => setRouteTitle(e.target.value)}
                         ></input>
                         <div>
-                          {language !== 'English' ? 'List of students:' : 'שיוך עובד :'}
+                          {t("plannerPage.List_of_students")}
                         </div>
                         <input
                           type='text'
                           style={{ paddingRight: language !== 'English' ? '' : '10px', paddingLeft: language !== 'English' ? '10px' : '', width: '100%' }}
-                          placeholder={language !== 'English' ? 'Search student' : 'חפש סטודנט'}
+                          placeholder={t("plannerPage.Search_student")}
                           value={searchStudent}
                           onChange={(e) => setSearchStudent(e.target.value)}
                         />
@@ -617,12 +612,12 @@ function Modal({
                         </div>
 
                         <Box>
-                          {language !== 'English' ? 'List of Route:' : 'רשימת מסלולים:'}
+                          {t("plannerPage.List_of_Routes")}
                         </Box>
                         <input
                           type='text'
                           style={{ paddingRight: language !== 'English' ? '' : '10px', paddingLeft: language !== 'English' ? '10px' : '', width: '100%' }}
-                          placeholder={language !== 'English' ? 'Search Route' : 'חיפוש מסלול'}
+                          placeholder={t("plannerPage.Search_Route")}
                           value={searchRoute}
                           onChange={(e) => setSearchRoute(e.target.value)}
                         />
@@ -649,13 +644,13 @@ function Modal({
                       </div>
                       <div className='footer'>
                         <button className='continueBtn' onClick={Post_Route}>
-                          {language !== 'English' ? 'Save route' : 'שמור מסלול'}
+                          {t("plannerPage.Save_route")}
                         </button>
                         <button className='continueBtn' onClick={
                           // setOpenModalRouteChosen(true)
                           Post_new_Route
                         }>
-                          {language !== 'English' ? 'Save route' : 'שמור בשם'}
+                          {t("plannerPage.Save_route")}
                         </button>
                         <button
                           className='cancelBtn'
@@ -663,7 +658,7 @@ function Modal({
                             setOpenModal(false);
                           }}
                         >
-                          {language !== 'English' ? 'Cancel' : 'ביטול'}
+                          {t("plannerPage.Cancel")}
                         </button>
                         {flagClickOK ? (
                           <>

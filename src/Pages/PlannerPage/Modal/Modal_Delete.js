@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import {
   Button,
   Dialog,
@@ -11,6 +12,7 @@ import {
 
 //--------------------------
 function Modal_Delete(props) {
+  const { t } = useTranslation();
   return (
     <>
       <Dialog
@@ -19,16 +21,16 @@ function Modal_Delete(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{props.DialogTitle}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{t(props.DialogTitle)}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {props.DialogContent}
+            {t(props.DialogContent)}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={props.handleCloseRemove}>{props.language === 'English' ? 'ביטול' : 'Cancel'}</Button>
+          <Button onClick={props.handleCloseRemove}>{t('plannerPage.Cancel')}</Button>
           <Button onClick={props.handleCloseRemoveConfirm} autoFocus>
-            {props.language === 'English' ? 'מחיקה' : 'Delete'}
+            {t('plannerPage.Delete')}
           </Button>
         </DialogActions>
       </Dialog>

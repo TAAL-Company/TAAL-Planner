@@ -21,6 +21,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import ReactLoading from "react-loading";
 
+
+import { useTranslation } from 'react-i18next';
 function ModalPack({
   setOpenModalPack,
   setFlagStudent,
@@ -37,6 +39,7 @@ function ModalPack({
   alleditors,
   allUsers
 }) {
+  const { t } = useTranslation();
   const { showNotification } = useNotification();
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -103,7 +106,7 @@ function ModalPack({
       setLoading(true); // Start loading
       if (requestForEditing === 'edit' || requestForEditing === 'details') {
         await updatePack(packUUID, packData);
-        showNotification("success", language !== "English" ? "Pack updated successfully" : "האריזה עודכנה בהצלחה");
+        showNotification("success", t("plannerPage.Pack_updated_successfully"));
       } else {
         // Create new pack and get the response
         const newPackResponse = await insertPack(packData);
@@ -114,12 +117,12 @@ function ModalPack({
         // Update the pack list by setting it through the setNewPack prop
         setNewPack(newlyCreatedPack);
 
-        showNotification("success", language !== "English" ? "Pack created successfully" : "האריזה נוצרה בהצלחה");
+        showNotification("success", t("plannerPage.Pack_created_successfully"));
       }
       setOpenModalPack(false);
     } catch (error) {
       console.error(error.message);
-      showNotification("error", language !== "English" ? "Error Creating Pack" : "שגיאה ביצירת האריזה");
+      showNotification("error", t("plannerPage.Error_Creating_Pack"));
     }
     finally {
       setLoading(false); // Stop loading
@@ -136,17 +139,17 @@ function ModalPack({
         dir={language !== 'English' ? 'ltr' : 'rtl'} // Dynamically set direction
       >
         {loading ? (<div className="modalContainerLittleLoading" style={{ marginTop: '0%', marginLeft: '0%' }}>
-          <h2 style={{ color: "white" }}>Loading</h2>
+          <h2 style={{ color: "white" }}>{t("plannerPage.Loading")}</h2>
           <ReactLoading />
         </div>) : (
           <>
             <DialogTitle style={{ backgroundColor: '#ad10d4', textAlign: language !== 'English' ? 'left' : 'right' }}>
-              {language !== 'English' ? 'Save Pack' : 'שמירת אריזה'}
+              {t("plannerPage.Save_Pack")}
             </DialogTitle>
             <DialogContent dividers style={{ maxHeight: '80vh', overflowY: 'auto' }}>
               <form onSubmit={handleSubmitPackTitle}>
                 <div>
-                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{language !== 'English' ? 'Pack name:' : ':שם האריזה'}</label>
+                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{t("plannerPage.Pack_name")}</label>
                   <input
                     type="text"
                     value={packTitle}
@@ -157,7 +160,7 @@ function ModalPack({
                   />
                 </div>
                 <div>
-                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{language !== 'English' ? 'Pack description:' : ':תיאור האריזה'}</label>
+                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{t("plannerPage.Pack_description")}</label>
                   <textarea
                     value={packDescription}
                     onChange={(e) => setPackDescription(e.target.value)}
@@ -167,7 +170,7 @@ function ModalPack({
                   />
                 </div>
                 <div>
-                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{language !== 'English' ? 'Select Routes (Ordered):' : ':בחר מסלולים (בסדר)'}</label>
+                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{t("plannerPage.Select_Routes_Ordered")}</label>
                   <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ccc', padding: '10px', borderRadius: '5px' }}>
                     {availableRoutes.map((route) => (
                       <div key={route.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
@@ -188,7 +191,7 @@ function ModalPack({
                     ))}
                   </div>
                   <div style={{ marginTop: '10px' }}>
-                    <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{language !== 'English' ? 'Selected Routes (Order):' : ':מסלולים שנבחרו (בסדר)'}</label>
+                    <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{t("plannerPage.Selected_Routes_Order")}</label>
                     <ol style={{ paddingLeft: '20px' }}>
                       {selectedRouteIds.map((id) => {
                         const route = availableRoutes.find((route) => route.id === id);
@@ -198,7 +201,7 @@ function ModalPack({
                   </div>
                 </div>
                 <div>
-                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{language !== 'English' ? 'Select Editors:' : ':בחר עורכים'}</label>
+                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{t("plannerPage.Select_Editors")}</label>
                   <Autocomplete
                     multiple
                     options={availableEditors}
@@ -221,8 +224,8 @@ function ModalPack({
                       <TextField
                         {...params}
                         variant="outlined"
-                        label={language !== 'English' ? 'Editors' : 'עורכים'}
-                        placeholder={language !== 'English' ? 'Select Editors' : 'בחר עורכים'}
+                        label={t("plannerPage.Editors")}
+                        placeholder={t("plannerPage.Select_Editors")}
                         dir={language !== 'English' ? 'ltr' : 'rtl'} // Dynamically set direction
                       />
                     )}
@@ -230,7 +233,7 @@ function ModalPack({
                   />
                 </div>
                 <div>
-                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{language !== 'English' ? 'Select Users:' : ':בחר משתמשים'}</label>
+                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{t("plannerPage.Select_Users")}</label>
                   <Autocomplete
                     multiple
                     options={availableUsers}
@@ -253,8 +256,8 @@ function ModalPack({
                       <TextField
                         {...params}
                         variant="outlined"
-                        label={language !== 'English' ? 'Users' : 'משתמשים'}
-                        placeholder={language !== 'English' ? 'Select Users' : 'בחר משתמשים'}
+                        label={t("plannerPage.Users")}
+                        placeholder={t("plannerPage.Select_Users")}
                         dir={language !== 'English' ? 'ltr' : 'rtl'} // Dynamically set direction
                       />
                     )}
@@ -265,10 +268,10 @@ function ModalPack({
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setOpenModalPack(false)} color="secondary">
-                {language !== 'English' ? 'Cancel' : 'ביטול'}
+                {t("plannerPage.Cancel")}
               </Button>
               <Button onClick={handleSubmitPackTitle} color="primary">
-                {language !== 'English' ? 'Save' : 'שמור'}
+                {t("plannerPage.Save")}
               </Button>
             </DialogActions>
           </>

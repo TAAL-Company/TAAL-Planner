@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import './Modal.css';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 
@@ -7,6 +8,7 @@ import { Link } from 'react-router-dom/cjs/react-router-dom.min';
 //--------------------------
 function Modal_Dropdown(props) {
   const menuRef = useRef(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -30,42 +32,42 @@ function Modal_Dropdown(props) {
         id='dropdown' className='button-dropdown-content'>
         {props.editable ? (
           <Link onClick={() => props.setRequestForEditing('edit')}>
-            {props.language !== 'English' ? 'Edit' : 'עריכה'}
+            {t('plannerPage.Edit')}
           </Link>
         ) : (
           <></>
         )}
         {props.Reproducible ? (
           <Link onClick={() => props.setRequestForEditing('duplication')}>
-            {props.language !== 'English' ? 'Duplicate' : 'העתקה'}
+            {t('plannerPage.Duplicate')}
           </Link>
         ) : (
           <></>
         )}
         {props.details ? (
           <Link onClick={() => props.setRequestForEditing('details')}>
-            {props.language !== 'English' ? 'Details' : 'פרטים'}
+            {t('plannerPage.Details')}
           </Link>
         ) : (
           <></>
         )}
         {props.erasable ? (
           <Link onClick={() => props.setRequestForEditing('delete')}>
-            {props.language !== 'English' ? 'Delete' : 'מחיקה'}
+            {t('plannerPage.Delete')}
           </Link>
         ) : (
           <></>
         )}
         {props.uploadfromsheet ? (
           <Link onClick={() => props.setRequestForEditing('uploadfromsheet')}>
-            {props.language !== 'English' ? 'Sheet Edit' : 'עריכת גיליון'}
+            {t('plannerPage.Sheet_Edit')}
           </Link>
         ) : (
           <></>
         )}
         {props.loop ? (
           <Link onClick={() => props.setRequestForEditing('loop')}>
-            {props.language !== 'English' ? 'loop' : 'לולאה'}
+            {t('plannerPage.Loop')}
           </Link>
         ) : (
           <></>

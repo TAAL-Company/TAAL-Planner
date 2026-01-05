@@ -4,10 +4,10 @@ import { FcMultipleInputs } from 'react-icons/fc';
 import { RiAsterisk } from 'react-icons/ri';
 import Modal_Loading from './Modal_Loading';
 import { baseUrl } from '../../config';
+import { useTranslation } from 'react-i18next';
 
 //--------------------------
 let getPicture, getSound;
-let ichour = 'Save';
 let parentNum = 0;
 let file = {};
 let flagClickOK = false;
@@ -19,6 +19,7 @@ function Modal_Plases({ setOpenModalPlaces }) {
   const [, setPicture] = useState(null);
   const [, setFile] = useState({});
   const [, setFlagClickOK] = useState(false);
+  const { t } = useTranslation();
 
   //----------------------------------
   const handleTitleInput = (e) => {
@@ -42,7 +43,7 @@ function Modal_Plases({ setOpenModalPlaces }) {
   //----------------------------------
   function Post_Place() {
     if (get_title === '' || getDescription === '') {
-      alert('You must fill in the required fields marked with an asterisk');
+      alert(t('plannerPage.You_must_fill_in_the_required_fields_marked_with_an_asterisk'));
     } else {
       setFlagClickOK((flagClickOK = true));
       let url_post = `https://taal.tech/wp-json/wp/v2/places/`;
@@ -71,7 +72,7 @@ function Modal_Plases({ setOpenModalPlaces }) {
         })
         .then(function (post) {
           if (post.message === 'כבר יש מונח עם אותו שם ועם אותו הורה.')
-            alert('כבר יש אתר עם אותו שם, בחר/י בשם אחר');
+            alert(t('plannerPage.There_is_already_a_place_with_the_same_name_choose_a_different_name'));
           else {
             setFlagClickOK((flagClickOK = false));
             window.location.replace('/planner');
@@ -84,7 +85,7 @@ function Modal_Plases({ setOpenModalPlaces }) {
       <div className='modalContainerPlases'>
         <div className='headerAddPlases'>
           <div className='title'>
-            <div className='newRoutTitle'>שמור אתר</div>
+            <div className='newRoutTitle'>{t('plannerPage.Save_Place')}</div>
           </div>
           <button
             className='closeModal'
@@ -99,7 +100,7 @@ function Modal_Plases({ setOpenModalPlaces }) {
         <div className='body'>
           <form id='IPU' className='w3-container'>
             <h6 style={{ textAlign: 'right' }}>
-              רשום את שם האתר <RiAsterisk style={{ color: 'red' }} />
+              {t('plannerPage.Enter_the_name_of_the_place')} <RiAsterisk style={{ color: 'red' }} />
             </h6>
             <p>
               <input
@@ -116,7 +117,7 @@ function Modal_Plases({ setOpenModalPlaces }) {
           <form id='IPU' className='w3-container'>
             <h6 style={{ textAlign: 'right' }}>
               {' '}
-              תאר את האתר במשפט:
+              {t('plannerPage.Describe_the_place_in_a_sentence')}
               <RiAsterisk style={{ color: 'red' }} />{' '}
             </h6>
             <p>
@@ -132,7 +133,7 @@ function Modal_Plases({ setOpenModalPlaces }) {
           </form>
           <form id='IPU' className='w3-container'>
             <h6 style={{ textAlign: 'right' }}>
-              צרף תמונה של האתר:
+              {t('plannerPage.Attach_an_image_of_the_place')}
               <FcMultipleInputs />
             </h6>
             <div className='input-group mb-3'>
@@ -151,7 +152,7 @@ function Modal_Plases({ setOpenModalPlaces }) {
           </form>
           <form id='IPU' className='w3-container'>
             <h6 style={{ textAlign: 'right' }}>
-              צרף קטע קול המתאר את האתר:
+              {t('plannerPage.Attach_an_audio_clip_describing_the_place')}
               <FcMultipleInputs />{' '}
             </h6>
             <p>
@@ -173,7 +174,7 @@ function Modal_Plases({ setOpenModalPlaces }) {
           <input
             type='submit'
             className='OK'
-            value={ichour}
+            value={t('plannerPage.Save_Place')}
             onClick={Post_Place}
           />
         </div>

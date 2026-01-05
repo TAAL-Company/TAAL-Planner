@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   getingData_Routes,
   getingData_Tasks,
@@ -145,6 +146,7 @@ const Places = (props) => {
   const [allEditors, setAllEditors] = useState([]); // All editors
 
   const [board, setBoard] = useState([]);
+  const { t } = useTranslation();
 
   const handleDeselectSelectedRoute = () => {
     setLoading(true); // Start loading indicator
@@ -167,18 +169,14 @@ const Places = (props) => {
       .then(() => {
         showNotification(
           "success",
-          props.language === "English"
-            ? "Route deselected successfully!"
-            : "המסלול בוטל בהצלחה!"
+          t("plannerPage.Route_deselected_successfully")
         );
       })
       .catch((error) => {
         console.error("Error deselecting route:", error);
         showNotification(
           "error",
-          props.language === "English"
-            ? "Error deselecting route!"
-            : "שגיאה בביטול המסלול!"
+          t("plannerPage.Error_deselecting_route")
         );
       })
       .finally(() => {
@@ -259,17 +257,13 @@ const Places = (props) => {
 
       showNotification(
         "success",
-        props.language === "English"
-          ? "Data reloaded successfully!"
-          : "הנתונים נטענו מחדש בהצלחה!"
+        t("plannerPage.Data_reloaded_successfully")
       );
     } catch (error) {
       console.error("Error reloading data:", error);
       showNotification(
         "error",
-        props.language === "English"
-          ? "Error reloading data!"
-          : "שגיאה בטעינת הנתונים!"
+        t("plannerPage.Error_reloading_data")
       );
     } finally {
       setLoading(false); // Hide loading indicator
@@ -361,7 +355,7 @@ const Places = (props) => {
   // Add this handler for the Add Pack button
   const handleAddPack = () => {
     if (!siteSelected) {
-      showNotification("error", props.language === "English" ? "יש לבחור אתר תחילה" : "Please select a site first");
+      showNotification("error", t("plannerPage.Please_select_a_site_first"));
       return;
     }
     setRequestForEditing('');
@@ -452,11 +446,11 @@ const Places = (props) => {
             const newPacks = [...filteredpacksbysite];
             newPacks.push(newadded);
             setFilteredPacksBySite(newPacks);
-            showNotification("success", props.language === "English" ? "האריזה הועתקה בהצלחה!" : "The pack was copied successfully!");
+            showNotification("success", t("plannerPage.The_pack_was_copied_successfully"));
           });
         } catch (error) {
           console.log(error);
-          showNotification("error", props.language === "English" ? "האריזה לא הועתקה!" : "The pack was not copied!");
+          showNotification("error", t("plannerPage.The_pack_was_not_copied"));
         } finally {
           setLoading(false); // Stop loading
         }
@@ -503,11 +497,11 @@ const Places = (props) => {
             const newRoutes = [...filteredDataRoutes];
             newRoutes.push(newadded);
             setFilteredDataRoutes(newRoutes);
-            showNotification("success", props.language === "English" ? "ההוראה הועתקה בהצלחה!" : "The instruction was copied successfully!");
+            showNotification("success", t("plannerPage.The_instruction_was_copied_successfully"));
           })
         } catch (error) {
           console.log(error);
-          showNotification("error", props.language === "English" ? "ההוראה לא הועתקה!" : "The instruction was not copied!");
+          showNotification("error", t("plannerPage.The_instruction_was_not_copied"));
         } finally {
           setLoading(false); // Stop loading
         }
@@ -561,7 +555,7 @@ const Places = (props) => {
         let deletePacks = await deletePack(routrForDelete);
 
         if (deletePacks.status === 200) {
-          showNotification('success', props.language === "English" ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
+          showNotification('success', t("plannerPage.The_deletion_was_successful"));
           const newPacks = filteredpacksbysite.filter(
             (pack, index) => index !== routrForDelete
           );
@@ -573,7 +567,7 @@ const Places = (props) => {
         let deleteRoutes = await deleteRoute(filteredDataRoutes[routrForDelete].id);
 
         if (deleteRoutes.status === 200) {
-          showNotification('success', props.language === "English" ? 'המחיקה בוצעה בהצלחה!' : 'The deletion was successful!');
+          showNotification('success', t("plannerPage.The_deletion_was_successful"));
           const newRoutes = [...filteredDataRoutes];
           newRoutes.splice(routrForDelete, 1); // remove one element at index x
           setFilteredDataRoutes(newRoutes);
@@ -587,7 +581,7 @@ const Places = (props) => {
       setRequestForEditing('');
     } catch (error) {
       console.error(error);
-      showNotification('error', props.language === "English" ? 'המחיקה נכשלה!' : 'Deletion failed!');
+      showNotification('error', t("plannerPage.Error_in_deletion"));
     } finally {
       setLoading(false); // Stop loading
     }
@@ -1060,8 +1054,7 @@ const Places = (props) => {
       }
     } catch (error) {
       console.error("Error loading site data:", error);
-      showNotification("error", props.language === "English" ?
-        "שגיאה בטעינת נתונים" : "Error loading data");
+      showNotification("error",t("plannerPage.Error_loading_data"));
     } finally {
       setLoading(false);
     }
@@ -1073,8 +1066,7 @@ const Places = (props) => {
       handleSiteSelect(selectedSiteValue);
     } catch (error) {
       console.error("Error parsing site selection:", error);
-      showNotification("error", props.language === "English" ?
-        "שגיאה בבחירת אתר" : "Error selecting site");
+      showNotification("error", t("plannerPage.Error_selecting_site"));
     }
   }, [handleSiteSelect]);
 
@@ -1176,7 +1168,7 @@ const Places = (props) => {
   };
 
   const handleWorkerSelectChange = (event) => {
-    const answer = window.confirm(props.language !== "English" ? "האם ברצונך לבצע פעולה זו?" : "Are you sure you want to do this?");
+    const answer = window.confirm(t("plannerPage.Are_you_sure_you_want_to_do_this"));
 
     const selectedWorkerValue = allWorkersForSite[event.target.selectedIndex - 1];
 
@@ -1303,7 +1295,7 @@ const Places = (props) => {
       .find((site) => site?.id === selectedSite?.id);
 
     if (!matchedSite) {
-      showNotification("warning", props.language === "English" ? 'לא נמצאו מקומות שונים!' : 'No different sites found!');
+      showNotification("warning", t("plannerPage.No_different_sites_found"));
       console.warn("No matched site found.");
       return;
     }
@@ -1484,10 +1476,10 @@ const Places = (props) => {
           try {
             setLoading(true); // Start loading
             updateRoute(uuidRoute, { siteIds: mySite.id });
-            showNotification("success", props.language === "English" ? "Route Updated Successfully" : "המסלול עודכן בהצלחה");
+            showNotification("success", t("plannerPage.route_updated_successfully"));
           } catch (error) {
             console.error(error);
-            showNotification("error", props.language === "English" ? "Error Updating Route" : "שגיאה בעדכון המסלול");
+            showNotification("error", t("plannerPage.Error_Updating_Route"));
           } finally {
             setLoading(false); // Stop loading
           }
@@ -1822,10 +1814,10 @@ const Places = (props) => {
         >
           <div className='placesTitle'>
             <DescriptionIcon />
-            {props.language !== 'English' ? "Upload sheet" : " העלה גיליון"}
+            {t("plannerPage.Upload_sheet")}
           </div>
           <button className="deselect-button" style={{ backgroundColor: "green" }} onClick={() => setOpenUploadsheets(true)}>
-            {props.language !== 'English' ? "upload sheet" : " העלה גיליון"}
+            {t("plannerPage.Upload_sheet")}
           </button>
         </div>
         <div style={{ margin: '20px' }}>
@@ -1910,7 +1902,7 @@ const Places = (props) => {
                     className={`MyTitle text ${props.language !== 'English' ? 'english' : ''
                       }`}
                   >
-                    {props.language === 'English' ? 'אריזות' : 'Packs'}
+                    {t("plannerPage.Packs")}
                   </div>
                 </div>
               </div>
@@ -1926,7 +1918,7 @@ const Places = (props) => {
                 className={`searchButton  ${props.language !== 'English' ? 'english' : 'routes'}`}
                 dir='rtl'
                 placeholder={
-                  props.language === 'English' ? 'חפש אריזות' : 'search packs'
+                  t("plannerPage.Search_packs")
                 }
                 label={
                   <CgSearch
@@ -2058,7 +2050,7 @@ const Places = (props) => {
                   <div
                     className={`MyTitle text ${props.language !== 'English' ? 'english' : ''}`}
                   >
-                    {props.language === 'English' ? 'מסלולים' : 'Routes'}
+                    {t("plannerPage.Routes")}
                   </div>
                 </div>
               </div>
@@ -2074,7 +2066,7 @@ const Places = (props) => {
                 className={`searchButton  ${props.language !== 'English' ? 'english' : 'routes'}`}
                 dir='rtl'
                 placeholder={
-                  props.language === 'English' ? 'חפש מסלול' : 'search route'
+                  t("plannerPage.Search_Route")
                 }
                 label={
                   <CgSearch
@@ -2094,7 +2086,7 @@ const Places = (props) => {
                 className="deselect-button"
                 onClick={handleDeselectRoute}
               >
-                {props.language === "English" ? "הצג את כל התחנות" : "show all Stations"}
+                {t("plannerPage.Show_all_Stations")}
               </button>
             </div>
 
@@ -2326,15 +2318,15 @@ const Places = (props) => {
               className='body'
               style={{ textAlign: 'center', direction: 'rtl' }}
             >
-              <h4>{props.language !== 'English' ? 'Chose another site' : 'בחרת כבר באתר אחר, ברצונך להחליף?'}</h4>
-              <div>{props.language !== 'English' ? 'Changing site will delete the changes you made on the current site' : 'החלפת אתר תמחק את השינויים שביצעת באתר הנוכחי'}</div>
+              <h4>{t("plannerPage.Chose_another_site")}</h4>
+              <div>{t("plannerPage.Changing_site_will_delete_the_changes_you_made_on_the_current_site")}</div>
             </div>
             <div className='footer' style={{ display: 'flex' }}>
               <button className='cancelBtn' onClick={closeSiteSelectionModal}>
-                {props.language !== 'English' ? 'Cancel' : 'ביטול'}
+                {t("plannerPage.Cancel")}
               </button>
               <button className='cancelBtn' onClick={handleSiteReplacement}>
-                {props.language !== 'English' ? 'Replace' : 'החלף אתר'}
+                {t("plannerPage.Replace")}
               </button>
             </div>
           </div>
@@ -2362,13 +2354,13 @@ const Places = (props) => {
         <DialogTitle id='alert-dialog-title'>{'מחיקת מסלול'}</DialogTitle>
         <DialogContent>
           <DialogContentText id='alert-dialog-description'>
-            {props.language === 'English' ? 'האם אתה בטוח במחיקת המסלול?' : 'Are you sure you want to delete the route?'}
+            {t("plannerPage.Are_you_sure_you_want_to_delete_the_route")}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseRemove}>{props.language === 'English' ? 'ביטול' : 'Cancel'}</Button>
+          <Button onClick={handleCloseRemove}>{t("plannerPage.Cancel")}</Button>
           <Button onClick={handleCloseRemoveConfirm} autoFocus>
-            {props.language === 'English' ? 'מחיקה' : 'Delete'}
+            {t("plannerPage.Delete")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -2395,9 +2387,7 @@ const Places = (props) => {
           ) : (
             <DialogContent>
               <DialogContentText style={{ textAlign: 'center', color: 'red' }}>
-                {props.language !== "English"
-                  ? "The selected route has no tasks."
-                  : { uploadOption, selectedRoute, openUpload } + "למסלול שנבחר אין משימות."}
+                {t("plannerPage.The_selected_route_has_no_tasks")}
               </DialogContentText>
             </DialogContent>
           )
@@ -2420,9 +2410,7 @@ const Places = (props) => {
               id="alert-dialog-description"
               style={{ textAlign: 'center' }}
             >
-              {props.language === "English"
-                ? "בחר אפשרות להעלאת גיליון"
-                : "Choose an option to upload a sheet"}
+              {t("plannerPage.Choose_an_option_to_upload_a_sheet")}
             </DialogContentText>
             <DialogActions>
               <Button
@@ -2431,9 +2419,7 @@ const Places = (props) => {
                 size="small"
                 onClick={() => handleSelectOption("CsvtojsonAddFullRoute")}
               >
-                {props.language === "English"
-                  ? "העלה מסלול עם תחנות ומשימות"
-                  : "Upload Route with Stations and Tasks"}
+                {t("plannerPage.Upload_Route_with_Stations_and_Tasks")}
               </Button>
               {/* <Button
                 variant="contained"
@@ -2454,9 +2440,7 @@ const Places = (props) => {
                 href="/SpreadsheetTemplate/EN-Fill-In-Spreadsheet-Template.xlsx"
                 download="EN-Fill-In-Spreadsheet-Template.xlsx"
               >
-                {props.language !== "English"
-                  ? "Download English Template"
-                  : "הורד תבנית באנגלית"}
+                {t("plannerPage.Download_English_Template")}
               </Button>
               <Button
                 variant="contained"
@@ -2465,9 +2449,7 @@ const Places = (props) => {
                 href="/SpreadsheetTemplate/HE-Fill-In-Spreadsheet-Template.xlsx"
                 download="HE-Fill-In-Spreadsheet-Template.xlsx"
               >
-                {props.language !== "English"
-                  ? "Download Hebrew Template"
-                  : "הורד תבנית בעברית"}
+                {t("plannerPage.Download_Hebrew_Template")}
               </Button>
             </div>
           </DialogContent>

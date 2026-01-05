@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Tag from '../Tag/Tag.js';
 import { CgSearch } from 'react-icons/cg';
@@ -10,6 +11,7 @@ import { Droppable, Draggable } from 'react-beautiful-dnd';
 import { useNotification } from "../../../components/Notification/NotificationProvider.js";
 
 const Tasks = (props) => {
+  const { t } = useTranslation();
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [requestForEditing, setRequestForEditing] = useState('');
   const [taskUuidForEdit, setTaskUuidForEdit] = useState('');
@@ -49,7 +51,7 @@ const Tasks = (props) => {
   const handleCloseRemoveConfirm = async () => {
     try {
     let deleteTaskTemp = await deleteTask(taskForDelete)
-    showNotification('success', props.language !== 'English' ? 'Task deleted successfully' : 'המשימה נמחקה בהצלחה');
+    showNotification('success', t('plannerPage.Task_deleted_successfully'));
 
     if (deleteTaskTemp !== undefined) {
       // alert(props.language !== 'English' ? 'Task deleted successfully' : 'המשימה נמחקה בהצלחה');
@@ -71,7 +73,7 @@ const Tasks = (props) => {
     setRequestForEditing('');
     } catch (error) {
       console.error(error);
-      showNotification('error', props.language === 'English' ?'Error deleting task'+error: 'שגיאה במחיקת משימה'+error);  
+      showNotification('error', t('plannerPage.Error_deleting_task') + error);  
     }
   };
 
@@ -102,7 +104,7 @@ const Tasks = (props) => {
           mySiteId,
           estimatedTimeSeconds
         );
-        showNotification('success', props.language !== 'English' ? 'Task duplicated successfully' : 'המשימה נוספה בהצלחה');  
+        showNotification('success', t('plannerPage.Task_duplicated_successfully'));  
 
         // props.setAllTasksOfTheSite((prev) => [...prev, post]);
         const newTasks = [...props.tasksOfChosenStation];
@@ -113,7 +115,7 @@ const Tasks = (props) => {
         setOpenThreeDotsVertical(-1);
       } catch (error) {
         console.error(error);
-        showNotification('error', props.language === 'English' ?'Error duplicating task'+error: 'שגיאה בשכפול משימה'+error);  
+        showNotification('error', t('plannerPage.Error_duplicating_task') + error);  
       }
     }
   };
@@ -189,7 +191,7 @@ const Tasks = (props) => {
           className={`searchButton ${props.language !== 'English' ? 'english' : ''}`}
           // dir="rtl"
           placeholder={
-            props.language === 'English' ? 'חפש משימה' : 'search task'
+            t('plannerPage.Search_Tasks')
           }
           label={<CgSearch style={{ fontSize: 'x-large' }} />}
           onChange={searchTask}
@@ -273,7 +275,7 @@ const Tasks = (props) => {
             if (Object.keys(props.chosenStation).length > 0) {
               setModalOpen(true);
               setModalOpenNoSiteSelected(true);
-            } else alert(props.language !== 'English' ? 'You must choose a station!' : 'את/ה חייב/ת לבחור תחנה!')
+            } else alert(t('plannerPage.You_must_choose_a_station'))
           }}
         >
           <AiOutlinePlus className='plus' />
@@ -391,8 +393,8 @@ const Tasks = (props) => {
         language={props.language}
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
-        DialogTitle={props.language !== 'English' ? 'Delete task' : 'מחיקת משימה'}
-        DialogContent={props.language !== 'English' ? 'Are you sure you want to delete the task?' : 'האם את/ה בטוח/בטוח שברצונך למחוק את המשימה?'}
+        DialogTitle={t('plannerPage.Delete_task')}
+        DialogContent={t('plannerPage.Are_you_sure_you_want_to_delete_the_task')}
         handleCloseRemoveConfirm={handleCloseRemoveConfirm}
       />
     </div>

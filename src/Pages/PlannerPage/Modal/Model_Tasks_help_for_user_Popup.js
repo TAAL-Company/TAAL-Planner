@@ -6,6 +6,7 @@ import Gallery2 from '../../GalleryPage/Gallery/Gallery2';
 import { getBlobsInContainer } from '../../../components/azureBlob';
 import InputFileUpload from '../../../components/InputFileUpload/InputFileUpload';
 import { FormControl, InputLabel, Select, MenuItem, TextField, Box, Button, Modal } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const style = {
     position: 'absolute',
@@ -34,35 +35,39 @@ const style2 = {
     // overflowY: "scroll",
     // p: 4,
 };
-const initialFormConfig = [
-    {
-        label: 'Select a user',
-        type: 'select',
-        value: 'UserID',
-        options: 'allUsers',
-        required: true,
-    },
-    {
-        label: 'Write additional help text',
-        type: 'text',
-        value: 'help_text',
-        required: true,
-    },
-    {
-        label: 'Add a picture of a task from the Gallery / Desktop',
-        type: 'file',
-        value: 'picture',
-        required: false,
-    },
-    {
-        label: 'Add a voice clip describing the task',
-        type: 'file',
-        value: 'audio',
-        required: false,
-    },
-];
+
 
 function Model_Tasks_Pop_for_user(props) {
+    const { t } = useTranslation();
+
+    const initialFormConfig = [
+        {
+            label: t('plannerPage.Select_User'),
+            type: 'select',
+            value: 'UserID',
+            options: 'allUsers',
+            required: true,
+        },
+        {
+            label: t('plannerPage.Write_additional_help_text'),
+            type: 'text',
+            value: 'help_text',
+            required: true,
+        },
+        {
+            label: t('plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop'),
+            type: 'file',
+            value: 'picture',
+            required: false,
+        },
+        {
+            label: t('plannerPage.Add_a_voice_clip_describing_the_task'),
+            type: 'file',
+            value: 'audio',
+            required: false,
+        },
+    ];
+
     let additonalHelp = [{
         id: "",
         help_text: "",
@@ -238,7 +243,7 @@ function Model_Tasks_Pop_for_user(props) {
         >
             <div className='headerNewTask'>
                 <div className='NewTaskTitle'>
-                    {props.language !== 'English' ? 'Adtional Help' : 'תוכן נוסף'}
+                    {t('plannerPage.Additional_Help_for_Users')}
                 </div>
             </div>
             <div
@@ -297,7 +302,7 @@ function Model_Tasks_Pop_for_user(props) {
                                             newData[formIndex].picture = file;
                                             return newData;
                                         })} language={props.language} />
-                                        <Button variant="outlined" onClick={handleOpen}>Gallery</Button>
+                                        <Button variant="outlined" onClick={handleOpen}>{t('plannerPage.Gallery')}</Button>
                                         <Modal
                                             open={open}
                                             onClose={handleClose}
@@ -309,12 +314,12 @@ function Model_Tasks_Pop_for_user(props) {
                                                     const newData = [...prevData];
                                                     newData[formIndex].picture = file;
                                                     return newData;
-                                                })} showaudio={false} showimage={true}/>
+                                                })} showaudio={false} showimage={true} />
                                             </Box>
                                         </Modal>
                                         {formData[formIndex].picture ? (
                                             <div className='selectedFileContainertask'>
-                                                <div className='selectedFileTitle'>:תמונה שנבחרה</div>
+                                                <div className='selectedFileTitle'>{t('plannerPage.Selected_Image')}:</div>
                                                 <div style={{ marginBottom: '1rem' }}>
                                                     {typeof formData[formIndex].picture === 'string'
                                                         ? extractFilenameFromURL(formData[formIndex].picture)
@@ -332,9 +337,7 @@ function Model_Tasks_Pop_for_user(props) {
                                             </div>
                                         ) : (
                                             <div style={{ marginBottom: '1rem' }}>
-                                                {props.language !== 'English'
-                                                    ? 'Selected image: No image file found'
-                                                    : ' :  תמונה שנבחרה: לא נמצא קובץ תמונה'}
+                                                {t('plannerPage.No_image_file_found')}
                                             </div>
                                         )}
                                     </div>
@@ -345,7 +348,7 @@ function Model_Tasks_Pop_for_user(props) {
                                             newData[formIndex].audio = file;
                                             return newData;
                                         })} language={props.language} />
-                                        <Button variant="outlined" onClick={handleOpen2}>Gallery audio</Button>
+                                        <Button variant="outlined" onClick={handleOpen2}>{t('plannerPage.Gallery_audio')}</Button>
                                         <Modal
                                             open={open2}
                                             onClose={handleClose}
@@ -357,14 +360,14 @@ function Model_Tasks_Pop_for_user(props) {
                                                     const newData = [...prevData];
                                                     newData[formIndex].audio = file;
                                                     return newData;
-                                                })} showaudio={true} showimage={false}/>
+                                                })} showaudio={true} showimage={false} />
                                             </Box>
                                         </Modal>
                                         {formData[formIndex].audio ? (
                                             <div className='selectedFileContainertask'>
                                                 <div className='selectedFileTitle'>
                                                     <span>:</span>
-                                                    אודיו שנבח
+                                                    {t('plannerPage.Selected_audio')}
                                                 </div>
                                                 <div className='audioNameContainer'>
                                                     <div style={{ marginBottom: '1rem' }}>
@@ -379,15 +382,13 @@ function Model_Tasks_Pop_for_user(props) {
                                                             src={typeof formData[formIndex].audio === 'string' ? formData[formIndex].audio : ''}
                                                             type='audio/mpeg'
                                                         />
-                                                        Your browser does not support the audio element.
+                                                        {t('plannerPage.Your_browser_does_not_support_the_audio_element')}
                                                     </audio>
                                                 </div>
                                             </div>
                                         ) : (
                                             <div style={{ marginBottom: '1rem' }}>
-                                                {props.language !== 'English'
-                                                    ? 'Selected audio: No audio file found'
-                                                    : ' אודיו שנבחר: לא נמצא קובץ אודיו'}
+                                                {t('plannerPage.Selected_audio_No_audio_file_found')}
                                             </div>
                                         )}
                                     </div>
@@ -395,10 +396,10 @@ function Model_Tasks_Pop_for_user(props) {
 
                             </form>
                         ))}
-                        <Button variant="outlined" color="secondary" onClick={() => removeForm(formIndex)}>Remove</Button>
+                        <Button variant="outlined" color="secondary" onClick={() => removeForm(formIndex)}>{t('Remove')}</Button>
                     </div>
                 ))}
-                <Button variant="outlined" onClick={addNewForm}>Add More</Button>
+                <Button variant="outlined" onClick={addNewForm}>{t('plannerPage.Add_More')}</Button>
                 {/* <h6>
                     {props.language !== 'English'
                         ? 'Select where to save picture / voice'
@@ -407,9 +408,7 @@ function Model_Tasks_Pop_for_user(props) {
                 </h6>
                 <BasicSelect setFoldersite={setFoldersite} folderName={Foldersite} folderlist={folderNames} /> */}
                 <h6>
-                    {props.language !== 'English'
-                        ? "Site where the image / voice will be save : " + props.siteNameInEnglish
-                        : props.siteNameInEnglish + ' : nאתר בו יישמרו התמונה/הקול'}
+                    {t("plannerPage.Site_where_the_image_voice_will_be_save") + " : " + props.siteNameInEnglish}
                     <FcMultipleInputs />
                 </h6>
             </div>
@@ -431,16 +430,14 @@ function Model_Tasks_Pop_for_user(props) {
                     <input
                         type='submit'
                         className='saveTaskButton'
-                        value={
-                            props.language !== 'English' ? 'Save Task' : 'שמור משימה'
-                        }
+                        value={t('plannerPage.Save_Task')}
                         onClick={saveTask}
                     />
                 )}
                 <input
                     type='submit'
                     className='cancelTaskButton'
-                    value={props.language !== 'English' ? 'Cancel' : 'ביטול'}
+                    value={t('plannerPage.Cancel')}
                     onClick={() => {
                         props.sethandleClose(false)
                     }}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Modal.css';
 import { baseUrl } from '../../../config';
+import { useTranslation } from 'react-i18next';
 // import Dot from '../Dot/Dot';
 //--------------------------
 let getPicture, getSound;
@@ -9,25 +10,10 @@ let flagClickOK = false;
 let flag_token = false;
 //--------------------------
 const Modal_Help = ({ setModalOpen, idTasks }) => {
+  const { t } = useTranslation();
   const [, login_token] = useState('');
   const [complete_name, setcomplete_name] = useState('');
   useEffect(() => {
-    // const url = `https://taal.tech/wp-json/wp/v2/users/me/`;
-    // fetch(url, {
-    //   method: 'GET',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     accept: 'application/json',
-    //     Authorization: 'Bearer' + sessionStorage.jwt,
-    //   },
-    // })
-    //   .then((response) => response.data.json())
-    //   .then(function (user) {
-    //     if (!flag_token) {
-    //       login_token((flag_token = true));
-    //       setcomplete_name(user.name);
-    //     }
-    //   });
     setcomplete_name(JSON.parse(sessionStorage.getItem('jwt')).name);
   });
   const [, setDone] = useState(false);
@@ -52,7 +38,7 @@ const Modal_Help = ({ setModalOpen, idTasks }) => {
           </button>
         </div>
 
-        <div className='HelpTxt'>נשלחה בקשה למסיייע/ת {complete_name}</div>
+        <div className='HelpTxt'>{t('plannerPage.A_request_was_sent_to_the_assistant')} {complete_name}</div>
       </div>
     </>
   );

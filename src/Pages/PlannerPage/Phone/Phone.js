@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './style.css';
 import Dot from '../Dot/Dot';
 import Tag from '../Tag/Tag.js';
@@ -7,6 +8,7 @@ import ModalHelp from '../Modal/Modal_help';
 import Clock from '../../../components/junk/Clock/Clock.js';
 let flagStress = false;
 const Phone = (props) => {
+  const { t } = useTranslation();
   const [, setFlagStress] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -89,25 +91,25 @@ const Phone = (props) => {
                   {modalOpen ? (
                     <>
                       <div className='pleaseName' style={{ color: '#45350a' }}>
-                        ,בבקשה
+                        {t('plannerPage.please')}
                       </div>
                       <div className='pleaseListenIconCover'></div>
                     </>
                   ) : (
                     <>
-                      <div className='pleaseName'>,בבקשה</div>
+                      <div className='pleaseName'>{t('plannerPage.please')}</div>
                       <button className='pleaseListenIcon'></button>
                     </>
                   )}
                 </div>
                 <div className='positionTextStress'>
-                  <div className='textStress'>.התקשתי במילוי המשימות שלי</div>
+                  <div className='textStress'>{t('plannerPage.I_had_difficulty_completing_my_tasks')}</div>
                   <div className='textStress'>
-                    אשמח לסיוע, ותודה על הרצון לעזור
+                    {t('plannerPage.I_would_appreciate_assistance_and_thank_you_for_your_willingness_to_help')}
                   </div>
                 </div>
                 <div className='whiteCoverPhoneStress'>
-                  <div className='currentLocation'>:המיקום הנוכחי שלי</div>
+                  <div className='currentLocation'>{t('plannerPage.My_Mycurrent_location')}</div>
                   {props.mySite.name ? (
                     <>
                       {' '}
@@ -118,7 +120,7 @@ const Phone = (props) => {
                     </>
                   ) : (
                     <>
-                      <div className='currentLocationName'>אין מיקום</div>
+                      <div className='currentLocationName'>{t('plannerPage.No_location')}</div>
                     </>
                   )}
                 </div>
@@ -134,7 +136,7 @@ const Phone = (props) => {
                           className='helpContinue'
                           style={{ color: '#3d453e' }}
                         >
-                          ממשיך לבקש עזרה
+                          {t('plannerPage.Continue_to_request_help')}
                         </div>
                       </div>
                       <div
@@ -146,7 +148,7 @@ const Phone = (props) => {
                         </div>
 
                         <div className='backup' style={{ color: '#3d453e' }}>
-                          חזור למשימות שלי
+                          {t('plannerPage.Return_to_my_tasks')}
                         </div>
                       </div>
                     </>
@@ -159,7 +161,7 @@ const Phone = (props) => {
                             setModalOpen(true);
                           }}
                         ></button>
-                        <div className='helpContinue'>ממשיך לבקש עזרה</div>
+                        <div className='helpContinue'>{t('plannerPage.Continue_to_request_help')}</div>
                       </div>
                       <div className='greenCoverPhoneStress'>
                         <button
@@ -169,7 +171,7 @@ const Phone = (props) => {
                           <MdOutlineSettingsBackupRestore className='TempBackup' />
                         </button>
 
-                        <div className='backup'>חזור למשימות שלי</div>
+                        <div className='backup'>{t('plannerPage.Return_to_my_tasks')}</div>
                       </div>
                     </>
                   )}

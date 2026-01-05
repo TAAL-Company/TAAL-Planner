@@ -38,6 +38,7 @@ const cacheLtr = createCache({
 
 export default function SitesTable() {
     const [expandedRows, setExpandedRows] = useState({});
+    const [pageSize, setPageSize] = useState(10);
 
     // Helper to toggle expand for a section
     const handleSectionExpandToggle = (siteId, section) => {
@@ -347,8 +348,9 @@ export default function SitesTable() {
                                 style={{ direction: t('Direction') }}
                                 rows={getRowsWithDetails()}
                                 columns={columns}
-                                pageSize={12}
-                                rowsPerPageOptions={[12, 24, 50]}
+                                pageSize={pageSize}
+                                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                                rowsPerPageOptions={[10, 25, 50, 100]}
                                 autoHeight
                                 loading={loading}
                                 components={{

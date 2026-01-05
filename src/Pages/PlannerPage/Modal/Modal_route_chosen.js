@@ -1,9 +1,11 @@
+
 import './Modal.css';
 import stopIcon from '../../../Pictures/stopIcon.svg';
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Modal_route_chosen = (props) => {
-
+  const { t } = useTranslation();
   const [isBoardChanged, setIsBoardChanged] = useState(false);
 
   useEffect(() => {
@@ -18,9 +20,9 @@ const Modal_route_chosen = (props) => {
           <img src={stopIcon} alt='logo'></img>
         </div>
         <div className='body' style={{ textAlign: 'center', direction: 'rtl' }}>
-          <h4>{props.language !== 'English' ? 'Changing Route' : 'שינוי מסלול'} </h4>
+          <h4>{t('plannerPage.Changing_Route')}</h4>
           {isBoardChanged === 'true' ? (
-          <div>{props.language !== 'English' ? 'Changing route will delete the changes you made on the current route if not saved' : 'שינוי מסלול ימחק את השינויים שביצעת במסלול הנוכחי אם לא יישמרו'}</div>
+            <div>{t('plannerPage.Changing_route_will_delete_the_changes_you_made_on_the_current_route_if_not_saved')}</div>
           ) : (<></>)}
         </div>
         <div className='footer' style={{ display: 'flex' }}>
@@ -30,7 +32,7 @@ const Modal_route_chosen = (props) => {
               props.setOpenModalRouteChosen(false);
             }}
           >
-            {props.language !== 'English' ? 'Cancel' : 'ביטול'}
+            {t('plannerPage.Cancel')}
           </button>
           <button
             className='cancelBtn'
@@ -38,7 +40,7 @@ const Modal_route_chosen = (props) => {
               props.setReplaceRouteFlag(true);
             }}
           >
-           {props.language !== 'English' ? 'Replace' : 'החלף מסלול'}
+            {t('plannerPage.Replace')}
           </button>
         </div>
       </div>

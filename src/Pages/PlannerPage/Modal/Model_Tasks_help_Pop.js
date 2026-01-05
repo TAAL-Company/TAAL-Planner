@@ -11,6 +11,8 @@ import Model_Tasks_help_for_user_Popup from './Model_Tasks_help_for_user_Popup';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
+import { useTranslation } from 'react-i18next';
+
 const style = {
     position: 'absolute',
     top: '5%',
@@ -43,6 +45,7 @@ const style2 = {
 
 //--------------------------
 function Model_Tasks_Pop(props) {
+    const { t } = useTranslation();
     console.log(props.additonalHelp);
     let additonalHelp = {};
 
@@ -188,7 +191,7 @@ function Model_Tasks_Pop(props) {
         >
             <div className='headerNewTask'>
                 <div className='NewTaskTitle'>
-                    {props.language !== 'English' ? 'Adtional Help' : 'תוכן נוסף'}
+                    {t("plannerPage.Task_Help_Details")}
                 </div>
             </div>
             <div
@@ -197,9 +200,7 @@ function Model_Tasks_Pop(props) {
             >
                 <form id='IPU' className='w3-container'>
                     <h6>
-                        {props.language !== 'English'
-                            ? ' write a additional help text'
-                            : ': כתוב טקסט נוסף '}
+                        {t("plannerPage.Write_additional_help_text")}
 
                         <RiAsterisk style={{ color: 'red' }} />
                     </h6>
@@ -226,21 +227,17 @@ function Model_Tasks_Pop(props) {
                 </h6>
                 <BasicSelect setFoldersite={setFoldersite} folderName={Foldersite} folderlist={folderNames} /> */}
                 <h6>
-                    {props.language !== 'English'
-                        ? "Site where the image / voice will be save : " + props.siteNameInEnglish
-                        : props.siteNameInEnglish + ' : nאתר בו יישמרו התמונה/הקול'}
+                    {t("plannerPage.Site_where_the_image_voice_will_be_save") + props.siteNameInEnglish}
                     <FcMultipleInputs />
                 </h6>
                 <form id='IPU' className='w3-container'>
                     <h6>
-                        {props.language !== 'English'
-                            ? 'Add a picture of a task from the Gallery / Desktop '
-                            : ' : הוסף תמונה של משימה מהגלריה/שולחן העבודה'}
+                        {t("plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop")}
                         <FcMultipleInputs />
                     </h6>
                     <div>
                         <InputFileUpload setPicture={setPicture} language={props.language} />
-                        <Button variant="outlined" onClick={handleOpen}>Gallery</Button>
+                        <Button variant="outlined" onClick={handleOpen}>{t('plannerPage.Gallery')}</Button>
                         <Modal
                             open={open}
                             onClose={() => {
@@ -256,7 +253,7 @@ function Model_Tasks_Pop(props) {
                         </Modal>
                         {picture ? (
                             <div className='selectedFileContainertask'>
-                                <div className='selectedFileTitle'>:תמונה שנבחרה</div>
+                                <div className='selectedFileTitle'>{t("plannerPage.Selected_image")}</div>
                                 <div style={{ marginBottom: '1rem' }}>
                                     {typeof picture === 'string'
                                         ? extractFilenameFromURL(picture)
@@ -274,22 +271,18 @@ function Model_Tasks_Pop(props) {
                             </div>
                         ) : (
                             <div style={{ marginBottom: '1rem' }}>
-                                {props.language !== 'English'
-                                    ? 'Selected image: No image file found'
-                                    : ' :  תמונה שנבחרה: לא נמצא קובץ תמונה'}
+                                {t("plannerPage.Selected_image_No_image_file_found")}
                             </div>
                         )}
                     </div>
                 </form>
                 <form id='IPU' className='w3-container'>
                     <h6>
-                        {props.language !== 'English'
-                            ? 'Add a voice clip describing the task'
-                            : ':הוסף קטע קול המתאר את המשימה '}
+                        {t("plannerPage.Add_a_voice_clip_describing_the_task")}
                         <FcMultipleInputs />
                     </h6>
                     <InputFileUpload setPicture={setAudio} language={props.language} />
-                    <Button variant="outlined" onClick={handleOpen2}>Gallery audio</Button>
+                    <Button variant="outlined" onClick={handleOpen2}>{t("plannerPage.Gallery_audio")}</Button>
                     <Modal
                         open={open2}
                         onClose={() => {
@@ -307,7 +300,7 @@ function Model_Tasks_Pop(props) {
                         <div className='selectedFileContainertask'>
                             <div className='selectedFileTitle'>
                                 <span>:</span>
-                                אודיו שנבח
+                                {t("plannerPage.Selected_audio")}
                             </div>
                             <div className='audioNameContainer'>
                                 <div style={{ marginBottom: '1rem' }}>
@@ -322,27 +315,23 @@ function Model_Tasks_Pop(props) {
                                         src={typeof audio === 'string' ? audio : ''}
                                         type='audio/mpeg'
                                     />
-                                    Your browser does not support the audio element.
+                                    {t("plannerPage.Your_browser_does_not_support_the_audio_element")}
                                 </audio>
                             </div>
                         </div>
                     ) : (
                         <div style={{ marginBottom: '1rem' }}>
-                            {props.language !== 'English' ?
-                                'Selected audio: No audio file found' :
-                                ' אודיו שנבחר: לא נמצא קובץ אודיו'}
+                            {t("plannerPage.Selected_audio_No_audio_file_found")}
                         </div>
                     )}
                 </form>
 
                 <form id='IPU' className='w3-container'>
                     <h6>
-                        {props.language !== 'English'
-                            ? 'add additional text for specific students'
-                            : ': הוסף טקסט נוסף לתלמידים מסוימים'}
+                        {t("plannerPage.Add_additional_help_for_specific_user")}
                         <FcMultipleInputs />
                     </h6>
-                    <Button variant="outlined" onClick={handleOpen3}>additional help for specific user</Button>
+                    <Button variant="outlined" onClick={handleOpen3}>{t("plannerPage.additional_help_for_specific_user")}</Button>
 
                     <Modal
                         open={open3}
@@ -398,7 +387,7 @@ function Model_Tasks_Pop(props) {
                         type='submit'
                         className='saveTaskButton'
                         value={
-                            props.language !== 'English' ? 'Save Task' : 'שמור משימה'
+                             t("plannerPage.Save_Task")
                         }
                         onClick={saveTask}
                     />
@@ -406,7 +395,7 @@ function Model_Tasks_Pop(props) {
                 <input
                     type='submit'
                     className='cancelTaskButton'
-                    value={props.language !== 'English' ? 'Cancel' : 'ביטול'}
+                    value={t("plannerPage.Cancel")}
                     onClick={() => {
                         props.sethandleClose(false)
                     }}

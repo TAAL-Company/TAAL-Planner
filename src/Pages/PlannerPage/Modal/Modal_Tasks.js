@@ -22,6 +22,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 
 import { useNotification } from "../../../components/Notification/NotificationProvider";
+import { useTranslation } from 'react-i18next';
 
 
 const style = {
@@ -63,6 +64,7 @@ let myPlacesChoiceTemp = [];
 function Modal_Tasks(props) {
   // console.log('props:', props);
   console.log('props:', props.requestForEditing);
+  const { t } = useTranslation();
 
   const [requestForEditing, setRequestForEditing] = useState(props.requestForEditing);
   const [, setDone] = useState(false);
@@ -190,7 +192,7 @@ function Modal_Tasks(props) {
     if (get_title === '' || getDescription === '') {
 
       // alert(props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
-      showNotification('error', props.language === "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
+      showNotification('error', t('Please_fill_in_the_required_fields'));
       setDone(false);
       setFlagClickOK(false);
       props.setModalOpen(true);
@@ -254,16 +256,16 @@ function Modal_Tasks(props) {
               delete additonalHelp[i][j].id;
               try {
                 await postAdditonalHelp(additonalHelp[i][j]);
-                showNotification('success', props.language === "English" ? 'עזרה נוספת נוספה בהצלחה' : 'Additional help added successfully');
+                showNotification('success', t('plannerPage.Additional_help_added_successfully'));
               } catch (error) {
-                showNotification('error', props.language === "English" ? ' שגיאה בהוספת עזרה' : 'Error adding additional help');
+                showNotification('error', t('plannerPage.Error_adding_additional_help'));
               }
             } else {
               try {
                 await updateAdditonalHelp(additonalHelp[i][j].id, additonalHelp[i][j]);
-                showNotification('success', props.language === "English" ? 'עזרה עודכנה בהצלחה' : 'Additional help updated successfully');
+                showNotification('success', t('plannerPage.Additional_help_updated_successfully'));
               } catch (error) {
-                showNotification('error', props.language === "English" ? ' שגיאה בעדכונה עזרה' : 'Error updating additional help');
+                showNotification('error', t('plannerPage.Error_updating_additional_help'));
               }
             }
           }
@@ -273,23 +275,23 @@ function Modal_Tasks(props) {
             delete additonalHelp[i].id;
             try {
               await postAdditonalHelp(additonalHelp[i]);
-              showNotification('success', props.language === "English" ? 'עזרה נוספת נוספה בהצלחה' : 'Additional help added successfully');
+              showNotification('success', t('plannerPage.Additional_help_added_successfully'));
             } catch (error) {
-              showNotification('error', props.language === "English" ? ' שגיאה בהוספת עזרה' : 'Error adding additional help');
+              showNotification('error', t('plannerPage.Error_adding_additional_help'));
             }
           } else {
             try {
               await updateAdditonalHelp(additonalHelp[i].id, additonalHelp[i]);
-              showNotification('success', props.language === "English" ? 'עזרה עודכנה בהצלחה' : 'Additional help updated successfully');
+              showNotification('success', t('plannerPage.Additional_help_updated_successfully'));
             } catch (error) {
-              showNotification('error', props.language === "English" ? ' שגיאה בעדכונה עזרה' : 'Error updating additional help');
+              showNotification('error', t('plannerPage.Error_updating_additional_help'));
             }
           }
         }
       }
     } catch (error) {
       // console.error(error);
-      showNotification('error', props.language === "English" ? ' שגיאה בעדכונה עזרה' : 'Error updating additional help');
+      showNotification('error', t('plannerPage.Error_updating_additional_help'));
     }
 
     // Create a copy of newTask without additonalHelp
@@ -298,7 +300,7 @@ function Modal_Tasks(props) {
 
     try {
       const update = await updateTask(uuid, newTaskWithoutHelp);
-      showNotification('success', props.language === "English" ? 'משימה עודכנה בהצלחה' : 'Task updated successfully');
+      showNotification('success', t('plannerPage.Task_updated_successfully'));
       // debugger
       if (update.status === 200) {
         let indexStation = props.allStations.findIndex(
@@ -325,7 +327,7 @@ function Modal_Tasks(props) {
       }
     } catch (error) {
       console.error(error);
-      showNotification('error', props.language === "English" ? ' שגיאה בעדכונה משימה' : 'Error updating task');
+      showNotification('error', t('plannerPage.Error_updating_task'));
     }
   };
   const Post_Task = async (picture_url, audio_url) => {
@@ -360,7 +362,7 @@ function Modal_Tasks(props) {
           additonalHelpflat
         )
 
-        showNotification('success', props.language !== 'English' ? 'Task added successfully' : 'המשימה נוספה בהצלחה');
+        showNotification('success', t('plannerPage.Task_added_successfully'));
 
         let color = props.allStations.find(
           (item) => item.id === myPlacesChoice[0]
@@ -376,13 +378,13 @@ function Modal_Tasks(props) {
         props.setModalOpen(false);
       } catch (error) {
         console.error(error);
-        showNotification('error', props.language === "English" ? ' שגיאה בהוספת משימה' : 'Error adding task');
+        showNotification('error', t('plannerPage.Error_adding_task'));
       }
     } else {
       setDone(false);
       setFlagClickOK(false);
       // alert(props.language !== 'English' ? 'You must choose a station!' : 'את/ה חייב/ת לבחור תחנה!')
-      showNotification('warning', props.language === 'English' ? 'You must choose a station!' : 'את/ה חייב/ת לבחור תחנה!');
+      showNotification('warning', t('plannerPage.You_must_choose_a_station'));
       props.setModalOpen(true);
     }
   };
@@ -523,7 +525,7 @@ function Modal_Tasks(props) {
               <div className='modalContainerTasks'>
                 <div className='headerNewTask'>
                   <div className='NewTaskTitle'>
-                    {props.language !== 'English' ? 'New task' : ':משימה חדשה'}
+                    { t('plannerPage.New_task')}
                   </div>
                 </div>
                 <div
@@ -533,9 +535,7 @@ function Modal_Tasks(props) {
                   {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
                   <form id='IPU' className='w3-container'>
                     <h6>
-                      {props.language !== 'English'
-                        ? 'Write the name of the task'
-                        : ':רשום את שם המשימה '}
+                      { t('plannerPage.Write_the_name_of_the_task')}
 
                       <RiAsterisk style={{ color: 'red' }} />
                     </h6>
@@ -556,9 +556,7 @@ function Modal_Tasks(props) {
                   </form>
                   <form id='IPU' className='w3-container'>
                     <h6>
-                      {props.language !== 'English'
-                        ? 'Describe the task'
-                        : ':תאר במשפט את משימה '}
+                      { t('plannerPage.Describe_the_task')}
                       <RiAsterisk style={{ color: 'red' }} />
                     </h6>
                     <p>
@@ -576,9 +574,7 @@ function Modal_Tasks(props) {
                     </p>
                   </form>
                   <div className='estimatedTimeContainer'>
-                    <h6>{props.language !== 'English'
-                      ? "Enter the estimated time in seconds for the task : "
-                      : " זמן מינימלי למשימה (שניות) "}</h6>
+                    <h6>{ t('plannerPage.Enter_the_estimated_time_in_seconds_for_the_task')}</h6>
                     <input
                       type='number'
                       name='estimatedTimeSeconds'
@@ -602,16 +598,14 @@ function Modal_Tasks(props) {
                         direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     />
-                    {props.language === 'English' ? 'הוסף נתונים נוספים' : 'Add additional data'}
+                    { t('plannerPage.Add_additional_data')}
 
                   </label>
                   {showForm && (
                     <form id='IPU' className='w3-container'  >
                       <form id='IPU' className='w3-container'>
                         <h6>
-                          {props.language !== 'English'
-                            ? 'Write a weight'
-                            : ':רשום משקל '}
+                          { t('plannerPage.Write_a_weight')}
                           <RiAsterisk style={{ color: 'red' }} />
                         </h6>
                         <p>
@@ -631,9 +625,7 @@ function Modal_Tasks(props) {
                       </form>
                       <form id='IPU' className='w3-container'>
                         <h6>
-                          {props.language !== 'English'
-                            ? 'Write Data Entry Validation'
-                            : ':רשום את תווית הנתונים '}
+                          { t('plannerPage.Write_Data_Entry_Validation')}
                           <RiAsterisk style={{ color: 'red' }} />
                         </h6>
                         <p>
@@ -652,23 +644,17 @@ function Modal_Tasks(props) {
                         </p>
                       </form>
                       <h6>
-                        {props.language !== 'English'
-                          ? 'Select data entry type'
-                          : ':בחר סוג נתונים '}
+                        { t('plannerPage.Select_data_entry_type')}
                       </h6>
                       <BasicSelect setFoldersite={setdataEntryType} folderName={dataEntryType} folderlist={dataEntryTypelist} />
                       <h6>
-                        {props.language !== 'English'
-                          ? 'Select type of task'
-                          : ':בחר סוג משימה '}
+                        { t('plannerPage.Select_task_type')} 
                       </h6>
                       <BasicSelect setFoldersite={setTaskType} folderName={taskType} folderlist={TaskTypelist} />
                     </form>
                   )}
                   <h6>
-                    {props.language !== 'English'
-                      ? "Site where the image / voice will be save : " + props.mySite.nameInEnglish
-                      : props.mySite.nameInEnglish + ' : nאתר בו יישמרו התמונה/הקול'}
+                    {t('plannerPage.Select_where_to_save_picture_voice')}
                     <FcMultipleInputs />
                   </h6>
                   {/* <h6>
@@ -680,14 +666,12 @@ function Modal_Tasks(props) {
                   <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} /> */}
                   <form id='IPU' className='w3-container'>
                     <h6>
-                      {props.language !== 'English'
-                        ? 'Add a picture of a task from the Gallery / Desktop '
-                        : ' : הוסף תמונה של משימה מהגלריה/שולחן העבודה'}
+                      { t('plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop')}
                       <FcMultipleInputs />
                     </h6>
                     <div>
                       <InputFileUpload setPicture={setPicture} language={props.language} />
-                      <Button variant="outlined" onClick={handleOpen}>Gallery</Button>
+                      <Button variant="outlined" onClick={handleOpen}>{ t('plannerPage.Gallery')}</Button>
                       <Modal
                         open={open}
                         onClose={() => {
@@ -703,7 +687,7 @@ function Modal_Tasks(props) {
                       </Modal>
                       {picture ? (
                         <div className='selectedFileContainer'>
-                          <div className='selectedFileTitle'>:תמונה שנבחרה</div>
+                          <div className='selectedFileTitle'>{ t('plannerPage.Selected_image')}</div>
                           <div style={{ marginBottom: '1rem' }}>
                             {typeof picture === 'string'
                               ? extractFilenameFromURL(picture)
@@ -728,22 +712,18 @@ function Modal_Tasks(props) {
                         </div>
                       ) : (
                         <div style={{ marginBottom: '1rem' }}>
-                          {props.language !== 'English'
-                            ? 'Selected image: No image file found'
-                            : ' :  תמונה שנבחרה: לא נמצא קובץ תמונה'}
+                          { t('plannerPage.Selected_image_No_image_file_found')}
                         </div>
                       )}
                     </div>
                   </form>
                   <form id='IPU' className='w3-container'>
                     <h6>
-                      {props.language !== 'English'
-                        ? 'Add a voice clip describing the task'
-                        : ':הוסף קטע קול המתאר את המשימה '}
+                      { t('plannerPage.Add_a_voice_clip_describing_the_task')}
                       <FcMultipleInputs />
                     </h6>
                     <InputFileUpload setPicture={setAudio} language={props.language} />
-                    <Button variant="outlined" onClick={handleOpen2}>Gallery audio</Button>
+                    <Button variant="outlined" onClick={handleOpen2}>{ t('plannerPage.Gallery_audio')}</Button>
                     <Modal
                       open={open2}
                       onClose={() => {
@@ -762,7 +742,7 @@ function Modal_Tasks(props) {
                     <div className='selectedFileContainertask'>
                       <div className='selectedFileTitle'>
                         <span>:</span>
-                        אודיו שנבח
+                        { t('plannerPage.Selected_audio')}
                       </div>
                       <div className='audioNameContainer'>
                         <div style={{ marginBottom: '1rem' }}>
@@ -777,7 +757,7 @@ function Modal_Tasks(props) {
                               onClick={handlePlayClick}
                             >
                               {/* {audio} */}
-                              Play
+                              { t('plannerPage.Play')}
                             </button>
                           )}
                         </div>
@@ -786,27 +766,21 @@ function Modal_Tasks(props) {
                             src={typeof audio === 'string' ? audio : ''}
                             type='audio/mpeg'
                           />
-                          Your browser does not support the audio element.
+                          { t('plannerPage.Your_browser_does_not_support_the_audio_element')}
                         </audio>
                       </div>
                     </div>
                   ) : (
                     <div style={{ marginBottom: '1rem' }}>
-                      {props.language !== 'English' ?
-                        'Selected audio: No audio file found' :
-                        ' אודיו שנבחר: לא נמצא קובץ אודיו'}
+                      { t('plannerPage.Selected_audio_No_audio_file_found')}
                     </div>
                   )}
                   <h6>
-                    {props.language !== 'English'
-                      ? 'add multi language'
-                      : ': רב שפות'}
+                    { t('plannerPage.add_multi_language')}
                     <IoMdCheckbox style={{ color: 'blue' }} />
                   </h6>
                   <Button variant="outlined" onClick={handleOpen3}>
-                    {props.language !== 'English'
-                      ? 'language'
-                      : ' שפות'}
+                    { t('plannerPage.language')}
                   </Button>
                   <Modal
                     open={open3}
@@ -856,15 +830,11 @@ function Modal_Tasks(props) {
                     </Box>
                   </Modal>
                   <h6>
-                    {props.language !== 'English'
-                      ? 'add additional help'
-                      : ': הוסף עזרה נוספת'}
+                    { t('plannerPage.add_additional_help')}
                     <IoMdCheckbox style={{ color: 'blue' }} />
                   </h6>
                   <Button variant="outlined" onClick={handleOpen4}>
-                    {props.language !== 'English'
-                      ? 'additional help'
-                      : ' עזרה נוספת'}
+                    { t('plannerPage.additional_help')}
                   </Button>
                   <Modal
                     open={open4}
@@ -889,9 +859,7 @@ function Modal_Tasks(props) {
                   </Modal>
                   <div className='list-group'>
                     <h6>
-                      {props.language !== 'English'
-                        ? 'Select the stations you want to associate the task with'
-                        : ':בחר את התחנות שברצונך לשייך את המשימה'}
+                      { t('plannerPage.Select_the_stations_you_want_to_associate_the_task_with')}
                       <IoMdCheckbox style={{ color: 'blue' }} />
                     </h6>
                     <div className='allTasks'>
@@ -933,16 +901,14 @@ function Modal_Tasks(props) {
                     <input
                       type='submit'
                       className='saveTaskButton'
-                      value={
-                        props.language !== 'English' ? 'Save Task' : 'שמור משימה'
-                      }
+                      value={ t('plannerPage.Save') }
                       onClick={saveTask}
                     />
                   )}
                   <input
                     type='submit'
                     className='cancelTaskButton'
-                    value={props.language !== 'English' ? 'Cancel' : 'ביטול'}
+                    value={ t('plannerPage.Cancel') }
                     onClick={() => {
                       setMyPlacesChoice([]);
                       props.setModalOpen(false);

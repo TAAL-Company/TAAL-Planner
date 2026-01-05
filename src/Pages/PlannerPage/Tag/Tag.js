@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import './style.css';
 import TaskImage from '../../../Pictures/TaskImage.png';
 import { BsThreeDotsVertical } from 'react-icons/bs';
@@ -40,6 +41,7 @@ function Tag({
   selectedRoute,
 }) {
   localStorage.setItem('myLastStation', JSON.stringify(myLastStation));
+  const { t } = useTranslation();
   const [idListen, setIdListen] = useState(0);
   const [dataListen, setDataListen] = useState({});
 
@@ -116,10 +118,10 @@ function Tag({
                     color: '#666',
                     fontStyle: 'italic'
                   }}>
-                    <strong>Loop:</strong> 
-                    {`Duration ${selectedRoute.loops.find((loop) => Station.id === loop.stationid)?.loopDuration},
-                      End Time ${selectedRoute.loops.find((loop) => Station.id === loop.stationid)?.loopUntil}, 
-                      Iterations ${selectedRoute.loops.find((loop) => Station.id === loop.stationid)?.loopIteration}`}
+                    <strong>{t('plannerPage.Loop')}:</strong> 
+                    {`${t('plannerPage.Duration')} ${selectedRoute.loops.find((loop) => Station.id === loop.stationid)?.loopDuration},
+                      ${t('plannerPage.End_Time')} ${selectedRoute.loops.find((loop) => Station.id === loop.stationid)?.loopUntil}, 
+                      ${t('plannerPage.Iterations')} ${selectedRoute.loops.find((loop) => Station.id === loop.stationid)?.loopIteration}`}
                   </span>
                 )}
             </div>

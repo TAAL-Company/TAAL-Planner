@@ -10,7 +10,12 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    IconButton,
+    InputAdornment,
 } from '@mui/material';
+
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import { insertEditor, updateEditor, uploadFiles } from '../../api/api';
 import MultipleSelect from '../../components/MultipleSelectCheckmarks/MultipleSelectCheckmarks';
@@ -37,6 +42,7 @@ export default function EditorForm({
     const [sortedUrls, setSortedUrls] = useState({});
     const [folderNames, setFolderNames] = useState([]);
     const [picture, setPicture] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
 
     const [errors, setErrors] = useState({});
     const { showNotification } = useNotification();
@@ -255,13 +261,27 @@ export default function EditorForm({
                 <TextField
                     required
                     label={t("Forms.Password")}
-                    type="password"
+                    type={showPassword ? 'text' : 'password'}
                     fullWidth
                     value={formValues.password}
                     onChange={handleChange('password')}
                     margin="normal"
                     error={!!errors.password}
                     helperText={errors.password}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                    onClick={() => setShowPassword((prev) => !prev)}
+                                    onMouseDown={(e) => e.preventDefault()}
+                                    edge="end"
+                                >
+                                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                        ),
+                    }}
                 />
                 <FormControl fullWidth margin="normal">
                     <InputLabel>{t("Forms.Role") || "Role"}</InputLabel>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import Tag from '../Tag/Tag.js';
 import ModalTasks from '../Modal/Modal_Tasks';
 import Modal from '../Modal/Modal';
@@ -38,6 +39,7 @@ let myStation = '';
 let countTemp = 0;
 //-------------------------
 function DragnDrop(props) {
+  const { t } = useTranslation();
   // const [props.board, props.setBoard] = useState([]);
   const [, setReorderBoardFlag] = useState(true);
   const [openRemove, setOpenRemove] = useState(false);
@@ -253,13 +255,13 @@ function DragnDrop(props) {
     // props.board={props.board}
     // props.setBoard={props.setBoard}
 
-    console.log("props.board", props.board);
-    console.log("openThreeDotsVerticalBoard", openThreeDotsVerticalBoard);
-    console.log("location", location);
+    // console.log("props.board", props.board);
+    // console.log("openThreeDotsVerticalBoard", openThreeDotsVerticalBoard);
+    // console.log("location", location);
 
     const items = Array.from(props.board);
     const filteredItems = items.filter((item, index) => index !== parseInt(location, 10));
-    console.log('filteredItems', filteredItems);
+    // console.log('filteredItems', filteredItems);
     props.setBoard(filteredItems);
 
 
@@ -748,10 +750,10 @@ function DragnDrop(props) {
       console.log("Updated Pack:", updatedPack);
 
       await updatePack(props.selectedPack.id, updatedPack);
-      showNotification("success", props.language !== "English" ? "Routes saved successfully!" : "המסלולים נשמרו בהצלחה!");
+      showNotification("success", t("plannerPage.Routes_saved_successfully_for_the_pack") );
     } catch (error) {
       console.error("Error saving routes for pack:", error);
-      showNotification("error", props.language !== "English" ? "Failed to save routes!" : "שמירת המסלולים נכשלה!");
+      showNotification("error", t("plannerPage.Error_saving_routes_for_the_pack_Please_try_again") );
     }
   };
   //---------------------------------------------------------
@@ -803,7 +805,7 @@ function DragnDrop(props) {
               type='submit'
               onClick={() => setModalOpenViewRoutes(true)}
             >
-              {props.language !== 'English' ? 'Add Pack' : 'הוספת חבילה'}
+              {t('plannerPage.Add_Pack')}
             </button>
             {/* כפתור שפות */}
             {/* <button
@@ -1161,8 +1163,8 @@ function DragnDrop(props) {
         language={props.language}
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
-        DialogTitle={props.language === 'English' ? 'Delete Task' : 'מחיקת משימה'}
-        DialogContent={props.language === 'English' ? 'Are you sure you want to delete this task?' : 'האם אתה בטוח שברצונך למחוק את המשימה?'}
+        DialogTitle={t('plannerPage.Delete_Task')}
+        DialogContent={t('plannerPage.Are_you_sure_you_want_to_delete_this_task')}
         handleCloseRemoveConfirm={handleCloseRemoveConfirm}
       />
     </>

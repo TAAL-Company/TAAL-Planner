@@ -5,6 +5,7 @@ import { useNotification } from "../../../components/Notification/NotificationPr
 import Box from '@mui/material/Box';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { useTranslation } from 'react-i18next';
 
 function Model_assigned_route_to_parent({
   setOpenModalRouteChosen,
@@ -16,6 +17,7 @@ function Model_assigned_route_to_parent({
   setFilteredDataRoutes,
   routesList
 }) {
+  const { t } = useTranslation();
   let today = new Date();
   const [routeTitle, setRouteTitle] = useState(routeName + "-" + " Child " + "-" + today.toLocaleDateString("en-US"));
   const { showNotification } = useNotification();
@@ -44,10 +46,10 @@ function Model_assigned_route_to_parent({
         setFilteredDataRoutes((prevRoutes) => [...prevRoutes, data]);
       });
       setOpenModalRouteChosen(false);
-      showNotification("success", language !== "English" ? "route created successfully" : "המסלול נוצר בהצלחה");
+      showNotification("success", t("plannerPage.route_created_successfully"));
     } catch (error) {
       console.error(error.message);
-      showNotification("error", language !== "English" ? "Error Creating Route" : "שגיאה ביצירת המסלול");
+      showNotification("error", t("plannerPage.Error_Creating_Route"));
     }
   }
 
@@ -62,9 +64,7 @@ function Model_assigned_route_to_parent({
       <Box className='headerNewRoute'
         dir={language === 'English' ? 'ltr' : 'rtl'} >
         <Box className='newRoutTitle'>
-          {language !== 'English'
-            ? 'Save Route'
-            : 'שמירת מסלול'}
+          {t("plannerPage.Save_Route")}
         </Box>
       </Box>
       <Box className='bodySaveRoute'
@@ -74,7 +74,7 @@ function Model_assigned_route_to_parent({
         }}
       >
         <Box>
-          {language !== 'English' ? 'Name of the route :' : 'שם המסלול :'}
+          {t("plannerPage.Name_of_the_route")}
         </Box>
         <input
           className='inputRouteName'
@@ -85,12 +85,12 @@ function Model_assigned_route_to_parent({
           onChange={(e) => setRouteTitle(e.target.value)}
         ></input>
         <Box>
-          {language !== 'English' ? 'List of Route:' : 'רשימת מסלולים:'}
+          {t("plannerPage.List_of_Routes")}
         </Box>
         <input
           type='text'
           style={{ paddingRight: language !== 'English' ? '' : '10px', paddingLeft: language !== 'English' ? '10px' : '', width: '100%' }}
-          placeholder={language !== 'English' ? 'Search Route' : 'חיפוש מסלול'}
+          placeholder={t("plannerPage.Search_Route")}
           value={searchRoute}
           onChange={(e) => setSearchRoute(e.target.value)}
         />
@@ -116,7 +116,7 @@ function Model_assigned_route_to_parent({
       </Box>
       <Box className='footer'>
         <button className='continueBtn' onClick={Post_new_Route}>
-          {language !== 'English' ? 'Save route' : 'שמור בשם'}
+          {t("plannerPage.Save_Route")}
         </button>
         <button
           className='cancelBtn'
@@ -124,7 +124,7 @@ function Model_assigned_route_to_parent({
             setOpenModalRouteChosen(false);
           }}
         >
-          {language !== 'English' ? 'Cancel' : 'ביטול'}
+          {t("plannerPage.Cancel")}
         </button>
       </Box>
     </Box>

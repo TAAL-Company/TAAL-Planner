@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TreeView, TreeItem } from '@mui/lab';
 import { ExpandMore, ChevronRight, ChevronLeft } from '@mui/icons-material';
 import { styled, alpha, useTheme } from '@mui/material/styles';
@@ -23,6 +24,7 @@ const CustomTreeItem = styled(TreeItem)(({ direction, theme }) => ({
 }));
 
 export default function BorderedTreeView({ filteredDataRoutes, renderRoute, direction }) {
+  const { t } = useTranslation();
   const treeData = useMemo(() => {
     const map = {};
     const roots = [];

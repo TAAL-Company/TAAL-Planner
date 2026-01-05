@@ -1,11 +1,12 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
-
+import { useTranslation } from 'react-i18next';
 function ViewRoutesModal({ open, onClose, routes, onSave }) {
+  const { t } = useTranslation();
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth style={{ direction: routes.language === 'English' ? 'ltr' : 'rtl' }}>
       <DialogTitle>
-        {routes.language === 'English' ? 'View All Routes' : 'צפייה בכל המסלולים'}
+        {t('plannerPage.View_All_Routes')}
       </DialogTitle>
       <DialogContent>
         <ul>
@@ -18,10 +19,10 @@ function ViewRoutesModal({ open, onClose, routes, onSave }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>
-          {routes.language === 'English' ? 'Close' : 'סגור'}
+          {t('plannerPage.Close')}
         </Button>
         <Button onClick={onSave} color="primary">
-          {routes.language === 'English' ? 'Save Routes' : 'שמור מסלולים'}
+          {t('plannerPage.Save_Routes')}
         </Button>
       </DialogActions>
     </Dialog>

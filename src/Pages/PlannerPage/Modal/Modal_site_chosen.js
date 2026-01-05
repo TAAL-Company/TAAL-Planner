@@ -1,7 +1,10 @@
+
 import './Modal.css';
 import stopIcon from '../../../Pictures/stopIcon.svg';
+import { useTranslation } from 'react-i18next';
 
 const Modal_Site_Chosen = (props) => {
+  const { t } = useTranslation();
   return (
     <>
       <div className='modal_route_chosen'>
@@ -9,8 +12,8 @@ const Modal_Site_Chosen = (props) => {
           <img src={stopIcon} alt='logo'></img>
         </div>
         <div className='body' style={{ textAlign: 'center', direction: 'rtl' }}>
-          <h4>{props.language !== 'English' ? 'Chose another site' : 'בחרת כבר באתר אחר, ברצונך להחליף?'}</h4>
-          <div>{props.language !== 'English' ? 'Changing site will delete the changes you made on the current site' : 'החלפת אתר תמחק את השינויים שביצעת באתר הנוכחי'} </div>
+          <h4>{t('plannerPage.Chose_another_site')}</h4>
+          <div>{t('plannerPage.Changing_site_will_delete_the_changes_you_made_on_the_current_site')}</div>
         </div>
         <div className='footer' style={{ display: 'flex' }}>
           <button
@@ -19,7 +22,7 @@ const Modal_Site_Chosen = (props) => {
               props.setOpenModalSiteChosen(false);
             }}
           >
-            {props.language !== 'English' ? 'Cancel' : 'ביטול'}
+            {t('plannerPage.Cancel')}
           </button>
           <button
             className='cancelBtn'
@@ -27,7 +30,7 @@ const Modal_Site_Chosen = (props) => {
               props.setReplaceSiteFlag(true);
             }}
           >
-            {props.language !== 'English' ? 'Replace' : 'החלף אתר'}
+            {t('plannerPage.Replace')}
           </button>
         </div>
       </div>

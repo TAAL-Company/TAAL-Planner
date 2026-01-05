@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useNotification } from '../Notification/NotificationProvider';
+import { useTranslation } from 'react-i18next';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -17,6 +18,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 export default function InputFileUpload(props) {
+    const { t } = useTranslation();
 
     const { showNotification } = useNotification();
     
@@ -56,11 +58,11 @@ export default function InputFileUpload(props) {
         >
             {props.language !== 'English' ? (
                 <>
-                    Upload from computer .<CloudUploadIcon />
+                    {t('plannerPage.Upload_from_computer')} <CloudUploadIcon />
                 </>
             ) : (
                 <>
-                    <CloudUploadIcon />. העלה מהמחשב
+                    <CloudUploadIcon />. {t('plannerPage.Upload_from_computer')}
                 </>
             )}
             <VisuallyHiddenInput type="file" onChange={handleFileChange} />

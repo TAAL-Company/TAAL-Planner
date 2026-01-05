@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import './style.css';
 import Clock from '../../../components/junk/Clock/Clock.js';
 import Tag from '../Tag/Tag.js';
@@ -16,6 +17,7 @@ const breakPoints = [
 ];
 
 const Tablet = (props) => {
+  const { t } = useTranslation();
   // const [currIndex, setCurrIndex] = useState(getInitialLocation);
   const sliderRef = useRef();
   const goBack = () => sliderRef.current.slickPrev();

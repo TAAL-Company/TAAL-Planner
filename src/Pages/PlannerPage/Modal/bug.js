@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Modal, Button, Box, Select, InputLabel, MenuItem, FormControl } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 function Model_Tasks_help_for_user_Popup(props) {
+    const { t } = useTranslation();
     const [dataEntryType, setdataEntryType] = useState('');
     const [studentIds, setStudentIds] = useState([]);
     const [formFields, setFormFields] = useState([
@@ -42,7 +44,7 @@ function Model_Tasks_help_for_user_Popup(props) {
             >
                 <div className='headerNewTask'>
                     <div className='NewTaskTitle'>
-                        {props.language !== 'English' ? 'Adtional Help' : 'תוכן נוסף'}
+                        {t('plannerPage.Help_for_user_in_task')}
                     </div>
                 </div>
                 <div
@@ -51,7 +53,7 @@ function Model_Tasks_help_for_user_Popup(props) {
                 >
                 </div>
             </div>
-            <h2 id="modal-modal-title">Student IDs</h2>
+            <h2 id="modal-modal-title">{t('plannerPage.Student_IDs')}</h2>
             <p id="modal-modal-description">
                 {(props.studentIds || []).map((studentId, index) => (
                     <div key={index}>{studentId}</div>
@@ -63,9 +65,7 @@ function Model_Tasks_help_for_user_Popup(props) {
                         <form key={field.id} id='IPU' className='w3-container'>
                             <h6>
                                 {field.id}
-                                {props.language !== 'English'
-                                    ? ' write a additional help text'
-                                    : ': כתוב טקסט נוסף '}
+                                {t('Write_additional_help_text')}
 
                                 {/* <RiAsterisk style={{ color: 'red' }} /> */}
                             </h6>
@@ -74,9 +74,7 @@ function Model_Tasks_help_for_user_Popup(props) {
                                     <Box >
                                         <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">
-                                                {props.language !== 'English'
-                                                    ? ' select a user'
-                                                    : ': בחר משתמש '}
+                                                {t('plannerPage.Select_User')}
                                             </InputLabel>
                                             <Select
                                                 labelId="demo-simple-select-label"
@@ -106,10 +104,10 @@ function Model_Tasks_help_for_user_Popup(props) {
                             </p>
                         </form>
                     ))}
-                    <button onClick={() => handleRemoveStudentId(index)}>Remove</button>
+                    <button onClick={() => handleRemoveStudentId(index)}>{t('plannerPage.Remove')}</button>
                 </div>
             ))}
-            <button onClick={handleAddStudentId}>Add Student ID</button>
+            <button onClick={handleAddStudentId}>{t('plannerPage.Add_Student_ID')}</button>
         </div>
     );
 }

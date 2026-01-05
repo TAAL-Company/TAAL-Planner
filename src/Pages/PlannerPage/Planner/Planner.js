@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import boot from './boot.module.css';
 import './style.css';
 // import { AiFillCheckCircle } from "react-icons/ai";
@@ -9,6 +10,7 @@ import Modal from '../Modal/Modal';
 
 //-------------------------
 const Planner = () => {
+  const { t } = useTranslation();
   const [get_logged_in, setLogged_in] = useState(false); // for TextView
   const [
     get_Name,
@@ -20,35 +22,35 @@ const Planner = () => {
   const [Hebrew, setHebrew] = useState(false);
   const [language, setLanguage] = useState('English');
   const [floatLan, setFloatLan] = useState('left');
-  const [sites, setSites] = useState('Sites');
-  const [addSite, setAddSite] = useState('Add sites');
-  const [stations, setStations] = useState('Stations');
-  const [addStation, setAddStation] = useState('add stations');
-  const [myTasks, setTasks] = useState('Tasks');
-  const [addMyTask, setAddTask] = useState('Add tasks');
-  const [saveButton, setSaveButton] = useState('Save route');
-  const [siteLanguage, setSiteLanguage] = useState('Site');
-  const [workerLanguage, setWorkerLanguage] = useState('Worker');
+  const [sites, setSites] = useState(t('plannerPage.Sites'));
+  const [addSite, setAddSite] = useState(t('plannerPage.Add_sites'));
+  const [stations, setStations] = useState(t('plannerPage.Stations'));
+  const [addStation, setAddStation] = useState(t('plannerPage.Add_stations'));
+  const [myTasks, setTasks] = useState(t('plannerPage.Tasks'));
+  const [addMyTask, setAddTask] = useState(t('plannerPage.Add_tasks'));
+  const [saveButton, setSaveButton] = useState(t('plannerPage.Save_route'));
+  const [siteLanguage, setSiteLanguage] = useState(t('plannerPage.Site'));
+  const [workerLanguage, setWorkerLanguage] = useState(t('plannerPage.Worker'));
   const [siteQuestionLanguage, setSiteQuestionLanguage] = useState(
-    'select site to build route on?'
+    t('plannerPage.select_site_to_build_route_on')
   );
   const [SiteStudentQuestionLanguage, setSiteStudentQuestionLanguage] = useState(
-    'For which student do you want to build a track?'
+    t('plannerPage.for_which_worker_do_you_want_to_build_a_track')
   );
   const [
     ,
     // routeWrite
     setRouteWrite,
-  ] = useState('Write down the name of the route');
+  ] = useState(t('plannerPage.Write_down_the_name_of_the_route'));
   const [drag, setRDrag] = useState('route view');
   const [routesBeforeChoosingSite, setRoutesBeforeChoosingSite] = useState(
-    'After selecting the site, this column will show routes that exist on the site.'
+    t('plannerPage.After_selecting_the_site_this_column_will_show_routes_that_exist_on_the_site')
   );
   const [tasksBeforeChoosingSite, setTasksBeforeChoosingSite] = useState(
-    'After selecting the site, this column will show routes that exist on the site.'
+    t('plannerPage.After_selecting_the_station_this_column_will_show_tasks_that_exist_in_it')
   );
   const [stationsBeforeChoosingSite, setStationsBeforeChoosingSite] = useState(
-    'After selecting the site, this column will show routes that exist on the site.'
+    t('plannerPage.After_selecting_the_route_this_column_will_show_the_stations_that_exist_in_it')
   );
 
   const [titlePlacesCss, setTitlePlacesCss] = useState(
@@ -83,7 +85,11 @@ const Planner = () => {
       hebrew();
     } else if (sessionStorage.getItem('language') === 'Hebrew') {
       english();
-    }else{
+    } else if (sessionStorage.getItem('language') === 'Arabic') {
+      english();
+    } else if (sessionStorage.getItem('language') === 'Russian') {
+      hebrew();
+    } else {
       english();
     }
     
@@ -98,29 +104,29 @@ const Planner = () => {
   /*changing between Hebrew and English */
   const hebrew = () => {
     setHebrew(false);
-    setLanguage('עברית');
+    setLanguage(t('plannerPage.Hebrew'));
     setFloatLan('left');
-    setSites('Sites');
-    setStations('Stations');
-    setTasks('Tasks');
-    setSaveButton('Save route');
-    setRouteWrite('Write down the name of the route');
-    setRDrag('Route View');
-    setAddSite('Add sites');
-    setAddStation('add stations');
-    setAddTask('Add tasks');
-    setSiteQuestionLanguage('select Site?');
-    setSiteStudentQuestionLanguage('select Worker ?');
-    setSiteLanguage('Site');
-    setWorkerLanguage('Worker');
+    setSites(t('plannerPage.Sites'));
+    setStations(t('plannerPage.Stations'));
+    setTasks(t('plannerPage.Tasks'));
+    setSaveButton(t('plannerPage.Save_route'));
+    setRouteWrite(t('plannerPage.Write_down_the_name_of_the_route'));
+    setRDrag(t('plannerPage.Route_View'));
+    setAddSite(t('plannerPage.Add_sites'));
+    setAddStation(t('plannerPage.Add_stations'));
+    setAddTask(t('plannerPage.Add_tasks'));
+    setSiteQuestionLanguage(t('plannerPage.select_site_to_build_route_on'));
+    setSiteStudentQuestionLanguage(t('plannerPage.for_which_worker_do_you_want_to_build_a_track'));
+    setSiteLanguage(t('plannerPage.Site'));
+    setWorkerLanguage(t('plannerPage.Worker'));
     setRoutesBeforeChoosingSite(
-      'After selecting the site, this column will show routes that exist on the site.'
+      t('plannerPage.After_selecting_the_site_this_column_will_show_routes_that_exist_on_the_site')
     );
     setTasksBeforeChoosingSite(
-      'After selecting the station, this column will show tasks that exist in it.'
+      t('plannerPage.After_selecting_the_station_this_column_will_show_tasks_that_exist_in_it')
     );
     setStationsBeforeChoosingSite(
-      'After selecting the route, this column will show the stations that exist in it.'
+      t('plannerPage.After_selecting_the_route_this_column_will_show_the_stations_that_exist_in_it')
     );
     // setTitlePlacesCss("linear-gradient(90deg, #7A78B7  5%, #7A78B71F 1%)");
     // setTitleStationCss("linear-gradient(90deg,#F2AE69 5%, #FEF5ED 1%)");
@@ -129,31 +135,31 @@ const Planner = () => {
     setflagHebrew(true);
     setMarginHebrew('150px');
   };
-  const english = () => {
+  const english = () => {//hebrow
     setHebrew(true);
-    setLanguage('English');
+    setLanguage(t('plannerPage.English'));
     setFloatLan('right');
-    setSiteQuestionLanguage('באיזה אתר ברצונך לבנות מסלול?');
-    setSiteStudentQuestionLanguage('לאיזו סטודנט ברצונך לבנות מסלול?');
-    setSiteLanguage('אתר');
-    setWorkerLanguage('סטודנט');
-    setSites('אתרים');
-    setStations('תחנות');
-    setTasks(' משימות');
-    setSaveButton('שמור מסלול');
-    setRouteWrite('רשום את שם המסלול');
-    setRDrag('תצוגת המסלול');
-    setAddSite('הוסף אתר');
-    setAddStation('הוסף תחנה');
-    setAddTask('הוסף משימה');
+    setSiteQuestionLanguage(t('plannerPage.select_site_to_build_route_on'));
+    setSiteStudentQuestionLanguage(t('plannerPage.for_which_worker_do_you_want_to_build_a_track'));
+    setSiteLanguage(t('plannerPage.Site'));
+    setWorkerLanguage(t('plannerPage.Worker'));
+    setSites(t('plannerPage.Sites'));
+    setStations(t('plannerPage.Stations'));
+    setTasks(t('plannerPage.Tasks'));
+    setSaveButton(t('plannerPage.Save_route'));
+    setRouteWrite(t('plannerPage.Write_down_the_name_of_the_route'));
+    setRDrag(t('plannerPage.Route_View'));
+    setAddSite(t('plannerPage.Add_sites'));
+    setAddStation(t('plannerPage.Add_stations'));
+    setAddTask(t('plannerPage.Add_tasks'));
     setRoutesBeforeChoosingSite(
-      'אחרי בחירת האתר, בעמודה זו יופיעו המסלולים הקיימים בו.'
+      t('plannerPage.After_selecting_the_site_this_column_will_show_routes_that_exist_on_the_site')
     );
     setTasksBeforeChoosingSite(
-      'אחרי בחירת התחנה, בעמודה זו יופיעו המשימות הקיימות בה.'
+      t('plannerPage.After_selecting_the_station_this_column_will_show_tasks_that_exist_in_it')
     );
     setStationsBeforeChoosingSite(
-      'אחרי בחירת המסלול, בעמודה זו יופיעו התחנות הקיימות בו.'
+      t('plannerPage.After_selecting_the_route_this_column_will_show_the_stations_that_exist_in_it')
     );
     // setTitlePlacesCss("linear-gradient(90deg,  #7A78B71F 95%, #7A78B7 1%)");
     // setTitleStationCss("linear-gradient(90deg, #FEF5ED 95%, #F2AE69 1%)");
@@ -165,11 +171,11 @@ const Planner = () => {
   return (
     <>
       {!get_logged_in ? (
-        <div style={{ color: 'white' }}>Please connect properly !</div>
+        <div style={{ color: 'white' }}>{t('plannerPage.Please_connect_properly')}</div>
       ) : (
         <>
           <div className={boot.Planner} >
-            {loading && <div>Loading</div>}
+            {loading && <div>{t('plannerPage.Loading')}</div>}
             {!loading && (
               <>
                 {/* <div

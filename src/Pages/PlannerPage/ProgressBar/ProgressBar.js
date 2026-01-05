@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import './ProgressBar.css';
 
 const ProgressBar = (props) => {
+  const { t } = useTranslation();
   const [percent, setPercent] = useState(0);
 
   useEffect(() => {

@@ -42,22 +42,22 @@ const Logo = styled('img')({
   margin: '0 auto',
 });
 
-const IconWrapper = styled(Box)(({ language }) => ({
+const IconWrapper = styled(Box)(({ isltr }) => ({
   backgroundColor: '#0d4264',
   width: '56px',
   height: '56px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  borderRadius: language === 'English' ? '5px 0 0 5px' : '0 5px 5px 0',
+  borderRadius: isltr ? '5px 0 0 5px' : '0 5px 5px 0',
 }));
 
-const InputWrapper = styled(Box)(({ language }) => ({
+const InputWrapper = styled(Box)(({ isltr }) => ({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
   marginBottom: '1rem',
-  flexDirection: language === 'English' ? 'row' : 'row-reverse',
+  flexDirection: isltr ? 'row' : 'row-reverse',
 }));
 
 const SubmitButton = styled(Button)({
@@ -72,10 +72,10 @@ const SubmitButton = styled(Button)({
   },
 });
 
-const ForgetPassword = styled(Typography)(({ language }) => ({
+const ForgetPassword = styled(Typography)(({ isltr }) => ({
   textAlign: 'center',
   color: '#0d4364d0',
-  direction: language === 'English' ? 'ltr' : 'rtl',
+  direction: isltr ? 'ltr' : 'rtl',
   fontSize: '18px',
   marginTop: '0.5rem',
 }));
@@ -95,12 +95,14 @@ function Login(props) {
     Hebrew: { username: 'שם משתמש', password: 'סיסמה', dir: 'rtl', login: 'התחברות', forget: 'שכחת סיסמה?' },
     English: { username: 'Username', password: 'Password', dir: 'ltr', login: 'Login', forget: 'Forget Password?' },
     Arabic: { username: 'اسم المستخدم', password: 'كلمة المرور', dir: 'rtl', login: 'تسجيل الدخول', forget: 'نسيت كلمة المرور؟' },
+    Russian: { username: 'Имя пользователя', password: 'Пароль', dir: 'ltr', login: 'Войти', forget: 'Забыли пароль?' },
   };
 
   const [checked, setChecked] = useState({
     Hebrew: true,
     English: false,
     Arabic: false,
+    Russian: false,
   });
 
   useEffect(() => {
@@ -128,6 +130,7 @@ function Login(props) {
       Hebrew: lang === 'Hebrew',
       English: lang === 'English',
       Arabic: lang === 'Arabic',
+      Russian: lang === 'Russian',
     });
     setLanguage(lang);
     setGlobalLanguage(lang); // Update global language for entire app translation
@@ -139,7 +142,7 @@ function Login(props) {
   };
 
   const lang = languages[language];
-  const isEnglish = language === 'English';
+  const isltr = lang.dir === 'ltr' ? true : false;
 
   return (
     <StyledBox>
@@ -153,8 +156,8 @@ function Login(props) {
             <Logo src={logo} alt="Logo" />
           </Box>
 
-          <InputWrapper language={language}>
-            <IconWrapper language={language}>
+          <InputWrapper isltr={isltr}>
+            <IconWrapper isltr={isltr}>
               <img src={userLogo} alt="User" width={24} height={24} />
             </IconWrapper>
             <TextField
@@ -170,8 +173,8 @@ function Login(props) {
             />
           </InputWrapper>
 
-          <InputWrapper language={language}>
-            <IconWrapper language={language}>
+          <InputWrapper isltr={isltr}>
+            <IconWrapper isltr={isltr}>
               <img src={lockLogo} alt="Lock" width={24} height={24} />
             </IconWrapper>
             <TextField
@@ -197,7 +200,7 @@ function Login(props) {
                 justifyContent: 'center',
                 cursor: 'pointer',
                 color: 'white',
-                borderRadius: isEnglish ? '0 5px 5px 0' : '5px 0 0 5px',
+                borderRadius: isltr ? '0 5px 5px 0' : '5px 0 0 5px',
 
               }}
             >
@@ -236,6 +239,16 @@ function Login(props) {
               }
               label="العربية"
             />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={checked.Russian}
+                  onClick={handleLanguageChange}
+                  name="Russian"
+                />
+              }
+              label="Русский"
+            />
           </Box>
 
           <Box display="flex" justifyContent="center">
@@ -244,7 +257,7 @@ function Login(props) {
             </SubmitButton>
           </Box>
 
-          <ForgetPassword language={language}>{lang.forget}</ForgetPassword>
+          <ForgetPassword isltr={isltr}>{lang.forget}</ForgetPassword>
 
           <LoginAPI
             APIDetailsLogin={apiDetailsLogin}

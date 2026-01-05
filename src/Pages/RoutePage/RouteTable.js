@@ -35,6 +35,7 @@ export default function RouteTable() {
   const [routes, setRoutes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedRoute, setSelectedRoute] = useState(null);
+  const [pageSize, setPageSize] = useState(10);
   const [openDialog, setOpenDialog] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [title, setTitle] = useState('');
@@ -257,8 +258,9 @@ export default function RouteTable() {
               <DataGrid
                 rows={getRowsWithDetails()}
                 columns={columns}
-                pageSize={7}
-                rowsPerPageOptions={[7, 14, 20]}
+                pageSize={pageSize}
+                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                rowsPerPageOptions={[10, 25, 50, 100]}
                 autoHeight
                 loading={loading}
                 sx={{

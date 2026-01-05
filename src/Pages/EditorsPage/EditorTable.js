@@ -31,6 +31,7 @@ const cacheLtr = createCache({
 
 export default function EditorTable() {
     const [expandedRows, setExpandedRows] = useState({});
+    const [pageSize, setPageSize] = useState(10);
     const [loading, setLoading] = useState(true);
     const [Editors, setEditors] = useState([]);
     const [newEditor, setNewEditor] = useState({
@@ -258,8 +259,9 @@ export default function EditorTable() {
                                 style={{ direction: t('Direction') }}
                                 rows={getRowsWithDetails()}
                                 columns={columns}
-                                pageSize={12}
-                                rowsPerPageOptions={[12, 24, 50]}
+                                pageSize={pageSize}
+                                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                                rowsPerPageOptions={[10, 25, 50, 100]}
                                 autoHeight
                                 loading={loading}
                                 components={{

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
 import Tag from '../Tag/Tag.js';
 import './reorderBoard.css';
 
 const ReorderBoard = (props) => {
+  const { t } = useTranslation();
   const [tasks, setTasks] = useState(props.board);
 
   useEffect(() => {

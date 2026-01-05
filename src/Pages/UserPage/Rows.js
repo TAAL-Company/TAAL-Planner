@@ -8,6 +8,7 @@ const Rows = ({ users, expandedRows }) => {
   const getRowsWithDetails = () => {
     const rows = [];
     users.forEach((user) => {
+      user.role = user.role.replace('STUDENT', 'WORKER');
       rows.push(user); // Push the main user row
       if (expandedRows[user.id]) {
         // Add routes as additional rows for expanded user

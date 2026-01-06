@@ -16,8 +16,11 @@ import {
   ImageOutlined,
   AudiotrackOutlined
 } from '@mui/icons-material';
+import { useTranslation } from 'react-i18next';
 
 const SidebarNav = ({ folderNames, sortedUrls, onFolderSelect, setSelectedType, showaudio, showimage }) => {
+  const { t } = useTranslation();
+
   const [openFolder, setOpenFolder] = useState(null);
 
   const handleFolderClick = (folderName) => {
@@ -38,7 +41,7 @@ const SidebarNav = ({ folderNames, sortedUrls, onFolderSelect, setSelectedType, 
         overflowY: 'auto',
       }}
     >
-      <Typography variant="h6" sx={{ p: 2 }}>Gallery</Typography>
+      <Typography variant="h6" sx={{ p: 2 }}>{t('GalleryPage.Gallery')}</Typography>
       <List>
         {folderNames.map((folderName) => (
           <React.Fragment key={folderName}>

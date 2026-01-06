@@ -13,8 +13,10 @@ import { MoreVert } from '@mui/icons-material';
 import AlertDialog from './AlertDialog';
 import BasicSelect from './BasicSelect';
 import { deleteFileByUrl, transferFile } from '../../../../../api/api'; // Adjust the import path as necessary
+import { useTranslation } from 'react-i18next';
 
 const ImageGrid = ({ images, setReload, setLoading, folderNames }) => {
+  const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -106,8 +108,8 @@ const ImageGrid = ({ images, setReload, setLoading, folderNames }) => {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleTransferClick}>Transfer</MenuItem>
-        <MenuItem onClick={handleDeleteClick}>Delete</MenuItem>
+        <MenuItem onClick={handleTransferClick}>{t('GalleryPage.Transfer')}</MenuItem>
+        <MenuItem onClick={handleDeleteClick}>{t('GalleryPage.Delete')}</MenuItem>
       </Menu>
 
       <BasicSelect

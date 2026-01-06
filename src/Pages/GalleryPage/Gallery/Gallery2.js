@@ -6,8 +6,10 @@ import SidebarNav from './Gallerypage/components/sidebar-nav';
 import ImageGrid from './image-grid';
 import AudioList from './audio-grid';
 import { getBlobsInContainer } from '../../../components/azureBlob';
+import { useTranslation } from 'react-i18next';
 
 const GalleryPage = (props) => {
+  const { t } = useTranslation();
   const [blobList, setBlobList] = useState({});
   const [sortedUrls, setSortedUrls] = useState({});
   const [folderNames, setFolderNames] = useState([]);
@@ -119,7 +121,7 @@ const GalleryPage = (props) => {
       <Box sx={{ flexGrow: 1, p: 3, overflowY: 'scroll' }}>
         <Button onClick={() => {
           props.sethandleClose(false)
-        }}>Close</Button>
+        }}>{t('GalleryPage.Close')}</Button>
         {/* <UploadZone onFileUpload={handleFileUpload} /> */}
         <SearchBar onSearch={handleSearch} />
         {selectedType === 'pictures' ? (

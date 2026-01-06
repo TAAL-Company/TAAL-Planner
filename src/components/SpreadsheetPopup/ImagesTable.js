@@ -1,18 +1,21 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const ImagesTable = ({ images, language, handleDragStart }) => {
+    const { t } = useTranslation();
+
     return (
         <div style={{ flex: 0, overflow: 'auto', minWidth: 220 }}>
             <h4 style={{
-                textAlign: language === 'English' ? 'right' : 'center',
-                direction: language === 'English' ? 'rtl' : 'ltr'
+                textAlign: t('Direction') === 'rtl' ? 'right' : 'center',
+                direction: t('Direction')
             }}>
-                {language === 'English' ? 'תמונות בגיליון' : 'Images In Sheet'}
+                {t('SpreadsheetPopup.Images_In_Sheet')}
             </h4>
             <table style={{
                 width: '100%',
                 borderCollapse: 'collapse',
-                direction: language === 'English' ? 'rtl' : 'ltr'
+                direction: t('Direction')   
             }}>
                 <thead>
                     <tr>
@@ -20,9 +23,9 @@ const ImagesTable = ({ images, language, handleDragStart }) => {
                             border: '1px solid #ccc',
                             padding: 4,
                             background: '#f0f0f0',
-                            direction: language === 'English' ? 'rtl' : 'ltr'
+                            direction: t('Direction')
                         }}>
-                            {language === 'English' ? 'תמונה' : 'Image'}
+                            {t('SpreadsheetPopup.Image')}
                         </th>
                     </tr>
                 </thead>
@@ -32,7 +35,7 @@ const ImagesTable = ({ images, language, handleDragStart }) => {
                             <td style={{
                                 border: '1px solid #ccc',
                                 padding: 4,
-                                direction: language === 'English' ? 'rtl' : 'ltr'
+                                direction: t('Direction')
                             }}>
                                 <img
                                     src={URL.createObjectURL(img.file)}

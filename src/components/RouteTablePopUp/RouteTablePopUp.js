@@ -222,23 +222,23 @@ function RouteTablePopUp({
             onClose={onClose}
             maxWidth="lg"
             fullWidth
-            style={{ direction: language !== 'English' ? 'ltr' : 'rtl' }} // Dynamically set direction
+            style={{ direction: t('Direction') }} // Dynamically set direction
         >
 
             <DialogTitle
                 sx={{
                     p: 2,
-                    textAlign: language !== 'English' ? 'left' : 'right', // Align title based on direction
+                    textAlign: t('Direction') === 'ltr' ? 'left' : 'right', // Align title based on direction
                 }}
             >
                 <Box
                     sx={{
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: language !== 'English' ? 'space-between' : 'space-between',
+                        justifyContent: 'space-between',
                     }}
                 >
-                    <span>{language !== 'English' ? 'Route Table' : 'טבלת מסלולים'}</span>
+                    <span>{t('RouteTablePopUp.Route_Table')}</span>
                     <IconButton
                         aria-label="close"
                         onClick={onClose}
@@ -255,7 +255,7 @@ function RouteTablePopUp({
             </DialogTitle>
             <Box sx={{ padding: '0 16px 16px 16px', display: 'flex', gap: '16px', flexWrap: 'wrap', alignItems: 'center' }}>
                 <label>
-                    {language !== 'English' ? 'Route Name' : 'שם מסלול'}
+                    {t('RouteTablePopUp.Route_Name')}
                 </label>
                 <TextField
                     value={routename}
@@ -265,7 +265,7 @@ function RouteTablePopUp({
             </Box>
             <DialogContent
                 sx={{
-                    direction: language === 'English' ? 'ltr' : 'rtl', // Set content direction
+                    direction: t('Direction'), // Set content direction
                 }}
             >
                 <RoutesByStationList

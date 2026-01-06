@@ -1,7 +1,9 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { RiAsterisk } from 'react-icons/ri';
 
 const FileUpload = ({ language, handleOnChange }) => {
+    const { t } = useTranslation();
     return (
         <form id='IPU' className='w3-container' style={{ marginBottom: 24 }}>
             <h6 style={{
@@ -12,11 +14,11 @@ const FileUpload = ({ language, handleOnChange }) => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: 8,
-                direction: language === 'English' ? 'rtl' : 'ltr',
-                textAlign: language === 'English' ? 'right' : 'left'
+                direction: t('Direction'),
+                textAlign: t('Direction') === 'rtl' ? 'right' : 'left'
             }}>
                 <span role="img" aria-label="upload" style={{ fontSize: 22 }}>📤</span>
-                {language !== 'English' ? 'Upload a xlsx file' : ' העלה קובץ xlsx '}
+                {t('SpreadsheetPopup.Upload_a_xlsx_file')}
                 <RiAsterisk style={{ color: 'red' }} />
             </h6>
             <div
@@ -30,14 +32,12 @@ const FileUpload = ({ language, handleOnChange }) => {
                     gap: 16,
                     cursor: 'pointer',
                     transition: 'border 0.2s',
-                    direction: language === 'English' ? 'rtl' : 'ltr',
+                    direction: t('Direction'),
                 }}
                 onClick={() => document.getElementById('xlsx-upload-input').click()}
                 tabIndex={0}
                 onKeyPress={e => { if (e.key === 'Enter') document.getElementById('xlsx-upload-input').click(); }}
-                title={language !== 'English'
-                    ? 'Click or drag a file here'
-                    : 'לחץ או גרור קובץ לכאן'}
+                title={t('SpreadsheetPopup.Click_or_drag_a_file_here')}
             >
                 <span role="img" aria-label="drag" style={{ fontSize: 32 }}>📂</span>
                 <span style={{
@@ -45,9 +45,7 @@ const FileUpload = ({ language, handleOnChange }) => {
                     color: '#256fa1',
                     fontWeight: 500
                 }}>
-                    {language !== 'English'
-                        ? 'Click or drag your Excel file here'
-                        : 'לחץ או גרור את קובץ האקסל לכאן'}
+                    {t('SpreadsheetPopup.Click_or_drag_your_Excel_file_here')}
                 </span>
                 <input
                     id="xlsx-upload-input"
@@ -62,12 +60,10 @@ const FileUpload = ({ language, handleOnChange }) => {
                 fontSize: 13,
                 color: '#888',
                 marginTop: 8,
-                direction: language === 'English' ? 'rtl' : 'ltr',
-                textAlign: language === 'English' ? 'right' : 'left'
+                direction: t('Direction'),
+                textAlign: t('Direction') === 'rtl' ? 'right' : 'left'
             }}>
-                {language !== 'English'
-                    ? 'Supported formats: .xlsx, .xls'
-                    : 'פורמטים נתמכים: .xlsx, .xls'}
+                {t('SpreadsheetPopup.Supported_formats_xlsx_xls_only')}
             </div>
         </form>
     );

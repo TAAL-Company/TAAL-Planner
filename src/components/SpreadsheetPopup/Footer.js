@@ -1,6 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 const Footer = ({ language, processGroupedData, handleCloseopenUpload }) => {
+    const { t } = useTranslation();
     return (
         <div
             style={{
@@ -19,15 +21,13 @@ const Footer = ({ language, processGroupedData, handleCloseopenUpload }) => {
                 type='submit'
                 className='saveTaskButton'
                 style={{ backgroundColor: '#ca0a0a' }}
-                value={
-                    language !== 'English' ? 'Upload data' : ' העלה נתונים '
-                }
+                value={t('SpreadsheetPopup.Upload_data')}
                 onClick={processGroupedData}
             />
             <input
                 type='submit'
                 className='cancelTaskButton'
-                value={language !== 'English' ? 'Cancel' : 'ביטול'}
+                value={t('SpreadsheetPopup.Cancel')}
                 onClick={handleCloseopenUpload}
             />
         </div>

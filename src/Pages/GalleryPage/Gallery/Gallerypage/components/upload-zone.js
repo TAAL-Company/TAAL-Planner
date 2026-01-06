@@ -2,8 +2,10 @@ import React from 'react';
 import { Paper, Typography, Button } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { useTranslation } from 'react-i18next';
 
 const UploadZone = ({ onFileUpload }) => {
+  const { t } = useTranslation();
   const handleDrop = (e) => {
     e.preventDefault();
     const files = Array.from(e.dataTransfer.files);
@@ -42,8 +44,8 @@ const UploadZone = ({ onFileUpload }) => {
       }}
     >
       <AddPhotoAlternateIcon sx={{ fontSize: 40, color: '#1976d2', mb: 1 }} />
-      <Typography color="primary">Upload Images / a folder</Typography>
-      <Typography variant="body2" color="text.secondary">or drag & drop</Typography>
+      <Typography color="primary">{t('GalleryPage.UploadImagesOrFolders')}</Typography>
+      <Typography variant="body2" color="text.secondary">{t('GalleryPage.OrDragAndDrop')}</Typography>
     </Paper>
   );
 };

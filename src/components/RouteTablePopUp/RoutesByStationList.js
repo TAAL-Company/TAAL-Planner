@@ -1,6 +1,7 @@
 import { Button, Divider } from "@mui/material";
 import React from "react";
 import InputFileUpload from "../InputFileUpload/InputFileUpload";
+import { useTranslation } from "react-i18next";
 
 const RoutesByStationList = ({
     data,
@@ -17,6 +18,7 @@ const RoutesByStationList = ({
     setData,
     handleOpenImageGallery,
 }) => {
+    const { t } = useTranslation();
 
     headerMapping = {
         Task: ["Task", "כותרת"],
@@ -101,8 +103,8 @@ const RoutesByStationList = ({
                             width: "100%",
                             borderCollapse: "collapse",
                             minWidth: 800,
-                            direction: language === "English" ? "rtl" : "ltr",
-                            textAlign: language === "English" ? "right" : "left",
+                            direction: t('Direction'),
+                            textAlign: t('Direction') === "rtl" ? "right" : "left",
                         }}
                     >
                         <thead>
@@ -117,11 +119,11 @@ const RoutesByStationList = ({
                                                 padding: 8,
                                                 background: "#f0f0f0",
                                                 fontWeight: 600,
-                                                direction: language === "English" ? "rtl" : "ltr",
-                                                textAlign: language === "English" ? "right" : "left",
+                                                direction: t('Direction'),
+                                                textAlign: t('Direction') === "rtl" ? "right" : "left",
                                             }}
                                         >
-                                            {language === "English"
+                                            {t('Direction') === "rtl"
                                                 ? headerMapping[key]?.[1] || key // Hebrew
                                                 : headerMapping[key]?.[0] || key // English
                                             }
@@ -161,8 +163,8 @@ const RoutesByStationList = ({
                                                             ? "2px dashed #256fa1"
                                                             : undefined,
                                                     transition: "background 0.2s, outline 0.2s",
-                                                    direction: language === "English" ? "rtl" : "ltr",
-                                                    textAlign: language === "English" ? "right" : "left",
+                                                    direction: t('Direction'),
+                                                    textAlign: t('Direction') === "rtl" ? "right" : "left",
                                                 }}
                                                 {...(key === "image"
                                                     ? {
@@ -184,8 +186,7 @@ const RoutesByStationList = ({
                                                             alignItems: "center",
                                                             gap: 8,
                                                             minHeight: 40,
-                                                            direction:
-                                                                language === "English" ? "rtl" : "ltr",
+                                                            direction: t('Direction'),
                                                         }}
                                                     >
                                                         {row[key] && (
@@ -225,11 +226,7 @@ const RoutesByStationList = ({
                                                                         color: "#ca0a0a",
                                                                         boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
                                                                     }}
-                                                                    title={
-                                                                        language === "English"
-                                                                            ? "הסר תמונה"
-                                                                            : "Remove image"
-                                                                    }
+                                                                    title={t('RoutesByStationList.Remove_image')}
                                                                 >
                                                                     ×
                                                                 </button>
@@ -280,7 +277,7 @@ const RoutesByStationList = ({
                                                             //     minWidth: "auto",
                                                             // }}
                                                         >
-                                                            {language === "English" ? "גלריה" : "Gallery"}
+                                                            {t('RoutesByStationList.Gallery')}
                                                         </Button>
                                                         {/* {!row[key] && (
                                                             <span
@@ -304,8 +301,7 @@ const RoutesByStationList = ({
                                                             alignItems: "center",
                                                             gap: 8,
                                                             minHeight: 40,
-                                                            direction:
-                                                                language === "English" ? "rtl" : "ltr",
+                                                            direction: t('Direction'),
                                                         }}
                                                     >
                                                         {row[key] && (
@@ -366,11 +362,7 @@ const RoutesByStationList = ({
                                                                         color: "#ca0a0a",
                                                                         boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
                                                                     }}
-                                                                    title={
-                                                                        language === "English"
-                                                                            ? "הסר אודיו"
-                                                                            : "Remove audio"
-                                                                    }
+                                                                    title={t('RoutesByStationList.Remove_audio')}
                                                                 >
                                                                     ×
                                                                 </button>
@@ -396,14 +388,10 @@ const RoutesByStationList = ({
                                                                 }}
                                                             >
                                                                 {row[key]
-                                                                    ? language === "English"
-                                                                        ? "החלף"
-                                                                        : "Replace"
-                                                                    : language === "English"
-                                                                        ? "העלה אודיו"
-                                                                        : "Upload Audio"}
+                                                                    ? t('RoutesByStationList.Replace')
+                                                                    : t('RoutesByStationList.Upload_Audio')}
                                                                 <input
-                                                                    dir={language === "English" ? "rtl" : "ltr"}
+                                                                    dir={t('Direction')}
                                                                     type="file"
                                                                     accept="audio/*"
                                                                     style={{ display: "none" }}
@@ -424,7 +412,7 @@ const RoutesByStationList = ({
                                                                 //     minWidth: "auto",
                                                                 // }}
                                                             >
-                                                                {language === "English" ? "גלריה" : "Gallery"}
+                                                                {t('RoutesByStationList.Gallery')}
                                                             </Button>
                                                         </div>
                                                         {/* {!row[key] && (
@@ -455,8 +443,8 @@ const RoutesByStationList = ({
                                                             background: "#fafafa",
                                                             padding: "4px 8px",
                                                             fontSize: 14,
-                                                            direction: language === "English" ? "rtl" : "ltr",
-                                                            textAlign: language === "English" ? "right" : "left",
+                                                            direction: t('Direction'),
+                                                            textAlign: t('Direction') === "rtl" ? "right" : "left",
                                                         }}
                                                     />
                                                 )}
@@ -474,7 +462,7 @@ const RoutesByStationList = ({
                                                 cursor: "pointer",
                                             }}
                                         >
-                                            {language !== "English" ? "Delete" : "מחק"}
+                                            {t('RoutesByStationList.Delete')}
                                         </button>
                                     </td>
                                     <td>
@@ -489,7 +477,7 @@ const RoutesByStationList = ({
                                                 cursor: "pointer",
                                             }}
                                         >
-                                            {language !== "English" ? "Add" : "הוסף"}
+                                            {t('RoutesByStationList.Add')}
                                         </button>
                                     </td>
                                 </tr>

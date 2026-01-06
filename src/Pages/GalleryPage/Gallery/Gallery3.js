@@ -12,10 +12,12 @@ import ImageIcon from '@mui/icons-material/Image';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import MediaControlCard from './MediaControlCard';
+import { useTranslation } from 'react-i18next';
 
 const storageConfigured = isStorageConfigured();
 
 function Gallery3(props) {
+  const { t } = useTranslation();
   const [sortedUrls, setSortedUrls] = useState([]);
   const [selectedFolderType, setselectedFolderType] = useState('pictures');
   const [selectedFolder, setSelectedFolder] = useState('general');
@@ -144,8 +146,8 @@ function Gallery3(props) {
       <Button onClick={() => {
         props.sethandleClose(false)
         setpopup(false)
-      }}>Close</Button>
-      <h1>Gallery</h1>
+      }}>{t('GalleryPage.Close')}</Button>
+      <h1>{t('GalleryPage.Gallery')}</h1>
       <div>
       <Box
           sx={{
@@ -176,7 +178,7 @@ function Gallery3(props) {
         {storageConfigured &&
           blobList.length > 0 &&
           DisplayImagesFromContainer(selectedFolder, selectedFolderType)}
-        {!storageConfigured && <div>Storage is not configured.</div>}
+        {!storageConfigured && <div>{t('GalleryPage.StorageNotConfigured')}</div>}
       </div>
     </div>
   );

@@ -9,8 +9,10 @@ import ImagesTable from "./ImagesTable";
 import Footer from "./Footer";
 import AudioGalleryModal from "./AudioGalleryModal";
 import ImageGalleryModal from "./ImageGalleryModal";
+import { useTranslation } from "react-i18next";
 
 function SpreadsheetPopup(props) {
+    const { t } = useTranslation();
     const [data, setData] = useState([]);
     const [images, setImages] = useState([]);
     const [audios, setAudios] = useState([]);
@@ -274,11 +276,11 @@ function SpreadsheetPopup(props) {
                         tasksIdsfromsheet.push(response.id);
                     }
                 }
-                showNotification('success', props.language === "English" ? 'התחנות והמשימות הוזנו בהצלחה' : 'Stations and tasks inserted successfully');
+                showNotification('success', t('Stations_and_tasks_inserted_successfully'));
             } catch (error) {
                 console.error("Error inserting stations or tasks:", error);
                 // Handle the error
-                showNotification('error', props.language === "English" ? 'שגיאה בהעלאת נתונים בתחנות או במשימות' : 'Error uploading data in stations or tasks');
+                showNotification('error', t('Error_uploading_data_in_stations_or_tasks'));
             }
 
             //groupBy RouteHeader--------------------------------------------------------------------------
@@ -319,18 +321,18 @@ function SpreadsheetPopup(props) {
                     console.log("📦 Inserting route:", route);
                     await insertRoute(route);
                 }
-                showNotification('success', props.language === "English" ? 'המסלול הוזן בהצלחה' : 'Route inserted successfully');
+                showNotification('success', t('Route_inserted_successfully'));
             } catch (error) {
                 console.error("Error inserting route:", error);
                 // Handle the error
-                showNotification('error', props.language === "English" ? 'שגיאה בהעלאת נתונים במסלול' : 'Error uploading data in route');
+                showNotification('error', t('Error_uploading_data_in_route'));
             }
 
-            showNotification('success', props.language === "English" ? 'הנתונים הוזנו בהצלחה' : 'Data inserted successfully');
+            showNotification('success', t('Data_inserted_successfully'));
             await props.reloadData();
         } catch (error) {
             console.error("Error inserting route:", error);
-            showNotification('error', props.language === "English" ? 'שגיאה בהעלאת הנתונים' : 'Error uploading data');
+            showNotification('error', t('Error_uploading_data'));
         } finally {
             props.setLoading(false);
             // props.setSelectedRoute(-1);
@@ -370,16 +372,16 @@ function SpreadsheetPopup(props) {
         setSelectedRowForAudio(null);
     };
 
-const handleSelectAudioFromGallery = (audioUrl) => {
-    if (selectedRowForAudio !== null) {
-        setData((prevData) => {
-            const newData = [...prevData];
-            newData[selectedRowForAudio] = { ...newData[selectedRowForAudio], audio: audioUrl };
-            return newData;
-        });
-        handleCloseAudioGallery();
-    }
-};
+    const handleSelectAudioFromGallery = (audioUrl) => {
+        if (selectedRowForAudio !== null) {
+            setData((prevData) => {
+                const newData = [...prevData];
+                newData[selectedRowForAudio] = { ...newData[selectedRowForAudio], audio: audioUrl };
+                return newData;
+            });
+            handleCloseAudioGallery();
+        }
+    };
 
     const handleOpenImageGallery = (rowIdx) => {
         setSelectedRowForImage(rowIdx);
@@ -391,16 +393,16 @@ const handleSelectAudioFromGallery = (audioUrl) => {
         setSelectedRowForImage(null);
     };
 
-const handleSelectImageFromGallery = (imageUrl) => {
-    if (selectedRowForImage !== null) {
-        setData((prevData) => {
-            const newData = [...prevData];
-            newData[selectedRowForImage] = { ...newData[selectedRowForImage], image: imageUrl };
-            return newData;
-        });
-        handleCloseImageGallery();
+    const handleSelectImageFromGallery = (imageUrl) => {
+        if (selectedRowForImage !== null) {
+            setData((prevData) => {
+                const newData = [...prevData];
+                newData[selectedRowForImage] = { ...newData[selectedRowForImage], image: imageUrl };
+                return newData;
+            });
+            handleCloseImageGallery();
+        }
     }
-}
 
     return (
         <div
@@ -413,8 +415,8 @@ const handleSelectImageFromGallery = (imageUrl) => {
                 boxSizing: 'border-box',
                 display: 'flex',
                 flexDirection: 'column',
-                textAlign: props.language === 'English' ? 'right' : 'left',
-                direction: props.language !== 'English' ? 'rtl' : 'ltr',
+                textAlign: t('Direction') === 'ltr' ? 'right' : 'left',
+                direction: t('Direction'),
                 background: '#f8f8f8',
                 overflow: 'auto',
             }}
@@ -433,7 +435,7 @@ const handleSelectImageFromGallery = (imageUrl) => {
                 <FileUpload language={props.language} handleOnChange={handleOnChange} />
                 {loadingData && (
                     <div style={{ textAlign: "center", padding: "40px" }}>
-                        <span style={{ fontSize: 18, color: "#555" }}>{props.language !== 'English' ? 'Loading...' : '...טוען'}</span>
+                        <span style={{ fontSize: 18, color: "#555" }}>{t('Loading')}</span>
                         <div className="loader" style={{
                             margin: "20px auto",
                             border: "6px solid #f3f3f3",
@@ -463,21 +465,13 @@ const handleSelectImageFromGallery = (imageUrl) => {
                                 display: 'flex',
                                 alignItems: 'center',
                                 gap: 12,
-                                direction: props.language === 'English' ? 'rtl' : 'ltr',
-                                textAlign: props.language === 'English' ? 'right' : 'left'
+                                direction: t('Direction'),
+                                textAlign: t('Direction') === 'ltr' ? 'right' : 'left'
                             }}
                         >
                             <span role="img" aria-label="drag">🖱️</span>
-                            {props.language === 'English'
-                                ? <>
-                                    גרור תמונה מתוך <b>תמונות בגיליון</b> ושחרר אותה בתא <b>תמונה</b> של השורה המתאימה למטה. <br />
-                                    ניתן גם להעלות <b>קבצי אודיו</b> ישירות לכל משימה.
-                                </>
-                                : <>
-                                    Drag an image from <b>Images In Sheet</b> and drop it into the <b>Image</b> cell of the relevant row below. <br />
-                                    You can also upload <b>audio files</b> directly to each task.
-                                </>
-                            }
+                            {t('SpreadsheetPopup.Drag_an_image_from_Images_In_Sheet_and_drop_it_into_the_Image_cell_of_the_relevant_row_below')} <br />
+                            {t('SpreadsheetPopup.You_can_also_upload_audio_files_directly_to_each_task')}
                         </div>
                         <div
                             style={{
@@ -487,7 +481,7 @@ const handleSelectImageFromGallery = (imageUrl) => {
                                 width: '100%',
                                 height: '100%',
                                 margin: '20px 0',
-                                direction: props.language === 'English' ? 'rtl' : 'ltr'
+                                direction: t('Direction'),
                             }}
                         >
                             {/* Data Table */}

@@ -9,8 +9,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useTranslation } from 'react-i18next';
 
 export default function BasicSelect({ open, handleTransfer, folder, setTargetFolder, handleDialogCloseTransfer, folderlist }) {
+    const { t } = useTranslation();
 
     const handleClose = () => {
         setTargetFolder('');
@@ -29,15 +31,15 @@ export default function BasicSelect({ open, handleTransfer, folder, setTargetFol
             aria-describedby="alert-dialog-description"
         >
             <DialogTitle id="alert-dialog-title">
-                {"Transfer"}
+                {t('GalleryPage.Transfer')}
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Select where you want to transfer the file
+                    {t('GalleryPage.Select_where_you_want_to_transfer_the_files')}
                 </DialogContentText>
             </DialogContent>
             <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">select</InputLabel>
+                <InputLabel id="demo-simple-select-label">{t('GalleryPage.Select')}</InputLabel>
                 <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
@@ -49,8 +51,8 @@ export default function BasicSelect({ open, handleTransfer, folder, setTargetFol
                 </Select>
             </FormControl>
             <DialogActions>
-                <Button onClick={handleDialogCloseTransfer}>Cancel</Button>
-                <Button onClick={handleTransfer} autoFocus>transfer</Button>
+                <Button onClick={handleDialogCloseTransfer}>{t('GalleryPage.Cancel')}</Button>
+                <Button onClick={handleTransfer} autoFocus>{t('GalleryPage.Transfer')}</Button>
             </DialogActions>
         </Dialog>
     );

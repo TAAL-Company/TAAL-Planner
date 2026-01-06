@@ -1,6 +1,7 @@
 import { Button } from "@mui/material";
 import React from "react";
 import InputFileUpload from "../InputFileUpload/InputFileUpload";
+import { useTranslation } from "react-i18next";
 
 const DataTable = ({
     data,
@@ -17,6 +18,7 @@ const DataTable = ({
     setData,
     handleOpenImageGallery
 }) => {
+    const { t } = useTranslation();
 
     // Add this function inside your component
     const handleRemoveImage = (rowIdx) => {
@@ -71,8 +73,8 @@ const DataTable = ({
                 width: '100%',
                 borderCollapse: 'collapse',
                 minWidth: 800,
-                direction: language === 'English' ? 'rtl' : 'ltr',
-                textAlign: language === 'English' ? 'right' : 'left'
+                direction: t('Direction'),
+                textAlign: t('Direction') === 'rtl' ? 'right' : 'left'
             }}
         >
             <thead>
@@ -87,15 +89,15 @@ const DataTable = ({
                                     padding: 8,
                                     background: '#f0f0f0',
                                     fontWeight: 600,
-                                    direction: language === 'English' ? 'rtl' : 'ltr',
-                                    textAlign: language === 'English' ? 'right' : 'left'
+                                    direction: t('Direction'),
+                                    textAlign: t('Direction') === 'rtl' ? 'right' : 'left'
                                 }}
                             >
                                 {key === 'image'
-                                    ? (language === 'English' ? 'תמונה' : 'Image')
+                                    ? (t('Image'))
                                     : key === 'audio'
-                                        ? (language === 'English' ? 'אודיו' : 'Audio')
-                                        : (language === 'English'
+                                        ? (t('Audio'))
+                                        : (t('Direction') === 'rtl'
                                             ? (headerMapping[key]?.[1] || key)
                                             : key)
                                 }
@@ -125,8 +127,8 @@ const DataTable = ({
                                                 ? '2px dashed #256fa1'
                                                 : undefined,
                                         transition: 'background 0.2s, outline 0.2s',
-                                        direction: language === 'English' ? 'rtl' : 'ltr',
-                                        textAlign: language === 'English' ? 'right' : 'left'
+                                        direction: t('Direction'),
+                                        textAlign: t('Direction') === 'rtl' ? 'right' : 'left'
                                     }}
                                     {...(key === 'image'
                                         ? {
@@ -147,7 +149,7 @@ const DataTable = ({
                                             alignItems: 'center',
                                             gap: 8,
                                             minHeight: 40,
-                                            direction: language === 'English' ? 'rtl' : 'ltr'
+                                            direction: t('Direction'),
                                         }}>
                                             {row[key] && (
                                                 <>
@@ -182,7 +184,7 @@ const DataTable = ({
                                                             color: '#ca0a0a',
                                                             boxShadow: '0 1px 4px rgba(0,0,0,0.08)'
                                                         }}
-                                                        title={language === 'English' ? "הסר תמונה" : "Remove image"}
+                                                        title={t('SpreadsheetPopup.Remove_image')}
                                                     >×</button>
                                                 </>
                                             )}
@@ -225,7 +227,7 @@ const DataTable = ({
                                                     minWidth: 'auto'
                                                 }}
                                             >
-                                                {language === 'English' ? 'גלריה' : 'Gallery'}
+                                                {t('SpreadsheetPopup.Gallery')}
                                             </Button>
                                             {!row[key] && (
                                                 <span style={{
@@ -233,9 +235,7 @@ const DataTable = ({
                                                     fontSize: 13,
                                                     marginLeft: 8
                                                 }}>
-                                                    {language === 'English'
-                                                        ? 'גרור תמונה לכאן'
-                                                        : 'Drag image here'}
+                                                    {t('SpreadsheetPopup.Drag_image_here')}
                                                 </span>
                                             )}
                                         </div>
@@ -246,7 +246,7 @@ const DataTable = ({
                                             alignItems: 'center',
                                             gap: 8,
                                             minHeight: 40,
-                                            direction: language === 'English' ? 'rtl' : 'ltr'
+                                            direction: t('Direction'),
                                         }}>
                                             {row[key] && (
                                                 <>
@@ -293,7 +293,7 @@ const DataTable = ({
                                                             color: '#ca0a0a',
                                                             boxShadow: '0 1px 4px rgba(0,0,0,0.08)'
                                                         }}
-                                                        title={language === 'English' ? "הסר אודיו" : "Remove audio"}
+                                                        title={t("SpreadsheetPopup.Remove_audio")}
                                                     >×</button>
                                                 </>
                                             )}
@@ -309,13 +309,13 @@ const DataTable = ({
                                                     textAlign: 'center'
                                                 }}>
                                                     {row[key]
-                                                        ? (language === 'English' ? 'החלף' : 'Replace')
-                                                        : (language === 'English' ? 'העלה אודיו' : 'Upload Audio')}
+                                                        ? (t('SpreadsheetPopup.Replace'))
+                                                        : (t('SpreadsheetPopup.Upload_Audio'))}
                                                     <input
-                                                        dir={language === 'English' ? 'rtl' : 'ltr'}
+                                                        dir={t('Direction')}
                                                         type="file"
                                                         accept="audio/*"
-                                                        style={{ display: 'none', direction: language === 'English' ? 'rtl' : 'ltr', }}
+                                                        style={{ display: 'none', direction: t('Direction'), }}
                                                         onChange={e => {
                                                             if (e.target.files && e.target.files[0]) {
                                                                 handleUploadAudio(idx, e.target.files[0]);
@@ -333,7 +333,7 @@ const DataTable = ({
                                                         minWidth: 'auto'
                                                     }}
                                                 >
-                                                    {language === 'English' ? 'גלריה' : 'Gallery'}
+                                                    {t('SpreadsheetPopup.Gallery')}
                                                 </Button>
                                             </div>
                                             {!row[key] && (
@@ -342,9 +342,7 @@ const DataTable = ({
                                                     fontSize: 13,
                                                     marginLeft: 8
                                                 }}>
-                                                    {language === 'English'
-                                                        ? 'העלה קובץ אודיו'
-                                                        : 'Upload audio file'}
+                                                    {t('SpreadsheetPopup.Upload_audio_file')}
                                                 </span>
                                             )}
                                         </div>
@@ -360,8 +358,8 @@ const DataTable = ({
                                                 background: '#fafafa',
                                                 padding: '4px 8px',
                                                 fontSize: 14,
-                                                direction: language === 'English' ? 'rtl' : 'ltr',
-                                                textAlign: language === 'English' ? 'right' : 'left'
+                                                direction: t('Direction'),
+                                                textAlign: t('Direction') === 'rtl' ? 'right' : 'left'
                                             }}
                                         />
                                     )}
@@ -380,7 +378,7 @@ const DataTable = ({
                                     cursor: 'pointer',
                                 }}
                             >
-                                Delete
+                                {t('SpreadsheetPopup.Delete')}
                             </button>
                         </td>
                         <td>
@@ -395,7 +393,7 @@ const DataTable = ({
                                     cursor: 'pointer',
                                 }}
                             >
-                                Add
+                                {t('SpreadsheetPopup.Add')}
                             </button>
                         </td>
                     </tr>

@@ -5,8 +5,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { useTranslation } from 'react-i18next';
 
 export default function AlertDialog({ open, onClose, onConfirm, imageUrl }) {
+    const { t } = useTranslation();
     const handleDelete = () => {
         onConfirm(imageUrl);
         onClose();
@@ -20,17 +22,17 @@ export default function AlertDialog({ open, onClose, onConfirm, imageUrl }) {
             aria-describedby="alert-dialog-description"
         >
             <DialogTitle id="alert-dialog-title">
-                {"Confirm Delete"}
+                {t('GalleryPage.Confirm_Delete')}
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    Are you sure you want to delete ?
+                    {t('Are_you_sure_you_want_to_delete')}
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>NO, CANCEL</Button>
+                <Button onClick={onClose}>{t('GalleryPage.No')}</Button>
                 <Button onClick={handleDelete} color="primary">
-                    YES, DELETE
+                    {t('GalleryPage.Yes')}
                 </Button>
             </DialogActions>
         </Dialog>

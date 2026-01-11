@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Backdrop, CircularProgress, Button } from '@mui/material';
-import SearchBar from './Gallerypage/components/search-bar';
+import SearchBar from '../../Pages/GalleryPage/components/search-bar';
 // import UploadZone from './components/upload-zone';
-import SidebarNav from './Gallerypage/components/sidebar-nav';
-import ImageGrid from './image-grid';
-import AudioList from './audio-grid';
-import { getBlobsInContainer } from '../../../components/azureBlob';
+import SidebarNav from '../../Pages/GalleryPage/components/sidebar-nav';
+import ImageGrid from './components/image-grid';
+import AudioList from './components/audio-grid';
 import { useTranslation } from 'react-i18next';
+import { getBlobsInContainer } from '../azureBlob';
 
-const GalleryPage = (props) => {
+const GalleryModalPopup = (props) => {
   const { t } = useTranslation();
   const [blobList, setBlobList] = useState({});
   const [sortedUrls, setSortedUrls] = useState({});
@@ -140,4 +140,4 @@ const GalleryPage = (props) => {
   );
 };
 
-export default GalleryPage;
+export default GalleryModalPopup;

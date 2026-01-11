@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { insertTask, updateRoute, updateTask, uploadFiles } from "../../api/api";
 import { useNotification } from "../Notification/NotificationProvider";
-import RoutesByStationList from "./RoutesByStationList";
+import RoutesByStationList from "../RoutesByStationList/RoutesByStationList";
 import { Box, Dialog, DialogContent, DialogTitle, IconButton, MenuItem, Select, FormControl, InputLabel, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import CloseIcon from '@mui/icons-material/Close';
-import Footer from "../SpreadsheetPopup/Footer";
-import AudioGalleryModal from "../SpreadsheetPopup/AudioGalleryModal";
-import ImageGalleryModal from "../SpreadsheetPopup/ImageGalleryModal";
+import Footer from "../SpreadsheetPopup/components/Footer";
+import AudioGalleryModal from "../SpreadsheetPopup/components/AudioGalleryModal";
+import ImageGalleryModal from "../SpreadsheetPopup/components/ImageGalleryModal";
 import { Backdrop, CircularProgress } from "@material-ui/core";
 
 

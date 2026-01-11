@@ -2,13 +2,13 @@ import React, { useState } from "react";
 import ExcelJS from "exceljs";
 import { getingData_Tasks, insertRoute, insertStation, insertTask, uploadFiles } from "../../api/api";
 import { useNotification } from "../Notification/NotificationProvider";
-import Header from "./Header";
-import FileUpload from "./FileUpload";
-import DataTable from "./DataTable";
-import ImagesTable from "./ImagesTable";
-import Footer from "./Footer";
-import AudioGalleryModal from "./AudioGalleryModal";
-import ImageGalleryModal from "./ImageGalleryModal";
+import Header from "./components/Header";
+import FileUpload from "./components/FileUpload";
+import DataTable from "./components/DataTable";
+import ImagesTable from "./components/ImagesTable";
+import Footer from "./components/Footer";
+import AudioGalleryModal from "./components/AudioGalleryModal";
+import ImageGalleryModal from "./components/ImageGalleryModal";
 import { useTranslation } from "react-i18next";
 
 function SpreadsheetPopup(props) {

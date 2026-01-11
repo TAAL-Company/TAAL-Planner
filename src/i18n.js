@@ -276,7 +276,8 @@ const resources = {
         Add_Pack: "Add Pack",
         New_task: "New Task",
         Details: "Details",
-        Upload_from_computer: "Upload from computer"
+        Upload_from_computer: "Upload from computer",
+        Image_dimensions_must_be_952x648: "Image dimensions must be 952x648",
       },
       showNotification: {
         "Error_delete_user": "Error deleting user",
@@ -1097,6 +1098,7 @@ const resources = {
         New_task: "משימה חדשה",
         Details: " פרטים",
         Upload_from_computer: "העלה מהמחשב",
+        Image_dimensions_must_be_952x648: "ממדי התמונה חייבים להיות 952x648",
       },
       showNotification: {
         "Error_delete_user": "שגיאה במחיקת משתמש",
@@ -1918,6 +1920,7 @@ const resources = {
         New_task: "مهمة جديدة",
         Details: "تفاصيل",
         Upload_from_computer: " رفع من الكمبيوتر",
+        Image_dimensions_must_be_952x648: "مقاسات الصورة يجب أن تكون 952x648",
       },
       showNotification: {
         "Error_delete_user": "خطأ في حذف المستخدم",
@@ -2738,7 +2741,8 @@ const resources = {
         Add_Pack: "Добавить пакет",
         New_task: "Новая задача",
         Details: "Детали",
-        Upload_from_computer: "Загрузить с компьютера"
+        Upload_from_computer: "Загрузить с компьютера",
+        Image_dimensions_must_be_952x648: "Масштаб изображения должен быть 952x648",
       },
       showNotification: {
         "Error_delete_user": "Ошибка удаления пользователя",

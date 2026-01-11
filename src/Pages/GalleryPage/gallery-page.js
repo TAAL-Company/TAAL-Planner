@@ -5,8 +5,8 @@ import UploadZone from './components/upload-zone';
 import SidebarNav from './components/sidebar-nav';
 import ImageGrid from './components/image-grid';
 import AudioList from './components/audio-grid';
-import { getBlobsInContainer } from '../../../../components/azureBlob';
-import { uploadFiles } from '../../../../api/api';
+import { getBlobsInContainer } from '../../components/azureBlob';
+import { uploadFiles } from '../../api/api';
 
 const GalleryPage = () => {
   const [blobList, setBlobList] = useState({});

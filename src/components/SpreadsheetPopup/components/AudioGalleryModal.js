@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Box } from "@mui/material";
-import Gallery2 from "../../Pages/GalleryPage/Gallery/Gallery2";
+import GalleryModalPopup from "../../GalleryModalPopup/GalleryModalPopup";
 
 const AudioGalleryModal = ({
     openAudioGallery,
@@ -26,7 +26,7 @@ const AudioGalleryModal = ({
             aria-describedby="audio-gallery-modal-description"
         >
             <Box sx={style2}>
-                <Gallery2
+                <GalleryModalPopup
                     sethandleClose={handleCloseAudioGallery}
                     setPicture={handleSelectAudioFromGallery}
                     showaudio={true}

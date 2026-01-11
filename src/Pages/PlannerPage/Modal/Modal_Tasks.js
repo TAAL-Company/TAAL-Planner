@@ -8,7 +8,6 @@ import { baseUrl } from '../../../config';
 import Modal_no_site_selected from './Modal_no_site_selected';
 import { uploadFiles, uploadFile, insertTask, updateTask, updateAdditonalHelp, postAdditonalHelp, getingData_Tasks } from '../../../api/api';
 import uploadFileToBlob from '../../../components/azureBlob';
-import Gallery2 from '../../GalleryPage/Gallery/Gallery2';
 import BasicSelect from '../../../components/BasicSelect/BasicSelect';
 import { getBlobsInContainer } from '../../../components/azureBlob';
 import InputFileUpload from '../../../components/InputFileUpload/InputFileUpload';
@@ -23,6 +22,7 @@ import Modal from '@mui/material/Modal';
 
 import { useNotification } from "../../../components/Notification/NotificationProvider";
 import { useTranslation } from 'react-i18next';
+import GalleryModalPopup from '../../../components/GalleryModalPopup/GalleryModalPopup';
 
 
 const style = {
@@ -682,7 +682,7 @@ function Modal_Tasks(props) {
                         aria-describedby="modal-modal-description"
                       >
                         <Box sx={style2}>
-                          <Gallery2 sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true} />
+                          <GalleryModalPopup sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true} />
                         </Box>
                       </Modal>
                       {picture ? (
@@ -734,7 +734,7 @@ function Modal_Tasks(props) {
                       aria-describedby="modal-modal-description"
                     >
                       <Box sx={style2}>
-                        <Gallery2 sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false} />
+                        <GalleryModalPopup sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false} />
                       </Box>
                     </Modal>
                   </form>

@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import React from "react";
-import InputFileUpload from "../InputFileUpload/InputFileUpload";
+import InputFileUpload from "../../InputFileUpload/InputFileUpload";
 import { useTranslation } from "react-i18next";
 
 const DataTable = ({

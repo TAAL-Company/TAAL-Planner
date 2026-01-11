@@ -35,7 +35,7 @@ export default function InputFileUpload(props) {
                     props.setPicture(file);
                     // Show notification if dimensions are incorrect
                     if (img.width !== 952 || img.height !== 648) {
-                        showNotification('error', props.language !== "English" ? 'Image dimensions must be 952x648.' : 'ממדי התמונה חייבים להיות 952*648.');
+                        showNotification('error', t('plannerPage.Image_dimensions_must_be_952x648'));
                     }
                 };
             };
@@ -53,7 +53,7 @@ export default function InputFileUpload(props) {
             style={{
                 textAlign: 'right',
                 height: '38px',
-                direction: props.language === 'English' ? 'rtl' : 'ltr',
+                direction: t('Direction'),
             }}
         >
             {props.language !== 'English' ? (

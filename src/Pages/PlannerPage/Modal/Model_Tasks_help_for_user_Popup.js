@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Modal.css';
 import { FcMultipleInputs } from 'react-icons/fc';
 import { RiAsterisk } from 'react-icons/ri';
-import Gallery2 from '../../GalleryPage/Gallery/Gallery2';
+import GalleryModalPopup from '../../../components/GalleryModalPopup/GalleryModalPopup';
 import { getBlobsInContainer } from '../../../components/azureBlob';
 import InputFileUpload from '../../../components/InputFileUpload/InputFileUpload';
 import { FormControl, InputLabel, Select, MenuItem, TextField, Box, Button, Modal } from '@mui/material';
@@ -310,7 +310,7 @@ function Model_Tasks_Pop_for_user(props) {
                                             aria-describedby="modal-modal-description"
                                         >
                                             <Box sx={style2}>
-                                                <Gallery2 sethandleClose={handleClose} setPicture={(file) => setFormData((prevData) => {
+                                                <GalleryModalPopup sethandleClose={handleClose} setPicture={(file) => setFormData((prevData) => {
                                                     const newData = [...prevData];
                                                     newData[formIndex].picture = file;
                                                     return newData;
@@ -356,7 +356,7 @@ function Model_Tasks_Pop_for_user(props) {
                                             aria-describedby="modal-modal-description"
                                         >
                                             <Box sx={style2}>
-                                                <Gallery2 sethandleClose={handleClose} setPicture={(file) => setFormData((prevData) => {
+                                                <GalleryModalPopup sethandleClose={handleClose} setPicture={(file) => setFormData((prevData) => {
                                                     const newData = [...prevData];
                                                     newData[formIndex].audio = file;
                                                     return newData;

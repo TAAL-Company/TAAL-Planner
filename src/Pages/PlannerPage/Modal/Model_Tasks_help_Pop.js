@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import './Modal.css';
 import { FcMultipleInputs } from 'react-icons/fc';
 import { RiAsterisk } from 'react-icons/ri';
-import Gallery2 from '../../GalleryPage/Gallery/Gallery2';
+import GalleryModalPopup from '../../../components/GalleryModalPopup/GalleryModalPopup';
 import { getBlobsInContainer } from '../../../components/azureBlob';
 import InputFileUpload from '../../../components/InputFileUpload/InputFileUpload';
 
@@ -248,7 +248,7 @@ function Model_Tasks_Pop(props) {
                             aria-describedby="modal-modal-description"
                         >
                             <Box sx={style2}>
-                                <Gallery2 sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true}/>
+                                <GalleryModalPopup sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true}/>
                             </Box>
                         </Modal>
                         {picture ? (
@@ -293,7 +293,7 @@ function Model_Tasks_Pop(props) {
                         aria-describedby="modal-modal-description"
                     >
                         <Box sx={style2}>
-                            <Gallery2 sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false}/>
+                            <GalleryModalPopup sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false}/>
                         </Box>
                     </Modal>
                     {audio ? (

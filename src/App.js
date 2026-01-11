@@ -9,7 +9,7 @@ import Login from './Pages/LoginPage/Login';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import Dashboard from './Pages/DashboardPage/Dashboard';
-import GalleryPage from './Pages/GalleryPage/Gallery/Gallerypage/gallery-page';
+import GalleryPage from './Pages/GalleryPage/gallery-page';
 // import Cards from './components/Cards/Cards';
 import RouteTable from './Pages/RoutePage/RouteTable';
 import { Switch, Route } from 'react-router-loading';
@@ -41,7 +41,7 @@ console.warn(`
 TAAL DEV INFO:`, {
   "Version": process.env.REACT_APP_VERSION,
   "Base URL": process.env.REACT_APP_BASE_URL,
-  "Node Environment": process.env.NODE_ENV,
+  "Node Environment": process.env.REACT_APP_NODE_ENV,
   "Storage Resource Name": process.env.REACT_APP_STORAGE_CONTAINER_NAME
 });
 

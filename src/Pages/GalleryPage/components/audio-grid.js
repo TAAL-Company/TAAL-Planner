@@ -1,27 +1,19 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-  IconButton,
-  Menu,
-  MenuItem
-} from '@mui/material';
+import { Box, List, ListItem, ListItemText, IconButton, Menu, MenuItem } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
-import AlertDialog from './Gallerypage/components/AlertDialog';
-import BasicSelect from './Gallerypage/components/BasicSelect';
+import ReactPlayer from 'react-player';
+import AlertDialog from './AlertDialog';
+import BasicSelect from './BasicSelect';
 import { deleteFileByUrl, transferFile } from '../../../api/api';
 import { useTranslation } from 'react-i18next';
 
-const ImageGrid = ({ images, setReload, setLoading, folderNames, setPicture, sethandleClose }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
+const AudioList = ({ audios, setReload, setLoading, folderNames }) => {
+  const { t } = useTranslation();
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [targetFolder, setTargetFolder] = useState('');
   const [dialogOpenTransfer, setDialogOpenTransfer] = useState(false);
-  const { t } = useTranslation();
 
   const handleMenuClick = (event, item) => {
     setAnchorEl(event.currentTarget);
@@ -52,11 +44,11 @@ const ImageGrid = ({ images, setReload, setLoading, folderNames, setPicture, set
     handleMenuClose();
   };
 
+
   const getFileName = (url) => {
     const parts = url.split('/');
     return parts[parts.length - 1];
   };
-
 
   const handleDeleteClick = () => {
     setDialogOpen(true);
@@ -74,40 +66,25 @@ const ImageGrid = ({ images, setReload, setLoading, folderNames, setPicture, set
     setDialogOpen(false);
   };
 
-  const handleDialogConfirm = (imageUrl) => {
-    handleDelete(imageUrl);
+  const handleDialogConfirm = (audioUrl) => {
+    handleDelete(audioUrl);
     setDialogOpen(false);
     handleMenuClose();
   };
 
   return (
-    <Box sx={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-      gap: 2
-    }}>
-      {Object.entries(images).map(([key, url]) => (
-        <Card key={key}
-        >
-          <CardMedia
-            component="img"
-            height="200"
-            image={url}
-            alt={key}
-            onClick={(e) => {
-              console.log(url);
-              setPicture(url);
-              sethandleClose(false);
-            }}
-          />
-          <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography>{getFileName(url)}</Typography>
+    <Box>
+      <List>
+        {Object.entries(audios).map(([key, url]) => (
+          <ListItem key={key} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <ListItemText primary={getFileName(url)} />
+            <ReactPlayer url={url} controls height="50px" />
             <IconButton onClick={(e) => handleMenuClick(e, url)}>
               <MoreVert />
             </IconButton>
-          </CardContent>
-        </Card>
-      ))}
+          </ListItem>
+        ))}
+      </List>
 
       <Menu
         anchorEl={anchorEl}
@@ -136,4 +113,4 @@ const ImageGrid = ({ images, setReload, setLoading, folderNames, setPicture, set
   );
 };
 
-export default ImageGrid;
+export default AudioList;

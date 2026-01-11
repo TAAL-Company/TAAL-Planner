@@ -3,9 +3,16 @@ import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import TranslateIcon from '@mui/icons-material/Translate';
+import HomeIcon from '@mui/icons-material/Home';
+import FeedIcon from '@mui/icons-material/Feed';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const Nav = () => {
   const [completeName, setCompleteName] = useState('');
+  const [languageAnchorEl, setLanguageAnchorEl] = useState(null);
 
   useEffect(() => {
     try {
@@ -34,10 +41,18 @@ const Nav = () => {
     window.location.replace('/');
   };
 
-  const toggleLanguage = () => {
-    const currentLanguage = sessionStorage.getItem('language');
-    const newLanguage = currentLanguage === 'English' ? 'Hebrew' : 'English';
-    sessionStorage.setItem('language', newLanguage);
+
+  const openLanguageMenu = (event) => {
+    setLanguageAnchorEl(event.currentTarget);
+  };
+
+  const closeLanguageMenu = () => {
+    setLanguageAnchorEl(null);
+  };
+
+  const handleLanguageSelect = (language) => {
+    sessionStorage.setItem('language', language);
+    closeLanguageMenu();
     window.location.reload();
   };
 
@@ -60,26 +75,32 @@ const Nav = () => {
             sx={{
               width: 51,
               height: 45,
-              backgroundImage: "url('../../Pictures/ic_home.svg')",
+              // backgroundImage: "url('../../Pictures/ic_home.svg')",
               backgroundSize: 'contain',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center',
               borderRadius: 0,
+              color: 'white',
             }}
-          />
+          >
+            <HomeIcon sx={{ fontSize: 40 }} />
+          </IconButton>
         </Link>
         <Link to="/Forms">
           <IconButton
             sx={{
               width: 51,
               height: 45,
-              backgroundImage: "url('../../Pictures/ic_forms.svg')",
+              // backgroundImage: "url('../../Pictures/ic_forms.svg')",
               backgroundSize: 'contain',
               backgroundRepeat: 'no-repeat',
               backgroundPosition: 'center',
               borderRadius: 0,
+              color: 'white',
             }}
-          />
+          >
+            <FeedIcon sx={{ fontSize: 40 }} />
+          </IconButton>
         </Link>
 
         <Link to="/TAAL_Ai">
@@ -97,29 +118,57 @@ const Nav = () => {
         </Link>
 
         <IconButton
-          onClick={toggleLanguage}
+          aria-controls={Boolean(languageAnchorEl) ? 'language-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={Boolean(languageAnchorEl) ? 'true' : undefined}
+          onClick={openLanguageMenu}
           sx={{
             width: 51,
             height: 45,
-            backgroundImage: "url('../../Pictures/language.svg')",
+            // backgroundImage: "url('../../Pictures/language.svg')",
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             borderRadius: 0,
+            color: 'white',
           }}
-        />
+        >
+          <TranslateIcon sx={{ fontSize: 40 }} />
+        </IconButton >
+
+        <Menu
+          id="language-menu"
+          anchorEl={languageAnchorEl}
+          open={Boolean(languageAnchorEl)}
+          onClose={closeLanguageMenu}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+        >
+          {['English', 'Hebrew', 'Arabic', 'Russian'].map((language) => (
+            <MenuItem
+              key={language}
+              onClick={() => handleLanguageSelect(language)}
+              selected={sessionStorage.getItem('language') === language}
+            >
+              {language}
+            </MenuItem>
+          ))}
+        </Menu>
         <IconButton
           onClick={logout}
           sx={{
             width: 51,
             height: 45,
-            backgroundImage: "url('../../Pictures/logout-svgrepo-com.svg')",
+            // backgroundImage: "url('../../Pictures/logout-svgrepo-com.svg')",
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center',
             borderRadius: 0,
+            color: 'white',
           }}
-        />
+        >
+          <LogoutIcon sx={{ fontSize: 40 }} />
+        </IconButton>
       </Box>
 
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>

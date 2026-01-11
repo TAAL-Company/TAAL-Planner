@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import { Box, List, ListItem, ListItemText, IconButton, Menu, MenuItem } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
 import ReactPlayer from 'react-player';
-import AlertDialog from './AlertDialog';
-import BasicSelect from './BasicSelect';
-import { deleteFileByUrl, transferFile } from '../../../../../api/api';
+import AlertDialog from '../../../Pages/GalleryPage/components/AlertDialog';
+import BasicSelect from '../../../Pages/GalleryPage/components/BasicSelect';
+import { deleteFileByUrl, transferFile } from '../../../api/api';
 import { useTranslation } from 'react-i18next';
 
-const AudioList = ({ audios, setReload, setLoading, folderNames }) => {
-  const { t } = useTranslation();
+const AudioList = ({ audios, setReload, setLoading, folderNames, setAudio, sethandleClose }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [targetFolder, setTargetFolder] = useState('');
   const [dialogOpenTransfer, setDialogOpenTransfer] = useState(false);
+  const { t } = useTranslation();
 
   const handleMenuClick = (event, item) => {
     setAnchorEl(event.currentTarget);
@@ -44,6 +44,11 @@ const AudioList = ({ audios, setReload, setLoading, folderNames }) => {
     handleMenuClose();
   };
 
+  const handleAudioClick = () => {
+      console.log(selectedItem);
+      setAudio(selectedItem);
+      sethandleClose(false);
+  }
 
   const getFileName = (url) => {
     const parts = url.split('/');
@@ -93,6 +98,7 @@ const AudioList = ({ audios, setReload, setLoading, folderNames }) => {
       >
         <MenuItem onClick={handleTransferClick}>{t('GalleryPage.Transfer')}</MenuItem>
         <MenuItem onClick={handleDeleteClick}>{t('GalleryPage.Delete')}</MenuItem>
+        <MenuItem onClick={handleAudioClick}>{t('GalleryPage.Select')}</MenuItem>
       </Menu>
 
       <BasicSelect

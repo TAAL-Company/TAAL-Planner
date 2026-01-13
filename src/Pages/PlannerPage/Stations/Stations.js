@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { getingDataTasks, deleteStation, insertLoop,updateLoop } from '../../../api/api';
+import { getingDataTasks, deleteStation, insertLoop, updateLoop } from '../../../api/api';
 import './style.css';
 import ModalStations from '../Modal/Modal_Stations';
 import { AiOutlinePlus } from 'react-icons/ai';
@@ -191,48 +191,48 @@ const Stations = (props) => {
     setRequestForEditing('');
     setStationForEdit(-1);
   };
-    // Add loop data to the station
-    // const updatedStations = [...props.stationArray];
-    // updatedStations[stationForEdit] = {
-    //   ...updatedStations[stationForEdit],
-    //   loops: updatedStations[stationForEdit].loops.map(loop => {
-    //     if (loop.routeId === props.selectedRoute) {
-    //       return {
-    //         ...loop,
-    //         duration: Number.parseInt(data.duration),
-    //         endTime: data.endTime,//from string to date new Date
-    //         iterations: Number.parseInt(data.iterations),
-    //       };
-    //     }
-    //     return loop;
-    //   })
-    // };
+  // Add loop data to the station
+  // const updatedStations = [...props.stationArray];
+  // updatedStations[stationForEdit] = {
+  //   ...updatedStations[stationForEdit],
+  //   loops: updatedStations[stationForEdit].loops.map(loop => {
+  //     if (loop.routeId === props.selectedRoute) {
+  //       return {
+  //         ...loop,
+  //         duration: Number.parseInt(data.duration),
+  //         endTime: data.endTime,//from string to date new Date
+  //         iterations: Number.parseInt(data.iterations),
+  //       };
+  //     }
+  //     return loop;
+  //   })
+  // };
 
-    // // Update the station array
-    // props.setStationArray(updatedStations);
+  // // Update the station array
+  // props.setStationArray(updatedStations);
 
-    // // Update the board with the new station data
-    // const updatedBoard = props.board.map(tag => {
-    //   if (
-    //     // tag.theStation.id === updatedStations[stationForEdit].id
-    //     // &&
-    //     tag.theStation.id === props.stationArray[stationForEdit].id
-    //   ) {
-    //     return {
-    //       ...tag,
-    //       theStation: {
-    //         ...tag.theStation,
-    //         loops: {
-    //           duration: Number.parseInt(data.duration),
-    //           endTime: data.endTime,
-    //           iterations: Number.parseInt(data.iterations),
-    //         }
-    //       }
-    //     };
-    //   }
-    //   return tag;
-    // });
-    // props.setBoard(updatedBoard);
+  // // Update the board with the new station data
+  // const updatedBoard = props.board.map(tag => {
+  //   if (
+  //     // tag.theStation.id === updatedStations[stationForEdit].id
+  //     // &&
+  //     tag.theStation.id === props.stationArray[stationForEdit].id
+  //   ) {
+  //     return {
+  //       ...tag,
+  //       theStation: {
+  //         ...tag.theStation,
+  //         loops: {
+  //           duration: Number.parseInt(data.duration),
+  //           endTime: data.endTime,
+  //           iterations: Number.parseInt(data.iterations),
+  //         }
+  //       }
+  //     };
+  //   }
+  //   return tag;
+  // });
+  // props.setBoard(updatedBoard);
   const handleLoopSubmit = async (data) => {
     // Update selectedRoute.loops immutably
     const stationId = props.stationArray[stationForEdit]?.id;
@@ -328,7 +328,7 @@ const Stations = (props) => {
         if (res?.status >= 200 && res?.status < 300) {
           showNotification(
             'success',
-           t('plannerPage.Loop_settings_saved_successfully')
+            t('plannerPage.Loop_settings_saved_successfully')
           );
         } else {
           throw new Error(`HTTP ${res?.status}`);
@@ -372,12 +372,26 @@ const Stations = (props) => {
           <div className='Cover_Stations'>
             <>
               <div className='TitleStation'>
-                <div
-                  className={`MyTitle text ${props.language !== 'English' ? 'english' : ''
-                    }`}
-                >
-                  {' '}
-                  {props.stationsName}
+                <div style={{
+                  display: 'flex',
+                  gap: '16px',
+                  alignItems: 'center',
+                  flexDirection: props.language !== 'English' ? 'row' : 'row-reverse',
+                }}>
+                  <div className={`MyTitle text ${props.language !== 'English' ? 'english' : ''}`}>
+                    {props.stationsName}
+                  </div>
+                  <div>
+                    <button
+                      className="deselect-button"
+                      style={{
+                        // fontSize: props.language !== 'English' ? '16px' : '18px',
+                      }}
+                    onClick={props.handleDeselectRoute}
+                    >
+                      {t("plannerPage.Show_all_Stations")}
+                    </button>
+                  </div>
                 </div>
               </div>
             </>

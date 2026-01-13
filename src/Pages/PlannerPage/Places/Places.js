@@ -49,6 +49,7 @@ import BorderedTreeView from './BorderedTreeView';
 import ModalPack from '../Modal/ModalPack';
 import SpreadsheetPopup from '../../../components/SpreadsheetPopup/SpreadsheetPopup';
 import RouteTablePopUp from '../../../components/RouteTablePopUp/RouteTablePopUp';
+import AssistantIcon from '@mui/icons-material/Assistant';
 
 import { FaRobot } from 'react-icons/fa';
 import { Icon } from '@mui/material';
@@ -1800,7 +1801,7 @@ const Places = (props) => {
             currentLanguage={props.language !== 'English' ? 'EN' : 'HE'}
             allPlaces={allWorkersForSite}
             siteQuestionLanguage={props.SiteStudentQuestionLanguage}
-            siteLanguage={props.siteLanguage}
+            siteLanguage={props.workerLanguage}
             handleSiteSelectChange={handleWorkerSelectChange}
             showDataTranslate={translateData} // props.showDataTranslate ||original - translated - Mixed
             selectedValuewithjsons={false}
@@ -1821,29 +1822,12 @@ const Places = (props) => {
           </button>
         </div>
         <div style={{ margin: '20px' }}>
-          <button 
-            className="deselect-button" 
-            style={{ 
-              backgroundColor: "darkblue",
-              display: "flex",
-              alignItems: "center",
-              gap: "8px"
-            }} 
-            onClick={() => window.location.href = '/TAAL_Ai'}
-          >
-            <Icon
-              sx={{
-                width: "50px",
-                height: "50px",
-                backgroundImage: "url('../../Pictures/logo_Taal_Ai.svg')",
-                backgroundSize: "contain",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                borderRadius: 1,
-              }}
-            />
-             {"TAAL AI"}
-            {/* {props.language !== 'English' ? "TAAL AI" : "טאל AI"} */}
+          <div className='placesTitle'>
+            <AssistantIcon />
+            {"TAAL AI"}
+          </div>
+          <button className="deselect-button" style={{ backgroundColor: "#2586c7" }} onClick={() => window.location.href = '/TAAL_Ai'}>
+            {"TAAL AI"}
           </button>
         </div>
       </div>
@@ -1945,7 +1929,7 @@ const Places = (props) => {
               {filteredpacksbysite.length === 0 ? (
                 <div
                   className={`textBeforeStation ${props.language !== 'English' ? 'english' : ''}`}
-                  style={{ backgroundImage: `url(${textArea})` }}
+                  style={{ backgroundImage: `url(${textArea})`, width: '88%' }}
                 >
                   <div
                     className={`textBeforeStationtext ${props.language !== 'English' ? 'english' : ''}`}>
@@ -2076,7 +2060,7 @@ const Places = (props) => {
                 onChange={inputHandlerRoutes}
               ></input>
             </div>
-            <div
+            {/* <div
               className='search'
               style={{
                 backgroundColor: '#F5F5F5',
@@ -2088,7 +2072,7 @@ const Places = (props) => {
               >
                 {t("plannerPage.Show_all_Stations")}
               </button>
-            </div>
+            </div> */}
 
             <Droppable droppableId="routes-droppable">
               {(provided, snapshot) => (
@@ -2103,7 +2087,7 @@ const Places = (props) => {
                   {filteredDataRoutes.length === 0 ? (
                     <div
                       className={`textBeforeStation ${props.language !== 'English' ? 'english' : ''}`}
-                      style={{ backgroundImage: `url(${textArea})` }}
+                      style={{ backgroundImage: `url(${textArea})`, width: '88%' }}
                     >
                       <div
                         className={`textBeforeStationtext ${props.language !== 'English' ? 'english' : ''}`}>
@@ -2216,6 +2200,7 @@ const Places = (props) => {
           </div>
           {/* //////////////////////////////////////////////////////////////////////////////////////////// */}
           <Stations
+            handleDeselectRoute={handleDeselectRoute}
             selectedRoute={selectedRoute}
             setSelectedRoute={setSelectedRoute}
             board={board}

@@ -48,8 +48,8 @@
   border-radius: 4px;
   color: white;
   font-size: 18px;
-  box-shadow: 0px 3px 6px #0000004d;
-  border: 2px solid #256fa1;
+  box-shadow: 0px 3px 1px 1px #0000004d;
+  border: 1px solid #256fa1;
 }
 
 .Places.english {
@@ -131,7 +131,7 @@
   /* margin: -0.5px; */
   padding-top: 1px;
   padding-bottom: 1px;
-  height: 287px;
+  height: 345px;
   overflow: auto;
   /* width: 272px; */
   width: 300px;
@@ -143,7 +143,7 @@
   align-items: center;
 }
 
-.packs{
+.packs {
   background-color: rgb(245 245 245);
   /* margin: -0.5px; */
   padding-top: 1px;
@@ -492,6 +492,10 @@ h3 {
 
 /* ================= 1440px ================= */
 @media screen and (max-width: 1440px) {
+  .deselect-button {
+    font-size: 14px;
+  }
+
   .Board {
     left: -118px;
     width: 400px;
@@ -655,6 +659,10 @@ h3 {
 
 /* ================= 1280px ================= */
 @media screen and (max-width: 1280px) {
+  .deselect-button {
+    font-size: 14px;
+  }
+
   .Board {
     left: -215px;
     width: 400px;
@@ -750,6 +758,11 @@ h3 {
 
 /* ================= 1200px ================= */
 @media (max-width: 1200px) {
+
+  .deselect-button {
+    font-size: 12px;
+  }
+
   .Cover_Places {
     width: 18%;
   }
@@ -868,6 +881,9 @@ h3 {
 
 /* ================= 1024px ================= */
 @media screen and (max-width: 1024px) {
+  .deselect-button {
+    font-size: 11px;
+  }
 
   .Cover_Places {
     width: 20%;

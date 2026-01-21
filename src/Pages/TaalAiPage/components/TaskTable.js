@@ -47,7 +47,7 @@ export default function TaskTable({
     accent: '#ff6b35',
   };
   const [editingTask, setEditingTask] = useState(null);
-  const [editFormData, setEditFormData] = useState({ title: '', subtitle: '', estimatedTimeMinutes: 0 });
+  const [editFormData, setEditFormData] = useState({ station: '', title: '', subtitle: '', estimatedTimeMinutes: 0 });
   
   // Add missing state variables for upload functionality
   const [pushToPlannerOpen, setPushToPlannerOpen] = useState(false);
@@ -79,6 +79,7 @@ export default function TaskTable({
     const task = tasks[taskIndex];
     setEditingTask(taskIndex);
     setEditFormData({
+      station: (task.station || '').toString(),
       title: task.title,
       subtitle: task.subtitle,
       estimatedTimeMinutes: task.estimatedTimeMinutes
@@ -87,7 +88,7 @@ export default function TaskTable({
 
   const cancelEditingTask = () => {
     setEditingTask(null);
-    setEditFormData({ title: '', subtitle: '', estimatedTimeMinutes: 0 });
+    setEditFormData({ station: '', title: '', subtitle: '', estimatedTimeMinutes: 0 });
   };
 
   const saveEditedTask = () => {
@@ -95,6 +96,7 @@ export default function TaskTable({
       const updatedTasks = [...tasks];
       updatedTasks[editingTask] = {
         ...updatedTasks[editingTask],
+        station: (editFormData.station || '').toString().trim(),
         title: editFormData.title.trim(),
         subtitle: editFormData.subtitle.trim(),
         estimatedTimeMinutes: parseInt(editFormData.estimatedTimeMinutes) || 0,
@@ -103,7 +105,7 @@ export default function TaskTable({
       };
       setTasks(updatedTasks);
       setEditingTask(null);
-      setEditFormData({ title: '', subtitle: '', estimatedTimeMinutes: 0 });
+      setEditFormData({ station: '', title: '', subtitle: '', estimatedTimeMinutes: 0 });
     }
   };
 
@@ -119,7 +121,9 @@ export default function TaskTable({
   };
 
   const addTaskAfter = (taskIndex) => {
+    const defaultStation = (tasks?.[taskIndex]?.station || tasks?.[tasks.length - 1]?.station || 'Station 1').toString();
     const newTask = {
+      station: defaultStation,
       title: "New Task",
       subtitle: "Task description",
       estimatedTimeMinutes: 1,
@@ -141,7 +145,9 @@ export default function TaskTable({
   };
 
   const addNewTask = () => {
+    const defaultStation = (tasks?.[tasks.length - 1]?.station || 'Station 1').toString();
     const newTask = {
+      station: defaultStation,
       title: "New Task",
       subtitle: "Task description",
       estimatedTimeMinutes: 1,
@@ -178,7 +184,7 @@ export default function TaskTable({
       <Paper
         sx={{
           flex: 4,
-          maxWidth: "1000px",
+          maxWidth: "1400px",
           bgcolor: colors.backgroundSecondary,
           color: colors.text,
           borderRadius: "15px",
@@ -245,22 +251,25 @@ export default function TaskTable({
         {/* Table Content */}
         <Box sx={{ flex: 1, overflow: "hidden", display: "flex", flexDirection: "column" }}>
           <TableContainer sx={{ flex: 1, overflow: "auto" }}>
-            <Table size="small" stickyHeader>
+            <Table size="small" sx={{ textAlign: isRTL ? "right" : "left" }} stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "15%" }}>
+                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "14%", textAlign: isRTL ? "right" : "left" }}>
                     {t('TextGenerative.image')}
                   </TableCell>
-                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "35%" }}>
+                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "14%", textAlign: isRTL ? "right" : "left" }}>
+                    {t('TextGenerative.station') || 'Station'}
+                  </TableCell>
+                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "27%", textAlign: isRTL ? "right" : "left" }}>
                     {t('TextGenerative.title_table')}
                   </TableCell>
-                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "35%" }}>
+                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "30%", textAlign: isRTL ? "right" : "left" }}>
                     {t('TextGenerative.subtitle_table')}
                   </TableCell>
-                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "10%" }}>
+                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "10%", textAlign: isRTL ? "right" : "left" }}>
                     {t('TextGenerative.time')}
                   </TableCell>
-                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "5%" }}>
+                  <TableCell sx={{ bgcolor: colors.backgroundTertiary, color: colors.text, fontWeight: "bold", width: "5%", textAlign: isRTL ? "right" : "left" }}>
                     {t('TextGenerative.actions')}
                   </TableCell>
                 </TableRow>
@@ -293,8 +302,34 @@ export default function TaskTable({
                       />
                     </TableCell>
 
+                    {/* Station Cell */}
+                    <TableCell sx={{ color: colors.textSecondary, fontSize: "0.95rem", textAlign: isRTL ? "right" : "left" }}>
+                      {editingTask === index ? (
+                        <TextField
+                          fullWidth
+                          value={editFormData.station}
+                          onChange={(e) => setEditFormData({ ...editFormData, station: e.target.value })}
+                          variant="outlined"
+                          size="small"
+                          placeholder={t('TextGenerative.station') || 'Station'}
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              bgcolor: colors.border,
+                              color: colors.text,
+                              fontSize: "0.95rem",
+                              "& fieldset": { borderColor: colors.borderHover || colors.border },
+                              "&:hover fieldset": { borderColor: colors.textMuted },
+                              "&.Mui-focused fieldset": { borderColor: colors.primary },
+                            },
+                          }}
+                        />
+                      ) : (
+                        task.station?.toString().trim() ? task.station : '-'
+                      )}
+                    </TableCell>
+
                     {/* Title Cell */}
-                    <TableCell sx={{ color: colors.text, fontSize: "0.8rem", fontWeight: "bold" }}>
+                    <TableCell sx={{ color: colors.text, fontSize: "1rem", fontWeight: "bold", textAlign: isRTL ? "right" : "left" }}>
                       {editingTask === index ? (
                         <TextField
                           fullWidth
@@ -306,7 +341,7 @@ export default function TaskTable({
                             "& .MuiOutlinedInput-root": {
                               bgcolor: colors.border,
                               color: colors.text,
-                              fontSize: "0.8rem",
+                              fontSize: "1rem",
                               "& fieldset": { borderColor: colors.borderHover || colors.border },
                               "&:hover fieldset": { borderColor: colors.textMuted },
                               "&.Mui-focused fieldset": { borderColor: colors.primary },
@@ -319,7 +354,7 @@ export default function TaskTable({
                     </TableCell>
 
                     {/* Subtitle Cell */}
-                    <TableCell sx={{ color: colors.textSecondary, fontSize: "0.75rem", fontStyle: "italic" }}>
+                    <TableCell sx={{ color: colors.textSecondary, fontSize: "1rem", fontStyle: "italic", textAlign: isRTL ? "right" : "left" }}>
                       {editingTask === index ? (
                         <TextField
                           fullWidth
@@ -332,7 +367,7 @@ export default function TaskTable({
                             "& .MuiOutlinedInput-root": {
                               bgcolor: colors.border,
                               color: colors.text,
-                              fontSize: "0.75rem",
+                              fontSize: "1rem",
                               "& fieldset": { borderColor: colors.borderHover || colors.border },
                               "&:hover fieldset": { borderColor: colors.textMuted },
                               "&.Mui-focused fieldset": { borderColor: colors.primary },
@@ -359,7 +394,7 @@ export default function TaskTable({
                             "& .MuiOutlinedInput-root": {
                               bgcolor: colors.border,
                               color: colors.text,
-                              fontSize: "0.7rem",
+                              fontSize: "0.9rem",
                               "& fieldset": { borderColor: colors.borderHover || colors.border },
                               "&:hover fieldset": { borderColor: colors.textMuted },
                               "&.Mui-focused fieldset": { borderColor: colors.primary },
@@ -372,7 +407,7 @@ export default function TaskTable({
                           size="small"
                           variant="outlined"
                           sx={{
-                            fontSize: "0.7rem",
+                            fontSize: "0.9rem",
                             height: "20px",
                             color: colors.primary,
                             borderColor: colors.primary

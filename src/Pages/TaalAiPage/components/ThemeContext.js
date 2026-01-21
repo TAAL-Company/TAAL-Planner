@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useMemo, useState, useEffect } from 'react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 // Define theme colors for light and dark modes
 export const themes = {
@@ -59,6 +60,63 @@ export function TaalAiThemeProvider({ children }) {
 
   const theme = isDarkMode ? themes.dark : themes.light;
 
+  const muiTheme = useMemo(() => {
+    return createTheme({
+      palette: {
+        mode: theme.mode,
+        primary: { main: theme.primary },
+        background: {
+          default: theme.background,
+          paper: theme.backgroundSecondary,
+        },
+        text: {
+          primary: theme.text,
+          secondary: theme.textSecondary,
+        },
+      },
+      // Make text bigger for the whole Taal AI page.
+      typography: {
+        fontSize: 18,
+        body1: { fontSize: '1.05rem' },
+        body2: { fontSize: '1.05rem' },
+        subtitle1: { fontSize: '1.05rem' },
+        subtitle2: { fontSize: '1.0rem' },
+        button: { fontSize: '1.0rem', textTransform: 'none' },
+      },
+      components: {
+        MuiButton: {
+          styleOverrides: {
+            root: {
+              fontSize: '1.0rem',
+              textTransform: 'none',
+            },
+          },
+        },
+        MuiChip: {
+          styleOverrides: {
+            label: {
+              fontSize: '0.95rem',
+            },
+          },
+        },
+        MuiInputBase: {
+          styleOverrides: {
+            input: {
+              fontSize: '1.05rem',
+            },
+          },
+        },
+        MuiMenuItem: {
+          styleOverrides: {
+            root: {
+              fontSize: '1.0rem',
+            },
+          },
+        },
+      },
+    });
+  }, [theme]);
+
   const toggleTheme = () => {
     setIsDarkMode(prev => !prev);
   };
@@ -70,7 +128,9 @@ export function TaalAiThemeProvider({ children }) {
 
   return (
     <ThemeContext.Provider value={{ theme, isDarkMode, toggleTheme }}>
-      {children}
+      <ThemeProvider theme={muiTheme}>
+        {children}
+      </ThemeProvider>
     </ThemeContext.Provider>
   );
 }

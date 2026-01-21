@@ -622,6 +622,18 @@ function Modal({
                           onChange={(e) => setSearchRoute(e.target.value)}
                         />
                         <Box className='allStudent'>
+                          <Box className={`list-group-item ${language !== 'English' ? 'english' : ''}`}>
+                            <FormControlLabel
+                              control={
+                                <Radio
+                                  checked={selectedRoute === null}
+                                  onChange={() => setSelectedRoute(null)}
+                                  value=""
+                                />
+                              }
+                              label={t("plannerPage.Deselect") || "Deselect"}
+                            />
+                          </Box>
                           {filteredDataRoutes
                             .filter((route) => route.parentRouteId === null)
                             .filter((route) => route.id !== routeUUID)
@@ -650,7 +662,7 @@ function Modal({
                           // setOpenModalRouteChosen(true)
                           Post_new_Route
                         }>
-                          {t("plannerPage.Save_route")}
+                          {t("plannerPage.Save_route_as")}
                         </button>
                         <button
                           className='cancelBtn'

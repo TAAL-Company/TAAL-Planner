@@ -16,17 +16,19 @@ import {
   IconButton,
   Paper,
   TextField,
-  InputAdornment
+  InputAdornment,
+  LinearProgress
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import BusinessIcon from '@mui/icons-material/Business';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearIcon from '@mui/icons-material/Clear';
+import AddIcon from '@mui/icons-material/Add';
 import { useTranslation } from "react-i18next";
 import { useNotification } from "../../../components/Notification/NotificationProvider";
 // Import API functions
-import { insertStation, insertTask, insertRoute, uploadFiles, getingData_Places } from "../../../api/api";
+import { insertSite, insertStation, insertTask, insertRoute, uploadFiles, getingData_Places } from "../../../api/api";
 
 export default function PushToPlannerPopup({
   isOpen,
@@ -38,12 +40,22 @@ export default function PushToPlannerPopup({
   const { t } = useTranslation();
   const { showNotification } = useNotification();
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStatus, setUploadStatus] = useState('');
   
   // Site selection popup states
   const [sitePopupOpen, setSitePopupOpen] = useState(false);
   const [sites, setSites] = useState([]);
   const [selectedSite, setSelectedSite] = useState(null);
   const [loadingSites, setLoadingSites] = useState(false);
+
+  // NEW: Create site popup states
+  const [createSiteOpen, setCreateSiteOpen] = useState(false);
+  const [isCreatingSite, setIsCreatingSite] = useState(false);
+  const [newSiteName, setNewSiteName] = useState("");
+  const [newSiteNameEn, setNewSiteNameEn] = useState("");
+  const [newSiteDescription, setNewSiteDescription] = useState("");
+  const [newSiteImageFile, setNewSiteImageFile] = useState(null);
 
   // NEW: Route name state (required)
   const [routeName, setRouteName] = useState("");
@@ -98,11 +110,88 @@ export default function PushToPlannerPopup({
     setSelectedSite(null);
   };
 
+  const resetCreateSiteForm = () => {
+    setNewSiteName("");
+    setNewSiteNameEn("");
+    setNewSiteDescription("");
+    setNewSiteImageFile(null);
+  };
+
+  const handleOpenCreateSitePopup = () => {
+    setCreateSiteOpen(true);
+  };
+
+  const handleCloseCreateSitePopup = () => {
+    setCreateSiteOpen(false);
+    setIsCreatingSite(false);
+    resetCreateSiteForm();
+  };
+
   // Select site and start upload process
   const handleSelectSite = (site) => {
     setSelectedSite(site);
     handleCloseSitePopup();
     processTasksToAPI(site);
+  };
+
+  const isNewSiteValid = newSiteName.trim().length > 0 && newSiteNameEn.trim().length > 0;
+
+  const toSafeAzureKey = (value) => {
+    return (value || "")
+      .toString()
+      .trim()
+      .replace(/%/g, "")
+      .replace(/[\\/]/g, "-");
+  };
+
+  const handleCreateSite = async () => {
+    if (!isNewSiteValid) {
+      showNotification('error', t('PushToPlannerPopup.siteNameRequired') || 'Please enter site name and English name');
+      return;
+    }
+
+    setIsCreatingSite(true);
+    try {
+      let pictureUrl = null;
+      if (newSiteImageFile) {
+        try {
+          const siteKey = toSafeAzureKey(newSiteNameEn || newSiteName);
+          pictureUrl = await uploadFiles(newSiteImageFile, 'Site media/picture', siteKey);
+        } catch (e) {
+          console.error('Error uploading site image:', e);
+          showNotification('error', t('PushToPlannerPopup.errorUploadingSiteImage') || 'Failed to upload site image (continuing without image)');
+        }
+      }
+
+      const siteObj = {
+        name: newSiteName.trim(),
+        nameInEnglish: newSiteNameEn.trim(),
+        description: newSiteDescription.trim(),
+        picture_url: pictureUrl,
+        studentIds: [],
+        editorIds: [],
+        taskIds: [],
+        routeIds: [],
+        stationIds: [],
+      };
+
+      const created = await insertSite(siteObj);
+      showNotification('success', t('PushToPlannerPopup.siteCreatedSuccessfully') || 'Site created successfully');
+
+      setCreateSiteOpen(false);
+      resetCreateSiteForm();
+
+      await loadSites();
+
+      if (created) {
+        handleSelectSite(created);
+      }
+    } catch (error) {
+      console.error('Error creating site:', error);
+      showNotification('error', t('PushToPlannerPopup.errorCreatingSite') || 'Error creating site');
+    } finally {
+      setIsCreatingSite(false);
+    }
   };
 
   // Helper functions
@@ -295,36 +384,62 @@ export default function PushToPlannerPopup({
     }
 
     setIsUploading(true);
+    setUploadProgress(0);
+    setUploadStatus(t('PushToPlannerPopup.preparingUpload') || 'Preparing upload...');
     
     try {
       const siteId = site;
       const tasksIdsfromAI = [];
       
-      // Create stations based on AI-derived name (with fallbacks)
-      const stationName = getAiStationName(tasks, finalRouteName, complexity);
-      let stationId;
+      // Calculate total steps for progress: stations + tasks + route creation
+      const totalTasks = tasks.length;
+      const stationNames = [...new Set(tasks.map(task => task.station || task.stationName || 'AI Generated Station'))];
+      const totalSteps = stationNames.length + totalTasks + 1; // stations + tasks + route
+      let completedSteps = 0;
       
       try {
-        stationId = await insertStation(stationName, stationName, siteId, [], null, null);
-        
-        // Process each task
-        for (const task of tasks) {
+        // Create stations based on task.station (with fallbacks)
+        const defaultStationName = getAiStationName(tasks, finalRouteName, complexity);
+        const normalizedTasks = (tasks || []).map((task) => {
+          const station = (task?.station || task?.stationName || defaultStationName || 'AI Generated Station')
+            .toString()
+            .trim();
+          return {
+            ...task,
+            station: station || (defaultStationName || 'AI Generated Station')
+          };
+        });
+
+        const tasksByStation = groupBy(normalizedTasks, 'station');
+        const stationIdsByName = {};
+
+        setUploadStatus(t('PushToPlannerPopup.creatingStations') || 'Creating stations...');
+        for (const stationName of Object.keys(tasksByStation)) {
+          const createdStation = await insertStation(stationName, stationName, siteId, [], null, null);
+          stationIdsByName[stationName] = createdStation;
+          completedSteps++;
+          setUploadProgress(Math.round((completedSteps / totalSteps) * 100));
+        }
+
+        // Process each task (assigned to its station)
+        setUploadStatus(t('PushToPlannerPopup.uploadingTasks') || 'Uploading tasks...');
+        for (const task of normalizedTasks) {
           let taskimage = null;
-          
+
           // Handle image upload if task has picture_url
           if (task.picture_url) {
             try {
               console.log("🖼️ Processing image for task:", task.title);
-              
+
               // Try multiple methods to get the image
               let imageFile = await urlToFile(task.picture_url, `ai_generated_image_${Date.now()}.png`);
-              
+
               // If direct fetch failed, try canvas method
               if (!imageFile) {
                 console.log("🔄 Trying canvas method...");
                 imageFile = await urlToFileViaCanvas(task.picture_url, `ai_generated_image_${Date.now()}.png`);
               }
-              
+
               if (imageFile) {
                 console.log("📦 Uploading image file:", imageFile.name, imageFile.size);
                 taskimage = await uploadFiles(imageFile, 'Task media/picture', siteId.nameInEnglish);
@@ -340,11 +455,12 @@ export default function PushToPlannerPopup({
 
           // Convert estimatedTimeMinutes to seconds
           const estimatedTimeSeconds = (task.estimatedTimeMinutes || 1) * 60;
+          const stationForTask = stationIdsByName[task.station];
 
           const response = await insertTask(
             task.title,
             task.subtitle || '',
-            [stationId.id],
+            [stationForTask.id],
             taskimage,
             null, // audio_url
             siteId.id,
@@ -359,8 +475,11 @@ export default function PushToPlannerPopup({
               UserID: "General"
             }]
           );
-          
+
           tasksIdsfromAI.push(response.id);
+          completedSteps++;
+          setUploadProgress(Math.round((completedSteps / totalSteps) * 100));
+          setUploadStatus(t('PushToPlannerPopup.uploadingTaskProgress', { current: completedSteps - stationNames.length, total: totalTasks }) || `Uploading task ${completedSteps - stationNames.length}/${totalTasks}...`);
           console.log(`✅ Task "${task.title}" created with ID: ${response.id}`);
         }
 
@@ -373,6 +492,7 @@ export default function PushToPlannerPopup({
 
       // Create route with uploaded tasks
       try {
+        setUploadStatus(t('PushToPlannerPopup.creatingRoute') || 'Creating route...');
         // Use user-provided route name
         const route = {
           name: finalRouteName,
@@ -383,6 +503,10 @@ export default function PushToPlannerPopup({
         
         console.log("📦 Inserting AI route:", route);
         await insertRoute(route);
+        
+        completedSteps++;
+        setUploadProgress(100);
+        setUploadStatus(t('PushToPlannerPopup.completed') || 'Completed!');
         
         // showNotification('success', t('PushToPlannerPopup.routeCreatedSuccessfully') || 'Route created successfully');
       } catch (error) {
@@ -400,6 +524,8 @@ export default function PushToPlannerPopup({
       showNotification('error', t('PushToPlannerPopup.errorProcessingTasks') || 'Error processing tasks');
     } finally {
       setIsUploading(false);
+      setUploadProgress(0);
+      setUploadStatus('');
     }
   };
 
@@ -554,11 +680,33 @@ export default function PushToPlannerPopup({
                 bgcolor: "#555",
                 color: "#999"
               },
-              minWidth: "160px"
+              minWidth: "160px",
+              flexDirection: 'column',
+              py: isUploading ? 1 : undefined
             }}
           >
             {isUploading 
-              ? (t('PushToPlannerPopup.uploading') || 'Uploading...') 
+              ? (
+                <Box sx={{ width: '100%', textAlign: 'center' }}>
+                  <Typography variant="body2" sx={{ mb: 0.5 }}>
+                    {uploadStatus} {uploadProgress}%
+                  </Typography>
+                  <LinearProgress 
+                    variant="determinate" 
+                    value={uploadProgress} 
+                    sx={{ 
+                      width: '100%', 
+                      height: 4, 
+                      borderRadius: 2,
+                      bgcolor: 'rgba(255,255,255,0.2)',
+                      '& .MuiLinearProgress-bar': {
+                        bgcolor: 'white',
+                        borderRadius: 2,
+                      }
+                    }} 
+                  />
+                </Box>
+              )
               : (t('PushToPlannerPopup.selectSiteAndUpload') || 'Select Site & Upload')
             }
           </Button>
@@ -683,7 +831,7 @@ export default function PushToPlannerPopup({
                           </Typography>
                         }
                         secondary={
-                          <Typography sx={{ color: "#ccc", fontSize: "0.85rem" }}>
+                          <Typography sx={{ color: "#ccc", fontSize: "0.95rem" }}>
                             {site.description || site.nameInEnglish}
                           </Typography>
                         }
@@ -697,11 +845,181 @@ export default function PushToPlannerPopup({
         </DialogContent>
         
         <DialogActions sx={{ borderTop: "1px solid #4a4a4a", p: 2 }}>
+          <Button
+            variant="outlined"
+            startIcon={<AddIcon />}
+            onClick={handleOpenCreateSitePopup}
+            disabled={loadingSites || isUploading}
+            sx={{
+              borderColor: "#4a9eff",
+              color: "#4a9eff",
+              mr: "auto",
+              "&:hover": { borderColor: "#3a8eef", bgcolor: "rgba(74, 158, 255, 0.08)" },
+              "&:disabled": { borderColor: "#555", color: "#777" }
+            }}
+          >
+            {t('PushToPlannerPopup.createSite') || 'Create Site'}
+          </Button>
           <Button 
             onClick={handleCloseSitePopup}
             sx={{ color: "gray" }}
           >
             {t('PushToPlannerPopup.cancel') || 'Cancel'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Create Site Dialog */}
+      <Dialog
+        open={createSiteOpen}
+        onClose={handleCloseCreateSitePopup}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            bgcolor: "#2b2b2b",
+            color: "white",
+            direction: direction
+          }
+        }}
+      >
+        <DialogTitle sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 1,
+          borderBottom: "1px solid #4a4a4a"
+        }}>
+          <AddIcon sx={{ color: "#4a9eff" }} />
+          {t('PushToPlannerPopup.createSiteTitle') || 'Create Site'}
+          <IconButton
+            onClick={handleCloseCreateSitePopup}
+            sx={{ marginLeft: "auto", color: "gray" }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent sx={{ p: 3 }}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+            <TextField
+              fullWidth
+              required
+              label={t('PushToPlannerPopup.siteName') || 'Site Name'}
+              value={newSiteName}
+              onChange={(e) => setNewSiteName(e.target.value)}
+              InputLabelProps={{ sx: { color: "#ccc" } }}
+              sx={{
+                bgcolor: "#3a3a3a",
+                borderRadius: 1,
+                "& .MuiOutlinedInput-root": {
+                  color: "white",
+                  "& fieldset": { borderColor: "#4a4a4a" },
+                  "&:hover fieldset": { borderColor: "#6a6a6a" },
+                }
+              }}
+            />
+
+            <TextField
+              fullWidth
+              required
+              label={t('PushToPlannerPopup.siteNameEnglish') || 'Site Name (English)'}
+              value={newSiteNameEn}
+              onChange={(e) => setNewSiteNameEn(e.target.value)}
+              InputLabelProps={{ sx: { color: "#ccc" } }}
+              sx={{
+                bgcolor: "#3a3a3a",
+                borderRadius: 1,
+                "& .MuiOutlinedInput-root": {
+                  color: "white",
+                  "& fieldset": { borderColor: "#4a4a4a" },
+                  "&:hover fieldset": { borderColor: "#6a6a6a" },
+                }
+              }}
+            />
+
+            <TextField
+              fullWidth
+              multiline
+              minRows={3}
+              label={t('PushToPlannerPopup.siteDescription') || 'Description'}
+              value={newSiteDescription}
+              onChange={(e) => setNewSiteDescription(e.target.value)}
+              InputLabelProps={{ sx: { color: "#ccc" } }}
+              sx={{
+                bgcolor: "#3a3a3a",
+                borderRadius: 1,
+                "& .MuiOutlinedInput-root": {
+                  color: "white",
+                  "& fieldset": { borderColor: "#4a4a4a" },
+                  "&:hover fieldset": { borderColor: "#6a6a6a" },
+                }
+              }}
+            />
+
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Button
+                component="label"
+                variant="outlined"
+                startIcon={<CloudUploadIcon />}
+                sx={{
+                  borderColor: "#4a4a4a",
+                  color: "#ccc",
+                  "&:hover": { borderColor: "#6a6a6a", bgcolor: "rgba(255,255,255,0.04)" },
+                }}
+              >
+                {newSiteImageFile
+                  ? (t('PushToPlannerPopup.changePicture') || 'Change picture')
+                  : (t('PushToPlannerPopup.uploadPicture') || 'Upload picture')}
+                <input
+                  hidden
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files && e.target.files[0];
+                    setNewSiteImageFile(file || null);
+                  }}
+                />
+              </Button>
+
+              {newSiteImageFile && (
+                <>
+                  <Typography variant="body2" sx={{ color: "#aaa", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {newSiteImageFile.name}
+                  </Typography>
+                  <IconButton size="small" onClick={() => setNewSiteImageFile(null)}>
+                    <ClearIcon sx={{ color: "#aaa" }} />
+                  </IconButton>
+                </>
+              )}
+            </Box>
+
+            {!isNewSiteValid && (
+              <Typography variant="caption" sx={{ color: "#ff6b35" }}>
+                {t('PushToPlannerPopup.siteNameRequired') || 'Site name and English name are required'}
+              </Typography>
+            )}
+          </Box>
+        </DialogContent>
+
+        <DialogActions sx={{ borderTop: "1px solid #4a4a4a", p: 2, gap: 1 }}>
+          <Button onClick={handleCloseCreateSitePopup} sx={{ color: "gray" }}>
+            {t('PushToPlannerPopup.cancel') || 'Cancel'}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleCreateSite}
+            disabled={isCreatingSite || !isNewSiteValid}
+            startIcon={isCreatingSite ? <CircularProgress size={16} color="inherit" /> : <AddIcon />}
+            sx={{
+              bgcolor: "#4a9eff",
+              "&:hover": { bgcolor: "#3a8eef" },
+              "&:disabled": { bgcolor: "#555", color: "#999" },
+              minWidth: "140px"
+            }}
+          >
+            {isCreatingSite
+              ? (t('PushToPlannerPopup.creating') || 'Creating...')
+              : (t('PushToPlannerPopup.create') || 'Create')}
           </Button>
         </DialogActions>
       </Dialog>

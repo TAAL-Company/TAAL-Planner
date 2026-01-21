@@ -203,6 +203,14 @@ export default function InputContainer({
             color: colors.text,
             minHeight: "50px",
             direction: direction,
+            "& .MuiInputBase-input": {
+              fontSize: "1.1rem",
+              lineHeight: 1.4,
+            },
+            "& textarea": {
+              fontSize: "1.1rem",
+              lineHeight: 1.4,
+            },
             "& .MuiOutlinedInput-notchedOutline": {
               borderColor: loading ? colors.border : colors.border,
             },

@@ -30,6 +30,7 @@ const resources = {
         Arabic: "Arabic",
         Russian: "Russian",
         Save_route: "Save route",
+        Save_route_as: "Save route as",
         Add_sites: "Add sites",
         Add_stations: "Add stations",
         Add_tasks: "Add tasks",
@@ -516,6 +517,7 @@ const resources = {
         seed: "Seed",
         model: "Model",
         noLogo: "No Logo",
+        station: "Station",
       },
 
       // Add LoopPopup translations
@@ -558,7 +560,26 @@ const resources = {
         // NEW:
         routeName: "Route Name",
         routeNamePlaceholder: "e.g., Morning chores route",
-        routeNameRequired: "Please enter a route name"
+        routeNameRequired: "Please enter a route name",
+        createSite: "Create Site",
+        createSiteTitle: "Create Site",
+        siteName: "Site Name",
+        siteNameEnglish: "Site Name (English)",
+        siteDescription: "Description",
+        uploadPicture: "Upload picture",
+        changePicture: "Change picture",
+        create: "Create",
+        creating: "Creating...",
+        siteNameRequired: "Site name and English name are required",
+        siteCreatedSuccessfully: "Site created successfully",
+        errorCreatingSite: "Error creating site",
+        errorUploadingSiteImage: "Failed to upload site image (continuing without image)",
+        preparingUpload: "Preparing upload...",
+        creatingStations: "Creating stations...",
+        uploadingTasks: "Uploading tasks...",
+        uploadingTaskProgress: "Uploading task {{current}}/{{total}}...",
+        creatingRoute: "Creating route...",
+        completed: "Completed!"
       },
 
       // FormsPage translations
@@ -837,6 +858,15 @@ const resources = {
         Loading: "Loading...",
         Drag_an_image_from_Images_In_Sheet_and_drop_it_into_the_Image_cell_of_the_relevant_row_below: "Drag an image from 'Images In Sheet' and drop it into the 'Image' cell of the relevant row below",
         You_can_also_upload_audio_files_directly_to_each_task: "You can also upload audio files directly to each task",
+        uploadingData: "Uploading Data...",
+        preparingUpload: "Preparing upload...",
+        creatingStations: "Creating stations...",
+        uploadingTasks: "Uploading tasks...",
+        uploadingTaskProgress: "Uploading task {{current}}/{{total}}...",
+        creatingRoutes: "Creating routes...",
+        creatingRouteProgress: "Creating route {{current}}/{{total}}...",
+        completed: "Completed!",
+        missingRequiredFields: "Missing required fields: Task, Station, Estimated Time Seconds, Route. Please fill in all highlighted cells before uploading."
       }
 
     },
@@ -852,6 +882,7 @@ const resources = {
         Arabic: "ערבית",
         Russian: "רוסית",
         Save_route: "שמור מסלול",
+        Save_route_as: "שמור מסלול כ",
         Add_sites: "הוסף אתרים",
         Add_stations: "הוסף תחנות",
         Add_tasks: "הוסף משימות",
@@ -1339,7 +1370,8 @@ const resources = {
         noLogo: "ללא לוגו",
         flux: "Flux",
         turbo: "Turbo",
-        midjourney: "Midjourney"
+        midjourney: "Midjourney",
+        station: "תחנה",
       },
 
       // Add LoopPopup translations (Hebrew)
@@ -1382,7 +1414,26 @@ const resources = {
         // NEW:
         routeName: "שם מסלול",
         routeNamePlaceholder: "לדוגמה, מסלול מטלות הבוקר",
-        routeNameRequired: "נא להכניס שם למסלול"
+        routeNameRequired: "נא להכניס שם למסלול",
+        createSite: "צור אתר",
+        createSiteTitle: "יצירת אתר",
+        siteName: "שם אתר",
+        siteNameEnglish: "שם אתר (אנגלית)",
+        siteDescription: "תיאור",
+        uploadPicture: "העלה תמונה",
+        changePicture: "החלף תמונה",
+        create: "צור",
+        creating: "יוצר...",
+        siteNameRequired: "נדרש שם אתר ושם באנגלית",
+        siteCreatedSuccessfully: "האתר נוצר בהצלחה",
+        errorCreatingSite: "שגיאה ביצירת אתר",
+        errorUploadingSiteImage: "שגיאה בהעלאת תמונת האתר (ממשיך ללא תמונה)",
+        preparingUpload: "מכין העלאה...",
+        creatingStations: "יוצר תחנות...",
+        uploadingTasks: "מעלה משימות...",
+        uploadingTaskProgress: "מעלה משימה {{current}}/{{total}}...",
+        creatingRoute: "יוצר מסלול...",
+        completed: "הושלם!"
       },
 
       // FormsPage translations
@@ -1661,6 +1712,15 @@ const resources = {
         Loading: "טוען...",
         Drag_an_image_from_Images_In_Sheet_and_drop_it_into_the_Image_cell_of_the_relevant_row_below: "גרור תמונה מ'תמונות בגיליון' ושחרר אותה בתא 'תמונה' של השורה הרלוונטית למטה",
         You_can_also_upload_audio_files_directly_to_each_task: "אתה יכול גם להעלות קבצי אודיו ישירות לכל משימה",
+        uploadingData: "מעלה נתונים...",
+        preparingUpload: "מכין העלאה...",
+        creatingStations: "יוצר תחנות...",
+        uploadingTasks: "מעלה משימות...",
+        uploadingTaskProgress: "מעלה משימה {{current}}/{{total}}...",
+        creatingRoutes: "יוצר מסלולים...",
+        creatingRouteProgress: "יוצר מסלול {{current}}/{{total}}...",
+        completed: "הושלם!",
+        missingRequiredFields: "שדות חובה חסרים: משימה, תחנה, שניות זמן משוערות, מסלול. אנא מלא את כל התאים המסומנים לפני ההעלאה."
       }
     }
   },
@@ -1675,6 +1735,7 @@ const resources = {
         Arabic: "العربية",
         Russian: "الروسية",
         Save_route: "حفظ المسار",
+        Save_route_as: "حفظ المسار كـ",
         Add_sites: "إضافة مواقع",
         Add_stations: "إضافة محطات",
         Add_tasks: "إضافة مهام",
@@ -2159,6 +2220,7 @@ const resources = {
         seed: "البذور",
         model: "النموذج",
         noLogo: "بدون شعار",
+        station: "محطة",
       },
 
       // Add LoopPopup translations (Arabic)
@@ -2201,7 +2263,26 @@ const resources = {
         // NEW:
         routeName: "اسم المسار",
         routeNamePlaceholder: "مثال: مسار مهام الصباح",
-        routeNameRequired: "يرجى إدخال اسم المسار"
+        routeNameRequired: "يرجى إدخال اسم المسار",
+        createSite: "إنشاء موقع",
+        createSiteTitle: "إنشاء موقع",
+        siteName: "اسم الموقع",
+        siteNameEnglish: "اسم الموقع (بالإنجليزية)",
+        siteDescription: "الوصف",
+        uploadPicture: "رفع صورة",
+        changePicture: "تغيير الصورة",
+        create: "إنشاء",
+        creating: "جارٍ الإنشاء...",
+        siteNameRequired: "اسم الموقع والاسم بالإنجليزية مطلوبان",
+        siteCreatedSuccessfully: "تم إنشاء الموقع بنجاح",
+        errorCreatingSite: "خطأ في إنشاء الموقع",
+        errorUploadingSiteImage: "فشل رفع صورة الموقع (المتابعة بدون صورة)",
+        preparingUpload: "جاري التحضير للرفع...",
+        creatingStations: "جاري إنشاء المحطات...",
+        uploadingTasks: "جاري رفع المهام...",
+        uploadingTaskProgress: "جاري رفع المهمة {{current}}/{{total}}...",
+        creatingRoute: "جاري إنشاء المسار...",
+        completed: "اكتمل!"
       },
 
       // FormsPage translations
@@ -2482,6 +2563,15 @@ const resources = {
         Loading: "جارٍ التحميل...",
         Drag_an_image_from_Images_In_Sheet_and_drop_it_into_the_Image_cell_of_the_relevant_row_below: "اسحب صورة من 'الصور في الورقة' وأفلتها في خلية 'الصورة' للصف المعني أدناه",
         You_can_also_upload_audio_files_directly_to_each_task: "يمكنك أيضًا رفع ملفات صوتية مباشرة لكل مهمة",
+        uploadingData: "جاري رفع البيانات...",
+        preparingUpload: "جاري التحضير للرفع...",
+        creatingStations: "جاري إنشاء المحطات...",
+        uploadingTasks: "جاري رفع المهام...",
+        uploadingTaskProgress: "جاري رفع المهمة {{current}}/{{total}}...",
+        creatingRoutes: "جاري إنشاء المسارات...",
+        creatingRouteProgress: "جاري إنشاء المسار {{current}}/{{total}}...",
+        completed: "اكتمل!",
+        missingRequiredFields: "حقول مطلوبة مفقودة: المهمة، المحطة، الثواني المقدرة، المسار. يرجى ملء جميع الخلايا المميزة قبل الرفع."
       }
     }
   },
@@ -2496,6 +2586,7 @@ const resources = {
         Arabic: "Арабский",
         Russian: "Русский",
         Save_route: "Сохранить маршрут",
+        Save_route_as: "Сохранить маршрут как",
         Add_sites: "Добавить объекты",
         Add_stations: "Добавить станции",
         Add_tasks: "Добавить задачи",
@@ -2981,6 +3072,7 @@ const resources = {
         seed: "Зерно",
         model: "Модель",
         noLogo: "Без логотипа",
+        station: "Станция",
       },
 
       // Add LoopPopup translations (Russian)
@@ -3023,7 +3115,26 @@ const resources = {
         // NEW:
         routeName: "Название маршрута",
         routeNamePlaceholder: "например, маршрут утренних дел",
-        routeNameRequired: "Пожалуйста, введите название маршрута"
+        routeNameRequired: "Пожалуйста, введите название маршрута",
+        createSite: "Создать сайт",
+        createSiteTitle: "Создание сайта",
+        siteName: "Название сайта",
+        siteNameEnglish: "Название сайта (англ.)",
+        siteDescription: "Описание",
+        uploadPicture: "Загрузить изображение",
+        changePicture: "Изменить изображение",
+        create: "Создать",
+        creating: "Создание...",
+        siteNameRequired: "Требуются название сайта и английское название",
+        siteCreatedSuccessfully: "Сайт успешно создан",
+        errorCreatingSite: "Ошибка создания сайта",
+        errorUploadingSiteImage: "Не удалось загрузить изображение сайта (продолжаем без изображения)",
+        preparingUpload: "Подготовка к загрузке...",
+        creatingStations: "Создание станций...",
+        uploadingTasks: "Загрузка задач...",
+        uploadingTaskProgress: "Загрузка задачи {{current}}/{{total}}...",
+        creatingRoute: "Создание маршрута...",
+        completed: "Завершено!"
       },
 
       // FormsPage translations
@@ -3304,6 +3415,15 @@ const resources = {
         Loading: "Загрузка...",
         Drag_an_image_from_Images_In_Sheet_and_drop_it_into_the_Image_cell_of_the_relevant_row_below: "Перетащите изображение из 'Изображения в таблице' и поместите его в ячейку 'Изображение' соответствующей строки ниже",
         You_can_also_upload_audio_files_directly_to_each_task: "Вы также можете загружать аудиофайлы непосредственно к каждому заданию",
+        uploadingData: "Загрузка данных...",
+        preparingUpload: "Подготовка к загрузке...",
+        creatingStations: "Создание станций...",
+        uploadingTasks: "Загрузка задач...",
+        uploadingTaskProgress: "Загрузка задачи {{current}}/{{total}}...",
+        creatingRoutes: "Создание маршрутов...",
+        creatingRouteProgress: "Создание маршрута {{current}}/{{total}}...",
+        completed: "Завершено!",
+        missingRequiredFields: "Отсутствуют обязательные поля: Задача, Станция, Предполагаемое время в секундах, Маршрут. Пожалуйста, заполните все выделенные ячейки перед загрузкой."
       }
     }
   }

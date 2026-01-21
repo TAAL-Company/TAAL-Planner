@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ExcelJS from "exceljs";
+import { Dialog, DialogContent, Typography, LinearProgress, Box } from "@mui/material";
 import { getingData_Tasks, insertRoute, insertStation, insertTask, uploadFiles } from "../../api/api";
 import { useNotification } from "../Notification/NotificationProvider";
 import Header from "./components/Header";
@@ -19,6 +20,11 @@ function SpreadsheetPopup(props) {
     const [draggedImage, setDraggedImage] = useState(null);
     const [draggedAudio, setDraggedAudio] = useState(null);
     const [loadingData, setLoadingData] = useState(false);
+    
+    // Upload progress states
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadStatus, setUploadStatus] = useState('');
 
     // Add these new states for gallery modal
     const [openAudioGallery, setOpenAudioGallery] = useState(false);
@@ -26,6 +32,13 @@ function SpreadsheetPopup(props) {
 
     const [openImageGallery, setOpenImageGallery] = useState(false);
     const [selectedRowForImage, setSelectedRowForImage] = useState(null);
+
+    // Validation errors state
+    const [validationErrors, setValidationErrors] = useState([]);
+    const [validationKey, setValidationKey] = useState(0);
+
+    // Required fields for validation
+    const requiredFields = ['Task', 'Station', 'Estimated Time Seconds', 'Route'];
 
     const headerMapping = {
         Task: ["Task", "משימה"],
@@ -223,19 +236,106 @@ function SpreadsheetPopup(props) {
         return groupedDataNoDuplication;
     };
 
+    // Validation function to check required fields
+    const validateData = () => {
+        const errors = [];
+        const missingColumns = [];
+        
+        // Fields that must be valid numbers
+        const numericFields = ['Estimated Time Seconds'];
+        
+        if (data.length > 0) {
+            const dataKeys = Object.keys(data[0]);
+            // Check which required columns are missing from the spreadsheet
+            requiredFields.forEach((field) => {
+                if (!dataKeys.includes(field)) {
+                    missingColumns.push(field);
+                }
+            });
+        }
+        
+        // Check for empty values in existing required fields
+        data.forEach((row, rowIdx) => {
+            requiredFields.forEach((field) => {
+                // Only check fields that exist in the data
+                if (field in row) {
+                    const value = row[field];
+                    
+                    // Check numeric fields
+                    if (numericFields.includes(field)) {
+                        // Value must be a valid number (not NaN, not empty string, not null/undefined)
+                        const numValue = Number(value);
+                        if (value === undefined || value === null || value === '' || isNaN(numValue)) {
+                            errors.push({ rowIdx, field });
+                        }
+                    } else {
+                        // Check string fields
+                        if (value === undefined || value === null || value === '' || (typeof value === 'string' && value.trim() === '')) {
+                            errors.push({ rowIdx, field });
+                        }
+                    }
+                }
+            });
+        });
+        
+        return { errors, missingColumns };
+    };
+
     const processGroupedData = async () => {
-        props.handleCloseopenUpload(); // Close the modal
+        // Validate data before processing
+        const { errors, missingColumns } = validateData();
+        
+        // Check for missing columns first
+        if (missingColumns.length > 0) {
+            const errorMessage = 
+                `Missing required columns in spreadsheet: ${missingColumns.join(', ')}. Please add these columns to your spreadsheet.`;
+            showNotification('error', errorMessage);
+            return;
+        }
+        
+        // Check for empty cells in existing columns
+        if (errors.length > 0) {
+            setValidationErrors([...errors]); // Create new array reference
+            setValidationKey(prev => prev + 1); // Force re-render
+            const missingFields = [...new Set(errors.map(e => e.field))];
+            const errorMessage = 
+                `Missing required fields: ${missingFields.join(', ')}. Please fill in all required fields before uploading.`;
+            showNotification('error', errorMessage);
+            return;
+        }
+        setValidationErrors([]);
+
+        // props.handleCloseopenUpload(); // Close the modal
         props.setLoading(true);
+        setIsUploading(true);
+        setUploadProgress(0);
+        setUploadStatus(t('SpreadsheetPopup.preparingUpload') || 'Preparing upload...');
+        
         try {
             const siteId = props.selectedSite; // { id: "Site1", name: "Site1" };
             const tasksIdsfromsheet = [];
+            
+            // Calculate total steps for progress
+            const groupedData = groupBy(data, "Station");
+            const groupedDataNoDuplication = removeDuplicatesFromGroupedData(groupedData);
+            const stationNames = Object.keys(groupedDataNoDuplication);
+            const totalTasks = Object.values(groupedDataNoDuplication).flat().length;
+            const RouteHeader = Object.keys(data[0])[0];
+            const groupedDataByRoutesHeader = groupBy(data, RouteHeader);
+            const totalRoutes = Object.keys(groupedDataByRoutesHeader).length;
+            const totalSteps = stationNames.length + totalTasks + totalRoutes; // stations + tasks + routes
+            let completedSteps = 0;
+            
             //groupBy Station--------------------------------------------------------------------------
             try {
-                const groupedData = groupBy(data, "Station");
-                const groupedDataNoDuplication = removeDuplicatesFromGroupedData(groupedData);
-
+                setUploadStatus(t('SpreadsheetPopup.creatingStations') || 'Creating stations...');
+                
                 for (const key of Object.keys(groupedDataNoDuplication)) {
                     let stationId = await insertStation(key, key, siteId, [], null, null);
+                    completedSteps++;
+                    setUploadProgress(Math.round((completedSteps / totalSteps) * 100));
+                    
+                    setUploadStatus(t('SpreadsheetPopup.uploadingTasks') || 'Uploading tasks...');
                     for (const data of groupedDataNoDuplication[key]) {
                         let taskimage = null;
                         let taskaudio = null; // Add audio variable
@@ -274,6 +374,10 @@ function SpreadsheetPopup(props) {
                             }]
                         );
                         tasksIdsfromsheet.push(response.id);
+                        completedSteps++;
+                        const currentTaskNum = completedSteps - stationNames.length;
+                        setUploadProgress(Math.round((completedSteps / totalSteps) * 100));
+                        setUploadStatus(t('SpreadsheetPopup.uploadingTaskProgress', { current: currentTaskNum, total: totalTasks }) || `Uploading task ${currentTaskNum}/${totalTasks}...`);
                     }
                 }
                 showNotification('success', t('Stations_and_tasks_inserted_successfully'));
@@ -286,10 +390,10 @@ function SpreadsheetPopup(props) {
             //groupBy RouteHeader--------------------------------------------------------------------------
 
             try {
+                setUploadStatus(t('SpreadsheetPopup.creatingRoutes') || 'Creating routes...');
                 const normalize = (str) => (str || "").trim().replace(/[\r\n]/g, "");
-                const RouteHeader = Object.keys(data[0])[0]; // Or use: headers.find(h => !!h)
-                const groupedDataByRoutesHeader = groupBy(data, RouteHeader);
                 const tasks = await getingData_Tasks();
+                let routeNum = 0;
                 for (const Route of Object.keys(groupedDataByRoutesHeader)) {
                     const tasksIds = [];
 
@@ -320,6 +424,10 @@ function SpreadsheetPopup(props) {
                     };
                     console.log("📦 Inserting route:", route);
                     await insertRoute(route);
+                    completedSteps++;
+                    routeNum++;
+                    setUploadProgress(Math.round((completedSteps / totalSteps) * 100));
+                    setUploadStatus(t('SpreadsheetPopup.creatingRouteProgress', { current: routeNum, total: totalRoutes }) || `Creating route ${routeNum}/${totalRoutes}...`);
                 }
                 showNotification('success', t('Route_inserted_successfully'));
             } catch (error) {
@@ -328,6 +436,8 @@ function SpreadsheetPopup(props) {
                 showNotification('error', t('Error_uploading_data_in_route'));
             }
 
+            setUploadProgress(100);
+            setUploadStatus(t('SpreadsheetPopup.completed') || 'Completed!');
             showNotification('success', t('Data_inserted_successfully'));
             await props.reloadData();
         } catch (error) {
@@ -335,6 +445,9 @@ function SpreadsheetPopup(props) {
             showNotification('error', t('Error_uploading_data'));
         } finally {
             props.setLoading(false);
+            setIsUploading(false);
+            setUploadProgress(0);
+            setUploadStatus('');
             // props.setSelectedRoute(-1);
             props.handleCloseopenUpload(); // Close the modal
             props.handleDeselectRoute(); // Call handleDeselectRoute after processing
@@ -487,6 +600,7 @@ function SpreadsheetPopup(props) {
                             {/* Data Table */}
                             <div style={{ flex: 2, overflow: 'auto', minWidth: 0 }}>
                                 <DataTable
+                                    key={`datatable-${validationKey}`}
                                     data={data}
                                     setData={setData}
                                     language={props.language}
@@ -500,6 +614,8 @@ function SpreadsheetPopup(props) {
                                     draggedAudio={draggedAudio}
                                     handleOpenAudioGallery={handleOpenAudioGallery}
                                     handleOpenImageGallery={handleOpenImageGallery}
+                                    validationErrors={validationErrors}
+                                    requiredFields={requiredFields}
                                 />
                             </div>
                             {/* Images In Sheet Table */}
@@ -530,6 +646,47 @@ function SpreadsheetPopup(props) {
                 handleCloseImageGallery={handleCloseImageGallery}
                 handleSelectImageFromGallery={handleSelectImageFromGallery}
             />
+
+            {/* Upload Progress Dialog */}
+            <Dialog
+                open={isUploading}
+                PaperProps={{
+                    sx: {
+                        bgcolor: '#2b2b2b',
+                        color: 'white',
+                        minWidth: 400,
+                        p: 2,
+                        borderRadius: 2,
+                    }
+                }}
+            >
+                <DialogContent>
+                    <Box sx={{ textAlign: 'center' }}>
+                        <Typography variant="h6" sx={{ mb: 2 }}>
+                            {t('SpreadsheetPopup.uploadingData') || 'Uploading Data...'}
+                        </Typography>
+                        <Typography variant="body1" sx={{ mb: 1, color: '#4a9eff' }}>
+                            {uploadStatus}
+                        </Typography>
+                        <Typography variant="h4" sx={{ mb: 2, fontWeight: 'bold', color: '#4a9eff' }}>
+                            {uploadProgress}%
+                        </Typography>
+                        <LinearProgress
+                            variant="determinate"
+                            value={uploadProgress}
+                            sx={{
+                                height: 10,
+                                borderRadius: 5,
+                                bgcolor: '#444',
+                                '& .MuiLinearProgress-bar': {
+                                    bgcolor: '#4a9eff',
+                                    borderRadius: 5,
+                                }
+                            }}
+                        />
+                    </Box>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

@@ -47,7 +47,7 @@
   background: #256fa1;
   border-radius: 4px;
   color: white;
-  font-size: 18px;
+  font-size: 16px;
   box-shadow: 0px 3px 1px 1px #0000004d;
   border: 1px solid #256fa1;
 }
@@ -115,9 +115,9 @@
     width: 224px;
   }
 
-  .topButtons {
+  /* .topButtons {
     transform: scale(0.8);
-  }
+  } */
 }
 
 
@@ -708,7 +708,7 @@ h3 {
   } */
 
   .Places {
-    scale: 0.9;
+    /* scale: 0.9; */
     padding: 1px 0px 1px 10px;
     height: auto;
     min-height: 80px;
@@ -946,7 +946,7 @@ h3 {
   }
 
   .Places {
-    scale: 0.8;
+    /* scale: 0.8; */
     padding: 1px 0px 1px 10px;
     height: auto;
     min-height: 80px;

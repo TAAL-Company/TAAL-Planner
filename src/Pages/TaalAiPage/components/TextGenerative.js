@@ -24,7 +24,9 @@ function SearchUIContent() {
   const [selectedComplexity, setSelectedComplexity] = useState('Medium');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
   const [hasTasksReady, setHasTasksReady] = useState(false);
+  const progressIntervalRef = useRef(null);
 
   // Add seed to image generation settings state
   const [imagePromptPrefix, setImagePromptPrefix] = useState(
@@ -97,12 +99,17 @@ Write tasks so they can be understood by workers with varied cognitive abilities
   const fixedJsonStructure = `Always output tasks as JSON with this structure:
 {
   "complexity": "Basic | Medium | High (בסיסי | בינוני | גבוה)",
-  "tasks": [
+  "stations": [
     {
-      "title": "Short and clear task title",
-      "subtitle": "Optional plain-language instruction or clarification",
-      "estimatedTimeMinutes": number,
-      "picture_url": ""
+      "title": "Station name",
+      "tasks": [
+        {
+          "title": "Short and clear task title",
+          "subtitle": "Optional plain-language instruction or clarification",
+          "estimatedTimeMinutes": number,
+          "picture_url": ""
+        }
+      ]
     }
   ]
 }`;
@@ -141,6 +148,17 @@ Write tasks so they can be understood by workers with varied cognitive abilities
     const updatedMessages = [...messagesRef.current, userMessage];
     setMessages(updatedMessages);
     setLoading(true);
+    setLoadingProgress(0);
+
+    // Simulate progress while waiting for response
+    progressIntervalRef.current = setInterval(() => {
+      setLoadingProgress((prev) => {
+        // Slow down as we approach 90% (never reach 100% until complete)
+        if (prev >= 90) return prev;
+        const increment = prev < 30 ? 8 : prev < 60 ? 5 : prev < 80 ? 2 : 1;
+        return Math.min(prev + increment, 90);
+      });
+    }, 300);
 
     try {
       const response = await createChatCompletion(updatedMessages, { maxTokens: 800 });
@@ -152,7 +170,17 @@ Write tasks so they can be understood by workers with varied cognitive abilities
     } catch (error) {
       console.error('Azure OpenAI request failed:', error);
     } finally {
-      setLoading(false);
+      // Clear progress interval
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+        progressIntervalRef.current = null;
+      }
+      setLoadingProgress(100);
+      // Small delay to show 100% before hiding
+      setTimeout(() => {
+        setLoading(false);
+        setLoadingProgress(0);
+      }, 200);
     }
   };
 
@@ -173,6 +201,49 @@ Write tasks so they can be understood by workers with varied cognitive abilities
   // Check if chat has started
   const hasChatStarted = messages.length > 1;
 
+  const normalizeTaskData = (taskData) => {
+    if (!taskData || typeof taskData !== 'object') return null;
+
+    const normalizedComplexity = taskData.complexity || '';
+
+    // Backward compatible: tasks at root
+    if (Array.isArray(taskData.tasks)) {
+      return {
+        tasks: taskData.tasks.map(task => ({
+          ...task,
+          station: (task.station || task.stationName || '').toString(),
+          picture_url: task.picture_url || ''
+        })),
+        complexity: normalizedComplexity
+      };
+    }
+
+    // Current schema: stations array
+    if (Array.isArray(taskData.stations)) {
+      const flattenedTasks = [];
+      for (let i = 0; i < taskData.stations.length; i++) {
+        const stationObj = taskData.stations[i];
+        const stationTitle = (stationObj?.title || '').toString().trim() || `Station ${i + 1}`;
+        const stationTasks = Array.isArray(stationObj?.tasks) ? stationObj.tasks : [];
+
+        for (const task of stationTasks) {
+          flattenedTasks.push({
+            ...task,
+            station: (task?.station || task?.stationName || stationTitle).toString(),
+            picture_url: task?.picture_url || ''
+          });
+        }
+      }
+
+      return {
+        tasks: flattenedTasks,
+        complexity: normalizedComplexity
+      };
+    }
+
+    return null;
+  };
+
   // Parse JSON from AI responses to extract tasks
   useEffect(() => {
     if (messages.length > 1 && !loading) {
@@ -181,16 +252,13 @@ Write tasks so they can be understood by workers with varied cognitive abilities
         try {
           const jsonMatch = lastMessage.content.match(/\{[\s\S]*\}/);
           if (jsonMatch) {
-            const taskData = JSON.parse(jsonMatch[0]);
-            if (taskData.tasks && Array.isArray(taskData.tasks)) {
-              // Ensure each task has a picture_url field
-              const tasksWithImageUrl = taskData.tasks.map(task => ({
-                ...task,
-                picture_url: task.picture_url || ''
-              }));
-              setTasks(tasksWithImageUrl);
-              setComplexity(taskData.complexity);
-              setHasTasksReady(true); // Mark that tasks are ready
+            const parsed = JSON.parse(jsonMatch[0]);
+            const normalized = normalizeTaskData(parsed);
+
+            if (normalized?.tasks && Array.isArray(normalized.tasks)) {
+              setTasks(normalized.tasks);
+              setComplexity(normalized.complexity);
+              setHasTasksReady(true);
             }
           }
         } catch (error) {
@@ -249,10 +317,12 @@ Write tasks so they can be understood by workers with varied cognitive abilities
 
   const handleShowTasks = (taskDataFromMessage = null) => {
     if (taskDataFromMessage) {
-      // Update state with task data from the specific message
-      setTasks(taskDataFromMessage.tasks);
-      setComplexity(taskDataFromMessage.complexity);
-      setHasTasksReady(true);
+      const normalized = normalizeTaskData(taskDataFromMessage);
+      if (normalized?.tasks && Array.isArray(normalized.tasks)) {
+        setTasks(normalized.tasks);
+        setComplexity(normalized.complexity);
+        setHasTasksReady(true);
+      }
     }
     setIsTableOpen(true);
   };
@@ -394,7 +464,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
               sx={{
                 width: 100,
                 height: 106,
-                backgroundImage: "url('../../Pictures/logo_Taal_Ai.svg')",
+                backgroundImage: "url('../../Pictures/logo_Taal_Ai.svg')",//
                 backgroundSize: "contain",
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "center",
@@ -470,6 +540,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
               messages={messages}
               userInputs={userInputs}
               loading={loading}
+              loadingProgress={loadingProgress}
               direction={direction}
               isRTL={isRTL}
               isTableOpen={isTableOpen}

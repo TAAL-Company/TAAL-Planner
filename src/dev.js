@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { usePollinationsImage } from "@pollinations/react";
 import {
   getingData_Places,
   uploadFiles,
   updateTask,
+  generateAzureImage,
 } from './api/api';
 import { useTranslator } from './Utility/TranslationProvider';
 
@@ -13,15 +13,10 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
   const [translatedPrompt, setTranslatedPrompt] = useState(null);
   const [tTitle, setTTitle] = useState("");
   const [tSubtitle, setTSubtitle] = useState("");
-  const [shouldGenerate, setShouldGenerate] = useState(false);
+  const [imageUrl, setImageUrl] = useState(task.picture_url || null); // Initialize with existing image
+  const [isGenerating, setIsGenerating] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [hasUploadedNewImage, setHasUploadedNewImage] = useState(false); // Track if we uploaded a NEW image in this session
-  const [seed, setSeed] = useState(() => Math.abs(
-    (task.title + task.subtitle)
-      .split("")
-      .reduce((a, c) => a + c.charCodeAt(0), 0)
-  ));
-  const [isRegenerating, setIsRegenerating] = useState(false);
   const [editablePrompt, setEditablePrompt] = useState(""); // User-editable prompt
   const [isEditingPrompt, setIsEditingPrompt] = useState(false);
 
@@ -29,12 +24,16 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
   const imagePromptPrefix = "A highly realistic photo of a person performing the task: " ;
   const imagePromptSuffix = 'The scene should look natural and immersive, fitting the task context (e.g., office, workshop, or classroom). Use natural lighting, realistic details, and authentic atmosphere. Ultra-realistic, cinematic composition, shallow depth of field, detailed textures, and no visible text or written words.';
 
-  // Translate title and subtitle to English before generating image
-  useEffect(() => {
-    if (!shouldGenerate) return;
+  // Generate image using Azure DALL-E
+  const generateImage = async (promptToUse = null) => {
+    setIsGenerating(true);
+    setImageUrl(null);
 
-    const buildPrompt = async () => {
-      try {
+    try {
+      let prompt = promptToUse;
+
+      if (!prompt) {
+        // Translate title and subtitle to English
         const translatedTitle = await translate(task.title, "en");
         const translatedSubtitle = await translate(task.subtitle, "en");
         const title = translatedTitle || task.title;
@@ -43,76 +42,110 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
         setTTitle(title);
         setTSubtitle(subtitle);
 
-        const prompt = `${imagePromptPrefix}: ${title}. ${subtitle}.${imagePromptSuffix}`;
+        prompt = `${imagePromptPrefix}: ${title}. ${subtitle}.${imagePromptSuffix}`;
         setTranslatedPrompt(prompt);
-        setEditablePrompt(prompt); // Initialize editable prompt
-      } catch (e) {
-        console.error("Translation error:", e);
-        // Fallback to original text if translation fails
-        setTTitle(task.title);
-        setTSubtitle(task.subtitle);
-        const prompt = `${imagePromptPrefix}: ${task.title}. ${task.subtitle}.${imagePromptSuffix}`;
-        setTranslatedPrompt(prompt);
-        setEditablePrompt(prompt); // Initialize editable prompt
+        setEditablePrompt(prompt);
       }
-    };
-    buildPrompt();
-  }, [task.title, task.subtitle, translate, shouldGenerate]);
 
-  // Only pass prompt to hook when shouldGenerate is true
-  // Use editablePrompt if user has edited it, otherwise use translatedPrompt
-  const activePrompt = editablePrompt || translatedPrompt;
-  const imageUrl = usePollinationsImage(shouldGenerate ? activePrompt : null, {
-    width: 512,
-    height: 512,
-    model: "flux",
-    seed: seed,
-  });
+      console.log("Generating image with prompt:", prompt);
+
+      const generatedUrl = await generateAzureImage(prompt, {
+        size: '1024x1024',
+        style: 'natural',
+        quality: 'standard',
+        n: 1,
+      });
+
+      console.log("Generated Azure image URL:", generatedUrl);
+      setImageUrl(generatedUrl);
+    } catch (error) {
+      console.error("Image generation error:", error);
+      alert("Failed to generate image. Please try again.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   const handleGenerate = () => {
-    setShouldGenerate(true);
+    generateImage();
   };
 
   const handleApplyPromptChange = () => {
-    // Trigger regeneration with the new prompt
+    // Trigger regeneration with the edited prompt
     setIsEditingPrompt(false);
     setHasUploadedNewImage(false);
-    setIsRegenerating(true);
-    setSeed(prev => prev + 1);
-    setTimeout(() => {
-      setIsRegenerating(false);
-    }, 100);
+    generateImage(editablePrompt);
   };
 
   const handleRegenerate = () => {
-    // Reset states for new generation
+    // Reset states and regenerate
     setHasUploadedNewImage(false);
-    setIsRegenerating(true);
-    // Change seed to get a different image
-    setSeed(prev => prev + 1);
-    // Small delay to allow the hook to reset
-    setTimeout(() => {
-      setIsRegenerating(false);
-    }, 100);
+    const promptToUse = editablePrompt || translatedPrompt;
+    generateImage(promptToUse);
   };
 
   // Convert image URL to File for Azure upload
   const urlToFile = async (url, filename) => {
+    // Try direct fetch first (works for Azure DALL-E signed URLs)
     try {
-      // Use CORS proxy to fetch the image
-      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-      const response = await fetch(proxyUrl);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+      console.log('Attempting direct fetch:', url);
+      const response = await fetch(url);
+      
+      if (response.ok) {
+        const blob = await response.blob();
+        if (blob.type.startsWith('image/')) {
+          console.log('✅ Direct fetch successful:', blob.type, blob.size);
+          return new File([blob], filename, { type: blob.type });
+        }
       }
-
-      const blob = await response.blob();
-      return new File([blob], filename, { type: blob.type || 'image/png' });
     } catch (error) {
-      console.error('Error converting URL to file:', error);
-      return null;
+      console.log('Direct fetch failed, trying canvas method:', error.message);
     }
+
+    // Fallback: Canvas-based conversion
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      
+      img.onload = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          canvas.width = img.width;
+          canvas.height = img.height;
+          
+          ctx.drawImage(img, 0, 0);
+          
+          canvas.toBlob((blob) => {
+            if (blob) {
+              const file = new File([blob], filename, { type: 'image/png' });
+              console.log('✅ Image converted via canvas:', file.size);
+              resolve(file);
+            } else {
+              console.error('❌ Failed to convert canvas to blob');
+              resolve(null);
+            }
+          }, 'image/png');
+        } catch (error) {
+          console.error('❌ Canvas conversion failed:', error);
+          resolve(null);
+        }
+      };
+      
+      img.onerror = () => {
+        console.error('❌ Failed to load image for canvas conversion');
+        resolve(null);
+      };
+      
+      img.src = url;
+      
+      // Timeout after 15 seconds
+      setTimeout(() => {
+        console.error('❌ Image load timeout');
+        resolve(null);
+      }, 15000);
+    });
   };
 
   // Upload image to Azure and update task
@@ -178,25 +211,26 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
       <h3 style={{ margin: "0 0 8px 0" }}>{index + 1}. {task.title} - {tTitle}</h3>
       <p style={{ margin: "0 0 12px 0", color: "#666" }}>{task.subtitle} - {tSubtitle}</p>
 
-      {!shouldGenerate ? (
+      {!imageUrl && !isGenerating ? (
         <button
           onClick={handleGenerate}
+          disabled={isGenerating}
           style={{
             padding: "10px 20px",
-            backgroundColor: "#4CAF50",
+            backgroundColor: isGenerating ? "#999" : "#4CAF50",
             color: "white",
             border: "none",
             borderRadius: 8,
-            cursor: "pointer",
+            cursor: isGenerating ? "not-allowed" : "pointer",
             fontSize: 14,
             fontWeight: "bold",
           }}
         >
-          Generate Image
+          {isGenerating ? "Generating..." : "Generate Image"}
         </button>
       ) : (
         <>
-          {imageUrl && !isRegenerating ? (
+          {imageUrl && !isGenerating ? (
             <div>
               {/* Editable Prompt Section */}
               <div style={{ marginBottom: 12 }}>
@@ -312,9 +346,9 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
                 </p>
               )}
             </div>
-          ) : (
-            <p style={{ color: "#999", fontStyle: "italic" }}>Generating image...</p>
-          )}
+          ) : isGenerating ? (
+            <p style={{ color: "#999", fontStyle: "italic" }}>Generating image with Azure DALL-E...</p>
+          ) : null}
         </>
       )}
     </div>

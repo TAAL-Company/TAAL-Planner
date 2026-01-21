@@ -6,7 +6,7 @@ import ViewListIcon from '@mui/icons-material/ViewList';
 import { useTranslation } from 'react-i18next';
 
 // Add userInputs prop and theme prop
-export default function ChatContainer({ messages, userInputs = [], loading, direction, isRTL, isTableOpen, onShowTasks, getComplexityColor, theme }) {
+export default function ChatContainer({ messages, userInputs = [], loading, loadingProgress = 0, direction, isRTL, isTableOpen, onShowTasks, getComplexityColor, theme }) {
   const { t } = useTranslation();
   const chatContainerRef = useRef(null);
 
@@ -35,12 +35,38 @@ export default function ChatContainer({ messages, userInputs = [], loading, dire
       const jsonMatch = content.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         const taskData = JSON.parse(jsonMatch[0]);
-        if (taskData.tasks && Array.isArray(taskData.tasks)) {
+
+        // Backward compatible: tasks at root
+        if (Array.isArray(taskData.tasks)) {
           return {
             tasks: taskData.tasks.map(task => ({
               ...task,
+              station: (task.station || task.stationName || '').toString(),
               picture_url: task.picture_url || ''
             })),
+            complexity: taskData.complexity
+          };
+        }
+
+        // Current schema: stations array
+        if (Array.isArray(taskData.stations)) {
+          const flattenedTasks = [];
+          for (let i = 0; i < taskData.stations.length; i++) {
+            const stationObj = taskData.stations[i];
+            const stationTitle = (stationObj?.title || '').toString().trim() || `Station ${i + 1}`;
+            const stationTasks = Array.isArray(stationObj?.tasks) ? stationObj.tasks : [];
+
+            for (const task of stationTasks) {
+              flattenedTasks.push({
+                ...task,
+                station: (task?.station || task?.stationName || stationTitle).toString(),
+                picture_url: task?.picture_url || ''
+              });
+            }
+          }
+
+          return {
+            tasks: flattenedTasks,
             complexity: taskData.complexity
           };
         }
@@ -134,7 +160,7 @@ export default function ChatContainer({ messages, userInputs = [], loading, dire
                   bgcolor: msg.role === 'user' ? colors.primary : colors.accent,
                   width: 32,
                   height: 32,
-                  fontSize: "14px",
+                  fontSize: "16px",
                 }}
               >
                 {msg.role === 'user' ? '👤' : '🤖'}
@@ -146,8 +172,9 @@ export default function ChatContainer({ messages, userInputs = [], loading, dire
                   color: colors.mode === 'light' && msg.role !== 'user' ? colors.text : 'white',
                   borderRadius: "15px",
                   direction: direction,
+                  fontSize: "1.05rem",
                   "& .markdown-content": {
-                    "& p": { margin: 0 },
+                    "& p": { margin: 0, fontSize: "1.05rem" },
                     "& pre": {
                       bgcolor: colors.codeBackground,
                       p: 1,
@@ -166,7 +193,7 @@ export default function ChatContainer({ messages, userInputs = [], loading, dire
                 {/* Show button for assistant messages with task data */}
                 {isAssistantWithTasks ? (
                   <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                    <Typography variant="body2" sx={{ color: colors.textSecondary, mb: 1 }}>
+                    <Typography variant="body1" sx={{ color: colors.textSecondary, mb: 1 }}>
                       {t('TextGenerative.taskGenerationCompleted')}
                     </Typography>
                     <Button
@@ -199,8 +226,8 @@ export default function ChatContainer({ messages, userInputs = [], loading, dire
                   <Box className="markdown-content">
                     {/* When rendering user messages: */}
                     {msg.role === 'user' ? (
-                      <Box sx={{ /* existing styles */ }}>
-                        <Typography sx={{ /* existing styles */ }}>
+                      <Box>
+                        <Typography variant="body1">
                           {extractOriginalInput(msg.content, index)}
                         </Typography>
                       </Box>
@@ -216,7 +243,7 @@ export default function ChatContainer({ messages, userInputs = [], loading, dire
       })}
       
       {/* Show loading skeleton when AI is responding */}
-      {loading && <LoadingSkeleton direction={direction} isRTL={isRTL} theme={theme} />}
+      {loading && <LoadingSkeleton direction={direction} isRTL={isRTL} theme={theme} progress={loadingProgress} />}
     </Paper>
   );
 }

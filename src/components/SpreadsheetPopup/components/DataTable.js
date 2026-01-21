@@ -16,9 +16,16 @@ const DataTable = ({
     draggedAudio,
     handleOpenAudioGallery,
     setData,
-    handleOpenImageGallery
+    handleOpenImageGallery,
+    validationErrors = [],
+    requiredFields = []
 }) => {
     const { t } = useTranslation();
+
+    // Helper function to check if a cell has an error
+    const hasCellError = (rowIdx, field) => {
+        return validationErrors.some(err => err.rowIdx === rowIdx && err.field === field);
+    };
 
     // Add this function inside your component
     const handleRemoveImage = (rowIdx) => {
@@ -110,18 +117,22 @@ const DataTable = ({
                     <tr key={idx} style={{ transition: 'background 0.2s', cursor: 'pointer' }}>
                         {Object.keys(data[0])
                             .filter(key => key !== "Image" && key !== "Site")
-                            .map((key) => (
+                            .map((key) => {
+                                const hasError = hasCellError(idx, key);
+                                return (
                                 <td
                                     key={key}
                                     style={{
-                                        border: '1px solid #ccc',
+                                        border: hasError ? '2px solid #dc3545' : '1px solid #ccc',
                                         padding: 8,
                                         position: 'relative',
                                         verticalAlign: 'middle',
                                         background:
-                                            (key === 'image' && draggedImage) || (key === 'audio' && draggedAudio)
-                                                ? '#e6f7ff'
-                                                : undefined,
+                                            hasError
+                                                ? '#fff0f0'
+                                                : (key === 'image' && draggedImage) || (key === 'audio' && draggedAudio)
+                                                    ? '#e6f7ff'
+                                                    : undefined,
                                         outline:
                                             (key === 'image' && draggedImage) || (key === 'audio' && draggedAudio)
                                                 ? '2px dashed #256fa1'
@@ -364,7 +375,7 @@ const DataTable = ({
                                         />
                                     )}
                                 </td>
-                            ))}
+                            );})}
                         {/* Add/Delete Task Buttons */}
                         <td>
                             <button

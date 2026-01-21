@@ -6,10 +6,11 @@ import {
   Avatar,
   CircularProgress,
   Skeleton,
+  LinearProgress,
 } from "@mui/material";
 import { useTranslation } from "react-i18next";
 
-export default function LoadingSkeleton({ direction, isRTL, theme }) {
+export default function LoadingSkeleton({ direction, isRTL, theme, progress = 0 }) {
   const { t } = useTranslation();
 
   // Default theme if not provided
@@ -65,7 +66,24 @@ export default function LoadingSkeleton({ direction, isRTL, theme }) {
             <Typography variant="body2" sx={{ color: colors.primary }}>
               {t('TextGenerative.generatingTasks')}
             </Typography>
+            <Typography variant="body2" sx={{ color: colors.primary, fontWeight: 'bold', ml: 'auto' }}>
+              {Math.round(progress)}%
+            </Typography>
           </Box>
+          <LinearProgress 
+            variant="determinate" 
+            value={progress} 
+            sx={{ 
+              mb: 1.5, 
+              height: 6, 
+              borderRadius: 3,
+              bgcolor: skeletonBg,
+              '& .MuiLinearProgress-bar': {
+                bgcolor: colors.primary,
+                borderRadius: 3,
+              }
+            }} 
+          />
           <Skeleton variant="text" width="100%" height={20} sx={{ bgcolor: skeletonBg }} />
           <Skeleton variant="text" width="80%" height={20} sx={{ bgcolor: skeletonBg }} />
           <Skeleton variant="text" width="90%" height={20} sx={{ bgcolor: skeletonBg }} />

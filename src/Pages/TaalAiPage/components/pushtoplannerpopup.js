@@ -1,34 +1,12 @@
-import React, { useState, useEffect, useMemo } from "react";
-import {
-  Box,
-  Typography,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemButton,
-  Avatar,
-  CircularProgress,
-  IconButton,
-  Paper,
-  TextField,
-  InputAdornment,
-  LinearProgress
-} from "@mui/material";
-import CloseIcon from '@mui/icons-material/Close';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import BusinessIcon from '@mui/icons-material/Business';
-import SearchIcon from '@mui/icons-material/Search';
-import ClearIcon from '@mui/icons-material/Clear';
-import AddIcon from '@mui/icons-material/Add';
+import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNotification } from "../../../components/Notification/NotificationProvider";
 // Import API functions
-import { insertSite, insertStation, insertTask, insertRoute, uploadFiles, getingData_Places } from "../../../api/api";
+import { insertSite, insertStation, insertTask, insertRoute, uploadFiles, getingData_Places, generateAzureImage } from "../../../api/api";
+// Import child dialogs
+import MainPushToPlannerDialog from "./MainPushToPlannerDialog";
+import SiteSelectionDialog from "./SiteSelectionDialog";
+import CreateSiteDialog from "./CreateSiteDialog";
 
 export default function PushToPlannerPopup({
   isOpen,
@@ -56,6 +34,7 @@ export default function PushToPlannerPopup({
   const [newSiteNameEn, setNewSiteNameEn] = useState("");
   const [newSiteDescription, setNewSiteDescription] = useState("");
   const [newSiteImageFile, setNewSiteImageFile] = useState(null);
+  const [isGeneratingImage, setIsGeneratingImage] = useState(false);
 
   // NEW: Route name state (required)
   const [routeName, setRouteName] = useState("");
@@ -115,6 +94,7 @@ export default function PushToPlannerPopup({
     setNewSiteNameEn("");
     setNewSiteDescription("");
     setNewSiteImageFile(null);
+    setIsGeneratingImage(false);
   };
 
   const handleOpenCreateSitePopup = () => {
@@ -125,6 +105,43 @@ export default function PushToPlannerPopup({
     setCreateSiteOpen(false);
     setIsCreatingSite(false);
     resetCreateSiteForm();
+  };
+
+  // Generate image for site using Azure OpenAI
+  const handleGenerateSiteImage = async () => {
+    const prompt = newSiteName.trim() || newSiteNameEn.trim();
+    if (!prompt) {
+      showNotification('error', t('PushToPlannerPopup.enterSiteNameFirst') || 'Please enter a site name first');
+      return;
+    }
+
+    setIsGeneratingImage(true);
+    try {
+      const fullPrompt = `A professional photo of ${prompt}, high quality, detailed, realistic`;
+      const imageUrl = await generateAzureImage(fullPrompt, {
+        size: '1024x1024',
+        quality: 'standard',
+        style: 'vivid'
+      });
+      
+      // Fetch the generated image and convert to File
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        throw new Error('Failed to fetch generated image');
+      }
+      
+      const blob = await response.blob();
+      const fileName = `${prompt.replace(/[^a-zA-Z0-9]/g, '_')}_generated.png`;
+      const file = new File([blob], fileName, { type: blob.type || 'image/png' });
+      
+      setNewSiteImageFile(file);
+      showNotification('success', t('PushToPlannerPopup.imageGenerated') || 'Image generated successfully');
+    } catch (error) {
+      console.error('Error generating image:', error);
+      showNotification('error', t('PushToPlannerPopup.errorGeneratingImage') || 'Error generating image');
+    } finally {
+      setIsGeneratingImage(false);
+    }
   };
 
   // Select site and start upload process
@@ -529,500 +546,61 @@ export default function PushToPlannerPopup({
     }
   };
 
-  // Calculate total time
-  const totalTime = tasks.reduce((sum, task) => sum + task.estimatedTimeMinutes, 0);
-  
-  const formatTime = (minutes) => {
-    if (minutes < 60) {
-      return `~${minutes} min`;
-    } else {
-      const hours = Math.floor(minutes / 60);
-      const remainingMinutes = minutes % 60;
-      return remainingMinutes > 0 ? `~${hours}h ${remainingMinutes}min` : `~${hours}h`;
-    }
-  };
-
   if (!isOpen) return null;
 
   return (
     <>
       {/* Main Push to Planner Dialog */}
-      <Dialog 
-        open={isOpen} 
+      <MainPushToPlannerDialog
+        isOpen={isOpen}
         onClose={onClose}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{
-          sx: {
-            bgcolor: "#2b2b2b",
-            color: "white",
-            direction: direction
-          }
-        }}
-      >
-        <DialogTitle sx={{ 
-          display: "flex", 
-          alignItems: "center", 
-          gap: 1,
-          borderBottom: "1px solid #4a4a4a"
-        }}>
-          <CloudUploadIcon sx={{ color: "#4a9eff" }} />
-          {t('PushToPlannerPopup.pushToPlanner') || 'Push to Planner'}
-          <IconButton 
-            onClick={onClose}
-            sx={{ 
-              marginLeft: "auto", 
-              color: "gray" 
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        
-        <DialogContent sx={{ p: 3 }}>
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" sx={{ color: "#4a9eff", mb: 2 }}>
-              {t('PushToPlannerPopup.uploadSummary') || 'Upload Summary'}
-            </Typography>
-            
-            <Paper sx={{ 
-              bgcolor: "#3a3a3a", 
-              p: 2, 
-              borderRadius: 2,
-              border: "1px solid #4a4a4a"
-            }}>
-              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-                <Typography variant="body2" sx={{ color: "gray" }}>
-                  {t('PushToPlannerPopup.totalTasks') || 'Total Tasks'}:
-                </Typography>
-                <Typography variant="body2" sx={{ color: "white", fontWeight: "bold" }}>
-                  {tasks.length}
-                </Typography>
-              </Box>
-              
-              <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
-                <Typography variant="body2" sx={{ color: "gray" }}>
-                  {t('PushToPlannerPopup.estimatedTime') || 'Estimated Time'}:
-                </Typography>
-                <Typography variant="body2" sx={{ color: "#4a9eff", fontWeight: "bold" }}>
-                  {formatTime(totalTime)}
-                </Typography>
-              </Box>
-              
-              {complexity && (
-                <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                  <Typography variant="body2" sx={{ color: "gray" }}>
-                    {t('PushToPlannerPopup.complexity') || 'Complexity'}:
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "#00e676", fontWeight: "bold" }}>
-                    {complexity}
-                  </Typography>
-                </Box>
-              )}
-            </Paper>
-          </Box>
-
-          {/* NEW: Route Name input */}
-          <Box sx={{ mb: 2 }}>
-            <TextField
-              fullWidth
-              required
-              label={t('PushToPlannerPopup.routeName') || 'Route Name'}
-              placeholder={t('PushToPlannerPopup.routeNamePlaceholder') || suggestedRouteName}
-              value={routeName}
-              onChange={(e) => setRouteName(e.target.value)}
-              InputLabelProps={{ sx: { color: "#ccc" } }}
-              inputProps={{ maxLength: 100 }}
-              sx={{
-                bgcolor: "#3a3a3a",
-                borderRadius: 1,
-                "& .MuiOutlinedInput-root": {
-                  color: "white",
-                  "& fieldset": { borderColor: "#4a4a4a" },
-                  "&:hover fieldset": { borderColor: "#6a6a6a" },
-                }
-              }}
-              helperText={
-                !isRouteNameValid
-                  ? (t('PushToPlannerPopup.routeNameRequired') || 'Please enter a route name')
-                  : " "
-              }
-              FormHelperTextProps={{ sx: { color: !isRouteNameValid ? "#ff6b35" : "#2b2b2b" } }}
-            />
-          </Box>
-
-          <Typography variant="body2" sx={{ color: "#ccc", mb: 2, textAlign: "center" }}>
-            {t('PushToPlannerPopup.selectSiteToUploadMessage') || 'Select a site to upload your AI-generated tasks and create a new route in the planner.'}
-          </Typography>
-          
-          <Typography variant="caption" sx={{ color: "#ff6b35", fontStyle: "italic", display: "block", textAlign: "center" }}>
-            {t('PushToPlannerPopup.uploadNote') || 'Note: This will create a new station and route with all your tasks.'}
-          </Typography>
-        </DialogContent>
-        
-        <DialogActions sx={{ borderTop: "1px solid #4a4a4a", p: 2, gap: 1 }}>
-          <Button 
-            onClick={onClose}
-            sx={{ color: "gray" }}
-          >
-            {t('PushToPlannerPopup.cancel') || 'Cancel'}
-          </Button>
-          
-          <Button
-            variant="contained"
-            startIcon={isUploading ? <CircularProgress size={16} color="inherit" /> : <CloudUploadIcon />}
-            onClick={handleOpenSitePopup}
-            disabled={isUploading || tasks.length === 0 || !isRouteNameValid}
-            sx={{
-              bgcolor: "#4a9eff",
-              "&:hover": { bgcolor: "#3a8eef" },
-              "&:disabled": {
-                bgcolor: "#555",
-                color: "#999"
-              },
-              minWidth: "160px",
-              flexDirection: 'column',
-              py: isUploading ? 1 : undefined
-            }}
-          >
-            {isUploading 
-              ? (
-                <Box sx={{ width: '100%', textAlign: 'center' }}>
-                  <Typography variant="body2" sx={{ mb: 0.5 }}>
-                    {uploadStatus} {uploadProgress}%
-                  </Typography>
-                  <LinearProgress 
-                    variant="determinate" 
-                    value={uploadProgress} 
-                    sx={{ 
-                      width: '100%', 
-                      height: 4, 
-                      borderRadius: 2,
-                      bgcolor: 'rgba(255,255,255,0.2)',
-                      '& .MuiLinearProgress-bar': {
-                        bgcolor: 'white',
-                        borderRadius: 2,
-                      }
-                    }} 
-                  />
-                </Box>
-              )
-              : (t('PushToPlannerPopup.selectSiteAndUpload') || 'Select Site & Upload')
-            }
-          </Button>
-        </DialogActions>
-      </Dialog>
+        tasks={tasks}
+        complexity={complexity}
+        direction={direction}
+        routeName={routeName}
+        onRouteNameChange={setRouteName}
+        suggestedRouteName={suggestedRouteName}
+        isRouteNameValid={isRouteNameValid}
+        isUploading={isUploading}
+        uploadStatus={uploadStatus}
+        uploadProgress={uploadProgress}
+        onOpenSitePopup={handleOpenSitePopup}
+      />
 
       {/* Site Selection Dialog */}
-      <Dialog 
-        open={sitePopupOpen} 
+      <SiteSelectionDialog
+        open={sitePopupOpen}
         onClose={handleCloseSitePopup}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{
-          sx: {
-            bgcolor: "#2b2b2b",
-            color: "white",
-            direction: direction
-          }
-        }}
-      >
-        <DialogTitle sx={{ 
-          display: "flex", 
-          alignItems: "center", 
-          gap: 1,
-          borderBottom: "1px solid #4a4a4a"
-        }}>
-          <BusinessIcon sx={{ color: "#4a9eff" }} />
-          {t('PushToPlannerPopup.selectSite') || 'Select Site'}
-          <IconButton 
-            onClick={handleCloseSitePopup}
-            sx={{ 
-              marginLeft: "auto", 
-              color: "gray" 
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        
-        <DialogContent sx={{ p: 0 }}>
-          {/* Search bar */}
-          <Box sx={{ p: 2, borderBottom: "1px solid #4a4a4a", position: "sticky", top: 0, bgcolor: "#2b2b2b", zIndex: 1 }}>
-            <TextField
-              fullWidth
-              size="small"
-              placeholder={t('PushToPlannerPopup.searchSites') || 'Search sites'}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon sx={{ color: "#aaa" }} />
-                  </InputAdornment>
-                ),
-                endAdornment: searchTerm ? (
-                  <InputAdornment position="end">
-                    <IconButton size="small" onClick={() => setSearchTerm("")}>
-                      <ClearIcon sx={{ color: "#aaa" }} />
-                    </IconButton>
-                  </InputAdornment>
-                ) : null
-              }}
-              sx={{
-                bgcolor: "#3a3a3a",
-                input: { color: "white" },
-                "& .MuiOutlinedInput-notchedOutline": { borderColor: "#4a4a4a" },
-                "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "#6a6a6a" }
-              }}
-            />
-            <Typography variant="caption" sx={{ color: "#aaa", mt: 1, display: "block" }}>
-              {loadingSites
-                ? (t('PushToPlannerPopup.loadingSites') || 'Loading sites...')
-                : `${filteredSites.length} ${(t('PushToPlannerPopup.results') || 'results')}`
-              }
-            </Typography>
-          </Box>
-
-          {loadingSites ? (
-            <Box sx={{ 
-              display: "flex", 
-              justifyContent: "center", 
-              alignItems: "center", 
-              minHeight: "200px" 
-            }}>
-              <CircularProgress sx={{ color: "#4a9eff" }} />
-            </Box>
-          ) : (
-            <List>
-              {filteredSites.length === 0 ? (
-                <ListItem>
-                  <ListItemText 
-                    primary={t('PushToPlannerPopup.noSitesFound') || 'No sites found'}
-                    sx={{ color: "gray", textAlign: "center" }}
-                  />
-                </ListItem>
-              ) : (
-                filteredSites.map((site) => {
-                  return (
-                    <ListItemButton
-                      key={site.id}
-                      onClick={() => handleSelectSite(site)}
-                      sx={{
-                        "&:hover": { bgcolor: "#3a3a3a" },
-                        borderBottom: "1px solid #4a4a4a"
-                      }}
-                    >
-                      <Avatar 
-                        src={site.picture_url} 
-                        sx={{ 
-                          width: 40, 
-                          height: 40, 
-                          mr: 2,
-                          bgcolor: "#4a9eff"
-                        }}
-                      >
-                        <BusinessIcon />
-                      </Avatar>
-                      <ListItemText
-                        primary={
-                          <Typography sx={{ color: "white", fontWeight: "bold" }}>
-                            {site.name}
-                          </Typography>
-                        }
-                        secondary={
-                          <Typography sx={{ color: "#ccc", fontSize: "0.95rem" }}>
-                            {site.description || site.nameInEnglish}
-                          </Typography>
-                        }
-                      />
-                    </ListItemButton>
-                  );
-                })
-              )}
-            </List>
-          )}
-        </DialogContent>
-        
-        <DialogActions sx={{ borderTop: "1px solid #4a4a4a", p: 2 }}>
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-            onClick={handleOpenCreateSitePopup}
-            disabled={loadingSites || isUploading}
-            sx={{
-              borderColor: "#4a9eff",
-              color: "#4a9eff",
-              mr: "auto",
-              "&:hover": { borderColor: "#3a8eef", bgcolor: "rgba(74, 158, 255, 0.08)" },
-              "&:disabled": { borderColor: "#555", color: "#777" }
-            }}
-          >
-            {t('PushToPlannerPopup.createSite') || 'Create Site'}
-          </Button>
-          <Button 
-            onClick={handleCloseSitePopup}
-            sx={{ color: "gray" }}
-          >
-            {t('PushToPlannerPopup.cancel') || 'Cancel'}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        sites={sites}
+        filteredSites={filteredSites}
+        loadingSites={loadingSites}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        onSelectSite={handleSelectSite}
+        onOpenCreateSite={handleOpenCreateSitePopup}
+        isUploading={isUploading}
+        direction={direction}
+      />
 
       {/* Create Site Dialog */}
-      <Dialog
+      <CreateSiteDialog
         open={createSiteOpen}
         onClose={handleCloseCreateSitePopup}
-        maxWidth="sm"
-        fullWidth
-        PaperProps={{
-          sx: {
-            bgcolor: "#2b2b2b",
-            color: "white",
-            direction: direction
-          }
-        }}
-      >
-        <DialogTitle sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: 1,
-          borderBottom: "1px solid #4a4a4a"
-        }}>
-          <AddIcon sx={{ color: "#4a9eff" }} />
-          {t('PushToPlannerPopup.createSiteTitle') || 'Create Site'}
-          <IconButton
-            onClick={handleCloseCreateSitePopup}
-            sx={{ marginLeft: "auto", color: "gray" }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-
-        <DialogContent sx={{ p: 3 }}>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <TextField
-              fullWidth
-              required
-              label={t('PushToPlannerPopup.siteName') || 'Site Name'}
-              value={newSiteName}
-              onChange={(e) => setNewSiteName(e.target.value)}
-              InputLabelProps={{ sx: { color: "#ccc" } }}
-              sx={{
-                bgcolor: "#3a3a3a",
-                borderRadius: 1,
-                "& .MuiOutlinedInput-root": {
-                  color: "white",
-                  "& fieldset": { borderColor: "#4a4a4a" },
-                  "&:hover fieldset": { borderColor: "#6a6a6a" },
-                }
-              }}
-            />
-
-            <TextField
-              fullWidth
-              required
-              label={t('PushToPlannerPopup.siteNameEnglish') || 'Site Name (English)'}
-              value={newSiteNameEn}
-              onChange={(e) => setNewSiteNameEn(e.target.value)}
-              InputLabelProps={{ sx: { color: "#ccc" } }}
-              sx={{
-                bgcolor: "#3a3a3a",
-                borderRadius: 1,
-                "& .MuiOutlinedInput-root": {
-                  color: "white",
-                  "& fieldset": { borderColor: "#4a4a4a" },
-                  "&:hover fieldset": { borderColor: "#6a6a6a" },
-                }
-              }}
-            />
-
-            <TextField
-              fullWidth
-              multiline
-              minRows={3}
-              label={t('PushToPlannerPopup.siteDescription') || 'Description'}
-              value={newSiteDescription}
-              onChange={(e) => setNewSiteDescription(e.target.value)}
-              InputLabelProps={{ sx: { color: "#ccc" } }}
-              sx={{
-                bgcolor: "#3a3a3a",
-                borderRadius: 1,
-                "& .MuiOutlinedInput-root": {
-                  color: "white",
-                  "& fieldset": { borderColor: "#4a4a4a" },
-                  "&:hover fieldset": { borderColor: "#6a6a6a" },
-                }
-              }}
-            />
-
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Button
-                component="label"
-                variant="outlined"
-                startIcon={<CloudUploadIcon />}
-                sx={{
-                  borderColor: "#4a4a4a",
-                  color: "#ccc",
-                  "&:hover": { borderColor: "#6a6a6a", bgcolor: "rgba(255,255,255,0.04)" },
-                }}
-              >
-                {newSiteImageFile
-                  ? (t('PushToPlannerPopup.changePicture') || 'Change picture')
-                  : (t('PushToPlannerPopup.uploadPicture') || 'Upload picture')}
-                <input
-                  hidden
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files && e.target.files[0];
-                    setNewSiteImageFile(file || null);
-                  }}
-                />
-              </Button>
-
-              {newSiteImageFile && (
-                <>
-                  <Typography variant="body2" sx={{ color: "#aaa", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {newSiteImageFile.name}
-                  </Typography>
-                  <IconButton size="small" onClick={() => setNewSiteImageFile(null)}>
-                    <ClearIcon sx={{ color: "#aaa" }} />
-                  </IconButton>
-                </>
-              )}
-            </Box>
-
-            {!isNewSiteValid && (
-              <Typography variant="caption" sx={{ color: "#ff6b35" }}>
-                {t('PushToPlannerPopup.siteNameRequired') || 'Site name and English name are required'}
-              </Typography>
-            )}
-          </Box>
-        </DialogContent>
-
-        <DialogActions sx={{ borderTop: "1px solid #4a4a4a", p: 2, gap: 1 }}>
-          <Button onClick={handleCloseCreateSitePopup} sx={{ color: "gray" }}>
-            {t('PushToPlannerPopup.cancel') || 'Cancel'}
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleCreateSite}
-            disabled={isCreatingSite || !isNewSiteValid}
-            startIcon={isCreatingSite ? <CircularProgress size={16} color="inherit" /> : <AddIcon />}
-            sx={{
-              bgcolor: "#4a9eff",
-              "&:hover": { bgcolor: "#3a8eef" },
-              "&:disabled": { bgcolor: "#555", color: "#999" },
-              minWidth: "140px"
-            }}
-          >
-            {isCreatingSite
-              ? (t('PushToPlannerPopup.creating') || 'Creating...')
-              : (t('PushToPlannerPopup.create') || 'Create')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+        isCreating={isCreatingSite}
+        siteName={newSiteName}
+        onSiteNameChange={setNewSiteName}
+        siteNameEn={newSiteNameEn}
+        onSiteNameEnChange={setNewSiteNameEn}
+        siteDescription={newSiteDescription}
+        onSiteDescriptionChange={setNewSiteDescription}
+        siteImageFile={newSiteImageFile}
+        onSiteImageFileChange={setNewSiteImageFile}
+        isGeneratingImage={isGeneratingImage}
+        onGenerateImage={handleGenerateSiteImage}
+        isValid={isNewSiteValid}
+        onCreateSite={handleCreateSite}
+        direction={direction}
+      />
     </>
   );
 }

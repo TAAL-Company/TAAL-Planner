@@ -17,6 +17,8 @@ const RoutesByStationList = ({
     handleOpenAudioGallery,
     setData,
     handleOpenImageGallery,
+    handleGenerateImage,
+    generatingRows,
 }) => {
     const { t } = useTranslation();
 
@@ -278,6 +280,19 @@ const RoutesByStationList = ({
                                                             // }}
                                                         >
                                                             {t('RoutesByStationList.Gallery')}
+                                                        </Button>
+                                                        <Button
+                                                            variant="outlined"
+                                                            
+                                                            onClick={() => handleGenerateImage(rowIndex)}
+                                                            disabled={generatingRows.has(rowIndex)}
+                                                            // style={{
+                                                            //     fontSize: 10,
+                                                            //     padding: "2px 8px",
+                                                            //     minWidth: "auto",
+                                                            // }}
+                                                        >
+                                                            {generatingRows.has(rowIndex) ? t('TextGenerative.generatingTasks') : t('TextGenerative.generate_image')}
                                                         </Button>
                                                         {/* {!row[key] && (
                                                             <span

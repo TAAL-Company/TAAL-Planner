@@ -17,6 +17,8 @@ const DataTable = ({
     handleOpenAudioGallery,
     setData,
     handleOpenImageGallery,
+    handleGenerateImage,
+    generatingRows,
     validationErrors = [],
     requiredFields = []
 }) => {
@@ -239,6 +241,19 @@ const DataTable = ({
                                                 }}
                                             >
                                                 {t('SpreadsheetPopup.Gallery')}
+                                            </Button>
+                                            <Button
+                                                variant="outlined"
+                                                size="small"
+                                                onClick={() => handleGenerateImage(idx)}
+                                                disabled={generatingRows.has(idx)}
+                                                style={{
+                                                    fontSize: 10,
+                                                    padding: '2px 8px',
+                                                    minWidth: 'auto'
+                                                }}
+                                            >
+                                                {generatingRows.has(idx) ? t('TextGenerative.generatingTasks') : t('TextGenerative.generate_image')}
                                             </Button>
                                             {!row[key] && (
                                                 <span style={{

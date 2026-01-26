@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ExcelJS from "exceljs";
 import { Dialog, DialogContent, Typography, LinearProgress, Box } from "@mui/material";
-import { getingData_Tasks, insertRoute, insertStation, insertTask, uploadFiles } from "../../api/api";
+import { getingData_Tasks, insertRoute, insertStation, insertTask, uploadFiles, generateAzureImage } from "../../api/api";
 import { useNotification } from "../Notification/NotificationProvider";
 import Header from "./components/Header";
 import FileUpload from "./components/FileUpload";
@@ -11,15 +11,18 @@ import Footer from "./components/Footer";
 import AudioGalleryModal from "./components/AudioGalleryModal";
 import ImageGalleryModal from "./components/ImageGalleryModal";
 import { useTranslation } from "react-i18next";
+import { useTranslator } from "../../Utility/TranslationProvider";
 
 function SpreadsheetPopup(props) {
     const { t } = useTranslation();
+    const { translate } = useTranslator();
     const [data, setData] = useState([]);
     const [images, setImages] = useState([]);
     const [audios, setAudios] = useState([]);
     const [draggedImage, setDraggedImage] = useState(null);
     const [draggedAudio, setDraggedAudio] = useState(null);
     const [loadingData, setLoadingData] = useState(false);
+    const [generatingRows, setGeneratingRows] = useState(new Set());
     
     // Upload progress states
     const [isUploading, setIsUploading] = useState(false);
@@ -86,6 +89,35 @@ function SpreadsheetPopup(props) {
         const updatedData = [...data];
         updatedData[rowIdx].audio = file;
         setData(updatedData);
+    };
+
+    const handleGenerateImage = async (rowIdx) => {
+        const task = data[rowIdx].Task;
+        if (!task) {
+            showNotification('error', 'No task description to generate image from');
+            return;
+        }
+        setGeneratingRows(prev => new Set(prev).add(rowIdx));
+        try {
+            const translatedTask = await translate(task, "en");
+            const imageUrl = await generateAzureImage(translatedTask);
+            // Fetch the image and create a File object
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const file = new File([blob], `translatedTask_${rowIdx}.png`, { type: 'image/png' });
+            const updatedData = [...data];
+            updatedData[rowIdx].image = file;
+            setData(updatedData);
+            showNotification('success', 'Image generated successfully');
+        } catch (error) {
+            showNotification('error', 'Failed to generate image: ' + error.message);
+        } finally {
+            setGeneratingRows(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(rowIdx);
+                return newSet;
+            });
+        }
     };
 
     const csvFileToArray = async (e) => {
@@ -614,6 +646,8 @@ function SpreadsheetPopup(props) {
                                     draggedAudio={draggedAudio}
                                     handleOpenAudioGallery={handleOpenAudioGallery}
                                     handleOpenImageGallery={handleOpenImageGallery}
+                                    handleGenerateImage={handleGenerateImage}
+                                    generatingRows={generatingRows}
                                     validationErrors={validationErrors}
                                     requiredFields={requiredFields}
                                 />

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { insertTask, updateRoute, updateTask, uploadFiles } from "../../api/api";
+import { insertTask, updateRoute, updateTask, uploadFiles, generateAzureImage } from "../../api/api";
 import { useNotification } from "../Notification/NotificationProvider";
 import RoutesByStationList from "../RoutesByStationList/RoutesByStationList";
 import { Box, Dialog, DialogContent, DialogTitle, IconButton, MenuItem, Select, FormControl, InputLabel, TextField } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import { useTranslator } from "../../Utility/TranslationProvider";
 import CloseIcon from '@mui/icons-material/Close';
 import Footer from "../SpreadsheetPopup/components/Footer";
 import AudioGalleryModal from "../SpreadsheetPopup/components/AudioGalleryModal";
@@ -30,8 +31,10 @@ function RouteTablePopUp({
     const [selectedRowForImage, setSelectedRowForImage] = useState(null);
     const [routename, setRoutename] = useState(route.name);
     const [loading, setLoading] = useState(false);
+    const [generatingRows, setGeneratingRows] = useState(new Set());
 
     const { t } = useTranslation();
+    const { translate } = useTranslator();
     const { showNotification } = useNotification();
 
     const style2 = {
@@ -107,6 +110,35 @@ function RouteTablePopUp({
         const updatedData = [...Data];
         updatedData[rowIdx].image = file;
         setData(updatedData);
+    };
+
+    const handleGenerateImage = async (rowIdx) => {
+        const task = Data[rowIdx].Task;
+        if (!task) {
+            showNotification('error', 'No task description to generate image from');
+            return;
+        }
+        setGeneratingRows(prev => new Set(prev).add(rowIdx));
+        try {
+            const translatedTask = await translate(task, "en");
+            const imageUrl = await generateAzureImage(translatedTask);
+            // Fetch the image and create a File object
+            const response = await fetch(imageUrl);
+            const blob = await response.blob();
+            const file = new File([blob], `translatedTask_${rowIdx}.png`, { type: 'image/png' });
+            const updatedData = [...Data];
+            updatedData[rowIdx].image = file;
+            setData(updatedData);
+            showNotification('success', 'Image generated successfully');
+        } catch (error) {
+            showNotification('error', 'Failed to generate image: ' + error.message);
+        } finally {
+            setGeneratingRows(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(rowIdx);
+                return newSet;
+            });
+        }
     };
 
     const handleOpenAudioGallery = (rowIdx) => {
@@ -282,6 +314,8 @@ function RouteTablePopUp({
                     draggedAudio={null}
                     handleOpenAudioGallery={handleOpenAudioGallery}
                     handleOpenImageGallery={handleOpenImageGallery}
+                    handleGenerateImage={handleGenerateImage}
+                    generatingRows={generatingRows}
                 />
             </DialogContent>
             <AudioGalleryModal

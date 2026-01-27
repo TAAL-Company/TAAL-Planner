@@ -52,10 +52,65 @@ const ImageGrid = ({ images, setReload, setLoading, folderNames }) => {
     handleMenuClose();
   };
 
+
+  // Helper to extract file name from URL
   const getFileName = (url) => {
     const parts = url.split('/');
     return parts[parts.length - 1];
   };
+
+  // Helper to extract file extension/type
+  const getFileType = (url) => {
+    const name = getFileName(url);
+    return name.split('.').pop().toLowerCase();
+  };
+
+  // Helper to fetch image info (size, last modified, width, height)
+  const fetchImageInfo = async (url) => {
+    let size = null, lastModified = null, width = null, height = null;
+    try {
+      const response = await fetch(url, { method: 'HEAD' });
+      size = response.headers.get('content-length');
+      lastModified = response.headers.get('last-modified');
+    } catch {}
+    // Try to get width/height by loading the image
+    try {
+      await new Promise((resolve, reject) => {
+        const img = new window.Image();
+        img.onload = function() {
+          width = img.naturalWidth;
+          height = img.naturalHeight;
+          resolve();
+        };
+        img.onerror = reject;
+        img.src = url;
+      });
+    } catch {}
+    return { size, lastModified, width, height };
+  };
+
+  // Store info for each image
+  const [imageInfo, setImageInfo] = useState({});
+
+  React.useEffect(() => {
+    const loadInfo = async () => {
+      const entries = Object.entries(images || {});
+      const infoObj = {};
+      await Promise.all(entries.map(async ([key, url]) => {
+        if (!imageInfo[key]) {
+          const info = await fetchImageInfo(url);
+          infoObj[key] = info;
+        } else {
+          infoObj[key] = imageInfo[key];
+        }
+      }));
+      setImageInfo(infoObj);
+    };
+    if (images && Object.keys(images).length > 0) {
+      loadInfo();
+    }
+    // eslint-disable-next-line
+  }, [images]);
 
 
   const handleDeleteClick = () => {
@@ -86,22 +141,31 @@ const ImageGrid = ({ images, setReload, setLoading, folderNames }) => {
       gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
       gap: 2
     }}>
-      {Object.entries(images).map(([key, url]) => (
-        <Card key={key}>
-          <CardMedia
-            component="img"
-            height="200"
-            image={url}
-            alt={key}
-          />
-          <CardContent sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography>{getFileName(url)}</Typography>
-            <IconButton onClick={(e) => handleMenuClick(e, url)}>
-              <MoreVert />
-            </IconButton>
-          </CardContent>
-        </Card>
-      ))}
+      {Object.entries(images).map(([key, url]) => {
+        const info = imageInfo[key] || {};
+        return (
+          <Card key={key}>
+            <CardMedia
+              component="img"
+              height="200"
+              image={url}
+              alt={key}
+            />
+            <CardContent>
+              <Typography variant="subtitle1" fontWeight="bold">{getFileName(url)}</Typography>
+              <Typography variant="body2">Type: {getFileType(url)}</Typography>
+              <Typography variant="body2">Size: {info.size ? `${(info.size/1024).toFixed(1)} KB` : 'N/A'}</Typography>
+              <Typography variant="body2">Dimensions: {info.width && info.height ? `${info.width} x ${info.height}` : 'N/A'}</Typography>
+              <Typography variant="body2">Last Modified: {info.lastModified ? new Date(info.lastModified).toLocaleString() : 'N/A'}</Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <IconButton onClick={(e) => handleMenuClick(e, url)}>
+                  <MoreVert />
+                </IconButton>
+              </Box>
+            </CardContent>
+          </Card>
+        );
+      })}
 
       <Menu
         anchorEl={anchorEl}

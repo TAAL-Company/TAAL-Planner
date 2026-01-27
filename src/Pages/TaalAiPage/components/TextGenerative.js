@@ -12,10 +12,12 @@ import SettingsDialog from './SettingsDialog';
 import { TaalAiThemeProvider, useTaalAiTheme } from './ThemeContext';
 import "../../../i18n";
 import { createChatCompletion } from "../../../api/api";
+import { useNotification } from '../../../components/Notification/NotificationProvider';
 
 // Inner component that uses the theme
 function SearchUIContent() {
   const { t } = useTranslation();
+  const { showNotification } = useNotification();
   const { theme, isDarkMode, toggleTheme } = useTaalAiTheme();
   const [input, setInput] = useState('');
   const [isTableOpen, setIsTableOpen] = useState(false);
@@ -168,6 +170,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
         setMessages((prev) => [...prev, assistantMessage]);
       }
     } catch (error) {
+      showNotification('error', error.message);
       console.error('Azure OpenAI request failed:', error);
     } finally {
       // Clear progress interval
@@ -302,7 +305,8 @@ Write tasks so they can be understood by workers with varied cognitive abilities
         await sendMessageToAzure(messageWithComplexity);
         setInput('');
       } catch (error) {
-        console.error('Error sending message:', error);
+        showNotification('error', error.message);
+        console.error('Azure OpenAI request failed:', error);
         setLoading(false);
       }
     }

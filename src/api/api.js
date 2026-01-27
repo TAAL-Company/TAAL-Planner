@@ -1644,6 +1644,20 @@ const buildImageUrl = () => {
 };
 
 export const createChatCompletion = async (messages, options = {}) => {
+  let role = null;
+  try {
+    const jwt = sessionStorage.getItem('jwt');
+    if (jwt) {
+      if (typeof jwt === 'string' && jwt.startsWith('{')) {
+        role = JSON.parse(jwt).role;
+      } else if (typeof jwt === 'object' && jwt.role) {
+        role = jwt.role;
+      }
+    }
+  } catch (e) {}
+  if (role !== 'ADMIN') {
+    throw new Error('Access denied: Only admins can use this feature.');
+  }
   const response = await fetch(buildUrl(), {
     method: 'POST',
     headers: {
@@ -1672,6 +1686,20 @@ export const generateAzureImage = async (
   prompt,
   { size = '1024x1024', quality = 'standard', style = 'vivid', n = 1 } = {}
 ) => {
+  let role = null;
+  try {
+    const jwt = sessionStorage.getItem('jwt');
+    if (jwt) {
+      if (typeof jwt === 'string' && jwt.startsWith('{')) {
+        role = JSON.parse(jwt).role;
+      } else if (typeof jwt === 'object' && jwt.role) {
+        role = jwt.role;
+      }
+    }
+  } catch (e) {}
+  if (role !== 'ADMIN') {
+    throw new Error('Access denied: Only admins can use this feature.');
+  }
   const response = await fetch(buildImageUrl(), {
     method: 'POST',
     headers: {

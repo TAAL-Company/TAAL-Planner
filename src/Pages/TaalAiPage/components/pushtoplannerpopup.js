@@ -449,12 +449,12 @@ export default function PushToPlannerPopup({
               console.log("🖼️ Processing image for task:", task.title);
 
               // Try multiple methods to get the image
-              let imageFile = await urlToFile(task.picture_url, `ai_generated_image_${Date.now()}.png`);
+              let imageFile = await urlToFile(task.picture_url, `AI_${task.title}.png`);
 
               // If direct fetch failed, try canvas method
               if (!imageFile) {
                 console.log("🔄 Trying canvas method...");
-                imageFile = await urlToFileViaCanvas(task.picture_url, `ai_generated_image_${Date.now()}.png`);
+                imageFile = await urlToFileViaCanvas(task.picture_url, `AI_${task.title}.png`);
               }
 
               if (imageFile) {

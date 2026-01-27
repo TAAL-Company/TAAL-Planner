@@ -1728,5 +1728,34 @@ export const generateAzureImage = async (
     throw new Error('Azure OpenAI image response missing URL');
   }
 
+  // Scale the image to 952x648 after generation and return a blob URL
+  async function scaleImageTo952x648BlobUrl(url) {
+    return new Promise((resolve, reject) => {
+      const img = new window.Image();
+      img.crossOrigin = 'Anonymous';
+      img.onload = function () {
+        const canvas = document.createElement('canvas');
+        canvas.width = 952;
+        canvas.height = 648;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, 952, 648);
+        canvas.toBlob(function(blob) {
+          if (blob) {
+            const blobUrl = URL.createObjectURL(blob);
+            resolve(blobUrl);
+          } else {
+            reject(new Error('Failed to create blob from canvas'));
+          }
+        }, 'image/png');
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+
+  // Only scale if the requested size is not already 952x648
+  if (size !== '952x648') {
+    return await scaleImageTo952x648BlobUrl(imageUrl);
+  }
   return imageUrl;
 };

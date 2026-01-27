@@ -157,7 +157,7 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
     try {
       // Convert the generated image URL to a File
       const translatedTitle = await translate(task.title, "en");
-      const imageFile = await urlToFile(imageUrl, `ai_generated_image_${translatedTitle}.png`);
+      const imageFile = await urlToFile(imageUrl, `AI_${translatedTitle}.png`);
 
       if (!imageFile) {
         console.error('Failed to convert image URL to file');

@@ -252,7 +252,7 @@ function Model_Tasks_Pop(props) {
             type='number'
             name='estimatedTimeSeconds'
             id='estimatedTimeSeconds'
-            min={1}
+            min={0}
             onChange={(e) =>
               setEstimatedTimeSeconds(parseInt(e.target.value))
             }

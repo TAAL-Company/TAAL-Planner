@@ -5,6 +5,7 @@ import {
   updateRoute,
   getingData_Routes,
   getingData_Users,
+  updateTask,
 } from '../../../api/api';
 import { FcLink } from 'react-icons/fc';
 import { BsExclamationLg } from 'react-icons/bs';
@@ -74,6 +75,7 @@ function Modal({
   const [openModalRouteChosen, setOpenModalRouteChosen] = useState(false);
   const [searchRoute, setSearchRoute] = useState('');
   const [selectedRoute, setSelectedRoute] = useState(filteredDataRoutes.filter((route) => route.id === routeUUID)[0]?.parentRouteId);
+  const [resetEstimatedTime, setResetEstimatedTime] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -126,7 +128,7 @@ function Modal({
     console.log("myStudentsList", myStudentsList);
   }, [routeTitle, Routes]);
 
-  function Post_Route() {
+  async function Post_Route() {
     setFlagClickOK((flagClickOK = true));
     resultMyArrayStudent();
 
@@ -145,6 +147,21 @@ function Modal({
         siteIds: [JSON.parse(localStorage.getItem('MySite')).id],
         parentRouteId: selectedRoute,
       };
+
+      // If resetEstimatedTime is checked, update all tasks to set estimatedTimeSeconds to 0
+      if (resetEstimatedTime) {
+        try {
+          const updatePromises = tasksForNewRoute.map((task) =>
+            updateTask(task.id, { estimatedTimeSeconds: 0 })
+          );
+          await Promise.all(updatePromises);
+          showNotification("success", "Estimated time reset to 0 for all tasks");
+        } catch (error) {
+          console.error("Error resetting estimated time:", error);
+          showNotification("error", "Error resetting estimated time");
+          return; // Stop if error
+        }
+      }
 
       // console.log('newRouteObj', newRouteObj);
 
@@ -564,6 +581,17 @@ function Modal({
                           value={routeTitle}
                           onChange={(e) => setRouteTitle(e.target.value)}
                         ></input>
+                        <div>
+                          <label>
+                            <input
+                              type="checkbox"
+                              checked={resetEstimatedTime}
+                              onChange={(e) => setResetEstimatedTime(e.target.checked)}
+                              style={{ marginLeft: language !== 'English' ? '0' : '10px' }}
+                            />
+                            {t("plannerPage.Reset_estimated_time") || "Reset estimated time to 0 for all tasks"}
+                          </label>
+                        </div>
                         <div>
                           {t("plannerPage.List_of_students")}
                         </div>

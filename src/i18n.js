@@ -279,6 +279,7 @@ const resources = {
         Details: "Details",
         Upload_from_computer: "Upload from computer",
         Image_dimensions_must_be_952x648: "Image dimensions must be 952x648",
+        Reset_estimated_time: "Reset estimated time to 0 for all tasks",
       },
       showNotification: {
         "Error_delete_user": "Error deleting user",
@@ -1130,6 +1131,7 @@ const resources = {
         Details: " פרטים",
         Upload_from_computer: "העלה מהמחשב",
         Image_dimensions_must_be_952x648: "ממדי התמונה חייבים להיות 952x648",
+        Reset_estimated_time:"איפוס זמן משוער ל-0 עבור כל המשימות"
       },
       showNotification: {
         "Error_delete_user": "שגיאה במחיקת משתמש",
@@ -1982,6 +1984,7 @@ const resources = {
         Details: "تفاصيل",
         Upload_from_computer: " رفع من الكمبيوتر",
         Image_dimensions_must_be_952x648: "مقاسات الصورة يجب أن تكون 952x648",
+        Reset_estimated_time : "إعادة تعيين الوقت المقدر إلى 0 لجميع المهام",
       },
       showNotification: {
         "Error_delete_user": "خطأ في حذف المستخدم",
@@ -2834,6 +2837,7 @@ const resources = {
         Details: "Детали",
         Upload_from_computer: "Загрузить с компьютера",
         Image_dimensions_must_be_952x648: "Масштаб изображения должен быть 952x648",
+        Reset_estimated_time: "Обнулите расчетное время для всех задач.",
       },
       showNotification: {
         "Error_delete_user": "Ошибка удаления пользователя",

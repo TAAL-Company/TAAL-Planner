@@ -1097,7 +1097,7 @@ function DragnDrop(props) {
               ? props.allTasks.find(
                 (task) => task.id === openThreeDotsVerticalBoard
               ).estimatedTimeSeconds
-              : 1
+              : 0
           }
           picture={
             openThreeDotsVerticalBoard !== -1

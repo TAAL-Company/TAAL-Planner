@@ -525,7 +525,7 @@ function Modal_Tasks(props) {
               <div className='modalContainerTasks'>
                 <div className='headerNewTask'>
                   <div className='NewTaskTitle'>
-                    { t('plannerPage.New_task')}
+                    {t('plannerPage.New_task')}
                   </div>
                 </div>
                 <div
@@ -535,7 +535,7 @@ function Modal_Tasks(props) {
                   {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
                   <form id='IPU' className='w3-container'>
                     <h6>
-                      { t('plannerPage.Write_the_name_of_the_task')}
+                      {t('plannerPage.Write_the_name_of_the_task')}
 
                       <RiAsterisk style={{ color: 'red' }} />
                     </h6>
@@ -556,7 +556,7 @@ function Modal_Tasks(props) {
                   </form>
                   <form id='IPU' className='w3-container'>
                     <h6>
-                      { t('plannerPage.Describe_the_task')}
+                      {t('plannerPage.Describe_the_task')}
                       <RiAsterisk style={{ color: 'red' }} />
                     </h6>
                     <p>
@@ -574,12 +574,12 @@ function Modal_Tasks(props) {
                     </p>
                   </form>
                   <div className='estimatedTimeContainer'>
-                    <h6>{ t('plannerPage.Enter_the_estimated_time_in_seconds_for_the_task')}</h6>
+                    <h6>{t('plannerPage.Enter_the_estimated_time_in_seconds_for_the_task')}</h6>
                     <input
                       type='number'
                       name='estimatedTimeSeconds'
                       id='estimatedTimeSeconds'
-                      min={1}
+                      min={0}
                       onChange={(e) =>
                         setEstimatedTimeSeconds(parseInt(e.target.value))
                       }
@@ -598,14 +598,14 @@ function Modal_Tasks(props) {
                         direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     />
-                    { t('plannerPage.Add_additional_data')}
+                    {t('plannerPage.Add_additional_data')}
 
                   </label>
                   {showForm && (
                     <form id='IPU' className='w3-container'  >
                       <form id='IPU' className='w3-container'>
                         <h6>
-                          { t('plannerPage.Write_a_weight')}
+                          {t('plannerPage.Write_a_weight')}
                           <RiAsterisk style={{ color: 'red' }} />
                         </h6>
                         <p>
@@ -625,7 +625,7 @@ function Modal_Tasks(props) {
                       </form>
                       <form id='IPU' className='w3-container'>
                         <h6>
-                          { t('plannerPage.Write_Data_Entry_Validation')}
+                          {t('plannerPage.Write_Data_Entry_Validation')}
                           <RiAsterisk style={{ color: 'red' }} />
                         </h6>
                         <p>
@@ -644,11 +644,11 @@ function Modal_Tasks(props) {
                         </p>
                       </form>
                       <h6>
-                        { t('plannerPage.Select_data_entry_type')}
+                        {t('plannerPage.Select_data_entry_type')}
                       </h6>
                       <BasicSelect setFoldersite={setdataEntryType} folderName={dataEntryType} folderlist={dataEntryTypelist} />
                       <h6>
-                        { t('plannerPage.Select_task_type')} 
+                        {t('plannerPage.Select_task_type')}
                       </h6>
                       <BasicSelect setFoldersite={setTaskType} folderName={taskType} folderlist={TaskTypelist} />
                     </form>
@@ -666,12 +666,12 @@ function Modal_Tasks(props) {
                   <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} /> */}
                   <form id='IPU' className='w3-container'>
                     <h6>
-                      { t('plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop')}
+                      {t('plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop')}
                       <FcMultipleInputs />
                     </h6>
                     <div>
                       <InputFileUpload setPicture={setPicture} language={props.language} />
-                      <Button variant="outlined" onClick={handleOpen}>{ t('plannerPage.Gallery')}</Button>
+                      <Button variant="outlined" onClick={handleOpen}>{t('plannerPage.Gallery')}</Button>
                       <Modal
                         open={open}
                         onClose={() => {
@@ -687,7 +687,7 @@ function Modal_Tasks(props) {
                       </Modal>
                       {picture ? (
                         <div className='selectedFileContainer'>
-                          <div className='selectedFileTitle'>{ t('plannerPage.Selected_image')}</div>
+                          <div className='selectedFileTitle'>{t('plannerPage.Selected_image')}</div>
                           <div style={{ marginBottom: '1rem' }}>
                             {typeof picture === 'string'
                               ? extractFilenameFromURL(picture)
@@ -712,18 +712,18 @@ function Modal_Tasks(props) {
                         </div>
                       ) : (
                         <div style={{ marginBottom: '1rem' }}>
-                          { t('plannerPage.Selected_image_No_image_file_found')}
+                          {t('plannerPage.Selected_image_No_image_file_found')}
                         </div>
                       )}
                     </div>
                   </form>
                   <form id='IPU' className='w3-container'>
                     <h6>
-                      { t('plannerPage.Add_a_voice_clip_describing_the_task')}
+                      {t('plannerPage.Add_a_voice_clip_describing_the_task')}
                       <FcMultipleInputs />
                     </h6>
                     <InputFileUpload setPicture={setAudio} language={props.language} />
-                    <Button variant="outlined" onClick={handleOpen2}>{ t('plannerPage.Gallery_audio')}</Button>
+                    <Button variant="outlined" onClick={handleOpen2}>{t('plannerPage.Gallery_audio')}</Button>
                     <Modal
                       open={open2}
                       onClose={() => {
@@ -742,7 +742,7 @@ function Modal_Tasks(props) {
                     <div className='selectedFileContainertask'>
                       <div className='selectedFileTitle'>
                         <span>:</span>
-                        { t('plannerPage.Selected_audio')}
+                        {t('plannerPage.Selected_audio')}
                       </div>
                       <div className='audioNameContainer'>
                         <div style={{ marginBottom: '1rem' }}>
@@ -757,7 +757,7 @@ function Modal_Tasks(props) {
                               onClick={handlePlayClick}
                             >
                               {/* {audio} */}
-                              { t('plannerPage.Play')}
+                              {t('plannerPage.Play')}
                             </button>
                           )}
                         </div>
@@ -766,21 +766,21 @@ function Modal_Tasks(props) {
                             src={typeof audio === 'string' ? audio : ''}
                             type='audio/mpeg'
                           />
-                          { t('plannerPage.Your_browser_does_not_support_the_audio_element')}
+                          {t('plannerPage.Your_browser_does_not_support_the_audio_element')}
                         </audio>
                       </div>
                     </div>
                   ) : (
                     <div style={{ marginBottom: '1rem' }}>
-                      { t('plannerPage.Selected_audio_No_audio_file_found')}
+                      {t('plannerPage.Selected_audio_No_audio_file_found')}
                     </div>
                   )}
                   <h6>
-                    { t('plannerPage.add_multi_language')}
+                    {t('plannerPage.add_multi_language')}
                     <IoMdCheckbox style={{ color: 'blue' }} />
                   </h6>
                   <Button variant="outlined" onClick={handleOpen3}>
-                    { t('plannerPage.language')}
+                    {t('plannerPage.language')}
                   </Button>
                   <Modal
                     open={open3}
@@ -830,11 +830,11 @@ function Modal_Tasks(props) {
                     </Box>
                   </Modal>
                   <h6>
-                    { t('plannerPage.add_additional_help')}
+                    {t('plannerPage.add_additional_help')}
                     <IoMdCheckbox style={{ color: 'blue' }} />
                   </h6>
                   <Button variant="outlined" onClick={handleOpen4}>
-                    { t('plannerPage.additional_help')}
+                    {t('plannerPage.additional_help')}
                   </Button>
                   <Modal
                     open={open4}
@@ -859,7 +859,7 @@ function Modal_Tasks(props) {
                   </Modal>
                   <div className='list-group'>
                     <h6>
-                      { t('plannerPage.Select_the_stations_you_want_to_associate_the_task_with')}
+                      {t('plannerPage.Select_the_stations_you_want_to_associate_the_task_with')}
                       <IoMdCheckbox style={{ color: 'blue' }} />
                     </h6>
                     <div className='allTasks'>
@@ -901,14 +901,14 @@ function Modal_Tasks(props) {
                     <input
                       type='submit'
                       className='saveTaskButton'
-                      value={ t('plannerPage.Save') }
+                      value={t('plannerPage.Save')}
                       onClick={saveTask}
                     />
                   )}
                   <input
                     type='submit'
                     className='cancelTaskButton'
-                    value={ t('plannerPage.Cancel') }
+                    value={t('plannerPage.Cancel')}
                     onClick={() => {
                       setMyPlacesChoice([]);
                       props.setModalOpen(false);
@@ -916,13 +916,6 @@ function Modal_Tasks(props) {
                     }}
                   />
                 </div>
-                {flagClickOK ? (
-                  <>
-                    <Modal_Loading props={false} />
-                  </>
-                ) : (
-                  <></>
-                )}
               </div>
             </div>
           </div>
@@ -971,6 +964,14 @@ function Modal_Tasks(props) {
         //     </div>
         //   </div>
         // </div>
+      )}
+
+      {flagClickOK ? (
+        <>
+          <Modal_Loading props={false} />
+        </>
+      ) : (
+        <></>
       )}
     </>
   );

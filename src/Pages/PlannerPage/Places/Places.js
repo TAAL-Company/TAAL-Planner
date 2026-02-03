@@ -12,7 +12,13 @@ import {
   insertRoute,
   getingData_Packs,
   insertPack,
-  deletePack
+  deletePack,
+  getingData_RoutesbyIds,
+  getingData_TasksbyIds,
+  getingDataStationsbyIds,
+  getingData_UsersbyIds,
+  getingData_EditorsbyIds,
+  getPacksByIds
 } from '../../../api/api';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -406,8 +412,7 @@ const Places = (props) => {
   }, [filteredDataRoutes, translateData]);
 
   useEffect(() => {
-    console.log("Request for editing:", requestForEditing);
-
+    // console.log("Request for editing:", requestForEditing);
 
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
       // If we're dealing with a pack edit
@@ -526,7 +531,6 @@ const Places = (props) => {
       setUploadOption('fromSheet');
     }
 
-    // Other existing conditions...
   }, [requestForEditing]);
 
   const handleCloseRemove = () => {
@@ -630,15 +634,36 @@ const Places = (props) => {
     setInputTextRouts((inputTextRouts = e.target.value.toLowerCase()));
     searchRoute();
   };
+
   const fetchALLData = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
-      setAllTasks(await getingData_Tasks()); //get request for tasks
-      setAllRoutes(await getingData_Routes()); //get request for routes
-      setOnlyAllStation(await getingDataStation()); //get request for station
-      setAllUsers(await getingData_Users()); //get request for Users
-      setallPacks(await getingData_Packs());
-      setAllEditors(await getingData_Editors()); //get request for Editors
+      // setAllTasks(await getingData_Tasks()); //get request for tasks
+      // setAllRoutes(await getingData_Routes()); //get request for routes
+      // setOnlyAllStation(await getingDataStation()); //get request for station
+      // setAllUsers(await getingData_Users()); //get request for Users
+      // setallPacks(await getingData_Packs());
+      // setAllEditors(await getingData_Editors()); //get request for Editors
+
+      // Load data for the site using IDs
+      const site = selectedSite || {};
+
+      const [tasks, routes, stations, users, packs, editors] = await Promise.all([
+        site.tasks && site.tasks.length > 0 ? getingData_TasksbyIds(site.tasks.map(task => task.id)) : Promise.resolve([]),
+        site.routes && site.routes.length > 0 ? getingData_RoutesbyIds(site.routes.map(route => route.id)) : Promise.resolve([]),
+        site.stations && site.stations.length > 0 ? getingDataStationsbyIds(site.stations.map(station => station.id)) : Promise.resolve([]),
+        site.students && site.students.length > 0 ? getingData_UsersbyIds(site.students.map(student => student.id)) : Promise.resolve([]),
+        site.packs && site.packs.length > 0 ? getPacksByIds(site.packs.map(pack => pack.id)) : Promise.resolve([]),
+        site.editors && site.editors.length > 0 ? getingData_EditorsbyIds(site.editors.map(editor => editor.id)) : Promise.resolve([]),
+      ]);
+
+      setAllTasks(tasks);
+      setAllRoutes(routes);
+      setOnlyAllStation(stations);
+      setAllUsers(users);
+      setallPacks(packs);
+      setAllEditors(editors);
+
     } catch (error) {
       console.error(error.message);
     }
@@ -647,9 +672,8 @@ const Places = (props) => {
     }
   };
   useEffect(() => {
-
     fetchALLData();
-  }, []);
+  }, [selectedSite]);
 
   useEffect(() => {
     let user;
@@ -660,19 +684,6 @@ const Places = (props) => {
       );
     }
   }, [allUsers]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        // setLogged_in(sessionStorage.getItem('logged_in'));
-        await getData();
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-    fetchData();
-  }, []);
 
   const getData = async () => {
     try {
@@ -793,6 +804,18 @@ const Places = (props) => {
 
     setDone(true);
   };
+
+  useEffect(async () => {
+    setSmallLoading(true);
+    try {
+      // setLogged_in(sessionStorage.getItem('logged_in'));
+      await getData();
+    } catch (error) {
+      console.error(error.message);
+    } finally {
+      setSmallLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     if (flagRoute && replaceRouteFlag) {
@@ -996,26 +1019,27 @@ const Places = (props) => {
   useEffect(() => {
     // debugger;
     if (selectedSite && Object.keys(selectedSite).length > 0) {
-      console.log('selectedSite: ', selectedSite);
+      // console.log('selectedSite: ', selectedSite);
 
       // Filter routes containing the selected site
       const workers = allRoutes
         .filter((route) => route.sites.some((site) => site.id === selectedSite.id))
         .flatMap((route) => route.students); // Collect and flatten students
 
-      console.log('workers: ', workers);
+      // console.log('workers: ', workers);
 
       // Optionally remove duplicates if necessary
       const uniqueWorkers = Array.from(
         new Set(workers.map((worker) => worker.id)) // Use IDs for uniqueness
       ).map((id) => workers.find((worker) => worker.id === id)); // Re-map to full objects
 
-      console.log('uniqueWorkers: ', uniqueWorkers);
+      // console.log('uniqueWorkers: ', uniqueWorkers);
 
       setAllWorkersForSite(uniqueWorkers); // Update state with unique workers
       // console.log('allWorkersForSite: ', allWorkersForSite);
     }
   }, [allRoutes, selectedSite]);
+
   const handleSiteSelect = useCallback(async (selectedSiteValue) => {
     setLoading(true);
     try {
@@ -1055,7 +1079,7 @@ const Places = (props) => {
       }
     } catch (error) {
       console.error("Error loading site data:", error);
-      showNotification("error",t("plannerPage.Error_loading_data"));
+      showNotification("error", t("plannerPage.Error_loading_data"));
     } finally {
       setLoading(false);
     }
@@ -1342,7 +1366,7 @@ const Places = (props) => {
 
   // ...existing code...
   const displayStationsFromSelectedRoute = async (selectedRoute) => {
-    if (!selectedRoute) return; // guard
+    if (!selectedRoute || !selectedRoute.sites || selectedRoute.sites.length === 0) return; // guard
 
     setAllTasksOfTheSite([]);
     setTasksOfChosenStation([]);

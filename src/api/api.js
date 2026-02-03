@@ -192,6 +192,22 @@ export const getingData_Users = async () => {
 
   return all_Users;
 };
+
+export const getingData_UsersbyIds = async (ids) => {
+  let users;
+
+  await post(`${baseUrl}/students/ids`, ids, {
+    headers: {
+      'Content-Type': 'application/json',
+      accept: 'application/json',
+    },
+  }).then((res) => {
+    users = res.data;
+  });
+
+  console.log('res users by ids: ', users);
+  return users;
+};
 export const getingDataUsers = async () => {
   const userNameApi = 'admin';
   const passwordApi = 'BnDN q25U yKnr exYX xcCS qWeK';
@@ -621,6 +637,22 @@ export const getingData_Editors = async () => {
 
   return all_Users;
 };
+
+export const getingData_EditorsbyIds = async (ids) => {
+  let editors;
+
+  await post(`${baseUrl}/editor/ids`, ids, {
+    headers: {
+      'Content-Type': 'application/json',
+      accept: 'application/json',
+    },
+  }).then((res) => {
+    editors = res.data;
+  });
+
+  console.log('res editors by ids: ', editors);
+  return editors;
+};
 export const insertEditor = async (user) => {
   try {
     const response = await fetch(baseUrl + '/editor', {
@@ -918,6 +950,22 @@ export const getingData_Tasks = async () => {
   console.log('res allTasks: ', allTasks);
   return allTasks;
 };
+
+export const getingData_TasksbyIds = async (ids) => {
+  let tasks;
+
+  await post(`${baseUrl}/tasks/ids`, ids, {
+    headers: {
+      'Content-Type': 'application/json',
+      accept: 'application/json',
+    },
+  }).then((res) => {
+    tasks = res.data;
+  });
+
+  console.log('res tasks by ids: ', tasks);
+  return tasks;
+};
 export const insertTask = async (
   get_title,
   subtitle,
@@ -1116,6 +1164,22 @@ export const getingDataStation = async () => {
   });
   console.log("allStations", allStations);
   return allStations;
+};
+
+export const getingDataStationsbyIds = async (ids) => {
+  let stations;
+
+  await post(`${baseUrl}/stations/ids`, ids, {
+    headers: {
+      'Content-Type': 'application/json',
+      accept: 'application/json',
+    },
+  }).then((res) => {
+    stations = res.data;
+  });
+
+  console.log('res stations by ids: ', stations);
+  return stations;
 };
 export const getingDataStationbyId = async (stationUUID) => {
   let allStations;

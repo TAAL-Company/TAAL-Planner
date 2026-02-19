@@ -59,6 +59,7 @@ import AssistantIcon from '@mui/icons-material/Assistant';
 
 import { FaRobot } from 'react-icons/fa';
 import { Icon } from '@mui/material';
+import PanelAccordion from './PanelAccordion';
 
 let tasksOfRoutes = {};
 // let allRoutes = [];
@@ -1902,337 +1903,44 @@ const Places = (props) => {
             />
           )}
           {/* //////////////////////////////////////////////////////////////////////////////////////////// */}
-          <div className='Cover_Places'>
-            <>
-              <div className='TitlePlacesCover' style={{ backgroundColor: '#ba11b0' }}>
-                <div className='TitlePlaces'>
-                  <div
-                    className={`MyTitle text ${props.language !== 'English' ? 'english' : ''
-                      }`}
-                  >
-                    {t("plannerPage.Packs")}
-                  </div>
-                </div>
-              </div>
-            </>
-
-            <div
-              className='search'
-              style={{
-                backgroundColor: '#F5F5F5',
-              }}
-            >
-              <input
-                className={`searchButton  ${props.language !== 'English' ? 'english' : 'routes'}`}
-                dir='rtl'
-                placeholder={
-                  t("plannerPage.Search_packs")
-                }
-                label={
-                  <CgSearch
-                    style={{ fontSize: 'x-large', textAlign: '-webkit-center' }}
-                  />
-                }
-              // onChange={inputHandlerPacks}
-              ></input>
-            </div>
-            {/* <div
-            className='search'
-            style={{
-              backgroundColor: '#F5F5F5',
-            }}
-          >
-            <button
-              className="deselect-button"
-              onClick={handleDeselectRoute}
-            >
-              {props.language === "English" ? "הצג את כל התחנות" : "show all Stations"}
-            </button>
-          </div> */}
-            <div className='packs'>
-              {filteredpacksbysite.length === 0 ? (
-                <div
-                  className={`textBeforeStation ${props.language !== 'English' ? 'english' : ''}`}
-                  style={{ backgroundImage: `url(${textArea})`, width: '88%' }}
-                >
-                  <div
-                    className={`textBeforeStationtext ${props.language !== 'English' ? 'english' : ''}`}>
-                    {props.routesBeforeChoosingSite}
-                  </div>
-                </div>
-
-              ) : (
-                filteredpacksbysite.map((pack, index) => (
-                  <div
-                    className='buttons'
-                    style={{
-                      border:
-                        pack.id === selectedPack?.id
-                          ? '1px solid rgb(173, 16, 212)'
-                          : '',
-                      flexDirection: props.language === 'English' ? 'row' : 'row-reverse',
-                      textAlignLast:
-                        props.language === 'English' ? 'end' : 'left',
-                    }}
-                    key={index}
-                  >
-                    <div className='dropdownThreeDots'>
-                      <button
-                        className='threeDotsVerticalEng'
-                        onClick={() => {
-                          // Find the actual index of the pack in filteredpacksbysite
-                          const actualIndex = filteredpacksbysite.findIndex(
-                            (r) => r.id === pack.id
-                          );
-                          console.log('actualIndex', actualIndex);
-                          console.log('openThreeDotsVerticalPacks', openThreeDotsVerticalPacks);
-                          clickOnThreeDotsVerticalIcon(actualIndex, 'pack'); // Pass the correct index and type
-                          setSelectedPack(pack);
-                          setRequestForEditing('');
-                        }}
-                      >
-                        <BsThreeDotsVertical />
-                      </button>
-
-                      {openThreeDotsVerticalPacks === filteredpacksbysite.findIndex((r) => r.id === pack.id) ? (
-                        <ModalDropdown
-                          language={props.language}
-                          setRequestForEditing={setRequestForEditing}
-                          setOpenThreeDotsVertical={setOpenThreeDotsVerticalPacks} // Use the pack-specific setter
-                          editable={true}
-                          Reproducible={true}
-                          details={false}
-                          erasable={true}
-                          uploadfromsheet={false}
-                        />
-                      ) : (
-                        <></>
-                      )}
-                    </div>
-                    <button
-                      className="nameOfButton"
-                      onClick={() => {
-                        setSelectedPack(pack);
-                        console.log('pack', pack);
-
-                        // Call the function to handle pack selection and display routes
-                        handleSelectPack(pack);
-
-                        // Create a simulated drop event to make the board view show pack routes
-                        const simulatedDropEvent = {
-                          source: { droppableId: 'Packs' },
-                          destination: { droppableId: 'board-droppable' },
-                          draggableId: pack.id
-                        };
-                        setDropToBoard(simulatedDropEvent);
-                      }}
-                    >
-                      {translateData === 'translated'
-                        ? translatedRoutes[pack.id] ||
-                        pack.name.replace('&#8211;', '-').replace('&#8217;', "'")
-                        : translateData === 'Mixed'
-                          ? `${pack.name
-                            .replace('&#8211;', '-')
-                            .replace('&#8217;', "'")} (${translatedRoutes[pack.id] ||
-                            pack.name.replace('&#8211;', '-').replace('&#8217;', "'")})`
-                          : pack.name.replace('&#8211;', '-').replace('&#8217;', "'")}
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-            <div className='addPlaceCover'>
-              <button
-                className='AddButton'
-                onClick={handleAddPack}
-              >
-                <AiOutlinePlus className='plus' />
-              </button>
-            </div>
-          </div>
-          {/* //////////////////////////////////////////////////////////////////////////////////////////// */}
-          <div className='Cover_Places'>
-            <>
-              <div className='TitlePlacesCover'>
-                <div className='TitlePlaces'>
-                  <div
-                    className={`MyTitle text ${props.language !== 'English' ? 'english' : ''}`}
-                  >
-                    {t("plannerPage.Routes")}
-                  </div>
-                </div>
-              </div>
-            </>
-
-            <div
-              className='search'
-              style={{
-                backgroundColor: '#F5F5F5',
-              }}
-            >
-              <input
-                className={`searchButton  ${props.language !== 'English' ? 'english' : 'routes'}`}
-                dir='rtl'
-                placeholder={
-                  t("plannerPage.Search_Route")
-                }
-                label={
-                  <CgSearch
-                    style={{ fontSize: 'x-large', textAlign: '-webkit-center' }}
-                  />
-                }
-                onChange={inputHandlerRoutes}
-              ></input>
-            </div>
-            {/* <div
-              className='search'
-              style={{
-                backgroundColor: '#F5F5F5',
-              }}
-            >
-              <button
-                className="deselect-button"
-                onClick={handleDeselectRoute}
-              >
-                {t("plannerPage.Show_all_Stations")}
-              </button>
-            </div> */}
-
-            <Droppable droppableId="routes-droppable">
-              {(provided, snapshot) => (
-                <div
-                  ref={provided.innerRef}
-                  {...provided.droppableProps}
-                  className='routs'
-                  style={{
-                    backgroundColor: snapshot.isDraggingOver ? '#eeeee4' : '#F5F5F5',
-                  }}
-                >
-                  {filteredDataRoutes.length === 0 ? (
-                    <div
-                      className={`textBeforeStation ${props.language !== 'English' ? 'english' : ''}`}
-                      style={{ backgroundImage: `url(${textArea})`, width: '88%' }}
-                    >
-                      <div
-                        className={`textBeforeStationtext ${props.language !== 'English' ? 'english' : ''}`}>
-                        {props.routesBeforeChoosingSite}
-                      </div>
-                    </div>
-                  ) : (
-                    <BorderedTreeView
-                      direction={props.language !== 'English' ? 'ltr' : 'rtl'}
-                      filteredDataRoutes={filteredDataRoutes}
-                      renderRoute={(route, index) => (
-                        <Draggable key={route.id} draggableId={route.id} index={index}>
-                          {(provided) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              className='buttons'
-                              style={{
-                                ...provided.draggableProps.style,
-                                border: route.id === tasksOfRoutes.id ? '1px solid #256fa1' : '',
-                                flexDirection: 'row-reverse',
-                                textAlignLast: props.language === 'English' ? 'end' : 'left',
-                              }}
-                              onClick={() => {
-                                setSelectedRoute(route);
-                                if (selectedRoute === null || selectedRoute.id !== route.id) {
-                                  displayStationsFromSelectedRoute(route);
-                                  DisplayTasks(route);
-                                }
-                              }}
-                            >
-                              <div className='dropdownThreeDots'>
-                                <button
-                                  className='threeDotsVerticalEng'
-                                  onClick={(e) => {
-                                    e.stopPropagation(); // Prevent drag from starting
-                                    // Find the actual index of the route in filteredDataRoutes
-                                    const actualIndex = filteredDataRoutes.findIndex(
-                                      (r) => r.id === route.id
-                                    );
-                                    console.log('actualIndex', actualIndex);
-                                    console.log('openThreeDotsVertical', openThreeDotsVertical);
-                                    clickOnThreeDotsVerticalIcon(actualIndex, 'route');
-                                    setSelectedRoute(route);
-                                  }}
-                                >
-                                  <BsThreeDotsVertical />
-                                </button>
-
-                                {selectedRoute?.id === route.id && openThreeDotsVertical === filteredDataRoutes.findIndex((r) => r.id === route.id) ? (
-                                  <ModalDropdown
-                                    language={props.language}
-                                    setRequestForEditing={setRequestForEditing}
-                                    setOpenThreeDotsVertical={setOpenThreeDotsVertical}
-                                    editable={false}
-                                    Reproducible={true}
-                                    details={false}
-                                    erasable={true}
-                                    uploadfromsheet={true}
-                                  />
-                                ) : (
-                                  <></>
-                                )}
-                              </div>
-                              <div
-                                className="nameOfButton"
-                                onClick={() => {
-                                  setSelectedRoute(route);
-                                  if (selectedRoute === null || selectedRoute.id !== route.id) {
-                                    displayStationsFromSelectedRoute(route);
-                                    DisplayTasks(route);
-                                  }
-                                }}
-                              >
-                                {translateData === 'translated'
-                                  ? translatedRoutes[route.id] ||
-                                  route.name.replace('&#8211;', '-').replace('&#8217;', "'")
-                                  : translateData === 'Mixed'
-                                    ? `${route.name
-                                      .replace('&#8211;', '-')
-                                      .replace('&#8217;', "'")} (${translatedRoutes[route.id] ||
-                                      route.name.replace('&#8211;', '-').replace('&#8217;', "'")})`
-                                    : route.name.replace('&#8211;', '-').replace('&#8217;', "'")}
-                              </div>
-                            </div>
-                          )}
-                        </Draggable>
-                      )}
-                    />
-                  )}
-                  {provided.placeholder}
-                </div>
-              )}
-            </Droppable>
-
-            <div className='addPlaceCover'>
-              <button
-                className='AddButton'
-                onClick={() => {
-                  console.log('clicked', modalOpen);
-                  setModalOpen(true);
-                  setFlagStudent(true);
-                  setClickAddRoute((clickAddRoute = true));
-                }}
-              >
-                <AiOutlinePlus className='plus' />
-              </button>
-            </div>
-          </div>
-          {/* //////////////////////////////////////////////////////////////////////////////////////////// */}
-          <Stations
-            handleDeselectRoute={handleDeselectRoute}
+          <PanelAccordion
+            language={props.language}
+            translateData={translateData}
+            translatedRoutes={translatedRoutes}
+            textArea={textArea}
+            routesBeforeChoosingSite={props.routesBeforeChoosingSite}
+            t={t}
+            filteredpacksbysite={filteredpacksbysite}
+            selectedPack={selectedPack}
+            setSelectedPack={setSelectedPack}
+            handleSelectPack={handleSelectPack}
+            setDropToBoard={setDropToBoard}
+            openThreeDotsVerticalPacks={openThreeDotsVerticalPacks}
+            setOpenThreeDotsVerticalPacks={setOpenThreeDotsVerticalPacks}
+            clickOnThreeDotsVerticalIcon={clickOnThreeDotsVerticalIcon}
+            setRequestForEditing={setRequestForEditing}
+            handleAddPack={handleAddPack}
+            ModalDropdown={ModalDropdown}
+            filteredDataRoutes={filteredDataRoutes}
             selectedRoute={selectedRoute}
             setSelectedRoute={setSelectedRoute}
+            openThreeDotsVertical={openThreeDotsVertical}
+            setOpenThreeDotsVertical={setOpenThreeDotsVertical}
+            inputHandlerRoutes={inputHandlerRoutes}
+            displayStationsFromSelectedRoute={displayStationsFromSelectedRoute}
+            DisplayTasks={DisplayTasks}
+            tasksOfRoutes={tasksOfRoutes}
+            BorderedTreeView={BorderedTreeView}
+            modalOpen={modalOpen}
+            setModalOpen={setModalOpen}
+            setFlagStudent={setFlagStudent}
+            setClickAddRoute={setClickAddRoute}
+            clickAddRoute={clickAddRoute}
+            handleDeselectRoute={handleDeselectRoute}
             board={board}
             setBoard={setBoard}
-            filteredDataRoutes={filteredDataRoutes}
             setFilteredDataRoutes={setFilteredDataRoutes}
             setTranslateData={setTranslateData}
-            setDropToBoard={setDropToBoard}
             dropToBoard={dropToBoard}
             setAllTasksOfTheSite={setAllTasksOfTheSite}
             percentProgressBar={percentProgressBar}
@@ -2243,13 +1951,12 @@ const Places = (props) => {
             replaceSiteFlag={replaceSiteFlag}
             firstStationName={firstStationName}
             boardArrayDND={boardArrayDND}
+            setBoardArrayDND={setBoardArrayDND}
             stationArray={stationArray}
             setStationArray={setStationArray}
-            idTask={thisIdTask}
-            allStations={onlyAllStation}
+            thisIdTask={thisIdTask}
+            onlyAllStation={onlyAllStation}
             setOnlyAllStation={setOnlyAllStation}
-            language={props.language}
-            stationsName={props.stations}
             myTasks={props.myTasks}
             drag={props.drag}
             addStation={props.addStation}
@@ -2258,13 +1965,12 @@ const Places = (props) => {
             titleTaskCss={props.titleTaskCss}
             mySite={mySite}
             flagHebrew={props.flagHebrew}
-            tasksOfRoutes={tasksOfRoutes}
-            clickAddRoute={clickAddRoute}
             saveButton={props.saveButton}
             siteQuestionLanguage={props.siteQuestionLanguage}
             stationsBeforeChoosingSite={props.stationsBeforeChoosingSite}
             tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
             allTasks={allTasks}
+            setAllTasks={setAllTasks}
             allTasksOfTheSite={allTasksOfTheSite}
             pastelColors={pastelColors}
             hebrew={props.hebrew}
@@ -2274,30 +1980,10 @@ const Places = (props) => {
             tasksOfChosenStation={tasksOfChosenStation}
             setChosenStation={setChosenStation}
             chosenStation={chosenStation}
-            settaskcolor={handleColor}
-            Packs={filteredpacksbysite}  // Make sure to pass the packs data 
-            selectedPack={selectedPack}
-          />
-          <Tasks
+            handleColor={handleColor}
+            taskcolor={taskcolor}
             allUsers={allUsers}
-            boardArrayDND={Array.isArray(boardArrayDND) ? boardArrayDND : []}
-            setBoardArrayDND={setBoardArrayDND}
-            allTasks={allTasks}
-            setAllTasks={setAllTasks}
-            setDropToBoard={setDropToBoard}
-            dropToBoard={dropToBoard}
-            allTasksOfTheSite={allTasksOfTheSite}
-            setAllTasksOfTheSite={setAllTasksOfTheSite}
-            setTasksOfChosenStation={setTasksOfChosenStation}
-            tasksOfChosenStation={tasksOfChosenStation}
-            myTasks={props.myTasks}
-            onlyAllStation={onlyAllStation}
-            language={props.language}
-            tasksBeforeChoosingSite={props.tasksBeforeChoosingSite}
-            chosenStation={chosenStation}
-            stationArray={stationArray}
-            mySite={mySite}
-            color={taskcolor}
+            stations={props.stations}
           />
         </DragDropContext>
       </div>

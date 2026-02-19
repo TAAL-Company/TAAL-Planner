@@ -173,14 +173,14 @@ const Tasks = (props) => {
 
   return (
     <div className='Cover_Tasks'>
-      <div className='TitleTasks'>
+      {/* <div className='TitleTasks'>
         <div
           className={`MyTitle text ${props.language !== 'English' ? 'english' : ''
             }`}
         >
           {props.myTasks}
         </div>
-      </div>
+      </div> */}
       <div
         className='search'
         style={{

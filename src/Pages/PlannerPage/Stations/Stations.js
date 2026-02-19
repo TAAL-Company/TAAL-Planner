@@ -371,7 +371,7 @@ const Stations = (props) => {
 
           <div className='Cover_Stations'>
             <>
-              <div className='TitleStation'>
+              {/* <div className='TitleStation'>
                 <div style={{
                   display: 'flex',
                   gap: '16px',
@@ -393,7 +393,7 @@ const Stations = (props) => {
                     </button>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </>
 
             <div

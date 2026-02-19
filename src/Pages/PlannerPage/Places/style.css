@@ -763,7 +763,7 @@ h3 {
     font-size: 12px;
   }
 
-  .Cover_Places {
+  /* .Cover_Places {
     width: 18%;
   }
 
@@ -773,10 +773,10 @@ h3 {
 
   .Cover_Tasks {
     width: 18%;
-  }
+  } */
 
   .TasksCover {
-    width: 100% !important;
+    /* width: 100% !important; */
     height: 40vh !important;
   }
 
@@ -795,7 +795,7 @@ h3 {
   }
 
   .Stations {
-    width: 100% !important;
+    /* width: 100% !important; */
     height: 40vh !important;
   }
 
@@ -885,7 +885,7 @@ h3 {
     font-size: 11px;
   }
 
-  .Cover_Places {
+  /* .Cover_Places {
     width: 20%;
   }
 
@@ -895,7 +895,7 @@ h3 {
 
   .Cover_Tasks {
     width: 20%;
-  }
+  } */
 
   .mainRectangles {
     display: flex;

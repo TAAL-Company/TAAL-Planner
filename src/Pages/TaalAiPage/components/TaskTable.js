@@ -9,10 +9,13 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import ImageIcon from '@mui/icons-material/Image'; // added
+import CallSplitIcon from '@mui/icons-material/CallSplit';
+import VideoFileIcon from '@mui/icons-material/VideoFile';
 import { useTranslation } from "react-i18next";
 import TaskImage from "./imageGenerate";
 import PushToPlannerPopup from './pushtoplannerpopup';
+import BreakTaskDialog from './BreakTaskDialog';
+import VideoGenerateDialog from '../../../components/VideoGenerate/VideoGenerateDialog';
 
 export default function TaskTable({
   isOpen,
@@ -26,7 +29,8 @@ export default function TaskTable({
   imageHeight,
   imageModel,
   imageNoLogo,
-  imageSeed, // Add imageSeed prop
+  imageSeed,
+  baseImage,       // ← NEW: { file: File, preview: string } | null
   direction,
   isRTL,
   getComplexityColor,
@@ -46,34 +50,25 @@ export default function TaskTable({
     primaryHover: '#3a8eef',
     accent: '#ff6b35',
   };
+
   const [editingTask, setEditingTask] = useState(null);
   const [editFormData, setEditFormData] = useState({ station: '', title: '', subtitle: '', estimatedTimeMinutes: 0 });
-  
-  // Add missing state variables for upload functionality
   const [pushToPlannerOpen, setPushToPlannerOpen] = useState(false);
-  const [bulkImageTrigger, setBulkImageTrigger] = useState(0); // ensures TaskImage runs automatically
-  const lastBulkTimeRef = useRef(0); // throttle to avoid too many bursts
+  const [bulkImageTrigger, setBulkImageTrigger] = useState(0);
+  const lastBulkTimeRef = useRef(0);
+  const [breakTaskDialogOpen, setBreakTaskDialogOpen] = useState(false);
+  const [taskToBreak, setTaskToBreak] = useState(null);
+  const [taskToBreakIndex, setTaskToBreakIndex] = useState(null);
+  const [videoDialogOpen, setVideoDialogOpen] = useState(false);
 
   const formatTime = (minutes) => {
-    if (minutes < 60) {
-      return `~${minutes} min`;
-    } else {
-      const hours = Math.floor(minutes / 60);
-      const remainingMinutes = minutes % 60;
-      return remainingMinutes > 0 ? `~${hours}h ${remainingMinutes}min` : `~${hours}h`;
-    }
+    if (minutes < 60) return `~${minutes} min`;
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
+    return remainingMinutes > 0 ? `~${hours}h ${remainingMinutes}min` : `~${hours}h`;
   };
 
-  // Add missing function for opening the push to planner popup
-  const handleOpenSitePopup = () => {
-    setPushToPlannerOpen(true);
-  };
-
-  // // added: bulk generate missing images
-  // const handleGenerateMissingImages = () => {
-  //   if (tasks.length === 0) return;
-  //   setBulkImageTrigger(prev => prev + 1);
-  // };
+  const handleOpenSitePopup = () => setPushToPlannerOpen(true);
 
   const startEditingTask = (taskIndex) => {
     const task = tasks[taskIndex];
@@ -100,7 +95,6 @@ export default function TaskTable({
         title: editFormData.title.trim(),
         subtitle: editFormData.subtitle.trim(),
         estimatedTimeMinutes: parseInt(editFormData.estimatedTimeMinutes) || 0,
-        // Preserve existing picture_url when editing
         picture_url: updatedTasks[editingTask].picture_url || ''
       };
       setTasks(updatedTasks);
@@ -112,68 +106,53 @@ export default function TaskTable({
   const deleteTask = (taskIndex) => {
     const updatedTasks = tasks.filter((_, index) => index !== taskIndex);
     setTasks(updatedTasks);
-
-    if (editingTask === taskIndex) {
-      cancelEditingTask();
-    } else if (editingTask > taskIndex) {
-      setEditingTask(editingTask - 1);
-    }
+    if (editingTask === taskIndex) cancelEditingTask();
+    else if (editingTask > taskIndex) setEditingTask(editingTask - 1);
   };
 
   const addTaskAfter = (taskIndex) => {
     const defaultStation = (tasks?.[taskIndex]?.station || tasks?.[tasks.length - 1]?.station || 'Station 1').toString();
-    const newTask = {
-      station: defaultStation,
-      title: "New Task",
-      subtitle: "Task description",
-      estimatedTimeMinutes: 1,
-      picture_url: '' // Initialize with empty picture_url
-    };
-
+    const newTask = { station: defaultStation, title: "New Task", subtitle: "Task description", estimatedTimeMinutes: 1, picture_url: '' };
     const insertIndex = taskIndex + 1;
     const updatedTasks = [...tasks];
     updatedTasks.splice(insertIndex, 0, newTask);
     setTasks(updatedTasks);
-
-    if (editingTask !== null && editingTask >= insertIndex) {
-      setEditingTask(editingTask + 1);
-    }
-
-    // setTimeout(() => {
-    //   startEditingTask(insertIndex);
-    // }, 0);
+    if (editingTask !== null && editingTask >= insertIndex) setEditingTask(editingTask + 1);
   };
 
   const addNewTask = () => {
     const defaultStation = (tasks?.[tasks.length - 1]?.station || 'Station 1').toString();
-    const newTask = {
-      station: defaultStation,
-      title: "New Task",
-      subtitle: "Task description",
-      estimatedTimeMinutes: 1,
-      picture_url: '' // Initialize with empty picture_url
-    };
+    const newTask = { station: defaultStation, title: "New Task", subtitle: "Task description", estimatedTimeMinutes: 1, picture_url: '' };
     setTasks([...tasks, newTask]);
+  };
 
-    // setTimeout(() => {
-    //   startEditingTask(tasks.length);
-    // }, 0);
+  const handleBreakTask = (taskIndex) => {
+    setTaskToBreak(tasks[taskIndex]);
+    setTaskToBreakIndex(taskIndex);
+    setBreakTaskDialogOpen(true);
+  };
+
+  const handleTasksBreak = (taskIndex, subtasks) => {
+    const updatedTasks = [...tasks];
+    // Remove the original task and insert subtasks in its place
+    updatedTasks.splice(taskIndex, 1, ...subtasks);
+    setTasks(updatedTasks);
+    setBreakTaskDialogOpen(false);
+    setTaskToBreak(null);
+    setTaskToBreakIndex(null);
   };
 
   const totalTime = tasks.reduce((sum, task) => sum + task.estimatedTimeMinutes, 0);
 
-  // Automatically trigger image generation for any tasks missing an image
+  // Automatically trigger image generation for tasks missing an image
   useEffect(() => {
     if (!isOpen) return;
     if (!tasks || tasks.length === 0) return;
-
     const hasMissing = tasks.some(t => !t?.picture_url);
     if (!hasMissing) return;
-
     const now = Date.now();
-    if (now - lastBulkTimeRef.current < 600) return; // small throttle
+    if (now - lastBulkTimeRef.current < 600) return;
     lastBulkTimeRef.current = now;
-
     setBulkImageTrigger(prev => prev + 1);
   }, [isOpen, tasks]);
 
@@ -202,29 +181,8 @@ export default function TaskTable({
             <Typography variant="h6">{t('TextGenerative.taskBreakdown')}</Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {/* <Tooltip title={t('TextGenerative.generateMissingImages') || 'Generate missing images'}>
-              <Button
-                variant="outlined"
-                startIcon={<ImageIcon />}
-                onClick={handleGenerateMissingImages}
-                disabled={tasks.length === 0}
-                sx={{
-                  color: colors.primary,
-                  borderColor: colors.primary,
-                  "&:hover": { bgcolor: `${colors.primary}1A` }
-                }}
-              >
-                {t('TextGenerative.generateMissingImages') || 'Generate missing images'}
-              </Button>
-            </Tooltip> */}
             <Tooltip title={t('TextGenerative.addNewTask')}>
-              <IconButton
-                onClick={addNewTask}
-                sx={{
-                  color: colors.primary,
-                  "&:hover": { bgcolor: `${colors.primary}1A` }
-                }}
-              >
+              <IconButton onClick={addNewTask} sx={{ color: colors.primary, "&:hover": { bgcolor: `${colors.primary}1A` } }}>
                 <AddCircleIcon />
               </IconButton>
             </Tooltip>
@@ -240,11 +198,7 @@ export default function TaskTable({
         {complexity && (
           <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
             <Typography variant="body2" sx={{ color: colors.textMuted }}>{t('TextGenerative.complexity')}:</Typography>
-            <Chip
-              label={complexity}
-              color={getComplexityColor(complexity)}
-              size="small"
-            />
+            <Chip label={complexity} color={getComplexityColor(complexity)} size="small" />
           </Box>
         )}
 
@@ -298,7 +252,8 @@ export default function TaskTable({
                         imageModel={imageModel}
                         imageNoLogo={imageNoLogo}
                         imageSeed={imageSeed}
-                        trigger={bulkImageTrigger} // auto fire for rows without images
+                        baseImage={baseImage}           // ← forwarded
+                        trigger={bulkImageTrigger}
                       />
                     </TableCell>
 
@@ -314,9 +269,7 @@ export default function TaskTable({
                           placeholder={t('TextGenerative.station') || 'Station'}
                           sx={{
                             "& .MuiOutlinedInput-root": {
-                              bgcolor: colors.border,
-                              color: colors.text,
-                              fontSize: "0.95rem",
+                              bgcolor: colors.border, color: colors.text, fontSize: "0.95rem",
                               "& fieldset": { borderColor: colors.borderHover || colors.border },
                               "&:hover fieldset": { borderColor: colors.textMuted },
                               "&.Mui-focused fieldset": { borderColor: colors.primary },
@@ -339,18 +292,14 @@ export default function TaskTable({
                           size="small"
                           sx={{
                             "& .MuiOutlinedInput-root": {
-                              bgcolor: colors.border,
-                              color: colors.text,
-                              fontSize: "1rem",
+                              bgcolor: colors.border, color: colors.text, fontSize: "1rem",
                               "& fieldset": { borderColor: colors.borderHover || colors.border },
                               "&:hover fieldset": { borderColor: colors.textMuted },
                               "&.Mui-focused fieldset": { borderColor: colors.primary },
                             },
                           }}
                         />
-                      ) : (
-                        task.title
-                      )}
+                      ) : task.title}
                     </TableCell>
 
                     {/* Subtitle Cell */}
@@ -365,18 +314,14 @@ export default function TaskTable({
                           placeholder="Task description"
                           sx={{
                             "& .MuiOutlinedInput-root": {
-                              bgcolor: colors.border,
-                              color: colors.text,
-                              fontSize: "1rem",
+                              bgcolor: colors.border, color: colors.text, fontSize: "1rem",
                               "& fieldset": { borderColor: colors.borderHover || colors.border },
                               "&:hover fieldset": { borderColor: colors.textMuted },
                               "&.Mui-focused fieldset": { borderColor: colors.primary },
                             },
                           }}
                         />
-                      ) : (
-                        task.subtitle || "-"
-                      )}
+                      ) : (task.subtitle || "-")}
                     </TableCell>
 
                     {/* Time Cell */}
@@ -392,9 +337,7 @@ export default function TaskTable({
                           sx={{
                             width: "80px",
                             "& .MuiOutlinedInput-root": {
-                              bgcolor: colors.border,
-                              color: colors.text,
-                              fontSize: "0.9rem",
+                              bgcolor: colors.border, color: colors.text, fontSize: "0.9rem",
                               "& fieldset": { borderColor: colors.borderHover || colors.border },
                               "&:hover fieldset": { borderColor: colors.textMuted },
                               "&.Mui-focused fieldset": { borderColor: colors.primary },
@@ -406,12 +349,7 @@ export default function TaskTable({
                           label={formatTime(task.estimatedTimeMinutes)}
                           size="small"
                           variant="outlined"
-                          sx={{
-                            fontSize: "0.9rem",
-                            height: "20px",
-                            color: colors.primary,
-                            borderColor: colors.primary
-                          }}
+                          sx={{ fontSize: "0.9rem", height: "20px", color: colors.primary, borderColor: colors.primary }}
                         />
                       )}
                     </TableCell>
@@ -423,26 +361,12 @@ export default function TaskTable({
                           {editingTask === index ? (
                             <>
                               <Tooltip title={t('TextGenerative.save')}>
-                                <IconButton
-                                  size="small"
-                                  onClick={saveEditedTask}
-                                  sx={{
-                                    color: colors.primary,
-                                    "&:hover": { bgcolor: `${colors.primary}1A` }
-                                  }}
-                                >
+                                <IconButton size="small" onClick={saveEditedTask} sx={{ color: colors.primary, "&:hover": { bgcolor: `${colors.primary}1A` } }}>
                                   <CheckIcon sx={{ fontSize: 16 }} />
                                 </IconButton>
                               </Tooltip>
                               <Tooltip title={t('TextGenerative.cancel')}>
-                                <IconButton
-                                  size="small"
-                                  onClick={cancelEditingTask}
-                                  sx={{
-                                    color: colors.textMuted,
-                                    "&:hover": { bgcolor: "rgba(128, 128, 128, 0.1)" }
-                                  }}
-                                >
+                                <IconButton size="small" onClick={cancelEditingTask} sx={{ color: colors.textMuted, "&:hover": { bgcolor: "rgba(128,128,128,0.1)" } }}>
                                   <CancelIcon sx={{ fontSize: 16 }} />
                                 </IconButton>
                               </Tooltip>
@@ -450,26 +374,12 @@ export default function TaskTable({
                           ) : (
                             <>
                               <Tooltip title={t('TextGenerative.edit')}>
-                                <IconButton
-                                  size="small"
-                                  onClick={() => startEditingTask(index)}
-                                  sx={{
-                                    color: colors.primary,
-                                    "&:hover": { bgcolor: `${colors.primary}1A` }
-                                  }}
-                                >
+                                <IconButton size="small" onClick={() => startEditingTask(index)} sx={{ color: colors.primary, "&:hover": { bgcolor: `${colors.primary}1A` } }}>
                                   <EditIcon sx={{ fontSize: 16 }} />
                                 </IconButton>
                               </Tooltip>
                               <Tooltip title={t('TextGenerative.delete')}>
-                                <IconButton
-                                  size="small"
-                                  onClick={() => deleteTask(index)}
-                                  sx={{
-                                    color: colors.accent,
-                                    "&:hover": { bgcolor: `${colors.accent}1A` }
-                                  }}
-                                >
+                                <IconButton size="small" onClick={() => deleteTask(index)} sx={{ color: colors.accent, "&:hover": { bgcolor: `${colors.accent}1A` } }}>
                                   <DeleteIcon sx={{ fontSize: 16 }} />
                                 </IconButton>
                               </Tooltip>
@@ -477,19 +387,18 @@ export default function TaskTable({
                           )}
                         </Box>
                         {editingTask !== index && (
-                          <Tooltip title={t('TextGenerative.addTaskAfter')}>
-                            <IconButton
-                              size="small"
-                              onClick={() => addTaskAfter(index)}
-                              sx={{
-                                color: "#00e676",
-                                "&:hover": { bgcolor: "rgba(0, 230, 118, 0.1)" },
-                                alignSelf: "center"
-                              }}
-                            >
-                              <PlaylistAddIcon sx={{ fontSize: 16 }} />
-                            </IconButton>
-                          </Tooltip>
+                          <Box sx={{ display: "flex", gap: 0.5 }}>
+                            <Tooltip title={t('TextGenerative.addTaskAfter')}>
+                              <IconButton size="small" onClick={() => addTaskAfter(index)} sx={{ color: "#00e676", "&:hover": { bgcolor: "rgba(0,230,118,0.1)" }, alignSelf: "center" }}>
+                                <PlaylistAddIcon sx={{ fontSize: 16 }} />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title={t('TextGenerative.breakTask') || 'Break into Subtasks'}>
+                              <IconButton size="small" onClick={() => handleBreakTask(index)} sx={{ color: "#ffb74d", "&:hover": { bgcolor: "rgba(255,183,77,0.1)" }, alignSelf: "center" }}>
+                                <CallSplitIcon sx={{ fontSize: 16 }} />
+                              </IconButton>
+                            </Tooltip>
+                          </Box>
                         )}
                       </Box>
                     </TableCell>
@@ -511,24 +420,37 @@ export default function TaskTable({
                 </Typography>
               </Box>
 
-              {/* Upload Button */}
-              <Button
-                variant="contained"
-                startIcon={<CloudUploadIcon />}
-                onClick={handleOpenSitePopup}
-                disabled={tasks.length === 0}
-                sx={{
-                  bgcolor: colors.primary,
-                  "&:hover": { bgcolor: colors.primaryHover },
-                  "&:disabled": {
-                    bgcolor: colors.border,
-                    color: colors.textMuted
-                  },
-                  minWidth: "160px"
-                }}
-              >
-                {t('PushToPlannerPopup.selectSiteAndUpload') || 'Select Site & Upload'}
-              </Button>
+              <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                <Button
+                  variant="outlined"
+                  startIcon={<VideoFileIcon />}
+                  onClick={() => setVideoDialogOpen(true)}
+                  disabled={tasks.length === 0}
+                  sx={{
+                    color: colors.primary,
+                    borderColor: colors.primary,
+                    "&:hover": { bgcolor: `${colors.primary}1A`, borderColor: colors.primaryHover },
+                    "&:disabled": { borderColor: colors.border, color: colors.textMuted },
+                    minWidth: "140px"
+                  }}
+                >
+                  {t('VideoGenerate.createVideo') || 'Create Video'}
+                </Button>
+                <Button
+                  variant="contained"
+                  startIcon={<CloudUploadIcon />}
+                  onClick={handleOpenSitePopup}
+                  disabled={tasks.length === 0}
+                  sx={{
+                    bgcolor: colors.primary,
+                    "&:hover": { bgcolor: colors.primaryHover },
+                    "&:disabled": { bgcolor: colors.border, color: colors.textMuted },
+                    minWidth: "160px"
+                  }}
+                >
+                  {t('PushToPlannerPopup.selectSiteAndUpload') || 'Select Site & Upload'}
+                </Button>
+              </Box>
             </Box>
           </Box>
         </Box>
@@ -541,6 +463,32 @@ export default function TaskTable({
         tasks={tasks}
         complexity={complexity}
         direction={direction}
+      />
+
+      {/* Video Generate Dialog */}
+      <VideoGenerateDialog
+        isOpen={videoDialogOpen}
+        onClose={() => setVideoDialogOpen(false)}
+        tasks={tasks}
+        theme={theme}
+        isRTL={isRTL}
+      />
+
+      {/* Break Task Dialog */}
+      <BreakTaskDialog
+        isOpen={breakTaskDialogOpen}
+        onClose={() => {
+          setBreakTaskDialogOpen(false);
+          setTaskToBreak(null);
+          setTaskToBreakIndex(null);
+        }}
+        task={taskToBreak}
+        taskIndex={taskToBreakIndex}
+        onTasksBreak={handleTasksBreak}
+        complexity={complexity}
+        theme={theme}
+        direction={direction}
+        isRTL={isRTL}
       />
     </>
   );

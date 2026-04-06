@@ -8,7 +8,7 @@ const PlacesDropdown = (props) => {
   useEffect(() => {
     const translatePlaces = async () => {
       const translations = await Promise.all(
-        props.allPlaces.map(async (place) => ({
+        (props.allPlaces || []).map(async (place) => ({
           ...place,
           // originalName: place.name, // Store the original name
           translatedname: await translate(place.name, props.currentLanguage),

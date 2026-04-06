@@ -22,9 +22,22 @@ export default function InputFileUpload(props) {
 
     const { showNotification } = useNotification();
     
+    const isHeic = (file) => {
+        const name = file.name?.toLowerCase() ?? '';
+        return name.endsWith('.heic') || name.endsWith('.heif') ||
+            file.type === 'image/heic' || file.type === 'image/heif';
+    };
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            // HEIC/HEIF files cannot be rendered by the browser natively,
+            // so skip the dimension check and accept them directly.
+            if (isHeic(file)) {
+                props.setPicture(file);
+                return;
+            }
+
             const reader = new FileReader();
             const img = new Image();
 
@@ -65,7 +78,7 @@ export default function InputFileUpload(props) {
                     <CloudUploadIcon />. {t('plannerPage.Upload_from_computer')}
                 </>
             )}
-            <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+            <VisuallyHiddenInput type="file" accept="image/*,.heic,.heif" onChange={handleFileChange} />
         </Button>
     );
 }

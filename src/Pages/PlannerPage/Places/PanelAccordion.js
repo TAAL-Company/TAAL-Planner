@@ -7,6 +7,8 @@ import { CgSearch } from "react-icons/cg";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import Stations from "../Stations/Stations";
 import Tasks from "../Tasks/tasks";
+import { FiMinimize2 } from "react-icons/fi";
+import { FiMaximize2 } from "react-icons/fi";
 
 /* ─── Styled Components (same pattern as SizeSelector) ─────── */
 
@@ -31,7 +33,7 @@ const LabelButton = styled(Box)(({ active, panelcolor }) => ({
   height: active ? 50 : 600,
   display: "flex",
   alignItems: "center",
-  justifyContent: "center",
+  justifyContent: active ? "center" : "space-between",
   cursor: "pointer",
   borderRight: "1px solid rgba(0,0,0,.12)",
   background: panelcolor,
@@ -156,7 +158,7 @@ export default function PanelAccordion(props) {
   } = props;
 
   // All 4 open by default — change array to e.g. ["packs"] to start with only one open
-  const [openPanels, setOpenPanels] = useState([ "routes", "stations", "tasks"]);
+  const [openPanels, setOpenPanels] = useState(["routes", "stations", "tasks"]);
 
   const handleToggle = (id) => {
     setOpenPanels((prev) =>
@@ -376,6 +378,7 @@ export default function PanelAccordion(props) {
                                   details={false}
                                   erasable={true}
                                   uploadfromsheet={true}
+                                  video={true}
                                 />
                               ) : (
                                 <></>
@@ -522,7 +525,7 @@ export default function PanelAccordion(props) {
       ),
     },
   ];
-  
+
   let panelsdir = props.language !== 'English' ? panels : panels.reverse();
 
   /* ── Render ─────────────────────────────────────────────────── */
@@ -540,10 +543,10 @@ export default function PanelAccordion(props) {
                 if (panel.id === "packs") {
                   handleToggle(panel.id);
                 }
-                
+
               }}
             >
-              {panel.label}
+              {panel.id === "packs" ? (isActive ? <FiMinimize2 /> : <FiMaximize2/>) : (<></>)}
               {panel.id === "stations" ?
                 (<>
                   <div>
@@ -557,6 +560,8 @@ export default function PanelAccordion(props) {
                 </>) :
                 (<></>)
               }
+              {panel.label}
+
             </LabelButton>
 
             {/* Sliding content */}

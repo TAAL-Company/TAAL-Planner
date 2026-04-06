@@ -72,6 +72,13 @@ function Modal_Dropdown(props) {
         ) : (
           <></>
         )}
+        {props.video ? (
+          <Link onClick={() => props.setRequestForEditing('video')}>
+            {t('VideoGenerate.createVideo') || 'Create Video'}
+          </Link>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );

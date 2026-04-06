@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Typography, Icon, Button, Chip, IconButton, Tooltip } from "@mui/material";
-import TaskIcon from '@mui/icons-material/Task';
+import { Box, IconButton, Tooltip } from "@mui/material";
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { useTranslation } from "react-i18next";
-// import { usePollinationsChat } from '@pollinations/react';
-import TaskTable from './TaskTable';
-import ChatContainer from './ChatContainer';
 import InputContainer from './InputContainer';
 import SettingsDialog from './SettingsDialog';
+import WelcomeView from './WelcomeView';
+import ChatView from './ChatView';
 import { TaalAiThemeProvider, useTaalAiTheme } from './ThemeContext';
 import "../../../i18n";
 import { createChatCompletion } from "../../../api/api";
@@ -29,6 +27,29 @@ function SearchUIContent() {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [hasTasksReady, setHasTasksReady] = useState(false);
   const progressIntervalRef = useRef(null);
+
+  // ── Base image (shared source for all task-image generations) ──────
+  // { file: File, preview: string } | null
+  const [baseImage, setBaseImage] = useState(null);
+
+  const handleBaseImageChange = (file) => {
+    // Revoke previous preview URL to avoid memory leaks
+    if (baseImage?.preview) URL.revokeObjectURL(baseImage.preview);
+
+    if (!file) {
+      setBaseImage(null);
+      return;
+    }
+    setBaseImage({ file, preview: URL.createObjectURL(file) });
+  };
+
+  // Revoke object URL on unmount
+  useEffect(() => {
+    return () => {
+      if (baseImage?.preview) URL.revokeObjectURL(baseImage.preview);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Add seed to image generation settings state
   const [imagePromptPrefix, setImagePromptPrefix] = useState(
@@ -118,7 +139,6 @@ Write tasks so they can be understood by workers with varied cognitive abilities
 
   // Initialize custom prompt with default
   const [customSystemPrompt, setCustomSystemPrompt] = useState(defaultEditablePrompt);
-  // Initialize custom prompt with default
   useEffect(() => {
     if (!customSystemPrompt) {
       setCustomSystemPrompt(defaultEditablePrompt);
@@ -155,7 +175,6 @@ Write tasks so they can be understood by workers with varied cognitive abilities
     // Simulate progress while waiting for response
     progressIntervalRef.current = setInterval(() => {
       setLoadingProgress((prev) => {
-        // Slow down as we approach 90% (never reach 100% until complete)
         if (prev >= 90) return prev;
         const increment = prev < 30 ? 8 : prev < 60 ? 5 : prev < 80 ? 2 : 1;
         return Math.min(prev + increment, 90);
@@ -173,13 +192,11 @@ Write tasks so they can be understood by workers with varied cognitive abilities
       showNotification('error', error.message);
       console.error('Azure OpenAI request failed:', error);
     } finally {
-      // Clear progress interval
       if (progressIntervalRef.current) {
         clearInterval(progressIntervalRef.current);
         progressIntervalRef.current = null;
       }
       setLoadingProgress(100);
-      // Small delay to show 100% before hiding
       setTimeout(() => {
         setLoading(false);
         setLoadingProgress(0);
@@ -187,17 +204,9 @@ Write tasks so they can be understood by workers with varied cognitive abilities
     }
   };
 
-  // // Sync our loading state with the hook's loading state
-  // useEffect(() => {
-  //   if (hookLoading !== undefined) {
-  //     setLoading(hookLoading);
-  //     console.log("Hook loading state:", hookLoading);
-  //   }
-  // }, [hookLoading]);
-
   useEffect(() => {
     if (messages[messages.length - 1]?.role === 'assistant') {
-      setLoading(false); // Reset loading when AI responds
+      setLoading(false);
     }
   }, [messages]);
 
@@ -287,19 +296,15 @@ Write tasks so they can be understood by workers with varied cognitive abilities
         setIsTableOpen(false);
 
         const complexityOptions = [
-          { value: 'Basic', label: `${t('TextGenerative.basic')}` },
+          { value: 'Basic',  label: `${t('TextGenerative.basic')}` },
           { value: 'Medium', label: `${t('TextGenerative.medium')}` },
-          { value: 'High', label: `${t('TextGenerative.high')}` }
+          { value: 'High',   label: `${t('TextGenerative.high')}` }
         ];
         const complexityInfo = complexityOptions.find(opt => opt.value === selectedComplexity);
 
-        // Store the original user input
         const originalInput = input;
-
-        // Create enhanced message for AI
         const messageWithComplexity = `Input:\n${input}\n\nInstruction: Create a clear, pre-school level task breakdown with ${complexityInfo.label} complexity level.`;
 
-        // Track original inputs to filter them in ChatContainer
         setUserInputs(prev => [...prev, originalInput]);
 
         await sendMessageToAzure(messageWithComplexity);
@@ -333,6 +338,23 @@ Write tasks so they can be understood by workers with varied cognitive abilities
 
   const toggleTable = () => {
     setIsTableOpen(!isTableOpen);
+  };
+
+  // ── Shared InputContainer props ────────────────────────────────────
+  const inputContainerProps = {
+    input,
+    setInput,
+    loading,
+    selectedComplexity,
+    setSelectedComplexity,
+    onSend: handleSend,
+    onKeyPress: handleKeyPress,
+    hasChatStarted,
+    direction,
+    isRTL,
+    theme,
+    baseImage,
+    onBaseImageChange: handleBaseImageChange,
   };
 
   return (
@@ -397,197 +419,45 @@ Write tasks so they can be understood by workers with varied cognitive abilities
         theme={theme}
       />
 
-      {/* Title and Input Container - Centered when chat hasn't started */}
+      {/* Welcome screen — no chat yet */}
       {!hasChatStarted && (
-        <Box sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 4,
-          width: "100%",
-          maxWidth: "800px",
-        }}>
-          {/* Title */}
-          <Box sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 0,
-            direction: direction,
-          }}>
-            <Icon
-              sx={{
-                width: 100,
-                height: 106,
-                backgroundImage: "url('../../Pictures/logo_Taal_Ai.svg')",
-                backgroundSize: "contain",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                borderRadius: 1,
-                transform: isRTL ? "none" : "scaleX(-1)",
-                filter: theme.mode === 'light' ? 'invert(1)' : 'none',
-              }}
-            />
-            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <Typography variant="h5">{t("TextGenerative.title")}</Typography>
-              <Typography variant="body2" sx={{ color: theme.textMuted }}>
-                {t("TextGenerative.subtitle")}
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* Input Container - Centered */}
-          <InputContainer
-            input={input}
-            setInput={setInput}
-            loading={loading}
-            selectedComplexity={selectedComplexity}
-            setSelectedComplexity={setSelectedComplexity}
-            onSend={handleSend}
-            onKeyPress={handleKeyPress}
-            hasChatStarted={hasChatStarted}
-            direction={direction}
-            isRTL={isRTL}
-            theme={theme}
-          />
-        </Box>
+        <WelcomeView
+          direction={direction}
+          isRTL={isRTL}
+          theme={theme}
+          inputContainerProps={inputContainerProps}
+        />
       )}
 
-      {/* Chat Started Layout */}
+      {/* Chat layout — at least one message exchanged */}
       {hasChatStarted && (
-        <>
-          {/* Title - Top positioned */}
-          <Box sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 0,
-            transition: "all 0.5s ease",
-            direction: direction,
-            mb: 2,
-          }}>
-            <Icon
-              sx={{
-                width: 100,
-                height: 106,
-                backgroundImage: "url('../../Pictures/logo_Taal_Ai.svg')",//
-                backgroundSize: "contain",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-                borderRadius: 1,
-                transform: isRTL ? "none" : "scaleX(-1)",
-                filter: theme.mode === 'light' ? 'invert(1)' : 'none',
-              }}
-            />
-            <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <Typography variant="h5">{t("TextGenerative.title")}</Typography>
-              <Typography variant="body2" sx={{ color: theme.textMuted }}>
-                {t("TextGenerative.subtitle")}
-              </Typography>
-            </Box>
-          </Box>
-
-          {/* Action Buttons */}
-          <Box sx={{
-            display: "flex",
-            gap: 2,
-            mb: 2,
-            alignSelf: isRTL ? "flex-end" : "flex-start",
-            maxWidth: "100%",
-            width: "100%",
-            opacity: hasChatStarted ? 1 : 0,
-            transform: hasChatStarted ? "translateY(0)" : "translateY(-20px)",
-            transition: "all 0.5s ease",
-            direction: direction,
-          }}>
-            <Button
-              variant={isTableOpen ? "contained" : "outlined"}
-              startIcon={<TaskIcon />}
-              onClick={toggleTable}
-              disabled={!hasTasksReady}
-              sx={{
-                color: isTableOpen ? "white" : theme.primary,
-                borderColor: theme.primary,
-                bgcolor: isTableOpen ? theme.primary : "transparent",
-                "&:hover": {
-                  bgcolor: isTableOpen ? theme.primaryHover : `${theme.primary}1A`,
-                },
-                "&:disabled": {
-                  color: theme.textMuted,
-                  borderColor: theme.textMuted,
-                },
-              }}
-            >
-              {isTableOpen ? t('TextGenerative.hideTasks') : `${t('TextGenerative.showTasks')} ${tasks.length > 0 ? `(${tasks.length})` : ''}`}
-            </Button>
-            {complexity && (
-              <Chip
-                label={complexity}
-                color={getComplexityColor(complexity)}
-                size="small"
-                sx={{ alignSelf: "center" }}
-              />
-            )}
-          </Box>
-
-          {/* Main Content Area */}
-          <Box sx={{
-            display: "flex",
-            gap: 2,
-            width: "100%",
-            flex: 1,
-            mb: 2,
-            opacity: hasChatStarted ? 1 : 0,
-            transform: hasChatStarted ? "translateY(0)" : "translateY(20px)",
-            transition: "all 0.5s ease",
-            direction: direction,
-          }}>
-            <ChatContainer
-              messages={messages}
-              userInputs={userInputs}
-              loading={loading}
-              loadingProgress={loadingProgress}
-              direction={direction}
-              isRTL={isRTL}
-              isTableOpen={isTableOpen}
-              onShowTasks={handleShowTasks}
-              getComplexityColor={getComplexityColor}
-              theme={theme}
-            />
-
-            <TaskTable
-              isOpen={isTableOpen}
-              onClose={() => setIsTableOpen(false)}
-              tasks={tasks}
-              setTasks={setTasks}
-              complexity={complexity}
-              imagePromptPrefix={imagePromptPrefix}
-              imagePromptSuffix={imagePromptSuffix}
-              imageWidth={imageWidth}
-              imageHeight={imageHeight}
-              imageModel={imageModel}
-              imageNoLogo={imageNoLogo}
-              imageSeed={imageSeed}
-              direction={direction}
-              isRTL={isRTL}
-              getComplexityColor={getComplexityColor}
-              theme={theme}
-            />
-          </Box>
-
-          {/* Input Container - Fixed at bottom when chat started */}
-          <InputContainer
-            input={input}
-            setInput={setInput}
-            loading={loading}
-            selectedComplexity={selectedComplexity}
-            setSelectedComplexity={setSelectedComplexity}
-            onSend={handleSend}
-            onKeyPress={handleKeyPress}
-            hasChatStarted={hasChatStarted}
-            direction={direction}
-            isRTL={isRTL}
-            theme={theme}
-          />
-        </>
+        <ChatView
+          direction={direction}
+          isRTL={isRTL}
+          theme={theme}
+          inputContainerProps={inputContainerProps}
+          isTableOpen={isTableOpen}
+          toggleTable={toggleTable}
+          setIsTableOpen={setIsTableOpen}
+          hasTasksReady={hasTasksReady}
+          tasks={tasks}
+          setTasks={setTasks}
+          complexity={complexity}
+          getComplexityColor={getComplexityColor}
+          messages={messages}
+          userInputs={userInputs}
+          loading={loading}
+          loadingProgress={loadingProgress}
+          handleShowTasks={handleShowTasks}
+          imagePromptPrefix={imagePromptPrefix}
+          imagePromptSuffix={imagePromptSuffix}
+          imageWidth={imageWidth}
+          imageHeight={imageHeight}
+          imageModel={imageModel}
+          imageNoLogo={imageNoLogo}
+          imageSeed={imageSeed}
+          baseImage={baseImage}
+        />
       )}
     </Box>
   );

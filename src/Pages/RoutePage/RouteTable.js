@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Button, Menu, MenuItem } from '@mui/material';
+import VideoFileIcon from '@mui/icons-material/VideoFile';
+import VideoGenerateDialog from '../../components/VideoGenerate/VideoGenerateDialog';
+import RouteQRCodeDialog from '../../components/QRCodeWithLogo/RouteQRCodeDialog';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
 import { useNotification } from '../../components/Notification/NotificationProvider';
 import { useTranslation } from 'react-i18next';
 import { getingData_Routes, deleteRoute, getingData_Tasks, getingData_Places } from '../../api/api';
@@ -46,6 +50,10 @@ export default function RouteTable() {
   const [sites, setSites] = useState([]);
   const { showNotification } = useNotification();
   const { t } = useTranslation();
+  const [videoDialogOpen, setVideoDialogOpen] = useState(false);
+  const [videoTasksForDialog, setVideoTasksForDialog] = useState([]);
+  const [qrDialogOpen, setQrDialogOpen] = useState(false);
+  const [qrRoute, setQrRoute] = useState(null);
 
   const handleClickMenu = (event, route) => {
     setAnchorEl(event.currentTarget);
@@ -178,6 +186,18 @@ export default function RouteTable() {
     fetchSites();
   }, []);
 
+  const handleOpenQRCode = () => {
+    setQrRoute(selectedRoute);
+    setQrDialogOpen(true);
+    handleCloseMenu();
+  };
+
+  const handleCreateVideo = () => {
+    setVideoTasksForDialog(selectedRoute?.tasks || []);
+    setVideoDialogOpen(true);
+    handleCloseMenu();
+  };
+
   const handleDeleteRoute = async () => {
     try {
       await deleteRoute(selectedRoute.id);
@@ -284,6 +304,14 @@ export default function RouteTable() {
               <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
                 {/* <MenuItem onClick={handleClickOpenEditDialog}>{t('RoutePage.Edit')}</MenuItem> */}
                 <MenuItem onClick={handleDeleteRoute}>{t('RoutePage.Delete')}</MenuItem>
+                <MenuItem onClick={handleCreateVideo}>
+                  <VideoFileIcon sx={{ mr: 1, fontSize: 18 }} />
+                  {t('VideoGenerate.createVideo') || 'Create Video'}
+                </MenuItem>
+                <MenuItem onClick={handleOpenQRCode}>
+                  <QrCode2Icon sx={{ mr: 1, fontSize: 18 }} />
+                  {t('RoutePage.GenerateQR') || 'Generate QR Code'}
+                </MenuItem>
               </Menu>
 
               <PopupTable
@@ -306,6 +334,17 @@ export default function RouteTable() {
                 routes={routes}
                 RouteAction={routeAction}
                 sites={sites}
+              />
+              <VideoGenerateDialog
+                isOpen={videoDialogOpen}
+                onClose={() => setVideoDialogOpen(false)}
+                tasks={videoTasksForDialog}
+                isRTL={t('Direction') === 'rtl'}
+              />
+              <RouteQRCodeDialog
+                open={qrDialogOpen}
+                onClose={() => setQrDialogOpen(false)}
+                route={qrRoute}
               />
             </div>
           </div>

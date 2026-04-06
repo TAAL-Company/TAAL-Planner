@@ -13,8 +13,12 @@ import {
     getingData_RoutesbyIds
 } from '../../api/api';
 import { useState, useEffect } from 'react';
-import { Button, MenuItem, Menu } from '@mui/material';
+import { Button, MenuItem, Menu, Grid, ToggleButton, ToggleButtonGroup, Typography, CircularProgress, Backdrop, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import SiteForm from './SiteForm';
+import SiteCard from './SiteCard';
 import Toolbar from '../../components/Toolbar/Toolbar';
 import { useNotification } from "../../components/Notification/NotificationProvider";
 import { useTranslation } from "react-i18next";
@@ -39,16 +43,19 @@ const cacheLtr = createCache({
 export default function SitesTable() {
     const [expandedRows, setExpandedRows] = useState({});
     const [pageSize, setPageSize] = useState(10);
+    const [viewMode, setViewMode] = useState('table'); // 'table' or 'cards'
 
     // Helper to toggle expand for a section
-    const handleSectionExpandToggle = (siteId, section) => {
-        setExpandedRows(prev => ({
-            ...prev,
-            [siteId]: {
-                ...prev[siteId],
-                [section]: !prev[siteId]?.[section],
-            },
-        }));
+    const handleSectionExpandToggle = (siteId, section, row) => {
+        setPopupSection(section);
+        setPopupRow(row);
+        setPopupOpen(true);
+    };
+
+    const handleViewModeChange = (event, newMode) => {
+        if (newMode !== null) {
+            setViewMode(newMode);
+        }
     };
 
     const [loading, setLoading] = useState(true);
@@ -271,6 +278,36 @@ export default function SitesTable() {
         }
     };
 
+    // Function to group sites by common prefix
+    const groupSitesByPrefix = (sites) => {
+        const groups = {};
+        const ungrouped = [];
+
+        sites.forEach(site => {
+            const words = site.name.trim().split(/\s+/);
+            if (words.length > 1) {
+                const prefix = words[0];
+                // Check if there are other sites with the same prefix
+                const hasSamePrefix = sites.some(
+                    s => s.id !== site.id && s.name.trim().startsWith(prefix + ' ')
+                );
+                
+                if (hasSamePrefix) {
+                    if (!groups[prefix]) {
+                        groups[prefix] = [];
+                    }
+                    groups[prefix].push(site);
+                } else {
+                    ungrouped.push(site);
+                }
+            } else {
+                ungrouped.push(site);
+            }
+        });
+
+        return { groups, ungrouped };
+    };
+
     const { getRowsWithDetails } = Rows({ sites, expandedRows });
     const columnsObj = Columns({
         handleClickMenu,
@@ -329,7 +366,21 @@ export default function SitesTable() {
                             minHeight: '700px',
                         }}
                     >
-                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '18px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
+                            <ToggleButtonGroup
+                                value={viewMode}
+                                exclusive
+                                onChange={handleViewModeChange}
+                                aria-label="view mode"
+                                size="small"
+                            >
+                                <ToggleButton value="table" aria-label="table view">
+                                    <ViewListIcon />
+                                </ToggleButton>
+                                <ToggleButton value="cards" aria-label="cards view">
+                                    <ViewModuleIcon />
+                                </ToggleButton>
+                            </ToggleButtonGroup>
                             <Button
                                 variant="outlined"
                                 onClick={handleClickOpenDialog}
@@ -344,33 +395,141 @@ export default function SitesTable() {
                             </Button>
                         </div>
                         <div style={{ width: '100%' }}>
-                            <DataGrid
-                                style={{ direction: t('Direction') }}
-                                rows={getRowsWithDetails()}
-                                columns={columns}
-                                pageSize={pageSize}
-                                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                                rowsPerPageOptions={[10, 25, 50, 100]}
-                                autoHeight
-                                loading={loading}
-                                components={{
-                                    Toolbar: Toolbar,
-                                }}
-                                sx={{
-                                    background: '#fafbfc',
-                                    borderRadius: 2,
-                                    '& .MuiDataGrid-columnHeaders': {
-                                        backgroundColor: 'rgb(0, 112, 166)',
-                                        borderBottom: '1px solid rgb(224, 224, 224)',
-                                        fontWeight: 'bold',
-                                        fontSize: '1.1rem',
-                                        color: '#fff',
-                                    },
-                                    '& .MuiDataGrid-cell': {
-                                        fontSize: '1rem',
-                                    },
-                                }}
-                            />
+                            {viewMode === 'table' ? (
+                                <DataGrid
+                                    style={{ direction: t('Direction') }}
+                                    rows={getRowsWithDetails()}
+                                    columns={columns}
+                                    pageSize={pageSize}
+                                    onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                                    rowsPerPageOptions={[10, 25, 50, 100]}
+                                    autoHeight
+                                    loading={loading}
+                                    components={{
+                                        Toolbar: Toolbar,
+                                    }}
+                                    sx={{
+                                        background: '#fafbfc',
+                                        borderRadius: 2,
+                                        '& .MuiDataGrid-columnHeaders': {
+                                            backgroundColor: 'rgb(0, 112, 166)',
+                                            borderBottom: '1px solid rgb(224, 224, 224)',
+                                            fontWeight: 'bold',
+                                            fontSize: '1.1rem',
+                                            color: '#fff',
+                                        },
+                                        '& .MuiDataGrid-cell': {
+                                            fontSize: '1rem',
+                                        },
+                                    }}
+                                />
+                            ) : (
+                                <>
+                                    {loading ? (
+                                        <Grid container>
+                                            <Grid item xs={12} sx={{ textAlign: 'center', py: 4 }}>
+                                                <CircularProgress size="10rem" color="info" />
+                                            </Grid>
+                                        </Grid>
+                                    ) : sites.length === 0 ? (
+                                        <Grid container>
+                                            <Grid item xs={12} sx={{ textAlign: 'center', py: 4 }}>
+                                                <Typography>{t('SitePage.NoSites') || 'No sites available'}</Typography>
+                                            </Grid>
+                                        </Grid>
+                                    ) : (
+                                        (() => {
+                                            const { groups, ungrouped } = groupSitesByPrefix(sites);
+                                            return (
+                                                <>
+                                                    {/* Render ungrouped sites in General Group */}
+                                                    {ungrouped.length > 0 && (
+                                                        <Accordion 
+                                                            defaultExpanded
+                                                            sx={{ 
+                                                                mb: 2,
+                                                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                                                '&:before': {
+                                                                    display: 'none',
+                                                                }
+                                                            }}
+                                                        >
+                                                            <AccordionSummary
+                                                                expandIcon={<ExpandMoreIcon />}
+                                                                sx={{
+                                                                    backgroundColor: '#f5f5f5',
+                                                                    '&:hover': {
+                                                                        backgroundColor: '#eeeeee',
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                                                                    {t('SitePage.GeneralGroup') || 'General'} ({ungrouped.length})
+                                                                </Typography>
+                                                            </AccordionSummary>
+                                                            <AccordionDetails sx={{ p: 3 }}>
+                                                                <Grid container spacing={3}>
+                                                                    {ungrouped.map((site) => (
+                                                                        <Grid item xs={12} sm={6} md={4} lg={3} key={site.id}>
+                                                                            <SiteCard
+                                                                                site={site}
+                                                                                handleClickMenu={handleClickMenu}
+                                                                                handleSectionExpandToggle={handleSectionExpandToggle}
+                                                                            />
+                                                                        </Grid>
+                                                                    ))}
+                                                                </Grid>
+                                                            </AccordionDetails>
+                                                        </Accordion>
+                                                    )}
+                                                    
+                                                    {/* Render grouped sites */}
+                                                    {Object.entries(groups).map(([prefix, groupedSites]) => (
+                                                        <Accordion 
+                                                            key={prefix} 
+                                                            defaultExpanded
+                                                            sx={{ 
+                                                                mb: 2,
+                                                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                                                '&:before': {
+                                                                    display: 'none',
+                                                                }
+                                                            }}
+                                                        >
+                                                            <AccordionSummary
+                                                                expandIcon={<ExpandMoreIcon />}
+                                                                sx={{
+                                                                    backgroundColor: '#f5f5f5',
+                                                                    '&:hover': {
+                                                                        backgroundColor: '#eeeeee',
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                                                                    {prefix} ({groupedSites.length})
+                                                                </Typography>
+                                                            </AccordionSummary>
+                                                            <AccordionDetails sx={{ p: 3 }}>
+                                                                <Grid container spacing={3}>
+                                                                    {groupedSites.map((site) => (
+                                                                        <Grid item xs={12} sm={6} md={4} lg={3} key={site.id}>
+                                                                            <SiteCard
+                                                                                site={site}
+                                                                                handleClickMenu={handleClickMenu}
+                                                                                handleSectionExpandToggle={handleSectionExpandToggle}
+                                                                            />
+                                                                        </Grid>
+                                                                    ))}
+                                                                </Grid>
+                                                            </AccordionDetails>
+                                                        </Accordion>
+                                                    ))}
+                                                </>
+                                            );
+                                        })()
+                                    )}
+                                </>
+                            )}
                             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
                                 <MenuItem onClick={handleClickOpenEditDialog}>{t('SitePage.Edit')}</MenuItem>
                                 <MenuItem onClick={handleDuplicateSite}>{t('SitePage.Duplicate')}</MenuItem>

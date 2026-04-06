@@ -1663,7 +1663,6 @@ export const deleteLoop = async (loopId) => {
 /*~~~~~~~~~~~~~~~~~  Azure AI  ~~~~~~~~~~~~~~~~~~~~~~~*/
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
-
 export const sendAzureChatMessage = async (messages) => {
   const response = await axios.post(`${baseUrl}/api/azure-chat`, {
     messages,
@@ -1671,7 +1670,6 @@ export const sendAzureChatMessage = async (messages) => {
 
   return response.data;
 };
-
 
 const endpoint = process.env.REACT_APP_AZURE_OPENAI_ENDPOINT;
 const apiKey = process.env.REACT_APP_AZURE_OPENAI_API_KEY;
@@ -1695,7 +1693,7 @@ const buildUrl = () => {
   return `${normalizedEndpoint}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
 };
 
-const buildImageUrl = () => {
+const buildImageGenerationsUrl = () => {
   if (!endpointimage || !apikeyimage || !apiVersionimage || !deploymentimage) {
     throw new Error('Missing Azure OpenAI image configuration');
   }
@@ -1707,7 +1705,20 @@ const buildImageUrl = () => {
   return `${normalizedEndpoint}/openai/deployments/${deploymentimage}/images/generations?api-version=${apiVersionimage}`;
 };
 
-export const createChatCompletion = async (messages, options = {}) => {
+const buildImageEditsUrl = () => {
+  if (!endpointimage || !apikeyimage || !apiVersionimage || !deploymentimage) {
+    throw new Error('Missing Azure OpenAI image configuration');
+  }
+
+  const normalizedEndpoint = endpointimage.endsWith('/')
+    ? endpointimage.slice(0, -1)
+    : endpointimage;
+
+  return `${normalizedEndpoint}/openai/deployments/${deploymentimage}/images/edits?api-version=${apiVersionimage}`;
+};
+
+// ─── Auth guard (shared) ──────────────────────────────────────────────────────
+const assertAdmin = () => {
   let role = null;
   try {
     const jwt = sessionStorage.getItem('jwt');
@@ -1722,20 +1733,63 @@ export const createChatCompletion = async (messages, options = {}) => {
   if (role !== 'ADMIN') {
     throw new Error('Access denied: Only admins can use this feature.');
   }
+};
+
+// ─── Scale helper ─────────────────────────────────────────────────────────────
+/**
+ * Draws a blob / URL onto a canvas scaled to 952×648 and returns a blob URL.
+ */
+const scaleImageTo952x648BlobUrl = (source) =>
+  new Promise((resolve, reject) => {
+    const img = new window.Image();
+    img.crossOrigin = 'Anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 952;
+      canvas.height = 648;
+      canvas.getContext('2d').drawImage(img, 0, 0, 952, 648);
+      canvas.toBlob((blob) => {
+        if (blob) resolve(URL.createObjectURL(blob));
+        else reject(new Error('Failed to create blob from canvas'));
+      }, 'image/png');
+    };
+    img.onerror = reject;
+    img.src = typeof source === 'string' ? source : URL.createObjectURL(source);
+  });
+
+// ─── Parse response ───────────────────────────────────────────────────────────
+/**
+ * Handles both b64_json and url response formats.
+ * Returns a blob URL or a remote URL string.
+ */
+const extractImageFromResponse = async (data) => {
+  const item = data?.data?.[0];
+  if (!item) throw new Error('Azure OpenAI image response missing data');
+
+  if (item.b64_json) {
+    const byteString = atob(item.b64_json);
+    const bytes = new Uint8Array(byteString.length);
+    for (let i = 0; i < byteString.length; i++) bytes[i] = byteString.charCodeAt(i);
+    const blob = new Blob([bytes], { type: 'image/png' });
+    return URL.createObjectURL(blob);
+  }
+
+  if (item.url) return item.url;
+
+  throw new Error('Azure OpenAI image response missing URL or b64_json');
+};
+
+// ─── Chat completion ──────────────────────────────────────────────────────────
+export const createChatCompletion = async (messages, options = {}) => {
+  assertAdmin();
+
   const response = await fetch(buildUrl(), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'api-key': apiKey,
     },
-    body: JSON.stringify({
-      messages,
-      // temperature: options.temperature ?? 0.7,
-      // max_completion_tokens: options.maxTokens ?? 800,
-      // top_p: options.topP ?? 0.95,
-      // frequency_penalty: options.frequencyPenalty ?? 0,
-      // presence_penalty: options.presencePenalty ?? 0,
-    }),
+    body: JSON.stringify({ messages }),
   });
 
   if (!response.ok) {
@@ -1746,25 +1800,17 @@ export const createChatCompletion = async (messages, options = {}) => {
   return response.json();
 };
 
+// ─── Image generation ─────────────────────────────────────────────────────────
+/**
+ * Generates a brand-new image from a text prompt.
+ */
 export const generateAzureImage = async (
   prompt,
   { size = '1024x1024', quality = 'standard', style = 'vivid', n = 1 } = {}
 ) => {
-  let role = null;
-  try {
-    const jwt = sessionStorage.getItem('jwt');
-    if (jwt) {
-      if (typeof jwt === 'string' && jwt.startsWith('{')) {
-        role = JSON.parse(jwt).role;
-      } else if (typeof jwt === 'object' && jwt.role) {
-        role = jwt.role;
-      }
-    }
-  } catch (e) {}
-  if (role !== 'ADMIN') {
-    throw new Error('Access denied: Only admins can use this feature.');
-  }
-  const response = await fetch(buildImageUrl(), {
+  assertAdmin();
+
+  const response = await fetch(buildImageGenerationsUrl(), {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -1776,7 +1822,9 @@ export const generateAzureImage = async (
       quality,
       style,
       n,
-      response_format: 'url',
+      output_format: 'png',
+      // Falls back to url if the deployment doesn't support b64_json
+      response_format: 'b64_json',
     }),
   });
 
@@ -1786,40 +1834,74 @@ export const generateAzureImage = async (
   }
 
   const data = await response.json();
-  const imageUrl = data?.data?.[0]?.url;
+  const rawUrl = await extractImageFromResponse(data);
 
-  if (!imageUrl) {
-    throw new Error('Azure OpenAI image response missing URL');
+  return size !== '952x648' ? await scaleImageTo952x648BlobUrl(rawUrl) : rawUrl;
+};
+
+// ─── Image editing ────────────────────────────────────────────────────────────
+/**
+ * Edits / re-images an existing image using a text prompt.
+ *
+ * @param {string}            prompt   - Editing instruction
+ * @param {File|Blob}         imageFile - The source image (File or Blob)
+ * @param {object}            options
+ * @param {string}            options.size
+ * @param {number}            options.n
+ */
+export const editAzureImage = async (
+  prompt,
+  imageFile,
+  { size = '1024x1024', n = 1 } = {}
+) => {
+  assertAdmin();
+
+  // The edits endpoint requires multipart/form-data
+  const formData = new FormData();
+  formData.append('prompt', prompt);
+  formData.append('n', String(n));
+  formData.append('size', size);
+  formData.append('output_format', 'png');
+
+  // Ensure the file has a proper name so Azure can detect the MIME type
+  const file =
+    imageFile instanceof File
+      ? imageFile
+      : new File([imageFile], 'image.png', { type: 'image/png' });
+  formData.append('image', file, file.name);
+
+  const response = await fetch(buildImageEditsUrl(), {
+    method: 'POST',
+    headers: {
+      'api-key': apikeyimage,
+      // Do NOT set Content-Type here — the browser sets it with the boundary automatically
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Azure OpenAI image edit error: ${response.status} ${errText}`);
   }
 
-  // Scale the image to 952x648 after generation and return a blob URL
-  async function scaleImageTo952x648BlobUrl(url) {
-    return new Promise((resolve, reject) => {
-      const img = new window.Image();
-      img.crossOrigin = 'Anonymous';
-      img.onload = function () {
-        const canvas = document.createElement('canvas');
-        canvas.width = 952;
-        canvas.height = 648;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0, 952, 648);
-        canvas.toBlob(function(blob) {
-          if (blob) {
-            const blobUrl = URL.createObjectURL(blob);
-            resolve(blobUrl);
-          } else {
-            reject(new Error('Failed to create blob from canvas'));
-          }
-        }, 'image/png');
-      };
-      img.onerror = reject;
-      img.src = url;
-    });
-  }
+  const data = await response.json();
+  const rawUrl = await extractImageFromResponse(data);
 
-  // Only scale if the requested size is not already 952x648
-  if (size !== '952x648') {
-    return await scaleImageTo952x648BlobUrl(imageUrl);
+  return size !== '952x648' ? await scaleImageTo952x648BlobUrl(rawUrl) : rawUrl;
+};
+
+// ─── Unified helper ───────────────────────────────────────────────────────────
+/**
+ * Convenience wrapper used by TaskImage.
+ * If `imageFile` is provided it calls editAzureImage, otherwise generateAzureImage.
+ *
+ * @param {string}          prompt
+ * @param {File|Blob|null}  imageFile   - Optional source image for editing
+ * @param {object}          options     - Forwarded to generate / edit
+ */
+export const generateOrEditAzureImage = async (prompt, imageFile = null, options = {}) => {
+  if (imageFile) {
+    return editAzureImage(prompt, imageFile, options);
   }
-  return imageUrl;
+  return generateAzureImage(prompt, options);
 };

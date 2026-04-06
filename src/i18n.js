@@ -374,6 +374,7 @@ const resources = {
         "Users": "Users",
         "Editors": "Editors",
         "Sites": "Sites",
+        "GeneralGroup": "General",
       },
       EditorPage: {
         "ADDANewEditor": "Add a New Editor",
@@ -468,7 +469,12 @@ const resources = {
         "Delete": "Delete",
         "sites": "Sites",
         "Routes": "Routes",
+        "QRCode": "Route QR Code",
+        "QRCodeHint": "Scan to view this route",
+        "DownloadQR": "Download PNG",
+        "GenerateQR": "Generate QR Code",
       },
+      close: "Close",
 
       // Add TextGenerative translations
       TextGenerative: {
@@ -500,6 +506,7 @@ const resources = {
         high: "High",
         addNewTask: "Add New Task at End",
         addTaskAfter: "Add Task After",
+        breakTask: "Break into Subtasks",
         edit: "Edit",
         delete: "Delete",
         save: "Save",
@@ -519,6 +526,20 @@ const resources = {
         model: "Model",
         noLogo: "No Logo",
         station: "Station",
+      },
+
+      BreakTaskDialog: {
+        title: "Break Task into Subtasks",
+        originalTask: "Original Task",
+        numSubtasks: "How many subtasks?",
+        numSubtasksHint: "Enter a number between 2 and 20",
+        generate: "Generate Subtasks",
+        generating: "Generating subtasks...",
+        preview: "Preview Subtasks",
+        totalTime: "Total Time",
+        accept: "Accept & Replace",
+        cancel: "Cancel",
+        subtasksGenerated: "Subtasks generated successfully",
       },
 
       // Add LoopPopup translations
@@ -581,6 +602,29 @@ const resources = {
         uploadingTaskProgress: "Uploading task {{current}}/{{total}}...",
         creatingRoute: "Creating route...",
         completed: "Completed!"
+      },
+
+      VideoGenerate: {
+        title            : "Create Slideshow Video",
+        preview          : "Video Preview",
+        format           : "Format",
+        secondsPerSlide  : "Seconds per slide",
+        fadeDuration     : "Transition fade",
+        generate         : "Generate Video",
+        regenerate       : "Change Settings",
+        download         : "Download",
+        shareWhatsapp    : "Share on WhatsApp",
+        whatsappText     : "Check out this TAAL task slideshow video!",
+        createVideo      : "Create Video",
+        slides           : "slides",
+        cancel           : "Cancel",
+        rendering        : "Rendering\u2026",
+        tasksIncluded    : "{{count}} of {{total}} tasks have images and will be included.",
+        noImagesHint     : "Generate images for tasks first, then come back to create the video.",
+        savedAsWebm      : "Saved as .webm in this browser",
+        mp4FallbackTooltip: "This browser doesn't support native MP4 recording. The video will be saved as WebM.",
+        estimatedLength  : "Estimated length: ~{{seconds}}s \u00b7 {{format}}",
+        madeWithTaal     : "Made with TAAL",
       },
 
       // FormsPage translations
@@ -910,7 +954,7 @@ const resources = {
         A_request_was_sent_to_the_assistant: "נשלחה בקשה לעוזר",
         View_All_Routes: "הצג את כל המסלולים",
         Help_for_user_in_task: "עזרה למשתמש במשימה",
-        Student_IDs: "מזהי תלמידים",
+        Student_IDs: "מזהי עובדים/ות",
         Write_additional_help_text: " - כתוב טקסט עזרה נוסף:",
         Select_User: "בחר משתמש",
         Please_fill_in_the_required_fields: "אנא מלא את השדות הנדרשים",
@@ -983,7 +1027,7 @@ const resources = {
         New_route: "מסלול חדש",
         route_name: "שם מסלול",
         Name_of_the_route: "שם המסלול",
-        List_of_students: "רשימת תלמידים",
+        List_of_students: "רשימת עובדים/ות",
         Search_student: "חפש תלמיד",
         List_of_Routes: "רשימת מסלולים",
         Search_Route: "חפש מסלול",
@@ -1226,6 +1270,7 @@ const resources = {
         "Users": "משתמשים",
         "Editors": "עורכים",
         "Sites": "אתרים",
+        "GeneralGroup": "כללי",
       },
       EditorPage: {
         "ADDANewEditor": "הוסף עורך חדש",
@@ -1320,7 +1365,12 @@ const resources = {
         "Delete": "מחק",
         "sites": "אתרים",
         "Routes": "מסלולים",
+        "QRCode": "קוד QR למסלול",
+        "QRCodeHint": "סרוק כדי לצפות במסלול",
+        "DownloadQR": "הורד PNG",
+        "GenerateQR": "צור קוד QR",
       },
+      close: "סגור",
 
       // Add TextGenerative translations (Hebrew)
       TextGenerative: {
@@ -1352,6 +1402,7 @@ const resources = {
         high: "גבוה",
         addNewTask: "הוסף משימה חדשה בסוף",
         addTaskAfter: "הוסף משימה אחרי",
+        breakTask: "פרק למשימות משנה",
         edit: "ערוך",
         delete: "מחק",
         save: "שמור",
@@ -1374,6 +1425,20 @@ const resources = {
         turbo: "Turbo",
         midjourney: "Midjourney",
         station: "תחנה",
+      },
+
+      BreakTaskDialog: {
+        title: "פירוק משימה למשימות משנה",
+        originalTask: "משימה מקורית",
+        numSubtasks: "כמה משימות משנה?",
+        numSubtasksHint: "הכנס מספר בין 2 ל-20",
+        generate: "צור משימות משנה",
+        generating: "יוצר משימות משנה...",
+        preview: "תצוגה מקדימה של משימות משנה",
+        totalTime: "זמן כולל",
+        accept: "אשר והחלף",
+        cancel: "ביטול",
+        subtasksGenerated: "משימות המשנה נוצרו בהצלחה",
       },
 
       // Add LoopPopup translations (Hebrew)
@@ -1436,6 +1501,29 @@ const resources = {
         uploadingTaskProgress: "מעלה משימה {{current}}/{{total}}...",
         creatingRoute: "יוצר מסלול...",
         completed: "הושלם!"
+      },
+
+      VideoGenerate: {
+        title            : "צור סרטון מצגת",
+        preview          : "תצוגה מקדימה של הסרטון",
+        format           : "פורמט",
+        secondsPerSlide  : "שניות לכל שקופית",
+        fadeDuration     : "מעבר דהייה",
+        generate         : "צור סרטון",
+        regenerate       : "שנה הגדרות",
+        download         : "הורד",
+        shareWhatsapp    : "שתף בוואטסאפ",
+        whatsappText     : "צפו בסרטון משימות TAAL שלי!",
+        createVideo      : "צור סרטון",
+        slides           : "שקופיות",
+        cancel           : "ביטול",
+        rendering        : "מעבד…",
+        tasksIncluded    : "{{count}} מתוך {{total}} משימות כוללות תמונה ויוכללו בסרטון.",
+        noImagesHint     : "צור תמונות למשימות תחילה, וחזור לכאן ליצירת הסרטון.",
+        savedAsWebm      : "נשמר כקובץ .webm בדפדפן זה",
+        mp4FallbackTooltip: "דפדפן זה אינו תומך בהקלטת MP4 מקורית. הסרטון יישמר כקובץ WebM.",
+        estimatedLength  : "אורך משוער: ~{{seconds}}ש · {{format}}",
+        madeWithTaal     : "נוצר עם TAAL",
       },
 
       // FormsPage translations
@@ -2079,6 +2167,7 @@ const resources = {
         "Users": "المستخدمون",
         "Editors": "المحررون",
         "Sites": "المواقع",
+        "GeneralGroup": "عام",
       },
       EditorPage: {
         "ADDANewEditor": "إضافة محرر جديد",
@@ -2173,7 +2262,12 @@ const resources = {
         "Delete": "حذف",
         "sites": "المواقع",
         "Routes": "المسارات",
+        "QRCode": "رمز QR للمسار",
+        "QRCodeHint": "امسح للاطلاع على هذا المسار",
+        "DownloadQR": "تنزيل PNG",
+        "GenerateQR": "إنشاء رمز QR",
       },
+      close: "إغلاق",
 
       // Add TextGenerative translations (Arabic)
       TextGenerative: {
@@ -2224,6 +2318,21 @@ const resources = {
         model: "النموذج",
         noLogo: "بدون شعار",
         station: "محطة",
+        breakTask: "تقسيم إلى مهام فرعية",
+      },
+
+      BreakTaskDialog: {
+        title: "تقسيم المهمة إلى مهام فرعية",
+        originalTask: "المهمة الأصلية",
+        numSubtasks: "كم عدد المهام الفرعية؟",
+        numSubtasksHint: "أدخل رقمًا بين 2 و 20",
+        generate: "إنشاء مهام فرعية",
+        generating: "جاري إنشاء المهام الفرعية...",
+        preview: "معاينة المهام الفرعية",
+        totalTime: "الوقت الإجمالي",
+        accept: "قبول واستبدال",
+        cancel: "إلغاء",
+        subtasksGenerated: "تم إنشاء المهام الفرعية بنجاح",
       },
 
       // Add LoopPopup translations (Arabic)
@@ -2286,6 +2395,29 @@ const resources = {
         uploadingTaskProgress: "جاري رفع المهمة {{current}}/{{total}}...",
         creatingRoute: "جاري إنشاء المسار...",
         completed: "اكتمل!"
+      },
+
+      VideoGenerate: {
+        title            : "إنشاء مقطع فيديو",
+        preview          : "معاينة الفيديو",
+        format           : "تنسيق",
+        secondsPerSlide  : "ثوانٍ لكل شريحة",
+        fadeDuration     : "تلاشي الانتقال",
+        generate         : "إنشاء فيديو",
+        regenerate       : "تغيير الإعدادات",
+        download         : "تحميل",
+        shareWhatsapp    : "مشاركة على واتساب",
+        whatsappText     : "شاهد فيديو مهام TAAL هذا!",
+        createVideo      : "إنشاء فيديو",
+        slides           : "شرائح",
+        cancel           : "إلغاء",
+        rendering        : "جاري المعالجة…",
+        tasksIncluded    : "{{count}} من {{total}} مهام تحتوي على صورة وستُدرج في الفيديو.",
+        noImagesHint     : "قم بإنشاء صور للمهام أولاً, ثم عد لإنشاء الفيديو.",
+        savedAsWebm      : "تم الحفظ بصيغة .webm في هذا المتصفح",
+        mp4FallbackTooltip: "هذا المتصفح لا يدعم تسجيل MP4 الأصلي. سيتم حفظ الفيديو بصيغة WebM.",
+        estimatedLength  : "المدة المتوقعة: ~{{seconds}}ث · {{format}}",
+        madeWithTaal     : "صُنع بواسطة TAAL",
       },
 
       // FormsPage translations
@@ -2932,6 +3064,7 @@ const resources = {
         "Users": "Пользователи",
         "Editors": "Редакторы",
         "Sites": "Сайты",
+        "GeneralGroup": "Общие",
       },
       EditorPage: {
         "ADDANewEditor": "Добавить нового редактора",
@@ -3026,7 +3159,12 @@ const resources = {
         "Delete": "Удалить",
         "sites": "Сайты",
         "Routes": "Маршруты",
+        "QRCode": "QR-код маршрута",
+        "QRCodeHint": "Отсканируйте для просмотра маршрута",
+        "DownloadQR": "Скачать PNG",
+        "GenerateQR": "Создать QR-код",
       },
+      close: "Закрыть",
 
       // Add TextGenerative translations (Russian)
       TextGenerative: {
@@ -3077,6 +3215,21 @@ const resources = {
         model: "Модель",
         noLogo: "Без логотипа",
         station: "Станция",
+        breakTask: "Разделить на подзадачи",
+      },
+
+      BreakTaskDialog: {
+        title: "Разделить задачу на подзадачи",
+        originalTask: "Исходная задача",
+        numSubtasks: "Сколько подзадач?",
+        numSubtasksHint: "Введите число от 2 до 20",
+        generate: "Создать подзадачи",
+        generating: "Создание подзадач...",
+        preview: "Предварительный просмотр подзадач",
+        totalTime: "Общее время",
+        accept: "Принять и заменить",
+        cancel: "Отмена",
+        subtasksGenerated: "Подзадачи успешно созданы",
       },
 
       // Add LoopPopup translations (Russian)
@@ -3139,6 +3292,29 @@ const resources = {
         uploadingTaskProgress: "Загрузка задачи {{current}}/{{total}}...",
         creatingRoute: "Создание маршрута...",
         completed: "Завершено!"
+      },
+
+      VideoGenerate: {
+        title            : "Создать слайд-шоу",
+        preview          : "Предпросмотр видео",
+        format           : "Формат",
+        secondsPerSlide  : "Секунд на слайд",
+        fadeDuration     : "Плавный переход",
+        generate         : "Создать видео",
+        regenerate       : "Изменить настройки",
+        download         : "Скачать",
+        shareWhatsapp    : "Поделиться в WhatsApp",
+        whatsappText     : "Посмотрите видео задач TAAL!",
+        createVideo      : "Создать видео",
+        slides           : "слайдов",
+        cancel           : "Отмена",
+        rendering        : "Обработка…",
+        tasksIncluded    : "{{count}} из {{total}} задач содержат изображения и будут включены.",
+        noImagesHint     : "Сначала сгенерируйте изображения для задач, затем вернитесь сюда для создания видео.",
+        savedAsWebm      : "Сохранено как .webm в этом браузере",
+        mp4FallbackTooltip: "Этот браузер не поддерживает запись MP4. Видео будет сохранено в формате WebM.",
+        estimatedLength  : "Примерная длительность: ~{{seconds}}с · {{format}}",
+        madeWithTaal     : "Создано с TAAL",
       },
 
       // FormsPage translations

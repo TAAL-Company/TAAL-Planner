@@ -198,7 +198,7 @@ function RouteTablePopUp({
                     const updatedTask = {
                         "title": task.Task,
                         "subtitle": task.Subtitle,
-                        "estimatedTimeSeconds": task["Estimated Time Seconds"],
+                        "estimatedTimeSeconds": parseInt(task["Estimated Time Seconds"]),
                         "picture_url": picture_url,
                         "audio_url": audio_url
                     };

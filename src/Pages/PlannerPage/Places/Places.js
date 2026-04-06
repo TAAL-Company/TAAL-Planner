@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   getingData_Routes,
@@ -49,6 +49,7 @@ import CsvtojsonRouteAdd from '../../../components/junk/csvtojson/csvtojsonRoute
 import DescriptionIcon from '@mui/icons-material/Description';
 import PlacesDropdown from "./PlacesDropdown"
 import { useTranslator } from '../../../Utility/TranslationProvider';
+import SettingsDialog from '../../FormsPage/components/SettingsDialog';
 
 import BorderedTreeView from './BorderedTreeView';
 
@@ -58,8 +59,10 @@ import RouteTablePopUp from '../../../components/RouteTablePopUp/RouteTablePopUp
 import AssistantIcon from '@mui/icons-material/Assistant';
 
 import { FaRobot } from 'react-icons/fa';
-import { Icon } from '@mui/material';
+import { Icon, Fab, Box, Typography } from '@mui/material';
+import SettingsIcon from '@mui/icons-material/Settings';
 import PanelAccordion from './PanelAccordion';
+import VideoGenerateDialog from '../../../components/VideoGenerate/VideoGenerateDialog';
 
 let tasksOfRoutes = {};
 // let allRoutes = [];
@@ -115,6 +118,8 @@ const Places = (props) => {
   const [firstStationName, setFirstStationName] = useState('');
   const [boardArrayDND, setBoardArrayDND] = useState([]);
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
+  const [videoDialogOpen, setVideoDialogOpen] = useState(false);
+  const [videoTasksForDialog, setVideoTasksForDialog] = useState([]);
   const [replaceRoute, setReplaceRoute] = useState([]);
   const [replaceRouteFlag, setReplaceRouteFlag] = useState(false);
   const [replaceSiteFlag, setReplaceSiteFlag] = useState(false);
@@ -135,8 +140,19 @@ const Places = (props) => {
   const [openUpload, setOpenUpload] = React.useState(false);
   const [openUploadsheets, setOpenUploadsheets] = React.useState(false);
   const [uploadOption, setUploadOption] = useState(null);
-  const [translateData, setTranslateData] = useState('original'); // 'original', 'translated', 'Mixed'
-  const { translate } = useTranslator();
+  // translateData is now disabled — translation is done centrally via handleTranslateData
+  // eslint-disable-next-line no-unused-vars
+  const translateData = 'original';
+  // eslint-disable-next-line no-unused-vars
+  const setTranslateData = () => {};
+  const { translate, translateArrayOfObjects } = useTranslator();
+
+  // Translation state
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [isTranslated, setIsTranslated] = useState(false);
+  const [currentTranslationLang, setCurrentTranslationLang] = useState('');
+  const originalDataRef = useRef({ tasks: [], routes: [], stations: [], users: [], packs: [] });
   const [openThreeDots, setOpenThreeDots] = useState(-1);
 
   const [allPacks, setallPacks] = useState([]); // All packs
@@ -192,6 +208,74 @@ const Places = (props) => {
       });
   };
 
+  // Handle translating all API data
+  const handleTranslateData = useCallback(async (targetLang) => {
+    setIsTranslating(true);
+    try {
+      const original = originalDataRef.current;
+      const [
+        translatedTasks,
+        translatedRoutes,
+        translatedStations,
+        translatedUsers,
+        translatedPacks,
+        translatedEditors,
+        translatedPlaces,
+      ] = await Promise.all([
+        translateArrayOfObjects(original.tasks, targetLang, ['title', 'subtitle']),
+        translateArrayOfObjects(original.routes, targetLang, ['name']),
+        translateArrayOfObjects(original.stations, targetLang, ['title', 'subtitle']),
+        translateArrayOfObjects(original.users, targetLang, ['name', 'role']),
+        translateArrayOfObjects(original.packs, targetLang, ['name']),
+        translateArrayOfObjects(original.editors, targetLang, ['name']),
+        translateArrayOfObjects(original.places, targetLang, ['name', 'description']),
+      ]);
+      setAllTasks(translatedTasks);
+      setAllRoutes(translatedRoutes);
+      setRoutes(translatedRoutes);
+      // Also update embedded task titles inside each station's .tasks array
+      // so tasksOfChosenStation (shown in Tasks panel) shows translated names
+      const translatedTaskMap = new Map(translatedTasks.map(t => [t.id, t]));
+      const stationsWithUpdatedTasks = translatedStations.map(station => ({
+        ...station,
+        tasks: (station.tasks || []).map(embeddedTask => {
+          const fullTask = translatedTaskMap.get(embeddedTask.id);
+          return fullTask ? { ...embeddedTask, title: fullTask.title, subtitle: fullTask.subtitle } : embeddedTask;
+        })
+      }));
+      setOnlyAllStation(stationsWithUpdatedTasks);
+      setStationArray(stationsWithUpdatedTasks.map((station, index) => ({ ...station, color: pastelColors[index % pastelColors.length] })));
+      setAllUsers(translatedUsers);
+      setallPacks(translatedPacks);
+      setAllEditors(translatedEditors);
+      // allPlaces is a module-level variable; update it so PlacesDropdown re-renders with translated names
+      allPlaces = translatedPlaces;
+      setIsTranslated(true);
+      setCurrentTranslationLang(targetLang);
+    } catch (error) {
+      console.error('Translation error:', error);
+    } finally {
+      setIsTranslating(false);
+    }
+  }, [translateArrayOfObjects]);
+
+  // Handle restoring original data
+  const handleRestoreOriginal = useCallback(() => {
+    const original = originalDataRef.current;
+    setAllTasks(original.tasks);
+    setAllRoutes(original.routes);
+    setRoutes(original.routes || []);
+    setOnlyAllStation(original.stations);
+    setStationArray((original.stations || []).map((station, index) => ({ ...station, color: pastelColors[index % pastelColors.length] })));
+    setAllUsers(original.users);
+    setallPacks(original.packs);
+    setAllEditors(original.editors || []);
+    // Restore module-level allPlaces variable
+    allPlaces = original.places || [];
+    setIsTranslated(false);
+    setCurrentTranslationLang('');
+  }, []);
+
   const reloadData = async () => {
     const keepRouteId = selectedRoute?.id; // preserve current route id
     handleDeselectSelectedRoute();
@@ -235,7 +319,17 @@ const Places = (props) => {
         pack.sites.some((site) => site.id === selectedSite?.id)
       );
 
-      // Update the state with the filtered data
+      // Store originals for translation restore (preserve existing places)
+      originalDataRef.current = {
+        ...originalDataRef.current,
+        tasks: newTasks,
+        routes: filteredRoutes,
+        stations: filteredStations,
+        users: newWorkers,
+        packs: filteredPacks,
+      };
+
+      // Update the state with the filtered data (must happen before auto-translate so translate can overwrite)
       setStationArray(
         filteredStations.map((station, index) => ({
           ...station,
@@ -245,8 +339,20 @@ const Places = (props) => {
       setRoutes(filteredRoutes);
       setAllWorkersForSite(uniqueWorkers);
       setFilteredPacksBySite(filteredPacks);
-
       setOnlyAllStation(filteredStations);
+
+      // Auto-translate based on login language
+      const langMap = {
+        Hebrew: 'he',
+        English: 'en',
+        Arabic: 'ar',
+        Russian: 'ru',
+      };
+      const loginLang = sessionStorage.getItem('language');
+      const code = langMap[loginLang];
+      if (code && code !== 'original') {
+        await handleTranslateData(code);
+      }
 
       // Reselect and re-map the previously selected route (if any)
       if (keepRouteId) {
@@ -530,6 +636,15 @@ const Places = (props) => {
     } else if (requestForEditing === 'uploadfromsheet') {
       setOpenUpload(true);
       setUploadOption('fromSheet');
+    } else if (requestForEditing === 'video') {
+      const route = filteredDataRoutes[openThreeDotsVertical];
+      if (route) {
+        const resolved = (route.tasks || []).map(rt => allTasks.find(at => at.id === rt.taskId)).filter(Boolean);
+        setVideoTasksForDialog(resolved);
+        setVideoDialogOpen(true);
+      }
+      setOpenThreeDotsVertical(-1);
+      setRequestForEditing('');
     }
 
   }, [requestForEditing]);
@@ -655,7 +770,7 @@ const Places = (props) => {
         site.stations && site.stations.length > 0 ? getingDataStationsbyIds(site.stations.map(station => station.id)) : Promise.resolve([]),
         site.students && site.students.length > 0 ? getingData_UsersbyIds(site.students.map(student => student.id)) : Promise.resolve([]),
         site.packs && site.packs.length > 0 ? getPacksByIds(site.packs.map(pack => pack.id)) : Promise.resolve([]),
-        site.editors && site.editors.length > 0 ? getingData_EditorsbyIds(site.editors.map(editor => editor.id)) : Promise.resolve([]),
+        site.editors && site.editors.length > 0 ? getingData_Editors().then(allEds => allEds.filter(ed => site.editors.some(se => se.id === ed.id))) : Promise.resolve([]),
       ]);
 
       setAllTasks(tasks);
@@ -664,6 +779,24 @@ const Places = (props) => {
       setAllUsers(users);
       setallPacks(packs);
       setAllEditors(editors);
+
+      // Store originals for translation restore
+      originalDataRef.current = { ...originalDataRef.current, tasks, routes, stations, users, packs, editors };
+
+      // --- Automatic translation based on login language ---
+      // Map sessionStorage language to translation code
+      const langMap = {
+        Hebrew: 'he',
+        English: 'en',
+        Arabic: 'ar',
+        Russian: 'ru',
+      };
+      const loginLang = sessionStorage.getItem('language');
+      const code = langMap[loginLang];
+      // Only auto-translate if not Hebrew (original data)
+      if (code && code !== 'original') {
+        await handleTranslateData(code);
+      }
 
     } catch (error) {
       console.error(error.message);
@@ -803,6 +936,18 @@ const Places = (props) => {
       };
     });
 
+    // Store places for translation restore
+    originalDataRef.current = { ...originalDataRef.current, places: [...allPlaces] };
+
+    // Auto-translate places based on login language
+    const langMap = { Hebrew: 'he', English: 'en', Arabic: 'ar', Russian: 'ru' };
+    const loginLang = sessionStorage.getItem('language');
+    const code = langMap[loginLang];
+    if (code && code !== 'original') {
+      const translatedPlaces = await translateArrayOfObjects(allPlaces, code, ['name', 'description']);
+      allPlaces = translatedPlaces;
+    }
+
     setDone(true);
   };
 
@@ -833,6 +978,41 @@ const Places = (props) => {
     }
   }, [replaceRouteFlag]);
 
+  // Keep allTasksOfTheSite in sync with allTasks so translation updates are reflected
+  useEffect(() => {
+    if (selectedSite && allTasks.length > 0) {
+      const tasksOfTheSite = allTasks.filter(task =>
+        task.sites?.find(siteItem => siteItem.id === selectedSite.id)
+      );
+      setAllTasksOfTheSite(tasksOfTheSite);
+      setTasksLength(tasksOfTheSite.length);
+    }
+  }, [allTasks, selectedSite]);
+
+  // When translation updates allTasksOfTheSite or stationArray, patch boardArrayDND in-place
+  // so the route board shows translated task titles and station names
+  useEffect(() => {
+    if (!boardArrayDND.length || !selectedRoute) return;
+    const updated = boardArrayDND.map(boardItem => {
+      const task = allTasksOfTheSite?.find(t => t.id === boardItem.id)
+                 || allTasks?.find(t => t.id === boardItem.id);
+      if (!task) return boardItem;
+      const stationEntry = boardItem.theStation
+        ? stationArray.find(s => s.id === boardItem.theStation.id)
+        : null;
+      const translatedStationName = stationEntry?.title ?? boardItem.myStation;
+      return {
+        ...boardItem,
+        title: task.title?.replace('&#8211;', '-').replace('&#8217;', "' ") ?? boardItem.title,
+        subtitle: task.subtitle ?? boardItem.subtitle,
+        myStation: translatedStationName,
+        nameStation: boardItem.nameStation ? translatedStationName : '',
+      };
+    });
+    setBoardArrayDND(updated);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allTasksOfTheSite, stationArray]);
+
   const DisplayTasks = (e) => {
     // Check if another route is already selected
     if (!flagRoute) {
@@ -862,7 +1042,9 @@ const Places = (props) => {
         firstStation.stations.forEach((station) => {
           if (station.parentSiteId === mySite.id) {
             theStation = station;
-            stationName = station.title;
+            // Look up translated title from stationArray
+            const translatedStn = stationArray.find(item => item.id === station.id);
+            stationName = translatedStn?.title ?? station.title;
           }
         });
         setFirstStationName(stationName);
@@ -921,9 +1103,10 @@ const Places = (props) => {
           );
 
           if (stationID !== undefined) {
-            stationName = stationID.title;
-            theStation = stationID;
+            // Look up translated title from stationArray instead of using the embedded (untranslated) stationID.title
             const colorEntry = stationArray.find((item) => item.id === stationID.id);
+            stationName = colorEntry?.title ?? stationID.title;
+            theStation = stationID;
             color = colorEntry ? colorEntry.color : '#CCCCCC';
           } else {
             // stationName = "כללי";
@@ -1018,28 +1201,24 @@ const Places = (props) => {
   }, []);
 
   useEffect(() => {
-    // debugger;
     if (selectedSite && Object.keys(selectedSite).length > 0) {
-      // console.log('selectedSite: ', selectedSite);
+      // Collect unique worker IDs from the site's routes
+      const workerIds = Array.from(new Set(
+        allRoutes
+          .filter((route) => route.sites.some((site) => site.id === selectedSite.id))
+          .flatMap((route) => route.students.map(s => s.id))
+      ));
 
-      // Filter routes containing the selected site
-      const workers = allRoutes
-        .filter((route) => route.sites.some((site) => site.id === selectedSite.id))
-        .flatMap((route) => route.students); // Collect and flatten students
+      // Look up workers in allUsers (which is translated) so names are always translated;
+      // fall back to the embedded student object if the user is not found in allUsers
+      const embeddedStudents = allRoutes.flatMap(r => r.students);
+      const uniqueWorkers = workerIds
+        .map(id => allUsers.find(u => String(u.id) === String(id)) || embeddedStudents.find(s => String(s.id) === String(id)))
+        .filter(Boolean);
 
-      // console.log('workers: ', workers);
-
-      // Optionally remove duplicates if necessary
-      const uniqueWorkers = Array.from(
-        new Set(workers.map((worker) => worker.id)) // Use IDs for uniqueness
-      ).map((id) => workers.find((worker) => worker.id === id)); // Re-map to full objects
-
-      // console.log('uniqueWorkers: ', uniqueWorkers);
-
-      setAllWorkersForSite(uniqueWorkers); // Update state with unique workers
-      // console.log('allWorkersForSite: ', allWorkersForSite);
+      setAllWorkersForSite(uniqueWorkers);
     }
-  }, [allRoutes, selectedSite]);
+  }, [allRoutes, selectedSite, allUsers]);
 
   const handleSiteSelect = useCallback(async (selectedSiteValue) => {
     setLoading(true);
@@ -1265,9 +1444,18 @@ const Places = (props) => {
   const Display_The_Stations = async (selectedValue) => {
     try {
       setSmallLoading(true);
-      const newallRoutes = await getingData_Routes();//
-      const onlyAllStation = await getingDataStation();//
-      const allTasks = await getingData_Tasks();//
+        const sites = await getingData_Places();
+        const site = sites.find(s => s.id === selectedValue.id);
+
+      const [newallRoutes, onlyAllStation, allTasks] = await Promise.all([
+        site.routes && site.routes.length > 0 ? getingData_RoutesbyIds(site.routes.map(route => route.id)) : Promise.resolve([]),
+        site.stations && site.stations.length > 0 ? getingDataStationsbyIds(site.stations.map(station => station.id)) : Promise.resolve([]),
+        site.tasks && site.tasks.length > 0 ? getingData_TasksbyIds(site.tasks.map(task => task.id)) : Promise.resolve([]),
+      ]);
+      
+      // const newallRoutes = await getingData_Routes();//
+      // const onlyAllStation = await getingDataStation();//
+      // const allTasks = await getingData_Tasks();//
 
 
       setThisIdTask((thisIdTask = selectedValue.id));
@@ -1753,10 +1941,47 @@ const Places = (props) => {
           <CircularProgress size="10rem" color="info" />
         </Backdrop>
       </div>
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 2 }}
+        open={isTranslating}
+      >
+        <Box style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+          <CircularProgress size='10rem' color='secondary' />
+          <Typography position='absolute' sx={{ width: '100%', textAlign: 'center', fontSize: 22, mt: 3 }}>
+            {t('FormsPage.translating') || 'Translating...'}
+          </Typography>
+        </Box>
+      </Backdrop>
 
       <div
         className={`Places ${props.language !== 'English' ? 'english' : ''}`}
       >
+        <Fab
+          title={t('FormsPage.settings') || 'Settings'}
+          color="primary"
+          size="small"
+          onClick={() => setSettingsOpen(true)}
+          sx={{
+            position: 'fixed',
+            top: 80,
+            right: 16,
+            bgcolor: '#114260',
+            '&:hover': { bgcolor: '#0d324d' },
+            zIndex: 1000,
+          }}
+        >
+          <SettingsIcon />
+        </Fab>
+
+        <SettingsDialog
+          open={settingsOpen}
+          onClose={() => setSettingsOpen(false)}
+          onTranslate={handleTranslateData}
+          onRestore={handleRestoreOriginal}
+          isTranslating={isTranslating}
+          isTranslated={isTranslated}
+          currentTranslationLang={currentTranslationLang}
+        />
         {/* <button onClick={reloadData}>
           {props.language === "English" ? "Reload Data" : "טען מחדש נתונים"}
         </button> */}
@@ -2169,6 +2394,12 @@ const Places = (props) => {
           // />
         )}
       </Dialog>
+      <VideoGenerateDialog
+        isOpen={videoDialogOpen}
+        onClose={() => setVideoDialogOpen(false)}
+        tasks={videoTasksForDialog}
+        isRTL={t('Direction') === 'rtl'}
+      />
     </>
   );
 };

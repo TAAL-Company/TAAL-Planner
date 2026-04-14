@@ -1905,3 +1905,45 @@ export const generateOrEditAzureImage = async (prompt, imageFile = null, options
   }
   return generateAzureImage(prompt, options);
 };
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  NOTIFICATIONS  ~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+export const sendNotification = async (notification) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    accept: 'application/json',
+  };
+
+  return await post(`${baseUrl}/notifications/send`, notification, { headers });
+};
+
+export const scheduleNotification = async (notification) => {
+  const headers = {
+    'Content-Type': 'application/json',
+    accept: 'application/json',
+  };
+
+  return await post(`${baseUrl}/notifications/schedule`, notification, { headers });
+};
+
+export const getScheduledNotifications = async () => {
+  let notifications;
+
+  await get(`${baseUrl}/notifications/scheduled`).then((res) => {
+    notifications = res.data;
+  });
+
+  return notifications;
+};
+
+export const deleteScheduledNotification = async (id) => {
+  let confirm;
+
+  await fetch(`${baseUrl}/notifications/${id}`, { method: 'DELETE' }).then((res) => {
+    confirm = res;
+  });
+
+  return confirm;
+};

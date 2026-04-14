@@ -29,7 +29,8 @@ import Plannerpage from './planner/plannerpage';
 import { NotificationProvider } from "./components/Notification/NotificationProvider";
 import { TranslationProvider } from './Utility/TranslationProvider';
 import FormsPage from './Pages/FormsPage/FormsPage';
-import GenerateTaskImagesPage from './dev.js'; 
+import GenerateTaskImagesPage from './dev.js';
+import SendNotificationPage from './Pages/NotificationPage/SendNotificationPage'; 
 
 console.warn(`
 ████████  █████   █████  ██          ██████  ███████ ██    ██ 
@@ -78,6 +79,7 @@ function App() {
                       <Route path='/subjects' component={Community}></Route>
                       <Route path='/TAAL_Ai' component={TaalAI}></Route>
                       <Route path='/devpage' component={GenerateTaskImagesPage}></Route>
+                      <Route path='/notifications' component={SendNotificationPage}></Route>
                     </Switch>
                   </div>
                 </Router>

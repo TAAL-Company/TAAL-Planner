@@ -9,6 +9,7 @@ import TranslateIcon from '@mui/icons-material/Translate';
 import HomeIcon from '@mui/icons-material/Home';
 import FeedIcon from '@mui/icons-material/Feed';
 import LogoutIcon from '@mui/icons-material/Logout';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 const Nav = () => {
   const [completeName, setCompleteName] = useState('');
@@ -115,6 +116,19 @@ const Nav = () => {
               borderRadius: 1,
             }}
           />
+        </Link>
+
+        <Link to="/notifications">
+          <IconButton
+            sx={{
+              width: 51,
+              height: 45,
+              borderRadius: 0,
+              color: 'white',
+            }}
+          >
+            <NotificationsIcon sx={{ fontSize: 40 }} />
+          </IconButton>
         </Link>
 
         <IconButton

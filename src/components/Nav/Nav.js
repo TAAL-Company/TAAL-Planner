@@ -10,6 +10,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import FeedIcon from '@mui/icons-material/Feed';
 import LogoutIcon from '@mui/icons-material/Logout';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const Nav = () => {
   const [completeName, setCompleteName] = useState('');
@@ -118,6 +119,19 @@ const Nav = () => {
           />
         </Link>
 
+        <Link to="/shifts">
+          <IconButton
+            sx={{
+              width: 51,
+              height: 45,
+              borderRadius: 0,
+              color: 'white',
+            }}
+            title="Shift Manager"
+          >
+            <CalendarMonthIcon sx={{ fontSize: 40 }} />
+          </IconButton>
+        </Link>
         <Link to="/notifications">
           <IconButton
             sx={{

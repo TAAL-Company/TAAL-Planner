@@ -1947,3 +1947,70 @@ export const deleteScheduledNotification = async (id) => {
 
   return confirm;
 };
+
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~  SHIFTS  ~~~~~~~~~~~~~~~~~~~~~~*/
+/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+
+const SHIFTS_STORAGE_KEY = 'taal_shifts';
+
+const generateShiftId = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0;
+    const v = c === 'x' ? r : (r & 0x3) | 0x8;
+    return v.toString(16);
+  });
+};
+
+export const getShifts = () => {
+  try {
+    const data = localStorage.getItem(SHIFTS_STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
+};
+
+export const saveShifts = (shifts) => {
+  localStorage.setItem(SHIFTS_STORAGE_KEY, JSON.stringify(shifts));
+};
+
+export const insertShift = (shift) => {
+  const shifts = getShifts();
+  const newShift = {
+    ...shift,
+    id: generateShiftId(),
+    createdAt: new Date().toISOString(),
+    assignments: shift.assignments || [],
+  };
+  shifts.push(newShift);
+  saveShifts(shifts);
+  return newShift;
+};
+
+export const updateShift = (shiftId, updatedShift) => {
+  const shifts = getShifts();
+  const index = shifts.findIndex((s) => s.id === shiftId);
+  if (index !== -1) {
+    shifts[index] = { ...shifts[index], ...updatedShift, id: shiftId };
+    saveShifts(shifts);
+    return shifts[index];
+  }
+  return null;
+};
+
+export const deleteShift = (shiftId) => {
+  const shifts = getShifts().filter((s) => s.id !== shiftId);
+  saveShifts(shifts);
+};
+
+export const updateShiftAssignments = (shiftId, assignments) => {
+  const shifts = getShifts();
+  const index = shifts.findIndex((s) => s.id === shiftId);
+  if (index !== -1) {
+    shifts[index].assignments = assignments;
+    saveShifts(shifts);
+    return shifts[index];
+  }
+  return null;
+};

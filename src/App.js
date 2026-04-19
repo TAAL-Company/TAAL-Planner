@@ -30,7 +30,8 @@ import { NotificationProvider } from "./components/Notification/NotificationProv
 import { TranslationProvider } from './Utility/TranslationProvider';
 import FormsPage from './Pages/FormsPage/FormsPage';
 import GenerateTaskImagesPage from './dev.js';
-import SendNotificationPage from './Pages/NotificationPage/SendNotificationPage'; 
+import SendNotificationPage from './Pages/NotificationPage/SendNotificationPage';
+import ShiftPage from './Pages/ShiftPage/ShiftPage';
 
 console.warn(`
 ████████  █████   █████  ██          ██████  ███████ ██    ██ 
@@ -80,6 +81,7 @@ function App() {
                       <Route path='/TAAL_Ai' component={TaalAI}></Route>
                       <Route path='/devpage' component={GenerateTaskImagesPage}></Route>
                       <Route path='/notifications' component={SendNotificationPage}></Route>
+                      <Route path='/shifts' component={ShiftPage}></Route>
                     </Switch>
                   </div>
                 </Router>

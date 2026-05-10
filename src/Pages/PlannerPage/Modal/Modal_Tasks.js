@@ -513,6 +513,7 @@ function Modal_Tasks(props) {
       {!props.help && props.siteSelected ? (
         <>
           <div>
+            <Draggable handle='.bodyNewTask' cancel='input, button, textarea, select, label, a, [role="button"]'>
             <div
               className='BackgroundTasks'
               style={{
@@ -530,7 +531,7 @@ function Modal_Tasks(props) {
                 </div>
                 <div
                   className={`bodyNewTask ${requestForEditing === 'details' ? 'disabledModal' : ''
-                    }`}
+                    }`} style={{ cursor: 'grab' }}
                 >
                   {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
                   <form id='IPU' className='w3-container'>
@@ -918,6 +919,7 @@ function Modal_Tasks(props) {
                 </div>
               </div>
             </div>
+            </Draggable>
           </div>
         </>
       ) : (

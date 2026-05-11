@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { AiOutlinePlus } from 'react-icons/ai';
 import Tag from '../Tag/Tag.js';
@@ -230,8 +229,7 @@ const Tasks = (props) => {
                   let ID = '' + tag.id;
                   return (
                     <Draggable key={ID} draggableId={ID} index={index}>
-                      {(provided, snapshot) => {
-                        const child = (
+                      {(provided) => (
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
@@ -268,11 +266,7 @@ const Tasks = (props) => {
                           // setRequestForEditingBoard={setRequestForEditingBoard}
                           />
                         </div>
-                        );
-                        return snapshot.isDragging
-                          ? ReactDOM.createPortal(child, document.body)
-                          : child;
-                      }}
+                      )}
                     </Draggable>
                   );
                 })}

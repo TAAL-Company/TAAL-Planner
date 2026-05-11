@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { getingDataTasks, deleteStation, insertLoop, updateLoop } from '../../../api/api';
 import './style.css';
@@ -436,8 +435,7 @@ const Stations = (props) => {
                                 draggableId={ID}
                                 index={index}
                               >
-                                {(provided, snapshot) => {
-                                  const child = (
+                                {(provided) => (
                                   <div
                                     className='draggableItems'
                                     ref={provided.innerRef}
@@ -520,11 +518,7 @@ const Stations = (props) => {
                                       </button>
                                     </div>
                                   </div>
-                                  );
-                                  return snapshot.isDragging
-                                    ? ReactDOM.createPortal(child, document.body)
-                                    : child;
-                                }}
+                                )}
                               </Draggable>
                             );
                           })}

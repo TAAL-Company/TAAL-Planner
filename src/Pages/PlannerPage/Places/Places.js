@@ -83,8 +83,25 @@ let myCategory = false;
 let flagTest = false;
 
 //-----------------------
+// Natural content width of .mainRectangles at zoom 1.0 (measured from design at full resolution)
+const NATURAL_BOARD_WIDTH = 1620;
+
+const useBoardZoom = () => {
+  const [zoom, setZoom] = useState(() =>
+    Math.min(1, Math.max(0.78, window.innerWidth / NATURAL_BOARD_WIDTH))
+  );
+  useEffect(() => {
+    const update = () =>
+      setZoom(Math.min(1, Math.max(0.78, window.innerWidth / NATURAL_BOARD_WIDTH)));
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
+  return zoom;
+};
+
 const Places = (props) => {
   const { showNotification } = useNotification();
+  const boardZoom = useBoardZoom();
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [selectedSite, setSelectedSite] = useState(null);
   const [tempSelectedSite, setTempSelectedSite] = useState(null);
@@ -2084,6 +2101,7 @@ const Places = (props) => {
       <div
         className={`mainRectangles ${props.language !== 'English' ? 'english' : ''
           }`}
+        style={{ zoom: boardZoom }}
       >
         <DragDropContext onDragEnd={handleDragEnd}>
           {/* routes */}

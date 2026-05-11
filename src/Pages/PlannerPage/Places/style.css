@@ -35,12 +35,12 @@
 
 .mainRectangles {
   display: flex;
-  margin-right: -130px;
+  margin-right: 0;
   padding-left: 40px;
   flex-direction: row-reverse;
   gap: 1%;
-  margin-top: -45px;
-  scale: 0.8;
+  margin-top: 0;
+  zoom: 0.8;
 }
 } */
 .deselect-button {
@@ -253,7 +253,7 @@
   justify-content: start;
   direction: ltr;
   padding-left: 0px;
-  margin-right: -50px;
+  margin-right: 0;
 }
 
 @media only screen and (max-width: 600px) {
@@ -465,134 +465,15 @@ h3 {
 
 
 
-/* ================= 1620xp ================= */
-@media screen and (max-width: 1620px) {
-  .Board {
-    left: -85px;
-    width: 400px;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -90px;
-    position: absolute;
-    padding-left: 50px;
-    padding-right: 25px;
-  }
-
-  .mainRectangles {
-    display: flex;
-    margin-right: -22px;
-    padding-left: 40px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -30px;
-    scale: 0.95;
-  }
-}
-
 /* ================= 1440px ================= */
 @media screen and (max-width: 1440px) {
   .deselect-button {
     font-size: 14px;
   }
-
-  .Board {
-    left: -118px;
-    width: 400px;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -115px;
-    position: absolute;
-    padding-left: 56px;
-    padding-right: 25px;
-  }
-
-  .mainRectangles {
-    display: flex;
-    margin-right: -52px;
-    padding-left: 40px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -30px;
-    scale: 0.9;
-  }
-
-  .mainRectangles.english {
-    display: flex;
-    margin-right: -90px;
-    padding-right: 40px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -30px;
-    scale: 0.9;
-    padding-left: 0px;
-    margin-left: -53px;
-    flex-direction: revert;
-  }
-
-  .Board.english {
-    right: -35px;
-    left: auto;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -115px;
-    position: absolute;
-    padding-left: 23px;
-    padding-right: 65px;
-  }
 }
 
 /* ================= 1366px ================= */
 @media screen and (max-width: 1366px) {
-  .Board {
-    left: -155px;
-    width: 400px;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -115px;
-    position: absolute;
-    padding-left: 60px;
-    padding-right: 26px;
-  }
-
-  .mainRectangles {
-    display: flex;
-    margin-right: -80px;
-    padding-left: 40px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -30px;
-    scale: 0.87;
-  }
-
-  .mainRectangles.english {
-    display: flex;
-    margin-right: -118px;
-    padding-right: 40px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -30px;
-    scale: 0.87;
-    padding-left: 0px;
-    margin-left: -75px;
-    flex-direction: revert;
-  }
-
-  .Board.english {
-    right: -46px;
-    left: auto;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -128px;
-    position: absolute;
-    padding-left: 15px;
-    padding-right: 80px;
-  }
-
   .Places.english {
     padding-left: 24px;
     direction: ltr;
@@ -602,53 +483,6 @@ h3 {
 
 /* ================= 1336px ================= */
 @media screen and (max-width: 1336px) {
-  .Board {
-    left: -172px;
-    width: 400px;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -115px;
-    position: absolute;
-    padding-left: 60px;
-    padding-right: 26px;
-  }
-
-  .mainRectangles {
-    display: flex;
-    margin-right: -96px;
-    padding-left: 40px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -30px;
-    scale: 0.85;
-  }
-
-  .mainRectangles.english {
-    display: flex;
-    margin-right: -131px;
-    padding-right: 40px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -30px;
-    scale: 0.85;
-    padding-left: 0px;
-    margin-left: -97px;
-    flex-direction: revert;
-  }
-
-  .Board.english {
-    right: -45px;
-    left: auto;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -133px;
-    position: absolute;
-    padding-left: 14px;
-    padding-right: 81px;
-  }
-
   .Places.english {
     padding-left: 19px;
     direction: ltr;
@@ -659,56 +493,7 @@ h3 {
 
 /* ================= 1280px ================= */
 @media screen and (max-width: 1280px) {
-  .deselect-button {
-    font-size: 14px;
-  }
-
-  .Board {
-    left: -215px;
-    width: 400px;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -115px;
-    position: absolute;
-    padding-left: 71px;
-    padding-right: 26px;
-  }
-
-  .mainRectangles {
-    display: flex;
-    margin-right: -120px;
-    padding-left: 40px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -53px;
-    scale: 0.81;
-  }
-
-  /* .Board {
-    left: -175px;
-    width: 400px;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -115px;
-    position: absolute;
-    padding-left: 71px;
-    padding-right: 26px;
-  }
-
-  .mainRectangles {
-    display: flex;
-    margin-right: -80px;
-    padding-left: 40px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -43px;
-    scale: 0.84;
-  } */
-
   .Places {
-    /* scale: 0.9; */
     padding: 1px 0px 1px 10px;
     height: auto;
     min-height: 80px;
@@ -729,60 +514,17 @@ h3 {
     text-align: left;
     gap: 0px;
   }
-
-  .mainRectangles.english {
-    display: flex;
-    margin-right: -131px;
-    padding-right: 40px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -30px;
-    scale: 0.81;
-    padding-left: 0px;
-    margin-left: -126px;
-    flex-direction: revert;
-  }
-
-  .Board.english {
-    right: -73px;
-    left: auto;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -133px;
-    position: absolute;
-    padding-left: 20px;
-    padding-right: 71px;
-  }
 }
 
 /* ================= 1200px ================= */
 @media (max-width: 1200px) {
-
   .deselect-button {
     font-size: 12px;
   }
 
-  /* .Cover_Places {
-    width: 18%;
-  }
-
-  .Cover_Stations {
-    width: 18%;
-  }
-
-  .Cover_Tasks {
-    width: 18%;
-  } */
-
   .TasksCover {
-    /* width: 100% !important; */
     height: 40vh !important;
   }
-
-  /* .buttons {
-    width: 79%;
-  } */
 
   .routs {
     width: 100%;
@@ -795,7 +537,6 @@ h3 {
   }
 
   .Stations {
-    /* width: 100% !important; */
     height: 40vh !important;
   }
 
@@ -829,54 +570,6 @@ h3 {
     padding-top: 50px !important;
     font-size: small;
   }
-
-  .mainRectangles {
-    display: flex;
-    margin-right: -100px;
-    padding-left: 40px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -53px;
-    scale: 0.81;
-  }
-
-  .Board {
-    left: -201px;
-    width: 400px;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -115px;
-    position: absolute;
-    padding-left: 71px;
-    padding-right: 26px;
-  }
-
-  .mainRectangles.english {
-    display: flex;
-    margin-right: -29px;
-    padding-right: 16px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -30px;
-    scale: 0.81;
-    padding-left: 0px;
-    margin-left: -109px;
-    flex-direction: revert;
-  }
-
-  .Board.english {
-    right: -109px;
-    left: auto;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -159px;
-    position: absolute;
-    padding-left: 27px;
-    padding-right: 0px;
-    width: 357px;
-  }
 }
 
 /* ================= 1024px ================= */
@@ -885,68 +578,7 @@ h3 {
     font-size: 11px;
   }
 
-  /* .Cover_Places {
-    width: 20%;
-  }
-
-  .Cover_Stations {
-    width: 20%;
-  }
-
-  .Cover_Tasks {
-    width: 20%;
-  } */
-
-  .mainRectangles {
-    display: flex;
-    margin-right: -100px;
-    padding-left: 40px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -53px;
-    scale: 0.81;
-  }
-
-  .Board {
-    left: -201px;
-    width: 400px;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -185px;
-    position: absolute;
-    padding-left: 71px;
-    padding-right: 26px;
-  }
-
-  .mainRectangles.english {
-    display: flex;
-    margin-right: -29px;
-    padding-right: 16px;
-    flex-direction: row-reverse;
-    gap: 1%;
-    margin-top: -30px;
-    scale: 0.78;
-    padding-left: 0px;
-    margin-left: -109px;
-    flex-direction: revert;
-  }
-
-  .Board.english {
-    right: -127px;
-    left: auto;
-    height: 1000px;
-    background: #f5f5f5 0% 0% no-repeat padding-box;
-    opacity: 1;
-    top: -174px;
-    position: absolute;
-    padding-left: 0px;
-    padding-right: 0px;
-    width: 324px;
-  }
-
   .Places {
-    /* scale: 0.8; */
     padding: 1px 0px 1px 10px;
     height: auto;
     min-height: 80px;
@@ -960,4 +592,13 @@ h3 {
     align-items: center;
     gap: 0px;
   }
+}
+
+/* zoom: replaces scale: for responsive sizing.
+   Unlike scale/transform, zoom does NOT create a fixed-position containing block,
+   so react-beautiful-dnd drag clone coordinates remain viewport-relative on all screen sizes.
+   The negative margin compensations previously needed for scale whitespace are no longer required. */
+.mainRectangles,
+.mainRectangles.english {
+  overflow-x: auto;
 }

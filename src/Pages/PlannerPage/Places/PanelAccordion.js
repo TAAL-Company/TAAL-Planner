@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
 import { Box } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -333,8 +332,7 @@ export default function PanelAccordion(props) {
                     filteredDataRoutes={filteredDataRoutes}
                     renderRoute={(route, index) => (
                       <Draggable key={route.id} draggableId={route.id} index={index}>
-                        {(provided, snapshot) => {
-                          const child = (
+                        {(provided) => (
                           <div
                             ref={provided.innerRef}
                             {...provided.draggableProps}
@@ -407,11 +405,7 @@ export default function PanelAccordion(props) {
                                   : route.name.replace("&#8211;", "-").replace("&#8217;", "'")}
                             </div>
                           </div>
-                          );
-                          return snapshot.isDragging
-                            ? ReactDOM.createPortal(child, document.body)
-                            : child;
-                        }}
+                        )}
                       </Draggable>
                     )}
                   />

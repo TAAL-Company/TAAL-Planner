@@ -10,16 +10,20 @@ import {
   drawOutroFrame,
 } from './videoCanvasUtils';
 import { getMimeTypeForFormat } from './videoFormatUtils';
+import { uploadVideoToAzure } from '../azureBlob';
+import { updateRoute } from '../../api/api';
 
 /**
  * Encapsulates all state and generation logic for VideoGenerateDialog.
  *
  * @param {object}   params
- * @param {Array}    params.tasks   - Full task list (must have picture_url, title, subtitle, station)
- * @param {boolean}  params.isRTL   - Whether the UI is right-to-left
- * @param {Function} params.onClose - Dialog close callback
+ * @param {Array}    params.tasks        - Full task list (must have picture_url, title, subtitle, station)
+ * @param {boolean}  params.isRTL        - Whether the UI is right-to-left
+ * @param {Function} params.onClose      - Dialog close callback
+ * @param {string}   [params.routeId]    - Route ID used when saving the video link
+ * @param {Function} [params.onVideoSaved] - Called with the uploaded video URL after saving
  */
-export function useVideoGenerate({ tasks, isRTL, onClose }) {
+export function useVideoGenerate({ tasks, isRTL, onClose, routeId, routeName, onVideoSaved }) {
   const { t } = useTranslation();
 
   const canvasRef = useRef(null);
@@ -36,6 +40,11 @@ export function useVideoGenerate({ tasks, isRTL, onClose }) {
   const [videoBlob,       setVideoBlob      ] = useState(null);
   const [videoUrl,        setVideoUrl       ] = useState(null);
   const [actualExt,       setActualExt      ] = useState('mp4');
+
+  // Save-to-cloud state
+  const [isSaving,        setIsSaving       ] = useState(false);
+  const [savedVideoUrl,   setSavedVideoUrl  ] = useState(null);
+  const [saveError,       setSaveError      ] = useState(null);
 
   // Sync video element when blob URL changes
   useEffect(() => {
@@ -59,6 +68,8 @@ export function useVideoGenerate({ tasks, isRTL, onClose }) {
     setVideoBlob(null);
     setVideoUrl(null);
     setError(null);
+    setSavedVideoUrl(null);
+    setSaveError(null);
     onClose();
   };
 
@@ -68,6 +79,8 @@ export function useVideoGenerate({ tasks, isRTL, onClose }) {
     setVideoBlob(null);
     setVideoUrl(null);
     setError(null);
+    setSavedVideoUrl(null);
+    setSaveError(null);
   };
 
   // ── Generation ────────────────────────────────────────────────────────────
@@ -203,6 +216,25 @@ export function useVideoGenerate({ tasks, isRTL, onClose }) {
     window.open(`https://wa.me/?text=${text}`, '_blank', 'noopener,noreferrer');
   };
 
+  // ── Save to Azure & backend ───────────────────────────────────────────────
+
+  const handleSaveToCloud = async () => {
+    if (!videoBlob || !routeId) return;
+    setIsSaving(true);
+    setSaveError(null);
+    try {
+      const url = await uploadVideoToAzure(videoBlob, routeName, actualExt);
+      await updateRoute(routeId, { name: routeName, video_link: url });
+      setSavedVideoUrl(url);
+      if (onVideoSaved) onVideoSaved(url);
+    } catch (err) {
+      console.error('Save to cloud error:', err);
+      setSaveError(err.message || 'Failed to save video');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return {
     // refs
     canvasRef,
@@ -218,6 +250,10 @@ export function useVideoGenerate({ tasks, isRTL, onClose }) {
     videoBlob,
     videoUrl,
     actualExt,
+    // save-to-cloud
+    isSaving,
+    savedVideoUrl,
+    saveError,
     // derived
     tasksWithImages,
     // handlers
@@ -226,5 +262,6 @@ export function useVideoGenerate({ tasks, isRTL, onClose }) {
     handleGenerate,
     handleDownload,
     handleWhatsAppShare,
+    handleSaveToCloud,
   };
 }

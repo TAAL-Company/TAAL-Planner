@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Dialog, DialogTitle, DialogContent, DialogActions,
   Button, Box, Typography, LinearProgress, Slider, IconButton,
-  ToggleButtonGroup, ToggleButton, Tooltip, Chip,
+  ToggleButtonGroup, ToggleButton, Tooltip, Chip, CircularProgress,
 } from '@mui/material';
 import VideoFileIcon    from '@mui/icons-material/VideoFile';
 import CloseIcon        from '@mui/icons-material/Close';
@@ -10,6 +10,8 @@ import DownloadIcon     from '@mui/icons-material/Download';
 import WhatsAppIcon     from '@mui/icons-material/WhatsApp';
 import ReplayIcon       from '@mui/icons-material/Replay';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import CloudUploadIcon  from '@mui/icons-material/CloudUpload';
+import CheckCircleIcon  from '@mui/icons-material/CheckCircle';
 import { useTranslation } from 'react-i18next';
 import { CANVAS_WIDTH, CANVAS_HEIGHT } from '../VideoGenerate/videoCanvasUtils';
 import { mp4NativeSupport } from '../VideoGenerate/videoFormatUtils';
@@ -31,13 +33,15 @@ const DEFAULT_COLORS = {
  * General-purpose video-slideshow dialog.
  *
  * Props:
- *   isOpen  {boolean}  - Whether the dialog is open
- *   onClose {Function} - Called when the dialog should close
- *   tasks   {Array}    - Task objects with { title, subtitle, picture_url, station? }
- *   theme   {object}   - Optional colour overrides (matches DEFAULT_COLORS shape)
- *   isRTL   {boolean}  - Right-to-left layout flag
+ *   isOpen       {boolean}  - Whether the dialog is open
+ *   onClose      {Function} - Called when the dialog should close
+ *   tasks        {Array}    - Task objects with { title, subtitle, picture_url, station? }
+ *   theme        {object}   - Optional colour overrides (matches DEFAULT_COLORS shape)
+ *   isRTL        {boolean}  - Right-to-left layout flag
+ *   routeId      {string}   - Route ID; required for saving the video link to the backend
+ *   onVideoSaved {Function} - Called with the uploaded Azure URL after saving (optional)
  */
-export default function VideoGenerateDialog({ isOpen, onClose, tasks, theme, isRTL }) {
+export default function VideoGenerateDialog({ isOpen, onClose, tasks, theme, isRTL, routeId, routeName, onVideoSaved }) {
   const { t } = useTranslation();
   const colors = theme || DEFAULT_COLORS;
 
@@ -49,8 +53,9 @@ export default function VideoGenerateDialog({ isOpen, onClose, tasks, theme, isR
     format,          setFormat,
     videoUrl,        actualExt,
     tasksWithImages,
-    handleClose, handleReset, handleGenerate, handleDownload, handleWhatsAppShare,
-  } = useVideoGenerate({ tasks, isRTL, onClose });
+    isSaving, savedVideoUrl, saveError,
+    handleClose, handleReset, handleGenerate, handleDownload, handleWhatsAppShare, handleSaveToCloud,
+  } = useVideoGenerate({ tasks, isRTL, onClose, routeId, routeName, onVideoSaved });
 
   const mp4WillFallback  = format === 'mp4' && !mp4NativeSupport;
   const estimatedSeconds = tasksWithImages.length * secondsPerSlide;
@@ -299,6 +304,43 @@ export default function VideoGenerateDialog({ isOpen, onClose, tasks, theme, isR
             </Button>
 
             <Box sx={{ flex: 1 }} />
+
+            {/* Save to Cloud */}
+            {routeId && (
+              savedVideoUrl ? (
+                <Button
+                  variant="outlined"
+                  startIcon={<CheckCircleIcon />}
+                  disabled
+                  sx={{ color: '#4caf50', borderColor: '#4caf50', minWidth: '160px' }}
+                >
+                  {t('VideoGenerate.saved') || 'Saved'}
+                </Button>
+              ) : (
+                <Button
+                  variant="outlined"
+                  startIcon={isSaving ? <CircularProgress size={18} color="inherit" /> : <CloudUploadIcon />}
+                  onClick={handleSaveToCloud}
+                  disabled={isSaving}
+                  sx={{
+                    color       : colors.primary,
+                    borderColor : colors.primary,
+                    minWidth    : '160px',
+                    '&:hover'   : { bgcolor: 'rgba(74,158,255,0.1)' },
+                  }}
+                >
+                  {isSaving
+                    ? (t('VideoGenerate.saving') || 'Saving...')
+                    : (t('VideoGenerate.saveToRoute') || 'Save to Route')}
+                </Button>
+              )
+            )}
+
+            {saveError && (
+              <Typography variant="caption" sx={{ color: colors.accent, alignSelf: 'center' }}>
+                {saveError}
+              </Typography>
+            )}
 
             <Button
               variant="outlined"

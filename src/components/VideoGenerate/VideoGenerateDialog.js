@@ -41,7 +41,7 @@ const DEFAULT_COLORS = {
  *   routeId      {string}   - Route ID; required for saving the video link to the backend
  *   onVideoSaved {Function} - Called with the uploaded Azure URL after saving (optional)
  */
-export default function VideoGenerateDialog({ isOpen, onClose, tasks, theme, isRTL, routeId, routeName, onVideoSaved }) {
+export default function VideoGenerateDialog({ isOpen, onClose, tasks, theme, isRTL, routeId, routeName, siteName, onVideoSaved, getRouteId }) {
   const { t } = useTranslation();
   const colors = theme || DEFAULT_COLORS;
 
@@ -55,7 +55,7 @@ export default function VideoGenerateDialog({ isOpen, onClose, tasks, theme, isR
     tasksWithImages,
     isSaving, savedVideoUrl, saveError,
     handleClose, handleReset, handleGenerate, handleDownload, handleWhatsAppShare, handleSaveToCloud,
-  } = useVideoGenerate({ tasks, isRTL, onClose, routeId, routeName, onVideoSaved });
+  } = useVideoGenerate({ tasks, isRTL, onClose, routeId, routeName, siteName, onVideoSaved, getRouteId });
 
   const mp4WillFallback  = format === 'mp4' && !mp4NativeSupport;
   const estimatedSeconds = tasksWithImages.length * secondsPerSlide;
@@ -306,7 +306,7 @@ export default function VideoGenerateDialog({ isOpen, onClose, tasks, theme, isR
             <Box sx={{ flex: 1 }} />
 
             {/* Save to Cloud */}
-            {routeId && (
+            {(routeId || getRouteId) && (
               savedVideoUrl ? (
                 <Button
                   variant="outlined"

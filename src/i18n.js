@@ -562,6 +562,40 @@ const resources = {
         station: "Station",
       },
 
+      ImageContext: {
+        // Dialog titles
+        titleGeneral: "Configure Image Context — All Tasks",
+        titleTask: "Configure Image Context",
+        allTasks: "All Tasks",
+        // Fields
+        environment: "Environment",
+        environmentPlaceholder: "e.g. Modern smart kitchen with stainless steel appliances and overhead camera system",
+        people: "People",
+        peoplePlaceholder: "e.g. Optional homeowner observing in background, or automated robotic system only",
+        objects: "Objects",
+        objectsPlaceholder: "e.g. Dirty dishes, AI vision overlay bounding boxes, sink, countertops, robotic arm",
+        styleMood: "Style / Mood",
+        styleMoodPlaceholder: "e.g. Technical, futuristic, realistic, product-demonstration lighting",
+        additionalDetails: "Additional Details",
+        additionalDetailsPlaceholder: "e.g. Eye-level shot, shallow depth of field, high-detail rendering, no visible text",
+        // Status
+        autoGenerating: "AI is generating context based on your project…",
+        description: "Edit any field to customize what the AI will visualize. These fields are combined into the final image prompt.",
+        currentTask: "Current task",
+        contextWeights: "Context weights:",
+        // Buttons
+        regenerate: "Re-generate",
+        regenerateContext: "Re-generate context from AI",
+        cancel: "Cancel",
+        generateAll: "Generate All Images",
+        generateOne: "Generate Image",
+        // Toolbar (TaskTable)
+        configureContext: "Configure Image Context",
+        contextSet: "Context Set",
+        // Per-task button tooltip
+        openTaskPopup: "Customize image context for this task",
+      },
+
       BreakTaskDialog: {
         title: "Break Task into Subtasks",
         originalTask: "Original Task",
@@ -657,8 +691,12 @@ const resources = {
         noImagesHint     : "Generate images for tasks first, then come back to create the video.",
         savedAsWebm      : "Saved as .webm in this browser",
         mp4FallbackTooltip: "This browser doesn't support native MP4 recording. The video will be saved as WebM.",
-        estimatedLength  : "Estimated length: ~{{seconds}}s \u00b7 {{format}}",
-        madeWithTaal     : "Made with TAAL",
+        estimatedLength          : "Estimated length: ~{{seconds}}s \u00b7 {{format}}",
+        madeWithTaal             : "Made with TAAL",
+        saved                    : "Saved",
+        saving                   : "Saving...",
+        saveToRoute              : "Save to Route",
+        routeCreationCancelled   : "Route creation cancelled",
       },
 
       // FormsPage translations
@@ -1120,7 +1158,7 @@ const resources = {
         route_name: "שם מסלול",
         Name_of_the_route: "שם המסלול",
         List_of_students: "רשימת עובדים/ות",
-        Search_student: "חפש תלמיד",
+        Search_student: "חפש עובדים/ות",
         List_of_Routes: "רשימת מסלולים",
         Search_Route: "חפש מסלול",
         Site_where_the_image_voice_will_be_save: "האתר שבו יישמרו התמונה / הקול:",
@@ -1553,6 +1591,40 @@ const resources = {
         station: "תחנה",
       },
 
+      ImageContext: {
+        // Dialog titles
+        titleGeneral: "הגדרת הקשר תמונה — כל המשימות",
+        titleTask: "הגדרת הקשר תמונה",
+        allTasks: "כל המשימות",
+        // Fields
+        environment: "סביבה",
+        environmentPlaceholder: "למשל: מטבח חכם מודרני עם מכשירים מנירוסטה ומצלמת תקרה",
+        people: "אנשים",
+        peoplePlaceholder: "למשל: בעל הבית הצופה ברקע, או רק מערכת רובוטית אוטומטית",
+        objects: "עצמים",
+        objectsPlaceholder: "למשל: כלים מלוכלכים, תיבות זיהוי של ראיית מחשב, כיור, משטחי עבודה, זרוע רובוטית",
+        styleMood: "סגנון / מצב רוח",
+        styleMoodPlaceholder: "למשל: טכני, עתידני, ריאליסטי, תאורת הדגמת מוצר",
+        additionalDetails: "פרטים נוספים",
+        additionalDetailsPlaceholder: "למשל: צילום ברמת העין, עומק שדה רדוד, עיבוד ברזולוציה גבוהה, ללא טקסט גלוי",
+        // Status
+        autoGenerating: "הבינה המלאכותית מייצרת הקשר בהתבסס על הפרויקט שלך…",
+        description: "ערוך כל שדה כדי להתאים את מה שהבינה המלאכותית תציג. השדות משולבים לפרומפט הסופי.",
+        currentTask: "משימה נוכחית",
+        contextWeights: "משקלי הקשר:",
+        // Buttons
+        regenerate: "צור מחדש",
+        regenerateContext: "צור הקשר מחדש מהבינה המלאכותית",
+        cancel: "ביטול",
+        generateAll: "צור את כל התמונות",
+        generateOne: "צור תמונה",
+        // Toolbar (TaskTable)
+        configureContext: "הגדרת הקשר תמונה",
+        contextSet: "הקשר הוגדר",
+        // Per-task button tooltip
+        openTaskPopup: "התאם הקשר תמונה למשימה זו",
+      },
+
       BreakTaskDialog: {
         title: "פירוק משימה למשימות משנה",
         originalTask: "משימה מקורית",
@@ -1648,8 +1720,12 @@ const resources = {
         noImagesHint     : "צור תמונות למשימות תחילה, וחזור לכאן ליצירת הסרטון.",
         savedAsWebm      : "נשמר כקובץ .webm בדפדפן זה",
         mp4FallbackTooltip: "דפדפן זה אינו תומך בהקלטת MP4 מקורית. הסרטון יישמר כקובץ WebM.",
-        estimatedLength  : "אורך משוער: ~{{seconds}}ש · {{format}}",
-        madeWithTaal     : "נוצר עם TAAL",
+        estimatedLength          : "אורך משוער: ~{{seconds}}ש · {{format}}",
+        madeWithTaal             : "נוצר עם TAAL",
+        saved                    : "נשמר",
+        saving                   : "שומר...",
+        saveToRoute              : "שמור למסלול",
+        routeCreationCancelled   : "יצירת המסלול בוטלה",
       },
 
       // FormsPage translations
@@ -2539,6 +2615,40 @@ const resources = {
         breakTask: "تقسيم إلى مهام فرعية",
       },
 
+      ImageContext: {
+        // Dialog titles
+        titleGeneral: "تهيئة سياق الصورة — جميع المهام",
+        titleTask: "تهيئة سياق الصورة",
+        allTasks: "جميع المهام",
+        // Fields
+        environment: "البيئة",
+        environmentPlaceholder: "مثال: مطبخ ذكي حديث بأجهزة من الفولاذ المقاوم للصدأ ونظام كاميرا علوية",
+        people: "الأشخاص",
+        peoplePlaceholder: "مثال: صاحب المنزل يراقب في الخلفية، أو نظام آلي روبوتي فقط",
+        objects: "الأشياء",
+        objectsPlaceholder: "مثال: أطباق متسخة، إطارات تحديد رؤية الذكاء الاصطناعي، حوض، أسطح العمل، ذراع روبوتية",
+        styleMood: "الأسلوب / المزاج",
+        styleMoodPlaceholder: "مثال: تقني، مستقبلي، واقعي، إضاءة عرض المنتج",
+        additionalDetails: "تفاصيل إضافية",
+        additionalDetailsPlaceholder: "مثال: لقطة على مستوى العين، عمق ميدان ضحل، دقة عالية، لا نص مرئي",
+        // Status
+        autoGenerating: "يقوم الذكاء الاصطناعي بإنشاء السياق بناءً على مشروعك…",
+        description: "عدّل أي حقل لتخصيص ما سيُصوّره الذكاء الاصطناعي. يتم دمج هذه الحقول في النص التوجيهي النهائي.",
+        currentTask: "المهمة الحالية",
+        contextWeights: "أوزان السياق:",
+        // Buttons
+        regenerate: "إعادة الإنشاء",
+        regenerateContext: "إعادة إنشاء السياق من الذكاء الاصطناعي",
+        cancel: "إلغاء",
+        generateAll: "إنشاء جميع الصور",
+        generateOne: "إنشاء صورة",
+        // Toolbar (TaskTable)
+        configureContext: "تهيئة سياق الصورة",
+        contextSet: "تم تعيين السياق",
+        // Per-task button tooltip
+        openTaskPopup: "تخصيص سياق الصورة لهذه المهمة",
+      },
+
       BreakTaskDialog: {
         title: "تقسيم المهمة إلى مهام فرعية",
         originalTask: "المهمة الأصلية",
@@ -2634,8 +2744,12 @@ const resources = {
         noImagesHint     : "قم بإنشاء صور للمهام أولاً, ثم عد لإنشاء الفيديو.",
         savedAsWebm      : "تم الحفظ بصيغة .webm في هذا المتصفح",
         mp4FallbackTooltip: "هذا المتصفح لا يدعم تسجيل MP4 الأصلي. سيتم حفظ الفيديو بصيغة WebM.",
-        estimatedLength  : "المدة المتوقعة: ~{{seconds}}ث · {{format}}",
-        madeWithTaal     : "صُنع بواسطة TAAL",
+        estimatedLength          : "المدة المتوقعة: ~{{seconds}}ث · {{format}}",
+        madeWithTaal             : "صُنع بواسطة TAAL",
+        saved                    : "تم الحفظ",
+        saving                   : "جارٍ الحفظ...",
+        saveToRoute              : "حفظ في المسار",
+        routeCreationCancelled   : "تم إلغاء إنشاء المسار",
       },
 
       // FormsPage translations
@@ -3528,6 +3642,40 @@ const resources = {
         breakTask: "Разделить на подзадачи",
       },
 
+      ImageContext: {
+        // Dialog titles
+        titleGeneral: "Настройка контекста изображения — все задачи",
+        titleTask: "Настройка контекста изображения",
+        allTasks: "Все задачи",
+        // Fields
+        environment: "Окружение",
+        environmentPlaceholder: "Напр.: Современная умная кухня с приборами из нержавеющей стали и потолочной камерой",
+        people: "Люди",
+        peoplePlaceholder: "Напр.: Хозяин дома наблюдает на заднем плане или только автоматическая роботизированная система",
+        objects: "Объекты",
+        objectsPlaceholder: "Напр.: Грязная посуда, рамки обнаружения компьютерного зрения, раковина, столешницы, роботизированная рука",
+        styleMood: "Стиль / Настроение",
+        styleMoodPlaceholder: "Напр.: Технический, футуристический, реалистичный, освещение для демонстрации продукта",
+        additionalDetails: "Дополнительные детали",
+        additionalDetailsPlaceholder: "Напр.: Съёмка на уровне глаз, малая глубина резкости, высокая детализация, без видимого текста",
+        // Status
+        autoGenerating: "ИИ генерирует контекст на основе вашего проекта…",
+        description: "Отредактируйте любое поле, чтобы настроить визуализацию. Поля объединяются в итоговый промпт.",
+        currentTask: "Текущая задача",
+        contextWeights: "Веса контекста:",
+        // Buttons
+        regenerate: "Перегенерировать",
+        regenerateContext: "Перегенерировать контекст с помощью ИИ",
+        cancel: "Отмена",
+        generateAll: "Создать все изображения",
+        generateOne: "Создать изображение",
+        // Toolbar (TaskTable)
+        configureContext: "Настроить контекст изображения",
+        contextSet: "Контекст задан",
+        // Per-task button tooltip
+        openTaskPopup: "Настроить контекст изображения для этой задачи",
+      },
+
       BreakTaskDialog: {
         title: "Разделить задачу на подзадачи",
         originalTask: "Исходная задача",
@@ -3623,8 +3771,12 @@ const resources = {
         noImagesHint     : "Сначала сгенерируйте изображения для задач, затем вернитесь сюда для создания видео.",
         savedAsWebm      : "Сохранено как .webm в этом браузере",
         mp4FallbackTooltip: "Этот браузер не поддерживает запись MP4. Видео будет сохранено в формате WebM.",
-        estimatedLength  : "Примерная длительность: ~{{seconds}}с · {{format}}",
-        madeWithTaal     : "Создано с TAAL",
+        estimatedLength          : "Примерная длительность: ~{{seconds}}с · {{format}}",
+        madeWithTaal             : "Создано с TAAL",
+        saved                    : "Сохранено",
+        saving                   : "Сохранение...",
+        saveToRoute              : "Сохранить в маршрут",
+        routeCreationCancelled   : "Создание маршрута отменено",
       },
 
       // FormsPage translations

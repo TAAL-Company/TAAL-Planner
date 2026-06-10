@@ -11,11 +11,13 @@ import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CallSplitIcon from '@mui/icons-material/CallSplit';
 import VideoFileIcon from '@mui/icons-material/VideoFile';
+import TuneIcon from '@mui/icons-material/Tune';
 import { useTranslation } from "react-i18next";
 import TaskImage from "./imageGenerate";
 import PushToPlannerPopup from './pushtoplannerpopup';
 import BreakTaskDialog from './BreakTaskDialog';
 import VideoGenerateDialog from '../../../components/VideoGenerate/VideoGenerateDialog';
+import ImageContextPopup from './ImageContextPopup';
 
 export default function TaskTable({
   isOpen,
@@ -31,6 +33,11 @@ export default function TaskTable({
   imageNoLogo,
   imageSeed,
   baseImage,       // ← NEW: { file: File, preview: string } | null
+  originalPrompt = "",  // ← NEW: user's original prompt that generated these tasks
+  // Global image context set via the "Configure Image Context" general popup.
+  // When set it overrides GPT auto-enrichment for all tasks.
+  globalImageContext = null,
+  setGlobalImageContext,
   direction,
   isRTL,
   getComplexityColor,
@@ -55,11 +62,27 @@ export default function TaskTable({
   const [editFormData, setEditFormData] = useState({ station: '', title: '', subtitle: '', estimatedTimeMinutes: 0 });
   const [pushToPlannerOpen, setPushToPlannerOpen] = useState(false);
   const [bulkImageTrigger, setBulkImageTrigger] = useState(0);
+  const [isGeneralContextPopupOpen, setIsGeneralContextPopupOpen] = useState(false);
   const lastBulkTimeRef = useRef(0);
   const [breakTaskDialogOpen, setBreakTaskDialogOpen] = useState(false);
   const [taskToBreak, setTaskToBreak] = useState(null);
   const [taskToBreakIndex, setTaskToBreakIndex] = useState(null);
   const [videoDialogOpen, setVideoDialogOpen] = useState(false);
+  const pendingRouteResolveRef = useRef(null);
+
+  // Opens PushToPlannerPopup and resolves with { id, name } once the route is created.
+  // Used by VideoGenerateDialog to create the route before saving the video.
+  const getRouteId = () => new Promise((resolve, reject) => {
+    pendingRouteResolveRef.current = { resolve, reject };
+    setPushToPlannerOpen(true);
+  });
+
+  const handleRouteCreated = (id, name) => {
+    if (pendingRouteResolveRef.current) {
+      pendingRouteResolveRef.current.resolve({ id, name });
+      pendingRouteResolveRef.current = null;
+    }
+  };
 
   const formatTime = (minutes) => {
     if (minutes < 60) return `~${minutes} min`;
@@ -253,6 +276,10 @@ export default function TaskTable({
                         imageNoLogo={imageNoLogo}
                         imageSeed={imageSeed}
                         baseImage={baseImage}           // ← forwarded
+                        originalPrompt={originalPrompt}  // ← forwarded
+                        globalImageContext={globalImageContext}
+                        theme={theme}
+                        isRTL={isRTL}
                         trigger={bulkImageTrigger}
                       />
                     </TableCell>
@@ -421,6 +448,25 @@ export default function TaskTable({
               </Box>
 
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                {/* General image context popup button */}
+                <Button
+                  variant="outlined"
+                  startIcon={<TuneIcon />}
+                  onClick={() => setIsGeneralContextPopupOpen(true)}
+                  disabled={tasks.length === 0}
+                  sx={{
+                    color: globalImageContext ? colors.accent : colors.primary,
+                    borderColor: globalImageContext ? colors.accent : colors.primary,
+                    bgcolor: globalImageContext ? `${colors.accent}11` : 'transparent',
+                    "&:hover": { bgcolor: globalImageContext ? `${colors.accent}22` : `${colors.primary}1A` },
+                    "&:disabled": { borderColor: colors.border, color: colors.textMuted },
+                    minWidth: "160px"
+                  }}
+                >
+                  {globalImageContext
+                    ? (t('ImageContext.contextSet', 'Context Set') + ' ✓')
+                    : (t('ImageContext.configureContext', 'Configure Image Context'))}
+                </Button>
                 <Button
                   variant="outlined"
                   startIcon={<VideoFileIcon />}
@@ -456,13 +502,36 @@ export default function TaskTable({
         </Box>
       </Paper>
 
+      {/* General Image Context Popup */}
+      <ImageContextPopup
+        open={isGeneralContextPopupOpen}
+        onClose={() => setIsGeneralContextPopupOpen(false)}
+        onGenerate={(ctx) => {
+          if (setGlobalImageContext) setGlobalImageContext(ctx);
+          setBulkImageTrigger(prev => prev + 1);
+        }}
+        mode="general"
+        tasks={tasks}
+        originalPrompt={originalPrompt}
+        baseImage={baseImage}
+        theme={theme}
+        isRTL={isRTL}
+      />
+
       {/* Push to Planner Popup */}
       <PushToPlannerPopup
         isOpen={pushToPlannerOpen}
-        onClose={() => setPushToPlannerOpen(false)}
+        onClose={() => {
+          if (pendingRouteResolveRef.current) {
+            pendingRouteResolveRef.current.reject(new Error('cancelled'));
+            pendingRouteResolveRef.current = null;
+          }
+          setPushToPlannerOpen(false);
+        }}
         tasks={tasks}
         complexity={complexity}
         direction={direction}
+        onRouteCreated={handleRouteCreated}
       />
 
       {/* Video Generate Dialog */}
@@ -470,8 +539,10 @@ export default function TaskTable({
         isOpen={videoDialogOpen}
         onClose={() => setVideoDialogOpen(false)}
         tasks={tasks}
-        theme={theme}
         isRTL={isRTL}
+        getRouteId={getRouteId}
+        onVideoSaved={() => {}}
+        theme={theme}
       />
 
       {/* Break Task Dialog */}

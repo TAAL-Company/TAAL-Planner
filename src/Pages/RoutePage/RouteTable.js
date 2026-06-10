@@ -54,6 +54,7 @@ export default function RouteTable() {
   const [videoTasksForDialog, setVideoTasksForDialog] = useState([]);
   const [videoRouteId, setVideoRouteId] = useState(null);
   const [videoRouteName, setVideoRouteName] = useState('');
+  const [videoSiteName, setVideoSiteName] = useState('');
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
   const [qrRoute, setQrRoute] = useState(null);
 
@@ -197,6 +198,7 @@ export default function RouteTable() {
   const handleCreateVideo = () => {
     setVideoRouteId(selectedRoute?.id || null);
     setVideoRouteName(selectedRoute?.name || '');
+    setVideoSiteName(selectedRoute?.sites?.[0]?.name || '');
     setVideoTasksForDialog(selectedRoute?.tasks || []);
     setVideoDialogOpen(true);
     handleCloseMenu();
@@ -354,6 +356,7 @@ export default function RouteTable() {
                 isRTL={t('Direction') === 'rtl'}
                 routeId={videoRouteId}
                 routeName={videoRouteName}
+                siteName={videoSiteName}
                 onVideoSaved={handleVideoSaved}
               />
               <RouteQRCodeDialog

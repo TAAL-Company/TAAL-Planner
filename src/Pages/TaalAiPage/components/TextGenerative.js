@@ -32,6 +32,10 @@ function SearchUIContent() {
   // { file: File, preview: string } | null
   const [baseImage, setBaseImage] = useState(null);
 
+  // ── Global image context set via the general popup ───────────────
+  // { environment, people, objects, styleMood, additionalDetails } | null
+  const [globalImageContext, setGlobalImageContext] = useState(null);
+
   const handleBaseImageChange = (file) => {
     // Revoke previous preview URL to avoid memory leaks
     if (baseImage?.preview) URL.revokeObjectURL(baseImage.preview);
@@ -457,6 +461,9 @@ Write tasks so they can be understood by workers with varied cognitive abilities
           imageNoLogo={imageNoLogo}
           imageSeed={imageSeed}
           baseImage={baseImage}
+          originalPrompt={userInputs[userInputs.length - 1] || ""}
+          globalImageContext={globalImageContext}
+          setGlobalImageContext={setGlobalImageContext}
         />
       )}
     </Box>

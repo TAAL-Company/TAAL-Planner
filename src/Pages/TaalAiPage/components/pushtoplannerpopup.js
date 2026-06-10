@@ -13,7 +13,8 @@ export default function PushToPlannerPopup({
   onClose,
   tasks,
   complexity,
-  direction
+  direction,
+  onRouteCreated,
 }) {
   const { t } = useTranslation();
   const { showNotification } = useNotification();
@@ -519,7 +520,10 @@ export default function PushToPlannerPopup({
         };
         
         console.log("📦 Inserting AI route:", route);
-        await insertRoute(route);
+        const createdRoute = await insertRoute(route);
+        if (onRouteCreated && createdRoute?.id) {
+          onRouteCreated(createdRoute.id, finalRouteName);
+        }
         
         completedSteps++;
         setUploadProgress(100);

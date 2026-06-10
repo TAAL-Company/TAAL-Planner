@@ -137,6 +137,8 @@ const Places = (props) => {
   const [openThreeDotsVertical, setOpenThreeDotsVertical] = useState(-1);
   const [videoDialogOpen, setVideoDialogOpen] = useState(false);
   const [videoTasksForDialog, setVideoTasksForDialog] = useState([]);
+  const [videoRouteId, setVideoRouteId] = useState(null);
+  const [videoRouteName, setVideoRouteName] = useState('');
   const [replaceRoute, setReplaceRoute] = useState([]);
   const [replaceRouteFlag, setReplaceRouteFlag] = useState(false);
   const [replaceSiteFlag, setReplaceSiteFlag] = useState(false);
@@ -658,6 +660,8 @@ const Places = (props) => {
       if (route) {
         const resolved = (route.tasks || []).map(rt => allTasks.find(at => at.id === rt.taskId)).filter(Boolean);
         setVideoTasksForDialog(resolved);
+        setVideoRouteId(route.id || null);
+        setVideoRouteName(route.name || '');
         setVideoDialogOpen(true);
       }
       setOpenThreeDotsVertical(-1);
@@ -2417,6 +2421,12 @@ const Places = (props) => {
         onClose={() => setVideoDialogOpen(false)}
         tasks={videoTasksForDialog}
         isRTL={t('Direction') === 'rtl'}
+        routeId={videoRouteId}
+        routeName={videoRouteName}
+        siteName={selectedSite?.name}
+        onVideoSaved={(videoUrl) => {
+          setAllRoutes(prev => prev.map(r => r.id === videoRouteId ? { ...r, video_link: videoUrl } : r));
+        }}
       />
     </>
   );

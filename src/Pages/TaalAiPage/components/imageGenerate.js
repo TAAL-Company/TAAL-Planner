@@ -11,9 +11,11 @@ import ImageIcon from "@mui/icons-material/Image";
 import EditIcon from "@mui/icons-material/Edit";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
 import CloseIcon from "@mui/icons-material/Close";
+import TuneIcon from "@mui/icons-material/Tune";
 import { useTranslation } from "react-i18next";
 import { useTranslator } from "../../../Utility/TranslationProvider";
-import { generateOrEditAzureImage } from "../../../api/api";
+import { generateOrEditAzureImage, createChatCompletion } from "../../../api/api";
+import ImageContextPopup from "./ImageContextPopup";
 
 export default function TaskImage({
   tasks,
@@ -31,11 +33,21 @@ export default function TaskImage({
   // ── Base image (global, set from InputContainer) ──────────────────
   // { file: File, preview: string } | null
   baseImage = null,
+  // ── Context-aware generation ──────────────────────────────────────
+  // The user's original prompt that generated the full task list
+  originalPrompt = "",
+  // Global image context set from the TaskTable general popup.
+  // When present it overrides GPT auto-enrichment in buildPrompt().
+  globalImageContext = null,
+  // theme + layout (forwarded from TaskTable for per-task popup)
+  theme,
+  isRTL = false,
 }) {
   const { t } = useTranslation();
-  const { translate } = useTranslator();
+  const { translate, translateBatch } = useTranslator();
 
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isContextPopupOpen, setIsContextPopupOpen] = useState(false);
 
   // Per-task override: user can upload a different image just for this task.
   // When null we fall back to baseImage (if present).
@@ -62,7 +74,47 @@ export default function TaskImage({
   const isLocalOverride = !!localFile; // true only when the user picked a per-task file
   const isUsingBaseImage = !isLocalOverride && !ignoreBaseImage && !!baseImage;
 
-  // ── Build prompt ──────────────────────────────────────────────────
+  // ── Build prompt from explicit context fields (no GPT call) ────────
+  const buildPromptFromContext = async (ctx) => {
+    let title    = task?.title    || "";
+    let subtitle = task?.subtitle || "";
+
+    let environment      = ctx.environment      || "";
+    let people           = ctx.people           || "";
+    let objects          = ctx.objects          || "";
+    let styleMood        = ctx.styleMood        || "";
+    let additionalDetails = ctx.additionalDetails || "";
+
+    try {
+      const [tTitle, tSubtitle, tEnv, tPeople, tObjects, tStyle, tAdditional] = await translateBatch(
+        [title, subtitle, environment, people, objects, styleMood, additionalDetails],
+        "en"
+      );
+      title             = tTitle             || title;
+      subtitle          = tSubtitle          || subtitle;
+      environment       = tEnv               || environment;
+      people            = tPeople            || people;
+      objects           = tObjects           || objects;
+      styleMood         = tStyle             || styleMood;
+      additionalDetails = tAdditional        || additionalDetails;
+    } catch (e) {
+      console.error("Translation error:", e);
+    }
+
+    const parts = [
+      imagePromptPrefix,
+      `Scene for "${title}"${subtitle ? ` (${subtitle})` : ""}.`,
+      environment       ? `Environment: ${environment}.`        : "",
+      people            ? `People: ${people}.`                  : "",
+      objects           ? `Objects: ${objects}.`                : "",
+      styleMood         ? `Style and mood: ${styleMood}.`       : "",
+      additionalDetails ? additionalDetails + "."               : "",
+      imagePromptSuffix,
+    ].filter(Boolean);
+    return parts.join(" ");
+  };
+
+  // ── Build context-aware prompt ───────────────────────────────────
   const buildPrompt = async () => {
     let title    = task?.title    || "";
     let subtitle = task?.subtitle || "";
@@ -76,14 +128,77 @@ export default function TaskImage({
       console.error("Translation error:", e);
     }
 
+    // Build related-tasks summary (all tasks except the current one)
+    const relatedTasks = tasks
+      .filter((_, i) => i !== taskIndex)
+      .map((t, i) => {
+        const label = i < taskIndex ? `[Done] Task ${i + 1}` : `[Upcoming] Task ${i + 2}`;
+        return `${label}: ${t.title}${t.subtitle ? ` — ${t.subtitle}` : ""}`;
+      })
+      .join("\n");
+
+    const hasVisualReference = !!activeFile;
+
+    // If a global image context is set, use it directly (skip GPT call)
+    if (globalImageContext) {
+      return buildPromptFromContext(globalImageContext);
+    }
+
+    // ── Context-aware GPT enrichment ──────────────────────────────────
+    // Formula: Original Prompt×60% + Current Task×25% + Related Tasks×10% + Visual×5%
+    const enrichSystemPrompt = `You are an expert image prompt engineer for DALL-E image generation.
+Your job is to write a single vivid, detailed image generation prompt for one specific task that belongs to a larger project.
+
+Context hierarchy (apply these weights to shape the scene):
+• Original project goal   — 60 %  (dominant theme, environment, style, narrative)
+• Current task            — 25 %  (the exact action/scene to visualize)
+• Related tasks           — 10 %  (shared entities, continuity, supporting context)
+• Visual references       — 5 %   (source image style, if present)
+
+Rules:
+- The image must feel like a coherent piece of the overall project, NOT an isolated illustration.
+- Maintain consistency in environment, characters, objects, style, and mood across all tasks.
+- Include: scene environment, relevant people or agents, key objects, style/mood, lighting, and camera details.
+- Output ONLY the final prompt text — no labels, no explanations, no markdown.`;
+
+    const enrichUserMessage =
+`Original Project Goal (60%): ${originalPrompt || "Not specified"}
+
+Current Task #${taskIndex + 1} (25%): ${title}${subtitle ? `\nTask Details: ${subtitle}` : ""}
+
+Related Tasks (10%):\n${relatedTasks || "None"}
+
+Visual Reference Present (5%): ${hasVisualReference ? "Yes" : "No"}
+
+Prefix style hint: ${imagePromptPrefix}
+Suffix quality requirements: ${imagePromptSuffix}
+
+Write the image prompt for Task #${taskIndex + 1} that reflects the full project context using the weights above.`;
+
+    try {
+      const response = await createChatCompletion(
+        [
+          { role: "system", content: enrichSystemPrompt },
+          { role: "user",   content: enrichUserMessage  },
+        ],
+        { maxTokens: 400 }
+      );
+      const enrichedPrompt = response?.choices?.[0]?.message?.content?.trim();
+      if (enrichedPrompt) return enrichedPrompt;
+    } catch (e) {
+      console.error("Context-aware prompt enrichment failed, using fallback:", e);
+    }
+
+    // Fallback: simple prompt without context enrichment
     return `${imagePromptPrefix}: ${title}. ${subtitle}.${imagePromptSuffix}`;
   };
 
   // ── Generate / Edit ───────────────────────────────────────────────
-  const GenerateTaskImage = async () => {
+  // Pass customContext to skip auto-enrichment and use explicit fields instead.
+  const GenerateTaskImage = async (customContext = null) => {
     setIsGenerating(true);
 
-    const prompt     = await buildPrompt();
+    const prompt     = customContext ? await buildPromptFromContext(customContext) : await buildPrompt();
     const targetSize = `${imageWidth}x${imageHeight}`;
 
     try {
@@ -190,7 +305,7 @@ export default function TaskImage({
                 opacity: 0, transition: "opacity 0.2s", cursor: "pointer", zIndex: 2,
                 "&:hover": { opacity: 1 },
               }}
-              onClick={GenerateTaskImage}
+              onClick={() => setIsContextPopupOpen(true)}
             >
               <Tooltip
                 title={
@@ -261,6 +376,25 @@ export default function TaskImage({
           style={{ display: "none" }}
           onChange={handleFileChange}
         />
+
+        {/* Per-task context popup button */}
+        <Tooltip title={t("ImageContext.openTaskPopup", "Customize image context for this task")}>
+          <IconButton
+            size="small"
+            onClick={() => setIsContextPopupOpen(true)}
+            disabled={isGenerating}
+            sx={{
+              color: "#4a9eff",
+              border: "1px solid #4a9eff44",
+              borderRadius: 1,
+              padding: "4px",
+              "&:hover": { bgcolor: "rgba(74,158,255,0.12)", borderColor: "#4a9eff" },
+              transition: "all 0.2s ease",
+            }}
+          >
+            <TuneIcon sx={{ fontSize: 18 }} />
+          </IconButton>
+        </Tooltip>
 
         <Tooltip
           title={
@@ -372,6 +506,21 @@ export default function TaskImage({
           {t("TextGenerative.pure_generation_hint", "Pure generation mode (no source image)")}
         </Typography>
       )}
+
+      {/* ── Per-task image context popup ── */}
+      <ImageContextPopup
+        open={isContextPopupOpen}
+        onClose={() => setIsContextPopupOpen(false)}
+        onGenerate={(ctx) => GenerateTaskImage(ctx)}
+        mode="task"
+        task={task}
+        taskIndex={taskIndex}
+        tasks={tasks}
+        originalPrompt={originalPrompt}
+        baseImage={baseImage}
+        theme={theme}
+        isRTL={isRTL}
+      />
     </Box>
   );
 }

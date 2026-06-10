@@ -22,8 +22,9 @@ import { updateRoute } from '../../api/api';
  * @param {Function} params.onClose      - Dialog close callback
  * @param {string}   [params.routeId]    - Route ID used when saving the video link
  * @param {Function} [params.onVideoSaved] - Called with the uploaded video URL after saving
+ * @param {Function} [params.getRouteId]   - Async function that creates a route and resolves with { id, name }; used when routeId is not yet known (e.g. AI page)
  */
-export function useVideoGenerate({ tasks, isRTL, onClose, routeId, routeName, onVideoSaved }) {
+export function useVideoGenerate({ tasks, isRTL, onClose, routeId, routeName, siteName, onVideoSaved, getRouteId }) {
   const { t } = useTranslation();
 
   const canvasRef = useRef(null);
@@ -200,9 +201,11 @@ export function useVideoGenerate({ tasks, isRTL, onClose, routeId, routeName, on
 
   const handleDownload = () => {
     if (!videoUrl) return;
-    const a    = document.createElement('a');
-    a.href     = videoUrl;
-    a.download = `taal-tasks.${actualExt}`;
+    const date     = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    const baseName = [siteName, routeName, date].filter(Boolean).join('_') || 'taal-tasks';
+    const a        = document.createElement('a');
+    a.href         = videoUrl;
+    a.download     = `${baseName}.${actualExt}`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -219,12 +222,32 @@ export function useVideoGenerate({ tasks, isRTL, onClose, routeId, routeName, on
   // ── Save to Azure & backend ───────────────────────────────────────────────
 
   const handleSaveToCloud = async () => {
-    if (!videoBlob || !routeId) return;
+    if (!videoBlob) return;
+
+    let effectiveRouteId = routeId;
+    let effectiveRouteName = routeName;
+
+    // If no routeId yet, use the getRouteId callback to create the route first
+    if (!effectiveRouteId && getRouteId) {
+      setIsSaving(true);
+      setSaveError(null);
+      try {
+        const result = await getRouteId();
+        effectiveRouteId = result?.id;
+        effectiveRouteName = result?.name || routeName;
+      } catch (err) {
+        setSaveError(t('VideoGenerate.routeCreationCancelled') || 'Route creation cancelled');
+        setIsSaving(false);
+        return;
+      }
+    }
+
+    if (!effectiveRouteId) return;
     setIsSaving(true);
     setSaveError(null);
     try {
-      const url = await uploadVideoToAzure(videoBlob, routeName, actualExt);
-      await updateRoute(routeId, { name: routeName, video_link: url });
+      const url = await uploadVideoToAzure(videoBlob, effectiveRouteName, actualExt);
+      await updateRoute(effectiveRouteId, { name: effectiveRouteName, video_link: url });
       setSavedVideoUrl(url);
       if (onVideoSaved) onVideoSaved(url);
     } catch (err) {

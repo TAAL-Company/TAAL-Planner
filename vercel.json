@@ -1,0 +1,5 @@
+{
+  "buildCommand": "npm run build:staging",
+  "outputDirectory": "build",
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}

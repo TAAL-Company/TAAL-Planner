@@ -78,12 +78,10 @@ export default function ChatContainer({ messages, userInputs = [], loading, load
   };
 
   // Function to handle showing tasks from a specific message
-  const handleShowTasksFromMessage = (messageContent) => {
+  const handleShowTasksFromMessage = (messageContent, messageKey) => {
     const taskData = parseTaskData(messageContent);
     if (taskData && onShowTasks) {
-      // You might need to modify this to pass the specific task data
-      // For now, we'll call the existing onShowTasks function
-      onShowTasks(taskData);
+      onShowTasks(taskData, messageKey);
     }
   };
 
@@ -199,7 +197,7 @@ export default function ChatContainer({ messages, userInputs = [], loading, load
                     <Button
                       variant="contained"
                       startIcon={<ViewListIcon />}
-                      onClick={() => handleShowTasksFromMessage(msg.content)}
+                      onClick={() => handleShowTasksFromMessage(msg.content, index)}
                       sx={{
                         bgcolor: colors.primary,
                         "&:hover": { bgcolor: colors.primaryHover },

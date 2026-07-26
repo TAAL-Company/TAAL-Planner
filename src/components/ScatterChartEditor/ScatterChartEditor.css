@@ -1,0 +1,28 @@
+/* Fix Google Chart Editor modal z-index and pointer events */
+.google-visualization-charteditor-dialog {
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+.modal-dialog {
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+}
+
+.modal-dialog-content {
+  pointer-events: auto !important;
+}
+
+.modal-dialog-buttons button {
+  pointer-events: auto !important;
+}
+
+/* Ensure all interactive elements in the chart editor are clickable */
+.google-visualization-charteditor-panel-navigation-cell,
+.google-visualization-charteditor-thumbnail,
+.jfk-radiobutton,
+.jfk-checkbox,
+.goog-buttonset-action,
+.goog-link-button {
+  pointer-events: auto !important;
+}

@@ -671,6 +671,8 @@ export const insertEditor = async (user) => {
         password: user.password,
         userid: user.userid,
         defaultdashboard: user.defaultdashboard,
+        canUseAI: user.canUseAI ?? false,
+        aiUsageLimit: user.aiUsageLimit ?? 10,
       }),
     });
 
@@ -710,6 +712,8 @@ export const updateEditor = async (userId, user) => {
     password: user.password,
     userid: user.userid,
     defaultdashboard: user.defaultdashboard,
+    canUseAI: user.canUseAI,
+    aiUsageLimit: user.aiUsageLimit,
   };
   const headers = {
     'Content-Type': 'application/json',
@@ -717,6 +721,17 @@ export const updateEditor = async (userId, user) => {
   };
 
   return await patch(url, body, headers);
+};
+
+export const resetEditorAiUsage = async (editorId) => {
+  const response = await fetch(`${baseUrl}/editor/${editorId}/reset-ai-usage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+  });
+  if (!response.ok) {
+    throw new Error(`Error resetting AI usage: ${response.statusText}`);
+  }
+  return response.json();
 };
 
 export const loginEditor = async (name, password) => {
@@ -1671,53 +1686,22 @@ export const sendAzureChatMessage = async (messages) => {
   return response.data;
 };
 
-const endpoint = process.env.REACT_APP_AZURE_OPENAI_ENDPOINT;
-const apiKey = process.env.REACT_APP_AZURE_OPENAI_API_KEY;
-const apiVersion = process.env.REACT_APP_AZURE_OPENAI_API_VERSION;
-const deployment = process.env.REACT_APP_AZURE_OPENAI_DEPLOYMENT;
 
-const endpointimage = process.env.REACT_APP_AZURE_OPENAI_IMAGE_ENDPOINT;
-const deploymentimage = process.env.REACT_APP_AZURE_OPENAI_IMAGE_DEPLOYMENT;
-const apikeyimage = process.env.REACT_APP_AZURE_OPENAI_IMAGE_API_KEY;
-const apiVersionimage = process.env.REACT_APP_AZURE_OPENAI_IMAGE_API_VERSION;
-
-const buildUrl = () => {
-  if (!endpoint || !apiKey || !apiVersion || !deployment) {
-    throw new Error('Missing Azure OpenAI configuration');
-  }
-
-  const normalizedEndpoint = endpoint.endsWith('/')
-    ? endpoint.slice(0, -1)
-    : endpoint;
-
-  return `${normalizedEndpoint}/openai/deployments/${deployment}/chat/completions?api-version=${apiVersion}`;
-};
-
-const buildImageGenerationsUrl = () => {
-  if (!endpointimage || !apikeyimage || !apiVersionimage || !deploymentimage) {
-    throw new Error('Missing Azure OpenAI image configuration');
-  }
-
-  const normalizedEndpoint = endpointimage.endsWith('/')
-    ? endpointimage.slice(0, -1)
-    : endpointimage;
-
-  return `${normalizedEndpoint}/openai/deployments/${deploymentimage}/images/generations?api-version=${apiVersionimage}`;
-};
-
-const buildImageEditsUrl = () => {
-  if (!endpointimage || !apikeyimage || !apiVersionimage || !deploymentimage) {
-    throw new Error('Missing Azure OpenAI image configuration');
-  }
-
-  const normalizedEndpoint = endpointimage.endsWith('/')
-    ? endpointimage.slice(0, -1)
-    : endpointimage;
-
-  return `${normalizedEndpoint}/openai/deployments/${deploymentimage}/images/edits?api-version=${apiVersionimage}`;
-};
 
 // ─── Auth guard (shared) ──────────────────────────────────────────────────────
+const getEditorId = () => {
+  try {
+    const jwt = sessionStorage.getItem('jwt');
+    if (jwt && typeof jwt === 'string' && jwt.startsWith('{')) {
+      return JSON.parse(jwt).id || null;
+    }
+    if (jwt && typeof jwt === 'object' && jwt.id) {
+      return jwt.id;
+    }
+  } catch (e) {}
+  return null;
+};
+
 const assertAdmin = () => {
   let role = null;
   try {
@@ -1730,8 +1714,8 @@ const assertAdmin = () => {
       }
     }
   } catch (e) {}
-  if (role !== 'ADMIN') {
-    throw new Error('Access denied: Only admins can use this feature.');
+  if (role !== 'ADMIN' && role !== 'EDITOR') {
+    throw new Error('Access denied: Only admins and editors can use this feature.');
   }
 };
 
@@ -1783,13 +1767,10 @@ const extractImageFromResponse = async (data) => {
 export const createChatCompletion = async (messages, options = {}) => {
   assertAdmin();
 
-  const response = await fetch(buildUrl(), {
+  const response = await fetch(`${baseUrl}/ai/chat`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'api-key': apiKey,
-    },
-    body: JSON.stringify({ messages }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ editorId: getEditorId(), messages }),
   });
 
   if (!response.ok) {
@@ -1810,22 +1791,10 @@ export const generateAzureImage = async (
 ) => {
   assertAdmin();
 
-  const response = await fetch(buildImageGenerationsUrl(), {
+  const response = await fetch(`${baseUrl}/ai/images/generate`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'api-key': apikeyimage,
-    },
-    body: JSON.stringify({
-      prompt,
-      size,
-      quality,
-      style,
-      n,
-      output_format: 'png',
-      // Falls back to url if the deployment doesn't support b64_json
-      response_format: 'b64_json',
-    }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ editorId: getEditorId(), prompt, size, quality, style, n }),
   });
 
   if (!response.ok) {
@@ -1856,26 +1825,21 @@ export const editAzureImage = async (
 ) => {
   assertAdmin();
 
-  // The edits endpoint requires multipart/form-data
   const formData = new FormData();
+  formData.append('editorId', getEditorId());
   formData.append('prompt', prompt);
   formData.append('n', String(n));
   formData.append('size', size);
-  formData.append('output_format', 'png');
 
-  // Ensure the file has a proper name so Azure can detect the MIME type
   const file =
     imageFile instanceof File
       ? imageFile
       : new File([imageFile], 'image.png', { type: 'image/png' });
   formData.append('image', file, file.name);
 
-  const response = await fetch(buildImageEditsUrl(), {
+  // No Content-Type header — browser sets it with the boundary automatically
+  const response = await fetch(`${baseUrl}/ai/images/edit`, {
     method: 'POST',
-    headers: {
-      'api-key': apikeyimage,
-      // Do NOT set Content-Type here — the browser sets it with the boundary automatically
-    },
     body: formData,
   });
 

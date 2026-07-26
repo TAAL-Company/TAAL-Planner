@@ -27,6 +27,17 @@ function SearchUIContent() {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [hasTasksReady, setHasTasksReady] = useState(false);
   const progressIntervalRef = useRef(null);
+  // Per-message image cache: { [messageKey]: string[] }
+  // messageKey = index of the message in messages.slice(1)
+  const taskImageCacheRef = useRef({});
+  const activeMessageKeyRef = useRef(null);
+
+  // Sync task picture_urls into the cache whenever tasks change
+  useEffect(() => {
+    if (activeMessageKeyRef.current !== null && tasks.length > 0) {
+      taskImageCacheRef.current[activeMessageKeyRef.current] = tasks.map(t => t.picture_url || '');
+    }
+  }, [tasks]);
 
   // ── Base image (shared source for all task-image generations) ──────
   // { file: File, preview: string } | null
@@ -81,6 +92,9 @@ You are TAAL's Internal AI Route Builder, an expert system that converts job des
 Input
 Input may be a free-text job description (Hebrew or English) or a structured Excel sheet.
 Always answer in the same language as the input.
+
+Conversation & Refinement
+You maintain full conversation history. When the user sends a follow-up message (e.g. "add more tasks", "make task 3 simpler", "remove the last station"), treat it as a refinement of the previous JSON output. Return the complete updated JSON — never a partial result. Only generate a fresh breakdown if the user clearly provides a new job description.
 
 Output
 No explanations, no markdown. JSON only.
@@ -272,6 +286,8 @@ Write tasks so they can be understood by workers with varied cognitive abilities
             const normalized = normalizeTaskData(parsed);
 
             if (normalized?.tasks && Array.isArray(normalized.tasks)) {
+              // Track which message is now active
+              activeMessageKeyRef.current = messages.length - 2;
               setTasks(normalized.tasks);
               setComplexity(normalized.complexity);
               setHasTasksReady(true);
@@ -307,11 +323,14 @@ Write tasks so they can be understood by workers with varied cognitive abilities
         const complexityInfo = complexityOptions.find(opt => opt.value === selectedComplexity);
 
         const originalInput = input;
-        const messageWithComplexity = `Input:\n${input}\n\nInstruction: Create a clear, pre-school level task breakdown with ${complexityInfo.label} complexity level.`;
+        const isFirstUserMessage = messagesRef.current.filter(m => m.role !== 'system').length === 0;
+        const messageContent = isFirstUserMessage
+          ? `Input:\n${input}\n\nInstruction: Create a clear, pre-school level task breakdown with ${complexityInfo.label} complexity level.`
+          : input;
 
         setUserInputs(prev => [...prev, originalInput]);
 
-        await sendMessageToAzure(messageWithComplexity);
+        await sendMessageToAzure(messageContent);
         setInput('');
       } catch (error) {
         showNotification('error', error.message);
@@ -328,11 +347,20 @@ Write tasks so they can be understood by workers with varied cognitive abilities
     }
   };
 
-  const handleShowTasks = (taskDataFromMessage = null) => {
+  const handleShowTasks = (taskDataFromMessage = null, messageKey = null) => {
     if (taskDataFromMessage) {
       const normalized = normalizeTaskData(taskDataFromMessage);
       if (normalized?.tasks && Array.isArray(normalized.tasks)) {
-        setTasks(normalized.tasks);
+        // Restore cached images for this specific message
+        const cachedImages = messageKey !== null
+          ? (taskImageCacheRef.current[messageKey] || [])
+          : [];
+        const mergedTasks = normalized.tasks.map((newTask, index) => ({
+          ...newTask,
+          picture_url: cachedImages[index] || newTask.picture_url || '',
+        }));
+        activeMessageKeyRef.current = messageKey;
+        setTasks(mergedTasks);
         setComplexity(normalized.complexity);
         setHasTasksReady(true);
       }

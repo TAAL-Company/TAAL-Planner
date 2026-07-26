@@ -49,6 +49,10 @@ export default function TaskImage({
   const [isGenerating, setIsGenerating] = useState(false);
   const [isContextPopupOpen, setIsContextPopupOpen] = useState(false);
 
+  // Conversation history for the prompt-enrichment AI call.
+  // Grows with each regeneration so the AI can refine previous prompts.
+  const promptConversationRef = useRef([]);
+
   // Per-task override: user can upload a different image just for this task.
   // When null we fall back to baseImage (if present).
   const [localFile, setLocalFile] = useState(null);
@@ -159,10 +163,17 @@ Rules:
 - The image must feel like a coherent piece of the overall project, NOT an isolated illustration.
 - Maintain consistency in environment, characters, objects, style, and mood across all tasks.
 - Include: scene environment, relevant people or agents, key objects, style/mood, lighting, and camera details.
+- If this is a regeneration request, improve and vary the previous prompt — do NOT repeat it verbatim.
 - Output ONLY the final prompt text — no labels, no explanations, no markdown.`;
 
-    const enrichUserMessage =
-`Original Project Goal (60%): ${originalPrompt || "Not specified"}
+    const isRegeneration = promptConversationRef.current.length > 0;
+    const enrichUserMessage = isRegeneration
+      ? `Regenerate the image prompt for Task #${taskIndex + 1}. Improve upon the previous version — vary the composition, angle, or details while keeping the project context consistent.
+
+Original Project Goal: ${originalPrompt || "Not specified"}
+Current Task: ${title}${subtitle ? ` — ${subtitle}` : ""}
+Visual Reference Present: ${hasVisualReference ? "Yes" : "No"}`
+      : `Original Project Goal (60%): ${originalPrompt || "Not specified"}
 
 Current Task #${taskIndex + 1} (25%): ${title}${subtitle ? `\nTask Details: ${subtitle}` : ""}
 
@@ -176,15 +187,22 @@ Suffix quality requirements: ${imagePromptSuffix}
 Write the image prompt for Task #${taskIndex + 1} that reflects the full project context using the weights above.`;
 
     try {
-      const response = await createChatCompletion(
-        [
-          { role: "system", content: enrichSystemPrompt },
-          { role: "user",   content: enrichUserMessage  },
-        ],
-        { maxTokens: 400 }
-      );
+      const messages = [
+        { role: "system", content: enrichSystemPrompt },
+        ...promptConversationRef.current,
+        { role: "user", content: enrichUserMessage },
+      ];
+      const response = await createChatCompletion(messages, { maxTokens: 400 });
       const enrichedPrompt = response?.choices?.[0]?.message?.content?.trim();
-      if (enrichedPrompt) return enrichedPrompt;
+      if (enrichedPrompt) {
+        // Store this exchange in conversation history for next regeneration
+        promptConversationRef.current = [
+          ...promptConversationRef.current,
+          { role: "user", content: enrichUserMessage },
+          { role: "assistant", content: enrichedPrompt },
+        ];
+        return enrichedPrompt;
+      }
     } catch (e) {
       console.error("Context-aware prompt enrichment failed, using fallback:", e);
     }

@@ -12,6 +12,8 @@ import {
     MenuItem,
     IconButton,
     InputAdornment,
+    Switch,
+    FormControlLabel,
 } from '@mui/material';
 
 import Visibility from '@mui/icons-material/Visibility';
@@ -351,6 +353,30 @@ export default function EditorForm({
                         ))}
                     </Select>
                 </FormControl>
+
+                {/* AI access settings */}
+                <FormControlLabel
+                    style={{ marginTop: '8px' }}
+                    control={
+                        <Switch
+                            checked={!!formValues.canUseAI}
+                            onChange={(e) => setFormValues(prev => ({ ...prev, canUseAI: e.target.checked }))}
+                        />
+                    }
+                    label="Allow AI Access"
+                />
+                {formValues.canUseAI && (
+                    <TextField
+                        label="AI Usage Limit"
+                        type="number"
+                        fullWidth
+                        value={formValues.aiUsageLimit ?? 10}
+                        onChange={(e) => setFormValues(prev => ({ ...prev, aiUsageLimit: Number(e.target.value) }))}
+                        margin="normal"
+                        inputProps={{ min: 1 }}
+                        helperText={`Current usage: ${formValues.aiUsageCount ?? 0} / ${formValues.aiUsageLimit ?? 10}`}
+                    />
+                )}
                 <FormControl fullWidth margin="normal">
                     {formValues.picture_url && (
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

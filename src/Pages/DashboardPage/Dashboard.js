@@ -15,9 +15,11 @@ import communityImage from '../../Pictures/community.png';
 // import Barchart from '../charts/Barchart';
 // import Piechart from '../charts/Piechart';
 import { baseUrl } from '../../config';
-// import Charts from '../../components/charts/Charts';
+// import Charts from '../../components/junk/charts/Charts';
 import { Grid, Card, CardContent, CardMedia, Typography, Button } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+// import ScatterChartEditor from '../../components/ScatterChartEditor/ScatterChartEditor';
+ 
 
 const useStyles = makeStyles({
   card: {
@@ -125,6 +127,7 @@ const Dashboard = () => {
   const editorId = jwtEditor && jwtEditor !== "undefined" ? JSON.parse(jwtEditor)?.id : "ADMIN";
   const defaultdashboard = jwt ? JSON.parse(jwt)?.defaultdashboard : null;
   const SiteIDs = JSON.parse(jwt)?.sites?.filter((site) =>site.id !== null).map((site) => site.id) || [];
+  const env = baseUrl === "https://stg-web-app0da5905.azurewebsites.net" ? "stg" : "prod";
 
   const leftElements = [
     <div className='right' height="100%">
@@ -163,6 +166,12 @@ const Dashboard = () => {
   const rightElements = [
     <div className='left'> {
       // <Charts />
+      // <ScatterChartEditor 
+      //   siteIds={SiteIDs} 
+      //   env={env} 
+      //   role={role} 
+      //   sitesId={SiteIDs} 
+      // />
       <iframe
         width="100%"
         height="100%"

@@ -47,7 +47,7 @@ function LoginAPI({
           posthog.identify(user.name);
           posthog.capture('$set', { $$set: [process.env.REACT_APP_VERSION] });
 
-          window.location.replace('/Planner');
+          window.location.replace('/planner');
         } catch (err) {
           console.error('Error parsing user data', err);
           showNotification('error', 'Login failed. Please try again.');

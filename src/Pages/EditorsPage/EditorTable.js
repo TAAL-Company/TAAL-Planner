@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-import { getingData_Editors, deleteEditor, getingData_Places, getingData_Users, getingData_coaches } from '../../api/api';
+import { getingData_Editors, deleteEditor, getingData_Places, getingData_Users, getingData_coaches, resetEditorAiUsage } from '../../api/api';
 import { useState, useEffect } from 'react';
 import { Button, MenuItem, Menu } from '@mui/material';
 import EditorForm from './EditorForms';
@@ -45,6 +45,8 @@ export default function EditorTable() {
         password: '',
         userid: '',
         defaultdashboard: '',
+        canUseAI: false,
+        aiUsageLimit: 10,
     });
     const [sites, setSites] = useState([]);
     const [users, setUsers] = useState([]);
@@ -84,6 +86,8 @@ export default function EditorTable() {
             password: '',
             userid: '',
             defaultdashboard: '',
+            canUseAI: false,
+            aiUsageLimit: 10,
         });
         setSelectedEditor(null);
         setAnchorEl(null);
@@ -177,6 +181,20 @@ export default function EditorTable() {
             console.error(error.message);
             showNotification('error', t('Error_delete_editor'));
         }
+    };
+
+    const handleResetAiUsage = async () => {
+        try {
+            const updated = await resetEditorAiUsage(selectedEditor.id);
+            setEditors(prev =>
+                prev.map(e => e.id === selectedEditor.id ? { ...e, aiUsageCount: 0 } : e)
+            );
+            showNotification('success', `AI usage reset for ${selectedEditor.name}`);
+        } catch (error) {
+            console.error(error.message);
+            showNotification('error', 'Failed to reset AI usage: ' + error.message);
+        }
+        handleCloseMenu();
     };
 
     // Function to get rows with details
@@ -285,6 +303,9 @@ export default function EditorTable() {
                             <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
                                 <MenuItem onClick={handleClickOpenEditDialog}>{t('EditorPage.Edit')}</MenuItem>
                                 <MenuItem onClick={handleDeleteEditor}>{t('EditorPage.Delete')}</MenuItem>
+                                {selectedEditor?.canUseAI && (
+                                    <MenuItem onClick={handleResetAiUsage}>Reset AI Usage</MenuItem>
+                                )}
                             </Menu>
 
                             <EditorForm

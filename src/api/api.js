@@ -4,6 +4,37 @@ import { Buffer } from 'buffer';
 import { BlobServiceClient } from '@azure/storage-blob';
 import React, { useState } from 'react';
 
+// ── Auth helpers ────────────────────────────────────────────────────────────
+// All requests to the TAAL backend (baseUrl) automatically carry the JWT.
+
+/** Returns the Authorization header object when a token is stored, or {}. */
+const getJwtHeaders = () => {
+  const token = sessionStorage.getItem('accessToken');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+// Attach the JWT access token to every outgoing axios request
+axios.interceptors.request.use((config) => {
+  const token = sessionStorage.getItem('accessToken');
+  if (token) {
+    config.headers = config.headers ?? {};
+    config.headers['Authorization'] = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Monkey-patch global fetch so that every fetch() call to the TAAL backend
+// automatically includes the Authorization header — no need to touch each
+// individual call site.
+const _originalFetch = window.fetch.bind(window);
+window.fetch = (url, options = {}) => {
+  if (typeof url === 'string' && baseUrl && url.startsWith(baseUrl)) {
+    const headers = { ...getJwtHeaders(), ...(options.headers || {}) };
+    return _originalFetch(url, { ...options, headers });
+  }
+  return _originalFetch(url, options);
+};
+
 // const connectionString =
 //         'https://taalmedia.blob.core.windows.net/images?sp=rwdlacupiytfx&se=2035-02-16T01:12:10Z&st=2025-02-15T17:12:10Z&spr=https,http&sig=cp2HYd4HFqlP0NWK7cYQhR8HP3ul6VjgkxiFReIfal4%3D'
 //     //  'https://taalmedia.blob.core.windows.net/images?sp=rwdlacupiytfx&se=2025-02-15T20:23:20Z&st=2025-02-15T12:23:20Z&spr=https&sig=28wRRGVf0rhm%2BUGFcn1GxuWSCr2QiatRCR6PoExPRdU%3D'
@@ -209,11 +240,13 @@ export const getingData_UsersbyIds = async (ids) => {
   return users;
 };
 export const getingDataUsers = async () => {
-  const userNameApi = 'admin';
-  const passwordApi = 'BnDN q25U yKnr exYX xcCS qWeK';
-  const base64encodedData = Buffer.from(
-    `${userNameApi}:${passwordApi}`
-  ).toString('base64');
+  // This function fetches from the legacy WordPress API.
+  // The WordPress application password must be set in the REACT_APP_WP_AUTH_TOKEN env var.
+  const wpAuthToken = process.env.REACT_APP_WP_AUTH_TOKEN;
+  if (!wpAuthToken) {
+    console.warn('REACT_APP_WP_AUTH_TOKEN not set; skipping legacy WordPress user fetch.');
+    return [];
+  }
 
   let allUsers;
 
@@ -222,7 +255,7 @@ export const getingDataUsers = async () => {
       per_page: 100,
       'Content-Type': 'application/json',
       'Cache-Control': 'no-cache',
-      Authorization: `basic ${base64encodedData}`,
+      Authorization: `basic ${wpAuthToken}`,
     },
   }).then((res) => {
     let max_pages = res.headers['x-wp-totalpages'];
@@ -235,7 +268,7 @@ export const getingDataUsers = async () => {
             per_page: 100,
             page: i,
             'Cache-Control': 'no-cache',
-            Authorization: `basic ${base64encodedData}`,
+            Authorization: `basic ${wpAuthToken}`,
           },
         }).then((res) => {
           Array.prototype.push.apply(allUsers, res.data);

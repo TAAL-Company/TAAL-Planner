@@ -31,6 +31,7 @@ const Nav = () => {
   }, []);
 
   const logout = () => {
+    sessionStorage.removeItem('accessToken')
     sessionStorage.removeItem('jwt');
     sessionStorage.removeItem('jwt-EDITOR');
     sessionStorage.removeItem('logged_in');

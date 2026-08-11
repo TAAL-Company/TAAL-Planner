@@ -28,7 +28,11 @@ function LoginAPI({
         showNotification('error', 'User not found — you need to register first');
       } else if (response.status === 201) {
         try {
-          const user = await response.json();
+          const { token, user } = await response.json();
+
+          // Store the JWT access token so the axios interceptor can attach it
+          sessionStorage.setItem('accessToken', token);
+          // Keep 'jwt' key as the editor user object for backward compatibility
           sessionStorage.setItem('jwt', JSON.stringify(user));
 
           if (user.role === 'ADMIN' || user.role === 'EDITOR') {

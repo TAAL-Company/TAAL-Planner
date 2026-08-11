@@ -123,12 +123,12 @@ const Dashboard = () => {
 
   const jwt = sessionStorage.getItem('jwt');
   const jwtEditor = sessionStorage.getItem('jwt-EDITOR');
+  const accessToken = sessionStorage.getItem('accessToken') ?? '';
   const role = jwt ? JSON.parse(jwt)?.role : null;
   const editorId = jwtEditor && jwtEditor !== "undefined" ? JSON.parse(jwtEditor)?.id : "ADMIN";
   const defaultdashboard = jwt ? JSON.parse(jwt)?.defaultdashboard : null;
   const SiteIDs = JSON.parse(jwt)?.sites?.filter((site) =>site.id !== null).map((site) => site.id) || [];
-  const env = baseUrl === "https://stg-web-app0da5905.azurewebsites.net" ? "stg" : "prod";
-
+  const env = baseUrl+"/";
   const leftElements = [
     <div className='right' height="100%">
       {(role === "ADMIN" || role === "EDITOR") ? (
@@ -175,7 +175,7 @@ const Dashboard = () => {
       <iframe
         width="100%"
         height="100%"
-        src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&env=${baseUrl === "https://stg-web-app0da5905.azurewebsites.net" ? "stg" : "prod"}`}
+        src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&env=${env}&token=${accessToken}`}
         // src={`http://localhost:8501/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&env=${baseUrl === "https://stg-web-app0da5905.azurewebsites.net" ? "stg" : "prod"}`}
       ></iframe>
     } </div>

@@ -10,3 +10,4 @@ TopSecret.js
 .env.dev
 .env.staging
 .env.prod
+.env.stagingfree

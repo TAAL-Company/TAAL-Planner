@@ -22,6 +22,7 @@ export default function TaskImage({
   setTasks,
   task,
   taskIndex,
+  taskId,
   imagePromptPrefix,
   imagePromptSuffix,
   imageWidth,
@@ -132,11 +133,19 @@ export default function TaskImage({
       console.error("Translation error:", e);
     }
 
+    // Resolve where this task currently sits in the live list by its stable
+    // id — taskIndex is a snapshot from render time and can be wrong by the
+    // time this async prompt build runs (tasks may have been added/removed).
+    const currentIndex = (() => {
+      const i = tasks.findIndex(t => t.id != null && t.id === taskId);
+      return i >= 0 ? i : taskIndex;
+    })();
+
     // Build related-tasks summary (all tasks except the current one)
     const relatedTasks = tasks
-      .filter((_, i) => i !== taskIndex)
+      .filter((_, i) => i !== currentIndex)
       .map((t, i) => {
-        const label = i < taskIndex ? `[Done] Task ${i + 1}` : `[Upcoming] Task ${i + 2}`;
+        const label = i < currentIndex ? `[Done] Task ${i + 1}` : `[Upcoming] Task ${i + 2}`;
         return `${label}: ${t.title}${t.subtitle ? ` — ${t.subtitle}` : ""}`;
       })
       .join("\n");
@@ -150,7 +159,7 @@ export default function TaskImage({
 
     // ── Context-aware GPT enrichment ──────────────────────────────────
     // Formula: Original Prompt×60% + Current Task×25% + Related Tasks×10% + Visual×5%
-    const enrichSystemPrompt = `You are an expert image prompt engineer for DALL-E image generation.
+    const enrichSystemPrompt = `You are an expert image prompt engineer for Azure image generation.
 Your job is to write a single vivid, detailed image generation prompt for one specific task that belongs to a larger project.
 
 Context hierarchy (apply these weights to shape the scene):
@@ -168,14 +177,14 @@ Rules:
 
     const isRegeneration = promptConversationRef.current.length > 0;
     const enrichUserMessage = isRegeneration
-      ? `Regenerate the image prompt for Task #${taskIndex + 1}. Improve upon the previous version — vary the composition, angle, or details while keeping the project context consistent.
+      ? `Regenerate the image prompt for Task #${currentIndex + 1}. Improve upon the previous version — vary the composition, angle, or details while keeping the project context consistent.
 
 Original Project Goal: ${originalPrompt || "Not specified"}
 Current Task: ${title}${subtitle ? ` — ${subtitle}` : ""}
 Visual Reference Present: ${hasVisualReference ? "Yes" : "No"}`
       : `Original Project Goal (60%): ${originalPrompt || "Not specified"}
 
-Current Task #${taskIndex + 1} (25%): ${title}${subtitle ? `\nTask Details: ${subtitle}` : ""}
+Current Task #${currentIndex + 1} (25%): ${title}${subtitle ? `\nTask Details: ${subtitle}` : ""}
 
 Related Tasks (10%):\n${relatedTasks || "None"}
 
@@ -184,7 +193,7 @@ Visual Reference Present (5%): ${hasVisualReference ? "Yes" : "No"}
 Prefix style hint: ${imagePromptPrefix}
 Suffix quality requirements: ${imagePromptSuffix}
 
-Write the image prompt for Task #${taskIndex + 1} that reflects the full project context using the weights above.`;
+Write the image prompt for Task #${currentIndex + 1} that reflects the full project context using the weights above.`;
 
     try {
       const messages = [
@@ -225,17 +234,29 @@ Write the image prompt for Task #${taskIndex + 1} that reflects the full project
         activeFile,   // File | null
         {
           size:    targetSize,
-          style:   imageModel,
-          quality: "standard",
+          quality: "medium",
           n:       imageSeed,
         }
       );
 
       console.log("Generated/Edited Azure image URL:", imageUrl);
 
-      const updatedTasks = [...tasks];
-      updatedTasks[taskIndex].picture_url = imageUrl;
-      setTasks(updatedTasks);
+      // IMPORTANT: use the functional setState form and match by stable id,
+      // never by the taskIndex/tasks captured in this closure. Generation is
+      // async and can take many seconds, during which:
+      //  - other tasks may finish generating in parallel (bulk mode) and
+      //    already have written their own picture_url into the real state
+      //  - tasks may have been added, deleted, reordered, or edited
+      // Writing a stale `[...tasks]` snapshot back with setTasks would wipe
+      // out all of those changes and/or write the image onto whatever task
+      // now happens to sit at the old numeric index. Updating from `prev`
+      // and matching on id makes this safe regardless of what else changed
+      // while the request was in flight.
+      setTasks(prev => prev.map(t => {
+        if (taskId != null) return t.id === taskId ? { ...t, picture_url: imageUrl } : t;
+        // Fallback only for legacy tasks that somehow have no id yet.
+        return prev.indexOf(t) === taskIndex ? { ...t, picture_url: imageUrl } : t;
+      }));
     } catch (error) {
       console.error("Azure image generation/edit failed:", error);
     } finally {

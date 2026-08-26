@@ -1,15 +1,25 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, IconButton, Tooltip } from "@mui/material";
+import { Box, IconButton, Tooltip, Badge } from "@mui/material";
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
+import HistoryIcon from '@mui/icons-material/History';
+import AddCommentIcon from '@mui/icons-material/AddComment';
 import { useTranslation } from "react-i18next";
 import InputContainer from './InputContainer';
 import SettingsDialog from './SettingsDialog';
 import WelcomeView from './WelcomeView';
 import ChatView from './ChatView';
+import HistorySidebar from './HistorySidebar';
 import { TaalAiThemeProvider, useTaalAiTheme } from './ThemeContext';
 import "../../../i18n";
-import { createChatCompletion } from "../../../api/api";
+import {
+  createChatCompletion,
+  listAiConversations,
+  getAiConversation,
+  createAiConversation,
+  saveAiConversation,
+  deleteAiConversation,
+} from "../../../api/api";
 import { useNotification } from '../../../components/Notification/NotificationProvider';
 
 // Inner component that uses the theme
@@ -183,6 +193,198 @@ Write tasks so they can be understood by workers with varied cognitive abilities
   // Add state to track original user inputs
   const [userInputs, setUserInputs] = useState([]);
 
+  // ── Chat history (saved conversations) ────────────────────────────
+  const [conversations, setConversations] = useState([]);
+  const [activeConversationId, setActiveConversationId] = useState(null);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [historyListLoading, setHistoryListLoading] = useState(false);
+
+  const activeConversationIdRef = useRef(null);
+  const isHydratingRef = useRef(false);
+  const lastSavedSnapshotRef = useRef('');
+  const saveTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    activeConversationIdRef.current = activeConversationId;
+  }, [activeConversationId]);
+
+  const buildStateSnapshot = () => ({
+    messages,
+    userInputs,
+    tasks,
+    complexity,
+    globalImageContext,
+    // Generated images for every task breakdown in this chat, keyed by message index —
+    // not just the one currently shown in the table.
+    taskImageCache: taskImageCacheRef.current,
+    activeMessageKey: activeMessageKeyRef.current,
+  });
+
+  // Loads a saved chat's full state so the user can continue where they left off.
+  const handleSelectConversation = async (id) => {
+    try {
+      isHydratingRef.current = true;
+      const conversation = await getAiConversation(id);
+      const state = conversation.state || {};
+      const restoredMessages = Array.isArray(state.messages) && state.messages.length > 0
+        ? state.messages
+        : [{ role: 'system', content: systemPrompt }];
+
+      taskImageCacheRef.current = state.taskImageCache && typeof state.taskImageCache === 'object'
+        ? state.taskImageCache
+        : {};
+      activeMessageKeyRef.current = state.activeMessageKey ?? null;
+
+      setMessages(restoredMessages);
+      setUserInputs(Array.isArray(state.userInputs) ? state.userInputs : []);
+      setTasks(Array.isArray(state.tasks) ? state.tasks : []);
+      setComplexity(state.complexity || '');
+      setHasTasksReady(Array.isArray(state.tasks) && state.tasks.length > 0);
+      setGlobalImageContext(state.globalImageContext || null);
+      setIsTableOpen(false);
+      setActiveConversationId(conversation.id);
+
+      lastSavedSnapshotRef.current = JSON.stringify({
+        messages: restoredMessages,
+        userInputs: state.userInputs || [],
+        tasks: state.tasks || [],
+        complexity: state.complexity || '',
+        globalImageContext: state.globalImageContext || null,
+        taskImageCache: taskImageCacheRef.current,
+        activeMessageKey: activeMessageKeyRef.current,
+      });
+      setIsHistoryOpen(false);
+    } catch (error) {
+      showNotification('error', t('TextGenerative.loadChatFailed', 'Failed to load chat'));
+      console.error('Failed to load AI conversation:', error);
+    } finally {
+      isHydratingRef.current = false;
+    }
+  };
+
+  // Resets local state to a blank chat; the next message will create a new saved conversation.
+  const handleNewChat = () => {
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    setMessages([{ role: 'system', content: systemPrompt }]);
+    setUserInputs([]);
+    setTasks([]);
+    setComplexity('');
+    setHasTasksReady(false);
+    setIsTableOpen(false);
+    setGlobalImageContext(null);
+    setActiveConversationId(null);
+    taskImageCacheRef.current = {};
+    activeMessageKeyRef.current = null;
+    lastSavedSnapshotRef.current = '';
+    setIsHistoryOpen(false);
+  };
+
+  const handleDeleteConversation = async (id) => {
+    try {
+      await deleteAiConversation(id);
+      setConversations((prev) => prev.filter((c) => c.id !== id));
+      if (id === activeConversationIdRef.current) {
+        handleNewChat();
+      }
+    } catch (error) {
+      showNotification('error', t('TextGenerative.deleteChatFailed', 'Failed to delete chat'));
+      console.error('Failed to delete AI conversation:', error);
+    }
+  };
+
+  // On first load: fetch the chat list and resume the most recent chat, if any.
+  useEffect(() => {
+    (async () => {
+      setHistoryListLoading(true);
+      try {
+        const list = await listAiConversations();
+        setConversations(list);
+        if (list.length > 0) {
+          await handleSelectConversation(list[0].id);
+        }
+      } catch (error) {
+        console.error('Failed to load AI chat history:', error);
+      } finally {
+        setHistoryListLoading(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Debounced auto-save: persists prompts, AI responses, tasks, and generated
+  // images whenever the chat state settles, skipping no-op saves.
+  useEffect(() => {
+    if (isHydratingRef.current || loading) return;
+    if (messages.length <= 1) return;
+
+    const snapshot = buildStateSnapshot();
+    const serialized = JSON.stringify(snapshot);
+    if (serialized === lastSavedSnapshotRef.current) return;
+
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(async () => {
+      try {
+        if (!activeConversationIdRef.current) {
+          const created = await createAiConversation(snapshot);
+          activeConversationIdRef.current = created.id;
+          setActiveConversationId(created.id);
+          setConversations((prev) => [created, ...prev]);
+        } else {
+          const updated = await saveAiConversation(activeConversationIdRef.current, snapshot);
+          setConversations((prev) => {
+            const others = prev.filter((c) => c.id !== updated.id);
+            return [
+              { id: updated.id, title: updated.title, createdAt: updated.createdAt, updatedAt: updated.updatedAt },
+              ...others,
+            ];
+          });
+        }
+        lastSavedSnapshotRef.current = serialized;
+      } catch (error) {
+        console.error('Failed to save AI chat history:', error);
+      }
+    }, 700);
+
+    return () => clearTimeout(saveTimeoutRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages, tasks, complexity, userInputs, globalImageContext, loading]);
+
+  // Applies task JSON found in a NEW assistant response. This is called
+  // explicitly, exactly once, right when a fresh reply arrives — never as
+  // a side effect of `messages` changing for some other reason (loading a
+  // saved conversation, the system-prompt sync effect touching messages,
+  // etc). That distinction is what actually matters: parsing reactively
+  // off `messages` used to re-run on every conversation switch, re-derive
+  // tasks from the raw AI JSON (which never carries picture_url), and wipe
+  // out the images that were just restored — triggering a full table
+  // regeneration every time the user switched chats.
+  const applyAssistantTasks = (content, messagesLength) => {
+    try {
+      const jsonMatch = content.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        const normalized = normalizeTaskData(parsed);
+
+        if (normalized?.tasks && Array.isArray(normalized.tasks)) {
+          activeMessageKeyRef.current = messagesLength - 2;
+          // Stable ids so image generation always targets the right task,
+          // even after tasks are added/removed/reordered later.
+          const tasksWithIds = normalized.tasks.map((task, i) => ({
+            ...task,
+            id: task.id || `task-${messagesLength}-${i}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          }));
+          setTasks(tasksWithIds);
+          setComplexity(normalized.complexity);
+          setHasTasksReady(true);
+          return;
+        }
+      }
+    } catch (error) {
+      console.log('No valid task JSON found in response');
+    }
+    setHasTasksReady(false);
+  };
+
   const sendMessageToAzure = async (content) => {
     const userMessage = { role: "user", content };
     const updatedMessages = [...messagesRef.current, userMessage];
@@ -204,7 +406,11 @@ Write tasks so they can be understood by workers with varied cognitive abilities
       const assistantMessage = response?.choices?.[0]?.message;
 
       if (assistantMessage) {
-        setMessages((prev) => [...prev, assistantMessage]);
+        const newMessages = [...updatedMessages, assistantMessage];
+        setMessages(newMessages);
+        if (assistantMessage.content) {
+          applyAssistantTasks(assistantMessage.content, newMessages.length);
+        }
       }
     } catch (error) {
       showNotification('error', error.message);
@@ -274,32 +480,14 @@ Write tasks so they can be understood by workers with varied cognitive abilities
     return null;
   };
 
-  // Parse JSON from AI responses to extract tasks
-  useEffect(() => {
-    if (messages.length > 1 && !loading) {
-      const lastMessage = messages[messages.length - 1];
-      if (lastMessage.role === 'assistant') {
-        try {
-          const jsonMatch = lastMessage.content.match(/\{[\s\S]*\}/);
-          if (jsonMatch) {
-            const parsed = JSON.parse(jsonMatch[0]);
-            const normalized = normalizeTaskData(parsed);
-
-            if (normalized?.tasks && Array.isArray(normalized.tasks)) {
-              // Track which message is now active
-              activeMessageKeyRef.current = messages.length - 2;
-              setTasks(normalized.tasks);
-              setComplexity(normalized.complexity);
-              setHasTasksReady(true);
-            }
-          }
-        } catch (error) {
-          console.log('No valid task JSON found in response');
-          setHasTasksReady(false);
-        }
-      }
-    }
-  }, [messages, loading]);
+  // NOTE: task parsing used to live in a `useEffect` watching `[messages, loading]`.
+  // That effect re-ran on ANY change to `messages` — including loading a saved
+  // conversation from history, or the system-prompt sync effect touching the
+  // messages array — and would re-derive `tasks` from the raw AI JSON (which
+  // never includes picture_url), wiping already-generated images and causing
+  // a full table regeneration. Parsing now happens once, explicitly, inside
+  // sendMessageToAzure (see applyAssistantTasks above) right when a genuinely
+  // new assistant reply arrives — never as a side effect of switching chats.
 
   const getComplexityColor = (complexity) => {
     if (complexity.includes('Basic') || complexity.includes('בסיסי')) return 'success';
@@ -357,6 +545,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
           : [];
         const mergedTasks = normalized.tasks.map((newTask, index) => ({
           ...newTask,
+          id: newTask.id || `task-${messageKey ?? 'x'}-${index}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
           picture_url: cachedImages[index] || newTask.picture_url || '',
         }));
         activeMessageKeyRef.current = messageKey;
@@ -406,6 +595,61 @@ Write tasks so they can be understood by workers with varied cognitive abilities
         direction: direction,
       }}
     >
+      {/* Chat History Button */}
+      <Tooltip title={t('TextGenerative.chatHistory', 'Chat History')}>
+        <IconButton
+          onClick={() => setIsHistoryOpen(true)}
+          sx={{
+            position: "absolute",
+            top: 16,
+            [isRTL ? 'left' : 'right']: 124,
+            bgcolor: theme.backgroundSecondary,
+            color: theme.primary,
+            "&:hover": { bgcolor: theme.backgroundTertiary },
+            zIndex: 1000,
+          }}
+        >
+          <Badge color="primary" variant="dot" invisible={conversations.length === 0}>
+            <HistoryIcon />
+          </Badge>
+        </IconButton>
+      </Tooltip>
+
+      {/* New Chat Button */}
+      <Tooltip title={t('TextGenerative.newChat', 'New chat')}>
+        <IconButton
+          onClick={handleNewChat}
+          disabled={!hasChatStarted}
+          sx={{
+            position: "absolute",
+            top: 16,
+            [isRTL ? 'left' : 'right']: 178,
+            bgcolor: theme.backgroundSecondary,
+            color: theme.primary,
+            "&:hover": { bgcolor: theme.backgroundTertiary },
+            "&:disabled": { color: theme.textMuted },
+            zIndex: 1000,
+          }}
+        >
+          <AddCommentIcon />
+        </IconButton>
+      </Tooltip>
+
+      {/* Chat History Sidebar */}
+      <HistorySidebar
+        open={isHistoryOpen}
+        onClose={() => setIsHistoryOpen(false)}
+        conversations={conversations}
+        activeId={activeConversationId}
+        loading={historyListLoading}
+        onSelect={handleSelectConversation}
+        onNew={handleNewChat}
+        onDelete={handleDeleteConversation}
+        direction={direction}
+        isRTL={isRTL}
+        theme={theme}
+      />
+
       {/* Theme Toggle Button */}
       <Tooltip title={isDarkMode ? t('TextGenerative.lightMode') || 'Light Mode' : t('TextGenerative.darkMode') || 'Dark Mode'}>
         <IconButton

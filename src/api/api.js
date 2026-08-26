@@ -1754,9 +1754,11 @@ const assertAdmin = () => {
 
 // ─── Scale helper ─────────────────────────────────────────────────────────────
 /**
- * Draws a blob / URL onto a canvas scaled to 952×648 and returns a blob URL.
+ * Draws a data-URL / remote URL onto a canvas scaled to 952×648 and returns a
+ * data URL. Data URLs (unlike blob: object URLs) remain valid after the
+ * conversation state is persisted and the page is reloaded.
  */
-const scaleImageTo952x648BlobUrl = (source) =>
+const scaleImageTo952x648DataUrl = (source) =>
   new Promise((resolve, reject) => {
     const img = new window.Image();
     img.crossOrigin = 'Anonymous';
@@ -1765,30 +1767,24 @@ const scaleImageTo952x648BlobUrl = (source) =>
       canvas.width = 952;
       canvas.height = 648;
       canvas.getContext('2d').drawImage(img, 0, 0, 952, 648);
-      canvas.toBlob((blob) => {
-        if (blob) resolve(URL.createObjectURL(blob));
-        else reject(new Error('Failed to create blob from canvas'));
-      }, 'image/png');
+      resolve(canvas.toDataURL('image/jpeg', 0.82));
     };
     img.onerror = reject;
-    img.src = typeof source === 'string' ? source : URL.createObjectURL(source);
+    img.src = source;
   });
 
 // ─── Parse response ───────────────────────────────────────────────────────────
 /**
  * Handles both b64_json and url response formats.
- * Returns a blob URL or a remote URL string.
+ * Returns a durable data: URL (or the remote URL as-is) so results can be
+ * safely persisted in conversation history and survive a page reload.
  */
 const extractImageFromResponse = async (data) => {
   const item = data?.data?.[0];
   if (!item) throw new Error('Azure OpenAI image response missing data');
 
   if (item.b64_json) {
-    const byteString = atob(item.b64_json);
-    const bytes = new Uint8Array(byteString.length);
-    for (let i = 0; i < byteString.length; i++) bytes[i] = byteString.charCodeAt(i);
-    const blob = new Blob([bytes], { type: 'image/png' });
-    return URL.createObjectURL(blob);
+    return `data:image/png;base64,${item.b64_json}`;
   }
 
   if (item.url) return item.url;
@@ -1814,20 +1810,71 @@ export const createChatCompletion = async (messages, options = {}) => {
   return response.json();
 };
 
+// ─── AI chat history (conversations) ──────────────────────────────────────────
+// Ownership is enforced server-side against the authenticated editor's JWT.
+
+/** Lightweight list of the current editor's saved chats, most recent first. */
+export const listAiConversations = async () => {
+  assertAdmin();
+  const response = await fetch(`${baseUrl}/ai-history`);
+  if (!response.ok) throw new Error(`Failed to load chat history: ${response.status}`);
+  return response.json();
+};
+
+/** Fetches the full saved state (messages, tasks, images, settings) for one chat. */
+export const getAiConversation = async (id) => {
+  assertAdmin();
+  const response = await fetch(`${baseUrl}/ai-history/${id}`);
+  if (!response.ok) throw new Error(`Failed to load chat: ${response.status}`);
+  return response.json();
+};
+
+/** Creates a new empty (or pre-seeded) chat and returns it. */
+export const createAiConversation = async (state = {}, title) => {
+  assertAdmin();
+  const response = await fetch(`${baseUrl}/ai-history`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, state }),
+  });
+  if (!response.ok) throw new Error(`Failed to create chat: ${response.status}`);
+  return response.json();
+};
+
+/** Saves/overwrites the state snapshot of an existing chat. */
+export const saveAiConversation = async (id, state, title) => {
+  assertAdmin();
+  const response = await fetch(`${baseUrl}/ai-history/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, state }),
+  });
+  if (!response.ok) throw new Error(`Failed to save chat: ${response.status}`);
+  return response.json();
+};
+
+/** Permanently deletes a saved chat. */
+export const deleteAiConversation = async (id) => {
+  assertAdmin();
+  const response = await fetch(`${baseUrl}/ai-history/${id}`, { method: 'DELETE' });
+  if (!response.ok) throw new Error(`Failed to delete chat: ${response.status}`);
+  return response.json();
+};
+
 // ─── Image generation ─────────────────────────────────────────────────────────
 /**
  * Generates a brand-new image from a text prompt.
  */
 export const generateAzureImage = async (
   prompt,
-  { size = '1024x1024', quality = 'standard', style = 'vivid', n = 1 } = {}
+  { size = '1024x1024', quality = 'medium', n = 1 } = {}
 ) => {
   assertAdmin();
 
   const response = await fetch(`${baseUrl}/ai/images/generate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ editorId: getEditorId(), prompt, size, quality, style, n }),
+    body: JSON.stringify({ editorId: getEditorId(), prompt, size, quality, n }),
   });
 
   if (!response.ok) {
@@ -1838,7 +1885,7 @@ export const generateAzureImage = async (
   const data = await response.json();
   const rawUrl = await extractImageFromResponse(data);
 
-  return size !== '952x648' ? await scaleImageTo952x648BlobUrl(rawUrl) : rawUrl;
+  return size !== '952x648' ? await scaleImageTo952x648DataUrl(rawUrl) : rawUrl;
 };
 
 // ─── Image editing ────────────────────────────────────────────────────────────
@@ -1884,7 +1931,7 @@ export const editAzureImage = async (
   const data = await response.json();
   const rawUrl = await extractImageFromResponse(data);
 
-  return size !== '952x648' ? await scaleImageTo952x648BlobUrl(rawUrl) : rawUrl;
+  return size !== '952x648' ? await scaleImageTo952x648DataUrl(rawUrl) : rawUrl;
 };
 
 // ─── Unified helper ───────────────────────────────────────────────────────────

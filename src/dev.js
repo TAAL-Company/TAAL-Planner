@@ -24,7 +24,7 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
   const imagePromptPrefix = "A highly realistic photo of a person performing the task: " ;
   const imagePromptSuffix = 'The scene should look natural and immersive, fitting the task context (e.g., office, workshop, or classroom). Use natural lighting, realistic details, and authentic atmosphere. Ultra-realistic, cinematic composition, shallow depth of field, detailed textures, and no visible text or written words.';
 
-  // Generate image using Azure DALL-E
+  // Generate image using Azure
   const generateImage = async (promptToUse = null) => {
     setIsGenerating(true);
     setImageUrl(null);
@@ -51,8 +51,7 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
 
       const generatedUrl = await generateAzureImage(prompt, {
         size: '1024x1024',
-        style: 'natural',
-        quality: 'standard',
+        quality: 'medium',
         n: 1,
       });
 
@@ -86,7 +85,7 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
 
   // Convert image URL to File for Azure upload
   const urlToFile = async (url, filename) => {
-    // Try direct fetch first (works for Azure DALL-E signed URLs)
+    // Try direct fetch first (works for Azure signed URLs)
     try {
       console.log('Attempting direct fetch:', url);
       const response = await fetch(url);
@@ -347,7 +346,7 @@ function TaskCard({ task, index, selectedSite, onTaskUpdated }) {
               )}
             </div>
           ) : isGenerating ? (
-            <p style={{ color: "#999", fontStyle: "italic" }}>Generating image with Azure DALL-E...</p>
+            <p style={{ color: "#999", fontStyle: "italic" }}>Generating image with Azure...</p>
           ) : null}
         </>
       )}

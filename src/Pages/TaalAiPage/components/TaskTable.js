@@ -133,9 +133,15 @@ export default function TaskTable({
     else if (editingTask > taskIndex) setEditingTask(editingTask - 1);
   };
 
+  // Small helper to hand every new task a stable, unique identity.
+  // Everything downstream (row keys, image generation) matches on this id
+  // instead of array position, so reordering/adding/deleting tasks can
+  // never cause an in-flight image to land on the wrong row.
+  const makeTaskId = () => `task-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+
   const addTaskAfter = (taskIndex) => {
     const defaultStation = (tasks?.[taskIndex]?.station || tasks?.[tasks.length - 1]?.station || 'Station 1').toString();
-    const newTask = { station: defaultStation, title: "New Task", subtitle: "Task description", estimatedTimeMinutes: 1, picture_url: '' };
+    const newTask = { id: makeTaskId(), station: defaultStation, title: "New Task", subtitle: "Task description", estimatedTimeMinutes: 1, picture_url: '' };
     const insertIndex = taskIndex + 1;
     const updatedTasks = [...tasks];
     updatedTasks.splice(insertIndex, 0, newTask);
@@ -145,7 +151,7 @@ export default function TaskTable({
 
   const addNewTask = () => {
     const defaultStation = (tasks?.[tasks.length - 1]?.station || 'Station 1').toString();
-    const newTask = { station: defaultStation, title: "New Task", subtitle: "Task description", estimatedTimeMinutes: 1, picture_url: '' };
+    const newTask = { id: makeTaskId(), station: defaultStation, title: "New Task", subtitle: "Task description", estimatedTimeMinutes: 1, picture_url: '' };
     setTasks([...tasks, newTask]);
   };
 
@@ -156,9 +162,11 @@ export default function TaskTable({
   };
 
   const handleTasksBreak = (taskIndex, subtasks) => {
+    const idBase = tasks?.[taskIndex]?.id || makeTaskId();
+    const subtasksWithIds = subtasks.map((st, i) => ({ id: `${idBase}-${i}-${makeTaskId()}`, ...st }));
     const updatedTasks = [...tasks];
     // Remove the original task and insert subtasks in its place
-    updatedTasks.splice(taskIndex, 1, ...subtasks);
+    updatedTasks.splice(taskIndex, 1, ...subtasksWithIds);
     setTasks(updatedTasks);
     setBreakTaskDialogOpen(false);
     setTaskToBreak(null);
@@ -254,7 +262,7 @@ export default function TaskTable({
               <TableBody>
                 {tasks.map((task, index) => (
                   <TableRow
-                    key={index}
+                    key={task.id || index}
                     sx={{
                       "&:hover": { bgcolor: colors.backgroundTertiary },
                       "& td": { borderColor: colors.border },
@@ -264,9 +272,11 @@ export default function TaskTable({
                     {/* Image Cell */}
                     <TableCell sx={{ padding: 1 }}>
                       <TaskImage
+                        key={task.id || index}
                         tasks={tasks}
                         setTasks={setTasks}
                         taskIndex={index}
+                        taskId={task.id}
                         task={task}
                         imagePromptPrefix={imagePromptPrefix}
                         imagePromptSuffix={imagePromptSuffix}

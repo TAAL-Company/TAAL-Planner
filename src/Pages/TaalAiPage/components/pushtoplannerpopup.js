@@ -121,8 +121,7 @@ export default function PushToPlannerPopup({
       const fullPrompt = `A professional photo of ${prompt}, high quality, detailed, realistic`;
       const imageUrl = await generateAzureImage(fullPrompt, {
         size: '1024x1024',
-        quality: 'standard',
-        style: 'vivid'
+        quality: 'medium'
       });
       
       // Fetch the generated image and convert to File

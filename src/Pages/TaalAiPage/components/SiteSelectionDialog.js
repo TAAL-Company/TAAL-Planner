@@ -42,7 +42,7 @@ export default function SiteSelectionDialog({
   return (
     <Dialog 
       open={open} 
-      onClose={onClose}
+      onClose={isUploading ? undefined : onClose}
       maxWidth="sm"
       fullWidth
       PaperProps={{
@@ -72,7 +72,27 @@ export default function SiteSelectionDialog({
         </IconButton>
       </DialogTitle>
       
-      <DialogContent sx={{ p: 0 }}>
+      <DialogContent sx={{ p: 0, position: "relative" }}>
+        {isUploading && (
+          <Box
+            sx={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 2,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 1.5,
+              bgcolor: "rgba(43, 43, 43, 0.85)",
+            }}
+          >
+            <CircularProgress sx={{ color: "#4a9eff" }} />
+            <Typography variant="body2" sx={{ color: "white" }}>
+              {t('ImageContext.savingContext') || 'Saving image context…'}
+            </Typography>
+          </Box>
+        )}
         {/* Search bar */}
         <Box sx={{ p: 2, borderBottom: "1px solid #4a4a4a", position: "sticky", top: 0, bgcolor: "#2b2b2b", zIndex: 1 }}>
           <TextField
@@ -134,6 +154,7 @@ export default function SiteSelectionDialog({
                   <ListItemButton
                     key={site.id}
                     onClick={() => onSelectSite(site)}
+                    disabled={isUploading}
                     sx={{
                       "&:hover": { bgcolor: "#3a3a3a" },
                       borderBottom: "1px solid #4a4a4a"
@@ -171,23 +192,26 @@ export default function SiteSelectionDialog({
       </DialogContent>
       
       <DialogActions sx={{ borderTop: "1px solid #4a4a4a", p: 2 }}>
-        <Button
-          variant="outlined"
-          startIcon={<AddIcon />}
-          onClick={onOpenCreateSite}
-          disabled={loadingSites || isUploading}
-          sx={{
-            borderColor: "#4a9eff",
-            color: "#4a9eff",
-            mr: "auto",
-            "&:hover": { borderColor: "#3a8eef", bgcolor: "rgba(74, 158, 255, 0.08)" },
-            "&:disabled": { borderColor: "#555", color: "#777" }
-          }}
-        >
-          {t('PushToPlannerPopup.createSite') || 'Create Site'}
-        </Button>
+        {onOpenCreateSite && (
+          <Button
+            variant="outlined"
+            startIcon={<AddIcon />}
+            onClick={onOpenCreateSite}
+            disabled={loadingSites || isUploading}
+            sx={{
+              borderColor: "#4a9eff",
+              color: "#4a9eff",
+              mr: "auto",
+              "&:hover": { borderColor: "#3a8eef", bgcolor: "rgba(74, 158, 255, 0.08)" },
+              "&:disabled": { borderColor: "#555", color: "#777" }
+            }}
+          >
+            {t('PushToPlannerPopup.createSite') || 'Create Site'}
+          </Button>
+        )}
         <Button 
           onClick={onClose}
+          disabled={isUploading}
           sx={{ color: "gray" }}
         >
           {t('PushToPlannerPopup.cancel') || 'Cancel'}

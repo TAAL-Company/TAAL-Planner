@@ -49,32 +49,10 @@ function SearchUIContent() {
     }
   }, [tasks]);
 
-  // ── Base image (shared source for all task-image generations) ──────
-  // { file: File, preview: string } | null
-  const [baseImage, setBaseImage] = useState(null);
-
   // ── Global image context set via the general popup ───────────────
   // { environment, people, objects, styleMood, additionalDetails } | null
   const [globalImageContext, setGlobalImageContext] = useState(null);
-
-  const handleBaseImageChange = (file) => {
-    // Revoke previous preview URL to avoid memory leaks
-    if (baseImage?.preview) URL.revokeObjectURL(baseImage.preview);
-
-    if (!file) {
-      setBaseImage(null);
-      return;
-    }
-    setBaseImage({ file, preview: URL.createObjectURL(file) });
-  };
-
-  // Revoke object URL on unmount
-  useEffect(() => {
-    return () => {
-      if (baseImage?.preview) URL.revokeObjectURL(baseImage.preview);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [taskImageContexts, setTaskImageContexts] = useState({});
 
   // Add seed to image generation settings state
   const [imagePromptPrefix, setImagePromptPrefix] = useState(
@@ -198,6 +176,8 @@ Write tasks so they can be understood by workers with varied cognitive abilities
   const [activeConversationId, setActiveConversationId] = useState(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [historyListLoading, setHistoryListLoading] = useState(false);
+  const [loadingConversationId, setLoadingConversationId] = useState(null);
+  const [deletingConversationId, setDeletingConversationId] = useState(null);
 
   const activeConversationIdRef = useRef(null);
   const isHydratingRef = useRef(false);
@@ -208,12 +188,43 @@ Write tasks so they can be understood by workers with varied cognitive abilities
     activeConversationIdRef.current = activeConversationId;
   }, [activeConversationId]);
 
+  const serializeImageReference = (reference) => reference ? {
+    url: reference.url || null,
+    name: reference.name || null,
+  } : null;
+
+  const serializeImageContext = (imageContext) => imageContext ? {
+    environment: imageContext.environment || "",
+    people: imageContext.people || "",
+    objects: imageContext.objects || "",
+    styleMood: imageContext.styleMood || "",
+    additionalDetails: imageContext.additionalDetails || "",
+    peopleImage: serializeImageReference(imageContext.peopleImage),
+    environmentImage: serializeImageReference(imageContext.environmentImage),
+  } : null;
+
+  const deserializeImageReference = (reference) => reference ? {
+    file: null,
+    preview: reference.url || null,
+    url: reference.url || null,
+    name: reference.name || null,
+  } : null;
+
+  const deserializeImageContext = (imageContext) => imageContext ? {
+    ...imageContext,
+    peopleImage: deserializeImageReference(imageContext.peopleImage),
+    environmentImage: deserializeImageReference(imageContext.environmentImage),
+  } : null;
+
   const buildStateSnapshot = () => ({
     messages,
     userInputs,
     tasks,
     complexity,
-    globalImageContext,
+    globalImageContext: serializeImageContext(globalImageContext),
+    taskImageContexts: Object.fromEntries(
+      Object.entries(taskImageContexts).map(([taskId, imageContext]) => [taskId, serializeImageContext(imageContext)])
+    ),
     // Generated images for every task breakdown in this chat, keyed by message index —
     // not just the one currently shown in the table.
     taskImageCache: taskImageCacheRef.current,
@@ -224,6 +235,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
   const handleSelectConversation = async (id) => {
     try {
       isHydratingRef.current = true;
+      setLoadingConversationId(id);
       const conversation = await getAiConversation(id);
       const state = conversation.state || {};
       const restoredMessages = Array.isArray(state.messages) && state.messages.length > 0
@@ -240,7 +252,12 @@ Write tasks so they can be understood by workers with varied cognitive abilities
       setTasks(Array.isArray(state.tasks) ? state.tasks : []);
       setComplexity(state.complexity || '');
       setHasTasksReady(Array.isArray(state.tasks) && state.tasks.length > 0);
-      setGlobalImageContext(state.globalImageContext || null);
+      const restoredGlobalContext = deserializeImageContext(state.globalImageContext);
+      const restoredTaskImageContexts = Object.fromEntries(
+        Object.entries(state.taskImageContexts || {}).map(([taskId, imageContext]) => [taskId, deserializeImageContext(imageContext)])
+      );
+      setGlobalImageContext(restoredGlobalContext);
+      setTaskImageContexts(restoredTaskImageContexts);
       setIsTableOpen(false);
       setActiveConversationId(conversation.id);
 
@@ -249,7 +266,10 @@ Write tasks so they can be understood by workers with varied cognitive abilities
         userInputs: state.userInputs || [],
         tasks: state.tasks || [],
         complexity: state.complexity || '',
-        globalImageContext: state.globalImageContext || null,
+        globalImageContext: serializeImageContext(restoredGlobalContext),
+        taskImageContexts: Object.fromEntries(
+          Object.entries(restoredTaskImageContexts).map(([taskId, imageContext]) => [taskId, serializeImageContext(imageContext)])
+        ),
         taskImageCache: taskImageCacheRef.current,
         activeMessageKey: activeMessageKeyRef.current,
       });
@@ -259,6 +279,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
       console.error('Failed to load AI conversation:', error);
     } finally {
       isHydratingRef.current = false;
+      setLoadingConversationId(null);
     }
   };
 
@@ -272,6 +293,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
     setHasTasksReady(false);
     setIsTableOpen(false);
     setGlobalImageContext(null);
+    setTaskImageContexts({});
     setActiveConversationId(null);
     taskImageCacheRef.current = {};
     activeMessageKeyRef.current = null;
@@ -281,6 +303,7 @@ Write tasks so they can be understood by workers with varied cognitive abilities
 
   const handleDeleteConversation = async (id) => {
     try {
+      setDeletingConversationId(id);
       await deleteAiConversation(id);
       setConversations((prev) => prev.filter((c) => c.id !== id));
       if (id === activeConversationIdRef.current) {
@@ -289,6 +312,8 @@ Write tasks so they can be understood by workers with varied cognitive abilities
     } catch (error) {
       showNotification('error', t('TextGenerative.deleteChatFailed', 'Failed to delete chat'));
       console.error('Failed to delete AI conversation:', error);
+    } finally {
+      setDeletingConversationId(null);
     }
   };
 
@@ -574,8 +599,10 @@ Write tasks so they can be understood by workers with varied cognitive abilities
     direction,
     isRTL,
     theme,
-    baseImage,
-    onBaseImageChange: handleBaseImageChange,
+    tasks,
+    originalPrompt: userInputs[userInputs.length - 1] || "",
+    globalImageContext,
+    onGlobalImageContextChange: setGlobalImageContext,
   };
 
   return (
@@ -642,6 +669,8 @@ Write tasks so they can be understood by workers with varied cognitive abilities
         conversations={conversations}
         activeId={activeConversationId}
         loading={historyListLoading}
+        loadingConversationId={loadingConversationId}
+        deletingConversationId={deletingConversationId}
         onSelect={handleSelectConversation}
         onNew={handleNewChat}
         onDelete={handleDeleteConversation}
@@ -732,10 +761,11 @@ Write tasks so they can be understood by workers with varied cognitive abilities
           imageModel={imageModel}
           imageNoLogo={imageNoLogo}
           imageSeed={imageSeed}
-          baseImage={baseImage}
           originalPrompt={userInputs[userInputs.length - 1] || ""}
           globalImageContext={globalImageContext}
           setGlobalImageContext={setGlobalImageContext}
+          taskImageContexts={taskImageContexts}
+          setTaskImageContexts={setTaskImageContexts}
         />
       )}
     </Box>

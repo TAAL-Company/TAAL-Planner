@@ -32,6 +32,8 @@ export default function HistorySidebar({
   conversations,
   activeId,
   loading,
+  loadingConversationId,
+  deletingConversationId,
   onSelect,
   onNew,
   onDelete,
@@ -63,8 +65,9 @@ export default function HistorySidebar({
     return t('TextGenerative.history_days_ago', '{{count}}d ago', { count: diffDay });
   };
 
-  const handleConfirmDelete = () => {
-    if (pendingDeleteId) onDelete(pendingDeleteId);
+  const handleConfirmDelete = async () => {
+    if (!pendingDeleteId) return;
+    await onDelete(pendingDeleteId);
     setPendingDeleteId(null);
   };
 
@@ -96,6 +99,7 @@ export default function HistorySidebar({
             variant="outlined"
             startIcon={<AddCommentIcon />}
             onClick={onNew}
+            disabled={!!loadingConversationId}
             sx={{
               color: colors.primary,
               borderColor: colors.primary,
@@ -119,11 +123,16 @@ export default function HistorySidebar({
             </Typography>
           ) : (
             <List sx={{ py: 0 }}>
-              {conversations.map((conv) => (
+              {conversations.map((conv) => {
+                const isLoadingThis = conv.id === loadingConversationId;
+                const isDeletingThis = conv.id === deletingConversationId;
+                const isAnyLoading = !!loadingConversationId || !!deletingConversationId;
+                return (
                 <ListItemButton
                   key={conv.id}
                   selected={conv.id === activeId}
                   onClick={() => onSelect(conv.id)}
+                  disabled={isAnyLoading}
                   sx={{
                     px: 2,
                     py: 1,
@@ -133,7 +142,11 @@ export default function HistorySidebar({
                     '&:hover .history-delete-btn': { opacity: 1 },
                   }}
                 >
-                  <ChatBubbleOutlineIcon sx={{ fontSize: 18, color: colors.textMuted, flexShrink: 0 }} />
+                  {isLoadingThis ? (
+                    <CircularProgress size={18} sx={{ color: colors.primary, flexShrink: 0 }} />
+                  ) : (
+                    <ChatBubbleOutlineIcon sx={{ fontSize: 18, color: colors.textMuted, flexShrink: 0 }} />
+                  )}
                   <ListItemText
                     primary={conv.title || t('TextGenerative.newChat', 'New chat')}
                     secondary={formatRelativeTime(conv.updatedAt)}
@@ -153,19 +166,25 @@ export default function HistorySidebar({
                         e.stopPropagation();
                         setPendingDeleteId(conv.id);
                       }}
-                      sx={{ color: colors.textMuted, opacity: 0, '&:hover': { color: '#ff6b6b' } }}
+                      disabled={isAnyLoading}
+                      sx={{ color: colors.textMuted, opacity: isDeletingThis ? 1 : 0, '&:hover': { color: '#ff6b6b' } }}
                     >
-                      <DeleteOutlineIcon sx={{ fontSize: 18 }} />
+                      {isDeletingThis ? (
+                        <CircularProgress size={16} sx={{ color: '#ff6b6b' }} />
+                      ) : (
+                        <DeleteOutlineIcon sx={{ fontSize: 18 }} />
+                      )}
                     </IconButton>
                   </Tooltip>
                 </ListItemButton>
-              ))}
+                );
+              })}
             </List>
           )}
         </Box>
       </Drawer>
 
-      <Dialog open={!!pendingDeleteId} onClose={() => setPendingDeleteId(null)} dir={direction}>
+      <Dialog open={!!pendingDeleteId} onClose={deletingConversationId ? undefined : () => setPendingDeleteId(null)} dir={direction}>
         <DialogTitle>{t('TextGenerative.deleteChatConfirmTitle', 'Delete this chat?')}</DialogTitle>
         <DialogContent>
           <Typography variant="body2">
@@ -173,8 +192,16 @@ export default function HistorySidebar({
           </Typography>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setPendingDeleteId(null)}>{t('TextGenerative.cancel', 'Cancel')}</Button>
-          <Button color="error" variant="contained" onClick={handleConfirmDelete}>
+          <Button onClick={() => setPendingDeleteId(null)} disabled={!!deletingConversationId}>
+            {t('TextGenerative.cancel', 'Cancel')}
+          </Button>
+          <Button
+            color="error"
+            variant="contained"
+            onClick={handleConfirmDelete}
+            disabled={!!deletingConversationId}
+            startIcon={deletingConversationId ? <CircularProgress size={14} sx={{ color: 'white' }} /> : null}
+          >
             {t('TextGenerative.delete', 'Delete')}
           </Button>
         </DialogActions>

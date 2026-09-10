@@ -7,7 +7,8 @@ import {
   Typography,
   IconButton,
   Menu,
-  MenuItem
+  MenuItem,
+  Chip
 } from '@mui/material';
 import { MoreVert } from '@mui/icons-material';
 import AlertDialog from './AlertDialog';
@@ -15,7 +16,17 @@ import BasicSelect from './BasicSelect';
 import { deleteFileByUrl, transferFile } from '../../../api/api'; // Adjust the import path as necessary
 import { useTranslation } from 'react-i18next';
 
-const ImageGrid = ({ images, setReload, setLoading, folderNames }) => {
+// Deterministic color per route name so the same route always gets the same tag color
+const getRouteColor = (name) => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 65%, 45%)`;
+};
+
+const ImageGrid = ({ images, setReload, setLoading, folderNames, routeTagsByUrl }) => {
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -157,6 +168,18 @@ const ImageGrid = ({ images, setReload, setLoading, folderNames }) => {
               <Typography variant="body2">Size: {info.size ? `${(info.size/1024).toFixed(1)} KB` : 'N/A'}</Typography>
               <Typography variant="body2">Dimensions: {info.width && info.height ? `${info.width} x ${info.height}` : 'N/A'}</Typography>
               <Typography variant="body2">Last Modified: {info.lastModified ? new Date(info.lastModified).toLocaleString() : 'N/A'}</Typography>
+              {(routeTagsByUrl?.[url] || []).length > 0 && (
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, mt: 1 }}>
+                  {routeTagsByUrl[url].map((routeName) => (
+                    <Chip
+                      key={routeName}
+                      label={routeName}
+                      size="small"
+                      sx={{ backgroundColor: getRouteColor(routeName), color: '#fff' }}
+                    />
+                  ))}
+                </Box>
+              )}
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <IconButton onClick={(e) => handleMenuClick(e, url)}>
                   <MoreVert />

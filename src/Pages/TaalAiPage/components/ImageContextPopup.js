@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -20,8 +20,9 @@ import TuneIcon from "@mui/icons-material/Tune";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import ImageIcon from "@mui/icons-material/Image";
 import { useTranslation } from "react-i18next";
-import { createChatCompletion } from "../../../api/api";
+import { createChatCompletion, getingData_Places, uploadFiles } from "../../../api/api";
 import { useNotification } from "../../../components/Notification/NotificationProvider";
+import SiteSelectionDialog from "./SiteSelectionDialog";
 
 const DEFAULT_CONTEXT = {
   environment: "",
@@ -29,6 +30,8 @@ const DEFAULT_CONTEXT = {
   objects: "",
   styleMood: "",
   additionalDetails: "",
+  peopleImage: null,
+  environmentImage: null,
 };
 
 /**
@@ -46,7 +49,6 @@ const DEFAULT_CONTEXT = {
  * taskIndex       number              (task mode)
  * tasks           full task array
  * originalPrompt  string
- * baseImage       { file, preview } | null
  * theme           colors object
  * isRTL           boolean
  */
@@ -59,7 +61,7 @@ export default function ImageContextPopup({
   taskIndex = 0,
   tasks = [],
   originalPrompt = "",
-  baseImage = null,
+  initialContext = null,
   theme,
   isRTL = false,
 }) {
@@ -89,6 +91,13 @@ export default function ImageContextPopup({
 
   const [context, setContext] = useState(DEFAULT_CONTEXT);
   const [isAutoGenerating, setIsAutoGenerating] = useState(false);
+  const [siteSelectionOpen, setSiteSelectionOpen] = useState(false);
+  const [sites, setSites] = useState([]);
+  const [siteSearchTerm, setSiteSearchTerm] = useState("");
+  const [loadingSites, setLoadingSites] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const peopleImageInputRef = useRef(null);
+  const environmentImageInputRef = useRef(null);
 
   // ── Auto-populate context fields via GPT whenever the dialog opens ──
   const autoGenerateContext = useCallback(async () => {
@@ -142,8 +151,6 @@ ${
 Related Tasks (10%):
 ${relatedTasks || "None"}
 
-Visual Reference (5%): ${baseImage ? "Yes — a reference image is attached" : "No"}
-
 Generate the image context JSON.`;
 
       const response = await createChatCompletion(
@@ -164,6 +171,8 @@ Generate the image context JSON.`;
           objects: parsed.objects || "",
           styleMood: parsed.styleMood || "",
           additionalDetails: parsed.additionalDetails || "",
+          peopleImage: context.peopleImage || null,
+          environmentImage: context.environmentImage || null,
         });
       }
     } catch (e) {
@@ -172,25 +181,110 @@ Generate the image context JSON.`;
     } finally {
       setIsAutoGenerating(false);
     }
-  }, [open, mode, task, taskIndex, tasks, originalPrompt, baseImage, outputLanguage]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open, mode, task, taskIndex, tasks, originalPrompt, outputLanguage]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (open) {
       // Only auto-generate if context has never been filled (first open)
       const isEmpty = Object.values(context).every((v) => !v);
-      if (isEmpty) {
+      if (isEmpty && !initialContext) {
         autoGenerateContext();
       }
     }
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  useEffect(() => {
+    if (open && initialContext) {
+      setContext({ ...DEFAULT_CONTEXT, ...initialContext });
+    }
+  }, [open, initialContext]);
+
   const handleFieldChange = (field) => (e) => {
     setContext((prev) => ({ ...prev, [field]: e.target.value }));
   };
 
-  const handleGenerate = () => {
-    onGenerate(context);
+  const handleReferenceChange = (field) => (e) => {
+    const file = e.target.files?.[0] || null;
+    e.target.value = "";
+    if (!file) return;
+
+    setContext((prev) => ({
+      ...prev,
+      [field]: {
+        file,
+        preview: URL.createObjectURL(file),
+        url: "",
+        name: file.name,
+      },
+    }));
+  };
+
+  const handleReferenceRemove = (field) => () => {
+    const reference = context[field];
+    if (reference?.preview?.startsWith("blob:")) URL.revokeObjectURL(reference.preview);
+    setContext((prev) => ({ ...prev, [field]: null }));
+  };
+
+  const saveContext = async (site = null) => {
+    const nextContext = { ...context };
+    for (const field of ["peopleImage", "environmentImage"]) {
+      const reference = nextContext[field];
+      if (reference?.file && !reference.url) {
+        try {
+          const siteKey = site.nameInEnglish || site.name || site.id;
+          const url = await uploadFiles(reference.file, `AI image context/${field}`, siteKey);
+          nextContext[field] = { ...reference, url };
+        } catch (error) {
+          console.error(`Failed to persist ${field}:`, error);
+          showNotification("warning", t("ImageContext.persistFailed", "Image reference could not be saved."));
+        }
+      }
+    }
+    onGenerate(nextContext);
+    setSiteSelectionOpen(false);
     onClose();
+  };
+
+  const handleGenerate = async () => {
+    const hasUnpersistedImages = ["peopleImage", "environmentImage"].some(
+      (field) => context[field]?.file && !context[field]?.url
+    );
+
+    if (!hasUnpersistedImages) {
+      onGenerate({ ...context });
+      onClose();
+      return;
+    }
+
+    setSiteSearchTerm("");
+    setSiteSelectionOpen(true);
+    setLoadingSites(true);
+    try {
+      const sitesData = await getingData_Places();
+      setSites(sitesData || []);
+    } catch (error) {
+      console.error("ImageContextPopup: failed to load sites:", error);
+      showNotification("error", t("ImageContext.errorLoadingSites", "Could not load sites."));
+    } finally {
+      setLoadingSites(false);
+    }
+  };
+
+  const filteredSites = sites.filter((site) => {
+    const query = siteSearchTerm.trim().toLowerCase();
+    if (!query) return true;
+    return `${site?.name || ""} ${site?.description || ""} ${site?.nameInEnglish || ""}`
+      .toLowerCase()
+      .includes(query);
+  });
+
+  const handleSelectSite = async (site) => {
+    setIsUploading(true);
+    try {
+      await saveContext(site);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const isGeneralMode = mode === "general";
@@ -228,6 +322,21 @@ Generate the image context JSON.`;
     },
   ];
 
+  const referenceFields = [
+    {
+      key: "peopleImage",
+      label: t("ImageContext.peopleImage", "People / Face image"),
+      hint: t("ImageContext.peopleImageHint", "Used as the standard person or face reference"),
+      inputRef: peopleImageInputRef,
+    },
+    {
+      key: "environmentImage",
+      label: t("ImageContext.environmentImage", "Environment / Background image"),
+      hint: t("ImageContext.environmentImageHint", "Used as the standard setting or background reference"),
+      inputRef: environmentImageInputRef,
+    },
+  ];
+
   const fieldSx = {
     "& .MuiOutlinedInput-root": {
       color: colors.text,
@@ -241,7 +350,8 @@ Generate the image context JSON.`;
   };
 
   return (
-    <Dialog
+    <>
+      <Dialog
       open={open}
       onClose={onClose}
       maxWidth="sm"
@@ -348,6 +458,74 @@ Generate the image context JSON.`;
           ))}
         </Box>
 
+        <Box sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 1.5 }}>
+          {referenceFields.map(({ key, label, hint, inputRef }) => {
+            const reference = context[key];
+            return (
+              <Box
+                key={key}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.5,
+                  p: 1.25,
+                  border: `1px solid ${colors.border}`,
+                  borderRadius: 1,
+                  bgcolor: colors.backgroundTertiary,
+                }}
+              >
+                <input
+                  ref={inputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  hidden
+                  onChange={handleReferenceChange(key)}
+                />
+                {reference?.preview ? (
+                  <img
+                    src={reference.preview}
+                    alt={label}
+                    style={{ width: 56, height: 56, objectFit: "cover", borderRadius: 4, flexShrink: 0 }}
+                  />
+                ) : (
+                  <ImageIcon sx={{ color: colors.textMuted, fontSize: 40, flexShrink: 0 }} />
+                )}
+                <Box sx={{ minWidth: 0, flex: 1 }}>
+                  <Typography variant="body2" sx={{ color: colors.text, fontWeight: 600 }}>
+                    {label}
+                  </Typography>
+                  <Typography variant="caption" sx={{ color: colors.textMuted, display: "block" }}>
+                    {reference?.name || hint}
+                  </Typography>
+                </Box>
+                <Button
+                  size="small"
+                  variant="outlined"
+                  onClick={() => inputRef.current?.click()}
+                  disabled={isAutoGenerating}
+                  sx={{ color: colors.primary, borderColor: colors.primary, flexShrink: 0 }}
+                >
+                  {reference
+                    ? t("ImageContext.replaceImage", "Replace")
+                    : t("ImageContext.uploadImage", "Upload")}
+                </Button>
+                {reference && (
+                  <Tooltip title={t("ImageContext.removeImage", "Remove image")}>
+                    <IconButton
+                      size="small"
+                      onClick={handleReferenceRemove(key)}
+                      disabled={isAutoGenerating}
+                      sx={{ color: colors.textMuted, flexShrink: 0 }}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </Box>
+            );
+          })}
+        </Box>
+
         <Divider sx={{ mt: 2, borderColor: colors.border }} />
 
         {/* Weight legend */}
@@ -426,6 +604,20 @@ Generate the image context JSON.`;
           </Button>
         </Box>
       </DialogActions>
-    </Dialog>
+      </Dialog>
+
+      <SiteSelectionDialog
+        open={siteSelectionOpen}
+        onClose={() => setSiteSelectionOpen(false)}
+        sites={sites}
+        filteredSites={filteredSites}
+        loadingSites={loadingSites}
+        searchTerm={siteSearchTerm}
+        onSearchChange={setSiteSearchTerm}
+        onSelectSite={handleSelectSite}
+        isUploading={isUploading}
+        direction={isRTL ? "rtl" : "ltr"}
+      />
+    </>
   );
 }

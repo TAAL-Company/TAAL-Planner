@@ -32,12 +32,13 @@ export default function TaskTable({
   imageModel,
   imageNoLogo,
   imageSeed,
-  baseImage,       // ← NEW: { file: File, preview: string } | null
   originalPrompt = "",  // ← NEW: user's original prompt that generated these tasks
   // Global image context set via the "Configure Image Context" general popup.
   // When set it overrides GPT auto-enrichment for all tasks.
   globalImageContext = null,
   setGlobalImageContext,
+  taskImageContexts = {},
+  setTaskImageContexts,
   direction,
   isRTL,
   getComplexityColor,
@@ -285,9 +286,13 @@ export default function TaskTable({
                         imageModel={imageModel}
                         imageNoLogo={imageNoLogo}
                         imageSeed={imageSeed}
-                        baseImage={baseImage}           // ← forwarded
                         originalPrompt={originalPrompt}  // ← forwarded
                         globalImageContext={globalImageContext}
+                        taskImageContext={taskImageContexts[task.id] || null}
+                        onTaskImageContextChange={(context) => {
+                          if (!setTaskImageContexts || !task.id) return;
+                          setTaskImageContexts(prev => ({ ...prev, [task.id]: context }));
+                        }}
                         theme={theme}
                         isRTL={isRTL}
                         trigger={bulkImageTrigger}
@@ -523,7 +528,7 @@ export default function TaskTable({
         mode="general"
         tasks={tasks}
         originalPrompt={originalPrompt}
-        baseImage={baseImage}
+        initialContext={globalImageContext}
         theme={theme}
         isRTL={isRTL}
       />

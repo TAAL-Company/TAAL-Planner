@@ -1900,8 +1900,8 @@ export const generateAzureImage = async (
  */
 export const editAzureImage = async (
   prompt,
-  imageFile,
-  { size = '1024x1024', n = 1 } = {}
+  imageFiles,
+  { size = '1024x1024', n = 1, quality = 'medium' } = {}
 ) => {
   assertAdmin();
 
@@ -1910,12 +1910,16 @@ export const editAzureImage = async (
   formData.append('prompt', prompt);
   formData.append('n', String(n));
   formData.append('size', size);
+  formData.append('quality', quality);
 
-  const file =
-    imageFile instanceof File
-      ? imageFile
-      : new File([imageFile], 'image.png', { type: 'image/png' });
-  formData.append('image', file, file.name);
+  const files = Array.isArray(imageFiles) ? imageFiles : [imageFiles];
+  files.filter(Boolean).forEach((imageFile) => {
+    const file =
+      imageFile instanceof File
+        ? imageFile
+        : new File([imageFile], 'image.png', { type: 'image/png' });
+    formData.append('image', file, file.name);
+  });
 
   // No Content-Type header — browser sets it with the boundary automatically
   const response = await fetch(`${baseUrl}/ai/images/edit`, {
@@ -1944,10 +1948,18 @@ export const editAzureImage = async (
  * @param {object}          options     - Forwarded to generate / edit
  */
 export const generateOrEditAzureImage = async (prompt, imageFile = null, options = {}) => {
-  if (imageFile) {
+  if (imageFile && (Array.isArray(imageFile) ? imageFile.length > 0 : true)) {
     return editAzureImage(prompt, imageFile, options);
   }
   return generateAzureImage(prompt, options);
+};
+
+export const persistAiImage = async (imageFile) => {
+  assertAdmin();
+  // Uploads directly to Azure Blob via SAS token, same as uploadFiles() above —
+  // avoids routing through the backend's own storage account/connection.
+  const url = await uploadFiles(imageFile, 'persistAiImage', 'persistAiImage');
+  return { url };
 };
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/

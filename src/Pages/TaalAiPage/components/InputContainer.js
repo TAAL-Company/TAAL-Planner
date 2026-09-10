@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   TextField,
@@ -12,12 +12,10 @@ import {
   CircularProgress,
   Tooltip,
 } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
 import TuneIcon from '@mui/icons-material/Tune';
-import CollectionsIcon from '@mui/icons-material/Collections';
-import CloseIcon from '@mui/icons-material/Close';
 import { useTranslation } from 'react-i18next';
+import ImageContextPopup from './ImageContextPopup';
 
 export default function InputContainer({
   input,
@@ -31,12 +29,14 @@ export default function InputContainer({
   direction,
   isRTL,
   theme,
-  // ── Base image props ──────────────────────────────────────────────
-  baseImage,        // { file: File, preview: string } | null  (controlled from parent)
-  onBaseImageChange, // (file: File | null) => void
+  // ── General image context props (shared across all tasks) ─────────
+  tasks = [],
+  originalPrompt = '',
+  globalImageContext,          // current context object | null
+  onGlobalImageContextChange,  // (context) => void
 }) {
   const { t } = useTranslation();
-  const fileInputRef = useRef(null);
+  const [isContextPopupOpen, setIsContextPopupOpen] = useState(false);
 
   // Default theme if not provided
   const colors = theme || {
@@ -50,18 +50,6 @@ export default function InputContainer({
     primary: '#4a9eff',
     primaryHover: '#3a8eef',
     shadow: 'rgba(0,0,0,0.3)',
-  };
-
-  // ── File picker ────────────────────────────────────────────────────
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    e.target.value = ''; // allow re-selecting the same file
-    if (!file) return;
-    onBaseImageChange?.(file);
-  };
-
-  const handleRemoveBaseImage = () => {
-    onBaseImageChange?.(null);
   };
 
   // ── Complexity options ─────────────────────────────────────────────
@@ -108,66 +96,8 @@ export default function InputContainer({
 
   return (
     <Box sx={containerSx}>
-
-      {/* ── Base-image indicator strip (shown when an image is set) ── */}
-      {baseImage && (
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            bgcolor: colors.backgroundSecondary,
-            border: `1px solid ${colors.primary}`,
-            borderRadius: 2,
-            px: 1.5,
-            py: 0.75,
-            alignSelf: 'flex-start',
-            maxWidth: '100%',
-          }}
-        >
-          <img
-            src={baseImage.preview}
-            alt="base"
-            style={{ width: 32, height: 32, objectFit: 'cover', borderRadius: 4, flexShrink: 0 }}
-          />
-          <Typography variant="caption" sx={{ color: colors.primary, fontWeight: 600, whiteSpace: 'nowrap' }}>
-            {t('TextGenerative.base_image_label', 'Base image:')}
-          </Typography>
-          <Typography
-            variant="caption"
-            sx={{
-              color: colors.textMuted || 'gray',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-              maxWidth: 180,
-            }}
-          >
-            {baseImage.file.name}
-          </Typography>
-          <Tooltip title={t('TextGenerative.remove_base_image', 'Remove base image')}>
-            <IconButton
-              size="small"
-              onClick={handleRemoveBaseImage}
-              sx={{ color: colors.textMuted || 'gray', padding: '2px', ml: 'auto', '&:hover': { color: '#ff6b6b' } }}
-            >
-              <CloseIcon sx={{ fontSize: 14 }} />
-            </IconButton>
-          </Tooltip>
-        </Box>
-      )}
-
       {/* ── Text field row ── */}
       <Box sx={{ display: 'flex', gap: 1, alignItems: 'flex-end', width: '100%', direction: direction }}>
-
-        {/* Hidden file input for base image */}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/png,image/jpeg,image/webp"
-          style={{ display: 'none' }}
-          onChange={handleFileChange}
-        />
 
         <TextField
           value={input}
@@ -181,20 +111,20 @@ export default function InputContainer({
           InputProps={{
             startAdornment: (
               <InputAdornment position={isRTL ? 'end' : 'start'}>
-                {/* Base-image upload button replaces the generic "+" */}
+                {/* Configure shared image context (environment/people/objects/style) for all tasks */}
                 <Tooltip
                   title={
-                    baseImage
-                      ? t('TextGenerative.change_base_image', 'Change base image for all tasks')
-                      : t('TextGenerative.upload_base_image', 'Upload base image for all tasks')
+                    globalImageContext
+                      ? t('ImageContext.contextSet', 'Context Set') + ' ✓'
+                      : t('ImageContext.configureContext', 'Configure Image Context')
                   }
                 >
-                  <span> {/* span needed so Tooltip works on disabled buttons */}
+                  <span>
                     <IconButton
                       disabled={loading}
-                      onClick={() => fileInputRef.current?.click()}
+                      onClick={() => setIsContextPopupOpen(true)}
                       sx={{
-                        color: baseImage
+                        color: globalImageContext
                           ? colors.primary
                           : loading
                             ? colors.border
@@ -203,10 +133,7 @@ export default function InputContainer({
                         '&:hover': { color: colors.primary },
                       }}
                     >
-                      {baseImage
-                        ? <CollectionsIcon sx={{ fontSize: '18px' }} />
-                        : <AddIcon sx={{ fontSize: '18px' }} />
-                      }
+                      <TuneIcon sx={{ fontSize: '18px' }} />
                     </IconButton>
                   </span>
                 </Tooltip>
@@ -312,6 +239,19 @@ export default function InputContainer({
           sx={{ flex: 1 }}
         />
       </Box>
+
+      {/* General image context popup — shared context for all tasks */}
+      <ImageContextPopup
+        open={isContextPopupOpen}
+        onClose={() => setIsContextPopupOpen(false)}
+        onGenerate={(ctx) => onGlobalImageContextChange?.(ctx)}
+        mode="general"
+        tasks={tasks}
+        originalPrompt={originalPrompt}
+        initialContext={globalImageContext}
+        theme={theme}
+        isRTL={isRTL}
+      />
     </Box>
   );
 }

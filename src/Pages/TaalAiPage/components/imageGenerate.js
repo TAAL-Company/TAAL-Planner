@@ -31,15 +31,14 @@ export default function TaskImage({
   imageNoLogo,
   imageSeed,
   trigger = 0,
-  // ── Base image (global, set from InputContainer) ──────────────────
-  // { file: File, preview: string } | null
-  baseImage = null,
   // ── Context-aware generation ──────────────────────────────────────
   // The user's original prompt that generated the full task list
   originalPrompt = "",
   // Global image context set from the TaskTable general popup.
   // When present it overrides GPT auto-enrichment in buildPrompt().
   globalImageContext = null,
+  taskImageContext = null,
+  onTaskImageContextChange,
   // theme + layout (forwarded from TaskTable for per-task popup)
   theme,
   isRTL = false,
@@ -54,13 +53,9 @@ export default function TaskImage({
   // Grows with each regeneration so the AI can refine previous prompts.
   const promptConversationRef = useRef([]);
 
-  // Per-task override: user can upload a different image just for this task.
-  // When null we fall back to baseImage (if present).
+  // Per-task source image upload.
   const [localFile, setLocalFile] = useState(null);
   const [localPreview, setLocalPreview] = useState(null);
-
-  // Flag to ignore the global base image for this specific task
-  const [ignoreBaseImage, setIgnoreBaseImage] = useState(false);
 
   const fileInputRef = useRef(null);
 
@@ -72,12 +67,30 @@ export default function TaskImage({
   }, [localPreview]);
 
   // ── Resolve the active source image ──────────────────────────────
-  // Priority: per-task local upload → global baseImage (if not ignored) → null (pure generation)
-  const activeFile    = localFile ?? (!ignoreBaseImage ? baseImage?.file : null) ?? null;
-  const activePreview = localPreview ?? (!ignoreBaseImage ? baseImage?.preview : null) ?? null;
+  const selectedImageContext = taskImageContext || globalImageContext;
+  const contextPeopleImage = selectedImageContext?.peopleImage;
+  const contextEnvironmentImage = selectedImageContext?.environmentImage;
+
+  // Priority: per-task upload → People reference → Environment reference.
+  const referenceFiles = localFile
+    ? [localFile]
+    : [contextPeopleImage?.file, contextEnvironmentImage?.file].filter(Boolean);
+  const activeFile    = referenceFiles[0] ?? null;
+  const activePreview = localPreview ?? contextPeopleImage?.preview ?? contextEnvironmentImage?.preview ?? null;
   const hasActiveSource = !!activeFile;
   const isLocalOverride = !!localFile; // true only when the user picked a per-task file
-  const isUsingBaseImage = !isLocalOverride && !ignoreBaseImage && !!baseImage;
+
+  const resolveReferenceFiles = async (imageContext = selectedImageContext) => {
+    if (referenceFiles.length > 0) return referenceFiles;
+    const references = [imageContext?.peopleImage, imageContext?.environmentImage].filter(reference => reference?.url);
+    if (references.length === 0) return activeFile ? [activeFile] : [];
+    const resolved = await Promise.all(references.map(async (reference, index) => {
+      const response = await fetch(reference.url);
+      const blob = await response.blob();
+      return new File([blob], reference.name || `image-reference-${index + 1}.png`, { type: blob.type || "image/png" });
+    }));
+    return resolved;
+  };
 
   // ── Build prompt from explicit context fields (no GPT call) ────────
   const buildPromptFromContext = async (ctx) => {
@@ -89,6 +102,8 @@ export default function TaskImage({
     let objects          = ctx.objects          || "";
     let styleMood        = ctx.styleMood        || "";
     let additionalDetails = ctx.additionalDetails || "";
+    const hasPeopleImage = !!ctx.peopleImage;
+    const hasEnvironmentImage = !!ctx.environmentImage;
 
     try {
       const [tTitle, tSubtitle, tEnv, tPeople, tObjects, tStyle, tAdditional] = await translateBatch(
@@ -114,6 +129,8 @@ export default function TaskImage({
       objects           ? `Objects: ${objects}.`                : "",
       styleMood         ? `Style and mood: ${styleMood}.`       : "",
       additionalDetails ? additionalDetails + "."               : "",
+      hasPeopleImage ? "Use the People / Face reference image for the person's identity and appearance." : "",
+      hasEnvironmentImage ? "Use the Environment / Background reference image for the setting and background." : "",
       imagePromptSuffix,
     ].filter(Boolean);
     return parts.join(" ");
@@ -150,9 +167,12 @@ export default function TaskImage({
       })
       .join("\n");
 
-    const hasVisualReference = !!activeFile;
+    const hasVisualReference = !!activeFile || !!contextPeopleImage || !!contextEnvironmentImage;
 
-    // If a global image context is set, use it directly (skip GPT call)
+    // Explicit task context overrides the global context and skips GPT enrichment.
+    if (taskImageContext) {
+      return buildPromptFromContext(taskImageContext);
+    }
     if (globalImageContext) {
       return buildPromptFromContext(globalImageContext);
     }
@@ -229,9 +249,10 @@ Write the image prompt for Task #${currentIndex + 1} that reflects the full proj
     const targetSize = `${imageWidth}x${imageHeight}`;
 
     try {
+      const sourceFiles = await resolveReferenceFiles(customContext || selectedImageContext);
       const imageUrl = await generateOrEditAzureImage(
         prompt,
-        activeFile,   // File | null
+        sourceFiles.length > 0 ? sourceFiles : null,
         {
           size:    targetSize,
           quality: "medium",
@@ -274,22 +295,12 @@ Write the image prompt for Task #${currentIndex + 1} that reflects the full proj
 
     setLocalFile(file);
     setLocalPreview(URL.createObjectURL(file));
-    // Clear ignore flag when uploading a new file
-    setIgnoreBaseImage(false);
   };
 
   const handleRemoveLocalFile = () => {
     if (localPreview) URL.revokeObjectURL(localPreview);
     setLocalFile(null);
     setLocalPreview(null);
-  };
-
-  const handleIgnoreBaseImage = () => {
-    setIgnoreBaseImage(true);
-  };
-
-  const handleUseBaseImage = () => {
-    setIgnoreBaseImage(false);
   };
 
   // ── Trigger from parent (bulk generation) ────────────────────────
@@ -439,11 +450,7 @@ Write the image prompt for Task #${currentIndex + 1} that reflects the full proj
           title={
             isLocalOverride
               ? t("TextGenerative.change_task_image", "Change this task's source image")
-              : ignoreBaseImage
-                ? t("TextGenerative.upload_for_edit", "Upload source image for editing")
-                : baseImage
-                  ? t("TextGenerative.override_base_image", "Upload a different image for this task only")
-                  : t("TextGenerative.upload_image", "Upload source image for editing")
+              : t("TextGenerative.upload_image", "Upload source image for editing")
           }
         >
           <IconButton
@@ -451,9 +458,9 @@ Write the image prompt for Task #${currentIndex + 1} that reflects the full proj
             onClick={() => fileInputRef.current?.click()}
             disabled={isGenerating}
             sx={{
-              color: isLocalOverride ? "#4a9eff" : baseImage ? "#aaa" : "#888",
+              color: isLocalOverride ? "#4a9eff" : "#888",
               border: "1px dashed",
-              borderColor: isLocalOverride ? "#4a9eff" : baseImage ? "#666" : "#555",
+              borderColor: isLocalOverride ? "#4a9eff" : "#555",
               borderRadius: 1,
               padding: "4px",
               "&:hover": { bgcolor: "rgba(74,158,255,0.08)", borderColor: "#4a9eff", color: "#4a9eff" },
@@ -489,44 +496,6 @@ Write the image prompt for Task #${currentIndex + 1} that reflects the full proj
           </Box>
         )}
 
-        {/* Show base-image indicator when no local override */}
-        {isUsingBaseImage && (
-          <Box
-            sx={{
-              display: "flex", alignItems: "center", gap: 0.5,
-              bgcolor: "#2a2a2a", border: "1px solid #666",
-              borderRadius: 1, padding: "2px 6px", maxWidth: 140,
-            }}
-          >
-            <img
-              src={baseImage.preview}
-              alt="base"
-              style={{ width: 20, height: 20, objectFit: "cover", borderRadius: 2, flexShrink: 0 }}
-            />
-            <Typography variant="caption" sx={{ color: "#aaa", fontSize: "0.65rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 70 }}>
-              {t("TextGenerative.using_base", "base")}
-            </Typography>
-            <Tooltip title={t("TextGenerative.remove_base_image", "Don't use base image for this task")}>
-              <IconButton size="small" onClick={handleIgnoreBaseImage} sx={{ color: "#888", padding: 0, "&:hover": { color: "#ff6b6b" } }}>
-                <CloseIcon sx={{ fontSize: 14 }} />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        )}
-
-        {/* Show "ignored" state with option to restore */}
-        {!isLocalOverride && ignoreBaseImage && baseImage && (
-          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-            <Typography variant="caption" sx={{ color: "#666", fontSize: "0.65rem" }}>
-              {t("TextGenerative.base_ignored", "base image ignored")}
-            </Typography>
-            <Tooltip title={t("TextGenerative.use_base_image", "Use base image again")}>
-              <IconButton size="small" onClick={handleUseBaseImage} sx={{ color: "#666", padding: 0, "&:hover": { color: "#4a9eff" } }}>
-                <RefreshIcon sx={{ fontSize: 14 }} />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        )}
       </Box>
 
       {/* Hint text */}
@@ -535,28 +504,20 @@ Write the image prompt for Task #${currentIndex + 1} that reflects the full proj
           {t("TextGenerative.edit_mode_hint", "Edit mode: task image will be used as source")}
         </Typography>
       )}
-      {isUsingBaseImage && (
-        <Typography variant="caption" sx={{ color: "#888", fontSize: "0.7rem" }}>
-          {t("TextGenerative.base_image_hint", "Using global base image as source")}
-        </Typography>
-      )}
-      {ignoreBaseImage && !isLocalOverride && baseImage && (
-        <Typography variant="caption" sx={{ color: "#666", fontSize: "0.7rem" }}>
-          {t("TextGenerative.pure_generation_hint", "Pure generation mode (no source image)")}
-        </Typography>
-      )}
-
       {/* ── Per-task image context popup ── */}
       <ImageContextPopup
         open={isContextPopupOpen}
         onClose={() => setIsContextPopupOpen(false)}
-        onGenerate={(ctx) => GenerateTaskImage(ctx)}
         mode="task"
         task={task}
         taskIndex={taskIndex}
         tasks={tasks}
         originalPrompt={originalPrompt}
-        baseImage={baseImage}
+        initialContext={taskImageContext}
+        onGenerate={(ctx) => {
+          if (onTaskImageContextChange) onTaskImageContextChange(ctx);
+          GenerateTaskImage(ctx);
+        }}
         theme={theme}
         isRTL={isRTL}
       />

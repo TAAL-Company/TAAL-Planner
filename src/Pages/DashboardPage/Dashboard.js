@@ -175,7 +175,8 @@ const Dashboard = () => {
       <iframe
         width="100%"
         height="100%"
-        src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&env=${env}&token=${accessToken}`}
+        src={`https://dashboard-bxfxeygddffpgxdq.israelcentral-01.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&env=${env}&token=${accessToken}`}
+        // src={`https://dashboardskillsservice.azurewebsites.net/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&env=${env}&token=${accessToken}`}
         // src={`http://localhost:8501/?embed=true&role=${role}&data=${editorId}&Language=${currentLanguage}&GRAPH_SELECTED_DEFAULT=${defaultdashboard}&sites=${SiteIDs}&env=${baseUrl === "https://stg-web-app0da5905.azurewebsites.net" ? "stg" : "prod"}`}
       ></iframe>
     } </div>

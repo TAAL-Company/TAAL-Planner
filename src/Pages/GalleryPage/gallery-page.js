@@ -6,7 +6,7 @@ import SidebarNav from './components/sidebar-nav';
 import ImageGrid from './components/image-grid';
 import AudioList from './components/audio-grid';
 import { getBlobsInContainer } from '../../components/azureBlob';
-import { uploadFiles } from '../../api/api';
+import { uploadFiles, getingData_Tasks } from '../../api/api';
 
 const GalleryPage = () => {
   const [blobList, setBlobList] = useState({});
@@ -17,16 +17,32 @@ const GalleryPage = () => {
   const [selectedType, setSelectedType] = useState('pictures');
   const [loading, setLoading] = useState(true);
   const [reload, setReload] = useState(false);
+  const [routeTagsByUrl, setRouteTagsByUrl] = useState({});
 
   useEffect(() => {
     const fetchBlobs = async () => {
       console.log('fetching blobs');
       setLoading(true);
-      setBlobList(await getBlobsInContainer());
+      const [blobs, tasks] = await Promise.all([getBlobsInContainer(), getingData_Tasks()]);
+      setBlobList(blobs);
+      setRouteTagsByUrl(buildRouteTagsByUrl(tasks));
       setLoading(false);
     };
     fetchBlobs();
   }, [reload]);
+
+  // Maps a task's picture_url to the (deduped) names of routes it belongs to
+  const buildRouteTagsByUrl = (tasks) => {
+    const map = {};
+    for (const task of tasks || []) {
+      if (!task.picture_url) continue;
+      const routeNames = [...new Set((task.routes || []).map((r) => r.route?.name).filter(Boolean))];
+      if (!routeNames.length) continue;
+      map[task.picture_url] = [...new Set([...(map[task.picture_url] || []), ...routeNames])];
+    }
+    return map;
+  };
+
 
   useEffect(() => {
     const sorted = {};
@@ -141,7 +157,7 @@ const GalleryPage = () => {
         <UploadZone onFileUpload={handleFileUpload} />
         <SearchBar onSearch={handleSearch} />
         {selectedType === 'pictures' ? (
-          <ImageGrid images={getFilteredItems()} setReload={setReload} setLoading={setLoading} folderNames={folderNames}/>
+          <ImageGrid images={getFilteredItems()} setReload={setReload} setLoading={setLoading} folderNames={folderNames} routeTagsByUrl={routeTagsByUrl}/>
         ) : (
           <AudioList audios={getFilteredItems()} setReload={setReload} setLoading={setLoading} folderNames={folderNames}/>
         )}

@@ -39,10 +39,11 @@ export default function ChatView({
   imageModel,
   imageNoLogo,
   imageSeed,
-  baseImage,
   originalPrompt,
   globalImageContext,
   setGlobalImageContext,
+  taskImageContexts,
+  setTaskImageContexts,
 }) {
   const { t } = useTranslation();
 
@@ -162,10 +163,11 @@ export default function ChatView({
           imageModel={imageModel}
           imageNoLogo={imageNoLogo}
           imageSeed={imageSeed}
-          baseImage={baseImage}
           originalPrompt={originalPrompt}
           globalImageContext={globalImageContext}
           setGlobalImageContext={setGlobalImageContext}
+          taskImageContexts={taskImageContexts}
+          setTaskImageContexts={setTaskImageContexts}
           direction={direction}
           isRTL={isRTL}
           getComplexityColor={getComplexityColor}

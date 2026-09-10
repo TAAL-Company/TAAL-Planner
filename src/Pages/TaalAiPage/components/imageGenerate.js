@@ -9,8 +9,6 @@ import {
 import RefreshIcon from "@mui/icons-material/Refresh";
 import ImageIcon from "@mui/icons-material/Image";
 import EditIcon from "@mui/icons-material/Edit";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
-import CloseIcon from "@mui/icons-material/Close";
 import TuneIcon from "@mui/icons-material/Tune";
 import { useTranslation } from "react-i18next";
 import { useTranslator } from "../../../Utility/TranslationProvider";
@@ -53,32 +51,15 @@ export default function TaskImage({
   // Grows with each regeneration so the AI can refine previous prompts.
   const promptConversationRef = useRef([]);
 
-  // Per-task source image upload.
-  const [localFile, setLocalFile] = useState(null);
-  const [localPreview, setLocalPreview] = useState(null);
-
-  const fileInputRef = useRef(null);
-
-  // Revoke local preview URL on change / unmount
-  useEffect(() => {
-    return () => {
-      if (localPreview) URL.revokeObjectURL(localPreview);
-    };
-  }, [localPreview]);
-
   // ── Resolve the active source image ──────────────────────────────
   const selectedImageContext = taskImageContext || globalImageContext;
   const contextPeopleImage = selectedImageContext?.peopleImage;
   const contextEnvironmentImage = selectedImageContext?.environmentImage;
 
-  // Priority: per-task upload → People reference → Environment reference.
-  const referenceFiles = localFile
-    ? [localFile]
-    : [contextPeopleImage?.file, contextEnvironmentImage?.file].filter(Boolean);
+  const referenceFiles = [contextPeopleImage?.file, contextEnvironmentImage?.file].filter(Boolean);
   const activeFile    = referenceFiles[0] ?? null;
-  const activePreview = localPreview ?? contextPeopleImage?.preview ?? contextEnvironmentImage?.preview ?? null;
+  const activePreview = contextPeopleImage?.preview ?? contextEnvironmentImage?.preview ?? null;
   const hasActiveSource = !!activeFile;
-  const isLocalOverride = !!localFile; // true only when the user picked a per-task file
 
   const resolveReferenceFiles = async (imageContext = selectedImageContext) => {
     if (referenceFiles.length > 0) return referenceFiles;
@@ -285,24 +266,6 @@ Write the image prompt for Task #${currentIndex + 1} that reflects the full proj
     }
   };
 
-  // ── Per-task upload handler ───────────────────────────────────────
-  const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    e.target.value = "";
-    if (!file) return;
-
-    if (localPreview) URL.revokeObjectURL(localPreview);
-
-    setLocalFile(file);
-    setLocalPreview(URL.createObjectURL(file));
-  };
-
-  const handleRemoveLocalFile = () => {
-    if (localPreview) URL.revokeObjectURL(localPreview);
-    setLocalFile(null);
-    setLocalPreview(null);
-  };
-
   // ── Trigger from parent (bulk generation) ────────────────────────
   useEffect(() => {
     if (trigger > 0 && !task?.picture_url && !isGenerating) {
@@ -417,16 +380,8 @@ Write the image prompt for Task #${currentIndex + 1} that reflects the full proj
         )}
       </Box>
 
-      {/* ── Per-task upload section ── */}
+      {/* ── Per-task image controls ── */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/png,image/jpeg,image/webp"
-          style={{ display: "none" }}
-          onChange={handleFileChange}
-        />
-
         {/* Per-task context popup button */}
         <Tooltip title={t("ImageContext.openTaskPopup", "Customize image context for this task")}>
           <IconButton
@@ -446,64 +401,8 @@ Write the image prompt for Task #${currentIndex + 1} that reflects the full proj
           </IconButton>
         </Tooltip>
 
-        <Tooltip
-          title={
-            isLocalOverride
-              ? t("TextGenerative.change_task_image", "Change this task's source image")
-              : t("TextGenerative.upload_image", "Upload source image for editing")
-          }
-        >
-          <IconButton
-            size="small"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isGenerating}
-            sx={{
-              color: isLocalOverride ? "#4a9eff" : "#888",
-              border: "1px dashed",
-              borderColor: isLocalOverride ? "#4a9eff" : "#555",
-              borderRadius: 1,
-              padding: "4px",
-              "&:hover": { bgcolor: "rgba(74,158,255,0.08)", borderColor: "#4a9eff", color: "#4a9eff" },
-              transition: "all 0.2s ease",
-            }}
-          >
-            <UploadFileIcon sx={{ fontSize: 18 }} />
-          </IconButton>
-        </Tooltip>
-
-        {/* Show per-task override preview */}
-        {isLocalOverride && localPreview && (
-          <Box
-            sx={{
-              display: "flex", alignItems: "center", gap: 0.5,
-              bgcolor: "#2a2a2a", border: "1px solid #4a9eff",
-              borderRadius: 1, padding: "2px 6px", maxWidth: 140,
-            }}
-          >
-            <img
-              src={localPreview}
-              alt="task override"
-              style={{ width: 24, height: 24, objectFit: "cover", borderRadius: 2, flexShrink: 0 }}
-            />
-            <Typography variant="caption" sx={{ color: "#ccc", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 70 }}>
-              {localFile.name}
-            </Typography>
-            <Tooltip title={t("TextGenerative.remove_upload", "Remove — use base image or generate")}>
-              <IconButton size="small" onClick={handleRemoveLocalFile} sx={{ color: "#888", padding: 0, "&:hover": { color: "#ff6b6b" } }}>
-                <CloseIcon sx={{ fontSize: 14 }} />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        )}
-
       </Box>
 
-      {/* Hint text */}
-      {isLocalOverride && (
-        <Typography variant="caption" sx={{ color: "#4a9eff", fontSize: "0.7rem" }}>
-          {t("TextGenerative.edit_mode_hint", "Edit mode: task image will be used as source")}
-        </Typography>
-      )}
       {/* ── Per-task image context popup ── */}
       <ImageContextPopup
         open={isContextPopupOpen}

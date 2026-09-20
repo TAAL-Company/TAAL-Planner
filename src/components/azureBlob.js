@@ -68,13 +68,14 @@ const uploadFileToBlob = async (file) => {
 // </snippet_uploadFileToBlob>
 
 /**
- * Upload a video Blob to Azure Blob Storage under the 'Route media/video/' virtual folder.
+ * Upload a video Blob to Azure Blob Storage under the '<site>/video/' virtual folder.
  * @param {Blob} blob - The video blob to upload
  * @param {string} routeName - The route name (used as the blob file name)
  * @param {string} ext - File extension without dot (e.g. 'webm' or 'mp4')
+ * @param {string} [site] - The site name (virtual folder in Azure Blob Storage)
  * @returns {Promise<string>} The public URL of the uploaded video
  */
-export const uploadVideoToAzure = async (blob, routeName, ext = 'webm') => {
+export const uploadVideoToAzure = async (blob, routeName, ext = 'webm', site = '') => {
   const blobService = new BlobServiceClient(
     `https://${storageAccountName}.blob.core.windows.net/?${sasToken}`
   );
@@ -82,7 +83,8 @@ export const uploadVideoToAzure = async (blob, routeName, ext = 'webm') => {
 
   const timestamp = Date.now();
   const safeName = (routeName || 'route').replace(/[^\w\u0080-\uFFFF\s-]/g, '').trim().replace(/\s+/g, '_');
-  const blobName = `Route media/video/${safeName}-${timestamp}.${ext}`;
+  const folder = site || 'general';
+  const blobName = `${folder}/video/${safeName}-${timestamp}.${ext}`;
   const blockBlobClient = containerClient.getBlockBlobClient(blobName);
 
   const options = { blobHTTPHeaders: { blobContentType: blob.type } };

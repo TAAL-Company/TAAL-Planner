@@ -5,6 +5,7 @@ import UploadZone from './components/upload-zone';
 import SidebarNav from './components/sidebar-nav';
 import ImageGrid from './components/image-grid';
 import AudioList from './components/audio-grid';
+import VideoGrid from './components/video-grid';
 import { getBlobsInContainer } from '../../components/azureBlob';
 import { uploadFiles, getingData_Tasks } from '../../api/api';
 
@@ -61,6 +62,8 @@ const GalleryPage = () => {
       let fileTypeFolder = 'pictures';
       if (['aac', 'mp3', 'wav'].includes(fileType)) {
         fileTypeFolder = 'audio';
+      } else if (['mp4', 'mov', 'webm', 'avi', 'mkv'].includes(fileType)) {
+        fileTypeFolder = 'video';
       }
 
       sorted[folderName] = sorted[folderName] || {};
@@ -152,12 +155,15 @@ const GalleryPage = () => {
         setSelectedType={setSelectedType}
         showaudio={true}
         showimage={true}
+        showvideo={true}
       />
       <Box sx={{ flexGrow: 1, p: 3, overflowY: 'scroll' }}>
         <UploadZone onFileUpload={handleFileUpload} />
         <SearchBar onSearch={handleSearch} />
         {selectedType === 'pictures' ? (
           <ImageGrid images={getFilteredItems()} setReload={setReload} setLoading={setLoading} folderNames={folderNames} routeTagsByUrl={routeTagsByUrl}/>
+        ) : selectedType === 'video' ? (
+          <VideoGrid videos={getFilteredItems()} setReload={setReload} setLoading={setLoading} folderNames={folderNames}/>
         ) : (
           <AudioList audios={getFilteredItems()} setReload={setReload} setLoading={setLoading} folderNames={folderNames}/>
         )}

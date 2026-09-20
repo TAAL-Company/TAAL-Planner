@@ -521,7 +521,7 @@ export default function PushToPlannerPopup({
         console.log("📦 Inserting AI route:", route);
         const createdRoute = await insertRoute(route);
         if (onRouteCreated && createdRoute?.id) {
-          onRouteCreated(createdRoute.id, finalRouteName);
+          onRouteCreated(createdRoute.id, finalRouteName, siteId?.nameInEnglish || siteId?.name || 'Route media');
         }
         
         completedSteps++;

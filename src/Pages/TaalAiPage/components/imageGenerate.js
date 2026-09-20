@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   Box,
   IconButton,
@@ -46,6 +47,11 @@ export default function TaskImage({
 
   const [isGenerating, setIsGenerating] = useState(false);
   const [isContextPopupOpen, setIsContextPopupOpen] = useState(false);
+  const [isImageHovered, setIsImageHovered] = useState(false);
+  // Bounding rect of the thumbnail, used to position the fixed zoom preview so it
+  // renders above the table (and everything else) instead of being clipped by it.
+  const [hoverRect, setHoverRect] = useState(null);
+  const imageBoxRef = useRef(null);
 
   // Conversation history for the prompt-enrichment AI call.
   // Grows with each regeneration so the AI can refine previous prompts.
@@ -282,6 +288,12 @@ Write the image prompt for Task #${currentIndex + 1} that reflects the full proj
 
       {/* ── Main image box ── */}
       <Box
+        ref={imageBoxRef}
+        onMouseEnter={() => {
+          if (imageBoxRef.current) setHoverRect(imageBoxRef.current.getBoundingClientRect());
+          setIsImageHovered(true);
+        }}
+        onMouseLeave={() => setIsImageHovered(false)}
         sx={{
           width: 200,
           height: 150,
@@ -307,6 +319,11 @@ Write the image prompt for Task #${currentIndex + 1} that reflects the full proj
                 objectFit: "cover",
                 borderRadius: "4px",
                 filter: isGenerating ? "blur(2px)" : "none",
+                transform: isImageHovered ? "scale(2)" : "scale(1)",
+                transformOrigin: "center center",
+                transition: "transform 0.25s ease",
+                boxShadow: isImageHovered ? "0 8px 24px rgba(0,0,0,0.6)" : "none",
+                position: "relative",
               }}
             />
             {/* Hover overlay */}
@@ -379,6 +396,36 @@ Write the image prompt for Task #${currentIndex + 1} that reflects the full proj
           </Box>
         )}
       </Box>
+
+      {/* ── Fixed zoom preview, portaled to <body> so it floats above the table/everything ── */}
+      {hasImage && isImageHovered && hoverRect && createPortal(
+        <Box
+          onMouseEnter={() => setIsImageHovered(true)}
+          onMouseLeave={() => setIsImageHovered(false)}
+          sx={{
+            position: "fixed",
+            top: hoverRect.top + hoverRect.height / 2,
+            left: hoverRect.left + hoverRect.width / 2,
+            transform: "translate(-50%, -50%) scale(2.4)",
+            transformOrigin: "center center",
+            width: hoverRect.width,
+            height: hoverRect.height,
+            pointerEvents: "none",
+            zIndex: 9999,
+            borderRadius: 1,
+            overflow: "hidden",
+            boxShadow: "0 12px 32px rgba(0,0,0,0.7)",
+            border: "1px solid #4a9eff",
+          }}
+        >
+          <img
+            src={task.picture_url}
+            alt={task.title}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        </Box>,
+        document.body
+      )}
 
       {/* ── Per-task image controls ── */}
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

@@ -2423,7 +2423,7 @@ const Places = (props) => {
         isRTL={t('Direction') === 'rtl'}
         routeId={videoRouteId}
         routeName={videoRouteName}
-        siteName={selectedSite?.name}
+        siteName={selectedSite?.nameInEnglish || selectedSite?.name || ''}
         onVideoSaved={(videoUrl) => {
           setAllRoutes(prev => prev.map(r => r.id === videoRouteId ? { ...r, video_link: videoUrl } : r));
         }}

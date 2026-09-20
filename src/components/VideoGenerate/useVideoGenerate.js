@@ -226,6 +226,7 @@ export function useVideoGenerate({ tasks, isRTL, onClose, routeId, routeName, si
 
     let effectiveRouteId = routeId;
     let effectiveRouteName = routeName;
+    let effectiveSiteName = siteName;
 
     // If no routeId yet, use the getRouteId callback to create the route first
     if (!effectiveRouteId && getRouteId) {
@@ -235,6 +236,7 @@ export function useVideoGenerate({ tasks, isRTL, onClose, routeId, routeName, si
         const result = await getRouteId();
         effectiveRouteId = result?.id;
         effectiveRouteName = result?.name || routeName;
+        effectiveSiteName = result?.siteName || siteName;
       } catch (err) {
         setSaveError(t('VideoGenerate.routeCreationCancelled') || 'Route creation cancelled');
         setIsSaving(false);
@@ -246,7 +248,7 @@ export function useVideoGenerate({ tasks, isRTL, onClose, routeId, routeName, si
     setIsSaving(true);
     setSaveError(null);
     try {
-      const url = await uploadVideoToAzure(videoBlob, effectiveRouteName, actualExt);
+      const url = await uploadVideoToAzure(videoBlob, effectiveRouteName, actualExt, effectiveSiteName);
       await updateRoute(effectiveRouteId, { name: effectiveRouteName, video_link: url });
       setSavedVideoUrl(url);
       if (onVideoSaved) onVideoSaved(url);

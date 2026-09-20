@@ -14,11 +14,12 @@ import {
   ExpandMore,
   FolderOutlined,
   ImageOutlined,
-  AudiotrackOutlined
+  AudiotrackOutlined,
+  VideocamOutlined
 } from '@mui/icons-material';
 import { useTranslation } from 'react-i18next';
 
-const SidebarNav = ({ folderNames, sortedUrls, onFolderSelect, setSelectedType, showaudio, showimage }) => {
+const SidebarNav = ({ folderNames, sortedUrls, onFolderSelect, setSelectedType, showaudio, showimage, showvideo }) => {
   const { t } = useTranslation();
 
   const [openFolder, setOpenFolder] = useState(null);
@@ -57,9 +58,10 @@ const SidebarNav = ({ folderNames, sortedUrls, onFolderSelect, setSelectedType, 
             {openFolder === folderName && (
               <List component="div" disablePadding>
                 {(showimage && Object.keys(sortedUrls[folderName]).includes('pictures')) ||
-                  (showaudio && Object.keys(sortedUrls[folderName]).includes('audio')) ? (
+                  (showaudio && Object.keys(sortedUrls[folderName]).includes('audio')) ||
+                  (showvideo && Object.keys(sortedUrls[folderName]).includes('video')) ? (
                   Object.keys(sortedUrls[folderName]).map((type) => {
-                    if ((type === 'pictures' && showimage) || (type === 'audio' && showaudio)) {
+                    if ((type === 'pictures' && showimage) || (type === 'audio' && showaudio) || (type === 'video' && showvideo)) {
                       return (
                         <ListItemButton
                           key={type}
@@ -69,6 +71,8 @@ const SidebarNav = ({ folderNames, sortedUrls, onFolderSelect, setSelectedType, 
                           <ListItemIcon sx={{ color: 'white' }}>
                             {type === 'pictures' ? (
                               <ImageOutlined />
+                            ) : type === 'video' ? (
+                              <VideocamOutlined />
                             ) : (
                               <AudiotrackOutlined />
                             )}

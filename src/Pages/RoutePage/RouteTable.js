@@ -198,7 +198,7 @@ export default function RouteTable() {
   const handleCreateVideo = () => {
     setVideoRouteId(selectedRoute?.id || null);
     setVideoRouteName(selectedRoute?.name || '');
-    setVideoSiteName(selectedRoute?.sites?.[0]?.name || '');
+    setVideoSiteName(selectedRoute?.sites?.[0]?.nameInEnglish || selectedRoute?.sites?.[0]?.name || '');
     setVideoTasksForDialog(selectedRoute?.tasks || []);
     setVideoDialogOpen(true);
     handleCloseMenu();

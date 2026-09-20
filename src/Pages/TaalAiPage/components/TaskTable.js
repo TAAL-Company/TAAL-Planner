@@ -71,16 +71,16 @@ export default function TaskTable({
   const [videoDialogOpen, setVideoDialogOpen] = useState(false);
   const pendingRouteResolveRef = useRef(null);
 
-  // Opens PushToPlannerPopup and resolves with { id, name } once the route is created.
+  // Opens PushToPlannerPopup and resolves with { id, name, siteName } once the route is created.
   // Used by VideoGenerateDialog to create the route before saving the video.
   const getRouteId = () => new Promise((resolve, reject) => {
     pendingRouteResolveRef.current = { resolve, reject };
     setPushToPlannerOpen(true);
   });
 
-  const handleRouteCreated = (id, name) => {
+  const handleRouteCreated = (id, name, siteName) => {
     if (pendingRouteResolveRef.current) {
-      pendingRouteResolveRef.current.resolve({ id, name });
+      pendingRouteResolveRef.current.resolve({ id, name, siteName });
       pendingRouteResolveRef.current = null;
     }
   };

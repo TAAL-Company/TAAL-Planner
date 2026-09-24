@@ -7,6 +7,7 @@ import './style.css';
 import Places from '../Places/Places';
 import 'reactjs-popup/dist/index.css';
 import Modal from '../Modal/Modal';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 //-------------------------
 const Planner = () => {
@@ -171,11 +172,21 @@ const Planner = () => {
   return (
     <>
       {!get_logged_in ? (
-        <div style={{ color: 'white' }}>{t('plannerPage.Please_connect_properly')}</div>
+        <div style={{ color: 'white' }}>
+          <I18nHoverText translationKey="plannerPage.Please_connect_properly">
+            {t('plannerPage.Please_connect_properly')}
+          </I18nHoverText>
+        </div>
       ) : (
         <>
           <div className={boot.Planner} >
-            {loading && <div>{t('plannerPage.Loading')}</div>}
+            {loading && (
+              <div>
+                <I18nHoverText translationKey="plannerPage.Loading">
+                  {t('plannerPage.Loading')}
+                </I18nHoverText>
+              </div>
+            )}
             {!loading && (
               <>
                 {/* <div

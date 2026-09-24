@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Checkbox, ListItemText, MenuItem, Select, InputLabel, FormControl, OutlinedInput } from '@mui/material';
+import I18nHoverText from '../I18nHoverText/I18nHoverText';
 
-export default function MultipleSelect({ label, formValues, handleChange, sites, setFormValues }) {
+export default function MultipleSelect({ label, translationKey, formValues, handleChange, sites, setFormValues }) {
     const [selectedSites, setSelectedSites] = useState([]);
     useEffect(() => {
         console.log('sites', sites);
@@ -24,7 +25,9 @@ export default function MultipleSelect({ label, formValues, handleChange, sites,
 
     return (
         <FormControl fullWidth margin="normal">
-            <InputLabel>{label}</InputLabel>
+            <InputLabel>
+                {translationKey ? <I18nHoverText translationKey={translationKey}>{label}</I18nHoverText> : label}
+            </InputLabel>
             <Select
                 multiple
                 value={selectedSites}

@@ -109,12 +109,12 @@ export default function CoachForm({
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!formValues.email) {
-            tempErrors.email = t("FormsErrors.emailRequired");
+            tempErrors.email = t("FormsErrors.EmailRequired");
         } else if (!emailRegex.test(formValues.email)) {
-            tempErrors.email = t("FormsErrors.emailFormat");
+            tempErrors.email = t("FormsErrors.EmailFormat");
         }
 
-        if (!formValues.name) tempErrors.name = t("FormsErrors.nameRequired");
+        if (!formValues.name) tempErrors.name = t("FormsErrors.NameRequired");
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
     };

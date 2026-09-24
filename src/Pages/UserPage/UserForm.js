@@ -21,6 +21,7 @@ import { getBlobsInContainer } from '../../components/azureBlob';
 import { useNotification } from '../../components/Notification/NotificationProvider';
 
 import { useTranslation } from "react-i18next";
+import I18nHoverText from '../../components/I18nHoverText/I18nHoverText';
 
 export default function UserForm({
     open,
@@ -44,6 +45,7 @@ export default function UserForm({
     const [loading, setLoading] = useState(false); // Add loading state
 
     const [errors, setErrors] = useState({});
+    const [errorKeys, setErrorKeys] = useState({});
     const { showNotification } = useNotification();
 
     const { t } = useTranslation();
@@ -121,18 +123,31 @@ export default function UserForm({
 
     const validate = () => {
         let tempErrors = {};
+        let tempErrorKeys = {};
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!formValues.email) {
-            tempErrors.email = t("FormsErrors.emailRequired");
+            tempErrorKeys.email = "FormsErrors.EmailRequired";
+            tempErrors.email = t(tempErrorKeys.email);
         } else if (!emailRegex.test(formValues.email)) {
-            tempErrors.email = t("FormsErrors.emailFormat");
+            tempErrorKeys.email = "FormsErrors.EmailFormat";
+            tempErrors.email = t(tempErrorKeys.email);
         }
 
-        if (!formValues.name) tempErrors.name = t("FormsErrors.nameRequired");
-        if (!formValues.user_name) tempErrors.user_name = t("FormsErrors.usernameRequired");
-        if (!formValues.password) tempErrors.password = t("FormsErrors.passwordRequired");
+        if (!formValues.name) {
+            tempErrorKeys.name = "FormsErrors.NameRequired";
+            tempErrors.name = t(tempErrorKeys.name);
+        }
+        if (!formValues.user_name) {
+            tempErrorKeys.user_name = "FormsErrors.UsernameRequired";
+            tempErrors.user_name = t(tempErrorKeys.user_name);
+        }
+        if (!formValues.password) {
+            tempErrorKeys.password = "FormsErrors.PasswordRequired";
+            tempErrors.password = t(tempErrorKeys.password);
+        }
         setErrors(tempErrors);
+        setErrorKeys(tempErrorKeys);
         return Object.keys(tempErrors).length === 0;
     };
 
@@ -190,27 +205,31 @@ export default function UserForm({
 
     return (
         <Dialog open={open} onClose={() => { handleClose(); handleCloseDialog(); }} style={{ direction: t('Direction') }}  >
-            <DialogTitle>{title}</DialogTitle>
+            <DialogTitle><I18nHoverText translationKey={UserAction === 'edit' ? 'UserPage.EditEmployeeInfo' : 'UserPage.ADDANewEmployee'}>{title}</I18nHoverText></DialogTitle>
             <DialogContent dir={t('Direction')} >
                 <TextField
                     required
-                    label={t("Forms.Email")}
+                    label={<I18nHoverText translationKey="Forms.Email">{t("Forms.Email")}</I18nHoverText>}
                     fullWidth
                     value={formValues.email}
                     onChange={handleChange('email')}
                     margin="normal"
                     error={!!errors.email}
-                    helperText={errors.email}
+                    helperText={errors.email && (
+                        <I18nHoverText translationKey={errorKeys.email}>{errors.email}</I18nHoverText>
+                    )}
                 />
                 <TextField
                     required
-                    label={t("Forms.Name")}
+                    label={<I18nHoverText translationKey="Forms.Name">{t("Forms.Name")}</I18nHoverText>}
                     fullWidth
                     value={formValues.name}
                     onChange={handleChange('name')}
                     margin="normal"
                     error={!!errors.name}
-                    helperText={errors.name}
+                    helperText={errors.name && (
+                        <I18nHoverText translationKey={errorKeys.name}>{errors.name}</I18nHoverText>
+                    )}
                 />
                 <TextField
                     label={t("Forms.Phone")}
@@ -257,6 +276,7 @@ export default function UserForm({
 
                 <MultipleSelect
                     label={t("Forms.Select_Sites")}
+                    translationKey="Forms.Select_Sites"
                     formValues={formValues}
                     handleChange={handleChange}
                     sites={sites}

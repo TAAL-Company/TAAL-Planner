@@ -31,6 +31,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import { useTranslation } from 'react-i18next';
 import { useNotification } from '../../components/Notification/NotificationProvider';
+import I18nHoverText from '../../components/I18nHoverText/I18nHoverText';
 import {
   getingData_Users,
   getingData_Routes,
@@ -385,11 +386,11 @@ const SendNotificationPage = () => {
               <Table size="small">
                 <TableHead>
                   <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-                    <TableCell><b>{t('NotificationPage.notification_title')}</b></TableCell>
-                    <TableCell><b>{t('NotificationPage.message')}</b></TableCell>
-                    <TableCell><b>{t('NotificationPage.send_to')}</b></TableCell>
-                    <TableCell><b>{t('NotificationPage.scheduled_for')}</b></TableCell>
-                    <TableCell align="center"><b>{t('NotificationPage.actions')}</b></TableCell>
+                    <TableCell><b><I18nHoverText translationKey="NotificationPage.notification_title">{t('NotificationPage.notification_title')}</I18nHoverText></b></TableCell>
+                    <TableCell><b><I18nHoverText translationKey="NotificationPage.message">{t('NotificationPage.message')}</I18nHoverText></b></TableCell>
+                    <TableCell><b><I18nHoverText translationKey="NotificationPage.send_to">{t('NotificationPage.send_to')}</I18nHoverText></b></TableCell>
+                    <TableCell><b><I18nHoverText translationKey="NotificationPage.scheduled_for">{t('NotificationPage.scheduled_for')}</I18nHoverText></b></TableCell>
+                    <TableCell align="center"><b><I18nHoverText translationKey="NotificationPage.actions">{t('NotificationPage.actions')}</I18nHoverText></b></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

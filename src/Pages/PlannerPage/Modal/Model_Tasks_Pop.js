@@ -11,6 +11,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { useTranslation } from 'react-i18next';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 const style = {
   position: 'absolute',
@@ -199,7 +200,7 @@ function Model_Tasks_Pop(props) {
     >
       <div className='headerNewTask'>
         <div className='NewTaskTitle'>
-          {t("plannerPage.task_languages")}  {props.language_description}
+          <I18nHoverText translationKey="plannerPage.task_languages">{t("plannerPage.task_languages")}</I18nHoverText>  {props.language_description}
         </div>
       </div>
       <div
@@ -208,7 +209,7 @@ function Model_Tasks_Pop(props) {
       >
         <form id='IPU' className='w3-container'>
           <h6>
-            {t("plannerPage.Write_the_name_of_the_task")}
+            <I18nHoverText translationKey="plannerPage.Write_the_name_of_the_task">{t("plannerPage.Write_the_name_of_the_task")}</I18nHoverText>
 
             <RiAsterisk style={{ color: 'red' }} />
           </h6>
@@ -229,7 +230,7 @@ function Model_Tasks_Pop(props) {
         </form>
         <form id='IPU' className='w3-container'>
           <h6>
-            {t("plannerPage.Describe_the_task")}
+            <I18nHoverText translationKey="plannerPage.Describe_the_task">{t("plannerPage.Describe_the_task")}</I18nHoverText>
             <RiAsterisk style={{ color: 'red' }} />
           </h6>
           <p>
@@ -247,7 +248,7 @@ function Model_Tasks_Pop(props) {
           </p>
         </form>
         <div className='estimatedTimeContainer'>
-          <h6>{t("plannerPage.Enter_the_estimated_time_in_seconds_for_the_task")}</h6>
+          <h6><I18nHoverText translationKey="plannerPage.Enter_the_estimated_time_in_seconds_for_the_task">{t("plannerPage.Enter_the_estimated_time_in_seconds_for_the_task")}</I18nHoverText></h6>
           <input
             type='number'
             name='estimatedTimeSeconds'
@@ -261,7 +262,7 @@ function Model_Tasks_Pop(props) {
         </div>
         <form id='IPU' className='w3-container'>
           <h6>
-            {t("plannerPage.Write_Data_Entry_Label")}
+            <I18nHoverText translationKey="plannerPage.Write_Data_Entry_Label">{t("plannerPage.Write_Data_Entry_Label")}</I18nHoverText>
             <RiAsterisk style={{ color: 'red' }} />
           </h6>
           <p>
@@ -281,7 +282,7 @@ function Model_Tasks_Pop(props) {
         </form>
         <form id='IPU' className='w3-container'>
           <h6>
-            {t("plannerPage.Write_Data_Entry_Validation")}
+            <I18nHoverText translationKey="plannerPage.Write_Data_Entry_Validation">{t("plannerPage.Write_Data_Entry_Validation")}</I18nHoverText>
             <RiAsterisk style={{ color: 'red' }} />
           </h6>
           <p>
@@ -300,11 +301,11 @@ function Model_Tasks_Pop(props) {
           </p>
         </form>
         <h6>
-          {t("plannerPage.Select_data_entry_type")}
+          <I18nHoverText translationKey="plannerPage.Select_data_entry_type">{t("plannerPage.Select_data_entry_type")}</I18nHoverText>
         </h6>
         <BasicSelect setFoldersite={setdataEntryType} folderName={dataEntryType} folderlist={dataEntryTypelist} />
         <h6>
-          {t("plannerPage.Select_task_type")} 
+          <I18nHoverText translationKey="plannerPage.Select_task_type">{t("plannerPage.Select_task_type")}</I18nHoverText> 
         </h6>
         <BasicSelect setFoldersite={setTaskType} folderName={TaskType} folderlist={TaskTypelist} />
         {/* <h6>
@@ -316,12 +317,12 @@ function Model_Tasks_Pop(props) {
         <BasicSelect setFoldersite={setFoldersite} folderName={Foldersite} folderlist={folderNames} /> */}
         
         <h6>
-          {t("plannerPage.Site_where_the_image_voice_will_be_save")}  {props.siteNameInEnglish}
+          <I18nHoverText translationKey="plannerPage.Site_where_the_image_voice_will_be_save">{t("plannerPage.Site_where_the_image_voice_will_be_save")}</I18nHoverText>  {props.siteNameInEnglish}
           <FcMultipleInputs />
         </h6>
         <form id='IPU' className='w3-container'>
           <h6>
-            {t("plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop")}
+            <I18nHoverText translationKey="plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop">{t("plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop")}</I18nHoverText>
             <FcMultipleInputs />
           </h6>
           <div>
@@ -339,7 +340,7 @@ function Model_Tasks_Pop(props) {
                 direction: props.language === 'English' ? 'rtl' : 'ltr',
               }}
             ></input> */}
-            <Button variant="outlined" onClick={handleOpen}>{t("plannerPage.Gallery")}</Button>
+            <Button variant="outlined" onClick={handleOpen}><I18nHoverText translationKey="plannerPage.Gallery">{t("plannerPage.Gallery")}</I18nHoverText></Button>
             <Modal
               open={open}
               onClose={() => {
@@ -355,7 +356,7 @@ function Model_Tasks_Pop(props) {
             </Modal>
             {picture ? (
               <div className='selectedFileContainertask'>
-                <div className='selectedFileTitle'>:{t("plannerPage.Selected_image")}</div>
+                <div className='selectedFileTitle'>:<I18nHoverText translationKey="plannerPage.Selected_image">{t("plannerPage.Selected_image")}</I18nHoverText></div>
                 <div style={{ marginBottom: '1rem' }}>
                   {typeof picture === 'string'
                     ? extractFilenameFromURL(picture)
@@ -373,18 +374,18 @@ function Model_Tasks_Pop(props) {
               </div>
             ) : (
               <div style={{ marginBottom: '1rem' }}>
-                {t("plannerPage.Selected_image_No_image_file_found")}
+                <I18nHoverText translationKey="plannerPage.Selected_image_No_image_file_found">{t("plannerPage.Selected_image_No_image_file_found")}</I18nHoverText>
               </div>
             )}
           </div>
         </form>
         <form id='IPU' className='w3-container'>
           <h6>
-            {t("plannerPage.Add_a_voice_clip_describing_the_task")}
+            <I18nHoverText translationKey="plannerPage.Add_a_voice_clip_describing_the_task">{t("plannerPage.Add_a_voice_clip_describing_the_task")}</I18nHoverText>
             <FcMultipleInputs />
           </h6>
           <InputFileUpload setPicture={setAudio} language={props.language} />
-          <Button variant="outlined" onClick={handleOpen2}>{t("plannerPage.Gallery_audio")}</Button>
+          <Button variant="outlined" onClick={handleOpen2}><I18nHoverText translationKey="plannerPage.Gallery_audio">{t("plannerPage.Gallery_audio")}</I18nHoverText></Button>
           <Modal
             open={open2}
             onClose={() => {
@@ -418,7 +419,7 @@ function Model_Tasks_Pop(props) {
           <div className='selectedFileContainertask'>
             <div className='selectedFileTitle'>
               <span>:</span>
-              {t("plannerPage.Selected_audio")}
+              <I18nHoverText translationKey="plannerPage.Selected_audio">{t("plannerPage.Selected_audio")}</I18nHoverText>
             </div>
             <div className='audioNameContainer'>
               <div style={{ marginBottom: '1rem' }}>
@@ -439,7 +440,7 @@ function Model_Tasks_Pop(props) {
           </div>
         ) : (
           <div style={{ marginBottom: '1rem' }}>
-            {t("plannerPage.Selected_audio_No_audio_file_found")}
+            <I18nHoverText translationKey="plannerPage.Selected_audio_No_audio_file_found">{t("plannerPage.Selected_audio_No_audio_file_found")}</I18nHoverText>
           </div>
         )}
         <Modal

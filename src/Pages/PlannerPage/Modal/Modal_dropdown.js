@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import './Modal.css';
 import { Link } from 'react-router-dom/cjs/react-router-dom.min';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 //--------------------------
 
@@ -32,49 +33,49 @@ function Modal_Dropdown(props) {
         id='dropdown' className='button-dropdown-content'>
         {props.editable ? (
           <Link onClick={() => props.setRequestForEditing('edit')}>
-            {t('plannerPage.Edit')}
+            <I18nHoverText translationKey="plannerPage.Edit">{t('plannerPage.Edit')}</I18nHoverText>
           </Link>
         ) : (
           <></>
         )}
         {props.Reproducible ? (
           <Link onClick={() => props.setRequestForEditing('duplication')}>
-            {t('plannerPage.Duplicate')}
+            <I18nHoverText translationKey="plannerPage.Duplicate">{t('plannerPage.Duplicate')}</I18nHoverText>
           </Link>
         ) : (
           <></>
         )}
         {props.details ? (
           <Link onClick={() => props.setRequestForEditing('details')}>
-            {t('plannerPage.Details')}
+            <I18nHoverText translationKey="plannerPage.Details">{t('plannerPage.Details')}</I18nHoverText>
           </Link>
         ) : (
           <></>
         )}
         {props.erasable ? (
           <Link onClick={() => props.setRequestForEditing('delete')}>
-            {t('plannerPage.Delete')}
+            <I18nHoverText translationKey="plannerPage.Delete">{t('plannerPage.Delete')}</I18nHoverText>
           </Link>
         ) : (
           <></>
         )}
         {props.uploadfromsheet ? (
           <Link onClick={() => props.setRequestForEditing('uploadfromsheet')}>
-            {t('plannerPage.Sheet_Edit')}
+            <I18nHoverText translationKey="plannerPage.Sheet_Edit">{t('plannerPage.Sheet_Edit')}</I18nHoverText>
           </Link>
         ) : (
           <></>
         )}
         {props.loop ? (
           <Link onClick={() => props.setRequestForEditing('loop')}>
-            {t('plannerPage.Loop')}
+            <I18nHoverText translationKey="plannerPage.Loop">{t('plannerPage.Loop')}</I18nHoverText>
           </Link>
         ) : (
           <></>
         )}
         {props.video ? (
           <Link onClick={() => props.setRequestForEditing('video')}>
-            {t('VideoGenerate.createVideo') || 'Create Video'}
+            <I18nHoverText translationKey="VideoGenerate.createVideo">{t('VideoGenerate.createVideo') || 'Create Video'}</I18nHoverText>
           </Link>
         ) : (
           <></>

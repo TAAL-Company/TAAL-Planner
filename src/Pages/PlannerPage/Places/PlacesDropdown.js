@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslator } from '../../../Utility/TranslationProvider';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 const PlacesDropdown = (props) => {
   const { translate,  } = useTranslator();
@@ -22,13 +23,22 @@ const PlacesDropdown = (props) => {
 
   return (
     <div>
-      <div className='placesTitle'>{props.siteQuestionLanguage}</div>
+      <div className='placesTitle'>
+        {props.siteQuestionLanguageKey ? (
+          <I18nHoverText translationKey={props.siteQuestionLanguageKey}>
+            {props.siteQuestionLanguage}
+          </I18nHoverText>
+        ) : (
+          props.siteQuestionLanguage
+        )}
+      </div>
       <select
         className='selectPlace'
         onChange={props.handleSiteSelectChange}
         value={props.value}
         // {props.selectedSite ? JSON.stringify(props.selectedSite) : 'DEFAULT'}
       >
+        {/* native <option> only renders plain text — hover popover not supported here */}
         <option value='DEFAULT' >
           {props.siteLanguage}
         </option>
@@ -36,13 +46,7 @@ const PlacesDropdown = (props) => {
         {translatedPlaces.map((place, index) => (
            <option key={index} value={props.selectedValuewithjsons ? JSON.stringify(place) : place.name}> 
             {/* {props.selectedValuewithjson ? JSON.stringify(place) : place.name}> */}
-           {props.showDataTranslate === 'original'
-             ? place.name
-             : props.showDataTranslate === 'translated'
-             ? place.translatedname
-             : props.showDataTranslate === 'Mixed'
-             ? `${place.name} (${place.translatedname})`
-             : place.name} {/* Default to original name */}
+            {place.name}
          </option>
         ))}
       </select>

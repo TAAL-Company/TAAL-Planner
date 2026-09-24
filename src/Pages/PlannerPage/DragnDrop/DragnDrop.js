@@ -11,12 +11,9 @@ import ModalDelete from '../Modal/Modal_Delete';
 import { deleteTask, updatePack } from '../../../api/api.js';
 import { Droppable } from 'react-beautiful-dnd';
 import './style.css';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import GTranslateIcon from '@mui/icons-material/GTranslate';
-import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import ViewRoutesModal from './ViewRoutesModal.js';
 import { useNotification } from "../../../components/Notification/NotificationProvider.js";
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 let Route = [];
 let dndArray = [];
@@ -73,17 +70,8 @@ function DragnDrop(props) {
   const [taskForEdit, setTaskForEdit] = useState('');
   const [openThreeDotsVerticalBoard, setOpenThreeDotsVerticalBoard] = useState(-1);
   const [location, setLocation] = useState(-1);
-  const [alignment, setAlignment] = useState('original');
   const [modalOpenViewRoutes, setModalOpenViewRoutes] = useState(false);
   const { showNotification } = useNotification();
-
-
-  const handleChange = (event, newAlignment) => {
-    console.log("newAlignment", newAlignment);
-    props.setTranslateData(newAlignment);
-
-    setAlignment(newAlignment);
-  };
 
   useEffect(() => {
     if (requestForEditing === 'edit' || requestForEditing === 'details') {
@@ -805,7 +793,7 @@ function DragnDrop(props) {
               type='submit'
               onClick={() => setModalOpenViewRoutes(true)}
             >
-              {t('plannerPage.Add_Pack')}
+              <I18nHoverText translationKey="plannerPage.Add_Pack">{t('plannerPage.Add_Pack')}</I18nHoverText>
             </button>
             {/* כפתור שפות */}
             {/* <button
@@ -818,19 +806,6 @@ function DragnDrop(props) {
             >
               {props.language}
             </button> */}
-
-            <ToggleButtonGroup
-              className='language'
-              color="warning"
-              value={alignment}
-              exclusive
-              onChange={handleChange}
-              aria-label="Platform"
-            >
-              <ToggleButton value="original"><TextSnippetIcon /></ToggleButton>
-              <ToggleButton value="translated"><GTranslateIcon /></ToggleButton>
-              <ToggleButton value="Mixed">Mixed</ToggleButton>
-            </ToggleButtonGroup>
 
           </div>
           <div
@@ -1163,8 +1138,8 @@ function DragnDrop(props) {
         language={props.language}
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
-        DialogTitle={t('plannerPage.Delete_Task')}
-        DialogContent={t('plannerPage.Are_you_sure_you_want_to_delete_this_task')}
+        DialogTitle="plannerPage.Delete_Task"
+        DialogContent="plannerPage.Are_you_sure_you_want_to_delete_this_task"
         handleCloseRemoveConfirm={handleCloseRemoveConfirm}
       />
     </>

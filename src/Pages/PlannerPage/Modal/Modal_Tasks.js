@@ -23,6 +23,7 @@ import Modal from '@mui/material/Modal';
 import { useNotification } from "../../../components/Notification/NotificationProvider";
 import { useTranslation } from 'react-i18next';
 import GalleryModalPopup from '../../../components/GalleryModalPopup/GalleryModalPopup';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 
 const style = {
@@ -526,7 +527,7 @@ function Modal_Tasks(props) {
               <div className='modalContainerTasks'>
                 <div className='headerNewTask'>
                   <div className='NewTaskTitle'>
-                    {t('plannerPage.New_task')}
+                    <I18nHoverText translationKey="plannerPage.New_task">{t('plannerPage.New_task')}</I18nHoverText>
                   </div>
                 </div>
                 <div
@@ -536,7 +537,7 @@ function Modal_Tasks(props) {
                   {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
                   <form id='IPU' className='w3-container'>
                     <h6>
-                      {t('plannerPage.Write_the_name_of_the_task')}
+                      <I18nHoverText translationKey="plannerPage.Write_the_name_of_the_task">{t('plannerPage.Write_the_name_of_the_task')}</I18nHoverText>
 
                       <RiAsterisk style={{ color: 'red' }} />
                     </h6>
@@ -557,7 +558,7 @@ function Modal_Tasks(props) {
                   </form>
                   <form id='IPU' className='w3-container'>
                     <h6>
-                      {t('plannerPage.Describe_the_task')}
+                      <I18nHoverText translationKey="plannerPage.Describe_the_task">{t('plannerPage.Describe_the_task')}</I18nHoverText>
                       <RiAsterisk style={{ color: 'red' }} />
                     </h6>
                     <p>
@@ -575,7 +576,7 @@ function Modal_Tasks(props) {
                     </p>
                   </form>
                   <div className='estimatedTimeContainer'>
-                    <h6>{t('plannerPage.Enter_the_estimated_time_in_seconds_for_the_task')}</h6>
+                    <h6><I18nHoverText translationKey="plannerPage.Enter_the_estimated_time_in_seconds_for_the_task">{t('plannerPage.Enter_the_estimated_time_in_seconds_for_the_task')}</I18nHoverText></h6>
                     <input
                       type='number'
                       name='estimatedTimeSeconds'
@@ -599,14 +600,14 @@ function Modal_Tasks(props) {
                         direction: props.language === 'English' ? 'rtl' : 'ltr',
                       }}
                     />
-                    {t('plannerPage.Add_additional_data')}
+                    <I18nHoverText translationKey="plannerPage.Add_additional_data">{t('plannerPage.Add_additional_data')}</I18nHoverText>
 
                   </label>
                   {showForm && (
                     <form id='IPU' className='w3-container'  >
                       <form id='IPU' className='w3-container'>
                         <h6>
-                          {t('plannerPage.Write_a_weight')}
+                          <I18nHoverText translationKey="plannerPage.Write_a_weight">{t('plannerPage.Write_a_weight')}</I18nHoverText>
                           <RiAsterisk style={{ color: 'red' }} />
                         </h6>
                         <p>
@@ -626,7 +627,7 @@ function Modal_Tasks(props) {
                       </form>
                       <form id='IPU' className='w3-container'>
                         <h6>
-                          {t('plannerPage.Write_Data_Entry_Validation')}
+                          <I18nHoverText translationKey="plannerPage.Write_Data_Entry_Validation">{t('plannerPage.Write_Data_Entry_Validation')}</I18nHoverText>
                           <RiAsterisk style={{ color: 'red' }} />
                         </h6>
                         <p>
@@ -645,17 +646,17 @@ function Modal_Tasks(props) {
                         </p>
                       </form>
                       <h6>
-                        {t('plannerPage.Select_data_entry_type')}
+                        <I18nHoverText translationKey="plannerPage.Select_data_entry_type">{t('plannerPage.Select_data_entry_type')}</I18nHoverText>
                       </h6>
                       <BasicSelect setFoldersite={setdataEntryType} folderName={dataEntryType} folderlist={dataEntryTypelist} />
                       <h6>
-                        {t('plannerPage.Select_task_type')}
+                        <I18nHoverText translationKey="plannerPage.Select_task_type">{t('plannerPage.Select_task_type')}</I18nHoverText>
                       </h6>
                       <BasicSelect setFoldersite={setTaskType} folderName={taskType} folderlist={TaskTypelist} />
                     </form>
                   )}
                   <h6>
-                    {t('plannerPage.Select_where_to_save_picture_voice')}
+                    <I18nHoverText translationKey="plannerPage.Select_where_to_save_picture_voice">{t('plannerPage.Select_where_to_save_picture_voice')}</I18nHoverText>
                     <FcMultipleInputs />
                   </h6>
                   {/* <h6>
@@ -667,12 +668,12 @@ function Modal_Tasks(props) {
                   <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} /> */}
                   <form id='IPU' className='w3-container'>
                     <h6>
-                      {t('plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop')}
+                      <I18nHoverText translationKey="plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop">{t('plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop')}</I18nHoverText>
                       <FcMultipleInputs />
                     </h6>
                     <div>
                       <InputFileUpload setPicture={setPicture} language={props.language} />
-                      <Button variant="outlined" onClick={handleOpen}>{t('plannerPage.Gallery')}</Button>
+                      <Button variant="outlined" onClick={handleOpen}><I18nHoverText translationKey="plannerPage.Gallery">{t('plannerPage.Gallery')}</I18nHoverText></Button>
                       <Modal
                         open={open}
                         onClose={() => {
@@ -688,7 +689,7 @@ function Modal_Tasks(props) {
                       </Modal>
                       {picture ? (
                         <div className='selectedFileContainer'>
-                          <div className='selectedFileTitle'>{t('plannerPage.Selected_image')}</div>
+                          <div className='selectedFileTitle'><I18nHoverText translationKey="plannerPage.Selected_image">{t('plannerPage.Selected_image')}</I18nHoverText></div>
                           <div style={{ marginBottom: '1rem' }}>
                             {typeof picture === 'string'
                               ? extractFilenameFromURL(picture)
@@ -713,18 +714,20 @@ function Modal_Tasks(props) {
                         </div>
                       ) : (
                         <div style={{ marginBottom: '1rem' }}>
-                          {t('plannerPage.Selected_image_No_image_file_found')}
+                          <I18nHoverText translationKey="plannerPage.Selected_image_No_image_file_found">
+                            {t('plannerPage.Selected_image_No_image_file_found')}
+                          </I18nHoverText>
                         </div>
                       )}
                     </div>
                   </form>
                   <form id='IPU' className='w3-container'>
                     <h6>
-                      {t('plannerPage.Add_a_voice_clip_describing_the_task')}
+                      <I18nHoverText translationKey="plannerPage.Add_a_voice_clip_describing_the_task">{t('plannerPage.Add_a_voice_clip_describing_the_task')}</I18nHoverText>
                       <FcMultipleInputs />
                     </h6>
                     <InputFileUpload setPicture={setAudio} language={props.language} />
-                    <Button variant="outlined" onClick={handleOpen2}>{t('plannerPage.Gallery_audio')}</Button>
+                    <Button variant="outlined" onClick={handleOpen2}><I18nHoverText translationKey="plannerPage.Gallery_audio">{t('plannerPage.Gallery_audio')}</I18nHoverText></Button>
                     <Modal
                       open={open2}
                       onClose={() => {
@@ -743,7 +746,7 @@ function Modal_Tasks(props) {
                     <div className='selectedFileContainertask'>
                       <div className='selectedFileTitle'>
                         <span>:</span>
-                        {t('plannerPage.Selected_audio')}
+                        <I18nHoverText translationKey="plannerPage.Selected_audio">{t('plannerPage.Selected_audio')}</I18nHoverText>
                       </div>
                       <div className='audioNameContainer'>
                         <div style={{ marginBottom: '1rem' }}>
@@ -758,7 +761,7 @@ function Modal_Tasks(props) {
                               onClick={handlePlayClick}
                             >
                               {/* {audio} */}
-                              {t('plannerPage.Play')}
+                              <I18nHoverText translationKey="plannerPage.Play">{t('plannerPage.Play')}</I18nHoverText>
                             </button>
                           )}
                         </div>
@@ -773,15 +776,17 @@ function Modal_Tasks(props) {
                     </div>
                   ) : (
                     <div style={{ marginBottom: '1rem' }}>
-                      {t('plannerPage.Selected_audio_No_audio_file_found')}
+                      <I18nHoverText translationKey="plannerPage.Selected_audio_No_audio_file_found">
+                        {t('plannerPage.Selected_audio_No_audio_file_found')}
+                      </I18nHoverText>
                     </div>
                   )}
                   <h6>
-                    {t('plannerPage.add_multi_language')}
+                    <I18nHoverText translationKey="plannerPage.add_multi_language">{t('plannerPage.add_multi_language')}</I18nHoverText>
                     <IoMdCheckbox style={{ color: 'blue' }} />
                   </h6>
                   <Button variant="outlined" onClick={handleOpen3}>
-                    {t('plannerPage.language')}
+                    <I18nHoverText translationKey="plannerPage.language">{t('plannerPage.language')}</I18nHoverText>
                   </Button>
                   <Modal
                     open={open3}
@@ -831,11 +836,11 @@ function Modal_Tasks(props) {
                     </Box>
                   </Modal>
                   <h6>
-                    {t('plannerPage.add_additional_help')}
+                    <I18nHoverText translationKey="plannerPage.add_additional_help">{t('plannerPage.add_additional_help')}</I18nHoverText>
                     <IoMdCheckbox style={{ color: 'blue' }} />
                   </h6>
                   <Button variant="outlined" onClick={handleOpen4}>
-                    {t('plannerPage.additional_help')}
+                    <I18nHoverText translationKey="plannerPage.additional_help">{t('plannerPage.additional_help')}</I18nHoverText>
                   </Button>
                   <Modal
                     open={open4}
@@ -860,7 +865,9 @@ function Modal_Tasks(props) {
                   </Modal>
                   <div className='list-group'>
                     <h6>
-                      {t('plannerPage.Select_the_stations_you_want_to_associate_the_task_with')}
+                      <I18nHoverText translationKey="plannerPage.Select_the_stations_you_want_to_associate_the_task_with">
+                        {t('plannerPage.Select_the_stations_you_want_to_associate_the_task_with')}
+                      </I18nHoverText>
                       <IoMdCheckbox style={{ color: 'blue' }} />
                     </h6>
                     <div className='allTasks'>

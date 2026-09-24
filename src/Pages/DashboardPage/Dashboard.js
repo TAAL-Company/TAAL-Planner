@@ -52,20 +52,25 @@ const Dashboard = () => {
     {
       id: 1,
       headline: t('Dashboard.sites'),
+      headlineKey: 'Dashboard.sites',
       addLabel: t('Dashboard.addSite'),
+      addLabelKey: 'Dashboard.addSite',
       image: location,
       color: '#f29d38'
     },
     {
       id: 2,
       headline: t('Dashboard.employees'),
+      headlineKey: 'Dashboard.employees',
       addLabel: t('Dashboard.addEmployee'),
+      addLabelKey: 'Dashboard.addEmployee',
       image: group,
       color: '#b1cdf9'
     },
     {
       id: 3,
       headline: t('Dashboard.routes'),
+      headlineKey: 'Dashboard.routes',
       addLabel: '',
       image: route,
       color: '#5bcfd0'
@@ -73,41 +78,52 @@ const Dashboard = () => {
     {
       id: 4,
       headline: t('Dashboard.professions'),
+      headlineKey: 'Dashboard.professions',
       addLabel: t('Dashboard.addProfession'),
+      addLabelKey: 'Dashboard.addProfession',
       image: Professions,
       color: '#f191c2'
     },
     {
       id: 5,
       headline: t('Dashboard.gallery'),
+      headlineKey: 'Dashboard.gallery',
       addLabel: t('Dashboard.addImage'),
+      addLabelKey: 'Dashboard.addImage',
       image: galleryImage,
       color: '#c5d1da'
     },
     {
       id: 6,
       headline: t('Dashboard.coaches'),
+      headlineKey: 'Dashboard.coaches',
       addLabel: t('Dashboard.addCoach'),
+      addLabelKey: 'Dashboard.addCoach',
       image: coachImage,
       color: '#3eacec'
     },
     {
       id: 7,
       headline: t('Dashboard.health'),
+      headlineKey: 'Dashboard.health',
       addLabel: t('Dashboard.addHealth'),
+      addLabelKey: 'Dashboard.addHealth',
       image: kashrut,
       color: '#57c47d'
     },
     {
       id: 8,
       headline: t('Dashboard.community'),
+      headlineKey: 'Dashboard.community',
       addLabel: t('Dashboard.addCommunity'),
+      addLabelKey: 'Dashboard.addCommunity',
       image: communityImage,
       color: '#65befc'
     },
     {
       id: 9,
       headline: t('Dashboard.addRoute'),
+      headlineKey: 'Dashboard.addRoute',
       addLabel: '',
       image: route,
       color: '#57c8ca'
@@ -115,7 +131,9 @@ const Dashboard = () => {
     {
       id: 10,
       headline: t('Dashboard.editor'),
+      headlineKey: 'Dashboard.editor',
       addLabel: t('Dashboard.addEditor'),
+      addLabelKey: 'Dashboard.addEditor',
       image: coachImage,
       color: '#57c8ca'
     },

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Modal.css';
 import { baseUrl } from '../../../config';
 import { useTranslation } from 'react-i18next';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 // import Dot from '../Dot/Dot';
 //--------------------------
 let getPicture, getSound;
@@ -38,7 +39,11 @@ const Modal_Help = ({ setModalOpen, idTasks }) => {
           </button>
         </div>
 
-        <div className='HelpTxt'>{t('plannerPage.A_request_was_sent_to_the_assistant')} {complete_name}</div>
+        <div className='HelpTxt'>
+          <I18nHoverText translationKey="plannerPage.A_request_was_sent_to_the_assistant">
+            {t('plannerPage.A_request_was_sent_to_the_assistant')}
+          </I18nHoverText> {complete_name}
+        </div>
       </div>
     </>
   );

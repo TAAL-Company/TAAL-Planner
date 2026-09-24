@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import Radio from '@mui/material/Radio';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useTranslation } from 'react-i18next';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 function Model_assigned_route_to_parent({
   setOpenModalRouteChosen,
@@ -64,7 +65,7 @@ function Model_assigned_route_to_parent({
       <Box className='headerNewRoute'
         dir={language === 'English' ? 'ltr' : 'rtl'} >
         <Box className='newRoutTitle'>
-          {t("plannerPage.Save_Route")}
+          <I18nHoverText translationKey="plannerPage.Save_Route">{t("plannerPage.Save_Route")}</I18nHoverText>
         </Box>
       </Box>
       <Box className='bodySaveRoute'
@@ -74,7 +75,7 @@ function Model_assigned_route_to_parent({
         }}
       >
         <Box>
-          {t("plannerPage.Name_of_the_route")}
+          <I18nHoverText translationKey="plannerPage.Name_of_the_route">{t("plannerPage.Name_of_the_route")}</I18nHoverText>
         </Box>
         <input
           className='inputRouteName'
@@ -85,7 +86,7 @@ function Model_assigned_route_to_parent({
           onChange={(e) => setRouteTitle(e.target.value)}
         ></input>
         <Box>
-          {t("plannerPage.List_of_Routes")}
+          <I18nHoverText translationKey="plannerPage.List_of_Routes">{t("plannerPage.List_of_Routes")}</I18nHoverText>
         </Box>
         <input
           type='text'
@@ -116,7 +117,7 @@ function Model_assigned_route_to_parent({
       </Box>
       <Box className='footer'>
         <button className='continueBtn' onClick={Post_new_Route}>
-          {t("plannerPage.Save_Route")}
+          <I18nHoverText translationKey="plannerPage.Save_Route">{t("plannerPage.Save_Route")}</I18nHoverText>
         </button>
         <button
           className='cancelBtn'
@@ -124,7 +125,7 @@ function Model_assigned_route_to_parent({
             setOpenModalRouteChosen(false);
           }}
         >
-          {t("plannerPage.Cancel")}
+          <I18nHoverText translationKey="plannerPage.Cancel">{t("plannerPage.Cancel")}</I18nHoverText>
         </button>
       </Box>
     </Box>

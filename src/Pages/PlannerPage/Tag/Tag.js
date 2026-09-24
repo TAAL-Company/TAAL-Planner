@@ -7,6 +7,7 @@ import Images from '../Images/Images';
 import Audios from '../../../components/junk/Audios/Audios';
 import Modal_dropdown from '../Modal/Modal_dropdown';
 import Badge from '@mui/material/Badge';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 function Tag({
   keyCount,
@@ -118,7 +119,7 @@ function Tag({
                     color: '#666',
                     fontStyle: 'italic'
                   }}>
-                    <strong>{t('plannerPage.Loop')}:</strong> 
+                    <strong><I18nHoverText translationKey="plannerPage.Loop">{t('plannerPage.Loop')}</I18nHoverText>:</strong> 
                     {`${t('plannerPage.Duration')} ${selectedRoute.loops.find((loop) => Station.id === loop.stationid)?.loopDuration},
                       ${t('plannerPage.End_Time')} ${selectedRoute.loops.find((loop) => Station.id === loop.stationid)?.loopUntil}, 
                       ${t('plannerPage.Iterations')} ${selectedRoute.loops.find((loop) => Station.id === loop.stationid)?.loopIteration}`}

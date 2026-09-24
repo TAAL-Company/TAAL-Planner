@@ -15,6 +15,7 @@ import {
 } from '../../../api/api';
 import { useNotification } from "../../../components/Notification/NotificationProvider";
 import { useTranslation } from 'react-i18next';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 
 //--------------------------
@@ -186,7 +187,7 @@ const Modal_Stations = (props) => {
               <img src={stopIcon} alt='logo'></img>
             </div>
             <div className='body' style={{ textAlign: 'center' }}>
-              <h4> {t('plannerPage.You_must_first_select_a_site_then_associate_a_station_with_it')}</h4>
+              <h4> <I18nHoverText translationKey="plannerPage.You_must_first_select_a_site_then_associate_a_station_with_it">{t('plannerPage.You_must_first_select_a_site_then_associate_a_station_with_it')}</I18nHoverText></h4>
             </div>
             <div className='footer'>
               <button
@@ -195,7 +196,7 @@ const Modal_Stations = (props) => {
                   props.setOpenModalPlaces(false);
                 }}
               >
-                {t('Close')}
+                <I18nHoverText translationKey="Close">{t('Close')}</I18nHoverText>
               </button>
             </div>
           </div>
@@ -211,7 +212,11 @@ const Modal_Stations = (props) => {
                   textAlign: props.language === 'English' ? 'right' : 'left',
                 }}
               >
-                {props.requestForEditing ? t('plannerPage.Edit_station') : t('plannerPage.New_station')}
+                {props.requestForEditing ? (
+                  <I18nHoverText translationKey="plannerPage.Edit_station">{t('plannerPage.Edit_station')}</I18nHoverText>
+                ) : (
+                  <I18nHoverText translationKey="plannerPage.New_station">{t('plannerPage.New_station')}</I18nHoverText>
+                )}
               </div>
             </div>
             <div
@@ -222,7 +227,7 @@ const Modal_Stations = (props) => {
             >
               <form id='IPU' className='w3-container'>
                 <h6>
-                  {t('plannerPage.Write_the_station_name')}
+                  <I18nHoverText translationKey="plannerPage.Write_the_station_name">{t('plannerPage.Write_the_station_name')}</I18nHoverText>
                   <RiAsterisk style={{ color: 'red' }} />
                 </h6>
                 <p>
@@ -242,7 +247,7 @@ const Modal_Stations = (props) => {
               </form>
               <form id='IPU' className='w3-container'>
                 <h6>
-                  {t('plannerPage.Describe_the_station')}
+                  <I18nHoverText translationKey="plannerPage.Describe_the_station">{t('plannerPage.Describe_the_station')}</I18nHoverText>
                   <RiAsterisk style={{ color: 'red' }} />
                 </h6>
                 <p>

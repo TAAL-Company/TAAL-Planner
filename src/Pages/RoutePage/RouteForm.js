@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { insertRoute, updateRoute } from '../../api/api';
 import { useNotification } from '../../components/Notification/NotificationProvider';
 import MultipleSelect from '../../components/MultipleSelectCheckmarks/MultipleSelectCheckmarks';
+import I18nHoverText from '../../components/I18nHoverText/I18nHoverText';
 
 export default function RouteForm({
   open,
@@ -45,7 +46,7 @@ export default function RouteForm({
 
   const validate = () => {
     let tempErrors = {};
-    if (!formValues.name) tempErrors.name = t("FormsErrors.nameRequired");
+    if (!formValues.name) tempErrors.name = t("FormsErrors.NameRequired");
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
@@ -77,13 +78,17 @@ export default function RouteForm({
     handleCloseDialog();
   };
 
+  const titleKey = RouteAction === 'edit' ? 'RoutePage.EditRouteInfo' : 'RoutePage.ADDANewRoute';
+
   return (
     <Dialog open={open} onClose={handleCloseDialog} style={{ direction: t('Direction') }}>
-      <DialogTitle>{title}</DialogTitle>
+      <DialogTitle>
+        <I18nHoverText translationKey={titleKey}>{title}</I18nHoverText>
+      </DialogTitle>
       <DialogContent dir={t('Direction')}>
         <TextField
           required
-          label={t("Route.Name")}
+          label={<I18nHoverText translationKey="Route.Name">{t("Route.Name")}</I18nHoverText>}
           fullWidth
           value={formValues.name}
           onChange={handleChange('name')}
@@ -92,14 +97,16 @@ export default function RouteForm({
           helperText={errors.name}
         />
         <TextField
-          label={t("Route.multi_language_description")}
+          label={<I18nHoverText translationKey="Route.multi_language_description">{t("Route.multi_language_description")}</I18nHoverText>}
           fullWidth
           value={formValues.multi_language_description}
           onChange={handleChange('multi_language_description')}
           margin="normal"
         />
         <FormControl fullWidth margin="normal">
-          <InputLabel>{t("Route.ParentRouteId")}</InputLabel>
+          <InputLabel>
+            <I18nHoverText translationKey="Route.ParentRouteId">{t("Route.ParentRouteId")}</I18nHoverText>
+          </InputLabel>
           <Select
             value={formValues.parentRouteId}
             onChange={handleChange('parentRouteId')}
@@ -113,6 +120,7 @@ export default function RouteForm({
         </FormControl>
         <MultipleSelect
           label={t("Forms.Select_Sites")}
+          translationKey="Forms.Select_Sites"
           formValues={formValues}
           handleChange={handleChange}
           sites={sites}
@@ -125,12 +133,12 @@ export default function RouteForm({
               onChange={handleChange('OnlyOnce')}
             />
           }
-          label={t("Route.OnlyOnce")}
+          label={<I18nHoverText translationKey="Route.OnlyOnce">{t("Route.OnlyOnce")}</I18nHoverText>}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleCloseDialog}>{t("Forms.Cancel")}</Button>
-        <Button onClick={handleSubmit}>{t("Forms.Submit")}</Button>
+        <Button onClick={handleCloseDialog}><I18nHoverText translationKey="Forms.Cancel">{t("Forms.Cancel")}</I18nHoverText></Button>
+        <Button onClick={handleSubmit}><I18nHoverText translationKey="Forms.Submit">{t("Forms.Submit")}</I18nHoverText></Button>
       </DialogActions>
     </Dialog>
   );

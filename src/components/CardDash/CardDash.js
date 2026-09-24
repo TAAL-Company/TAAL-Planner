@@ -3,6 +3,7 @@ import { Card, CardContent, Typography, Box, IconButton, Link as MuiLink } from 
 import { styled } from '@mui/system';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useHistory } from 'react-router-dom';
+import I18nHoverText from '../I18nHoverText/I18nHoverText';
 
 const StyledCard = styled(Card)(({ isHover, color }) => ({
   width: 300,
@@ -90,7 +91,11 @@ const CardDash = ({ cards }) => {
         sx={{ width: '100%', height: '100%', cursor: 'pointer' }}
         onClick={() => handleHeadlineLink(cards.id)}
       >
-        <Headline>{cards.headline}</Headline>
+        <Headline>
+          <I18nHoverText translationKey={cards.headlineKey} component="span">
+            {cards.headline}
+          </I18nHoverText>
+        </Headline>
         <ImageBackground bgcolor={cards.color}>
           <Box
             component="img"
@@ -103,7 +108,9 @@ const CardDash = ({ cards }) => {
 
       {cards.addLabel && (
         <AddLink onClick={() => handleAddLink(cards.id)}>
-          {cards.addLabel}
+          <I18nHoverText translationKey={cards.addLabelKey} component="span">
+            {cards.addLabel}
+          </I18nHoverText>
           <AiOutlinePlus style={{ color: '#0d4264', marginLeft: 4 }} />
         </AddLink>
       )}

@@ -16,6 +16,7 @@ import { DndProvider } from 'react-dnd';
 import DragnDrop from '../DragnDrop/DragnDrop';
 import { useNotification } from "../../../components/Notification/NotificationProvider";
 import LoopPopUpInput from './../../../components/LoopPopUpInputs/LoopPopUpInput';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 //-----------------------
 // let allTasks = [];
@@ -389,7 +390,7 @@ const Stations = (props) => {
                       }}
                     onClick={props.handleDeselectRoute}
                     >
-                      {t("plannerPage.Show_all_Stations")}
+                      <I18nHoverText translationKey="plannerPage.Show_all_Stations">{t("plannerPage.Show_all_Stations")}</I18nHoverText>
                     </button>
                   </div>
                 </div>
@@ -560,7 +561,6 @@ const Stations = (props) => {
             setBoard={props.setBoard}
             filteredDataRoutes={props.filteredDataRoutes}
             setFilteredDataRoutes={props.setFilteredDataRoutes}
-            setTranslateData={props.setTranslateData}
             dropToBoard={props.dropToBoard}
             setDropToBoard={props.setDropToBoard}
             setStationArray={props.setStationArray}
@@ -608,8 +608,8 @@ const Stations = (props) => {
         language={props.language}
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
-        DialogTitle={t('plannerPage.Delete_Station')}
-        DialogContent={t('plannerPage.Are_you_sure_you_want_to_delete_this_station')}
+        DialogTitle="plannerPage.Delete_Station"
+        DialogContent="plannerPage.Are_you_sure_you_want_to_delete_this_station"
         handleCloseRemoveConfirm={handleCloseRemoveConfirm}
       />
       <LoopPopUpInput

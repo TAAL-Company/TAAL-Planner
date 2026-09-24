@@ -4,17 +4,23 @@ import TableViewIcon from '@mui/icons-material/TableView';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Avatar from '@mui/material/Avatar';
 import { useTranslation } from 'react-i18next';
+import I18nHoverText from '../../components/I18nHoverText/I18nHoverText';
 
 const Columns = ({ handleClickMenu, handlePopupOpen }) => {
   const { t } = useTranslation();
+  // DataGrid headerName stays a plain string (used for sorting/column menu a11y text); renderHeader adds the hover.
+  const renderHeaderWithHover = (key) => () => (
+    <I18nHoverText translationKey={key}>{t(key)}</I18nHoverText>
+  );
 
   const columns = [
-    { field: 'name', headerName: t('Route.Name'), width: 180 },
-    { field: 'OnlyOnce', headerName: t('Route.OnlyOnce'), width: 100, type: 'boolean', },
-    { field: 'parentRouteId', headerName: t('Route.ParentRouteId'), width: 220, },
+    { field: 'name', headerName: t('Route.Name'), renderHeader: renderHeaderWithHover('Route.Name'), width: 180 },
+    { field: 'OnlyOnce', headerName: t('Route.OnlyOnce'), renderHeader: renderHeaderWithHover('Route.OnlyOnce'), width: 100, type: 'boolean', },
+    { field: 'parentRouteId', headerName: t('Route.ParentRouteId'), renderHeader: renderHeaderWithHover('Route.ParentRouteId'), width: 220, },
     {
       field: 'created_at',
       headerName: t('Route.CreatedAt'),
+      renderHeader: renderHeaderWithHover('Route.CreatedAt'),
       width: 150,
       valueGetter: (params) => {
         const createdAt = params.row.createdAt;
@@ -24,6 +30,7 @@ const Columns = ({ handleClickMenu, handlePopupOpen }) => {
     {
       field: 'tasks',
       headerName: t('Route.tasks'),
+      renderHeader: renderHeaderWithHover('Route.tasks'),
       width: 100,
       renderCell: (params) =>
         Array.isArray(params.row.tasks) && params.row.tasks.length > 0 ? (
@@ -35,6 +42,7 @@ const Columns = ({ handleClickMenu, handlePopupOpen }) => {
     {
       field: 'students',
       headerName: t('SitePage.Users'),
+      renderHeader: renderHeaderWithHover('SitePage.Users'),
       width: 100,
       renderCell: (params) =>
         Array.isArray(params.row.students) && params.row.students.length > 0 ? (
@@ -46,6 +54,7 @@ const Columns = ({ handleClickMenu, handlePopupOpen }) => {
     {
       field: 'sites',
       headerName: t('RoutePage.sites'),
+      renderHeader: renderHeaderWithHover('RoutePage.sites'),
       width: 200,
       valueGetter: (params) => {
         // If your route has a sites array, show their names
@@ -69,11 +78,12 @@ const Columns = ({ handleClickMenu, handlePopupOpen }) => {
 
   // Columns for the popup tables
   const taskColumns = [
-    { field: 'position', headerName: t('Planner.Tasks.Title'), width: 90, resizable: true, flex: 0.5 },
-    { field: 'title', headerName: t('Task.title'), width: 180, resizable: true, flex: 1 },
+    { field: 'position', headerName: t('Planner.Tasks.Title'), renderHeader: renderHeaderWithHover('Planner.Tasks.Title'), width: 90, resizable: true, flex: 0.5 },
+    { field: 'title', headerName: t('Task.title'), renderHeader: renderHeaderWithHover('Task.title'), width: 180, resizable: true, flex: 1 },
     {
       field: 'picture_url',
       headerName: t('Planner.Tasks.picture_url'),
+      renderHeader: renderHeaderWithHover('Planner.Tasks.picture_url'),
       width: 80,
       resizable: true,
       flex: 0.5,
@@ -85,13 +95,13 @@ const Columns = ({ handleClickMenu, handlePopupOpen }) => {
   ];
 
   const studentColumns = [
-    { field: 'name', headerName: t('UserPage.Name'), width: 120, resizable: true, flex: 1 },
-    { field: 'user_name', headerName: t('UserPage.Username'), width: 140, resizable: true, flex: 1 },
-    { field: 'email', headerName: t('UserPage.Email'), width: 180, resizable: true, flex: 1.5 },
-    { field: 'phone', headerName: t('UserPage.Phone'), width: 120, resizable: true, flex: 1 },
-    { field: 'role', headerName: t('UserPage.Role'), width: 100, resizable: true, flex: 0.7 },
-    { field: 'lastLoginAt', headerName: t('UserPage.LastLoginAt'), width: 160, resizable: true, flex: 1, valueGetter: (params) => params.value ? new Date(params.value).toLocaleString() : '' },
-    { field: 'createdAt', headerName: t('UserPage.CreatedAt'), width: 160, resizable: true, flex: 1, valueGetter: (params) => params.value ? new Date(params.value).toLocaleString() : '' },
+    { field: 'name', headerName: t('UserPage.Name'), renderHeader: renderHeaderWithHover('UserPage.Name'), width: 120, resizable: true, flex: 1 },
+    { field: 'user_name', headerName: t('UserPage.Username'), renderHeader: renderHeaderWithHover('UserPage.Username'), width: 140, resizable: true, flex: 1 },
+    { field: 'email', headerName: t('UserPage.Email'), renderHeader: renderHeaderWithHover('UserPage.Email'), width: 180, resizable: true, flex: 1.5 },
+    { field: 'phone', headerName: t('UserPage.Phone'), renderHeader: renderHeaderWithHover('UserPage.Phone'), width: 120, resizable: true, flex: 1 },
+    { field: 'role', headerName: t('UserPage.Role'), renderHeader: renderHeaderWithHover('UserPage.Role'), width: 100, resizable: true, flex: 0.7 },
+    { field: 'lastLoginAt', headerName: t('UserPage.LastLoginAt'), renderHeader: renderHeaderWithHover('UserPage.LastLoginAt'), width: 160, resizable: true, flex: 1, valueGetter: (params) => params.value ? new Date(params.value).toLocaleString() : '' },
+    { field: 'createdAt', headerName: t('UserPage.CreatedAt'), renderHeader: renderHeaderWithHover('UserPage.CreatedAt'), width: 160, resizable: true, flex: 1, valueGetter: (params) => params.value ? new Date(params.value).toLocaleString() : '' },
   ];
 
   return { columns, taskColumns, studentColumns };

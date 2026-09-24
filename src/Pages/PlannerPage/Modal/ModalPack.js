@@ -23,6 +23,7 @@ import ReactLoading from "react-loading";
 
 
 import { useTranslation } from 'react-i18next';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 function ModalPack({
   setOpenModalPack,
   setFlagStudent,
@@ -139,17 +140,17 @@ function ModalPack({
         dir={language !== 'English' ? 'ltr' : 'rtl'} // Dynamically set direction
       >
         {loading ? (<div className="modalContainerLittleLoading" style={{ marginTop: '0%', marginLeft: '0%' }}>
-          <h2 style={{ color: "white" }}>{t("plannerPage.Loading")}</h2>
+          <h2 style={{ color: "white" }}><I18nHoverText translationKey="plannerPage.Loading">{t("plannerPage.Loading")}</I18nHoverText></h2>
           <ReactLoading />
         </div>) : (
           <>
             <DialogTitle style={{ backgroundColor: '#ad10d4', textAlign: language !== 'English' ? 'left' : 'right' }}>
-              {t("plannerPage.Save_Pack")}
+              <I18nHoverText translationKey="plannerPage.Save_Pack">{t("plannerPage.Save_Pack")}</I18nHoverText>
             </DialogTitle>
             <DialogContent dividers style={{ maxHeight: '80vh', overflowY: 'auto' }}>
               <form onSubmit={handleSubmitPackTitle}>
                 <div>
-                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{t("plannerPage.Pack_name")}</label>
+                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}><I18nHoverText translationKey="plannerPage.Pack_name">{t("plannerPage.Pack_name")}</I18nHoverText></label>
                   <input
                     type="text"
                     value={packTitle}
@@ -160,7 +161,7 @@ function ModalPack({
                   />
                 </div>
                 <div>
-                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{t("plannerPage.Pack_description")}</label>
+                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}><I18nHoverText translationKey="plannerPage.Pack_description">{t("plannerPage.Pack_description")}</I18nHoverText></label>
                   <textarea
                     value={packDescription}
                     onChange={(e) => setPackDescription(e.target.value)}
@@ -170,7 +171,7 @@ function ModalPack({
                   />
                 </div>
                 <div>
-                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{t("plannerPage.Select_Routes_Ordered")}</label>
+                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}><I18nHoverText translationKey="plannerPage.Select_Routes_Ordered">{t("plannerPage.Select_Routes_Ordered")}</I18nHoverText></label>
                   <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #ccc', padding: '10px', borderRadius: '5px' }}>
                     {availableRoutes.map((route) => (
                       <div key={route.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
@@ -191,7 +192,7 @@ function ModalPack({
                     ))}
                   </div>
                   <div style={{ marginTop: '10px' }}>
-                    <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{t("plannerPage.Selected_Routes_Order")}</label>
+                    <label dir={language !== 'English' ? 'ltr' : 'rtl'}><I18nHoverText translationKey="plannerPage.Selected_Routes_Order">{t("plannerPage.Selected_Routes_Order")}</I18nHoverText></label>
                     <ol style={{ paddingLeft: '20px' }}>
                       {selectedRouteIds.map((id) => {
                         const route = availableRoutes.find((route) => route.id === id);
@@ -201,7 +202,7 @@ function ModalPack({
                   </div>
                 </div>
                 <div>
-                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{t("plannerPage.Select_Editors")}</label>
+                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}><I18nHoverText translationKey="plannerPage.Select_Editors">{t("plannerPage.Select_Editors")}</I18nHoverText></label>
                   <Autocomplete
                     multiple
                     options={availableEditors}
@@ -224,7 +225,7 @@ function ModalPack({
                       <TextField
                         {...params}
                         variant="outlined"
-                        label={t("plannerPage.Editors")}
+                        label={<I18nHoverText translationKey="plannerPage.Editors">{t("plannerPage.Editors")}</I18nHoverText>}
                         placeholder={t("plannerPage.Select_Editors")}
                         dir={language !== 'English' ? 'ltr' : 'rtl'} // Dynamically set direction
                       />
@@ -233,7 +234,7 @@ function ModalPack({
                   />
                 </div>
                 <div>
-                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}>{t("plannerPage.Select_Users")}</label>
+                  <label dir={language !== 'English' ? 'ltr' : 'rtl'}><I18nHoverText translationKey="plannerPage.Select_Users">{t("plannerPage.Select_Users")}</I18nHoverText></label>
                   <Autocomplete
                     multiple
                     options={availableUsers}
@@ -256,7 +257,7 @@ function ModalPack({
                       <TextField
                         {...params}
                         variant="outlined"
-                        label={t("plannerPage.Users")}
+                        label={<I18nHoverText translationKey="plannerPage.Users">{t("plannerPage.Users")}</I18nHoverText>}
                         placeholder={t("plannerPage.Select_Users")}
                         dir={language !== 'English' ? 'ltr' : 'rtl'} // Dynamically set direction
                       />
@@ -268,10 +269,10 @@ function ModalPack({
             </DialogContent>
             <DialogActions>
               <Button onClick={() => setOpenModalPack(false)} color="secondary">
-                {t("plannerPage.Cancel")}
+                <I18nHoverText translationKey="plannerPage.Cancel">{t("plannerPage.Cancel")}</I18nHoverText>
               </Button>
               <Button onClick={handleSubmitPackTitle} color="primary">
-                {t("plannerPage.Save")}
+                <I18nHoverText translationKey="plannerPage.Save">{t("plannerPage.Save")}</I18nHoverText>
               </Button>
             </DialogActions>
           </>

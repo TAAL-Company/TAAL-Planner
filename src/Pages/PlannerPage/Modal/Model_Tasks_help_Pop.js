@@ -12,6 +12,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { useTranslation } from 'react-i18next';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 const style = {
     position: 'absolute',
@@ -191,7 +192,7 @@ function Model_Tasks_Pop(props) {
         >
             <div className='headerNewTask'>
                 <div className='NewTaskTitle'>
-                    {t("plannerPage.Task_Help_Details")}
+                    <I18nHoverText translationKey="plannerPage.Task_Help_Details">{t("plannerPage.Task_Help_Details")}</I18nHoverText>
                 </div>
             </div>
             <div
@@ -200,7 +201,7 @@ function Model_Tasks_Pop(props) {
             >
                 <form id='IPU' className='w3-container'>
                     <h6>
-                        {t("plannerPage.Write_additional_help_text")}
+                        <I18nHoverText translationKey="plannerPage.Write_additional_help_text">{t("plannerPage.Write_additional_help_text")}</I18nHoverText>
 
                         <RiAsterisk style={{ color: 'red' }} />
                     </h6>
@@ -227,17 +228,19 @@ function Model_Tasks_Pop(props) {
                 </h6>
                 <BasicSelect setFoldersite={setFoldersite} folderName={Foldersite} folderlist={folderNames} /> */}
                 <h6>
-                    {t("plannerPage.Site_where_the_image_voice_will_be_save") + props.siteNameInEnglish}
+                    <I18nHoverText translationKey="plannerPage.Site_where_the_image_voice_will_be_save">
+                        {t("plannerPage.Site_where_the_image_voice_will_be_save") + props.siteNameInEnglish}
+                    </I18nHoverText>
                     <FcMultipleInputs />
                 </h6>
                 <form id='IPU' className='w3-container'>
                     <h6>
-                        {t("plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop")}
+                        <I18nHoverText translationKey="plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop">{t("plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop")}</I18nHoverText>
                         <FcMultipleInputs />
                     </h6>
                     <div>
                         <InputFileUpload setPicture={setPicture} language={props.language} />
-                        <Button variant="outlined" onClick={handleOpen}>{t('plannerPage.Gallery')}</Button>
+                        <Button variant="outlined" onClick={handleOpen}><I18nHoverText translationKey="plannerPage.Gallery">{t('plannerPage.Gallery')}</I18nHoverText></Button>
                         <Modal
                             open={open}
                             onClose={() => {
@@ -253,7 +256,7 @@ function Model_Tasks_Pop(props) {
                         </Modal>
                         {picture ? (
                             <div className='selectedFileContainertask'>
-                                <div className='selectedFileTitle'>{t("plannerPage.Selected_image")}</div>
+                                <div className='selectedFileTitle'><I18nHoverText translationKey="plannerPage.Selected_image">{t("plannerPage.Selected_image")}</I18nHoverText></div>
                                 <div style={{ marginBottom: '1rem' }}>
                                     {typeof picture === 'string'
                                         ? extractFilenameFromURL(picture)
@@ -271,18 +274,18 @@ function Model_Tasks_Pop(props) {
                             </div>
                         ) : (
                             <div style={{ marginBottom: '1rem' }}>
-                                {t("plannerPage.Selected_image_No_image_file_found")}
+                                <I18nHoverText translationKey="plannerPage.Selected_image_No_image_file_found">{t("plannerPage.Selected_image_No_image_file_found")}</I18nHoverText>
                             </div>
                         )}
                     </div>
                 </form>
                 <form id='IPU' className='w3-container'>
                     <h6>
-                        {t("plannerPage.Add_a_voice_clip_describing_the_task")}
+                        <I18nHoverText translationKey="plannerPage.Add_a_voice_clip_describing_the_task">{t("plannerPage.Add_a_voice_clip_describing_the_task")}</I18nHoverText>
                         <FcMultipleInputs />
                     </h6>
                     <InputFileUpload setPicture={setAudio} language={props.language} />
-                    <Button variant="outlined" onClick={handleOpen2}>{t("plannerPage.Gallery_audio")}</Button>
+                    <Button variant="outlined" onClick={handleOpen2}><I18nHoverText translationKey="plannerPage.Gallery_audio">{t("plannerPage.Gallery_audio")}</I18nHoverText></Button>
                     <Modal
                         open={open2}
                         onClose={() => {
@@ -300,7 +303,7 @@ function Model_Tasks_Pop(props) {
                         <div className='selectedFileContainertask'>
                             <div className='selectedFileTitle'>
                                 <span>:</span>
-                                {t("plannerPage.Selected_audio")}
+                                <I18nHoverText translationKey="plannerPage.Selected_audio">{t("plannerPage.Selected_audio")}</I18nHoverText>
                             </div>
                             <div className='audioNameContainer'>
                                 <div style={{ marginBottom: '1rem' }}>
@@ -321,17 +324,17 @@ function Model_Tasks_Pop(props) {
                         </div>
                     ) : (
                         <div style={{ marginBottom: '1rem' }}>
-                            {t("plannerPage.Selected_audio_No_audio_file_found")}
+                            <I18nHoverText translationKey="plannerPage.Selected_audio_No_audio_file_found">{t("plannerPage.Selected_audio_No_audio_file_found")}</I18nHoverText>
                         </div>
                     )}
                 </form>
 
                 <form id='IPU' className='w3-container'>
                     <h6>
-                        {t("plannerPage.Add_additional_help_for_specific_user")}
+                        <I18nHoverText translationKey="plannerPage.Add_additional_help_for_specific_user">{t("plannerPage.Add_additional_help_for_specific_user")}</I18nHoverText>
                         <FcMultipleInputs />
                     </h6>
-                    <Button variant="outlined" onClick={handleOpen3}>{t("plannerPage.additional_help_for_specific_user")}</Button>
+                    <Button variant="outlined" onClick={handleOpen3}><I18nHoverText translationKey="plannerPage.additional_help_for_specific_user">{t("plannerPage.additional_help_for_specific_user")}</I18nHoverText></Button>
 
                     <Modal
                         open={open3}

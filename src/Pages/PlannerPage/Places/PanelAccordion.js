@@ -9,6 +9,7 @@ import Stations from "../Stations/Stations";
 import Tasks from "../Tasks/tasks";
 import { FiMinimize2 } from "react-icons/fi";
 import { FiMaximize2 } from "react-icons/fi";
+import I18nHoverText from "../../../components/I18nHoverText/I18nHoverText";
 
 /* ─── Styled Components (same pattern as SizeSelector) ─────── */
 
@@ -70,8 +71,6 @@ export default function PanelAccordion(props) {
   const {
     // shared
     language,
-    translateData,
-    translatedRoutes,
     textArea,
     routesBeforeChoosingSite,
     t,
@@ -111,7 +110,6 @@ export default function PanelAccordion(props) {
     board,
     setBoard,
     setFilteredDataRoutes,
-    setTranslateData,
     dropToBoard,
     setAllTasksOfTheSite,
     percentProgressBar,
@@ -172,6 +170,7 @@ export default function PanelAccordion(props) {
     {
       id: "packs",
       label: t ? t("plannerPage.Packs") : "Packs",
+      labelKey: "plannerPage.Packs",
       color: "linear-gradient(to bottom, #ba11b0, #ba11b0)",
       content: (
         <div className="Cover_Places">
@@ -208,7 +207,6 @@ export default function PanelAccordion(props) {
             ) : (
               filteredpacksbysite.map((pack, index) => (
                 <div
-                  className="buttons"
                   style={{
                     border: pack.id === selectedPack?.id ? "1px solid rgb(173, 16, 212)" : "",
                     flexDirection: language === "English" ? "row" : "row-reverse",
@@ -261,12 +259,7 @@ export default function PanelAccordion(props) {
                       setDropToBoard(simulatedDropEvent);
                     }}
                   >
-                    {translateData === "translated"
-                      ? translatedRoutes[pack.id] || pack.name.replace("&#8211;", "-").replace("&#8217;", "'")
-                      : translateData === "Mixed"
-                        ? `${pack.name.replace("&#8211;", "-").replace("&#8217;", "'")} (${translatedRoutes[pack.id] || pack.name.replace("&#8211;", "-").replace("&#8217;", "'")
-                        })`
-                        : pack.name.replace("&#8211;", "-").replace("&#8217;", "'")}
+                    {pack.name.replace("&#8211;", "-").replace("&#8217;", "'")}
                   </button>
                 </div>
               ))
@@ -286,6 +279,7 @@ export default function PanelAccordion(props) {
     {
       id: "routes",
       label: t ? t("plannerPage.Routes") : "Routes",
+      labelKey: "plannerPage.Routes",
       color: "linear-gradient(to bottom, #256fa1, #256fa1)",
       content: (
         <div className="Cover_Places">
@@ -396,13 +390,7 @@ export default function PanelAccordion(props) {
                                 }
                               }}
                             >
-                              {translateData === "translated"
-                                ? translatedRoutes[route.id] || route.name.replace("&#8211;", "-").replace("&#8217;", "'")
-                                : translateData === "Mixed"
-                                  ? `${route.name.replace("&#8211;", "-").replace("&#8217;", "'")} (${translatedRoutes[route.id] ||
-                                  route.name.replace("&#8211;", "-").replace("&#8217;", "'")
-                                  })`
-                                  : route.name.replace("&#8211;", "-").replace("&#8217;", "'")}
+                              {route.name.replace("&#8211;", "-").replace("&#8217;", "'")}
                             </div>
                           </div>
                         )}
@@ -436,6 +424,7 @@ export default function PanelAccordion(props) {
     {
       id: "stations",
       label: t ? t("plannerPage.Stations") : "Stations",
+      labelKey: "plannerPage.Stations",
       color: "linear-gradient(to bottom, #cc0127, #cc0127)",
       content: (
         <Stations
@@ -446,7 +435,6 @@ export default function PanelAccordion(props) {
           setBoard={setBoard}
           filteredDataRoutes={filteredDataRoutes}
           setFilteredDataRoutes={setFilteredDataRoutes}
-          setTranslateData={setTranslateData}
           setDropToBoard={setDropToBoard}
           dropToBoard={dropToBoard}
           setAllTasksOfTheSite={setAllTasksOfTheSite}
@@ -500,6 +488,7 @@ export default function PanelAccordion(props) {
     {
       id: "tasks",
       label: t ? t("plannerPage.Tasks") : "Tasks",
+      labelKey: "plannerPage.Tasks",
       color: "linear-gradient(to bottom, #e8b221, #e8b221)",
       content: (
         <Tasks
@@ -555,13 +544,17 @@ export default function PanelAccordion(props) {
                       className="deselect-button"
                       onClick={props.handleDeselectRoute}
                     >
-                      {t("plannerPage.Show_all_Stations")}
+                      <I18nHoverText translationKey="plannerPage.Show_all_Stations">{t("plannerPage.Show_all_Stations")}</I18nHoverText>
                     </button>
                   </div>
                 </>) :
                 (<></>)
               }
-              {panel.label}
+              {panel.labelKey ? (
+                <I18nHoverText translationKey={panel.labelKey}>{panel.label}</I18nHoverText>
+              ) : (
+                panel.label
+              )}
 
             </LabelButton>
 

@@ -26,6 +26,7 @@ import InputFileUpload from '../../components/InputFileUpload/InputFileUpload';
 import { getBlobsInContainer } from '../../components/azureBlob';
 import { useNotification } from '../../components/Notification/NotificationProvider';
 import { useTranslation } from "react-i18next";
+import I18nHoverText from '../../components/I18nHoverText/I18nHoverText';
 
 export default function EditorForm({
     open,
@@ -47,6 +48,7 @@ export default function EditorForm({
     const [showPassword, setShowPassword] = useState(false);
 
     const [errors, setErrors] = useState({});
+    const [errorKeys, setErrorKeys] = useState({});
     const { showNotification } = useNotification();
     const { t } = useTranslation();
 
@@ -160,17 +162,27 @@ export default function EditorForm({
 
     const validate = () => {
         let tempErrors = {};
+        let tempErrorKeys = {};
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!formValues.email) {
-            tempErrors.email = t("FormsErrors.emailRequired");
+            tempErrorKeys.email = "FormsErrors.EmailRequired";
+            tempErrors.email = t(tempErrorKeys.email);
         } else if (!emailRegex.test(formValues.email)) {
-            tempErrors.email = t("FormsErrors.emailFormat");
+            tempErrorKeys.email = "FormsErrors.EmailFormat";
+            tempErrors.email = t(tempErrorKeys.email);
         }
 
-        if (!formValues.name) tempErrors.name = t("FormsErrors.nameRequired");
-        if (!formValues.password) tempErrors.password = t("FormsErrors.passwordRequired");
+        if (!formValues.name) {
+            tempErrorKeys.name = "FormsErrors.NameRequired";
+            tempErrors.name = t(tempErrorKeys.name);
+        }
+        if (!formValues.password) {
+            tempErrorKeys.password = "FormsErrors.PasswordRequired";
+            tempErrors.password = t(tempErrorKeys.password);
+        }
         setErrors(tempErrors);
+        setErrorKeys(tempErrorKeys);
         return Object.keys(tempErrors).length === 0;
     };
 
@@ -224,30 +236,38 @@ export default function EditorForm({
 
     return (
         <Dialog open={open} onClose={handleCloseDialog} style={{ direction: t('Direction') }}>
-            <DialogTitle>{title}</DialogTitle>
+            <DialogTitle>
+                <I18nHoverText translationKey={EditorAction === 'edit' ? 'EditorPage.EditCoachInfo' : 'EditorPage.ADDANewEditor'}>
+                    {title}
+                </I18nHoverText>
+            </DialogTitle>
             <DialogContent dir={t('Direction')}>
                 <TextField
                     required
-                    label={t("Forms.Email")}
+                    label={<I18nHoverText translationKey="Forms.Email">{t("Forms.Email")}</I18nHoverText>}
                     fullWidth
                     value={formValues.email}
                     onChange={handleChange('email')}
                     margin="normal"
                     error={!!errors.email}
-                    helperText={errors.email}
+                    helperText={errors.email && (
+                        <I18nHoverText translationKey={errorKeys.email}>{errors.email}</I18nHoverText>
+                    )}
                 />
                 <TextField
                     required
-                    label={t("Forms.Name")}
+                    label={<I18nHoverText translationKey="Forms.Name">{t("Forms.Name")}</I18nHoverText>}
                     fullWidth
                     value={formValues.name}
                     onChange={handleChange('name')}
                     margin="normal"
                     error={!!errors.name}
-                    helperText={errors.name}
+                    helperText={errors.name && (
+                        <I18nHoverText translationKey={errorKeys.name}>{errors.name}</I18nHoverText>
+                    )}
                 />
                 <TextField
-                    label={t("Forms.Phone")}
+                    label={<I18nHoverText translationKey="Forms.Phone">{t("Forms.Phone")}</I18nHoverText>}
                     fullWidth
                     value={formValues.phone}
                     onChange={handleChange('phone')}
@@ -262,14 +282,16 @@ export default function EditorForm({
                 />
                 <TextField
                     required
-                    label={t("Forms.Password")}
+                    label={<I18nHoverText translationKey="Forms.Password">{t("Forms.Password")}</I18nHoverText>}
                     type={showPassword ? 'text' : 'password'}
                     fullWidth
                     value={formValues.password}
                     onChange={handleChange('password')}
                     margin="normal"
                     error={!!errors.password}
-                    helperText={errors.password}
+                    helperText={errors.password && (
+                        <I18nHoverText translationKey={errorKeys.password}>{errors.password}</I18nHoverText>
+                    )}
                     InputProps={{
                         endAdornment: (
                             <InputAdornment position="end">
@@ -286,7 +308,7 @@ export default function EditorForm({
                     }}
                 />
                 <FormControl fullWidth margin="normal">
-                    <InputLabel>{t("Forms.Role") || "Role"}</InputLabel>
+                    <InputLabel><I18nHoverText translationKey="Forms.Role">{t("Forms.Role") || "Role"}</I18nHoverText></InputLabel>
                     <Select
                         value={formValues.role}
                         onChange={handleChange('role')}
@@ -300,7 +322,7 @@ export default function EditorForm({
                 {/* Dynamic user/coach selection based on role */}
                 {formValues.role === 'EDITOR' && (
                     <FormControl fullWidth margin="normal">
-                        <InputLabel>{t("Forms.SelectCoach")}</InputLabel>
+                        <InputLabel><I18nHoverText translationKey="Forms.SelectCoach">{t("Forms.SelectCoach")}</I18nHoverText></InputLabel>
                         <Select
                             value={formValues.userid || ''}
                             onChange={handleChange('userid')}
@@ -315,7 +337,7 @@ export default function EditorForm({
                 )}
                 {formValues.role === 'STUDENT' && (
                     <FormControl fullWidth margin="normal">
-                        <InputLabel>{t("Forms.SelectUser")}</InputLabel>
+                        <InputLabel><I18nHoverText translationKey="Forms.SelectUser">{t("Forms.SelectUser")}</I18nHoverText></InputLabel>
                         <Select
                             value={formValues.userid || ''}
                             onChange={handleChange('userid')}
@@ -333,6 +355,7 @@ export default function EditorForm({
 
                 <MultipleSelect
                     label={t("Forms.Select_Sites")}
+                    translationKey="Forms.Select_Sites"
                     formValues={formValues}
                     handleChange={handleChange}
                     sites={sites}
@@ -341,7 +364,7 @@ export default function EditorForm({
 
                 {/* Default dashboard selection based on selected sites */}
                 <FormControl fullWidth margin="normal">
-                    <InputLabel>{t("Forms.DefaultDashboard")}</InputLabel>
+                    <InputLabel><I18nHoverText translationKey="Forms.DefaultDashboard">{t("Forms.DefaultDashboard")}</I18nHoverText></InputLabel>
                     <Select
                         value={formValues.defaultdashboard}
                         onChange={handleChange('defaultdashboard')}
@@ -395,12 +418,12 @@ export default function EditorForm({
                             setPicture(newPicture);
                         }}
                     />
-                    <p>{t("Forms.UploadImageText")}</p>
+                    <p><I18nHoverText translationKey="Forms.UploadImageText">{t("Forms.UploadImageText")}</I18nHoverText></p>
                 </FormControl>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseDialog}>{t("Forms.Cancel")}</Button>
-                <Button onClick={handleSubmit}>{t("Forms.Submit")}</Button>
+                <Button onClick={handleCloseDialog}><I18nHoverText translationKey="Forms.Cancel">{t("Forms.Cancel")}</I18nHoverText></Button>
+                <Button onClick={handleSubmit}><I18nHoverText translationKey="Forms.Submit">{t("Forms.Submit")}</I18nHoverText></Button>
             </DialogActions>
         </Dialog>
     );

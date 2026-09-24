@@ -42,6 +42,7 @@ import {
   getingData_Routes,
 } from '../../api/api';
 import { useNotification } from '../../components/Notification/NotificationProvider';
+import I18nHoverText from '../../components/I18nHoverText/I18nHoverText';
 import ShiftForm from './ShiftForm/ShiftForm';
 import ShiftAssignmentDialog from './ShiftAssignmentDialog/ShiftAssignmentDialog';
 import ShiftEventCalendar from './ShiftEventCalendar/ShiftEventCalendar';
@@ -253,7 +254,9 @@ export default function ShiftPage() {
             onClick={(e) => { e.stopPropagation(); setTimelineShift(params.row); setTab(2); }}
             sx={{ color: timelineShift?.id === params.row.id ? '#0d4264' : 'inherit' }}
           >
-            <TimelineIcon fontSize="small" />
+            <I18nHoverText translationKey="ShiftPage.ViewTimeline" options={{ defaultValue: 'View timeline' }} component="span">
+              <TimelineIcon fontSize="small" />
+            </I18nHoverText>
           </IconButton>
         </Tooltip>
       ),
@@ -281,7 +284,9 @@ export default function ShiftPage() {
       {/* Page header */}
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
         <Typography variant="h5" fontWeight={700} color="#0d4264">
-          {t('ShiftPage.Title', 'Shift Manager')}
+          <I18nHoverText translationKey="ShiftPage.Title" options={{ defaultValue: 'Shift Manager' }}>
+            {t('ShiftPage.Title', 'Shift Manager')}
+          </I18nHoverText>
         </Typography>
         <Button
           variant="contained"
@@ -289,7 +294,9 @@ export default function ShiftPage() {
           onClick={handleOpenAdd}
           sx={{ backgroundColor: '#0d4264', '&:hover': { backgroundColor: '#0a3250' } }}
         >
-          {t('ShiftPage.NewShift', 'New Shift')}
+          <I18nHoverText translationKey="ShiftPage.NewShift" options={{ defaultValue: 'New Shift' }}>
+            {t('ShiftPage.NewShift', 'New Shift')}
+          </I18nHoverText>
         </Button>
       </Box>
 
@@ -302,9 +309,9 @@ export default function ShiftPage() {
           textColor="primary"
           indicatorColor="primary"
         >
-          <Tab icon={<TableChartIcon fontSize="small" />} iconPosition="start" label={t('ShiftPage.Shifts', 'Shifts')} />
-          <Tab icon={<CalendarMonthIcon fontSize="small" />} iconPosition="start" label={t('ShiftPage.Scheduler', 'Scheduler')} />
-          <Tab icon={<TimelineIcon fontSize="small" />} iconPosition="start" label={t('ShiftPage.Timeline', 'Timeline')} />
+          <Tab icon={<TableChartIcon fontSize="small" />} iconPosition="start" label={<I18nHoverText translationKey="ShiftPage.Shifts" options={{ defaultValue: 'Shifts' }}>{t('ShiftPage.Shifts', 'Shifts')}</I18nHoverText>} />
+          <Tab icon={<CalendarMonthIcon fontSize="small" />} iconPosition="start" label={<I18nHoverText translationKey="ShiftPage.Scheduler" options={{ defaultValue: 'Scheduler' }}>{t('ShiftPage.Scheduler', 'Scheduler')}</I18nHoverText>} />
+          <Tab icon={<TimelineIcon fontSize="small" />} iconPosition="start" label={<I18nHoverText translationKey="ShiftPage.Timeline" options={{ defaultValue: 'Timeline' }}>{t('ShiftPage.Timeline', 'Timeline')}</I18nHoverText>} />
         </Tabs>
       </Paper>
 
@@ -383,18 +390,24 @@ export default function ShiftPage() {
           }}
         >
           <PersonAddIcon fontSize="small" sx={{ mr: 1 }} />
-          {t('ShiftPage.AssignUsers', 'Assign Users & Routes')}
+          <I18nHoverText translationKey="ShiftPage.AssignUsers" options={{ defaultValue: 'Assign Users & Routes' }}>
+            {t('ShiftPage.AssignUsers', 'Assign Users & Routes')}
+          </I18nHoverText>
         </MenuItem>
         <MenuItem onClick={() => handleOpenEdit(selectedShift)}>
           <EditIcon fontSize="small" sx={{ mr: 1 }} />
-          {t('Edit', 'Edit')}
+          <I18nHoverText translationKey="Edit" options={{ defaultValue: 'Edit' }}>
+            {t('Edit', 'Edit')}
+          </I18nHoverText>
         </MenuItem>
         <MenuItem
           onClick={() => handleDelete(selectedShift)}
           sx={{ color: 'error.main' }}
         >
           <DeleteIcon fontSize="small" sx={{ mr: 1 }} />
-          {t('Delete', 'Delete')}
+          <I18nHoverText translationKey="Delete" options={{ defaultValue: 'Delete' }}>
+            {t('Delete', 'Delete')}
+          </I18nHoverText>
         </MenuItem>
       </Menu>
 

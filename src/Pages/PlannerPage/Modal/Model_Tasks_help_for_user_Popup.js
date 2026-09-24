@@ -7,6 +7,7 @@ import { getBlobsInContainer } from '../../../components/azureBlob';
 import InputFileUpload from '../../../components/InputFileUpload/InputFileUpload';
 import { FormControl, InputLabel, Select, MenuItem, TextField, Box, Button, Modal } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 const style = {
     position: 'absolute',
@@ -43,6 +44,7 @@ function Model_Tasks_Pop_for_user(props) {
     const initialFormConfig = [
         {
             label: t('plannerPage.Select_User'),
+            labelKey: 'plannerPage.Select_User',
             type: 'select',
             value: 'UserID',
             options: 'allUsers',
@@ -50,18 +52,21 @@ function Model_Tasks_Pop_for_user(props) {
         },
         {
             label: t('plannerPage.Write_additional_help_text'),
+            labelKey: 'plannerPage.Write_additional_help_text',
             type: 'text',
             value: 'help_text',
             required: true,
         },
         {
             label: t('plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop'),
+            labelKey: 'plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop',
             type: 'file',
             value: 'picture',
             required: false,
         },
         {
             label: t('plannerPage.Add_a_voice_clip_describing_the_task'),
+            labelKey: 'plannerPage.Add_a_voice_clip_describing_the_task',
             type: 'file',
             value: 'audio',
             required: false,
@@ -243,7 +248,7 @@ function Model_Tasks_Pop_for_user(props) {
         >
             <div className='headerNewTask'>
                 <div className='NewTaskTitle'>
-                    {t('plannerPage.Additional_Help_for_Users')}
+                    <I18nHoverText translationKey="plannerPage.Additional_Help_for_Users">{t('plannerPage.Additional_Help_for_Users')}</I18nHoverText>
                 </div>
             </div>
             <div
@@ -255,18 +260,22 @@ function Model_Tasks_Pop_for_user(props) {
                         {formConfig.map((field, index) => (
                             <form key={index} id='IPU' className='w3-container'>
                                 <h6>
-                                    {props.language !== 'English'
-                                        ? field.label
-                                        : `: ${field.label}`}
+                                    <I18nHoverText translationKey={field.labelKey}>
+                                        {props.language !== 'English'
+                                            ? field.label
+                                            : `: ${field.label}`}
+                                    </I18nHoverText>
                                     {field.required && <RiAsterisk style={{ color: 'red' }} />}
                                 </h6>
                                 {field.type === 'select' ? (
                                     <Box>
                                         <FormControl fullWidth>
                                             <InputLabel id={`select-label-${index}`}>
-                                                {props.language !== 'English'
-                                                    ? field.label
-                                                    : `: ${field.label}`}
+                                                <I18nHoverText translationKey={field.labelKey}>
+                                                    {props.language !== 'English'
+                                                        ? field.label
+                                                        : `: ${field.label}`}
+                                                </I18nHoverText>
                                             </InputLabel>
                                             <Select
                                                 labelId={`select-label-${index}`}
@@ -302,7 +311,7 @@ function Model_Tasks_Pop_for_user(props) {
                                             newData[formIndex].picture = file;
                                             return newData;
                                         })} language={props.language} />
-                                        <Button variant="outlined" onClick={handleOpen}>{t('plannerPage.Gallery')}</Button>
+                                        <Button variant="outlined" onClick={handleOpen}><I18nHoverText translationKey="plannerPage.Gallery">{t('plannerPage.Gallery')}</I18nHoverText></Button>
                                         <Modal
                                             open={open}
                                             onClose={handleClose}
@@ -319,7 +328,7 @@ function Model_Tasks_Pop_for_user(props) {
                                         </Modal>
                                         {formData[formIndex].picture ? (
                                             <div className='selectedFileContainertask'>
-                                                <div className='selectedFileTitle'>{t('plannerPage.Selected_Image')}:</div>
+                                                <div className='selectedFileTitle'><I18nHoverText translationKey="plannerPage.Selected_Image">{t('plannerPage.Selected_Image')}</I18nHoverText>:</div>
                                                 <div style={{ marginBottom: '1rem' }}>
                                                     {typeof formData[formIndex].picture === 'string'
                                                         ? extractFilenameFromURL(formData[formIndex].picture)
@@ -337,7 +346,7 @@ function Model_Tasks_Pop_for_user(props) {
                                             </div>
                                         ) : (
                                             <div style={{ marginBottom: '1rem' }}>
-                                                {t('plannerPage.No_image_file_found')}
+                                                <I18nHoverText translationKey="plannerPage.No_image_file_found">{t('plannerPage.No_image_file_found')}</I18nHoverText>
                                             </div>
                                         )}
                                     </div>
@@ -348,7 +357,7 @@ function Model_Tasks_Pop_for_user(props) {
                                             newData[formIndex].audio = file;
                                             return newData;
                                         })} language={props.language} />
-                                        <Button variant="outlined" onClick={handleOpen2}>{t('plannerPage.Gallery_audio')}</Button>
+                                        <Button variant="outlined" onClick={handleOpen2}><I18nHoverText translationKey="plannerPage.Gallery_audio">{t('plannerPage.Gallery_audio')}</I18nHoverText></Button>
                                         <Modal
                                             open={open2}
                                             onClose={handleClose}
@@ -367,7 +376,7 @@ function Model_Tasks_Pop_for_user(props) {
                                             <div className='selectedFileContainertask'>
                                                 <div className='selectedFileTitle'>
                                                     <span>:</span>
-                                                    {t('plannerPage.Selected_audio')}
+                                                    <I18nHoverText translationKey="plannerPage.Selected_audio">{t('plannerPage.Selected_audio')}</I18nHoverText>
                                                 </div>
                                                 <div className='audioNameContainer'>
                                                     <div style={{ marginBottom: '1rem' }}>
@@ -388,7 +397,7 @@ function Model_Tasks_Pop_for_user(props) {
                                             </div>
                                         ) : (
                                             <div style={{ marginBottom: '1rem' }}>
-                                                {t('plannerPage.Selected_audio_No_audio_file_found')}
+                                                <I18nHoverText translationKey="plannerPage.Selected_audio_No_audio_file_found">{t('plannerPage.Selected_audio_No_audio_file_found')}</I18nHoverText>
                                             </div>
                                         )}
                                     </div>
@@ -396,10 +405,10 @@ function Model_Tasks_Pop_for_user(props) {
 
                             </form>
                         ))}
-                        <Button variant="outlined" color="secondary" onClick={() => removeForm(formIndex)}>{t('Remove')}</Button>
+                        <Button variant="outlined" color="secondary" onClick={() => removeForm(formIndex)}><I18nHoverText translationKey="Remove">{t('Remove')}</I18nHoverText></Button>
                     </div>
                 ))}
-                <Button variant="outlined" onClick={addNewForm}>{t('plannerPage.Add_More')}</Button>
+                <Button variant="outlined" onClick={addNewForm}><I18nHoverText translationKey="plannerPage.Add_More">{t('plannerPage.Add_More')}</I18nHoverText></Button>
                 {/* <h6>
                     {props.language !== 'English'
                         ? 'Select where to save picture / voice'
@@ -408,7 +417,9 @@ function Model_Tasks_Pop_for_user(props) {
                 </h6>
                 <BasicSelect setFoldersite={setFoldersite} folderName={Foldersite} folderlist={folderNames} /> */}
                 <h6>
-                    {t("plannerPage.Site_where_the_image_voice_will_be_save") + " : " + props.siteNameInEnglish}
+                    <I18nHoverText translationKey="plannerPage.Site_where_the_image_voice_will_be_save">
+                        {t("plannerPage.Site_where_the_image_voice_will_be_save") + " : " + props.siteNameInEnglish}
+                    </I18nHoverText>
                     <FcMultipleInputs />
                 </h6>
             </div>

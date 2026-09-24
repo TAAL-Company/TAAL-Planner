@@ -19,6 +19,7 @@ import Model_assigned_route_to_parent from './Model_assigned_route_to_parent';
 import Box from '@mui/material/Box';
 import { FormControlLabel, Radio } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 //--------------------------
 let myStudents = [];
 let myStudentsChoice = [];
@@ -365,7 +366,7 @@ function Modal({
                 {setFlagStudent ? (
                   <>
                     <div className='headerNewRoute'>
-                      <div className='newRoutTitle'> {t("plannerPage.Assign_route_to_employee")} </div>
+                      <div className='newRoutTitle'> <I18nHoverText translationKey="plannerPage.Assign_route_to_employee">{t("plannerPage.Assign_route_to_employee")}</I18nHoverText> </div>
                     </div>
 
                     <div className='AddStudentTitle'>
@@ -407,11 +408,11 @@ function Modal({
                       })}
                     </div>
                     <button className='saveAs' onClick={() => saveData()}>
-                      <div style={{ color: 'white' }}>{t("plannerPage.Assign")}</div>
+                      <div style={{ color: 'white' }}><I18nHoverText translationKey="plannerPage.Assign">{t("plannerPage.Assign")}</I18nHoverText></div>
                     </button>
 
                     <button className='cancelSaveAs' onClick={() => saveData()}>
-                      {t("plannerPage.Cancel")}
+                      <I18nHoverText translationKey="plannerPage.Cancel">{t("plannerPage.Cancel")}</I18nHoverText>
                     </button>
                   </>
                 ) : (
@@ -419,12 +420,12 @@ function Modal({
                     {' '}
                     <div className='body'>
                       <h5>
-                        {t("plannerPage.Save_route")}
+                        <I18nHoverText translationKey="plannerPage.Save_route">{t("plannerPage.Save_route")}</I18nHoverText>
                       </h5>
                     </div>
                     <div className='footer'>
                       <button className='continueBtn' onClick={Post_Route}>
-                        {t("plannerPage.Save_route")}
+                        <I18nHoverText translationKey="plannerPage.Save_route">{t("plannerPage.Save_route")}</I18nHoverText>
                       </button>
                       &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
                       &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
@@ -434,7 +435,7 @@ function Modal({
                           setOpenModal(false);
                         }}
                       >
-                        {t("plannerPage.Cancel")}
+                        <I18nHoverText translationKey="plannerPage.Cancel">{t("plannerPage.Cancel")}</I18nHoverText>
                       </button>
                       {flagClickOK ? (
                         <>
@@ -507,7 +508,7 @@ function Modal({
                               language === 'English' ? 'right' : 'left',
                           }}
                         >
-                          {t("plannerPage.New_route")}
+                          <I18nHoverText translationKey="plannerPage.New_route">{t("plannerPage.New_route")}</I18nHoverText>
                         </div>
                       </div>
                       <div className='newRouteBody'>
@@ -523,7 +524,7 @@ function Modal({
                                 language === 'English' ? 'right' : 'left',
                             }}
                           >
-                            {t("plannerPage.route_name")}
+                            <I18nHoverText translationKey="plannerPage.route_name">{t("plannerPage.route_name")}</I18nHoverText>
                           </div>
                           <p>
                             <input
@@ -540,7 +541,11 @@ function Modal({
                           <button type='submit' className='saveAs' disabled={loading}>
                             {/* onClick={() => saveData()}> */}
                             <div style={{ color: 'white' }} disabled={loading} >
-                              {loading ? (t("plannerPage.Loading")) : (t("plannerPage.Save"))}
+                              {loading ? (
+                                <I18nHoverText translationKey="plannerPage.Loading">{t("plannerPage.Loading")}</I18nHoverText>
+                              ) : (
+                                <I18nHoverText translationKey="plannerPage.Save">{t("plannerPage.Save")}</I18nHoverText>
+                              )}
                             </div>
                           </button>
 
@@ -548,7 +553,7 @@ function Modal({
                             className='cancelSaveAs'
                             onClick={() => saveData()}
                           >
-                            {t("plannerPage.Cancel")}
+                            <I18nHoverText translationKey="plannerPage.Cancel">{t("plannerPage.Cancel")}</I18nHoverText>
                           </button>
                         </form>
                       </div>
@@ -559,7 +564,7 @@ function Modal({
                       <div className='headerNewRoute'
                         dir={language === 'English' ? 'ltr' : 'rtl'} >
                         <div className='newRoutTitle'>
-                          {t("plannerPage.Save_route")}
+                          <I18nHoverText translationKey="plannerPage.Save_route">{t("plannerPage.Save_route")}</I18nHoverText>
                         </div>
                       </div>
                       <div className='bodySaveRoute'
@@ -569,7 +574,7 @@ function Modal({
                         }}
                       >
                         <div>
-                          {t("plannerPage.Name_of_the_route")}
+                          <I18nHoverText translationKey="plannerPage.Name_of_the_route">{t("plannerPage.Name_of_the_route")}</I18nHoverText>
                         </div>
                         <input
                           // dir={language !== 'English' ? 'ltr' : 'rtl'}
@@ -589,11 +594,13 @@ function Modal({
                               onChange={(e) => setResetEstimatedTime(e.target.checked)}
                               style={{ marginLeft: language !== 'English' ? '0' : '10px' }}
                             />
-                            {t("plannerPage.Reset_estimated_time") || "Reset estimated time to 0 for all tasks"}
+                            <I18nHoverText translationKey="plannerPage.Reset_estimated_time">
+                              {t("plannerPage.Reset_estimated_time") || "Reset estimated time to 0 for all tasks"}
+                            </I18nHoverText>
                           </label>
                         </div>
                         <div>
-                          {t("plannerPage.List_of_students")}
+                          <I18nHoverText translationKey="plannerPage.List_of_students">{t("plannerPage.List_of_students")}</I18nHoverText>
                         </div>
                         <input
                           type='text'
@@ -640,7 +647,7 @@ function Modal({
                         </div>
 
                         <Box>
-                          {t("plannerPage.List_of_Routes")}
+                          <I18nHoverText translationKey="plannerPage.List_of_Routes">{t("plannerPage.List_of_Routes")}</I18nHoverText>
                         </Box>
                         <input
                           type='text'
@@ -659,7 +666,7 @@ function Modal({
                                   value=""
                                 />
                               }
-                              label={t("plannerPage.Deselect") || "Deselect"}
+                              label={<I18nHoverText translationKey="plannerPage.Deselect">{t("plannerPage.Deselect") || "Deselect"}</I18nHoverText>}
                             />
                           </Box>
                           {filteredDataRoutes
@@ -684,13 +691,13 @@ function Modal({
                       </div>
                       <div className='footer'>
                         <button className='continueBtn' onClick={Post_Route}>
-                          {t("plannerPage.Save_route")}
+                          <I18nHoverText translationKey="plannerPage.Save_route">{t("plannerPage.Save_route")}</I18nHoverText>
                         </button>
                         <button className='continueBtn' onClick={
                           // setOpenModalRouteChosen(true)
                           Post_new_Route
                         }>
-                          {t("plannerPage.Save_route_as")}
+                          <I18nHoverText translationKey="plannerPage.Save_route_as">{t("plannerPage.Save_route_as")}</I18nHoverText>
                         </button>
                         <button
                           className='cancelBtn'
@@ -698,7 +705,7 @@ function Modal({
                             setOpenModal(false);
                           }}
                         >
-                          {t("plannerPage.Cancel")}
+                          <I18nHoverText translationKey="plannerPage.Cancel">{t("plannerPage.Cancel")}</I18nHoverText>
                         </button>
                         {flagClickOK ? (
                           <>

@@ -8,6 +8,7 @@ import {
   DialogTitle,
   DialogContentText,
 } from "@mui/material";
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 //--------------------------
 
 //--------------------------
@@ -21,16 +22,18 @@ function Modal_Delete(props) {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{t(props.DialogTitle)}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <I18nHoverText translationKey={props.DialogTitle}>{t(props.DialogTitle)}</I18nHoverText>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {t(props.DialogContent)}
+            <I18nHoverText translationKey={props.DialogContent}>{t(props.DialogContent)}</I18nHoverText>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={props.handleCloseRemove}>{t('plannerPage.Cancel')}</Button>
+          <Button onClick={props.handleCloseRemove}><I18nHoverText translationKey="plannerPage.Cancel">{t('plannerPage.Cancel')}</I18nHoverText></Button>
           <Button onClick={props.handleCloseRemoveConfirm} autoFocus>
-            {t('plannerPage.Delete')}
+            <I18nHoverText translationKey="plannerPage.Delete">{t('plannerPage.Delete')}</I18nHoverText>
           </Button>
         </DialogActions>
       </Dialog>

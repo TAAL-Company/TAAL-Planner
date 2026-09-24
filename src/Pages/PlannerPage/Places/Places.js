@@ -159,12 +159,7 @@ const Places = (props) => {
   const [openUpload, setOpenUpload] = React.useState(false);
   const [openUploadsheets, setOpenUploadsheets] = React.useState(false);
   const [uploadOption, setUploadOption] = useState(null);
-  // translateData is now disabled — translation is done centrally via handleTranslateData
-  // eslint-disable-next-line no-unused-vars
-  const translateData = 'original';
-  // eslint-disable-next-line no-unused-vars
-  const setTranslateData = () => {};
-  const { translate, translateArrayOfObjects } = useTranslator();
+  const { translateArrayOfObjects } = useTranslator();
 
   // Translation state
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -252,6 +247,8 @@ const Places = (props) => {
       setAllTasks(translatedTasks);
       setAllRoutes(translatedRoutes);
       setRoutes(translatedRoutes);
+      setFilteredDataRoutes(translatedRoutes);
+      setFilteredPacksBySite(translatedPacks);
       // Also update embedded task titles inside each station's .tasks array
       // so tasksOfChosenStation (shown in Tasks panel) shows translated names
       const translatedTaskMap = new Map(translatedTasks.map(t => [t.id, t]));
@@ -264,6 +261,15 @@ const Places = (props) => {
       }));
       setOnlyAllStation(stationsWithUpdatedTasks);
       setStationArray(stationsWithUpdatedTasks.map((station, index) => ({ ...station, color: pastelColors[index % pastelColors.length] })));
+      setTasksOfChosenStation((currentTasks) => currentTasks.map((task) => (
+        translatedTaskMap.get(task.id) || task
+      )));
+      setAllTasksOfTheSite((currentTasks) => currentTasks.map((task) => (
+        translatedTaskMap.get(task.id) || task
+      )));
+      setSelectedRoute((currentRoute) => (
+        translatedRoutes.find((route) => route.id === currentRoute?.id) || currentRoute
+      ));
       setAllUsers(translatedUsers);
       setallPacks(translatedPacks);
       setAllEditors(translatedEditors);
@@ -284,8 +290,20 @@ const Places = (props) => {
     setAllTasks(original.tasks);
     setAllRoutes(original.routes);
     setRoutes(original.routes || []);
+    setFilteredDataRoutes(original.routes || []);
+    setFilteredPacksBySite(original.packs || []);
     setOnlyAllStation(original.stations);
     setStationArray((original.stations || []).map((station, index) => ({ ...station, color: pastelColors[index % pastelColors.length] })));
+    const originalTaskMap = new Map((original.tasks || []).map((task) => [task.id, task]));
+    setTasksOfChosenStation((currentTasks) => currentTasks.map((task) => (
+      originalTaskMap.get(task.id) || task
+    )));
+    setAllTasksOfTheSite((currentTasks) => currentTasks.map((task) => (
+      originalTaskMap.get(task.id) || task
+    )));
+    setSelectedRoute((currentRoute) => (
+      (original.routes || []).find((route) => route.id === currentRoute?.id) || currentRoute
+    ));
     setAllUsers(original.users);
     setallPacks(original.packs);
     setAllEditors(original.editors || []);
@@ -505,37 +523,6 @@ const Places = (props) => {
     setPackUUID(pack.id);
     setModalOpenPack(true);
   };
-
-  const translateRouteName = async (routeName) => {
-    try {
-      return await translate(routeName, props.language);
-    } catch (error) {
-      console.error('Translation error:', error);
-      return routeName; // Fallback to the original name in case of an error
-    }
-  };
-
-  // Add a state to store translated route names
-  const [translatedRoutes, setTranslatedRoutes] = useState({});
-
-  // Translate route names when `filteredDataRoutes` changes
-  useEffect(() => {
-    const translateRoutes = async () => {
-      setLoading(true);
-      console.log(translateData);
-
-      const translations = {};
-      for (const route of filteredDataRoutes) {
-        const translatedName = await translateRouteName(route.name.replace('&#8211;', '-').replace('&#8217;', "'"));
-        translations[route.id] = translatedName;
-      }
-      setTranslatedRoutes(translations);
-      setLoading(false);
-    };
-    if (translateData === 'translated' || translateData === 'Mixed') {
-      translateRoutes();
-    }
-  }, [filteredDataRoutes, translateData]);
 
   useEffect(() => {
     // console.log("Request for editing:", requestForEditing);
@@ -2036,9 +2023,9 @@ const Places = (props) => {
           currentLanguage={props.language !== 'English' ? 'EN' : 'HE'}
           allPlaces={allPlaces}
           siteQuestionLanguage={props.siteQuestionLanguage}
+          siteQuestionLanguageKey="plannerPage.select_site_to_build_route_on"
           siteLanguage={props.siteLanguage}
           handleSiteSelectChange={handleSiteSelectChange}
-          showDataTranslate={translateData} // props.showDataTranslate ||original - translated - Mixed
           selectedValuewithjsons={true}
           selectedSite={selectedSite}
           value={selectedSite ? JSON.stringify(selectedSite) : 'DEFAULT'}
@@ -2072,9 +2059,9 @@ const Places = (props) => {
             currentLanguage={props.language !== 'English' ? 'EN' : 'HE'}
             allPlaces={allWorkersForSite}
             siteQuestionLanguage={props.SiteStudentQuestionLanguage}
+            siteQuestionLanguageKey="plannerPage.for_which_worker_do_you_want_to_build_a_track"
             siteLanguage={props.workerLanguage}
             handleSiteSelectChange={handleWorkerSelectChange}
-            showDataTranslate={translateData} // props.showDataTranslate ||original - translated - Mixed
             selectedValuewithjsons={false}
             selectedSite={selectedWorker}
             value={selectedWorker ? selectedWorker.name : 'DEFAULT'}
@@ -2152,8 +2139,6 @@ const Places = (props) => {
           {/* //////////////////////////////////////////////////////////////////////////////////////////// */}
           <PanelAccordion
             language={props.language}
-            translateData={translateData}
-            translatedRoutes={translatedRoutes}
             textArea={textArea}
             routesBeforeChoosingSite={props.routesBeforeChoosingSite}
             t={t}
@@ -2187,7 +2172,6 @@ const Places = (props) => {
             board={board}
             setBoard={setBoard}
             setFilteredDataRoutes={setFilteredDataRoutes}
-            setTranslateData={setTranslateData}
             dropToBoard={dropToBoard}
             setAllTasksOfTheSite={setAllTasksOfTheSite}
             percentProgressBar={percentProgressBar}

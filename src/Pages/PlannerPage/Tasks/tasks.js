@@ -401,8 +401,8 @@ const Tasks = (props) => {
         language={props.language}
         openRemove={openRemove}
         handleCloseRemove={handleCloseRemove}
-        DialogTitle={t('plannerPage.Delete_task')}
-        DialogContent={t('plannerPage.Are_you_sure_you_want_to_delete_the_task')}
+        DialogTitle="plannerPage.Delete_task"
+        DialogContent="plannerPage.Are_you_sure_you_want_to_delete_the_task"
         handleCloseRemoveConfirm={handleCloseRemoveConfirm}
       />
     </div>

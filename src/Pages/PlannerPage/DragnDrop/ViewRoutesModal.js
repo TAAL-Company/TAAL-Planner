@@ -1,12 +1,13 @@
 import React from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 function ViewRoutesModal({ open, onClose, routes, onSave }) {
   const { t } = useTranslation();
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth style={{ direction: routes.language === 'English' ? 'ltr' : 'rtl' }}>
       <DialogTitle>
-        {t('plannerPage.View_All_Routes')}
+        <I18nHoverText translationKey="plannerPage.View_All_Routes">{t('plannerPage.View_All_Routes')}</I18nHoverText>
       </DialogTitle>
       <DialogContent>
         <ul>
@@ -19,10 +20,10 @@ function ViewRoutesModal({ open, onClose, routes, onSave }) {
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose}>
-          {t('plannerPage.Close')}
+          <I18nHoverText translationKey="plannerPage.Close">{t('plannerPage.Close')}</I18nHoverText>
         </Button>
         <Button onClick={onSave} color="primary">
-          {t('plannerPage.Save_Routes')}
+          <I18nHoverText translationKey="plannerPage.Save_Routes">{t('plannerPage.Save_Routes')}</I18nHoverText>
         </Button>
       </DialogActions>
     </Dialog>

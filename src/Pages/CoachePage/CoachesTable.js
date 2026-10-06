@@ -236,13 +236,13 @@ export default function CoachesTable() {
                 style={{ direction: t('Direction') }}
                 rows={getRowsWithDetails()}
                 columns={columns}
-                pageSize={pageSize}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                rowsPerPageOptions={[10, 25, 50, 100]}
+                paginationModel={{ page: 0, pageSize: pageSize }}
+                onPaginationModelChange={(model) => setPageSize(model.pageSize)}
+                pageSizeOptions={[10, 25, 50, 100]}
                 autoHeight
                 loading={loading}
-                components={{
-                  Toolbar: Toolbar,
+                slots={{
+                  toolbar: Toolbar,
                 }}
                 sx={{
                   background: '#fafbfc',

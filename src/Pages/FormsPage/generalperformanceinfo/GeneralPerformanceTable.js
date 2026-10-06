@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Box, Paper } from '@mui/material';
-import { DataGrid, heIL } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { heIL } from '@mui/x-data-grid/locales';
 import GeneralPerformanceColumns from './GeneralPerformanceColumns';
 import GeneralPerformanceRows from './GeneralPerformanceRows';
 import { useTranslation } from 'react-i18next';
@@ -127,15 +128,15 @@ const GeneralPerformanceTable = ({cognitiveList}) => {
                   }}
                   rows={rows}
                   columns={columns}
-                  pageSize={pageSize}
-                  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                  paginationModel={{ page: 0, pageSize: pageSize }}
+                  onPaginationModelChange={(model) => setPageSize(model.pageSize)}
                   getRowHeight={() => 'auto'}
-                  rowsPerPageOptions={[10, 25, 50, 100]}
+                  pageSizeOptions={[10, 25, 50, 100]}
                   pagination
                   checkboxSelection
-                  disableSelectionOnClick
+                  disableRowSelectionOnClick
                   disableVirtualization
-                  componentsProps={{
+                  slotProps={{
                     toolbar: {
                       utf8WithBom: true,
                       showQuickFilter: false,

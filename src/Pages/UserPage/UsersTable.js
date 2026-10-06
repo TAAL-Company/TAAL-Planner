@@ -18,6 +18,7 @@ import Columns from './Columns';
 import Rows from './Rows';
 import { CssBaseline, Paper } from '@mui/material';
 import PopupTable from '../../components/PopupTable/popuptable'; // Add this import
+import I18nHoverText from '../../components/I18nHoverText/I18nHoverText';
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -229,7 +230,7 @@ export default function DataGridDemo() {
   // Function to get rows with routes
   const { getRowsWithDetails } = Rows({ users, expandedRows });
 
-  const { columns, routeColumns } = Columns({
+  const { columns, routeColumns, siteColumns } = Columns({
     handleClickMenu,
     coaches,
     handleSectionExpandToggle,
@@ -259,7 +260,7 @@ export default function DataGridDemo() {
               letterSpacing: '0.5px',
             }}
           >
-            {t('UserPage.Employees')}
+            <I18nHoverText translationKey="UserPage.Employees">{t('UserPage.Employees')}</I18nHoverText>
           </div>
           <div
             style={{
@@ -292,7 +293,7 @@ export default function DataGridDemo() {
                   fontSize: '1rem',
                 }}
               >
-                {t('UserPage.ADDANewEmployee')}
+                <I18nHoverText translationKey="UserPage.ADDANewEmployee">{t('UserPage.ADDANewEmployee')}</I18nHoverText>
               </Button>
             </div>
             <CssBaseline />
@@ -302,13 +303,13 @@ export default function DataGridDemo() {
                   style={{ direction: t('Direction') }}
                   rows={getRowsWithDetails()}
                   columns={columns}
-                  pageSize={pageSize}
-                  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                  rowsPerPageOptions={[10, 25, 50, 100]}
+                  paginationModel={{ page: 0, pageSize: pageSize }}
+                  onPaginationModelChange={(model) => setPageSize(model.pageSize)}
+                  pageSizeOptions={[10, 25, 50, 100]}
                   autoHeight
                   loading={loading}
-                  components={{
-                    Toolbar: Toolbar,
+                  slots={{
+                    toolbar: Toolbar,
                   }}
                   sx={{
                     background: '#fafbfc',
@@ -331,9 +332,9 @@ export default function DataGridDemo() {
                 open={Boolean(anchorEl)}
                 onClose={handleCloseMenu}
               >
-                <MenuItem onClick={handleClickOpenEditDialog}>{t('UserPage.Edit')}</MenuItem>
-                <MenuItem onClick={handleDeleteUser}>{t('UserPage.Delete')}</MenuItem>
-                <MenuItem onClick={handleDuplicateUser}>{t('UserPage.Duplicate')}</MenuItem>
+                <MenuItem onClick={handleClickOpenEditDialog}><I18nHoverText translationKey="UserPage.Edit">{t('UserPage.Edit')}</I18nHoverText></MenuItem>
+                <MenuItem onClick={handleDeleteUser}><I18nHoverText translationKey="UserPage.Delete">{t('UserPage.Delete')}</I18nHoverText></MenuItem>
+                <MenuItem onClick={handleDuplicateUser}><I18nHoverText translationKey="UserPage.Duplicate">{t('UserPage.Duplicate')}</I18nHoverText></MenuItem>
               </Menu>
 
               <UserForm
@@ -356,6 +357,7 @@ export default function DataGridDemo() {
                 row={popupRow}
                 columnsMap={{
                   routeColumns,
+                  siteColumns,
                 }}
               />
             </div>

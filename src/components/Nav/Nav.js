@@ -5,6 +5,9 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+import { useTranslation } from 'react-i18next';
+import Avatar from '@mui/material/Avatar';
+import PersonIcon from '@mui/icons-material/Person';
 import TranslateIcon from '@mui/icons-material/Translate';
 import HomeIcon from '@mui/icons-material/Home';
 import FeedIcon from '@mui/icons-material/Feed';
@@ -13,8 +16,11 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 const Nav = () => {
+  const { t } = useTranslation();
   const [completeName, setCompleteName] = useState('');
   const [languageAnchorEl, setLanguageAnchorEl] = useState(null);
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null);
+  const [profileImage, setProfileImage] = useState('');
 
   useEffect(() => {
     try {
@@ -24,6 +30,7 @@ const Nav = () => {
         if (parsed?.name) {
           setCompleteName(parsed.name);
         }
+        setProfileImage(parsed?.picture_url || parsed?.picture || parsed?.image || '');
       }
     } catch (err) {
       console.error('Invalid JWT in sessionStorage:', err);
@@ -204,6 +211,28 @@ const Nav = () => {
         <Typography sx={{ whiteSpace: 'nowrap', fontSize: '16px' }}>
           {completeName}
         </Typography>
+        <IconButton
+          onClick={(e) => setProfileAnchorEl(e.currentTarget)}
+          aria-controls={profileAnchorEl ? 'profile-menu' : undefined}
+          aria-haspopup="true"
+          sx={{ p: 0 }}
+        >
+          <Avatar src={profileImage || undefined} alt={completeName} sx={{ width: 44, height: 44 }}>
+            {!profileImage && <PersonIcon />}
+          </Avatar>
+        </IconButton>
+        <Menu
+          id="profile-menu"
+          anchorEl={profileAnchorEl}
+          open={Boolean(profileAnchorEl)}
+          onClose={() => setProfileAnchorEl(null)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <MenuItem component={Link} to="/profile" onClick={() => setProfileAnchorEl(null)}>
+            {t('ProfilePage.MyProfile')}
+          </MenuItem>
+        </Menu>
         <Box
           sx={{
             width: 50,

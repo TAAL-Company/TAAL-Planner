@@ -180,7 +180,7 @@ export default function ShiftPage() {
       field: 'time',
       headerName: t('ShiftPage.Time', 'Time'),
       width: 130,
-      valueGetter: (params) => `${params.row.startTime} – ${params.row.endTime}`,
+      valueGetter: (value, row) => `${row.startTime} – ${row.endTime}`,
     },
     {
       field: 'assignments',
@@ -327,17 +327,17 @@ export default function ShiftPage() {
               <DataGrid
                 rows={shifts}
                 columns={columns}
-                pageSize={10}
-                rowsPerPageOptions={[10, 25, 50]}
+                paginationModel={{ page: 0, pageSize: 10 }}
+                pageSizeOptions={[10, 25, 50]}
                 autoHeight
-                disableSelectionOnClick
+                disableRowSelectionOnClick
                 onRowClick={(params) => setTimelineShift(params.row)}
                 sx={{
                   '& .MuiDataGrid-columnHeaders': { backgroundColor: '#f0f4f8', fontWeight: 700 },
                   '& .MuiDataGrid-row': { cursor: 'pointer' },
                   '& .MuiDataGrid-row.Mui-selected': { backgroundColor: '#e3f0fa' },
                 }}
-                selectionModel={timelineShift ? [timelineShift.id] : []}
+                rowSelectionModel={timelineShift ? [timelineShift.id] : []}
                 localeText={{
                   noRowsLabel: t('ShiftPage.NoShifts', 'No shifts yet — click "New Shift" to get started'),
                 }}

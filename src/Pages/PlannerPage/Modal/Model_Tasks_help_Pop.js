@@ -42,7 +42,7 @@ const style2 = {
     // overflow: "hidden",
     // overflowY: "scroll",
     // p: 4,
-  };
+};
 
 //--------------------------
 function Model_Tasks_Pop(props) {
@@ -65,11 +65,11 @@ function Model_Tasks_Pop(props) {
         }
     }
 
-    const [UserIDs, setUserIDs] = useState(additonalHelp.UserID|| '');
-    const [help_text, setHelp_text] = useState(additonalHelp.help_text|| '');
-    const [picture, setPicture] = useState(additonalHelp.picture_url|| '');
-    const [audio, setAudio] = useState(additonalHelp.audio_url|| '');
-    const [video, setVideo] = useState(additonalHelp.video_url|| '');
+    const [UserIDs, setUserIDs] = useState(additonalHelp.UserID || '');
+    const [help_text, setHelp_text] = useState(additonalHelp.help_text || '');
+    const [picture, setPicture] = useState(additonalHelp.picture_url || '');
+    const [audio, setAudio] = useState(additonalHelp.audio_url || '');
+    const [video, setVideo] = useState(additonalHelp.video_url || '');
 
     const [additonalHelpUsers, setAdditonalHelpUsers] = useState(props.additonalHelp);
 
@@ -111,7 +111,7 @@ function Model_Tasks_Pop(props) {
         if (props.additonalHelp.length > 0 && props.additonalHelp[0].UserID === "General") {
             props.additonalHelp[0] = GeneraladditonalHelp
         } else {
-            props.setAdditonalHelp([ GeneraladditonalHelp]);
+            props.setAdditonalHelp([GeneraladditonalHelp]);
         }
 
 
@@ -119,7 +119,7 @@ function Model_Tasks_Pop(props) {
             props.setAdditonalHelp([...(props.additonalHelp || []), additonalHelpUsers]);
         }
 
-        props.setMainAdditonalHelp([ GeneraladditonalHelp , additonalHelpUsers]);
+        props.setMainAdditonalHelp([GeneraladditonalHelp, additonalHelpUsers]);
 
         props.sethandleClose(false);
     };
@@ -251,7 +251,7 @@ function Model_Tasks_Pop(props) {
                             aria-describedby="modal-modal-description"
                         >
                             <Box sx={style2}>
-                                <GalleryModalPopup sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true}/>
+                                <GalleryModalPopup sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true} />
                             </Box>
                         </Modal>
                         {picture ? (
@@ -296,7 +296,7 @@ function Model_Tasks_Pop(props) {
                         aria-describedby="modal-modal-description"
                     >
                         <Box sx={style2}>
-                            <GalleryModalPopup sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false}/>
+                            <GalleryModalPopup sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false} />
                         </Box>
                     </Modal>
                     {audio ? (
@@ -386,23 +386,23 @@ function Model_Tasks_Pop(props) {
                 {props.requestForEditing === 'details' ? (
                     <></>
                 ) : (
-                    <input
-                        type='submit'
+                    <Button
+                        variant='contained'
                         className='saveTaskButton'
-                        value={
-                             t("plannerPage.Save_Task")
-                        }
                         onClick={saveTask}
-                    />
+                    >
+                        <I18nHoverText translationKey="plannerPage.Save_Task">{t("plannerPage.Save_Task")}</I18nHoverText>
+                    </Button>
                 )}
-                <input
-                    type='submit'
+                <Button
+                    variant='outlined'
                     className='cancelTaskButton'
-                    value={t("plannerPage.Cancel")}
                     onClick={() => {
                         props.sethandleClose(false)
                     }}
-                />
+                >
+                    <I18nHoverText translationKey="plannerPage.Cancel">{t("plannerPage.Cancel")}</I18nHoverText>
+                </Button>
             </div>
         </div>
     );

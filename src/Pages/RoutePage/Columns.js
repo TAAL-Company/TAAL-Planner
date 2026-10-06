@@ -22,9 +22,12 @@ const Columns = ({ handleClickMenu, handlePopupOpen }) => {
       headerName: t('Route.CreatedAt'),
       renderHeader: renderHeaderWithHover('Route.CreatedAt'),
       width: 150,
-      valueGetter: (params) => {
+      valueGetter: (value, row) => {
+        const params = { value, row };
         const createdAt = params.row.createdAt;
-        return createdAt ? new Date(createdAt).toLocaleString() : '';
+        if (!createdAt) return '';
+        const d = new Date(createdAt);
+        return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
       },
     },
     {
@@ -56,7 +59,8 @@ const Columns = ({ handleClickMenu, handlePopupOpen }) => {
       headerName: t('RoutePage.sites'),
       renderHeader: renderHeaderWithHover('RoutePage.sites'),
       width: 200,
-      valueGetter: (params) => {
+      valueGetter: (value, row) => {
+        const params = { value, row };
         // If your route has a sites array, show their names
         if (Array.isArray(params.row.sites)) {
           return params.row.sites.map(site => site.name).join(', ');
@@ -100,8 +104,9 @@ const Columns = ({ handleClickMenu, handlePopupOpen }) => {
     { field: 'email', headerName: t('UserPage.Email'), renderHeader: renderHeaderWithHover('UserPage.Email'), width: 180, resizable: true, flex: 1.5 },
     { field: 'phone', headerName: t('UserPage.Phone'), renderHeader: renderHeaderWithHover('UserPage.Phone'), width: 120, resizable: true, flex: 1 },
     { field: 'role', headerName: t('UserPage.Role'), renderHeader: renderHeaderWithHover('UserPage.Role'), width: 100, resizable: true, flex: 0.7 },
-    { field: 'lastLoginAt', headerName: t('UserPage.LastLoginAt'), renderHeader: renderHeaderWithHover('UserPage.LastLoginAt'), width: 160, resizable: true, flex: 1, valueGetter: (params) => params.value ? new Date(params.value).toLocaleString() : '' },
-    { field: 'createdAt', headerName: t('UserPage.CreatedAt'), renderHeader: renderHeaderWithHover('UserPage.CreatedAt'), width: 160, resizable: true, flex: 1, valueGetter: (params) => params.value ? new Date(params.value).toLocaleString() : '' },
+    { field: 'lastLoginAt', headerName: t('UserPage.LastLoginAt'), renderHeader: renderHeaderWithHover('UserPage.LastLoginAt'), width: 160, resizable: true, flex: 1, valueGetter: (value) => { if (!value) return ''; const d = new Date(value); return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); } },
+    { field: 'createdAt', headerName: t('UserPage.CreatedAt'), renderHeader: renderHeaderWithHover('UserPage.CreatedAt'), width: 160, resizable: true, flex: 1, valueGetter: (value) => { if (!value) return ''; const d = new Date(value); return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); } },
+    { field: 'lastUsed', headerName: t('UserPage.LastUsed'), renderHeader: renderHeaderWithHover('UserPage.LastUsed'), width: 160, resizable: true, flex: 1, valueGetter: (value) => { if (!value) return ''; const d = new Date(value); return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); } },
   ];
 
   return { columns, taskColumns, studentColumns };

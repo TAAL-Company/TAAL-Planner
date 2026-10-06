@@ -7,7 +7,7 @@ import RouteQRCodeDialog from '../../components/QRCodeWithLogo/RouteQRCodeDialog
 import QrCode2Icon from '@mui/icons-material/QrCode2';
 import { useNotification } from '../../components/Notification/NotificationProvider';
 import { useTranslation } from 'react-i18next';
-import { getingData_Routes, deleteRoute, getingData_Tasks, getingData_Places } from '../../api/api';
+import { getingData_Routes, deleteRoute, getingData_Tasks, getingData_Places, getTaskPerformanceByRoute } from '../../api/api';
 import RouteForm from './RouteForm';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
@@ -22,6 +22,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import "./style.css";
 import Toolbar from '../../components/Toolbar/Toolbar';
+import I18nHoverText from '../../components/I18nHoverText/I18nHoverText';
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -134,6 +135,40 @@ export default function RouteTable() {
             : [],
         }));
 
+        // 5. Fetch task-performance per route and compute lastUsed per student
+        const performancesPerRoute = await Promise.all(
+          routesWithTaskDetails.map(route => getTaskPerformanceByRoute(route.id))
+        );
+
+        // Build a map: routeId -> { studentId -> latestDate }
+        const routeStudentLastUsed = {};
+        routesWithTaskDetails.forEach((route, idx) => {
+          const perfs = Array.isArray(performancesPerRoute[idx]) ? performancesPerRoute[idx] : [];
+          const studentMap = {};
+          perfs.forEach(perf => {
+            const sid = perf.studentId;
+            if (!sid) return;
+            const perfDate = new Date(perf.endTime || perf.startTime);
+            if (!studentMap[sid] || perfDate > studentMap[sid]) {
+              studentMap[sid] = perfDate;
+            }
+          });
+          routeStudentLastUsed[route.id] = studentMap;
+        });
+
+        // 6. Attach lastUsed to each student in each route
+        const routesEnriched = routesWithTaskDetails.map(route => ({
+          ...route,
+          students: Array.isArray(route.students)
+            ? route.students.map(student => ({
+              ...student,
+              lastUsed: routeStudentLastUsed[route.id]?.[student.id]
+                ? routeStudentLastUsed[route.id][student.id].toISOString()
+                : null,
+            }))
+            : [],
+        }));
+
         // Role-based filtering
         const jwt = sessionStorage.getItem('jwt');
         const jwtEditor = sessionStorage.getItem('jwt-EDITOR');
@@ -158,20 +193,20 @@ export default function RouteTable() {
         }
 
         if (role === "ADMIN") {
-          setRoutes(routesWithTaskDetails);
+          setRoutes(routesEnriched);
         } else if (role === "EDITOR" && userId) {
-          const filteredRoutes = routesWithTaskDetails.filter(route =>
+          const filteredRoutes = routesEnriched.filter(route =>
             Array.isArray(route.editorIds) && route.editorIds.includes(userId)
           );
           setRoutes(filteredRoutes);
         } else if (role === "STUDENT" && userId) {
           // Filter routes where the student is included in the students array
-          const filteredRoutes = routesWithTaskDetails.filter(route =>
+          const filteredRoutes = routesEnriched.filter(route =>
             Array.isArray(route.students) && route.students.some(student => student.id === userId)
           );
           setRoutes(filteredRoutes);
         } else {
-          setRoutes(routesWithTaskDetails);
+          setRoutes(routesEnriched);
         }
       } catch (error) {
         console.error(error);
@@ -252,7 +287,7 @@ export default function RouteTable() {
               letterSpacing: '0.5px',
             }}
           >
-            {t('RoutePage.Routes')}
+            <I18nHoverText translationKey="RoutePage.Routes">{t('RoutePage.Routes')}</I18nHoverText>
           </div>
           <div
             style={{
@@ -285,16 +320,16 @@ export default function RouteTable() {
                   fontSize: '1rem',
                 }}
               >
-                {t('RoutePage.ADDANewRoute')}
+                <I18nHoverText translationKey="RoutePage.ADDANewRoute">{t('RoutePage.ADDANewRoute')}</I18nHoverText>
               </Button>
             </div>
             <div style={{ width: '100%', minHeight: 100 }}>
               <DataGrid
                 rows={getRowsWithDetails()}
                 columns={columns}
-                pageSize={pageSize}
-                onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-                rowsPerPageOptions={[10, 25, 50, 100]}
+                paginationModel={{ page: 0, pageSize: pageSize }}
+                onPaginationModelChange={(model) => setPageSize(model.pageSize)}
+                pageSizeOptions={[10, 25, 50, 100]}
                 autoHeight
                 loading={loading}
                 sx={{
@@ -311,20 +346,20 @@ export default function RouteTable() {
                     fontSize: '1rem',
                   },
                 }}
-                components={{
-                  Toolbar: Toolbar,
+                slots={{
+                  toolbar: Toolbar,
                 }}
               />
               <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
                 {/* <MenuItem onClick={handleClickOpenEditDialog}>{t('RoutePage.Edit')}</MenuItem> */}
-                <MenuItem onClick={handleDeleteRoute}>{t('RoutePage.Delete')}</MenuItem>
+                <MenuItem onClick={handleDeleteRoute}><I18nHoverText translationKey="RoutePage.Delete">{t('RoutePage.Delete')}</I18nHoverText></MenuItem>
                 <MenuItem onClick={handleCreateVideo}>
                   <VideoFileIcon sx={{ mr: 1, fontSize: 18 }} />
-                  {t('VideoGenerate.createVideo') || 'Create Video'}
+                  <I18nHoverText translationKey="VideoGenerate.createVideo">{t('VideoGenerate.createVideo') || 'Create Video'}</I18nHoverText>
                 </MenuItem>
                 <MenuItem onClick={handleOpenQRCode}>
                   <QrCode2Icon sx={{ mr: 1, fontSize: 18 }} />
-                  {t('RoutePage.GenerateQR') || 'Generate QR Code'}
+                  <I18nHoverText translationKey="RoutePage.GenerateQR">{t('RoutePage.GenerateQR') || 'Generate QR Code'}</I18nHoverText>
                 </MenuItem>
               </Menu>
 

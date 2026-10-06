@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { heIL, arSD, ruRU, enUS } from '@mui/x-data-grid';
+import { heIL, arSD, ruRU, enUS } from '@mui/x-data-grid/locales';
 import { prefixer } from 'stylis';
 import rtlPlugin from 'stylis-plugin-rtl';
 import createCache from '@emotion/cache';
@@ -364,6 +364,7 @@ const resources = {
         "SitesName": "Sites",
         "CreatedAt": "Created At",
         'LastLoginAt': 'Last Login At',
+        'LastUsed': 'Last Used',
         "Online": "Online",
         "RouteName": "Route Name",
         "RouteOnlyOnce": "Only Once",
@@ -416,6 +417,17 @@ const resources = {
         "Edit": "Edit",
         "Delete": "Delete",
         "Editors": "Editors"
+      },
+      ProfilePage: {
+        MyProfile: "My Profile",
+        EditProfile: "Edit Profile",
+        GoogleID: "Google ID",
+        LinkedUser: "Linked user / coach",
+        AIAccess: "AI Access",
+        AIUsage: "AI Usage",
+        Yes: "Yes",
+        No: "No",
+        LoadError: "Failed to load profile"
       },
       Forms: {
         "Name": "Name",
@@ -1410,6 +1422,7 @@ const resources = {
         "SitesName": "אתרים",
         "CreatedAt": "נוצר ב",
         'LastLoginAt': 'התחבר לאחרונה ב',
+        'LastUsed': 'שימוש אחרון',
         "Online": "מחובר",
         "RouteName": "שם רחוב",
         "RouteOnlyOnce": "רק פעם אחת",
@@ -1462,6 +1475,17 @@ const resources = {
         "Edit": "ערוך",
         "Delete": "מחק",
         "Editors": "עורכים"
+      },
+      ProfilePage: {
+        MyProfile: "הפרופיל שלי",
+        EditProfile: "ערוך פרופיל",
+        GoogleID: "מזהה Google",
+        LinkedUser: "משתמש / מדריך מקושר",
+        AIAccess: "גישה ל-AI",
+        AIUsage: "שימוש ב-AI",
+        Yes: "כן",
+        No: "לא",
+        LoadError: "טעינת הפרופיל נכשלה"
       },
       Forms: {
         "Name": "שם",
@@ -2449,6 +2473,7 @@ const resources = {
         "SitesName": "المواقع",
         "CreatedAt": "تاريخ الإنشاء",
         'LastLoginAt': 'آخر تسجيل دخول',
+        'LastUsed': 'آخر استخدام',
         "Online": "متصل",
         "RouteName": "اسم الطريق",
         "RouteOnlyOnce": "مرة واحدة فقط",
@@ -2501,6 +2526,17 @@ const resources = {
         "Edit": "تعديل",
         "Delete": "حذف",
         "Editors": "المحررون"
+      },
+      ProfilePage: {
+        MyProfile: "ملفي الشخصي",
+        EditProfile: "تعديل الملف الشخصي",
+        GoogleID: "معرف Google",
+        LinkedUser: "المستخدم / المدرب المرتبط",
+        AIAccess: "الوصول إلى الذكاء الاصطناعي",
+        AIUsage: "استخدام الذكاء الاصطناعي",
+        Yes: "نعم",
+        No: "لا",
+        LoadError: "فشل تحميل الملف الشخصي"
       },
       Forms: {
         "Name": "الاسم",
@@ -3488,6 +3524,7 @@ const resources = {
         "SitesName": "Сайты",
         "CreatedAt": "Создано",
         'LastLoginAt': 'Последний вход',
+        'LastUsed': 'Последнее использование',
         "Online": "В сети",
         "RouteName": "Название маршрута",
         "RouteOnlyOnce": "Только один раз",
@@ -3540,6 +3577,17 @@ const resources = {
         "Edit": "Редактировать",
         "Delete": "Удалить",
         "Editors": "Редакторы"
+      },
+      ProfilePage: {
+        MyProfile: "Мой профиль",
+        EditProfile: "Редактировать профиль",
+        GoogleID: "Google ID",
+        LinkedUser: "Связанный пользователь / тренер",
+        AIAccess: "Доступ к ИИ",
+        AIUsage: "Использование ИИ",
+        Yes: "Да",
+        No: "Нет",
+        LoadError: "Не удалось загрузить профиль"
       },
       Forms: {
         "Name": "Имя",

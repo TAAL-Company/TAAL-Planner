@@ -104,9 +104,12 @@ const Columns = ({ handleClickMenu, expandedRows, handleSectionExpandToggle }) =
       headerName: t('SitePage.CreatedAt'),
       renderHeader: renderHeaderWithHover('SitePage.CreatedAt'),
       width: 150,
-      valueGetter: (params) => {
+      valueGetter: (value, row) => {
+        const params = { value, row };
         const createdAt = params.row.createdAt;
-        return createdAt ? new Date(createdAt).toLocaleString() : '';
+        if (!createdAt) return '';
+        const d = new Date(createdAt);
+        return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
       },
     },
     {
@@ -148,8 +151,8 @@ const Columns = ({ handleClickMenu, expandedRows, handleSectionExpandToggle }) =
     { field: 'email', headerName: t('UserPage.Email'), renderHeader: renderHeaderWithHover('UserPage.Email'), width: 180 },
     { field: 'phone', headerName: t('UserPage.Phone'), renderHeader: renderHeaderWithHover('UserPage.Phone'), width: 120 },
     { field: 'role', headerName: t('UserPage.Role'), renderHeader: renderHeaderWithHover('UserPage.Role'), width: 100 },
-    { field: 'lastLoginAt', headerName: t('UserPage.LastLoginAt'), renderHeader: renderHeaderWithHover('UserPage.LastLoginAt'), width: 160, valueGetter: (params) => params.value ? new Date(params.value).toLocaleString() : '' },
-    { field: 'createdAt', headerName: t('UserPage.CreatedAt'), renderHeader: renderHeaderWithHover('UserPage.CreatedAt'), width: 160, valueGetter: (params) => params.value ? new Date(params.value).toLocaleString() : '' },
+    { field: 'lastLoginAt', headerName: t('UserPage.LastLoginAt'), renderHeader: renderHeaderWithHover('UserPage.LastLoginAt'), width: 160, valueGetter: (value) => { if (!value) return ''; const d = new Date(value); return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); } },
+    { field: 'createdAt', headerName: t('UserPage.CreatedAt'), renderHeader: renderHeaderWithHover('UserPage.CreatedAt'), width: 160, valueGetter: (value) => { if (!value) return ''; const d = new Date(value); return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); } },
   ];
 
   const editorColumns = [

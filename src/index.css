@@ -106,3 +106,7 @@ code {
     justify-content: space-between;
     gap: 100px;
 } */
+/* Fix DataGrid v7 header background */
+.MuiDataGrid-root .MuiDataGrid-container--top [role=row], .MuiDataGrid-root .MuiDataGrid-container--bottom [role=row] {
+    background: transparent !important;
+}

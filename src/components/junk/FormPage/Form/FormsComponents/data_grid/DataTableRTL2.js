@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
-import { heIL } from '@mui/x-data-grid';
+import { heIL } from '@mui/x-data-grid/locales';
 import CustomToolbar from './CustomToolbar';
 export default function DataTableRTL2({ 
   columns,
@@ -212,14 +212,11 @@ export default function DataTableRTL2({
                 opacity: 1,
               },
           }}
-          experimentalFeatures={
-            ({ newEditingApi: true }, { columnGrouping: true })
-          }
           localeText={heIL.components.MuiDataGrid.defaultProps.localeText}
           // disableVirtualization
 
-          components={{
-            Toolbar: () => (
+          slots={{
+            toolbar: () => (
               <CustomToolbar
                 tableType={tableType}
                 routeForTasksAbility={routeForTasksAbility}
@@ -235,9 +232,7 @@ export default function DataTableRTL2({
                 SaveProfileChanges={SaveProfileChanges}
               />
             ),
-          }}
-
-        />
+          }} />
       </Box>
     </div>
   );

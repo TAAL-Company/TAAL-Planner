@@ -63,6 +63,8 @@ export default function I18nHoverText({
         transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         onClose={handlePopoverClose}
         disableRestoreFocus
+        disableAutoFocus
+        disableEnforceFocus
       >
         <Typography sx={{ p: 1 }} dir="rtl">
           {hebrewText}

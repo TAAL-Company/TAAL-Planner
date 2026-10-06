@@ -128,12 +128,12 @@ const PersonalInfoTable = ({ worker }) => {
                   }}
                   rows={rows}
                   columns={columns}
-                  pageSize={pageSize}
-                  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                  paginationModel={{ page: 0, pageSize: pageSize }}
+                  onPaginationModelChange={(model) => setPageSize(model.pageSize)}
                   getRowHeight={() => 'auto'}
-                  rowsPerPageOptions={[10, 25, 50, 100]}
+                  pageSizeOptions={[10, 25, 50, 100]}
                   pagination
-                  disableSelectionOnClick
+                  disableRowSelectionOnClick
                 />
               </Paper>
             </div>

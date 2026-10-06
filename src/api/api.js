@@ -1444,36 +1444,62 @@ export const postTask_Performance = async (
   studentId,
   routeId,
   siteId,
+  stationId,
   startTime,
   endTime,
   whenAssisted
 ) => {
   try {
-    const response = await fetch(baseUrl + '/tasks-performance', {
+    console.log('postTask_Performance called with:', {
+      taskId,
+      studentId,
+      routeId,
+      siteId,
+      stationId,
+      startTime,
+      endTime,
+      whenAssisted
+    });
+    
+    const payload = {
+      taskId,
+      studentId,
+      routeId,
+      siteId,
+      stationId: stationId || undefined, // Don't send empty string, use undefined instead
+      startTime,
+      endTime,
+      whenAssisted: new Date(), // whenAssisted should be a Date according to DTO
+      dataEntered: "",
+      startTimeLoop: undefined,
+      endTimeLoop: undefined,
+    };
+    
+    console.log('Sending payload:', payload);
+    
+    const response = await fetch(baseUrl + '/task-performance', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         // Authorization: `Bearer ${sessionStorage.getItem("jwt")}`,
       },
-      body: JSON.stringify({
-        taskId,
-        studentId,
-        routeId,
-        siteId,
-        startTime,
-        endTime,
-        whenAssisted,
-      }),
+      body: JSON.stringify(payload),
     });
 
+    console.log('postTask_Performance response status:', response.status);
+    
     if (!response.ok) {
-      throw new Error(`Error inserting task: ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('postTask_Performance error response:', errorText);
+      throw new Error(`Error inserting task: ${response.statusText} - ${errorText}`);
     }
 
     const data = await response.json();
+    console.log('postTask_Performance response data:', data);
 
     return data;
   } catch (error) {
+    console.error('postTask_Performance error:', error);
     throw error;
   }
 };
@@ -1499,6 +1525,20 @@ export const getingTask_Performance = async (
     taskssperformance = res.data;
   });
   return taskssperformance;
+};
+
+/**
+ * Fetch task-performance records for a specific route.
+ * Returns the raw array from the backend (each item has studentId, startTime, endTime, etc.).
+ */
+export const getTaskPerformanceByRoute = async (routeId) => {
+  try {
+    const res = await get(`${baseUrl}/task-performance?routeId=${routeId}`);
+    return res?.data ?? [];
+  } catch (e) {
+    console.error('getTaskPerformanceByRoute error:', e);
+    return [];
+  }
 };
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 /*~~~~~~~~~~~~~~~~~  additonalHelp  ~~~~~~~~~~~~~~~~~~*/

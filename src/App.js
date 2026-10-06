@@ -32,6 +32,7 @@ import FormsPage from './Pages/FormsPage/FormsPage';
 import GenerateTaskImagesPage from './dev.js';
 import SendNotificationPage from './Pages/NotificationPage/SendNotificationPage';
 import ShiftPage from './Pages/ShiftPage/ShiftPage';
+import Profile from './Pages/ProfilePage/Profile';
 
 console.warn(`
 ████████  █████   █████  ██          ██████  ███████ ██    ██ 
@@ -82,6 +83,7 @@ function App() {
                       <Route path='/devpage' component={GenerateTaskImagesPage}></Route>
                       <Route path='/notifications' component={SendNotificationPage}></Route>
                       <Route path='/shifts' component={ShiftPage}></Route>
+                      <Route path='/profile' component={Profile}></Route>
                     </Switch>
                   </div>
                 </Router>

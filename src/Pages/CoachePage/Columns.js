@@ -31,9 +31,12 @@ const Columns = ({ handleClickMenu }) => {
       headerName: t('CoachPage.CreatedAt'),
       renderHeader: renderHeaderWithHover('CoachPage.CreatedAt'),
       width: 150,
-      valueGetter: (params) => {
+      valueGetter: (value, row) => {
+        const params = { value, row };
         const createdAt = params.row.createdAt;
-        return createdAt ? new Date(createdAt).toLocaleString() : '';
+        if (!createdAt) return '';
+        const d = new Date(createdAt);
+        return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
       },
     },
     {
@@ -41,9 +44,12 @@ const Columns = ({ handleClickMenu }) => {
       headerName: t('CoachPage.LastLoginAt'),
       renderHeader: renderHeaderWithHover('CoachPage.LastLoginAt'),
       width: 150,
-      valueGetter: (params) => {
+      valueGetter: (value, row) => {
+        const params = { value, row };
         const lastLoginAt = params.row.lastLoginAt;
-        return lastLoginAt ? new Date(lastLoginAt).toLocaleString() : '';
+        if (!lastLoginAt) return '';
+        const d = new Date(lastLoginAt);
+        return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
       },
     },
     {

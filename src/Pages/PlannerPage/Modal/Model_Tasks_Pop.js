@@ -472,21 +472,23 @@ function Model_Tasks_Pop(props) {
         {props.requestForEditing === 'details' ? (
           <></>
         ) : (
-          <input
-            type='submit'
+          <Button
+            variant='contained'
             className='saveTaskButton'
-            value={t("plannerPage.Save_Task")}
             onClick={saveTask}
-          />
+          >
+            <I18nHoverText translationKey="plannerPage.Save_Task">{t("plannerPage.Save_Task")}</I18nHoverText>
+          </Button>
         )}
-        <input
-          type='submit'
+        <Button
+          variant='outlined'
           className='cancelTaskButton'
-          value={t("plannerPage.Cancel")}
           onClick={() => {
             props.sethandleClose(false)
           }}
-        />
+        >
+          <I18nHoverText translationKey="plannerPage.Cancel">{t("plannerPage.Cancel")}</I18nHoverText>
+        </Button>
       </div>
     </div>
   );

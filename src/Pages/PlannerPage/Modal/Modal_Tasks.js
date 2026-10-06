@@ -515,290 +515,290 @@ function Modal_Tasks(props) {
         <>
           <div>
             <Draggable handle='.bodyNewTask' cancel='input, button, textarea, select, label, a, [role="button"]'>
-            <div
-              className='BackgroundTasks'
-              style={{
-                textAlign: props.language === 'English' ? 'right' : 'left',
-                direction: props.language !== 'English' ? 'rtl' : 'ltr',
-                top: '3%',
-                left: '31%',
-              }}
-            >
-              <div className='modalContainerTasks'>
-                <div className='headerNewTask'>
-                  <div className='NewTaskTitle'>
-                    <I18nHoverText translationKey="plannerPage.New_task">{t('plannerPage.New_task')}</I18nHoverText>
+              <div
+                className='BackgroundTasks'
+                style={{
+                  textAlign: props.language === 'English' ? 'right' : 'left',
+                  direction: props.language !== 'English' ? 'rtl' : 'ltr',
+                  top: '3%',
+                  left: '31%',
+                }}
+              >
+                <div className='modalContainerTasks'>
+                  <div className='headerNewTask'>
+                    <div className='NewTaskTitle'>
+                      <I18nHoverText translationKey="plannerPage.New_task">{t('plannerPage.New_task')}</I18nHoverText>
+                    </div>
                   </div>
-                </div>
-                <div
-                  className={`bodyNewTask ${requestForEditing === 'details' ? 'disabledModal' : ''
-                    }`} style={{ cursor: 'grab' }}
-                >
-                  {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
-                  <form id='IPU' className='w3-container'>
-                    <h6>
-                      <I18nHoverText translationKey="plannerPage.Write_the_name_of_the_task">{t('plannerPage.Write_the_name_of_the_task')}</I18nHoverText>
-
-                      <RiAsterisk style={{ color: 'red' }} />
-                    </h6>
-                    <p>
-                      <input
-                        required={true}
-                        type='text'
-                        onChange={handleTitleInput}
-                        style={{
-                          width: '100%',
-                          height: '38px',
-                          paddingRight: '20px',
-                          direction: props.language === 'English' ? 'rtl' : 'ltr',
-                        }}
-                        value={get_title}
-                      ></input>
-                    </p>
-                  </form>
-                  <form id='IPU' className='w3-container'>
-                    <h6>
-                      <I18nHoverText translationKey="plannerPage.Describe_the_task">{t('plannerPage.Describe_the_task')}</I18nHoverText>
-                      <RiAsterisk style={{ color: 'red' }} />
-                    </h6>
-                    <p>
-                      <input
-                        type='text'
-                        onChange={handleDescriptionInput}
-                        style={{
-                          width: '100%',
-                          height: '38px',
-                          paddingRight: '20px',
-                          direction: props.language === 'English' ? 'rtl' : 'ltr',
-                        }}
-                        value={getDescription}
-                      ></input>
-                    </p>
-                  </form>
-                  <div className='estimatedTimeContainer'>
-                    <h6><I18nHoverText translationKey="plannerPage.Enter_the_estimated_time_in_seconds_for_the_task">{t('plannerPage.Enter_the_estimated_time_in_seconds_for_the_task')}</I18nHoverText></h6>
-                    <input
-                      type='number'
-                      name='estimatedTimeSeconds'
-                      id='estimatedTimeSeconds'
-                      min={0}
-                      onChange={(e) =>
-                        setEstimatedTimeSeconds(parseInt(e.target.value))
-                      }
-                      value={estimatedTimeSeconds}
-                    />
-                  </div>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={showForm}
-                      onChange={() => setShowForm(!showForm)}
-                      style={{
-                        width: '85px',
-                        height: '20px',
-                        paddingRight: '20px',
-                        direction: props.language === 'English' ? 'rtl' : 'ltr',
-                      }}
-                    />
-                    <I18nHoverText translationKey="plannerPage.Add_additional_data">{t('plannerPage.Add_additional_data')}</I18nHoverText>
-
-                  </label>
-                  {showForm && (
-                    <form id='IPU' className='w3-container'  >
-                      <form id='IPU' className='w3-container'>
-                        <h6>
-                          <I18nHoverText translationKey="plannerPage.Write_a_weight">{t('plannerPage.Write_a_weight')}</I18nHoverText>
-                          <RiAsterisk style={{ color: 'red' }} />
-                        </h6>
-                        <p>
-                          <input
-                            required={true}
-                            type='text'
-                            onChange={handleDataEntryLabelInput}
-                            style={{
-                              width: '100%',
-                              height: '38px',
-                              paddingRight: '20px',
-                              direction: props.language === 'English' ? 'rtl' : 'ltr',
-                            }}
-                            value={dataEntryLabel}
-                          ></input>
-                        </p>
-                      </form>
-                      <form id='IPU' className='w3-container'>
-                        <h6>
-                          <I18nHoverText translationKey="plannerPage.Write_Data_Entry_Validation">{t('plannerPage.Write_Data_Entry_Validation')}</I18nHoverText>
-                          <RiAsterisk style={{ color: 'red' }} />
-                        </h6>
-                        <p>
-                          <input
-                            required={true}
-                            type='text'
-                            onChange={handleDataEntryValidationInput}
-                            style={{
-                              width: '100%',
-                              height: '38px',
-                              paddingRight: '20px',
-                              direction: props.language === 'English' ? 'rtl' : 'ltr',
-                            }}
-                            value={dataEntryValidation}
-                          ></input>
-                        </p>
-                      </form>
+                  <div
+                    className={`bodyNewTask ${requestForEditing === 'details' ? 'disabledModal' : ''
+                      }`} style={{ cursor: 'grab' }}
+                  >
+                    {/* <h5 style={{ textAlign: 'center' }}> הוסף משימה</h5> */}
+                    <form id='IPU' className='w3-container'>
                       <h6>
-                        <I18nHoverText translationKey="plannerPage.Select_data_entry_type">{t('plannerPage.Select_data_entry_type')}</I18nHoverText>
+                        <I18nHoverText translationKey="plannerPage.Write_the_name_of_the_task">{t('plannerPage.Write_the_name_of_the_task')}</I18nHoverText>
+
+                        <RiAsterisk style={{ color: 'red' }} />
                       </h6>
-                      <BasicSelect setFoldersite={setdataEntryType} folderName={dataEntryType} folderlist={dataEntryTypelist} />
-                      <h6>
-                        <I18nHoverText translationKey="plannerPage.Select_task_type">{t('plannerPage.Select_task_type')}</I18nHoverText>
-                      </h6>
-                      <BasicSelect setFoldersite={setTaskType} folderName={taskType} folderlist={TaskTypelist} />
+                      <p>
+                        <input
+                          required={true}
+                          type='text'
+                          onChange={handleTitleInput}
+                          style={{
+                            width: '100%',
+                            height: '38px',
+                            paddingRight: '20px',
+                            direction: props.language === 'English' ? 'rtl' : 'ltr',
+                          }}
+                          value={get_title}
+                        ></input>
+                      </p>
                     </form>
-                  )}
-                  <h6>
-                    <I18nHoverText translationKey="plannerPage.Select_where_to_save_picture_voice">{t('plannerPage.Select_where_to_save_picture_voice')}</I18nHoverText>
-                    <FcMultipleInputs />
-                  </h6>
-                  {/* <h6>
+                    <form id='IPU' className='w3-container'>
+                      <h6>
+                        <I18nHoverText translationKey="plannerPage.Describe_the_task">{t('plannerPage.Describe_the_task')}</I18nHoverText>
+                        <RiAsterisk style={{ color: 'red' }} />
+                      </h6>
+                      <p>
+                        <input
+                          type='text'
+                          onChange={handleDescriptionInput}
+                          style={{
+                            width: '100%',
+                            height: '38px',
+                            paddingRight: '20px',
+                            direction: props.language === 'English' ? 'rtl' : 'ltr',
+                          }}
+                          value={getDescription}
+                        ></input>
+                      </p>
+                    </form>
+                    <div className='estimatedTimeContainer'>
+                      <h6><I18nHoverText translationKey="plannerPage.Enter_the_estimated_time_in_seconds_for_the_task">{t('plannerPage.Enter_the_estimated_time_in_seconds_for_the_task')}</I18nHoverText></h6>
+                      <input
+                        type='number'
+                        name='estimatedTimeSeconds'
+                        id='estimatedTimeSeconds'
+                        min={0}
+                        onChange={(e) =>
+                          setEstimatedTimeSeconds(parseInt(e.target.value))
+                        }
+                        value={estimatedTimeSeconds}
+                      />
+                    </div>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={showForm}
+                        onChange={() => setShowForm(!showForm)}
+                        style={{
+                          width: '85px',
+                          height: '20px',
+                          paddingRight: '20px',
+                          direction: props.language === 'English' ? 'rtl' : 'ltr',
+                        }}
+                      />
+                      <I18nHoverText translationKey="plannerPage.Add_additional_data">{t('plannerPage.Add_additional_data')}</I18nHoverText>
+
+                    </label>
+                    {showForm && (
+                      <form id='IPU' className='w3-container'  >
+                        <form id='IPU' className='w3-container'>
+                          <h6>
+                            <I18nHoverText translationKey="plannerPage.Write_a_weight">{t('plannerPage.Write_a_weight')}</I18nHoverText>
+                            <RiAsterisk style={{ color: 'red' }} />
+                          </h6>
+                          <p>
+                            <input
+                              required={true}
+                              type='text'
+                              onChange={handleDataEntryLabelInput}
+                              style={{
+                                width: '100%',
+                                height: '38px',
+                                paddingRight: '20px',
+                                direction: props.language === 'English' ? 'rtl' : 'ltr',
+                              }}
+                              value={dataEntryLabel}
+                            ></input>
+                          </p>
+                        </form>
+                        <form id='IPU' className='w3-container'>
+                          <h6>
+                            <I18nHoverText translationKey="plannerPage.Write_Data_Entry_Validation">{t('plannerPage.Write_Data_Entry_Validation')}</I18nHoverText>
+                            <RiAsterisk style={{ color: 'red' }} />
+                          </h6>
+                          <p>
+                            <input
+                              required={true}
+                              type='text'
+                              onChange={handleDataEntryValidationInput}
+                              style={{
+                                width: '100%',
+                                height: '38px',
+                                paddingRight: '20px',
+                                direction: props.language === 'English' ? 'rtl' : 'ltr',
+                              }}
+                              value={dataEntryValidation}
+                            ></input>
+                          </p>
+                        </form>
+                        <h6>
+                          <I18nHoverText translationKey="plannerPage.Select_data_entry_type">{t('plannerPage.Select_data_entry_type')}</I18nHoverText>
+                        </h6>
+                        <BasicSelect setFoldersite={setdataEntryType} folderName={dataEntryType} folderlist={dataEntryTypelist} />
+                        <h6>
+                          <I18nHoverText translationKey="plannerPage.Select_task_type">{t('plannerPage.Select_task_type')}</I18nHoverText>
+                        </h6>
+                        <BasicSelect setFoldersite={setTaskType} folderName={taskType} folderlist={TaskTypelist} />
+                      </form>
+                    )}
+                    <h6>
+                      <I18nHoverText translationKey="plannerPage.Select_where_to_save_picture_voice">{t('plannerPage.Select_where_to_save_picture_voice')}</I18nHoverText>
+                      <FcMultipleInputs />
+                    </h6>
+                    {/* <h6>
                     {props.language !== 'English'
                       ? 'Select where to save picture / voice'
                       : ':בחר היכן לשמור תמונה/קול'}
                     <FcMultipleInputs />
                   </h6>
                   <BasicSelect setFoldersite={setFoldersite} folderlist={folderNames} /> */}
-                  <form id='IPU' className='w3-container'>
-                    <h6>
-                      <I18nHoverText translationKey="plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop">{t('plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop')}</I18nHoverText>
-                      <FcMultipleInputs />
-                    </h6>
-                    <div>
-                      <InputFileUpload setPicture={setPicture} language={props.language} />
-                      <Button variant="outlined" onClick={handleOpen}><I18nHoverText translationKey="plannerPage.Gallery">{t('plannerPage.Gallery')}</I18nHoverText></Button>
+                    <form id='IPU' className='w3-container'>
+                      <h6>
+                        <I18nHoverText translationKey="plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop">{t('plannerPage.Add_a_picture_of_a_task_from_the_Gallery_Desktop')}</I18nHoverText>
+                        <FcMultipleInputs />
+                      </h6>
+                      <div>
+                        <InputFileUpload setPicture={setPicture} language={props.language} />
+                        <Button variant="outlined" onClick={handleOpen}><I18nHoverText translationKey="plannerPage.Gallery">{t('plannerPage.Gallery')}</I18nHoverText></Button>
+                        <Modal
+                          open={open}
+                          onClose={() => {
+                            handleClose()
+                            console.log(open);
+                          }}
+                          aria-labelledby="modal-modal-title"
+                          aria-describedby="modal-modal-description"
+                        >
+                          <Box sx={style2}>
+                            <GalleryModalPopup sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true} />
+                          </Box>
+                        </Modal>
+                        {picture ? (
+                          <div className='selectedFileContainer'>
+                            <div className='selectedFileTitle'><I18nHoverText translationKey="plannerPage.Selected_image">{t('plannerPage.Selected_image')}</I18nHoverText></div>
+                            <div style={{ marginBottom: '1rem' }}>
+                              {typeof picture === 'string'
+                                ? extractFilenameFromURL(picture)
+                                : picture?.name}
+                            </div>
+                            <div className='thumbnailtask'>
+                              {typeof picture === 'string' ? (
+                                <img
+                                  src={picture}
+                                  className={`thumbnailImgtask ${props.language !== 'English' ? 'english' : ''}`}
+                                  alt=''
+                                />
+                              ) : picture instanceof File ? (
+                                // If the picture is a file, use FileReader to display it
+                                <img
+                                  src={URL.createObjectURL(picture)}
+                                  className={`thumbnailImgtask ${props.language !== 'English' ? 'english' : ''}`}
+                                  alt='Uploaded Task'
+                                />
+                              ) : null}
+                            </div>
+                          </div>
+                        ) : (
+                          <div style={{ marginBottom: '1rem' }}>
+                            <I18nHoverText translationKey="plannerPage.Selected_image_No_image_file_found">
+                              {t('plannerPage.Selected_image_No_image_file_found')}
+                            </I18nHoverText>
+                          </div>
+                        )}
+                      </div>
+                    </form>
+                    <form id='IPU' className='w3-container'>
+                      <h6>
+                        <I18nHoverText translationKey="plannerPage.Add_a_voice_clip_describing_the_task">{t('plannerPage.Add_a_voice_clip_describing_the_task')}</I18nHoverText>
+                        <FcMultipleInputs />
+                      </h6>
+                      <InputFileUpload setPicture={setAudio} language={props.language} />
+                      <Button variant="outlined" onClick={handleOpen2}><I18nHoverText translationKey="plannerPage.Gallery_audio">{t('plannerPage.Gallery_audio')}</I18nHoverText></Button>
                       <Modal
-                        open={open}
+                        open={open2}
                         onClose={() => {
                           handleClose()
-                          console.log(open);
+                          console.log(open2);
                         }}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                       >
                         <Box sx={style2}>
-                          <GalleryModalPopup sethandleClose={handleClose} setPicture={setPicture} showaudio={false} showimage={true} />
+                          <GalleryModalPopup sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false} />
                         </Box>
                       </Modal>
-                      {picture ? (
-                        <div className='selectedFileContainer'>
-                          <div className='selectedFileTitle'><I18nHoverText translationKey="plannerPage.Selected_image">{t('plannerPage.Selected_image')}</I18nHoverText></div>
+                    </form>
+                    {audio ? (
+                      <div className='selectedFileContainertask'>
+                        <div className='selectedFileTitle'>
+                          <span>:</span>
+                          <I18nHoverText translationKey="plannerPage.Selected_audio">{t('plannerPage.Selected_audio')}</I18nHoverText>
+                        </div>
+                        <div className='audioNameContainer'>
                           <div style={{ marginBottom: '1rem' }}>
-                            {typeof picture === 'string'
-                              ? extractFilenameFromURL(picture)
-                              : picture?.name}
+                            {typeof audio === 'string'
+                              ? extractFilenameFromURL(audio)
+                              : audio?.name}
                           </div>
-                          <div className='thumbnailtask'>
-                            {typeof picture === 'string' ? (
-                              <img
-                                src={picture}
-                                className={`thumbnailImgtask ${props.language !== 'English' ? 'english' : ''}`}
-                                alt=''
-                              />
-                            ) : picture instanceof File ? (
-                              // If the picture is a file, use FileReader to display it
-                              <img
-                                src={URL.createObjectURL(picture)}
-                                className={`thumbnailImgtask ${props.language !== 'English' ? 'english' : ''}`}
-                                alt='Uploaded Task'
-                              />
-                            ) : null}
+                          <div>
+                            {typeof audio === 'string' && (
+                              <button
+                                className='play-button'
+                                onClick={handlePlayClick}
+                              >
+                                {/* {audio} */}
+                                <I18nHoverText translationKey="plannerPage.Play">{t('plannerPage.Play')}</I18nHoverText>
+                              </button>
+                            )}
                           </div>
+                          <audio ref={audioRef} controls>
+                            <source
+                              src={typeof audio === 'string' ? audio : ''}
+                              type='audio/mpeg'
+                            />
+                            {t('plannerPage.Your_browser_does_not_support_the_audio_element')}
+                          </audio>
                         </div>
-                      ) : (
-                        <div style={{ marginBottom: '1rem' }}>
-                          <I18nHoverText translationKey="plannerPage.Selected_image_No_image_file_found">
-                            {t('plannerPage.Selected_image_No_image_file_found')}
-                          </I18nHoverText>
-                        </div>
-                      )}
-                    </div>
-                  </form>
-                  <form id='IPU' className='w3-container'>
+                      </div>
+                    ) : (
+                      <div style={{ marginBottom: '1rem' }}>
+                        <I18nHoverText translationKey="plannerPage.Selected_audio_No_audio_file_found">
+                          {t('plannerPage.Selected_audio_No_audio_file_found')}
+                        </I18nHoverText>
+                      </div>
+                    )}
                     <h6>
-                      <I18nHoverText translationKey="plannerPage.Add_a_voice_clip_describing_the_task">{t('plannerPage.Add_a_voice_clip_describing_the_task')}</I18nHoverText>
-                      <FcMultipleInputs />
+                      <I18nHoverText translationKey="plannerPage.add_multi_language">{t('plannerPage.add_multi_language')}</I18nHoverText>
+                      <IoMdCheckbox style={{ color: 'blue' }} />
                     </h6>
-                    <InputFileUpload setPicture={setAudio} language={props.language} />
-                    <Button variant="outlined" onClick={handleOpen2}><I18nHoverText translationKey="plannerPage.Gallery_audio">{t('plannerPage.Gallery_audio')}</I18nHoverText></Button>
+                    <Button variant="outlined" onClick={handleOpen3}>
+                      <I18nHoverText translationKey="plannerPage.language">{t('plannerPage.language')}</I18nHoverText>
+                    </Button>
                     <Modal
-                      open={open2}
+                      open={open3}
                       onClose={() => {
                         handleClose()
-                        console.log(open2);
+                        console.log(open3);
                       }}
                       aria-labelledby="modal-modal-title"
                       aria-describedby="modal-modal-description"
                     >
-                      <Box sx={style2}>
-                        <GalleryModalPopup sethandleClose={handleClose} setPicture={setAudio} showaudio={true} showimage={false} />
-                      </Box>
-                    </Modal>
-                  </form>
-                  {audio ? (
-                    <div className='selectedFileContainertask'>
-                      <div className='selectedFileTitle'>
-                        <span>:</span>
-                        <I18nHoverText translationKey="plannerPage.Selected_audio">{t('plannerPage.Selected_audio')}</I18nHoverText>
-                      </div>
-                      <div className='audioNameContainer'>
-                        <div style={{ marginBottom: '1rem' }}>
-                          {typeof audio === 'string'
-                            ? extractFilenameFromURL(audio)
-                            : audio?.name}
-                        </div>
-                        <div>
-                          {typeof audio === 'string' && (
-                            <button
-                              className='play-button'
-                              onClick={handlePlayClick}
-                            >
-                              {/* {audio} */}
-                              <I18nHoverText translationKey="plannerPage.Play">{t('plannerPage.Play')}</I18nHoverText>
-                            </button>
-                          )}
-                        </div>
-                        <audio ref={audioRef} controls>
-                          <source
-                            src={typeof audio === 'string' ? audio : ''}
-                            type='audio/mpeg'
-                          />
-                          {t('plannerPage.Your_browser_does_not_support_the_audio_element')}
-                        </audio>
-                      </div>
-                    </div>
-                  ) : (
-                    <div style={{ marginBottom: '1rem' }}>
-                      <I18nHoverText translationKey="plannerPage.Selected_audio_No_audio_file_found">
-                        {t('plannerPage.Selected_audio_No_audio_file_found')}
-                      </I18nHoverText>
-                    </div>
-                  )}
-                  <h6>
-                    <I18nHoverText translationKey="plannerPage.add_multi_language">{t('plannerPage.add_multi_language')}</I18nHoverText>
-                    <IoMdCheckbox style={{ color: 'blue' }} />
-                  </h6>
-                  <Button variant="outlined" onClick={handleOpen3}>
-                    <I18nHoverText translationKey="plannerPage.language">{t('plannerPage.language')}</I18nHoverText>
-                  </Button>
-                  <Modal
-                    open={open3}
-                    onClose={() => {
-                      handleClose()
-                      console.log(open3);
-                    }}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                  >
-                    <Box sx={style}>
-                      {/* <h1>{props.multi_language_description == {} ? props.multi_language_description : 'No description'}</h1>
+                      <Box sx={style}>
+                        {/* <h1>{props.multi_language_description == {} ? props.multi_language_description : 'No description'}</h1>
                     <form id='IPU' className='w3-container'>
                       <h6>
                         {props.language !== 'English'
@@ -822,110 +822,112 @@ function Modal_Tasks(props) {
                         ></input>
                       </p>
                     </form> */}
-                      {/* {Object.keys(multi_language_description).map((languagedescription, index) => ( */}
-                      <Model_Tasks_Pop
-                        // key={index}
-                        siteNameInEnglish={props.mySite.nameInEnglish}
-                        language={props.language}
-                        language_description={language_description}
-                        sethandleClose={handleClose}
-                        multi_language_description={multi_language_description}//data[language_description]
-                        setMulti_language_description={setMulti_language_description}
-                      />
-                      {/* ))} */}
-                    </Box>
-                  </Modal>
-                  <h6>
-                    <I18nHoverText translationKey="plannerPage.add_additional_help">{t('plannerPage.add_additional_help')}</I18nHoverText>
-                    <IoMdCheckbox style={{ color: 'blue' }} />
-                  </h6>
-                  <Button variant="outlined" onClick={handleOpen4}>
-                    <I18nHoverText translationKey="plannerPage.additional_help">{t('plannerPage.additional_help')}</I18nHoverText>
-                  </Button>
-                  <Modal
-                    open={open4}
-                    onClose={() => {
-                      handleClose()
-                    }}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                  >
-                    <Box sx={style}>
-                      <Model_Tasks_help_Pop
-                        siteNameInEnglish={props.mySite.nameInEnglish}
-                        allUsers={props.allUsers}
-                        language={props.language}
-                        additonalHelp={additonalHelp}
-                        sethandleClose={handleClose}
-                        setAdditonalHelp={setAdditonalHelp}
-                        setMainAdditonalHelp={setMainAdditonalHelp}
-                        mainadditonalHelp={mainadditonalHelp}
-                      />
-                    </Box>
-                  </Modal>
-                  <div className='list-group'>
+                        {/* {Object.keys(multi_language_description).map((languagedescription, index) => ( */}
+                        <Model_Tasks_Pop
+                          // key={index}
+                          siteNameInEnglish={props.mySite.nameInEnglish}
+                          language={props.language}
+                          language_description={language_description}
+                          sethandleClose={handleClose}
+                          multi_language_description={multi_language_description}//data[language_description]
+                          setMulti_language_description={setMulti_language_description}
+                        />
+                        {/* ))} */}
+                      </Box>
+                    </Modal>
                     <h6>
-                      <I18nHoverText translationKey="plannerPage.Select_the_stations_you_want_to_associate_the_task_with">
-                        {t('plannerPage.Select_the_stations_you_want_to_associate_the_task_with')}
-                      </I18nHoverText>
+                      <I18nHoverText translationKey="plannerPage.add_additional_help">{t('plannerPage.add_additional_help')}</I18nHoverText>
                       <IoMdCheckbox style={{ color: 'blue' }} />
                     </h6>
-                    <div className='allTasks'>
-                      {props.allStations.map((value, index) => {
-                        return (
-                          <label key={index} className='list-group-item'>
-                            <input
-                              className='form-check-input me-1'
-                              type='checkbox'
-                              onChange={() => saveCheckbox(value)}
-                              style={{
-                                marginLeft: props.language === 'English' ? '0' : '5px',
-                                marginRight: props.language !== 'English' ? '0' : '5px',
-                              }}
-                              checked={myPlacesChoice.includes(value.id)}
-                            ></input>
-                            {value.title}
-                          </label>
-                        );
-                      })}
+                    <Button variant="outlined" onClick={handleOpen4}>
+                      <I18nHoverText translationKey="plannerPage.additional_help">{t('plannerPage.additional_help')}</I18nHoverText>
+                    </Button>
+                    <Modal
+                      open={open4}
+                      onClose={() => {
+                        handleClose()
+                      }}
+                      aria-labelledby="modal-modal-title"
+                      aria-describedby="modal-modal-description"
+                    >
+                      <Box sx={style}>
+                        <Model_Tasks_help_Pop
+                          siteNameInEnglish={props.mySite.nameInEnglish}
+                          allUsers={props.allUsers}
+                          language={props.language}
+                          additonalHelp={additonalHelp}
+                          sethandleClose={handleClose}
+                          setAdditonalHelp={setAdditonalHelp}
+                          setMainAdditonalHelp={setMainAdditonalHelp}
+                          mainadditonalHelp={mainadditonalHelp}
+                        />
+                      </Box>
+                    </Modal>
+                    <div className='list-group'>
+                      <h6>
+                        <I18nHoverText translationKey="plannerPage.Select_the_stations_you_want_to_associate_the_task_with">
+                          {t('plannerPage.Select_the_stations_you_want_to_associate_the_task_with')}
+                        </I18nHoverText>
+                        <IoMdCheckbox style={{ color: 'blue' }} />
+                      </h6>
+                      <div className='allTasks'>
+                        {props.allStations.map((value, index) => {
+                          return (
+                            <label key={index} className='list-group-item'>
+                              <input
+                                className='form-check-input me-1'
+                                type='checkbox'
+                                onChange={() => saveCheckbox(value)}
+                                style={{
+                                  marginLeft: props.language === 'English' ? '0' : '5px',
+                                  marginRight: props.language !== 'English' ? '0' : '5px',
+                                }}
+                                checked={myPlacesChoice.includes(value.id)}
+                              ></input>
+                              {value.title}
+                            </label>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    gap: '16px',
-                    height: '100px',
-                    alignItems: 'center',
-                    padding: '40px',
-                    marginBottom: '20px',
-                  }}
-                  className='footerNewTasks'
-                >
-                  {requestForEditing === 'details' ? (
-                    <></>
-                  ) : (
-                    <input
-                      type='submit'
-                      className='saveTaskButton'
-                      value={t('plannerPage.Save')}
-                      onClick={saveTask}
-                    />
-                  )}
-                  <input
-                    type='submit'
-                    className='cancelTaskButton'
-                    value={t('plannerPage.Cancel')}
-                    onClick={() => {
-                      setMyPlacesChoice([]);
-                      props.setModalOpen(false);
-                      props.handleClose();
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      gap: '16px',
+                      height: '100px',
+                      alignItems: 'center',
+                      padding: '40px',
+                      marginBottom: '20px',
                     }}
-                  />
+                    className='footerNewTasks'
+                  >
+                    {requestForEditing === 'details' ? (
+                      <></>
+                    ) : (
+                      <Button
+                        variant='contained'
+                        className='saveTaskButton'
+                        onClick={saveTask}
+                      >
+                        <I18nHoverText translationKey="plannerPage.Save">{t("plannerPage.Save")}</I18nHoverText>
+                      </Button>
+                    )}
+                    <Button
+                      variant='outlined'
+                      className='cancelTaskButton'
+                      onClick={() => {
+                        setMyPlacesChoice([]);
+                        props.setModalOpen(false);
+                        props.handleClose();
+                      }}
+                    >
+                      <I18nHoverText translationKey="plannerPage.Cancel">{t("plannerPage.Cancel")}</I18nHoverText>
+                    </Button>
+                  </div>
                 </div>
               </div>
-            </div>
             </Draggable>
           </div>
         </>

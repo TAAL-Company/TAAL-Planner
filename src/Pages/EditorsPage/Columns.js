@@ -31,9 +31,12 @@ const Columns = ({ handleClickMenu, handleSectionExpandToggle }) => {
             headerName: t('Route.CreatedAt'),
             renderHeader: renderHeaderWithHover('Route.CreatedAt'),
             width: 150,
-            valueGetter: (params) => {
+            valueGetter: (value, row) => {
+        const params = { value, row };
                 const createdAt = params.row.createdAt;
-                return createdAt ? new Date(createdAt).toLocaleString() : '';
+                if (!createdAt) return '';
+                const d = new Date(createdAt);
+                return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
             },
         },
         {

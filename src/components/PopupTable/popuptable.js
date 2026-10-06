@@ -87,8 +87,8 @@ const PopupTable = ({
                         style={{ direction: t('Direction') }}
                         rows={rows.map((r, i) => ({ ...r, id: r.id || i }))}
                         columns={cols}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
+                        paginationModel={{ page: 0, pageSize: 5 }}
+                        pageSizeOptions={[5]}
                         autoHeight
                     />
                 </div>

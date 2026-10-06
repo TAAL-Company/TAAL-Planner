@@ -11,7 +11,7 @@ import CustomToolbar from '../FormPage/Form/FormsComponents/data_grid/CustomTool
 import { DataGridPro } from '@mui/x-data-grid-pro';
 import { DataGrid } from '@mui/x-data-grid';
 
-import { heIL } from '@mui/x-data-grid';
+import { heIL } from '@mui/x-data-grid/locales';
 import {
   Button,
   FormControl,
@@ -167,7 +167,7 @@ const CognitiveAbillities = () => {
       field: 'id',
       headerName: 'ID',
       filterable: false,
-      renderCell: (index) => index.api.getRowIndex(index.row.id) + 1,
+      renderCell: (index) => index.api.getRowIndexRelativeToVisibleRows(index.row.id) + 1,
     },
     { field: 'index', headerName: 'NO' },
     { field: 'trait', headerName: 'Trait', flex: 1 },
@@ -322,21 +322,17 @@ const CognitiveAbillities = () => {
                 opacity: 1,
               },
           }}
-          experimentalFeatures={
-            ({ newEditingApi: true }, { columnGrouping: true })
-          }
           rows={cognitiveList}
           columns={columns}
-          pageSize={100}
+          paginationModel={{ page: 0, pageSize: 100 }}
           // rowHeight={52}
           getRowHeight={() => 'auto'}
-          // getEstimatedRowHeight={() => 150}
-          rowsPerPageOptions={[10]}
+          pageSizeOptions={[10]}
           pagination
           // scrollbarSize={[1]}
           // scrollArea={(color = "red")}
           checkboxSelection
-          disableSelectionOnClick
+          disableRowSelectionOnClick
           // onSelectionModelChange={(ids) => {
           //   const selectedIDs = new Set(ids);
           //   const selectedRows = rows.filter((row) => selectedIDs.has(row.id));
@@ -344,8 +340,8 @@ const CognitiveAbillities = () => {
           // }}
           //columnGroupingModel={columnGroupingModel}
           localeText={heIL.components.MuiDataGrid.defaultProps.localeText}
-          components={{
-            Toolbar: () => (
+          slots={{
+            toolbar: () => (
               <CustomToolbar
                 // handleChangeUserFlags={handleChangeUserFlags}
                 // handleChangeRouteFlags={handleChangeRouteFlags}
@@ -375,7 +371,7 @@ const CognitiveAbillities = () => {
             ),
           }}
           disableVirtualization
-          componentsProps={{
+          slotProps={{
             toolbar: {
               utf8WithBom: true,
               showQuickFilter: false,
@@ -383,8 +379,7 @@ const CognitiveAbillities = () => {
                 debounceMs: 500,
               },
             },
-          }}
-        />
+          }} />
 
         <div>
           <Dialog

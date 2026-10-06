@@ -4,14 +4,7 @@ import Box from '@mui/material/Box';
 import './DataTableLTR.css';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
-import {
-  GridToolbarContainer,
-  GridToolbarExport,
-  GridToolbarColumnsButton,
-  GridToolbarFilterButton,
-  GridToolbarDensitySelector,
-  GridToolbarQuickFilter,
-} from '@mui/x-data-grid';
+import { GridToolbarContainer, GridToolbarExport, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector, GridToolbarQuickFilter } from '@mui/x-data-grid';
 import { Button } from '@mui/material';
 import MultipleEdit from '../multiple_edit/MultipleEdit';
 import AddColumn from '../add_column/AddColumn';
@@ -407,22 +400,18 @@ const DataTableLTR = ({
             //   bgcolor: "#d3e2ec",
             // },
           }}
-          experimentalFeatures={
-            ({ newEditingApi: true }, { columnGrouping: true })
-          }
           rows={rows}
           columns={columns}
-          pageSize={100}
+          paginationModel={{ page: 0, pageSize: 100 }}
           // rowHeight={52}
           getRowHeight={() => 'auto'}
-          // getEstimatedRowHeight={() => 150}
-          rowsPerPageOptions={[10]}
+          pageSizeOptions={[10]}
           pagination
           // scrollbarSize={[1]}
           // scrollArea={(color = "red")}
           checkboxSelection
-          disableSelectionOnClick
-          onSelectionModelChange={(ids) => {
+          disableRowSelectionOnClick
+          onRowSelectionModelChange={(ids) => {
             const selectedIDs = new Set(ids);
             const selectedRows = rows.filter((row) => selectedIDs.has(row.id));
 
@@ -436,8 +425,8 @@ const DataTableLTR = ({
           }}
           columnGroupingModel={columnGroupingModel}
           // localeText={heIL.components.MuiDataGrid.defaultProps.localeText}
-          components={{
-            Toolbar: () => (
+          slots={{
+            toolbar: () => (
               <CustomToolbar
                 allRoutes={allRoutes}
                 tableType={tableType}
@@ -454,7 +443,7 @@ const DataTableLTR = ({
             ),
           }}
           disableVirtualization
-          componentsProps={{
+          slotProps={{
             toolbar: {
               utf8WithBom: true,
               showQuickFilter: false,
@@ -462,8 +451,7 @@ const DataTableLTR = ({
                 debounceMs: 500,
               },
             },
-          }}
-        />
+          }} />
       </Box>
       {/* <pre style={{ fontSize: 10 }}>
         {JSON.stringify(selectedRows, null, 4)}

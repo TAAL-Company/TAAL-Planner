@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Box, Button, CircularProgress, Backdrop, Paper } from '@mui/material';
-import { DataGrid, heIL } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { heIL } from '@mui/x-data-grid/locales';
 import TaskPerformanceColumns from './TaskPerformanceColumns';
 import TaskPerformanceRows from './TaskPerformanceRows';
 import CustomToolbar from '../components/CustomToolbar';
@@ -158,115 +159,115 @@ const TaskPerformanceTable = ({
 
   return (
     <CacheProvider value={cache}>
-    <ThemeProvider theme={theme}>
-    <div dir={direction}>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-      >
-        <CircularProgress size='10rem' color='info' />
-      </Backdrop>
+      <ThemeProvider theme={theme}>
+      <div dir={direction}>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress size='10rem' color='info' />
+        </Backdrop>
 
-      <Box
-        sx={{
-          width: '100%',
-          direction: direction,
-          background: '#F5F5F5',
-          mb: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          '& .MuiDataGrid-root': {
-            marginRight: '25px',
-            marginLeft: '25px',
-            border: 0,
-          },
-          '& .MuiDataGrid-columnHeaderTitle': {
-            fontSize: 'Medium',
-            fontWeight: 'bold',
-          },
-          '& .MuiDataGrid-row': {
-            backgroundColor: 'white',
-            marginTop: '5px',
-            marginBottom: '0px',
-            borderRadius: '6px',
-          },
-          '& .MuiDataGrid-cellContent': {
-            fontFamily: 'Gotham Black, sans-serif',
-            fontSize: 'medium',
-          },
-        }}
-      >
-        <div style={{ direction, width: '100%', overflowX: 'auto' }}>
-        <Paper style={{ minWidth: 1200 }}>
-        <DataGrid
-          autoHeight
-          style={{ direction: direction }}
-          sortModel={[
-            {
-              field: 'id',
-              sort: 'asc',
-            },
-          ]}
-          onCellEditCommit={handleCellEdit}
+        <Box
           sx={{
-            '& .MuiDataGrid-virtualScroller': {
-              mt: '0 !important',
-            },
-            '& .MuiDataGrid-columnHeaders': {
-              bgcolor: '#114260',
-              borderBottom: '1px solid rgba(224, 224, 224, 1)',
-              fontWeight: 'bold',
-              color: '#fff',
-              position: 'relative',
-              zIndex: 1,
-            },
-            '& .MuiDataGrid-row:hover': {
-              backgroundColor: '#EDF3F8',
-            },
-            '& .MuiButton-textSizeSmall': {
-              color: 'rgb(8,8,137)',
+            width: '100%',
+            direction: direction,
+            background: '#F5F5F5',
+            mb: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            '& .MuiDataGrid-root': {
+              marginRight: '25px',
+              marginLeft: '25px',
+              border: 0,
             },
             '& .MuiDataGrid-columnHeaderTitle': {
-              color: 'white',
+              fontSize: 'Medium',
+              fontWeight: 'bold',
             },
-            '& .MuiDataGrid-iconSeparator': {
-              color: 'white',
+            '& .MuiDataGrid-row': {
+              backgroundColor: 'white',
+              marginTop: '5px',
+              marginBottom: '0px',
+              borderRadius: '6px',
             },
-            '& .MuiDataGrid-menuIconButton > .MuiSvgIcon-root , .MuiDataGrid-sortIcon':
+            '& .MuiDataGrid-cellContent': {
+              fontFamily: 'Gotham Black, sans-serif',
+              fontSize: 'medium',
+            },
+          }}
+        >
+          <div style={{ direction, width: '100%', overflowX: 'auto' }}>
+          <Paper style={{ minWidth: 1200 }}>
+          <DataGrid
+            autoHeight
+            style={{ direction: direction }}
+            sortModel={[
               {
-                color: 'white !important',
-                opacity: 1,
+                field: 'id',
+                sort: 'asc',
               },
-          }}
-          rows={rows}
-          columns={columns}
-          pageSize={pageSize}
-          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          getRowHeight={() => 'auto'}
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          pagination
-          disableSelectionOnClick
-          components={{
-            Toolbar: () => (
-              <CustomToolbar
-                handleChangeUser={handleChangeUser}
-                allUsers={allUsers}
-                setWorker={setWorker}
-                worker={worker}
-                tableType={'TaskPerformance'}
-                isInfoUserRoute={false}
-                isInfoUserSite={true}
-                SaveProfileChanges={SaveProfileChanges}
-                language={language}
-              />
-            ),
-          }}
-        />
-        </Paper>
-        </div>
-      </Box>
-    </div>
-    </ThemeProvider>
+            ]}
+            onCellEditCommit={handleCellEdit}
+            sx={{
+              '& .MuiDataGrid-virtualScroller': {
+                mt: '0 !important',
+              },
+              '& .MuiDataGrid-columnHeaders': {
+                bgcolor: '#114260',
+                borderBottom: '1px solid rgba(224, 224, 224, 1)',
+                fontWeight: 'bold',
+                color: '#fff',
+                position: 'relative',
+                zIndex: 1,
+              },
+              '& .MuiDataGrid-row:hover': {
+                backgroundColor: '#EDF3F8',
+              },
+              '& .MuiButton-textSizeSmall': {
+                color: 'rgb(8,8,137)',
+              },
+              '& .MuiDataGrid-columnHeaderTitle': {
+                color: 'white',
+              },
+              '& .MuiDataGrid-iconSeparator': {
+                color: 'white',
+              },
+              '& .MuiDataGrid-menuIconButton > .MuiSvgIcon-root , .MuiDataGrid-sortIcon':
+                {
+                  color: 'white !important',
+                  opacity: 1,
+                },
+            }}
+            rows={rows}
+            columns={columns}
+            paginationModel={{ page: 0, pageSize: pageSize }}
+            onPaginationModelChange={(model) => setPageSize(model.pageSize)}
+            getRowHeight={() => 'auto'}
+            pageSizeOptions={[10, 25, 50, 100]}
+            pagination
+            disableRowSelectionOnClick
+            slots={{
+              toolbar: () => (
+                <CustomToolbar
+                  handleChangeUser={handleChangeUser}
+                  allUsers={allUsers}
+                  setWorker={setWorker}
+                  worker={worker}
+                  tableType={'TaskPerformance'}
+                  isInfoUserRoute={false}
+                  isInfoUserSite={true}
+                  SaveProfileChanges={SaveProfileChanges}
+                  language={language}
+                />
+              ),
+            }}
+          />
+          </Paper>
+          </div>
+        </Box>
+      </div>
+      </ThemeProvider>
     </CacheProvider>
   );
 };

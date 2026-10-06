@@ -232,7 +232,7 @@ export default function UserForm({
                     )}
                 />
                 <TextField
-                    label={t("Forms.Phone")}
+                    label={<I18nHoverText translationKey="Forms.Phone">{t("Forms.Phone")}</I18nHoverText>}
                     fullWidth
                     value={formValues.phone}
                     onChange={handleChange('phone')}
@@ -240,7 +240,7 @@ export default function UserForm({
                 />
                 <TextField
                     required
-                    label={t("Forms.Username")}
+                    label={<I18nHoverText translationKey="Forms.Username">{t("Forms.Username")}</I18nHoverText>}
                     fullWidth
                     value={formValues.user_name}
                     onChange={handleChange('user_name')}
@@ -250,7 +250,7 @@ export default function UserForm({
                 />
                 <TextField
                     required
-                    label={t("Forms.Password")}
+                    label={<I18nHoverText translationKey="Forms.Password">{t("Forms.Password")}</I18nHoverText>}
                     type="password"
                     fullWidth
                     value={formValues.password}
@@ -260,7 +260,7 @@ export default function UserForm({
                     helperText={errors.password}
                 />
                 <FormControl fullWidth margin="normal">
-                    <InputLabel>{t("Forms.Select_Coach")}</InputLabel>
+                    <InputLabel><I18nHoverText translationKey="Forms.Select_Coach">{t("Forms.Select_Coach")}</I18nHoverText></InputLabel>
                     <Select
                         value={formValues.coachId}
                         onChange={handleChange('coachId')}
@@ -271,18 +271,18 @@ export default function UserForm({
                             </MenuItem>
                         ))}
                     </Select>
-                    <p>{t("Forms.SelectCoachText")}</p>
+                    <p><I18nHoverText translationKey="Forms.SelectCoachText">{t("Forms.SelectCoachText")}</I18nHoverText></p>
                 </FormControl>
 
                 <MultipleSelect
-                    label={t("Forms.Select_Sites")}
+                    label={<I18nHoverText translationKey="Forms.Select_Sites">{t("Forms.Select_Sites")}</I18nHoverText>}
                     translationKey="Forms.Select_Sites"
                     formValues={formValues}
                     handleChange={handleChange}
                     sites={sites}
                     setFormValues={setFormValues}
                 />
-                <p>{t("Forms.SelectSitesText")}</p>
+                <p><I18nHoverText translationKey="Forms.SelectSitesText">{t("Forms.SelectSitesText")}</I18nHoverText></p>
                 <FormControl fullWidth margin="normal">
                     {formValues.picture_url && (
                         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -296,13 +296,13 @@ export default function UserForm({
                             formValues.picture_url = newPicture
                             setPicture(newPicture)
                         }} />
-                    <p>{t("Forms.UploadImageText")}</p>
+                    <p><I18nHoverText translationKey="Forms.UploadImageText">{t("Forms.UploadImageText")}</I18nHoverText></p>
                 </FormControl>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleCloseDialog}>{t("Forms.Cancel")}</Button>
+                <Button onClick={handleCloseDialog}><I18nHoverText translationKey="Forms.Cancel">{t("Forms.Cancel")}</I18nHoverText></Button>
                 <Button onClick={handleSubmit} disabled={loading}>
-                    {loading ? t("Forms.Loading") : t("Forms.Submit")}
+                    {loading ? <I18nHoverText translationKey="Forms.Loading">{t("Forms.Loading")}</I18nHoverText> : <I18nHoverText translationKey="Forms.Submit">{t("Forms.Submit")}</I18nHoverText>}
                 </Button>
             </DialogActions>
         </Dialog>

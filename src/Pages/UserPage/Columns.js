@@ -37,7 +37,8 @@ const Columns = ({ handleClickMenu, coaches, handleSectionExpandToggle }) => {
       headerName: t('UserPage.CoachName'),
       renderHeader: renderHeaderWithHover('UserPage.CoachName'),
       width: 150,
-      valueGetter: (params) => {
+      valueGetter: (value, row) => {
+        const params = { value, row };
         const coach = coaches.find(coach => coach.id === params.row.coachId);
         return coach ? coach.name : '';
       },
@@ -46,12 +47,15 @@ const Columns = ({ handleClickMenu, coaches, handleSectionExpandToggle }) => {
       field: 'sites',
       headerName: t('UserPage.SitesName'),
       renderHeader: renderHeaderWithHover('UserPage.SitesName'),
-      width: 200,
+      width: 100,
       renderCell: (params) => {
-        const sites = params.row.sites ? params.row.sites.map((site) => site.name) : [];
-        const sitesfromsitesdata = params.row.sites ? params.row.sites.flatMap((site) => site.students?.find((student) => student.id === params.row.id)?.name) : [];
-        const allsites = sites.concat(sitesfromsitesdata);
-        return <div>{allsites.join(', ')}</div>;
+        const hasSites = params.row.sites && params.row.sites.length > 0;
+        if (!hasSites) return null;
+        return (
+          <div onClick={() => handleSectionExpandToggle(params.row.id, 'sites', params.row)}>
+            <TableViewIcon style={{ color: 'teal', cursor: 'pointer' }} />
+          </div>
+        );
       },
     },
     {
@@ -59,9 +63,12 @@ const Columns = ({ handleClickMenu, coaches, handleSectionExpandToggle }) => {
       headerName: t('UserPage.CreatedAt'),
       renderHeader: renderHeaderWithHover('UserPage.CreatedAt'),
       width: 150,
-      valueGetter: (params) => {
+      valueGetter: (value, row) => {
+        const params = { value, row };
         const createdAt = params.row.createdAt;
-        return createdAt ? new Date(createdAt).toLocaleString() : '';
+        if (!createdAt) return '';
+        const d = new Date(createdAt);
+        return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
       },
     },
     {
@@ -69,9 +76,12 @@ const Columns = ({ handleClickMenu, coaches, handleSectionExpandToggle }) => {
       headerName: t('UserPage.LastLoginAt'),
       renderHeader: renderHeaderWithHover('UserPage.LastLoginAt'),
       width: 150,
-      valueGetter: (params) => {
+      valueGetter: (value, row) => {
+        const params = { value, row };
         const lastLoginAt = params.row.lastLoginAt;
-        return lastLoginAt ? new Date(lastLoginAt).toLocaleString() : '';
+        if (!lastLoginAt) return '';
+        const d = new Date(lastLoginAt);
+        return d.toLocaleDateString('en-GB') + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
       },
     },
     {
@@ -99,7 +109,7 @@ const Columns = ({ handleClickMenu, coaches, handleSectionExpandToggle }) => {
         if (!hasRoute) return null;
         return (
           <div onClick={() => handleSectionExpandToggle(params.row.id, 'routes', params.row)}>
-            <TableViewIcon style={{ color: 'teal', cursor: 'pointer' }} />
+            <TableViewIcon style={{ color: 'blue', cursor: 'pointer' }} />
           </div>
         );
       },
@@ -123,8 +133,13 @@ const Columns = ({ handleClickMenu, coaches, handleSectionExpandToggle }) => {
     // { field: 'parentRouteId', headerName: t('Route.ParentRouteId'), width: 220 },
   ];
 
-  // No need for customColumns for routes now
-  return { columns, routeColumns };
+    const siteColumns = [
+      { field: 'name', headerName: t('SitePage.Name'), renderHeader: renderHeaderWithHover('SitePage.Name'), width: 180 },
+      { field: 'description', headerName: t('SitePage.Description'), renderHeader: renderHeaderWithHover('SitePage.Description'), width: 220 },
+      { field: 'nameInEnglish', headerName: t('SitePage.NameInEnglish'), renderHeader: renderHeaderWithHover('SitePage.NameInEnglish'), width: 180 },
+    ];
+
+    return { columns, routeColumns, siteColumns };
 };
 
 export default Columns;

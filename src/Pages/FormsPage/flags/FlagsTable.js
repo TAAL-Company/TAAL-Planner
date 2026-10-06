@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Box, CircularProgress, Backdrop, Paper } from '@mui/material';
-import { DataGrid, heIL } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
+import { heIL } from '@mui/x-data-grid/locales';
 import FlagsColumns from './FlagsColumns';
 import FlagsRows from './FlagsRows';
 import FlagsDialog from './FlagsDialog';
@@ -277,15 +278,15 @@ const FlagsTable = ({
                   }}
                   rows={flags}
                   columns={columns}
-                  pageSize={pageSize}
-                  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                  paginationModel={{ page: 0, pageSize: pageSize }}
+                  onPaginationModelChange={(model) => setPageSize(model.pageSize)}
                   getRowHeight={() => 'auto'}
-                  rowsPerPageOptions={[10, 25, 50, 100]}
+                  pageSizeOptions={[10, 25, 50, 100]}
                   pagination
                   checkboxSelection
-                  disableSelectionOnClick
-                  components={{
-                    Toolbar: () => (
+                  disableRowSelectionOnClick
+                  slots={{
+                    toolbar: () => (
                       <CustomToolbar
                         handleChangeUserFlags={handleChangeUserFlags}
                         handleChangeRouteFlags={handleChangeRouteFlags}
@@ -305,7 +306,7 @@ const FlagsTable = ({
                     ),
                   }}
                   disableVirtualization
-                  componentsProps={{
+                  slotProps={{
                     toolbar: {
                       utf8WithBom: true,
                       showQuickFilter: false,

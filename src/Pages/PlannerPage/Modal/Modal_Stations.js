@@ -16,6 +16,7 @@ import {
 import { useNotification } from "../../../components/Notification/NotificationProvider";
 import { useTranslation } from 'react-i18next';
 import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
+import { Button } from '@mui/material';
 
 
 //--------------------------
@@ -74,37 +75,37 @@ const Modal_Stations = (props) => {
     if (get_title === '' || getDescription === '') {
       setFlagClickOK((flagClickOK = false));
       setDone(false);
-      showNotification('error',  t('plannerPage.Please_fill_in_the_required_fields'));
+      showNotification('error', t('plannerPage.Please_fill_in_the_required_fields'));
       // alert( props.language !== "English" ? 'עליך למלא שדות חובה המסומנים בכוכבית' : 'Please fill in the required fields');
 
     } else if (props.requestForEditing === 'edit' || props.requestForEditing === 'details') {
       try {
-      let response = await updateStation(
-        stationUUId,
-        get_title,
-        getDescription,
-        props.mySite.id
-      );
-      if (response.status === 200) {
-        // alert('התחנה עודכנה');
-        showNotification('success', t('plannerPage.The_station_has_been_updated'));
-        setFlagClickOK((flagClickOK = false));
-        props.setOpenModalPlaces(false);
-        let station = props.stationArray.find(
-          (station) => station.id === stationUUId
+        let response = await updateStation(
+          stationUUId,
+          get_title,
+          getDescription,
+          props.mySite.id
         );
-        station.title = get_title;
-        station.subtitle = getDescription;
+        if (response.status === 200) {
+          // alert('התחנה עודכנה');
+          showNotification('success', t('plannerPage.The_station_has_been_updated'));
+          setFlagClickOK((flagClickOK = false));
+          props.setOpenModalPlaces(false);
+          let station = props.stationArray.find(
+            (station) => station.id === stationUUId
+          );
+          station.title = get_title;
+          station.subtitle = getDescription;
 
-        props.setOpenModalPlaces(false);
-        props.setOpenThreeDotsVertical(-1);
-        props.setRequestForEditing('');
+          props.setOpenModalPlaces(false);
+          props.setOpenThreeDotsVertical(-1);
+          props.setRequestForEditing('');
+        }
+      } catch (error) {
+        // alert('שם התחנה כבר קיים - בחר שם אחר');
+        showNotification('error', t('plannerPage.The_station_name_already_exists_choose_another_name'));
+        console.error(error);
       }
-    } catch (error) {
-      // alert('שם התחנה כבר קיים - בחר שם אחר');
-      showNotification('error', t('plannerPage.The_station_name_already_exists_choose_another_name'));
-      console.error(error);
-    }
     } else if (props.requestForEditing === 'duplication') {
       console.log("duplication", props.stationArray);
       let station = props.stationArray.find(
@@ -320,21 +321,23 @@ const Modal_Stations = (props) => {
               </form> */}
             </div>
             <div className='footerNewStation'>
-              <input
-                type='submit'
+              <Button
+                variant='contained'
                 className='newStationButton'
-                value={t('plannerPage.Save')}
                 onClick={Post_Station}
-              />
-              <input
-                type='submit'
+              >
+                <I18nHoverText translationKey="plannerPage.Save">{t("plannerPage.Save")}</I18nHoverText>
+              </Button>
+              <Button
+                variant='outlined'
                 className='newStationButton'
-                value={t('plannerPage.Cancel')}
                 onClick={() => {
                   props.setOpenModalPlaces(false);
                   props.setRequestForEditing('');
                 }}
-              />
+              >
+                <I18nHoverText translationKey="plannerPage.Cancel">{t("plannerPage.Cancel")}</I18nHoverText>
+              </Button>
             </div>
 
             {flagClickOK ? (

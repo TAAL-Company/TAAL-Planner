@@ -5,17 +5,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import { useEffect, useState } from 'react';
 
-import {
-  GridToolbarContainer,
-  GridToolbarExport,
-  GridToolbarColumnsButton,
-  GridToolbarFilterButton,
-  GridToolbarDensitySelector,
-  GridToolbarQuickFilter,
-} from '@mui/x-data-grid';
+import { GridToolbarContainer, GridToolbarExport, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarDensitySelector, GridToolbarQuickFilter } from '@mui/x-data-grid';
 // import MultipleSelectChip from "./MultipleSelectChip";
 // import AccessibleTabs1 from "./AccessibleTabs1";
-import { heIL } from '@mui/x-data-grid';
+import { heIL } from '@mui/x-data-grid/locales';
 import {
   Button,
   FormControl,
@@ -425,22 +418,16 @@ const DataTableRTL = ({
               maxHeight: "none",
             }
           }}
-          experimentalFeatures={
-            ({ newEditingApi: true }, { columnGrouping: true })
-          }
           rows={rows}
           columns={columns}
-          pageSize={100}
-          // rowHeight={52}
-          // getRowHeight={() => 'auto'}
-          // getEstimatedRowHeight={() => 150}
-          rowsPerPageOptions={[10]}
+          paginationModel={{ page: 0, pageSize: 100 }}
+          pageSizeOptions={[10]}
           pagination
           // scrollbarSize={[1]}
           // scrollArea={(color = "red")}
           checkboxSelection
-          disableSelectionOnClick
-          onSelectionModelChange={(ids) => {
+          disableRowSelectionOnClick
+          onRowSelectionModelChange={(ids) => {
             const selectedIDs = new Set(ids);
             const selectedRows = rows.filter((row) => selectedIDs.has(row.id));
 
@@ -448,8 +435,8 @@ const DataTableRTL = ({
           }}
           columnGroupingModel={columnGroupingModel}
           localeText={heIL.components.MuiDataGrid.defaultProps.localeText}
-          components={{
-            Toolbar: () => (
+          slots={{
+            toolbar: () => (
               <CustomToolbar
                 handleChangeUserFlags={handleChangeUserFlags}
                 handleChangeRouteFlags={handleChangeRouteFlags}
@@ -481,7 +468,7 @@ const DataTableRTL = ({
             ),
           }}
           disableVirtualization
-          componentsProps={{
+          slotProps={{
             toolbar: {
               utf8WithBom: true,
               showQuickFilter: false,
@@ -489,8 +476,7 @@ const DataTableRTL = ({
                 debounceMs: 500,
               },
             },
-          }}
-        />
+          }} />
 
         <div>
           <Dialog

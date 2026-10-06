@@ -1,5 +1,6 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import I18nHoverText from '../I18nHoverText/I18nHoverText';
 import './LoopPopUpInput.css';
 
 const LoopPopUpInput = ({ isOpen, onClose, onSubmit, station, selectedRoute }) => {
@@ -10,7 +11,7 @@ const LoopPopUpInput = ({ isOpen, onClose, onSubmit, station, selectedRoute }) =
   const [duration, setDuration] = useState('');
   const [endTime, setEndTime] = useState('');
   const [iterations, setIterations] = useState('');
-  
+
   useEffect(() => {
     if (!isOpen) return;
 
@@ -47,20 +48,28 @@ const LoopPopUpInput = ({ isOpen, onClose, onSubmit, station, selectedRoute }) =
 
   return (
     <div className="loop-popup-overlay">
-      <div 
-        className="loop-popup-container" 
+      <div
+        className="loop-popup-container"
         style={{ direction: direction }}
       >
         <div className="loop-popup-header">
-          <h3>{t('LoopPopup.title')}</h3>
+          <h3>
+            <I18nHoverText translationKey="LoopPopup.title">
+              {t('LoopPopup.title')}
+            </I18nHoverText>
+          </h3>
           <button className="close-button" onClick={handleClose}>
             ×
           </button>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="loop-popup-form">
           <div className="input-group">
-            <label htmlFor="duration">{t('LoopPopup.duration')}:</label>
+            <label htmlFor="duration">
+              <I18nHoverText translationKey="LoopPopup.duration">
+                {t('LoopPopup.duration')}
+              </I18nHoverText>:
+            </label>
             <input
               type="number"
               id="duration"
@@ -70,30 +79,38 @@ const LoopPopUpInput = ({ isOpen, onClose, onSubmit, station, selectedRoute }) =
               min="1"
               step="1"
               inputMode="numeric"
-              style={{ 
+              style={{
                 direction: isRTL ? 'rtl' : 'ltr',
                 textAlign: isRTL ? 'right' : 'left'
               }}
             />
           </div>
-          
+
           <div className="input-group">
-            <label htmlFor="endTime">{t('LoopPopup.endTime')}:</label>
+            <label htmlFor="endTime">
+              <I18nHoverText translationKey="LoopPopup.endTime">
+                {t('LoopPopup.endTime')}
+              </I18nHoverText>:
+            </label>
             <input
               type="time"
               id="endTime"
               value={endTime}
               onChange={(e) => setEndTime(e.target.value)}
               placeholder={t('LoopPopup.endTimePlaceholder')}
-              style={{ 
+              style={{
                 direction: isRTL ? 'rtl' : 'ltr',
                 textAlign: isRTL ? 'right' : 'left'
               }}
             />
           </div>
-          
+
           <div className="input-group">
-            <label htmlFor="iterations">{t('LoopPopup.iterations')}:</label>
+            <label htmlFor="iterations">
+              <I18nHoverText translationKey="LoopPopup.iterations">
+                {t('LoopPopup.iterations')}
+              </I18nHoverText>:
+            </label>
             <input
               type="number"
               id="iterations"
@@ -103,19 +120,23 @@ const LoopPopUpInput = ({ isOpen, onClose, onSubmit, station, selectedRoute }) =
               min="1"
               step="1"
               inputMode="numeric"
-              style={{ 
+              style={{
                 direction: isRTL ? 'rtl' : 'ltr',
                 textAlign: isRTL ? 'right' : 'left'
               }}
             />
           </div>
-          
+
           <div className="button-group">
             <button type="button" onClick={handleClose} className="cancel-button">
-              {t('Forms.Cancel')}
+              <I18nHoverText translationKey="Forms.Cancel">
+                {t('Forms.Cancel')}
+              </I18nHoverText>
             </button>
             <button type="submit" className="submit-button">
-              {t('LoopPopup.apply')}
+              <I18nHoverText translationKey="LoopPopup.apply">
+                {t('LoopPopup.apply')}
+              </I18nHoverText>
             </button>
           </div>
         </form>

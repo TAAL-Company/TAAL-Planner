@@ -131,125 +131,125 @@ const TaskAbilityTable = ({
 
   return (
     <CacheProvider value={cache}>
-    <ThemeProvider theme={theme}>
-    <div dir={direction}>
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-      >
-        <CircularProgress size='10rem' color='info' />
-      </Backdrop>
+      <ThemeProvider theme={theme}>
+      <div dir={direction}>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress size='10rem' color='info' />
+        </Backdrop>
 
-      <Box
-        sx={{
-          width: '100%',
-          direction: t('Direction'),
-          background: '#F5F5F5',
-          mb: 2,
-          display: 'flex',
-          flexDirection: 'column',
-          '& .MuiDataGrid-root': {
-            marginRight: '25px',
-            marginLeft: '25px',
-            border: 0,
-          },
-          '& .MuiDataGrid-columnHeaderTitle': {
-            fontSize: 'Medium',
-            fontWeight: 'bold',
-          },
-          '& .MuiDataGrid-row': {
-            backgroundColor: 'white',
-            marginTop: '5px',
-            marginBottom: '0px',
-            borderRadius: '6px',
-          },
-          '& .MuiDataGrid-cellContent': {
-            fontFamily: 'Gotham Black, sans-serif',
-            fontSize: 'medium',
-          },
-        }}
-      >
-        <div style={{ direction, width: '100%', overflowX: 'auto' }}>
-        <Paper style={{ }}>
-        <DataGrid
-          autoHeight
-          style={{ direction:t('Direction') }}
-          sortModel={[
-            {
-              field: 'id',
-              sort: 'asc',
-            },
-          ]}
+        <Box
           sx={{
-            '& .MuiDataGrid-virtualScroller': {
-              mt: '0 !important',
-            },
-            '& .MuiDataGrid-main': {
-              direction: t('Direction'),
-            },
-            '& .MuiDataGrid-columnHeaders': {
-              bgcolor: '#114260',
-              borderBottom: '1px solid rgba(224, 224, 224, 1)',
-              fontWeight: 'bold',
-              color: '#fff',
-              position: 'relative',
-              zIndex: 1,
-              direction: t('Direction'),
-            },
-            '& .MuiDataGrid-columnHeadersInner': {
-              direction: t('Direction'),
-            },
-            '& .MuiDataGrid-virtualScrollerContent': {
-              direction: t('Direction'),
-            },
-            '& .MuiDataGrid-row:hover': {
-              backgroundColor: '#EDF3F8',
-            },
-            '& .MuiButton-textSizeSmall': {
-              color: 'rgb(8,8,137)',
+            width: '100%',
+            direction: t('Direction'),
+            background: '#F5F5F5',
+            mb: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            '& .MuiDataGrid-root': {
+              marginRight: '25px',
+              marginLeft: '25px',
+              border: 0,
             },
             '& .MuiDataGrid-columnHeaderTitle': {
-              color: 'white',
+              fontSize: 'Medium',
+              fontWeight: 'bold',
             },
-            '& .MuiDataGrid-iconSeparator': {
-              color: 'white',
+            '& .MuiDataGrid-row': {
+              backgroundColor: 'white',
+              marginTop: '5px',
+              marginBottom: '0px',
+              borderRadius: '6px',
             },
-            '& .MuiDataGrid-menuIconButton > .MuiSvgIcon-root , .MuiDataGrid-sortIcon':
+            '& .MuiDataGrid-cellContent': {
+              fontFamily: 'Gotham Black, sans-serif',
+              fontSize: 'medium',
+            },
+          }}
+        >
+          <div style={{ direction, width: '100%', overflowX: 'auto' }}>
+          <Paper style={{ }}>
+          <DataGrid
+            autoHeight
+            style={{ direction:t('Direction') }}
+            sortModel={[
               {
-                color: 'white !important',
-                opacity: 1,
+                field: 'id',
+                sort: 'asc',
               },
-          }}
-          rows={rows}
-          columns={columns}
-          pageSize={pageSize}
-          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          getRowHeight={() => 'auto'}
-          rowsPerPageOptions={[10, 25, 50, 100]}
-          pagination
-          disableSelectionOnClick
-          components={{
-            Toolbar: () => (
-              <CustomToolbar
-                handleChangeRoute={handleChangeRoute}
-                allRoutes={filteredRoutes}
-                tableType={'TaskAbility'}
-                isInfoUserRoute={false}
-                isInfoUserSite={false}
-                routeForTasksAbility={routeForTasksAbility}
-                setRouteForTasksAbility={setRouteForTasksAbility}
-                sites={sites}
-                selectedSite={selectedSite}
-                handleChangeSite={handleChangeSite}
-              />
-            ),
-          }}
-        />
-        </Paper>
-        </div>
-      </Box>
-    </div>
-    </ThemeProvider>
+            ]}
+            sx={{
+              '& .MuiDataGrid-virtualScroller': {
+                mt: '0 !important',
+              },
+              '& .MuiDataGrid-main': {
+                direction: t('Direction'),
+              },
+              '& .MuiDataGrid-columnHeaders': {
+                bgcolor: '#114260',
+                borderBottom: '1px solid rgba(224, 224, 224, 1)',
+                fontWeight: 'bold',
+                color: '#fff',
+                position: 'relative',
+                zIndex: 1,
+                direction: t('Direction'),
+              },
+              '& .MuiDataGrid-columnHeadersInner': {
+                direction: t('Direction'),
+              },
+              '& .MuiDataGrid-virtualScrollerContent': {
+                direction: t('Direction'),
+              },
+              '& .MuiDataGrid-row:hover': {
+                backgroundColor: '#EDF3F8',
+              },
+              '& .MuiButton-textSizeSmall': {
+                color: 'rgb(8,8,137)',
+              },
+              '& .MuiDataGrid-columnHeaderTitle': {
+                color: 'white',
+              },
+              '& .MuiDataGrid-iconSeparator': {
+                color: 'white',
+              },
+              '& .MuiDataGrid-menuIconButton > .MuiSvgIcon-root , .MuiDataGrid-sortIcon':
+                {
+                  color: 'white !important',
+                  opacity: 1,
+                },
+            }}
+            rows={rows}
+            columns={columns}
+            paginationModel={{ page: 0, pageSize: pageSize }}
+            onPaginationModelChange={(model) => setPageSize(model.pageSize)}
+            getRowHeight={() => 'auto'}
+            pageSizeOptions={[10, 25, 50, 100]}
+            pagination
+            disableRowSelectionOnClick
+            slots={{
+              toolbar: () => (
+                <CustomToolbar
+                  handleChangeRoute={handleChangeRoute}
+                  allRoutes={filteredRoutes}
+                  tableType={'TaskAbility'}
+                  isInfoUserRoute={false}
+                  isInfoUserSite={false}
+                  routeForTasksAbility={routeForTasksAbility}
+                  setRouteForTasksAbility={setRouteForTasksAbility}
+                  sites={sites}
+                  selectedSite={selectedSite}
+                  handleChangeSite={handleChangeSite}
+                />
+              ),
+            }}
+          />
+          </Paper>
+          </div>
+        </Box>
+      </div>
+      </ThemeProvider>
     </CacheProvider>
   );
 };

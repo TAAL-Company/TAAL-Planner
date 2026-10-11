@@ -327,7 +327,7 @@ export default function ShiftPage() {
               <DataGrid
                 rows={shifts}
                 columns={columns}
-                paginationModel={{ page: 0, pageSize: 10 }}
+                initialState={{ pagination: { paginationModel: { pageSize: 10 } } }}
                 pageSizeOptions={[10, 25, 50]}
                 autoHeight
                 disableRowSelectionOnClick

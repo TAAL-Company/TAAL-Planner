@@ -128,7 +128,7 @@ const GeneralPerformanceTable = ({cognitiveList}) => {
                   }}
                   rows={rows}
                   columns={columns}
-                  paginationModel={{ page: 0, pageSize: pageSize }}
+                  initialState={{ pagination: { paginationModel: { pageSize } } }}
                   onPaginationModelChange={(model) => setPageSize(model.pageSize)}
                   getRowHeight={() => 'auto'}
                   pageSizeOptions={[10, 25, 50, 100]}

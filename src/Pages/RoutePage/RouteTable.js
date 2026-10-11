@@ -327,7 +327,7 @@ export default function RouteTable() {
               <DataGrid
                 rows={getRowsWithDetails()}
                 columns={columns}
-                paginationModel={{ page: 0, pageSize: pageSize }}
+                initialState={{ pagination: { paginationModel: { pageSize } } }}
                 onPaginationModelChange={(model) => setPageSize(model.pageSize)}
                 pageSizeOptions={[10, 25, 50, 100]}
                 autoHeight

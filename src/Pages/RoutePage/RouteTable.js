@@ -7,6 +7,7 @@ import RouteQRCodeDialog from '../../components/QRCodeWithLogo/RouteQRCodeDialog
 import QrCode2Icon from '@mui/icons-material/QrCode2';
 import { useNotification } from '../../components/Notification/NotificationProvider';
 import { useTranslation } from 'react-i18next';
+import useTranslatedList from '../../Utility/useTranslatedList';
 import { getingData_Routes, deleteRoute, getingData_Tasks, getingData_Places, getTaskPerformanceByRoute } from '../../api/api';
 import RouteForm from './RouteForm';
 import { CacheProvider } from '@emotion/react';
@@ -23,6 +24,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import "./style.css";
 import Toolbar from '../../components/Toolbar/Toolbar';
 import I18nHoverText from '../../components/I18nHoverText/I18nHoverText';
+
+const ROUTE_FIELDS = ['name', 'multi_language_description'];
+const ROUTE_NESTED = {
+  tasks: ['title', 'subtitle'],
+  students: ['name', 'role'],
+  sites: ['name', 'description'],
+};
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -51,6 +59,7 @@ export default function RouteTable() {
   const [sites, setSites] = useState([]);
   const { showNotification } = useNotification();
   const { t } = useTranslation();
+  const [displayRoutes, translatingRoutes] = useTranslatedList(routes, ROUTE_FIELDS, ROUTE_NESTED);
   const [videoDialogOpen, setVideoDialogOpen] = useState(false);
   const [videoTasksForDialog, setVideoTasksForDialog] = useState([]);
   const [videoRouteId, setVideoRouteId] = useState(null);
@@ -61,7 +70,8 @@ export default function RouteTable() {
 
   const handleClickMenu = (event, route) => {
     setAnchorEl(event.currentTarget);
-    setSelectedRoute(route);
+    // Use the original (untranslated) route so edits don't save translated text
+    setSelectedRoute(routes.find(r => r.id === route?.id) ?? route);
   };
 
   const handleCloseMenu = () => {
@@ -259,7 +269,7 @@ export default function RouteTable() {
     }
   };
 
-  const { getRowsWithDetails } = Rows({ routes });
+  const { getRowsWithDetails } = Rows({ routes: displayRoutes });
   const columnsObj = Columns({ handleClickMenu, handlePopupOpen });
   const { columns, taskColumns, studentColumns } = columnsObj;
 
@@ -331,7 +341,7 @@ export default function RouteTable() {
                 onPaginationModelChange={(model) => setPageSize(model.pageSize)}
                 pageSizeOptions={[10, 25, 50, 100]}
                 autoHeight
-                loading={loading}
+                loading={loading || translatingRoutes}
                 sx={{
                   background: '#fafbfc',
                   borderRadius: 2,

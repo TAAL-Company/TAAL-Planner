@@ -16,6 +16,10 @@ import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Rows from './Rows';
 import Columns from './Columns'; 
 import PopupTable from '../../components/PopupTable/popuptable'; 
+import useTranslatedList from '../../Utility/useTranslatedList';
+
+const EDITOR_FIELDS = ['name', 'role'];
+const EDITOR_NESTED = { sites: ['name', 'description'] };
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -63,9 +67,12 @@ export default function EditorTable() {
     const [popupSection, setPopupSection] = useState('');
     const [popupRow, setPopupRow] = useState(null);
 
+    const [displayEditors, translatingEditors] = useTranslatedList(Editors, EDITOR_FIELDS, EDITOR_NESTED);
+
     const handleClickMenu = (event, Editor) => {
         setAnchorEl(event.currentTarget);
-        setSelectedEditor(Editor);
+        // Use the original (untranslated) editor so edits don't save translated text
+        setSelectedEditor(Editors.find(e => (e.id || e.userid) === (Editor?.id || Editor?.userid)) ?? Editor);
     };
 
     const handleCloseMenu = () => {
@@ -198,7 +205,7 @@ export default function EditorTable() {
     };
 
     // Function to get rows with details
-    const { getRowsWithDetails } = Rows({ editors: Editors, expandedRows });
+    const { getRowsWithDetails } = Rows({ editors: displayEditors, expandedRows });
 
     // Add this handler in EditorTable
     const handleSectionExpandToggle = (editorId, section, row) => {
@@ -281,7 +288,7 @@ export default function EditorTable() {
                                 onPaginationModelChange={(model) => setPageSize(model.pageSize)}
                                 pageSizeOptions={[10, 25, 50, 100]}
                                 autoHeight
-                                loading={loading}
+                                loading={loading || translatingEditors}
                                 slots={{
                                     toolbar: Toolbar,
                                 }}

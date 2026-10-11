@@ -19,6 +19,12 @@ import Rows from './Rows';
 import { CssBaseline, Paper } from '@mui/material';
 import PopupTable from '../../components/PopupTable/popuptable'; // Add this import
 import I18nHoverText from '../../components/I18nHoverText/I18nHoverText';
+import useTranslatedList from '../../Utility/useTranslatedList';
+
+// 'role' is intentionally not translated: Rows maps STUDENT -> WORKER
+const USER_FIELDS = ['name'];
+const USER_NESTED = { routes: ['name'], sites: ['name', 'description'] };
+const COACH_FIELDS = ['name'];
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -69,9 +75,13 @@ export default function DataGridDemo() {
 
 
 
+  const [displayUsers, translatingUsers] = useTranslatedList(users, USER_FIELDS, USER_NESTED);
+  const [displayCoaches, translatingCoaches] = useTranslatedList(coaches, COACH_FIELDS);
+
   const handleClickMenu = (event, user) => {
     setAnchorEl(event.currentTarget);
-    setSelectedUser(user);
+    // Use the original (untranslated) user so edits don't save translated text
+    setSelectedUser(users.find(u => u.id === user?.id) ?? user);
   };
 
   const handleCloseMenu = () => {
@@ -228,11 +238,11 @@ export default function DataGridDemo() {
 
 
   // Function to get rows with routes
-  const { getRowsWithDetails } = Rows({ users, expandedRows });
+  const { getRowsWithDetails } = Rows({ users: displayUsers, expandedRows });
 
   const { columns, routeColumns, siteColumns } = Columns({
     handleClickMenu,
-    coaches,
+    coaches: displayCoaches,
     handleSectionExpandToggle,
   });
 
@@ -307,7 +317,7 @@ export default function DataGridDemo() {
                   onPaginationModelChange={(model) => setPageSize(model.pageSize)}
                   pageSizeOptions={[10, 25, 50, 100]}
                   autoHeight
-                  loading={loading}
+                  loading={loading || translatingUsers || translatingCoaches}
                   slots={{
                     toolbar: Toolbar,
                   }}

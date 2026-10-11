@@ -1003,22 +1003,16 @@ const ENVIRONMENTS = {
   },
   staging: {
     label: 'Staging',
-    baseUrl: 'https://staging-gfa2eybwcweaerds.westus2-01.azurewebsites.net', // e.g. https://staging-web-appXXXXXXX.azurewebsites.net
+    baseUrl: 'https://staging-gfa2eybwcweaerds.westus2-01.azurewebsites.net',
   },
 };
 
 /*
  * 2. AUTH
  *
- * Your app stores one JWT in sessionStorage('accessToken') and attaches it
- * to every request via an axios interceptor + a monkey-patched fetch — both
- * globally, for whichever baseUrl happens to be configured for THIS app.
- * That pattern can't hold two different tokens (staging + production) at
- * once, so this tab keeps its own two tokens in memory and attaches the
- * right one per call, independent of the app's global interceptor.
- *
- * Paste a token pair from each environment's login response (or read
- * sessionStorage.accessToken while logged into that environment).
+ * This tab keeps its own two tokens in memory and attaches the right one
+ * per call, independent of the app's global interceptor (which can only
+ * hold one token for one baseUrl).
  */
 const authHeaders = (token) => (token ? { Authorization: `Bearer ${token}` } : {});
 
@@ -1063,7 +1057,7 @@ const makeClient = (env, token) => {
     listRoutes: () => req('get', '/routes'),
     getRoute: (id) => req('get', `/routes/${id}`),
     routesByIds: (ids) => req('post', '/routes/ids', ids),
-    createRoute: (b) => req('post', '/routes', b),
+    createRoute: (b) => req('post', '/routes/', b),
     updateRoute: (id, b) => req('patch', `/routes/${id}`, b),
   };
 };
@@ -1086,28 +1080,40 @@ const stripBase = (obj) => {
   return rest;
 };
 
-// Generic fallback (use for routes, stations)
+// Generic fallback (used for stations)
 const stripServerFields = stripBase;
 
 // Task: CreateTaskDto accepts title, subtitle, multi_language_description,
-// estimatedTimeSeconds, picture_url, audio_url, siteIds, stationIds,
+// estimatedTimeSeconds, picture_url, audio_url, siteIds, stationId,
 // dataEntryLabel, dataEntryValidation, dataEntryType, taskType, additonalHelp.
-// Strip all relational arrays that contain IDs from the source env
-// (alternativeTasks, tasksAlternativeTo, subtasks, parentTasks, siteIds,
-// stationIds) and strip IDs+taskId from each additonalHelp entry so the
-// backend creates them fresh rather than trying to resolve source-env IDs.
-const stripTaskFields = (task, newSiteId, stationMap) => {
+// Strip all relational arrays that contain IDs from the source env and strip
+// IDs+taskId from each additonalHelp entry.
+//
+// FIX: every task needs a stationId (the original app always creates tasks
+// with one, and the route needs it to build its task rows). The station link
+// is resolved from taskStationMap, which is now also filled from the route
+// entries (see executeMigration).
+const stripTaskFields = (task, newSiteId, stationMap, taskStationMap) => {
   const {
     id, createdAt, updatedAt, created_at, updated_at, __v,
     alternativeTasks, tasksAlternativeTo, subtasks, parentTasks,
-    siteIds: _s, stationIds: _st,
+    siteIds: _s, stationIds: _st, sites: _sites, loops: _loops,
+    stations: _stObjs, stationId: _stId, station_id: _stId2, station: _stObj,
     additonalHelp,
     ...rest
   } = task || {};
 
-  // Remap stationIds using the new station ids, only send if the task had them
-  const newStationIds = arr(_st)
-    .map(idOf)
+  // The source may expose station links as stationIds, embedded stations[],
+  // a single stationId/station, or via the map built from stations + routes.
+  const sourceStationRefs = [
+    ...arr(_st), ...arr(_stObjs), _stId, _stId2, _stObj,
+    taskStationMap.get(idOf(task)),
+  ].filter(Boolean);
+  // Last resort: a site with a single station -> every task belongs to it.
+  if (sourceStationRefs.length === 0 && stationMap.size === 1) {
+    sourceStationRefs.push([...stationMap.keys()][0]);
+  }
+  const newStationIds = [...new Set(sourceStationRefs.map(idOf))]
     .map(sid => stationMap.get(sid))
     .filter(Boolean);
 
@@ -1120,46 +1126,49 @@ const stripTaskFields = (task, newSiteId, stationMap) => {
   return {
     ...rest,
     siteIds: newSiteId ? [newSiteId] : [],
+    // The API (insertTask in api.js) expects a stationIds ARRAY.
     ...(newStationIds.length > 0 ? { stationIds: newStationIds } : {}),
     ...(cleanedHelp.length > 0 ? { additonalHelp: cleanedHelp } : {}),
   };
 };
 
-// Route: CreateRouteDto accepts name, studentIds, taskIds, siteIds,
-// OnlyOnce, parentRouteId, loopIds, video_link, multi_language_description.
-// GET /routes/{id} returns the expanded shape with sites[], students[],
-// loops[], and tasks[] as {position, routeId, taskId, stationId}.
-// We must convert to ID-array form and remap all source-env IDs.
-const stripRouteFields = (route, newSiteId, taskMap, routeMap) => {
-  const {
-    id, createdAt, updatedAt, created_at, updated_at, __v,
-    // relational expanded arrays — replaced with ID arrays below
-    tasks: rawTasks, students, sites, loops,
-    parentRouteId,
-    ...scalar
-  } = route || {};
+// Route: FIX — send exactly the minimal body the original import script
+// used successfully: { name, studentIds, taskIds, siteIds }. GET /routes/{id}
+// returns tasks[] as {position, routeId, taskId, stationId}; we only need the
+// ordered task ids, remapped to the new environment.
+//
+// Optional scalar fields are listed in OPTIONAL_ROUTE_FIELDS below. They are
+// OFF by default; enable them one at a time if you need them copied.
+const OPTIONAL_ROUTE_FIELDS = [
+  // 'OnlyOnce',
+  // 'video_link',
+  // 'multi_language_description',
+  // 'picture_url',
+];
 
-  // tasks[]: convert {position, routeId, taskId, stationId?} ->
-  //          {position, taskId (remapped), stationId? (will be remapped by caller)}
-  // routeId inside each task entry is a self-reference — drop it.
-  const taskEntries = arr(rawTasks)
-    .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-    .map(({ routeId: _rid, taskId, stationId, ...rest }) => ({
-      ...rest,
-      taskId: taskMap.get(idOf(taskId)) ?? idOf(taskId),
-      ...(stationId ? { stationId } : {}), // stationId remapped by caller
-    }));
+const stripRouteFields = (route, newSiteId, taskMap) => {
+  const entries = arr(route?.tasks).length
+    ? arr(route.tasks).slice().sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+    : arr(route?.taskIds);
+
+  const taskIds = entries.map((entry) => {
+    const oldId = idOf(entry?.taskId ?? entry);
+    const newId = taskMap.get(oldId);
+    if (!newId) throw new Error(`Route "${nameOf(route)}" references task ${oldId} that was not migrated`);
+    return newId;
+  });
+
+  const optional = {};
+  OPTIONAL_ROUTE_FIELDS.forEach((f) => {
+    if (route?.[f] !== undefined) optional[f] = route[f];
+  });
 
   return {
-    ...scalar,
-    // Scalar fields the DTO accepts
-    siteIds: newSiteId ? [newSiteId] : [],
+    name: route.name,
     studentIds: [],
-    loopIds: arr(loops).map(idOf).filter(Boolean),
-    tasks: taskEntries,
-    parentRouteId: parentRouteId
-      ? (routeMap.get(idOf(parentRouteId)) ?? null)
-      : null,
+    taskIds,
+    siteIds: newSiteId ? [newSiteId] : [],
+    ...optional,
   };
 };
 
@@ -1193,8 +1202,29 @@ const newIdFrom = (created, what) => {
 /*  up on GET /routes/{id}, so each route is re-fetched individually.   */
 /* ------------------------------------------------------------------ */
 const collectSiteBundle = async (site, src, warnings) => {
-  const stations = arr(site.stations);
-  const tasks = arr(site.tasks);
+  let stations = arr(site.stations);
+  let tasks = arr(site.tasks);
+
+  // GET /sites/{id} doesn't carry task<->station links. POST /tasks/ids returns
+  // tasks[].stations[] and POST /stations/ids returns stations[].tasks[].
+  if (tasks.length) {
+    try {
+      const full = arr(await src.tasksByIds(tasks.map(idOf)));
+      const byId = new Map(full.map((t) => [idOf(t), t]));
+      tasks = tasks.map((t) => ({ ...t, ...(byId.get(idOf(t)) || {}) }));
+    } catch (e) {
+      warnings.push(`Could not load task station links (${e.message.slice(0, 90)})`);
+    }
+  }
+  if (stations.length) {
+    try {
+      const full = arr(await src.stationsByIds(stations.map(idOf)));
+      const byId = new Map(full.map((s) => [idOf(s), s]));
+      stations = stations.map((s) => ({ ...s, ...(byId.get(idOf(s)) || {}) }));
+    } catch (e) {
+      warnings.push(`Could not load station task links (${e.message.slice(0, 90)})`);
+    }
+  }
   const routeSummaries = arr(site.routes);
 
   const routes = await mapLimit(routeSummaries, 5, async (rs) => {
@@ -1225,6 +1255,31 @@ const collectSiteBundle = async (site, src, warnings) => {
   }
 
   return { site, stations, tasks: [...tasks, ...extraTasks], routes };
+};
+
+// FIX: build task -> station links from every place the source exposes them.
+// Returns a Map of OLD task id -> OLD station id.
+const buildTaskStationMap = (bundle) => {
+  const map = new Map();
+
+  // (a) stations that list their tasks
+  for (const st of arr(bundle.stations)) {
+    for (const taskRef of arr(st.taskIds ?? st.tasks)) {
+      const taskId = idOf(taskRef?.taskId ?? taskRef);
+      if (taskId && !map.has(taskId)) map.set(taskId, idOf(st));
+    }
+  }
+
+  // (b) route entries: {position, routeId, taskId, stationId}
+  for (const r of arr(bundle.routes)) {
+    for (const rt of arr(r.tasks)) {
+      const taskId = idOf(rt?.taskId ?? rt?.id);
+      const stationId = idOf(rt?.stationId);
+      if (taskId && stationId && !map.has(taskId)) map.set(taskId, stationId);
+    }
+  }
+
+  return map;
 };
 
 /* ------------------------------------------------------------------ */
@@ -1304,6 +1359,16 @@ function EnvironmentMigration() {
 
         if (bundle.tasks.length === 0) warnings.push('This site has no tasks.');
         if (bundle.routes.length === 0) warnings.push('This site has no routes.');
+
+        // FIX: warn up-front about tasks we can't link to a station
+        const tsMap = buildTaskStationMap(bundle);
+        const orphans = bundle.tasks.filter((t) => !tsMap.has(idOf(t)));
+        if (orphans.length > 0) {
+          warnings.push(
+            `${orphans.length} task(s) have no station in the source and will be created WITHOUT one: ${orphans.map(nameOf).join(', ')}`
+          );
+        }
+        if (bundle.stations.length === 0) warnings.push('This site has no stations.');
 
         return {
           id, name: nameOf(fullSite), bundle, existing, mode, warnings,
@@ -1388,53 +1453,55 @@ function EnvironmentMigration() {
         // (if the field exists) is remapped once tasks exist, in step 3b.
         for (const st of item.bundle.stations) {
           checkCancel();
-          const body = stripServerFields(st);
+          const { tasks: _t, parentSite: _ps, loops: _l, taskIds: _ti, ...stBody } = stripServerFields(st);
+          const body = stBody;
           body.parentSiteId = newSiteId;
-          if ('taskIds' in body) body.taskIds = [];
+          body.taskIds = [];
           const created = await dst.createStation(body);
           stationMap.set(idOf(st), newIdFrom(created, 'station'));
           addLog(`  ✓ station "${nameOf(st)}"`, 'ok'); tick();
         }
 
-        // 3. TASKS — copy every scalar field and media URLs. Strip all
-        // relational arrays (alternativeTasks, parentTasks, etc.) and
-        // clean additonalHelp entries so they don't carry source-env IDs.
+        // FIX: task -> station links come from the stations AND from the
+        // route entries (the only place the link is guaranteed to exist).
+        const taskStationMap = buildTaskStationMap(item.bundle);
+
+        // 3. TASKS — each one is created with its (remapped) stationId.
         for (const t of item.bundle.tasks) {
           checkCancel();
-          const body = stripTaskFields(t, newSiteId, stationMap);
+          const body = stripTaskFields(t, newSiteId, stationMap, taskStationMap);
+          if (!body.stationIds?.length) {
+            addLog(`  ⚠ task "${nameOf(t)}" has no resolvable station — created without one (route creation may fail)`, 'warn');
+          }
           const created = await dst.createTask(body);
           taskMap.set(idOf(t), newIdFrom(created, 'task'));
-          addLog(`  ✓ task "${nameOf(t)}"`, 'ok'); tick();
+          addLog(`  ✓ task "${nameOf(t)}"${body.stationIds?.length ? ' → station linked' : ''}`, 'ok'); tick();
         }
 
         // 3b. Back-fill each station's taskIds now that tasks exist, only if
         // the source station actually carried that field.
         for (const st of item.bundle.stations) {
           checkCancel();
-          if (!('taskIds' in st)) continue;
+          if (!('taskIds' in st) && !('tasks' in st)) continue;
           const newStId = stationMap.get(idOf(st));
-          const newTaskIds = remapIdList(st.taskIds, taskMap);
+          const newTaskIds = remapIdList(st.taskIds ?? st.tasks, taskMap);
           if (newStId && newTaskIds.length) {
             await dst.updateStation(newStId, { taskIds: newTaskIds });
           }
         }
 
-        // 4. ROUTES — convert GET shape to CreateRouteDto shape.
-        // stripRouteFields handles: dropping relational objects (sites[],
-        // students[], loops[]), converting tasks[] from {routeId, taskId, ...}
-        // to {taskId (remapped), position, ...}, setting siteIds/studentIds,
-        // and remapping parentRouteId to the new target-env route id.
+        // 4. ROUTES — FIX: minimal body { name, studentIds, taskIds, siteIds }
+        // exactly like the original import script.
         for (const r of item.bundle.routes) {
           checkCancel();
-          const body = stripRouteFields(r, newSiteId, taskMap, routeMap);
-          // Remap stationId within each task entry now that stationMap is full
-          body.tasks = body.tasks.map((rt) => ({
-            ...rt,
-            ...(rt.stationId
-              ? { stationId: stationMap.get(idOf(rt.stationId)) ?? rt.stationId }
-              : {}),
-          }));
-          const created = await dst.createRoute(body);
+          const body = stripRouteFields(r, newSiteId, taskMap);
+          console.log('Creating route with body:', body);
+          let created;
+          try {
+            created = await dst.createRoute(body);
+          } catch (err) {
+            throw new Error(`creating route "${nameOf(r)}": ${err.message}`);
+          }
           routeMap.set(idOf(r), newIdFrom(created, 'route'));
           addLog(`  ✓ route "${nameOf(r)}"`, 'ok'); tick();
         }

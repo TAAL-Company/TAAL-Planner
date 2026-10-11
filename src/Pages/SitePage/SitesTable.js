@@ -30,6 +30,16 @@ import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Rows from './Rows';
 import Columns from './Columns';
 import PopupTable from '../../components/PopupTable/popuptable';
+import useTranslatedList from '../../Utility/useTranslatedList';
+
+const SITE_FIELDS = ['name', 'description'];
+const SITE_NESTED = {
+    tasks: ['title', 'subtitle'],
+    routes: ['name'],
+    stations: ['title', 'subtitle'],
+    students: ['name', 'role'],
+    editors: ['name', 'role'],
+};
 
 const cacheRtl = createCache({
     key: 'data-grid-rtl-demo',
@@ -81,9 +91,12 @@ export default function SitesTable() {
     const [popupSection, setPopupSection] = useState('');
     const [popupRow, setPopupRow] = useState(null);
 
+    const [displaySites, translatingSites] = useTranslatedList(sites, SITE_FIELDS, SITE_NESTED);
+
     const handleClickMenu = (event, site) => {
         setAnchorEl(event.currentTarget);
-        setSelectedSite(site);
+        // Use the original (untranslated) site so edits don't save translated text
+        setSelectedSite(sites.find(s => s.id === site?.id) ?? site);
     };
 
     const handleCloseMenu = () => {
@@ -308,7 +321,7 @@ export default function SitesTable() {
         return { groups, ungrouped };
     };
 
-    const { getRowsWithDetails } = Rows({ sites, expandedRows });
+    const { getRowsWithDetails } = Rows({ sites: displaySites, expandedRows });
     const columnsObj = Columns({
         handleClickMenu,
         expandedRows,
@@ -404,7 +417,7 @@ export default function SitesTable() {
                                     onPaginationModelChange={(model) => setPageSize(model.pageSize)}
                                     pageSizeOptions={[10, 25, 50, 100]}
                                     autoHeight
-                                    loading={loading}
+                                    loading={loading || translatingSites}
                                     slots={{
                                         toolbar: Toolbar,
                                     }}
@@ -425,7 +438,7 @@ export default function SitesTable() {
                                 />
                             ) : (
                                 <>
-                                    {loading ? (
+                                    {loading || translatingSites ? (
                                         <Grid container>
                                             <Grid item xs={12} sx={{ textAlign: 'center', py: 4 }}>
                                                 <CircularProgress size="10rem" color="info" />
@@ -439,7 +452,7 @@ export default function SitesTable() {
                                         </Grid>
                                     ) : (
                                         (() => {
-                                            const { groups, ungrouped } = groupSitesByPrefix(sites);
+                                            const { groups, ungrouped } = groupSitesByPrefix(displaySites);
                                             return (
                                                 <>
                                                     {/* Render ungrouped sites in General Group */}

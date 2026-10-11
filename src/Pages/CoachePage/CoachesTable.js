@@ -15,6 +15,7 @@ import { CacheProvider } from '@emotion/react';
 import { createTheme, ThemeProvider, useTheme } from '@mui/material/styles';
 import Rows from './Rows';
 import Columns from './Columns'; // Import Columns
+import useTranslatedList from '../../Utility/useTranslatedList';
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -48,9 +49,12 @@ export default function CoachesTable() {
   const { showNotification } = useNotification();
   const { t } = useTranslation();
 
+  const [displayCoaches, translatingCoaches] = useTranslatedList(coaches, ['name']);
+
   const handleClickMenu = (event, coach) => {
     setAnchorEl(event.currentTarget);
-    setSelectedCoach(coach);
+    // Use the original (untranslated) coach so edits don't save translated text
+    setSelectedCoach(coaches.find(c => c.id === coach?.id) ?? coach);
   };
 
   const handleCloseMenu = () => {
@@ -164,7 +168,7 @@ export default function CoachesTable() {
   };
 
   // Function to get rows with details
-  const { getRowsWithDetails } = Rows({ coaches, expandedRows });
+  const { getRowsWithDetails } = Rows({ coaches: displayCoaches, expandedRows });
 
   // Get columns from Columns.js
   const { columns } = Columns({ handleClickMenu });
@@ -240,7 +244,7 @@ export default function CoachesTable() {
                 onPaginationModelChange={(model) => setPageSize(model.pageSize)}
                 pageSizeOptions={[10, 25, 50, 100]}
                 autoHeight
-                loading={loading}
+                loading={loading || translatingCoaches}
                 slots={{
                   toolbar: Toolbar,
                 }}

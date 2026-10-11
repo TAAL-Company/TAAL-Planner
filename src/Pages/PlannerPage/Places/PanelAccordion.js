@@ -10,6 +10,7 @@ import Tasks from "../Tasks/tasks";
 import { FiMinimize2 } from "react-icons/fi";
 import { FiMaximize2 } from "react-icons/fi";
 import I18nHoverText from "../../../components/I18nHoverText/I18nHoverText";
+import OriginalTip from "../OriginalTip";
 
 /* ─── Styled Components (same pattern as SizeSelector) ─────── */
 
@@ -380,6 +381,7 @@ export default function PanelAccordion(props) {
                               )}
                             </div>
 
+                            <OriginalTip text={route.name}>
                             <div
                               className="nameOfButton"
                               onClick={() => {
@@ -392,6 +394,7 @@ export default function PanelAccordion(props) {
                             >
                               {route.name.replace("&#8211;", "-").replace("&#8217;", "'")}
                             </div>
+                            </OriginalTip>
                           </div>
                         )}
                       </Draggable>

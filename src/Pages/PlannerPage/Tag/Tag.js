@@ -8,6 +8,7 @@ import Audios from '../../../components/junk/Audios/Audios';
 import Modal_dropdown from '../Modal/Modal_dropdown';
 import Badge from '@mui/material/Badge';
 import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
+import OriginalTip from '../OriginalTip';
 
 function Tag({
   keyCount,
@@ -104,8 +105,9 @@ function Tag({
                 }`}
               style={{ marginTop: width }}
             ></div>
-            <div className={`nameStationBoard ${language !== 'English' ? 'english' : ''}`}>
-              {nameStation}
+            <div
+              className={`nameStationBoard ${language !== 'English' ? 'english' : ''}`}>
+              <OriginalTip text={nameStation}><span>{nameStation}</span></OriginalTip>
               {
                 nameStation !== ''
                 && selectedRoute?.loops?.length > 0
@@ -275,10 +277,12 @@ function Tag({
                     <></>
                   )}
                 </div>
-                <div style={{ marginLeft: language === 'English' ? '0' : '15px', marginRight: language !== 'English' ? '0' : '15px' }} className='nameOfTask'>
-                  {' '}
-                  {title}
-                </div>
+                <OriginalTip text={title}>
+                  <div style={{ marginLeft: language === 'English' ? '0' : '15px', marginRight: language !== 'English' ? '0' : '15px' }} className='nameOfTask'>
+                    {' '}
+                    {title}
+                  </div>
+                </OriginalTip>
               </div>
             </>
           ) : (

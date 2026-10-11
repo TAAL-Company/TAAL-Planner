@@ -13,6 +13,7 @@ import { Droppable } from 'react-beautiful-dnd';
 import './style.css';
 import ViewRoutesModal from './ViewRoutesModal.js';
 import { useNotification } from "../../../components/Notification/NotificationProvider.js";
+import OriginalTip from '../OriginalTip';
 import I18nHoverText from '../../../components/I18nHoverText/I18nHoverText';
 
 let Route = [];
@@ -884,7 +885,9 @@ function DragnDrop(props) {
                               {props.board[0].pack ? props.board[0].pack : 'Pack Routes'}
                             </span>
                           ) : props.tasksOfRoutes && props.tasksOfRoutes.name ? (
-                            props.tasksOfRoutes.name
+                            <OriginalTip text={props.tasksOfRoutes.name}>
+                              <span>{props.tasksOfRoutes.name}</span>
+                            </OriginalTip>
                           ) : (
                             <></>
                           )}

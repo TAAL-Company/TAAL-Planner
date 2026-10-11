@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Droppable, Draggable, DragDropContext } from 'react-beautiful-dnd';
 import Tag from '../Tag/Tag.js';
 import './reorderBoard.css';
+import OriginalTip from '../OriginalTip';
 
 const ReorderBoard = (props) => {
   const { t } = useTranslation();
@@ -78,9 +79,11 @@ const ReorderBoard = (props) => {
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
                     >
-                      <div className='nameStationReorder'>
-                        {task.nameStation}
-                      </div>
+                      <OriginalTip text={task.nameStation}>
+                        <div className='nameStationReorder'>
+                          {task.nameStation}
+                        </div>
+                      </OriginalTip>
 
                       <div
                         className='buttons'
@@ -98,7 +101,9 @@ const ReorderBoard = (props) => {
                           padding: '22px',
                         }}
                       >
-                        <div className='nameOfTask'> {task.title}</div>
+                        <OriginalTip text={task.title}>
+                          <div className='nameOfTask'> {task.title}</div>
+                        </OriginalTip>
                       </div>
                     </div>
                   )}

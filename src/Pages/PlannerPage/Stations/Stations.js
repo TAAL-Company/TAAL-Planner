@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getingDataTasks, deleteStation, insertLoop, updateLoop } from '../../../api/api';
 import './style.css';
+import OriginalTip from '../OriginalTip';
 import ModalStations from '../Modal/Modal_Stations';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { CgSearch } from 'react-icons/cg';
@@ -511,12 +512,13 @@ const Stations = (props) => {
                                           <></>
                                         )}
                                       </div>
+                                      <OriginalTip text={title}>
                                       <button
                                         className='nameOfButton'
-
                                       >
                                         {title}
                                       </button>
+                                      </OriginalTip>
                                     </div>
                                   </div>
                                 )}

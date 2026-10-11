@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { setOriginalTexts, clearOriginalTexts } from '../originalText';
 import {
   getingData_Routes,
   getingData_Tasks,
@@ -167,6 +168,8 @@ const Places = (props) => {
   const [isTranslated, setIsTranslated] = useState(false);
   const [currentTranslationLang, setCurrentTranslationLang] = useState('');
   const originalDataRef = useRef({ tasks: [], routes: [], stations: [], users: [], packs: [] });
+  const translatedSnapshotRef = useRef(null);
+  const translateRequestRef = useRef(0);
   const [openThreeDots, setOpenThreeDots] = useState(-1);
 
   const [allPacks, setallPacks] = useState([]); // All packs
@@ -225,6 +228,7 @@ const Places = (props) => {
   // Handle translating all API data
   const handleTranslateData = useCallback(async (targetLang) => {
     setIsTranslating(true);
+    const requestId = ++translateRequestRef.current;
     try {
       const original = originalDataRef.current;
       const [
@@ -244,6 +248,16 @@ const Places = (props) => {
         translateArrayOfObjects(original.editors, targetLang, ['name']),
         translateArrayOfObjects(original.places, targetLang, ['name', 'description']),
       ]);
+      // A newer translate (or a restore) started while this one was awaiting: drop this result
+      if (requestId !== translateRequestRef.current) return;
+      translatedSnapshotRef.current = {
+        tasks: { original: original.tasks, translated: translatedTasks },
+        routes: { original: original.routes, translated: translatedRoutes },
+        stations: { original: original.stations, translated: translatedStations },
+        users: { original: original.users, translated: translatedUsers },
+        packs: { original: original.packs, translated: translatedPacks },
+        editors: { original: original.editors, translated: translatedEditors },
+      };
       setAllTasks(translatedTasks);
       setAllRoutes(translatedRoutes);
       setRoutes(translatedRoutes);
@@ -275,8 +289,15 @@ const Places = (props) => {
       setAllEditors(translatedEditors);
       // allPlaces is a module-level variable; update it so PlacesDropdown re-renders with translated names
       allPlaces = translatedPlaces;
-      setIsTranslated(true);
+      setOriginalTexts([
+        [original.tasks, translatedTasks, ['title', 'subtitle']],
+        [original.routes, translatedRoutes, ['name']],
+        [original.stations, translatedStations, ['title', 'subtitle']],
+        [original.packs, translatedPacks, ['name']],
+        [original.users, translatedUsers, ['name']],
+      ]);
       setCurrentTranslationLang(targetLang);
+      setIsTranslated(true);
     } catch (error) {
       console.error('Translation error:', error);
     } finally {
@@ -309,9 +330,58 @@ const Places = (props) => {
     setAllEditors(original.editors || []);
     // Restore module-level allPlaces variable
     allPlaces = original.places || [];
+    clearOriginalTexts();
     setIsTranslated(false);
+    translatedSnapshotRef.current = null;
+    translateRequestRef.current += 1;
     setCurrentTranslationLang('');
   }, []);
+
+  // While translated, any list that was rebuilt from untranslated API data (site/route changes,
+  // re-fetches, stale closures) is patched back to the translated text. Items are patched only
+  // if they still hold the original text, so user edits are kept.
+  useEffect(() => {
+    const snap = translatedSnapshotRef.current;
+    if (!isTranslated || !snap) return;
+    const patchList = (list, kind, fields) => {
+      const pair = snap[kind];
+      if (!Array.isArray(list) || list.length === 0 || !pair) return list;
+      const trMap = new Map((pair.translated || []).map((item) => [item.id, item]));
+      const origMap = new Map((pair.original || []).map((item) => [item.id, item]));
+      let changed = false;
+      const result = list.map((item) => {
+        const tr = trMap.get(item?.id);
+        const orig = origMap.get(item?.id);
+        if (!tr || !orig) return item;
+        let patched = item;
+        fields.forEach((field) => {
+          if (item[field] === orig[field] && tr[field] !== item[field]) {
+            if (patched === item) patched = { ...item };
+            patched[field] = tr[field];
+          }
+        });
+        if (patched !== item) changed = true;
+        return patched;
+      });
+      return changed ? result : list;
+    };
+    const apply = (setter, kind, fields) =>
+      setter((current) => patchList(current, kind, fields));
+
+    const taskFields = ['title', 'subtitle'];
+    apply(setAllTasks, 'tasks', taskFields);
+    apply(setAllTasksOfTheSite, 'tasks', taskFields);
+    apply(setTasksOfChosenStation, 'tasks', taskFields);
+    apply(setAllRoutes, 'routes', ['name']);
+    apply(setFilteredDataRoutes, 'routes', ['name']);
+    apply(setRoutes, 'routes', ['name']);
+    apply(setOnlyAllStation, 'stations', taskFields);
+    apply(setStationArray, 'stations', taskFields);
+    apply(setAllUsers, 'users', ['name', 'role']);
+    apply(setallPacks, 'packs', ['name']);
+    apply(setFilteredPacksBySite, 'packs', ['name']);
+    apply(setAllEditors, 'editors', ['name']);
+  }, [isTranslated, stationArray, filteredDataRoutes, myRoutes, allTasksOfTheSite, tasksOfChosenStation, onlyAllStation, allRoutes, allTasks, allUsers, allPacks, filteredpacksbysite, allEditors]);
 
   const reloadData = async () => {
     const keepRouteId = selectedRoute?.id; // preserve current route id
@@ -1006,7 +1076,7 @@ const Places = (props) => {
                  || allTasks?.find(t => t.id === boardItem.id);
       if (!task) return boardItem;
       const stationEntry = boardItem.theStation
-        ? stationArray.find(s => s.id === boardItem.theStation.id)
+        ? (onlyAllStation.find(s => s.id === boardItem.theStation.id) || stationArray.find(s => s.id === boardItem.theStation.id))
         : null;
       const translatedStationName = stationEntry?.title ?? boardItem.myStation;
       return {
@@ -1019,7 +1089,7 @@ const Places = (props) => {
     });
     setBoardArrayDND(updated);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [allTasksOfTheSite, stationArray]);
+  }, [allTasksOfTheSite, stationArray, onlyAllStation]);
 
   const DisplayTasks = (e) => {
     // Check if another route is already selected
@@ -1051,7 +1121,7 @@ const Places = (props) => {
           if (station.parentSiteId === mySite.id) {
             theStation = station;
             // Look up translated title from stationArray
-            const translatedStn = stationArray.find(item => item.id === station.id);
+            const translatedStn = onlyAllStation.find(item => item.id === station.id) || stationArray.find(item => item.id === station.id);
             stationName = translatedStn?.title ?? station.title;
           }
         });
@@ -1113,7 +1183,8 @@ const Places = (props) => {
           if (stationID !== undefined) {
             // Look up translated title from stationArray instead of using the embedded (untranslated) stationID.title
             const colorEntry = stationArray.find((item) => item.id === stationID.id);
-            stationName = colorEntry?.title ?? stationID.title;
+            const translatedStation = onlyAllStation.find((item) => item.id === stationID.id);
+            stationName = translatedStation?.title ?? colorEntry?.title ?? stationID.title;
             theStation = stationID;
             color = colorEntry ? colorEntry.color : '#CCCCCC';
           } else {
@@ -1455,11 +1526,20 @@ const Places = (props) => {
         const sites = await getingData_Places();
         const site = sites.find(s => s.id === selectedValue.id);
 
-      const [newallRoutes, onlyAllStation, allTasks] = await Promise.all([
+      const [fetchedRoutes, fetchedStations, fetchedTasks] = await Promise.all([
         site.routes && site.routes.length > 0 ? getingData_RoutesbyIds(site.routes.map(route => route.id)) : Promise.resolve([]),
         site.stations && site.stations.length > 0 ? getingDataStationsbyIds(site.stations.map(station => station.id)) : Promise.resolve([]),
         site.tasks && site.tasks.length > 0 ? getingData_TasksbyIds(site.tasks.map(task => task.id)) : Promise.resolve([]),
       ]);
+
+      // Reuse already-translated items from state so the re-fetch doesn't bring back the original text
+      const preferTranslated = (fetched, current) => {
+        const byId = new Map((current || []).map((item) => [item.id, item]));
+        return fetched.map((item) => byId.get(item.id) || item);
+      };
+      const newallRoutes = isTranslated ? preferTranslated(fetchedRoutes, allRoutes) : fetchedRoutes;
+      const stationsOfSite = isTranslated ? preferTranslated(fetchedStations, onlyAllStation) : fetchedStations;
+      const tasksOfSiteFetched = isTranslated ? preferTranslated(fetchedTasks, allTasks) : fetchedTasks;
       
       // const newallRoutes = await getingData_Routes();//
       // const onlyAllStation = await getingDataStation();//
@@ -1474,7 +1554,7 @@ const Places = (props) => {
       mySite.id = selectedValue.id;
       mySite.nameInEnglish = selectedValue.nameInEnglish;
 
-      const tasksOfTheSite = allTasks.filter((task) =>
+      const tasksOfTheSite = tasksOfSiteFetched.filter((task) =>
         task.sites.find((site) => site.id === mySite.id)
       );
 
@@ -1484,7 +1564,7 @@ const Places = (props) => {
       localStorage.setItem('MySite', JSON.stringify(mySite));
 
       setStationArray(
-        onlyAllStation
+        stationsOfSite
           .filter((item) => item.parentSiteId === selectedValue.id)
           .map((item, index) => ({
             ...item,

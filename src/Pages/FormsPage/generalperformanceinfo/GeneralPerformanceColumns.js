@@ -9,7 +9,7 @@ const GeneralPerformanceColumns = () => {
       field: 'id',
       headerName: t('FormsPage.id'),
       filterable: false,
-      renderCell: (index) => index.api.getRowIndex(index.row.id) + 1,
+      renderCell: (index) => index.api.getRowIndexRelativeToVisibleRows(index.row.id) + 1,
     },
     { 
       field: 'index', 

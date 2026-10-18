@@ -180,7 +180,7 @@ const Nav = () => {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         >
-          {['English', 'Hebrew', 'Arabic', 'Russian'].map((language) => (
+          {['English', 'Hebrew', 'Arabic', 'Russian', 'German'].map((language) => (
             <MenuItem
               key={language}
               onClick={() => handleLanguageSelect(language)}

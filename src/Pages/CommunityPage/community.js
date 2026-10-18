@@ -151,7 +151,7 @@ const TaskPerformanceTable = () => {
 
       <TableContainer component={Paper} sx={{ backgroundColor: '#f0f0f0', marginTop: 2 }}>
         <Table sx={{ minWidth: 650, backgroundColor: '#f0f0f0' }} aria-label="simple table">
-          <TableHead sx={{ backgroundColor: '#114260', color: '#fff' }}>
+          <TableHead sx={{ backgroundColor: '#0070a6', color: '#fff' }}>
             <TableRow>
               <TableCell sx={{ color: '#fff' }}>Task Name</TableCell>
               <TableCell sx={{ color: '#fff' }}>Student Name</TableCell>

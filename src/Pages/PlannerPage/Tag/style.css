@@ -373,6 +373,21 @@
   left: 4px;
 }
 
+.phoneTagTitle {
+  overflow-wrap: anywhere;
+}
+
+.phoneTagText {
+  box-sizing: border-box;
+  max-height: 110px;
+  overflow-y: auto;
+  padding: 0 10px;
+}
+
 .phoneTagDesc {
-  margin: 0 8px 8px 8px;
+  margin: 0;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 16px;
+  overflow-wrap: anywhere;
 }

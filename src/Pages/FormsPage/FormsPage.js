@@ -142,6 +142,7 @@ const FormsPage = () => {
           English: 'en',
           Arabic: 'ar',
           Russian: 'ru',
+          German: 'de',
         };
         const loginLang = sessionStorage.getItem('language');
         const code = langMap[loginLang];
@@ -261,7 +262,7 @@ const FormsPage = () => {
             position: "absolute",
             top: 80,
             [t('Direction') === 'rtl' ? 'left' : 'right']: 16,
-            bgcolor: "#114260",
+            bgcolor: "#0070a6",
             "&:hover": { bgcolor: "#0d324d" },
             zIndex: 1000,
           }}

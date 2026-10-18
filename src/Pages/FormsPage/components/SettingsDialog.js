@@ -24,6 +24,7 @@ const SUPPORTED_LANGUAGES = [
   { code: 'he', name: 'עברית (Hebrew)' },
   { code: 'ar', name: 'العربية (Arabic)' },
   { code: 'ru', name: 'Русский (Russian)' },
+  { code: 'de', name: 'Deutsch (German)' },
 ];
 
 const SettingsDialog = ({
@@ -63,7 +64,7 @@ const SettingsDialog = ({
           display: 'flex',
           alignItems: 'center',
           gap: 1,
-          bgcolor: '#114260',
+          bgcolor: '#0070a6',
           color: 'white',
         }}
       >

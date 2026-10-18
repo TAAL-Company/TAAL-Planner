@@ -156,11 +156,11 @@ const Columns = ({ handleClickMenu, expandedRows, handleSectionExpandToggle }) =
   ];
 
   const editorColumns = [
-    { field: 'name', headerName: t('Editor.Name'), renderHeader: renderHeaderWithHover('Editor.Name'), width: 120 },
-    { field: 'email', headerName: t('Editor.Email'), renderHeader: renderHeaderWithHover('Editor.Email'), width: 180 },
-    { field: 'googleID', headerName: t('Editor.GoogleID'), renderHeader: renderHeaderWithHover('Editor.GoogleID'), width: 120 },
-    { field: 'phone', headerName: t('Editor.Phone'), renderHeader: renderHeaderWithHover('Editor.Phone'), width: 120 },
-    { field: 'role', headerName: t('Editor.Role'), renderHeader: renderHeaderWithHover('Editor.Role'), width: 100 },
+    { field: 'name', headerName: t('UserPage.Name'), renderHeader: renderHeaderWithHover('UserPage.Name'), width: 120 },
+    { field: 'email', headerName: t('UserPage.Email'), renderHeader: renderHeaderWithHover('UserPage.Email'), width: 180 },
+    { field: 'googleID', headerName: t('GoogleID'), renderHeader: renderHeaderWithHover('GoogleID'), width: 120 },
+    { field: 'phone', headerName: t('UserPage.Phone'), renderHeader: renderHeaderWithHover('UserPage.Phone'), width: 120 },
+    { field: 'role', headerName: t('UserPage.Role'), renderHeader: renderHeaderWithHover('UserPage.Role'), width: 100 },
   ];
 
   return { columns, taskColumns, routeColumns, stationColumns, studentColumns, editorColumns };

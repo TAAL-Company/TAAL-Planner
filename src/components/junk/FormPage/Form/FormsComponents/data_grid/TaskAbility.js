@@ -269,7 +269,7 @@ const TaskAbility = ({
               position: 'sticky',
               left: 1,
               zIndex: 1,
-              bgcolor: '#114260',
+              bgcolor: '#0070a6',
             },
             '& .MuiDataGrid-columnHeadersInner > div': {
               direction: 'rtl !important',
@@ -284,11 +284,11 @@ const TaskAbility = ({
               backgroundColor: '#EDF3F8',
             },
             '& .MuiButton-textSizeSmall': {
-              color: 'rgb(8,8,137)',
+              color: '#0070a6',
             },
             '& .MuiDataGrid-columnHeadersInner': {
               borderBottom: '1px solid rgba(224, 224, 224, 1)',
-              bgcolor: '#114260',
+              bgcolor: '#0070a6',
             },
 
             '& .MuiDataGrid-columnHeaderTitle': {

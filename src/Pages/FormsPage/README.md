@@ -247,7 +247,7 @@ The FormsPage relies on the following API endpoints (from `../../api/api.js`):
 All components use Material-UI's `sx` prop for styling, with additional CSS in `FormsPage.css`.
 
 **Theme Colors:**
-- Primary: `#114260` (Dark Blue)
+- Primary:#0070a6 <!-- `#114260` (Dark Blue) -->
 - Background: `#F5F5F5` (Light Gray)
 - Hover: `#EDF3F8` (Light Blue-Gray)
 - White: `#FFFFFF`

@@ -194,8 +194,10 @@ function Tag({
           <div className='borderTask'>
             <div className='nameOfTaskPhone'>
               <Images id={id} url={picture_url || TaskImage} />
-              {title}
-              <div className='phoneTagDesc'>{subtitle}</div>
+              <div className='phoneTagText'>
+                <div className='phoneTagTitle'>{title}</div>
+                <div className='phoneTagDesc'>{subtitle}</div>
+              </div>
             </div>
           </div>
           <button className='listenIcon' onClick={() => listen()}></button>

@@ -9,6 +9,14 @@ const BATCH_DELAY = 100;
 
 export const TranslationProvider = ({ children, defaultLang = 'en' }) => {
   const [currentLanguage, setCurrentLanguage] = useState(defaultLang);
+  const [translationEnabled, setTranslationEnabledState] = useState(
+    () => localStorage.getItem('dataTranslationEnabled') !== 'false'
+  );
+
+  const setTranslationEnabled = useCallback((enabled) => {
+    localStorage.setItem('dataTranslationEnabled', String(enabled));
+    setTranslationEnabledState(enabled);
+  }, []);
   
   // Translation cache: { 'en->he': { 'hello': 'שלום' } }
   const cacheRef = useRef({});
@@ -289,6 +297,8 @@ export const TranslationProvider = ({ children, defaultLang = 'en' }) => {
         currentLanguage, 
         setLanguage: setCurrentLanguage,
         translateArrayOfObjectsfull,
+        translationEnabled,
+        setTranslationEnabled,
       }}
     >
       {children}

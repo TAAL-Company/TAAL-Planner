@@ -96,6 +96,7 @@ function Login(props) {
     English: { username: 'Username', password: 'Password', dir: 'ltr', login: 'Login', forget: 'Forget Password?' },
     Arabic: { username: 'اسم المستخدم', password: 'كلمة المرور', dir: 'rtl', login: 'تسجيل الدخول', forget: 'نسيت كلمة المرور؟' },
     Russian: { username: 'Имя пользователя', password: 'Пароль', dir: 'ltr', login: 'Войти', forget: 'Забыли пароль?' },
+    German: { username: 'Benutzername', password: 'Passwort', dir: 'ltr', login: 'Anmelden', forget: 'Passwort vergessen?' },
   };
 
   const [checked, setChecked] = useState({
@@ -103,6 +104,7 @@ function Login(props) {
     English: false,
     Arabic: false,
     Russian: false,
+    German: false,
   });
 
   useEffect(() => {
@@ -131,6 +133,7 @@ function Login(props) {
       English: lang === 'English',
       Arabic: lang === 'Arabic',
       Russian: lang === 'Russian',
+      German: lang === 'German',
     });
     setLanguage(lang);
     setGlobalLanguage(lang); // Update global language for entire app translation
@@ -248,6 +251,16 @@ function Login(props) {
                 />
               }
               label="Русский"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={checked.German}
+                  onClick={handleLanguageChange}
+                  name="German"
+                />
+              }
+              label="Deutsch"
             />
           </Box>
 

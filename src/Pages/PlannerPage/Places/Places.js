@@ -454,6 +454,7 @@ const Places = (props) => {
         English: 'en',
         Arabic: 'ar',
         Russian: 'ru',
+        German: 'de',
       };
       const loginLang = sessionStorage.getItem('language');
       const code = langMap[loginLang];
@@ -868,6 +869,7 @@ const Places = (props) => {
         English: 'en',
         Arabic: 'ar',
         Russian: 'ru',
+        German: 'de',
       };
       const loginLang = sessionStorage.getItem('language');
       const code = langMap[loginLang];
@@ -1018,7 +1020,7 @@ const Places = (props) => {
     originalDataRef.current = { ...originalDataRef.current, places: [...allPlaces] };
 
     // Auto-translate places based on login language
-    const langMap = { Hebrew: 'he', English: 'en', Arabic: 'ar', Russian: 'ru' };
+    const langMap = { Hebrew: 'he', English: 'en', Arabic: 'ar', Russian: 'ru', German: 'de' };
     const loginLang = sessionStorage.getItem('language');
     const code = langMap[loginLang];
     if (code && code !== 'original') {

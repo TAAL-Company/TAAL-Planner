@@ -214,7 +214,7 @@ const TaskPerformanceTable = ({
                 mt: '0 !important',
               },
               '& .MuiDataGrid-columnHeaders': {
-                bgcolor: '#114260',
+                bgcolor: '#0070a6',
                 borderBottom: '1px solid rgba(224, 224, 224, 1)',
                 fontWeight: 'bold',
                 color: '#fff',
@@ -225,7 +225,7 @@ const TaskPerformanceTable = ({
                 backgroundColor: '#EDF3F8',
               },
               '& .MuiButton-textSizeSmall': {
-                color: 'rgb(8,8,137)',
+                color: '#0070a6',
               },
               '& .MuiDataGrid-columnHeaderTitle': {
                 color: 'white',

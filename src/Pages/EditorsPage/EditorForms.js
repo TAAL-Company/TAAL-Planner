@@ -315,7 +315,7 @@ export default function EditorForm({
                     >
                         <MenuItem value="ADMIN">ADMIN</MenuItem>
                         <MenuItem value="EDITOR">EDITOR</MenuItem>
-                        <MenuItem value="STUDENT">STUDENT</MenuItem>
+                        <MenuItem value="STUDENT">WORKER</MenuItem>
                     </Select>
                 </FormControl>
 

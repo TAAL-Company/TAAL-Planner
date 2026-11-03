@@ -8,7 +8,7 @@ import QrCode2Icon from '@mui/icons-material/QrCode2';
 import { useNotification } from '../../components/Notification/NotificationProvider';
 import { useTranslation } from 'react-i18next';
 import useTranslatedList from '../../Utility/useTranslatedList';
-import { getingData_Routes, deleteRoute, getingData_Tasks, getingData_Places, getTaskPerformanceByRoute } from '../../api/api';
+import { getingData_Routes, deleteRoute, getingData_Tasks, getingData_Places, getTaskPerformanceByRoute, getingData_Users, assignStudentToRoute, unassignStudentFromRoute } from '../../api/api';
 import RouteForm from './RouteForm';
 import { CacheProvider } from '@emotion/react';
 import createCache from '@emotion/cache';
@@ -57,6 +57,7 @@ export default function RouteTable() {
   const [popupRow, setPopupRow] = useState(null);
   const [routeAction, setRouteAction] = useState('add');
   const [sites, setSites] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const { showNotification } = useNotification();
   const { t } = useTranslation();
   const [displayRoutes, translatingRoutes] = useTranslatedList(routes, ROUTE_FIELDS, ROUTE_NESTED);
@@ -101,11 +102,52 @@ export default function RouteTable() {
 
   const handlePopupOpen = (section, row) => {
     setPopupSection(section);
-    if (section === 'tasks' && Array.isArray(row.tasks)) {
-      row = { ...row, tasks: [...row.tasks].sort((a, b) => a.position - b.position) };
-    }
     setPopupRow(row);
     setPopupOpen(true);
+  };
+
+  // Always read the popup row from current state so assign/unassign updates show immediately
+  const livePopupRow = React.useMemo(() => {
+    if (!popupRow) return null;
+    const row = displayRoutes.find((r) => r.id === popupRow.id) ?? popupRow;
+    if (popupSection === 'tasks' && Array.isArray(row.tasks)) {
+      return { ...row, tasks: [...row.tasks].sort((a, b) => a.position - b.position) };
+    }
+    return row;
+  }, [popupRow, popupSection, displayRoutes]);
+
+  const handleAssignStudent = async (student) => {
+    try {
+      await assignStudentToRoute(popupRow.id, student.id);
+      setRoutes((prev) =>
+        prev.map((r) =>
+          r.id === popupRow.id
+            ? { ...r, students: [...(r.students || []), { ...student, lastUsed: null }] }
+            : r
+        )
+      );
+      showNotification('success', t('Success_assign', { defaultValue: 'Assigned successfully' }));
+    } catch (error) {
+      console.error(error);
+      showNotification('error', t('Error_assign', { defaultValue: 'Failed to assign' }));
+    }
+  };
+
+  const handleUnassignStudent = async (student) => {
+    try {
+      await unassignStudentFromRoute(popupRow.id, student.id);
+      setRoutes((prev) =>
+        prev.map((r) =>
+          r.id === popupRow.id
+            ? { ...r, students: (r.students || []).filter((s) => s.id !== student.id) }
+            : r
+        )
+      );
+      showNotification('success', t('Success_unassign', { defaultValue: 'Unassigned successfully' }));
+    } catch (error) {
+      console.error(error);
+      showNotification('error', t('Error_unassign', { defaultValue: 'Failed to unassign' }));
+    }
   };
 
   useEffect(() => {
@@ -230,8 +272,17 @@ export default function RouteTable() {
       setSites(sitesData);
     };
 
+    const fetchUsers = async () => {
+      try {
+        setAllUsers((await getingData_Users()) || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
     fetchData();
     fetchSites();
+    fetchUsers();
   }, []);
 
   const handleOpenQRCode = () => {
@@ -377,10 +428,18 @@ export default function RouteTable() {
                 open={popupOpen}
                 onClose={() => setPopupOpen(false)}
                 section={popupSection}
-                row={popupRow}
+                row={livePopupRow}
                 columnsMap={{
                   taskColumns,
                   studentColumns,
+                }}
+                assignment={{
+                  students: {
+                    options: allUsers,
+                    getOptionLabel: (u) => u.name || u.user_name || u.email,
+                    onAssign: handleAssignStudent,
+                    onUnassign: handleUnassignStudent,
+                  },
                 }}
               />
 

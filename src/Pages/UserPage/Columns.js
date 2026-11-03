@@ -105,8 +105,6 @@ const Columns = ({ handleClickMenu, coaches, handleSectionExpandToggle }) => {
       renderHeader: renderHeaderWithHover('UserPage.Routes'),
       width: 100,
       renderCell: (params) => {
-        const hasRoute = params.row.routes && params.row.routes.length > 0;
-        if (!hasRoute) return null;
         return (
           <div onClick={() => handleSectionExpandToggle(params.row.id, 'routes', params.row)}>
             <TableViewIcon style={{ color: 'blue', cursor: 'pointer' }} />

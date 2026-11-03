@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
-import { getingData_Users, getingData_coaches, getingData_Places, insertUser, deleteUser } from '../../api/api';
+import { getingData_Users, getingData_coaches, getingData_Places, insertUser, deleteUser, getingData_Routes, assignStudentToRoute, unassignStudentFromRoute } from '../../api/api';
 import { useState, useEffect } from 'react';
 import { Button, MenuItem, Menu } from '@mui/material';
 import UserForm from './UserForm';
@@ -44,6 +44,7 @@ export default function DataGridDemo() {
   const [loading, setLoading] = useState(true);
   const [coaches, setCoaches] = useState([]);
   const [sites, setSites] = useState([]);
+  const [allRoutes, setAllRoutes] = useState([]);
   const [newUser, setNewUser] = useState({
     email: '',
     phone: '',
@@ -119,6 +120,11 @@ export default function DataGridDemo() {
       const coachesData = await getingData_coaches();
       const sitesData = await getingData_Places();
       setSites(sitesData);
+      try {
+        setAllRoutes((await getingData_Routes()) || []);
+      } catch (error) {
+        console.error(error);
+      }
       setCoaches(coachesData);
 
       const jwt = sessionStorage.getItem('jwt');
@@ -234,6 +240,39 @@ export default function DataGridDemo() {
     setPopupSection(section);
     setPopupRow(row);
     setPopupOpen(true);
+  };
+
+  // Always read the popup row from current state so assign/unassign updates show immediately
+  const livePopupRow = popupRow ? displayUsers.find((u) => u.id === popupRow.id) ?? popupRow : null;
+
+  const handleAssignRoute = async (route) => {
+    try {
+      await assignStudentToRoute(route.id, popupRow.id);
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === popupRow.id ? { ...u, routes: [...(u.routes || []), route] } : u
+        )
+      );
+      showNotification('success', t('Success_assign', { defaultValue: 'Assigned successfully' }));
+    } catch (error) {
+      console.error(error);
+      showNotification('error', t('Error_assign', { defaultValue: 'Failed to assign' }));
+    }
+  };
+
+  const handleUnassignRoute = async (route) => {
+    try {
+      await unassignStudentFromRoute(route.id, popupRow.id);
+      setUsers((prev) =>
+        prev.map((u) =>
+          u.id === popupRow.id ? { ...u, routes: (u.routes || []).filter((r) => r.id !== route.id) } : u
+        )
+      );
+      showNotification('success', t('Success_unassign', { defaultValue: 'Unassigned successfully' }));
+    } catch (error) {
+      console.error(error);
+      showNotification('error', t('Error_unassign', { defaultValue: 'Failed to unassign' }));
+    }
   };
 
 
@@ -364,10 +403,18 @@ export default function DataGridDemo() {
                 open={popupOpen}
                 onClose={() => setPopupOpen(false)}
                 section={popupSection}
-                row={popupRow}
+                row={livePopupRow}
                 columnsMap={{
                   routeColumns,
                   siteColumns,
+                }}
+                assignment={{
+                  routes: {
+                    options: allRoutes,
+                    getOptionLabel: (r) => r.name,
+                    onAssign: handleAssignRoute,
+                    onUnassign: handleUnassignRoute,
+                  },
                 }}
               />
             </div>

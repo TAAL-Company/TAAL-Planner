@@ -47,12 +47,11 @@ const Columns = ({ handleClickMenu, handlePopupOpen }) => {
       headerName: t('SitePage.Users'),
       renderHeader: renderHeaderWithHover('SitePage.Users'),
       width: 100,
-      renderCell: (params) =>
-        Array.isArray(params.row.students) && params.row.students.length > 0 ? (
-          <IconButton onClick={() => handlePopupOpen('students', params.row)}>
-            <TableViewIcon style={{ color: 'black' }} />
-          </IconButton>
-        ) : null,
+      renderCell: (params) => (
+        <IconButton onClick={() => handlePopupOpen('students', params.row)}>
+          <TableViewIcon style={{ color: 'black' }} />
+        </IconButton>
+      ),
     },
     {
       field: 'sites',

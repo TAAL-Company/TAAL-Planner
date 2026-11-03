@@ -117,9 +117,13 @@ const Stations = (props) => {
     else setOpenThreeDotsVertical(value);
   };
 
-  if (flagFirstTime === true) {
-    filteredData = props.stationArray;
-  }
+  // Always derive from the current stationArray so route/site changes are reflected
+  filteredData =
+    inputText === ''
+      ? props.stationArray
+      : props.stationArray.filter((el) =>
+          el.title?.toLowerCase().includes(inputText)
+        );
 
   // handle search station name
   let inputHandler = (e) => {

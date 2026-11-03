@@ -1651,8 +1651,12 @@ const Places = (props) => {
     setTasksOfChosenStation([]);
     setTasksLength(0);
 
+    const routeSiteIds = selectedRoute.sites.map((s) => s.id);
+    const activeSiteId = routeSiteIds.includes(selectedSite?.id)
+      ? selectedSite.id
+      : selectedRoute.sites[0].id;
     const stationsArray = onlyAllStation?.filter(
-      (station) => station.parentSiteId === selectedRoute.sites[0].id
+      (station) => station.parentSiteId === activeSiteId
     );
 
     const tasksOfTheRoute = allTasks.filter((task) =>

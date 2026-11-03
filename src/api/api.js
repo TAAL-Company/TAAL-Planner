@@ -453,6 +453,14 @@ export const updateRoute = async (routeUUID, routeData, callback) => {
       console.log(error);
     });
 };
+export const assignStudentToRoute = async (routeId, studentId) => {
+  const res = await axios.patch(`${baseUrl}/routes/${routeId}/students/${studentId}`);
+  return res.data;
+};
+export const unassignStudentFromRoute = async (routeId, studentId) => {
+  const res = await axios.delete(`${baseUrl}/routes/${routeId}/students/${studentId}`);
+  return res.data;
+};
 export const deleteRoute = async (route_id) => {
   let confirm;
 
